@@ -51,6 +51,7 @@ FILTER := ""
 LABEL := "RP section"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPClass.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPRuleProcessor.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Attributes.java" #[EndFile]

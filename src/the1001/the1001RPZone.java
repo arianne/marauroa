@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.24 2004/05/10 15:40:31 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.25 2004/06/07 17:21:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ public class the1001RPZone extends MarauroaRPZone
   {
   private RPObject heroesHouse;
   private RPObject arena;
-  public the1001RPZone()
+  public the1001RPZone() throws Exception 
     {
     super();
     marauroad.trace("the1001RPZone::the1001RPZone",">");
@@ -109,7 +109,15 @@ public class the1001RPZone extends MarauroaRPZone
         }      
       }
     }
+  
+  public void onInit()
+    {
+    }
     
+  public void onFinish()
+    {
+    }
+       
   public RPObject getHeroesHouse()
     {
     return heroesHouse;

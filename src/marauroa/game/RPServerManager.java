@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.98 2004/06/05 00:35:09 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.99 2004/06/07 17:21:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -488,6 +488,7 @@ public class RPServerManager extends Thread
       
       stats.setObjectsNow(zone.size());
       }
+    
     isfinished=true;
     marauroad.trace("RPServerManager::run","<");
     }

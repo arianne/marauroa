@@ -37,10 +37,19 @@ public class RPClass
     public int scope;   
     }
   
+  private static Map rpClassList;
+  
+  static
+    {
+    rpClassList=new HashMap();
+    }
+  
   public RPClass(String type)
     {    
     name=type;
     attributes=new HashMap();
+    
+    rpClassList.put(type,this);
     }
   
   public boolean addAttribute(String name, int type, int scope)
@@ -50,9 +59,37 @@ public class RPClass
     
     return true;
     }
-  
+
   public int getCode(String name)
     {
-    return ((AttributeDesc)attributes.get(name)).code;
+    if(attributes.containsKey(name))
+      {
+      AttributeDesc desc=(AttributeDesc)attributes.get(name);
+      return desc.code;
+      }
+    
+    /* TODO: Throw exception */
+    return -1;  
+    }
+  
+  public boolean hasAttribute(String name)
+    {
+    if(attributes.containsKey(name))
+      {
+      return true;
+      }
+    
+    return false;
+    }
+  
+  public static RPClass getRPClass(String name)
+    {
+    if(rpClassList.containsKey(name))
+      {
+      return (RPClass)rpClassList.get(name);
+      }
+    
+    /* TODO: Throw exception */
+    return null;
     }
   }
