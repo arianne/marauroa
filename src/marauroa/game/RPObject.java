@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.25 2004/02/06 21:38:45 root777 Exp $ */
+/* $Id: RPObject.java,v 1.26 2004/02/07 20:36:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,7 @@ public class RPObject extends Attributes
 		}
 	}
   
-  public static ID INVALID_ID=new ID(-1);
+  public final static ID INVALID_ID=new ID(-1);
 	
   /** Constructor */
   public RPObject()

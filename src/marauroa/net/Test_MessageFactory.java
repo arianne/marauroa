@@ -1,4 +1,4 @@
-/* $Id: Test_MessageFactory.java,v 1.9 2003/12/12 16:33:30 arianne_rpg Exp $ */
+/* $Id: Test_MessageFactory.java,v 1.10 2004/02/07 20:40:25 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,12 @@ import junit.framework.*;
 public class Test_MessageFactory extends TestCase
   {
   private ByteArrayOutputStream out;
-  private ByteArrayInputStream in;
+//  private ByteArrayInputStream in;
   
-  private InputSerializer sin;
+//  private InputSerializer sin;
   private OutputSerializer sout;
 
-  public static Test suite ( ) 
+  public static Test suite ( )
     {
     return new TestSuite(Test_MessageFactory.class);
 	}
@@ -57,7 +57,7 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {
       fail("Exception happened when serializing data out");
-      }    
+      }
 
     assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,msg.getType());
     assertEquals(clientid,msg.getClientID());
@@ -67,7 +67,7 @@ public class Test_MessageFactory extends TestCase
       {
       Message result=msgFac.getMessage(out.toByteArray(),null);
 
-      assertNotNull(result);    
+      assertNotNull(result);
       assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,result.getType());
     
       MessageC2SChooseCharacter realResult=(MessageC2SChooseCharacter)result;
@@ -107,7 +107,7 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {
       fail("Exception happened when serializing data out");
-      }    
+      }
 
     byte[] outarray=out.toByteArray();
     outarray[1]=Message.TYPE_INVALID;
@@ -118,7 +118,7 @@ public class Test_MessageFactory extends TestCase
       fail("Expected IOException");
       }
     catch(IOException e)
-      {      
+      {
       }
 
     marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnUnregisteredMessage","<");
@@ -148,7 +148,7 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {
       fail("Exception happened when serializing data out");
-      }    
+      }
 
     byte[] outarray=out.toByteArray();
     /* We make protocol to differ from the expected */
@@ -160,7 +160,7 @@ public class Test_MessageFactory extends TestCase
       fail("Expected IOException");
       }
     catch(IOException e)
-      {      
+      {
       }
 
     marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnWrongProtocol","<");
@@ -230,7 +230,7 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {
       fail("Exception happened when serializing data out");
-      }    
+      }
 
     assertEquals(Message.TYPE_C2S_ACTION,msg_0.getType());
     assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,msg_1.getType());

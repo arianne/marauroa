@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.3 2004/02/07 20:39:24 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,18 +20,18 @@ import java.io.*;
  */
 public class MessageS2CLoginNACK extends Message
   {
-  public static byte UNKNOWN_REASON=0;
-  public static byte USERNAME_WRONG=1;
-  public static byte SERVER_IS_FULL=2;  
+  public final static byte UNKNOWN_REASON=0;
+  public final static byte USERNAME_WRONG=1;
+  public final static byte SERVER_IS_FULL=2;
   
   static private String[] text=
     {
     "Unknown reason",
     "Username/Password incorrect.",
-    "Server is full."    
+    "Server is full."
     };
     
-  private byte reason;  
+  private byte reason;
   
   /** Constructor for allowing creation of an empty message */
   public MessageS2CLoginNACK()
@@ -41,7 +41,7 @@ public class MessageS2CLoginNACK extends Message
     type=TYPE_S2C_LOGIN_NACK;
     }
 
-  /** Constructor with a TCP/IP source/destination of the message 
+  /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message
    *  @param resolution the reason to deny the login */
   public MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
@@ -51,9 +51,9 @@ public class MessageS2CLoginNACK extends Message
     type=TYPE_S2C_LOGIN_NACK;
     
     reason=resolution;
-    }  
+    }
   
-  /** This method returns the resolution of the login event 
+  /** This method returns the resolution of the login event
    *  @return a byte representing the resolution given.*/
   public byte getResolutionCode()
     {
@@ -64,10 +64,10 @@ public class MessageS2CLoginNACK extends Message
    *  @return a string representing the resolution.*/
   public String getResolution()
     {
-    return text[reason];    
+    return text[reason];
     }
 
-  /** This method returns a String that represent the object 
+  /** This method returns a String that represent the object
    *  @return a string representing the object.*/
   public String toString()
     {
@@ -89,7 +89,7 @@ public class MessageS2CLoginNACK extends Message
       {
       throw new java.lang.ClassNotFoundException();
       }
-    }    
+    }
   };
 
 

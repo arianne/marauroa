@@ -103,12 +103,10 @@ public class JStatistics
 											{
 					public void actionPerformed(ActionEvent e)
 					{
-						Statistics.addBytesRecv(1);
 						updateStats(Statistics.getVariables());
 					}
 				});
 		updateStats(Statistics.getVariables());
-		timer.start();
   }
   
   public void updateStats(Statistics.GatheredVariables vars)
@@ -142,6 +140,7 @@ public class JStatistics
 		frm.setContentPane(js);
 		frm.pack();
 		frm.show();
+	  js.timer.start();
 		return(js);
   }
   
