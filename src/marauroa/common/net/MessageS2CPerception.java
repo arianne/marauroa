@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.2 2005/02/08 20:22:04 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.3 2005/02/09 20:22:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -272,7 +272,7 @@ public class MessageS2CPerception extends Message
         if(obj instanceof CacheKey)
           {
           CacheKey a=(CacheKey)obj;
-          if(a.type==type && a.zoneid==zoneid)
+          if(a.type==type && a.zoneid.equals(zoneid))
             {
             return true;
             }
@@ -295,6 +295,7 @@ public class MessageS2CPerception extends Message
       }
       
     static CachedCompressedPerception instance;
+      
     synchronized static public CachedCompressedPerception get()
       {
       if(instance==null)
@@ -316,6 +317,7 @@ public class MessageS2CPerception extends Message
       
       if(!cachedContent.containsKey(key))
         {
+        Logger.trace("MessageS2CPerception::CachedCompressedPerception::get()","D","Perception not found in cache");
         ByteArrayOutputStream array=new ByteArrayOutputStream();
         DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
         OutputSerializer serializer=new OutputSerializer(out_stream);
@@ -326,6 +328,10 @@ public class MessageS2CPerception extends Message
         byte[] content=array.toByteArray();
         
         cachedContent.put(key,content);
+        }
+      else
+        {
+        Logger.trace("MessageS2CPerception::CachedCompressedPerception::get()","D","Perception FOUND in cache");
         }
     
       return (byte[])cachedContent.get(key);

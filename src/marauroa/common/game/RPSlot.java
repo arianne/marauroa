@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.1 2005/01/23 21:00:43 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.2 2005/02/09 20:22:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.server.*;
 import marauroa.common.*;
 
 /** This class represent a slot in an object */
-public class RPSlot implements marauroa.common.net.Serializable, Cloneable, Iterable<RPObject>
+public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject>
   {
   private List<RPObject> added;
   private List<RPObject> deleted;

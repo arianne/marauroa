@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.1 2005/01/23 21:00:41 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.2 2005/02/09 20:22:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,9 +24,6 @@ public abstract class ariannexp
   private NetworkClientManager netMan;
   private int clientid;
   private List<Message> messages;
-  
-  private RPObject avatar;
-  private PerceptionHandler handler;
   
   public ariannexp()
     {

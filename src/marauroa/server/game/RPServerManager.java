@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.2 2005/01/30 12:24:35 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.3 2005/02/09 20:22:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,9 +64,6 @@ public class RPServerManager extends Thread
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
   
-  /** This list host players that still need to login in */
-  private List<RPObject> incubator;
-  
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
   public RPServerManager(NetworkServerManager netMan) throws Exception
@@ -95,7 +92,6 @@ public class RPServerManager extends Thread
       String duration=conf.get("rp_turnDuration");
 
       turnDuration=Long.parseLong(duration);
-      incubator=new LinkedList<RPObject>();
       
       start();
       }

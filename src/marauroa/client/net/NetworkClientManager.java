@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.2 2005/01/30 12:24:05 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.3 2005/02/09 20:22:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,8 +117,8 @@ public class NetworkClientManager
       }
     }
   
-  final private int PACKET_SIGNATURE_SIZE=3;
-  final private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
+  final static private int PACKET_SIGNATURE_SIZE=3;
+  final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
 
   private void storePacket(InetSocketAddress address, byte[] data)
     {

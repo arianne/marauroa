@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.4 2005/02/08 20:22:13 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.5 2005/02/09 20:22:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.common.*;
 import marauroa.common.net.*;
 import marauroa.server.game.*;
 
+
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
 public final class NetworkServerManager
@@ -28,20 +29,14 @@ public final class NetworkServerManager
   /** The server socket from where we recieve the packets. */
   private DatagramSocket socket;
   /** While keepRunning is true, we keep recieving messages */
-  private volatile boolean keepRunning;
+  private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
   /** A List of Message objects: List<Message> */
   private List<Message> messages;
-
-  /** A queue for messages to send: List<Message> */
-  private List<Message> messagesToSend;
-
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
-  private NetworkServerManagerWrite[] writeManager;
-  private int last_signature;
-
+  private NetworkServerManagerWrite writeManager;
   private Statistics stats;
   private PacketValidator packetValidator;
   
@@ -52,7 +47,7 @@ public final class NetworkServerManager
     Logger.trace("NetworkServerManager",">");
     try
       {
-      /* init the packet validator (which can now only check if the address is banned)*/
+      /* init the packet validater (which can now only check if the address is banned)*/
       packetValidator = new PacketValidator();
       
       /* Create the socket and set a timeout of 1 second */
@@ -64,24 +59,13 @@ public final class NetworkServerManager
       msgFactory=MessageFactory.getFactory();
       keepRunning=true;
       isfinished=false;
-      
       /* Because we access the list from several places we create a synchronized list. */
       messages=Collections.synchronizedList(new LinkedList<Message>());
       stats=Statistics.getStatistics();
       readManager=new NetworkServerManagerRead();
       readManager.start();
-
-      messagesToSend = new LinkedList<Message>();
-
-      int writer_count = 1;
-      writeManager = new NetworkServerManagerWrite[writer_count];
-      for(int i = 0; i<writeManager.length; i++)
-        {
-        writeManager[i]=new NetworkServerManagerWrite();
-        writeManager[i].setName("NetworkServerManagerWrite_"+(i+1));
-        writeManager[i].start();
-        }     
-      } 
+      writeManager=new NetworkServerManagerWrite();
+      }
     finally
       {
       Logger.trace("NetworkServerManager","<");
@@ -97,13 +81,7 @@ public final class NetworkServerManager
       {
       Thread.yield();
       }
-
-    //wait until writer threads are shutted down
-    for(int i = 0; i<writeManager.length; i++)
-      {
-      try{writeManager[i].join();}catch(InterruptedException ie){}
-      }
-
+      
     socket.close();
     Logger.trace("NetworkServerManager::finish","<");
     }
@@ -181,13 +159,7 @@ public final class NetworkServerManager
   public void addMessage(Message msg)
     {
     Logger.trace("NetworkServerManager::addMessage",">");
-    synchronized(messagesToSend)
-      {
-      messagesToSend.add(msg);
-      //wake up waiting Writer-Threads
-      messagesToSend.notifyAll();
-      }
-      
+    writeManager.write(msg);
     Logger.trace("NetworkServerManager::addMessage","<");
     }
     
@@ -214,11 +186,8 @@ public final class NetworkServerManager
           Logger.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
           
           /*** Statistics ***/
-          synchronized(stats)
-            {  
-            stats.addBytesRecv(packet.getLength());
-            stats.addMessageRecv();
-            }
+          stats.addBytesRecv(packet.getLength());
+          stats.addMessageRecv();
           
           if(!packetValidator.checkBanned(packet))
             {
@@ -260,47 +229,14 @@ public final class NetworkServerManager
     
 
   /** A wrapper class for sending messages to clients */
-  class NetworkServerManagerWrite extends Thread
+  class NetworkServerManagerWrite
     {
+    private int last_signature;
     public NetworkServerManagerWrite()
       {
       last_signature=0;
       }
-
-    public void run()
-      {
-      Logger.trace("NetworkServerManagerWrite::run",">");
-      while(keepRunning)
-        {
-        Message msg = null;
-        synchronized(messagesToSend)
-          {
-          if(messagesToSend.size()==0)
-            {
-            //sleep max 1 second until some one wake me up...
-            try
-              {
-              messagesToSend.wait(1000);
-              }
-            catch(InterruptedException ie)
-              {
-              }
-            }
-        
-          if(messagesToSend.size()>0)
-            {
-            msg = messagesToSend.remove(0);
-            }
-          }
-        
-        if(msg!=null)
-          {
-          write(msg);
-          }
-        }
-      Logger.trace("NetworkServerManagerWrite::run","<");
-      }
-
+    
     private byte[] serializeMessage(Message msg) throws IOException    
       {
       ByteArrayOutputStream out=new ByteArrayOutputStream();
@@ -319,19 +255,17 @@ public final class NetworkServerManager
       Logger.trace("NetworkServerManagerWrite::write",">");
       try
         {
+        /* TODO: Looks like hardcoded, write it in a better way */
         if(keepRunning)
           {
           byte[] buffer=serializeMessage(msg);
           int used_signature;
   
           /*** Statistics ***/
-          synchronized(stats) //we can have many threads now...
-            {
-            used_signature=++last_signature;
+          used_signature=++last_signature;
 
-            stats.addBytesSend(buffer.length);
-            stats.addMessageSend();
-            }
+          stats.addBytesSend(buffer.length);
+          stats.addMessageSend();
           
           Logger.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
           int totalNumberOfPackets=(buffer.length/CONTENT_PACKET_SIZE)+1;
