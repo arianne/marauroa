@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.4 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.5 2004/05/31 08:10:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ public class MessageC2SChooseCharacter extends Message
    *  @param source The TCP/IP address associated to this message
    *  @param character The name of the choosen character that <b>MUST</b> be one
    *  of the returned by the marauroa.net.MessageS2CCharacters
-   *  @see marauroa.net.MessageS2CCharacters
+   *  @see marauroa.net.MessageS2CCharacterList
    */
   public MessageC2SChooseCharacter(InetSocketAddress source,String character)
     {

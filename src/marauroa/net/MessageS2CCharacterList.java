@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.4 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.5 2004/05/31 08:10:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,6 @@ public class MessageS2CCharacterList extends Message
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
    *  @param characters the list of characters of the player
-   *  @see marauroa.net.MessageS2CCharacters
    */
   public MessageS2CCharacterList(InetSocketAddress source,String[] characters)
     {    

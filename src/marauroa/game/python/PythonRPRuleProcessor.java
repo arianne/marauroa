@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.3 2004/05/30 22:30:07 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.4 2004/05/31 08:11:18 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,7 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.
    *  @param action the action to execute
-   *  @returns the action status, that can be Success, Fail or incomplete, please
+   *  @return the action status, that can be Success, Fail or incomplete, please
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {

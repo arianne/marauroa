@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.7 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.8 2004/05/31 08:10:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public class MessageS2CChooseCharacterACK extends Message
     }
    
   /** This method returns the object id of the choosen character
-   *  @returns RPObject.ID of the choosen character */
+   *  @return RPObject.ID of the choosen character */
   public RPObject.ID getObjectID()
     {
     return id;

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.29 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.30 2004/05/31 08:11:15 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -135,7 +135,7 @@ public class Attributes implements marauroa.net.Serializable
   /** This methods return the value of an attribute
    *  @param attribute the attribute we want to get
    *  @return the value of the attribute
-   *  @throw AttributesNotFoundException if the attributes doesn't exist. */
+   *  @exception AttributesNotFoundException if the attributes doesn't exist. */
   public String get(String attribute) throws AttributeNotFoundException
     {
     if(content.containsKey(attribute))
@@ -174,7 +174,7 @@ public class Attributes implements marauroa.net.Serializable
 	
   /** This methods remove the attribute from the container
    *  @param attribute the attribute we want to remove
-   *  @throw AttributesNotFoundException if the attributes doesn't exist. */
+   *  @exception AttributesNotFoundException if the attributes doesn't exist. */
   public void remove(String attribute) throws AttributeNotFoundException
     {
     if(content.containsKey(attribute))

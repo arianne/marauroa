@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.6 2004/05/31 07:26:22 root777 Exp $ */
+/* $Id: Transaction.java,v 1.7 2004/05/31 08:11:18 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,8 +13,15 @@
 
 package marauroa.game;
 
+/**
+ * This class represents a transaction which can be used to retrieve/store/change
+ * in PlayerDatabase. Different PlayerDatabase implementaions may requiere different
+ * implementations of this class. This dummy implementation can only be used with 
+ * MemoryPlayerDatabase(which does not support transactions anyway).  
+ * JDBCPlayerDatabase needs an instance of JDBCTransaction in order to work properly
+ */
 public class Transaction
-  {
+  {  
   static public class TransactionException extends Exception
     {
     public TransactionException(String msg)
@@ -22,11 +29,18 @@ public class Transaction
       super(msg);
       }
     };
-    
+   
+  /**
+   * commits the changes made to backstore.
+   * @exception TransactionException if the underlaying backstore throws an Exception
+   */
   public void commit() throws TransactionException
     {
     }
-  
+
+  /**
+   * makes previous changes to backstore invalid
+   */
   public void rollback()
     {
     }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.53 2004/05/19 16:38:41 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.54 2004/05/31 08:12:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,7 +51,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.
    *  @param action the action to execute
-   *  @returns the action status, that can be Success, Fail or incomplete, please 
+   *  @return the action status, that can be Success, Fail or incomplete, please 
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {

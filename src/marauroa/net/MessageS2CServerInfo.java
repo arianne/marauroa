@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.3 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.4 2004/05/31 08:10:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,11 +28,10 @@ public class MessageS2CServerInfo extends Message
     type=TYPE_S2C_SERVERINFO;
     }
 
-  /** Constructor with a TCP/IP source/destination of the message and the name
-   *  of the choosen character.
+  /** Constructor with a TCP/IP source/destination of the message 
+   * and the content.
    *  @param source The TCP/IP address associated to this message
    *  @param contents the list of strings to describe the server.
-   *  @see marauroa.net.MessageS2CCharacters
    */
   public MessageS2CServerInfo(InetSocketAddress source,String[] contents)
     {    

@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.14 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.15 2004/05/31 08:10:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,7 +85,7 @@ public class Message implements marauroa.net.Serializable
     }
   
   /** Returns the clientID of the Message.
-   @returns the ClientID */
+   @return the ClientID */
   public int getClientID()
     {
     return clientid;
@@ -97,7 +97,7 @@ public class Message implements marauroa.net.Serializable
     }
 
   /** Serialize the object into an ObjectOutput 
-   *  @throws IOException if the serializations fails 
+   *  @exception IOException if the serializations fails 
    */
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
@@ -108,8 +108,8 @@ public class Message implements marauroa.net.Serializable
     }
     
   /** Serialize the object from an ObjectInput 
-   *  @throws IOException if the serializations fails 
-   *  @throws java.lang.ClassNotFoundException if the serialized class doesn't exist.
+   *  @exception IOException if the serializations fails 
+   *  @exception java.lang.ClassNotFoundException if the serialized class doesn't exist.
    */
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {

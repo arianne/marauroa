@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.44 2004/05/27 12:25:02 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.45 2004/05/31 08:11:17 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -147,7 +147,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method returns the lis of character that the player pointed by username has.
    *  @param username the name of the player from which we are requesting the list of characters.
    *  @return an array of String with the characters
-   *  @throw PlayerNotFoundException if that player does not exists. */
+   *  @exception PlayerNotFoundException if that player does not exists. */
   public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getCharacterList",">");
@@ -197,7 +197,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method add the player to database with username and password as identificator.
    *  @param username is the name of the player
    *  @param password is a string used to verify access.
-   *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
+   *  @exception PlayerAlreadyAddedExceptio if the player is already in database */
   public void addPlayer(Transaction trans, String username, String password, String email) throws PlayerAlreadyAddedException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addPlayer",">");
@@ -253,7 +253,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   /** This method remove the player with usernae from database.
    *  @param username is the name of the player
-   *  @throws PlayerNotFoundException if the player doesn't exist in database. */
+   *  @exception PlayerNotFoundException if the player doesn't exist in database. */
   public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::removePlayer",">");
@@ -295,8 +295,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method removes a character asociated with a player.
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player owns.
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
-   *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database.
+   *  @exception CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
   public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::removeCharacter",">");
@@ -428,7 +428,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method returns the list of Login events as a array of Strings
    *  @param username is the name of the player
    *  @return an array of String containing the login events.
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database. */
   public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getLoginEvent",">");
@@ -484,7 +484,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param character is the name of the character
    *  @return true if player has the character or false if it hasn't
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database. */
   public boolean hasCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::hasCharacter",">");
@@ -534,7 +534,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param source the IP address of the player
    *  @param correctLogin true if the login has been correct.
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database. */
   public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent",">");
@@ -573,9 +573,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method add a character asociated to a player.
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player wants to add.
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
-   *  @throws CharacterAlreadyAddedException if that player-character exist in database.
-   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database.
+   *  @exception CharacterAlreadyAddedException if that player-character exist in database.
+   *  @exception GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public void addCharacter(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException, CharacterAlreadyAddedException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addCharacter",">");
@@ -661,9 +661,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player wants to add.
    *  @param object is the RPObject that represent this character in game.
    *
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
-   *  @throws CharacterNotFoundException  if the player-character doesn't exist in database.
-   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database.
+   *  @exception CharacterNotFoundException  if the player-character doesn't exist in database.
+   *  @exception GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public void setRPObject(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::setRPObject",">");
@@ -717,9 +717,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player wants to add.
    *  @return a RPObject that is the RPObject that represent this character in game.
    *
-   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
-   *  @throws CharacterNotFoundException  if the player-character doesn't exist in database.
-   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
+   *  @exception PlayerNotFoundException  if the player doesn't exist in database.
+   *  @exception CharacterNotFoundException  if the player-character doesn't exist in database.
+   *  @exception GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public RPObject getRPObject(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getRPObject",">");

@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.11 2004/05/26 21:18:58 root777 Exp $ */
+/* $Id: Configuration.java,v 1.12 2004/05/31 08:11:15 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,7 +100,7 @@ public class Configuration
     
   /** This method returns a String with the value of the property.
    *  @param property the property we want the value
-   *  @throw PropertyNotFound if the property is not found. */
+   *  @exception PropertyNotFound if the property is not found. */
   public String get(String property) throws PropertyNotFoundException
     {
     marauroad.trace("Configuration::get",">");
