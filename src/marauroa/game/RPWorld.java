@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.7 2004/11/25 17:03:20 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.8 2004/12/23 10:33:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,8 +61,12 @@ public class RPWorld
         IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
         zone.add(object);
-        
-        playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
+
+        /** NOTE: Document this hack */        
+        if(object.has("clientid"))
+          {
+          playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
+          }
         }        
       }
     catch(Exception e)
@@ -70,6 +74,33 @@ public class RPWorld
       throw new NoRPZoneException();  
       }
     }
+  
+  public RPObject get(RPObject.ID id) throws NoRPZoneException, RPObjectInvalidException  
+    {
+    try
+      {
+      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
+      return zone.get(id);
+      }
+    catch(Exception e)
+      {
+      throw new NoRPZoneException();  
+      }
+    }
+  
+  public void modify(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
+    {
+    try
+      {
+      IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
+      zone.modify(object);
+      }
+    catch(Exception e)
+      {
+      throw new NoRPZoneException();  
+      }
+    }
+  
     
   public void changeZone(IRPZone.ID oldzone, IRPZone.ID newzone, RPObject object)
     {

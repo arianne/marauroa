@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.21 2004/11/21 12:56:22 root777 Exp $ */
+/* $Id: PerceptionHandler.java,v 1.22 2004/12/23 10:34:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,7 +202,10 @@ public class PerceptionHandler
         {
         RPObject w_object=world.get(object.getID());
         if(!listener.onModifiedAdded(w_object,object))
-          {
+          {          
+          System.out.println("ApplyDifferences");
+          System.out.println(w_object);
+          System.out.println(object);
           w_object.applyDifferences(object,null);
           }
         }

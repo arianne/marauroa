@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.59 2004/11/28 20:35:13 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.60 2004/12/23 10:33:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -440,7 +440,8 @@ public final class GameServerManager extends Thread
       /* Enforce source_id and action_id*/
       RPObject.ID id=playerContainer.getRPObjectID(clientid);
 
-      action.put("source_id",id.getObjectID());
+      action.put("sourceid",id.getObjectID());
+      action.put("zoneid",id.getZoneID());
       if(action.has("type"))
         {
         stats.addActionsAdded(action.get("type"),clientid,action.toString());
@@ -586,6 +587,7 @@ public final class GameServerManager extends Thread
             {
             marauroad.trace("GameServerManager::processTransferACK","D","Transfering content "+content);
             MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
+            msgTransfer.setClientID(clientid);
             netMan.addMessage(msgTransfer);
             }
           else

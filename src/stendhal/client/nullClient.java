@@ -128,7 +128,8 @@ public class nullClient extends Thread
           }
         });
         
-      for(int i=0;i<10;i++)  
+      boolean cond=true;
+      while(cond)  
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -141,6 +142,15 @@ public class nullClient extends Thread
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
           handler.apply(msgPer,world_objects);
+          
+          RPAction action=new RPAction();
+          action.put("type","add");
+          action.put("a","1");
+          action.put("b","2");
+          
+          MessageC2SAction msgAction=new MessageC2SAction(msg.getAddress(),action);
+          msgAction.setClientID(clientid);
+          netMan.addMessage(msgAction);
           }
         else if(msg instanceof MessageS2CTransferREQ)        
           {
@@ -171,6 +181,10 @@ public class nullClient extends Thread
               
             System.out.println();
             }
+          }
+        else
+          {
+          System.out.println("Other Message: "+msg);
           }
         }
           

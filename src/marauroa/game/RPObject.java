@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.53 2004/11/26 21:15:48 root777 Exp $ */
+/* $Id: RPObject.java,v 1.54 2004/12/23 10:33:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -511,10 +511,10 @@ public class RPObject extends Attributes
       }
 		
     /** Constructor
-     *  @param attr an RPAction containing source_id attribute */
+     *  @param attr an RPAction containing sourceid attribute */
     public ID(RPAction attr) throws AttributeNotFoundException
       {
-      id=attr.getInt("source_id");
+      id=attr.getInt("sourceid");
       zoneid=attr.get("zoneid");
       }
 
@@ -543,7 +543,7 @@ public class RPObject extends Attributes
       {
       if(anotherid!=null)
         {
-        return (id==((RPObject.ID)anotherid).id && zoneid==((RPObject.ID)anotherid).zoneid);
+        return (id==((RPObject.ID)anotherid).id && zoneid.equals(((RPObject.ID)anotherid).zoneid));
         }
       else
         {
@@ -554,7 +554,7 @@ public class RPObject extends Attributes
     /** We need it for HashMap */
     public int hashCode()
       {
-      return id;
+      return id*zoneid.hashCode();
       }
 		
     /** This method returns a String that represent the object

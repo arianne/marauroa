@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.22 2004/11/28 20:35:29 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.23 2004/12/23 10:33:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,7 +87,7 @@ public class Test_RPScheduler extends TestCase
       RPScheduler sched=new RPScheduler();
       RPAction action=new RPAction();
 
-      action.put("source_id",10);
+      action.put("sourceid",10);
       action.put("type","testing");
       action.put("zoneid","somewhere");
       sched.addRPAction(action);
