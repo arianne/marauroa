@@ -19,6 +19,16 @@ public class marauroad extends Thread
     try
       {
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+      
+      if(playerDatabase.hasPlayer("Test Player"))
+        {
+        playerDatabase.removePlayer("Test Player");
+        }
+
+      if(playerDatabase.hasPlayer("Another Test Player"))
+        {
+        playerDatabase.removePlayer("Another Test Player");
+        }
 
       playerDatabase.addPlayer("Test Player","Test Password");
       playerDatabase.addPlayer("Another Test Player","Test Password");
