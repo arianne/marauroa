@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.3 2003/12/12 18:31:47 arianne_rpg Exp $ */
+/* $Id: Item.java,v 1.1 2003/12/12 18:31:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,49 +15,14 @@ package the1001.objects;
 import marauroa.game.*;
 import java.util.*;
 
-public class Gladiator extends RPObject
+public class Item extends RPObject
   {
-  private static String[] randomNames=
-    {
-    "Rirg",
-    "Rool",
-    "Bark",
-    "Prort",
-    "Bogdush",
-    "Vugor",
-    "Giurk",
-    "Erunak",
-    "Gaol",
-    "Vrodush",
-    "Prashnak",
-    "Vugor",
-    "Priurk",
-    "Pradash",
-    "Gudish",
-    "Biol",
-    "Vidash"
-    };
-  
-  private static Random random=new Random();
-  
-  public Gladiator(RPObject.ID id) throws SlotAlreadyAddedException
+  public Item(RPObject.ID id,String type)
     {
     put("object_id",id.getObjectID());
-    put("type","gladiator");
-    put("name",randomNames[random.nextInt()%randomNames.length]);
-	put("rp_size",5);
-	put("rp_breath",5);
-	put("rp_health",5);
-	put("rp_fame",0);
-	put("_strengh",5);
-	put("_speed",5);
-	put("_attack",5);
-	put("_defend",5);
-	put("_evasion",5);
-	put("num_victory",0);
-	put("num_defeat",0);    
-	
-	this.addSlot(new RPSlot("l_hand"));
-	this.addSlot(new RPSlot("r_hand"));
+    put("type",type);
+	put("rp_defend",5);
+	put("rp_attack",5);
+	put("price","30");
     }
   }

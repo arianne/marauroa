@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.3 2003/12/12 17:50:21 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.4 2003/12/12 18:31:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,15 +17,17 @@ import marauroa.*;
 
 public class the1001RPZone extends MarauroaRPZone
   {
+  RPObject heroesHouse;
+  
   public the1001RPZone()
     {
     marauroad.trace("the1001RPZone::the1001RPZone",">");
     
     try
       {
-      RPObject HeroesHouse=super.create();
-      HeroesHouse.put("type","shop");
-      HeroesHouse.put("name","Heroes' House");
+      heroesHouse=super.create();
+      heroesHouse.put("type","shop");
+      heroesHouse.put("name","Heroes' House");
     
       RPSlot gladiators=new RPSlot("gladiators");    
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
@@ -33,9 +35,15 @@ public class the1001RPZone extends MarauroaRPZone
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-      HeroesHouse.addSlot(gladiators);
-
-      HeroesHouse.addSlot(new RPSlot("gladiators"));
+      heroesHouse.addSlot(gladiators);
+      
+      RPSlot items=new RPSlot("items");
+      items.add(new Item(new RPObject.ID(super.create()),"sword"));
+      items.add(new Item(new RPObject.ID(super.create()),"shield"));
+      heroesHouse.addSlot(items);
+      
+      /* Add to zone */
+      add(heroesHouse);      
       }
     catch(Exception e)
       {
@@ -46,6 +54,11 @@ public class the1001RPZone extends MarauroaRPZone
       {
       marauroad.trace("the1001RPZone::the1001RPZone","<");
       }
+    }
+    
+  public RPObject getHeroesHouse()
+    {
+    return heroesHouse;
     }
   }
   

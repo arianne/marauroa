@@ -243,6 +243,7 @@ available. If you buy a gladiator it will be placed at the gladiator slot of you
 player and whatever other thing at the backpack container.
 
 Attributes
+	item_type
 	shop_item
 	
 

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.14 2003/12/12 16:20:56 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.15 2003/12/12 18:31:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,16 +25,16 @@ import marauroa.game.RPObject;
 public class marauroad extends Thread
   {
   private static marauroad marauroa;
-	private static Date timestamp;
-	private static SimpleDateFormat formatter;
+  private static Date timestamp;
+  private static SimpleDateFormat formatter;
 	
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
   
-	static
-	{
-		timestamp = new Date();
-		formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+  static
+    {
+	timestamp=new Date();
+	formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
 	
   private void setTestDatabase()
@@ -61,16 +61,19 @@ public class marauroad extends Thread
       RPObject SonGoku=new RPObject();
       SonGoku.put("object_id","1");
       SonGoku.put("name","Son Goku");
+      SonGoku.put("type","character");
       playerDatabase.addCharacter("Test Player", "Son Goku",SonGoku);
 
       RPObject MrBean=new RPObject();
       MrBean.put("object_id","2");
       MrBean.put("name","Mr Bean");
+      MrBean.put("type","character");
       playerDatabase.addCharacter("Another Test Player", "MrBean",MrBean);
       
       RPObject DrCoreDump=new RPObject();
       DrCoreDump.put("object_id","3");
       DrCoreDump.put("name","Dr CoreDump");
+      DrCoreDump.put("type","character");
       playerDatabase.addCharacter("Test Player", "Dr CoreDump",DrCoreDump);
       }
     catch(Exception e)
