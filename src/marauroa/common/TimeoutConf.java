@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.1 2005/01/23 21:00:42 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.2 2005/01/28 20:01:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.common;
 public class TimeoutConf
   {
   /** This indicate when we stop to wait on the socket. The lower the slower. */
-  final public static int SOCKET_TIMEOUT=100;
+  final public static int SOCKET_TIMEOUT=10;
   
   /** This indicate how many time we wait for a message to arrive. The lower the slower. */
   final public static int GAMESERVER_MESSAGE_GET_TIMEOUT=1000;
