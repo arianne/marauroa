@@ -56,8 +56,6 @@ They also have a set of Skills:
 	Determine how good you are absorbing hits.
 - Evasion skill
 	Determine your skill to avoid being hitted.
-- Movement skill
-	Determine how fast you can move.
 	
 With the fame you have earnt you can buy new items and gladiators.
 The available items are:
@@ -88,9 +86,10 @@ RPObject		Player
 				  Helm
 				  Shield
 				  Armor
-				  Weapon
+				  Sword
+				  Spear
 				Arena
-				Heroes House
+				Heroes' House
 
 RPAction		Join Arena
 				Fight 
@@ -103,6 +102,7 @@ RPAction		Join Arena
 				AwardFame
 				Talk
 				Buy
+				Sell
 				Retire
 				Train
 				
@@ -111,4 +111,66 @@ Description of each element
 
 Player
 We need to have something to represent users in the virtual world, and we are 
-going to use an invisible avatar, that is a player.
+going to use an invisible avatar, that is a player. As player it has no just a
+slot name "gladiators", that contains the gladiators that the player owns.
+Also the player will have a name to represent him/her.
+
+Attributes
+	name
+Slots
+	gladiators
+	backpack
+		
+The backpack is the place for storing all the gladiator items that are not going
+to be used by the moment.
+		
+
+Gladiator
+This is the character that fights and die on the Arena, for the fame and glory of
+players. It will have all the attributes and skill posted above so:
+
+Attributes
+	rp_strengh
+	rp_speed
+	rp_size
+	rp_breath
+	rp_fame
+	skill_attack
+	skill_defend
+	skill_evasion
+Slots
+	l_hand
+	r_hand
+	head
+	torso
+
+In the slots the gladiator will store the weapons and the items.		
+
+
+Helm, Shield & Armor
+It is a piece of leather, wood or metal for protecting head and the whole body by 
+blocking hits. It increase a lot the defend skill of the character but
+it also decrease a lot the evasion skill and the speed attribute
+
+Attributes
+	rp_defend	
+
+
+Sword & Spear
+It is a piece of metal that is used to hit the rival. These items will determine
+the damage done to the rival and it is heavily modified by strengh, breath and 
+attack attributes. It will affects breath, the more weight, the worse.
+
+Attributes
+	rp_damage
+	rp_weight
+
+
+Arena
+Every player in 1001 Gladiators is in the Arena. So in fact this RPObject does not
+exist and it is our World
+
+
+Heroes' House
+It is a single object that contains all the heroes that have been retired. This 
+object has also the fact of create new Gladiators and Items on demand.
