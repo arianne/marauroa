@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.29 2004/04/25 14:26:46 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.30 2004/04/26 12:50:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,7 +126,7 @@ public class The1001Bot
                 if(previous_timestamp+1!=perception.getPerceptionTimestamp())
                 {
                   marauroad.trace("The1001Bot::messageLoop","D","We are out of sync. Waiting for sync perception");
-                  marauroad.trace("The1001Bot::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
+                  marauroad.trace("The1001Bot::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getPerceptionTimestamp());
                   synced=false;
                   /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }
