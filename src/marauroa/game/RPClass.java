@@ -11,14 +11,13 @@ public class RPClass implements Serializable
   
   /** Type **/
   final public static byte STRING=1;
-  final public static byte INT=2;
-  final public static byte SHORT=3;
-  final public static byte BYTE=4;  
-  final public static byte FLAG=5;
-
-  private String name;
-  private Map attributes;
+  final public static byte SHORT_STRING=2;
   
+  final public static byte INT=3;
+  final public static byte SHORT=4;
+  final public static byte BYTE=5;  
+  final public static byte FLAG=6;
+
   static public class SyntaxException extends java.io.IOException
     {
     public SyntaxException()
@@ -86,6 +85,10 @@ public class RPClass implements Serializable
     {
     rpClassList=new HashMap();
     }
+
+  private String name;
+  private RPClass parent;  
+  private Map attributes;  
   
   public RPClass()
     {    

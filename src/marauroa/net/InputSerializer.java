@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.8 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.9 2004/06/15 18:28:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,7 +82,35 @@ public class InputSerializer
       }
     return buffer;
     }
-	
+
+  /** This method read a byte array from the Serializer
+   @return the byte array serialized
+   @throws java.io.IOException if there is an IO error
+   @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */
+  public byte[] readShortByteArray() throws IOException, java.lang.ClassNotFoundException
+    {
+    int size=readByte();
+        
+    if(size>TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Ilegal request of an array of "+size+" size");
+      }
+        
+    byte[] buffer=new byte[size];
+    int bytes_read_total = 0;
+    int bytes_read = 0;
+
+    while((bytes_read_total<size)&&(bytes_read=in.read(buffer,bytes_read_total,size-bytes_read_total))!=-1)
+      {
+      bytes_read_total+=bytes_read; 
+      }
+    if(bytes_read_total!=size)
+      {
+      throw new IOException("Declared array size=" +size+" is not equal to actually read bytes count("+bytes_read_total+")!");
+      }
+    return buffer;
+    }
+    
   /** This method read a short from the Serializer
    @return the short serialized
    @throws java.io.IOException if there is an IO error
@@ -148,7 +176,12 @@ public class InputSerializer
     {
     return new String(readByteArray(),"UTF-8");
     }
-	
+
+  public String readShortString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
+    {
+    return new String(readShortByteArray(),"UTF-8");
+    }
+    
   /** This method read a String array from the Serializer
    @return the String array serialized
    @throws java.io.IOException if there is an IO error

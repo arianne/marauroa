@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.5 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.6 2004/06/15 18:28:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,6 +49,17 @@ public class OutputSerializer
     out.write(a);
     }
 
+  public void writeShort(byte[] a) throws IOException
+    {
+    if(a.length>Byte.MAX_VALUE)
+      {
+      throw new IOException();
+      }
+      
+    write((byte)a.length);
+    out.write(a);
+    }
+
   /** Add the short to the serializer
    *  @param a the short to serialize */
   public void write(short a) throws IOException
@@ -82,6 +93,11 @@ public class OutputSerializer
   public void write(String a) throws IOException,UnsupportedEncodingException
     {
     write(a.getBytes("UTF-8"));
+    }
+
+  public void writeShort(String a) throws IOException,UnsupportedEncodingException
+    {
+    writeShort(a.getBytes("UTF-8"));
     }
 
   /** Add the String array to the serializer, using UTF-8 encoding

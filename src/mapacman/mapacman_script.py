@@ -132,6 +132,7 @@ class RealPythonRP(PythonRP):
     def createRPClasses(self):
         # TODO: Refactor this once you add RPClass heritance
         STRING=RPClass.STRING
+        SHORT_STRING=RPClass.STRING
         INT=RPClass.INT
         SHORT=RPClass.SHORT
         BYTE=RPClass.BYTE
@@ -139,20 +140,20 @@ class RealPythonRP(PythonRP):
         HIDDEN=RPClass.HIDDEN
         
         objclass=RPClass("player")
-        objclass.add("name",STRING)
+        objclass.add("name",SHORT_STRING)
         objclass.add("x",BYTE)
         objclass.add("y",BYTE)
-        objclass.add("dir",STRING)
+        objclass.add("dir",SHORT_STRING)
         objclass.add("score",INT)
         objclass.add("super",BYTE)
         objclass.add("!vdir",STRING,HIDDEN)
         objclass.add("!hdir",STRING,HIDDEN)
         
         objclass=RPClass("ghost")
-        objclass.add("name",STRING)
+        objclass.add("name",SHORT_STRING)
         objclass.add("x",BYTE)
         objclass.add("y",BYTE)
-        objclass.add("dir",STRING)
+        objclass.add("dir",SHORT_STRING)
         objclass.add("score",INT)
         objclass.add("!vdir",STRING,HIDDEN)
         objclass.add("!hdir",STRING,HIDDEN)
@@ -167,14 +168,12 @@ class RealPythonRP(PythonRP):
         objclass=RPClass("ball")
         objclass.add("x",BYTE)
         objclass.add("y",BYTE)
-        objclass.add("dir",STRING)
         objclass.add("!score",INT,HIDDEN)
         objclass.add("!respawn",INT,HIDDEN)
         
         objclass=RPClass("superball")
         objclass.add("x",BYTE)
         objclass.add("y",BYTE)
-        objclass.add("dir",STRING)
         objclass.add("!score",INT,HIDDEN)
         objclass.add("!respawn",INT,HIDDEN)
         objclass.add("!timeout",INT,HIDDEN)
