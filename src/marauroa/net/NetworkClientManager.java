@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.8 2003/12/08 23:10:02 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.9 2003/12/08 23:40:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,7 +116,7 @@ public class NetworkClientManager
         byte total=data[0];
         byte position=data[1];
         byte signature=data[2];
-        System.out.println("NetworkClientManager: receive multipart message("+signature+"): "+position+1+" of "+total);
+        System.out.println("NetworkClientManager: receive multipart message("+signature+"): "+(position+1)+" of "+total);
 
         if(!pendingPackets.containsKey(new Byte(signature)))
           {
