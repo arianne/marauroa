@@ -138,8 +138,13 @@ class RealPythonRP(PythonRP):
         BYTE=RPClass.BYTE
         FLAG=RPClass.FLAG
         HIDDEN=RPClass.HIDDEN
+
+        objclass=RPClass("position")
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
         
         objclass=RPClass("player")
+        objclass.isA("position")
         objclass.add("name",SHORT_STRING)
         objclass.add("x",BYTE)
         objclass.add("y",BYTE)
@@ -150,32 +155,21 @@ class RealPythonRP(PythonRP):
         objclass.add("!hdir",STRING,HIDDEN)
         
         objclass=RPClass("ghost")
-        objclass.add("name",SHORT_STRING)
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
-        objclass.add("dir",SHORT_STRING)
-        objclass.add("score",INT)
-        objclass.add("!vdir",STRING,HIDDEN)
-        objclass.add("!hdir",STRING,HIDDEN)
+        objclass.isA("player")
         objclass.add("!target",INT,HIDDEN)
         objclass.add("!decision",INT,HIDDEN)
         objclass.add("?kill",FLAG)        
         
         objclass=RPClass("block")
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
+        objclass.isA("position")
 
         objclass=RPClass("ball")
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
+        objclass.isA("position")
         objclass.add("!score",INT,HIDDEN)
         objclass.add("!respawn",INT,HIDDEN)
         
         objclass=RPClass("superball")
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
-        objclass.add("!score",INT,HIDDEN)
-        objclass.add("!respawn",INT,HIDDEN)
+        objclass.isA("ball")
         objclass.add("!timeout",INT,HIDDEN)
         
     def getZone(self):
