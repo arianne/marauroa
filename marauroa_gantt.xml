@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ganttproject.sourceforge.net>
 
-<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/12/2003" view-zoom="3" version="1.9.10">
+<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/12/2003" view-zoom="4" version="1.9.10">
     <description>
         Marauroa a an online development project aimed at create a open source multiplayer online framework.
     </description>
@@ -113,46 +113,53 @@
             <depend id="109" type="2"/>
             <depend id="163" type="2"/>
         </task>
-        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="30" complete="100" priority="1">
+        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="28" complete="100" priority="1">
             <depend id="110" type="2"/>
             <depend id="157" type="3"/>
         </task>
         <task id="109" name="Document 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="12" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="157" name="Test case for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="20/1/2004" duration="10" complete="100" priority="1">
+        <task id="157" name="Test case for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="22/1/2004" duration="6" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="163" name="Create client for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="20" complete="70" priority="1">
+        <task id="163" name="Create client for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="20" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="184" name="Port Marauroa to C++: ariannexp" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/1/2004" duration="12" complete="100" priority="1">
             <depend id="185" type="2"/>
         </task>
-        <task id="185" name="Create a Blitz 3D client for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="14/1/2004" duration="13" complete="45" priority="1">
+        <task id="185" name="Create a Blitz 3D client for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="14/1/2004" duration="13" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="110" name="Release Marauroa 0.20" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="30/1/2004" duration="3" complete="0" priority="1">
+        <task id="110" name="Release Marauroa 0.20" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="28/1/2004" duration="8" complete="0" priority="1">
             <depend id="159" type="2"/>
             <depend id="160" type="2"/>
             <depend id="179" type="2"/>
+            <depend id="206" type="2"/>
         </task>
-        <task id="159" name="Add Equip and Buy actions" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/2/2004" duration="7" complete="0" priority="1">
+        <task id="205" name="Fix bugs at Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/1/2004" duration="6" complete="14" priority="1">
+            <depend id="206" type="2"/>
+        </task>
+        <task id="206" name="Release Marauroa 0.21" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="5/2/2004" duration="3" complete="0" priority="1">
             <depend id="161" type="2"/>
         </task>
-        <task id="160" name="Add Lua support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/2/2004" duration="10" complete="0" priority="1">
+        <task id="159" name="Add Equip and Buy actions" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="5/2/2004" duration="7" complete="0" priority="1">
             <depend id="161" type="2"/>
         </task>
-        <task id="161" name="Release Marauroa 0.21" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="12/2/2004" duration="3" complete="0" priority="1">
+        <task id="160" name="Add Lua support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="5/2/2004" duration="10" complete="0" priority="1">
+            <depend id="161" type="2"/>
+        </task>
+        <task id="161" name="Release Marauroa 0.22" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="15/2/2004" duration="3" complete="0" priority="1">
             <depend id="162" type="2"/>
         </task>
-        <task id="162" name="Rewrite 1001 using Lua" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/2/2004" duration="15" complete="0" priority="1">
+        <task id="162" name="Rewrite 1001 using Lua" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="18/2/2004" duration="15" complete="0" priority="1">
             <depend id="164" type="2"/>
         </task>
         <task id="179" name="Develop AI Bot for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/2/2004" duration="12" complete="0" priority="1">
             <depend id="164" type="2"/>
         </task>
-        <task id="164" name="Release Marauroa 0.25" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="1/3/2004" duration="3" complete="0" priority="1"/>
+        <task id="164" name="Release Marauroa 0.25" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="4/3/2004" duration="3" complete="0" priority="1"/>
     </tasks>
 
     <resources>

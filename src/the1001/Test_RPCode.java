@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.23 2004/01/27 15:51:14 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.24 2004/01/27 16:39:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,7 +125,7 @@ public class Test_RPCode extends TestCase
       
       status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertEquals(gladiator.get(RPCode.var_combat_mode),RPCode.var_rock);
+      assertEquals(gladiator.get(RPCode.var_hidden_combat_mode),RPCode.var_rock);
       }
     catch(Exception e)
       {
