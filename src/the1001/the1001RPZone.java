@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.12 2004/01/30 18:09:54 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.13 2004/02/06 21:38:32 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,77 +12,131 @@
  ***************************************************************************/
 package the1001;
 
-import marauroa.game.*;
-import marauroa.*;
-import the1001.objects.*;
+import marauroa.game.MarauroaRPZone;
+import marauroa.game.RPObject;
+import marauroa.game.RPSlot;
+import marauroa.marauroad;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class the1001RPZone extends MarauroaRPZone
-  {
+{
   private RPObject heroesHouse;
   private RPObject arena;
   
   public the1001RPZone()
-    {
-    marauroad.trace("the1001RPZone::the1001RPZone",">");
-    
-    try
-      {
-//      heroesHouse=super.create();
-//      heroesHouse.put(RPCode.var_type,"shop");
-//      heroesHouse.put(RPCode.var_name,"Heroes' House");
-//    
-//      RPSlot gladiators=new RPSlot(RPCode.var_gladiators);    
-//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-//      heroesHouse.addSlot(gladiators);
-//      
-//      RPSlot items=new RPSlot(RPCode.var_items);
-//      items.add(new Item(new RPObject.ID(super.create()),"sword"));
-//      items.add(new Item(new RPObject.ID(super.create()),"shield"));
-//      heroesHouse.addSlot(items);      
-//      /* Add to zone */
-//      add(heroesHouse);      
-      
-      arena=super.create();
-      arena.put(RPCode.var_type,"arena");
-      arena.put(RPCode.var_name,"Arena");
-      arena.put(RPCode.var_status,RPCode.var_waiting);
-      arena.put(RPCode.var_waiting,0);
-      
-      arena.addSlot(new RPSlot(RPCode.var_gladiators));      
-      /* Add to zone */
-      add(arena);
-      }
-    catch(Exception e)
-      {
-      marauroad.trace("the1001RPZone::the1001RPZone","!","Can't initialize world: "+e.getMessage());
-      e.printStackTrace(System.out);
-      System.exit(-1);      
-      }
-    finally
-      {
-      marauroad.trace("the1001RPZone::the1001RPZone","<");
-      }
-    }
-    
+	{
+		marauroad.trace("the1001RPZone::the1001RPZone",">");
+		
+		try
+		{
+			//      heroesHouse=super.create();
+			//      heroesHouse.put(RPCode.var_type,"shop");
+			//      heroesHouse.put(RPCode.var_name,"Heroes' House");
+			//
+			//      RPSlot gladiators=new RPSlot(RPCode.var_gladiators);
+			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			//      heroesHouse.addSlot(gladiators);
+			//
+			//      RPSlot items=new RPSlot(RPCode.var_items);
+			//      items.add(new Item(new RPObject.ID(super.create()),"sword"));
+			//      items.add(new Item(new RPObject.ID(super.create()),"shield"));
+			//      heroesHouse.addSlot(items);
+			//      /* Add to zone */
+			//      add(heroesHouse);
+			
+			arena=super.create();
+			arena.put(RPCode.var_type,"arena");
+			arena.put(RPCode.var_name,"Arena");
+			arena.put(RPCode.var_status,RPCode.var_waiting);
+			arena.put(RPCode.var_waiting,0);
+			
+			arena.addSlot(new RPSlot(RPCode.var_gladiators));
+			/* Add to zone */
+			add(arena);
+		}
+		catch(Exception e)
+		{
+			marauroad.trace("the1001RPZone::the1001RPZone","!","Can't initialize world: "+e.getMessage());
+			e.printStackTrace(System.out);
+			System.exit(-1);
+		}
+		finally
+		{
+			marauroad.trace("the1001RPZone::the1001RPZone","<");
+		}
+	}
+	
   public RPObject getHeroesHouse()
-    {
-    return heroesHouse;
-    }
-    
+	{
+		return heroesHouse;
+	}
+	
   public RPObject getArena()
-    {
-    return arena;
-    }    
-    
+	{
+		return arena;
+	}
+	
   public RPObject create(RPObject object)
-    {
-    /** TODO: Must copy the object and assign a new Object id 
-     *  It is used in the Buy action. */
-    return null;
-    }    
-  }
-  
+	{
+		/** TODO: Must copy the object and assign a new Object id
+		 *  It is used in the Buy action. */
+		return null;
+	}
+	
+	public Document toXML()
+	{
+		Document xml_doc = super.toXML();
+		Element zone_elem = xml_doc.getDocumentElement();
+		if(heroesHouse!=null)
+		{
+			Element heroes_house_elem = xml_doc.createElement("heroes_house");
+			heroesHouse.toXML(heroes_house_elem);
+			zone_elem.appendChild(heroes_house_elem);
+		}
+		if(arena!=null)
+		{
+			Element arena_elem = xml_doc.createElement("arena");
+			arena.toXML(arena_elem);
+			zone_elem.appendChild(arena_elem);
+		}
+		return(xml_doc);
+	}
+	
+	public void fromXML(Document document)
+	{
+		if(document!=null)
+		{
+			super.fromXML(document);
+			Element zone_elem = document.getDocumentElement();
+			heroesHouse = null;
+			arena = null;
+			NodeList nl = zone_elem.getElementsByTagName("heroes_house");
+			if(nl.getLength()==1)
+			{
+				heroesHouse = new RPObject();
+				heroesHouse.fromXML((Element)nl.item(0));
+			}
+			else
+			{
+				marauroad.trace("MarauroaRPZone","D","No heroes house element in XML");
+			}
+			nl = zone_elem.getElementsByTagName("arena");
+			if(nl.getLength()==1)
+			{
+				arena = new RPObject();
+				arena.fromXML((Element)nl.item(0));
+			}
+			else
+			{
+				marauroad.trace("MarauroaRPZone","D","No arena element in XML");
+			}
+		}
+	}
+}
+

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.17 2004/01/30 18:09:54 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.18 2004/02/06 21:38:45 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,138 +13,274 @@
 package marauroa.game;
 
 import java.util.*;
-import java.io.*;
-import marauroa.*;
+
+import java.io.File;
+import java.io.PrintStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import marauroa.marauroad;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import java.io.IOException;
+import org.xml.sax.SAXException;
 
 public class MarauroaRPZone implements RPZone
-  {
-  private HashMap objects;
-  private List listObjects;
+{
+  private Map objects;
   private Perception perception;
-
+	
   private static Random rand=new Random();
   
   public MarauroaRPZone()
-    {
-    rand.setSeed(new Date().getTime());
-    objects=new HashMap();
-    
-    listObjects=new LinkedList();
-    perception=new Perception(Perception.DELTA);
-    }
+	{
+		rand.setSeed(new Date().getTime());
+		objects=new LinkedHashMap();
+		perception=new Perception(Perception.DELTA);
+	}
   
   public void add(RPObject object) throws RPObjectInvalidException
-    {
-    try
-      {
-      RPObject.ID id=new RPObject.ID(object);
-      objects.put(id,object);
-      
-      listObjects.add(object);
-      modify(object);
-      }
-    catch(Attributes.AttributeNotFoundException e)
-      {
-      marauroad.trace("MarauroaRPZone::add","X",e.getMessage());
-      throw new RPObjectInvalidException(e.getAttribute());
-      }
-    }
+	{
+		try
+		{
+			RPObject.ID id=new RPObject.ID(object);
+			objects.put(id,object);
+			modify(object);
+		}
+		catch(Attributes.AttributeNotFoundException e)
+		{
+			marauroad.trace("MarauroaRPZone::add","X",e.getMessage());
+			throw new RPObjectInvalidException(e.getAttribute());
+		}
+	}
   
   public void modify(RPObject object)
-    {
-    perception.modified(object);
-    }
-
+	{
+		perception.modified(object);
+	}
+	
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
-    {
-    if(objects.containsKey(id))
-      {
-      RPObject object=(RPObject)objects.remove(id);
-      
-      listObjects.remove(object);
-      perception.removed(object);
-      
-      return object;
-      }
-    else
-      {
-      throw new RPObjectNotFoundException(id);
-      }
-    }
+	{
+		if(objects.containsKey(id))
+		{
+			RPObject object=(RPObject)objects.remove(id);
+			perception.removed(object);
+			return object;
+		}
+		else
+		{
+			throw new RPObjectNotFoundException(id);
+		}
+	}
   
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException
-    {
-    if(objects.containsKey(id))
-      {
-      return (RPObject)objects.get(id);
-      }
-    
-    throw new RPObjectNotFoundException(id);
-    }
+	{
+		if(objects.containsKey(id))
+		{
+			return (RPObject)objects.get(id);
+		}
+		
+		throw new RPObjectNotFoundException(id);
+	}
   
   public boolean has(RPObject.ID id)
-    {
-    if(objects.containsKey(id))
-      {
-      return true;
-      }
-    else
-      {
-      return false;
-      }
-    }
+	{
+		if(objects.containsKey(id))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
   
   public RPObject create()
-    {
-    RPObject.ID id=new RPObject.ID(rand.nextInt());
-    
-    while(has(id) || id.getObjectID()==-1)    
-      {
-      id=new RPObject.ID(rand.nextInt());
-      }
-     
-    return new RPObject(id);
-    }
-    
+	{
+		RPObject.ID id=new RPObject.ID(rand.nextInt());
+		
+		while(has(id) || id.getObjectID()==-1)
+		{
+			id=new RPObject.ID(rand.nextInt());
+		}
+		
+		return new RPObject(id);
+	}
+	
   public Iterator iterator()
-    {
-    return listObjects.iterator();
-    }
-
+	{
+		return objects.values().iterator();
+	}
+	
   public Perception getPerception(RPObject.ID id, byte type)
-    {
-    if(type==Perception.DELTA)
-      {
-      return perception;
-      }
-    else
-      {
-      Perception p=new Perception(Perception.TOTAL);
-      p.modifiedList=listObjects;
-      
-      return p;
-      }
-    }
-    
+	{
+		if(type==Perception.DELTA)
+		{
+			return perception;
+		}
+		else
+		{
+			Perception p=new Perception(Perception.TOTAL);
+			p.modifiedList=new ArrayList(objects.values());
+			
+			return p;
+		}
+	}
+	
   public long size()
-    {
-    return listObjects.size();
-    }
+	{
+		return objects.size();
+	}
   
   public void print(PrintStream out)
-    {
-    Iterator it=iterator();
-    
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      out.println(object);
-      }
-    }
+	{
+		Iterator it=iterator();
+		
+		while(it.hasNext())
+		{
+			RPObject object=(RPObject)it.next();
+			out.println(object);
+		}
+	}
   
-  public void nextTurn() 
-    {
-    perception=new Perception(Perception.DELTA);
-    }  
-  }
+  public void nextTurn()
+	{
+		perception=new Perception(Perception.DELTA);
+	}
+	
+	public Document toXML()
+	{
+		Document xml_doc = null;
+		try
+		{
+			xml_doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			Element zone_elem = xml_doc.createElement("rp_zone");
+			Element objects_elem = xml_doc.createElement("objects");
+			Iterator iter_obj = iterator();
+			while(iter_obj.hasNext())
+			{
+				Element rp_obj_xml = xml_doc.createElement("rp_object");
+				RPObject rp_object = (RPObject)iter_obj.next();
+				rp_object.toXML(rp_obj_xml);
+				objects_elem.appendChild(rp_obj_xml);
+			}
+			zone_elem.appendChild(objects_elem);
+			if(perception!=null)
+			{
+				Element perc_elem = xml_doc.createElement("perception");
+				perception.toXML(perc_elem);
+				zone_elem.appendChild(perc_elem);
+			}
+			xml_doc.appendChild(zone_elem);
+		}
+		catch (ParserConfigurationException e)
+		{
+			e.printStackTrace();
+		}
+		return(xml_doc);
+	}
+	
+	public void fromXML(Document document)
+	{
+		if(document!=null)
+		{
+			Element zone_elem = document.getDocumentElement();
+			NodeList nl_objects = zone_elem.getElementsByTagName("objects");
+			if(nl_objects.getLength()==1)
+			{
+				Element elem_objects = (Element)nl_objects.item(0);
+				NodeList nl_rp_objects = elem_objects.getElementsByTagName("rp_object");
+				for (int i = 0; i < nl_rp_objects.getLength(); i++)
+				{
+					Element rp_obj_elem = (Element)nl_rp_objects.item(i);
+					RPObject rp_object = new RPObject();
+					rp_object.fromXML(rp_obj_elem);
+					try
+					{
+						add(rp_object);
+					}
+					catch (RPZone.RPObjectInvalidException e)
+					{
+						marauroad.trace("MarauroaRPZone","X",e.getMessage());
+					}
+				}
+			}
+			else
+			{
+				marauroad.trace("MarauroaRPZone","E","Wrong zone xml document - count of <objects> element is not 1");
+			}
+			NodeList nl_perceptions = zone_elem.getElementsByTagName("perception");
+			if(nl_perceptions.getLength()==1)
+			{
+				perception = new Perception((byte)0);
+				perception.fromXML((Element)nl_perceptions.item(0));
+			}
+			else
+			{
+				marauroad.trace("MarauroaRPZone","E","Wrong zone xml document - count of <perception> element is "+nl_perceptions.getLength());
+				perception = null;
+			}
+		}
+	}
+	
+	public void saveToFile(String file)
+	{
+		Document document = toXML();
+		try
+		{
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty("indent","yes");
+			try
+			{
+				DOMSource source = new DOMSource(document);
+				StreamResult result = new StreamResult(new File(file));
+				transformer.transform(source,result);
+			}
+			catch (TransformerException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		catch (TransformerFactoryConfigurationError e)
+		{
+			e.printStackTrace();
+		}
+		catch (TransformerConfigurationException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadFromFile(String file)
+	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try
+		{
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new File(file));
+			fromXML(document);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SAXException e)
+		{
+			e.printStackTrace();
+		}
+		catch (ParserConfigurationException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+}
 
