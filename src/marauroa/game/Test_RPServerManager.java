@@ -5,7 +5,7 @@ import marauroa.game.*;
 import marauroa.net.*;
 import marauroa.*;
 import java.io.*;
-
+import java.net.*;
 
 public class Test_RPServerManager extends TestCase
   {
@@ -14,8 +14,21 @@ public class Test_RPServerManager extends TestCase
     return new TestSuite(Test_RPServerManager.class);
 	}
 	
-  public void testRPServerManager()
-    {
-    fail();
+  public void testRPServerManager()  
+	{
+	marauroad.trace("Test_RPServerManager::testRPServerManager",">");
+	
+	try
+	  {
+	  RPServerManager rpMan=new RPServerManager(new NetworkServerManager());
+	  }
+	catch(Exception e)
+	  {
+	  fail(e.getMessage());
+	  }
+	finally
+	  {
+      marauroad.trace("Test_RPServerManager::testRPServerManager","<");
+	  }
     }
   }
