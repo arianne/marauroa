@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.34 2004/05/01 07:41:51 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.35 2004/05/04 16:24:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,44 +77,56 @@ public class The1001Bot
     continueGamePlay = true;
     PerceptionHandler handler=new PerceptionHandler(gm);
     Message msg;
+    int timeout_count = 0;
     while(continueGamePlay)
     {
       try
       {
         msg = null;
-        while(msg==null) msg=netMan.getMessage();
-        if(msg instanceof MessageS2CPerception)
-        {
-          MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
-          reply.setClientID(msg.getClientID());
-          netMan.addMessage(reply);
-          MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-          handler.apply(msgPer,gm.getAllObjects());
-        }
-        else if(msg instanceof MessageS2CLogoutACK)
-        {
-          loggedOut=true;
-          marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
-          try
+        msg=netMan.getMessage();
+	if(msg!=null)
+	{
+	  timeout_count = 0;
+          if(msg instanceof MessageS2CPerception)
           {
-            Thread.sleep(30000);
+            MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+            reply.setClientID(msg.getClientID());
+            netMan.addMessage(reply);
+            MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+            handler.apply(msgPer,gm.getAllObjects());
           }
-          catch (InterruptedException e)
+          else if(msg instanceof MessageS2CLogoutACK)
           {
+            loggedOut=true;
+            marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
+            try
+            {
+              Thread.sleep(30000);
+            }
+            catch (InterruptedException e)
+            {
+            }
+            System.exit(-1);
           }
-          System.exit(-1);
+          else if(msg instanceof MessageS2CActionACK)
+          {
+            MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
+            gm.actionAck(msg_act_ack);
+            marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
+          }
+          else
+          {
+            marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
+          }
         }
-        else if(msg instanceof MessageS2CActionACK)
-        {
-          MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
-          gm.actionAck(msg_act_ack);
-          marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
-        }
-        else
-        {
-          marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
-        }
-        
+	else
+	{
+	  timeout_count++;
+	  if(timeout_count>=100)
+	  {	    
+	    gm.onTimeout();
+	  }
+	}
       }
       catch (MessageFactory.InvalidVersionException e)
       {
