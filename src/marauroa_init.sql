@@ -74,3 +74,11 @@ create table if not exists statistics
   
   PRIMARY KEY(timedate)
   );
+  
+create table if not exists banlist
+  (
+    id integer auto_increment not null,
+    address char(15),
+    mask    char(15),
+    PRIMARY KEY(id)
+  );
