@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.20 2004/03/22 23:04:08 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.19 2004/03/22 22:53:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -767,7 +767,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       connInfo.put("password", props.get("jdbc_pwd"));
       connInfo.put("charSet", "UTF-8");
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-      conn.setAutoCommit(true);
+      conn.setAutoCommit(false);
       
       return conn;
     }
