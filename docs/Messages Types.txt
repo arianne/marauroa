@@ -24,7 +24,7 @@ Send Login
 				If Login is correct 
  			  	  Send LoginACK
 				else
-			    	  Send LoginNACK
+			      Send LoginNACK
 			  	  Finish
 
 				Send CharacterList
@@ -37,9 +37,11 @@ Send ChooseCharacter
 				  Finish
 
 --onTimer:
+				Send Perception
+
+--onGameStart:
 Send Map Hash
 					
-				Send Perception
 				Send Map
 
 --onEvent:
@@ -156,22 +158,21 @@ let its avatar in the game uncontrolled ( idle ).
 Message S2C Logout ACK
 ----------------------
 The Logout ACK Message is sent from server to client to notify the 
-client that the character has been choosen.
+client that the logout has been accepted.
 It has no params.
 
 
 Message S2C Logout NACK
 -----------------------
 The Logout NACK Message is sent from server to client to notify the 
-client that the character has not been choosen, and so it requiere from client
-that it send again a ChooseCharacter Message.
+client that the logout has not been accepted because something related to 
+the RP entity, for example, combat on the way.
 It has no params.
 
 Message C2S Action
 ------------------
 The Action message is sent from client to server to notify server about
 the willing of executing an action.
-
 The message is simply composed by a single action.
 
 
@@ -183,14 +184,25 @@ the RP, it just means that the action arrived the server.
 It has no params.
 
 
-
 Message S2C Perception
 ----------------------
+The Perception message is a message sent from server to client to nofity client 
+about changes in the objects that exist near it.
+The message is based on the idea explained in Delta perception document.
+
+The message is composed by:
+- A List of RPObject that contains modified object
+- A List of RPObject that contains deleted object
+
+Read the Delta perception algorithm to understand what it is for.
+
 
 Message C2S Map Hash
 --------------------
+(TODO)
 
 Message S2C Map
 ---------------
+(TODO)
 
 %% END %%

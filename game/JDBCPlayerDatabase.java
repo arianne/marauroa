@@ -79,7 +79,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       throw new NoDatabaseConfException();
       }
-      
+
+    /* TODO: Change for initDB() */      
+    /* NOTE: By now tests expect database to be empty. */
     reInitDB();
     }
   
@@ -625,13 +627,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       Statement stmt = connection.createStatement();
       
-      String query = "CREATE TABLE player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
+      String query = "CREATE TABLE IF NOT EXIST player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
       stmt.addBatch(query);
 
-      query = "CREATE TABLE characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(id,charname))";
+      query = "CREATE TABLE IF NOT EXIST characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(id,charname))";
       stmt.addBatch(query);
 
-      query = "CREATE TABLE loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
+      query = "CREATE TABLE IF NOT EXIST loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
       stmt.addBatch(query);
 
       int ret_array[] = stmt.executeBatch();
@@ -657,7 +659,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   public static void main(String argv[])
     {
     Properties props = new Properties();
-    props.put("jdbc_url","jdbc:mysql://mariamat/marauroa");
+    props.put("jdbc_url","jdbc:mysql://127.0.0.1/marauroa");
     props.put("jdbc_class","com.mysql.jdbc.Driver");
     props.put("jdbc_user","marauroa_dbuser");
     props.put("jdbc_pwd","marauroa_dbpwd");

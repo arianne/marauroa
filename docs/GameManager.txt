@@ -68,6 +68,7 @@ Process C2S ChooseCharacter ( STATE_LOGIN_COMPLETE )
   if exist in database character
     {
     add character to Player's PlayerEntry
+    add character to game
     reply S2C Choose Character ACK
     
     state = STATE_GAME_BEGIN
@@ -90,6 +91,8 @@ Process C2S Logout ( STATE_GAME_END )
     reply S2C Logout ACK
     state = NULL
     
+    store character in database
+    remove character from game
     delete PlayerEntry
     }
   else

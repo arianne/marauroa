@@ -6,4 +6,42 @@ Created: 2003/10/23
 status : planning
 
 %% BEGIN %%
+JDBC technology is an API that lets you access virtually any tabular data 
+source from the Java programming language. It provides cross-DBMS connectivity
+to a wide range of SQL databases, and now, with the new JDBC API, it also 
+provides access to other tabular data sources, such as spreadsheets or flat files.
+
+To configure Marauroa to work with a JDBC source we need to modify the 
+configuration of the JDBC Connection.
+
+So open marauroad.ini file and edit the next fields
+
+    jdbc_class=com.mysql.jdbc.Driver
+    jdbc_url=jdbc:mysql://localhost/marauroa
+    jdbc_user=marauroa_dbuser
+    jdbc_pwd=marauroa_dbpwd
+
+jdbc_class is the field that says what Driver to use. Please refer to your sofware
+manual to see the multiple options.
+
+jdbc_url points to the type and source of the information, for MySQL the string 
+must be as follow:
+	
+	jdbc:mysql://<hostname>[:<port>]/<database name>
+	
+jdbc_user is the username for the database and jdbc_pwd is the password for that 
+username in the database.
+
+Then simply save the changes and ready.
+
+
+Before using the application with the database, you need to create the database itself.
+So in case of MySQL just open MySQL and write:
+
+	create database marauroa;
+	grant all on marauroa.* to marauroa_dbuser@localhost identified by 'marauroa_dbpwd';
+	
+The rest of code is handled by the server itself, that will create the tables if they 
+don't exits.	
+    
 %% END %%
