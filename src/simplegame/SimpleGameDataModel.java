@@ -1,4 +1,4 @@
-/* $Id: SimpleGameDataModel.java,v 1.7 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: SimpleGameDataModel.java,v 1.8 2003/12/13 19:27:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,11 +95,9 @@ public class SimpleGameDataModel
     return(sb.toString());
   }
   
-  public int getWinner()
+  public int getWinnerID()
   {
     //TODO implement the win conditions check.
-    //it should return the byte value of the winner
-    //or -1 if none won
     return(-1);
   }
   

@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.22 2003/12/13 15:50:16 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.23 2003/12/13 19:27:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,8 +59,8 @@ public class SimpleGame
   private int ownCharacterID;
   private int otherCharacterID;
   private static Sequencer player;
-  
-  private boolean continuing = true;
+  private boolean continueMusikPlay;
+  private boolean continueGamePlay;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
@@ -86,7 +86,8 @@ public class SimpleGame
                       {
           public void windowClosing(WindowEvent e)
           {
-            System.exit(0);
+            continueMusikPlay = false;
+            continueGamePlay  = false;
           }
         });
   }
@@ -98,7 +99,8 @@ public class SimpleGame
   
   public void run()
   {
-    while(true)
+    continueGamePlay = true;
+    while(continueGamePlay)
     {
       if(netMan!=null)
       {
@@ -134,6 +136,23 @@ public class SimpleGame
                     int id = gb.getRPCharacterAt(k,l);
                     gdm.setRPCharacterAt(k,l,id);
                   }
+                }
+                int winner_id = gb.getWinnerID();
+                if(winner_id!=-1)
+                {
+                  String msg_1;
+                  if(winner_id==ownCharacterID)
+                  {
+                    msg_1 = "You won.";
+                  }
+                  else
+                  {
+                    msg_1 = "You lost.";
+                  }
+                  JOptionPane.showMessageDialog(marauroa,msg_1,msg_1,JOptionPane.INFORMATION_MESSAGE);
+                  continueGamePlay  = false;
+                  continueMusikPlay = false;
+                  SimpleGame.this.dispose();
                 }
               }
               catch (Exception e1)
@@ -390,11 +409,8 @@ public class SimpleGame
                 player.open();
                 player.setSequence(theSound);
                 player.addMetaEventListener(SimpleGame.this);
+                continueMusikPlay = true;
               }
-              //              else
-              //              {
-              //                player.stop();
-              //              }
               player.start();
               //player.close();
             }
@@ -421,7 +437,7 @@ public class SimpleGame
     {
       System.out.println("song ended");
       // Sequencer is done playing
-      if (continuing && player != null)
+      if (continueMusikPlay && player != null)
       {
         player.setTickPosition(0);
         playMidi();
@@ -430,6 +446,7 @@ public class SimpleGame
   }
   
 }
+
 
 
 

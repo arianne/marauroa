@@ -1,4 +1,4 @@
-/* $Id: GameBoard.java,v 1.5 2003/12/10 22:49:46 root777 Exp $ */
+/* $Id: GameBoard.java,v 1.6 2003/12/13 19:27:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package simplegame.objects;
 
 import marauroa.game.Attributes;
 import marauroa.game.RPObject;
+import marauroa.marauroad;
 import simplegame.SimpleGameDataModelIF;
 
 public class GameBoard
@@ -31,9 +32,16 @@ public class GameBoard
   {
     objectType=TYPE_GAME_BOARD;
     put("size",size);
+    //last player id
     put("l_id",-1);
+    //winner id
+    put("w_id",-1);
   }
   
+  /**
+   * returns the character id of the player who made the last move
+   * @return the character id of the last player or -1 if nobody has made a move
+   **/
   public int getLastPlayerID()
   {
     int ret = -1;
@@ -50,17 +58,16 @@ public class GameBoard
     return(ret);
   }
   
-  public int getSize()
-  {
-    return(getSize(this));
-  }
-  
-  public static int getSize(RPObject obj)
+  /**
+   * returns the winner id previously set by checkWinCondition
+   * @return the character id of the winner or -1
+   **/
+  public int getWinnerID()
   {
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(obj.get("size"));
+      ret = Integer.parseInt(get("w_id"));
     }
     catch (NumberFormatException e)
     {
@@ -71,6 +78,37 @@ public class GameBoard
     return(ret);
   }
   
+  /**
+   * returns the size of the board. currently should always return 3 :)
+   * @return the game board size
+   **/
+  public int getSize()
+  {
+    int ret = -1;
+    try
+    {
+      ret = Integer.parseInt(get("size"));
+    }
+    catch (NumberFormatException e)
+    {
+      ret = -1;
+    }
+    catch (Attributes.AttributeNotFoundException e)
+    {
+      ret = -1;
+    }
+    return(ret);
+  }
+  
+  
+  /**
+   * makes a move for character.
+   * sets the field with coordinates row,column assigned to the characterID
+   * does nothing if the field is already set.
+   * @param row the row
+   * @param column the column
+   * @param characterID - id to set into field(row,column)
+   **/
   public void setRPCharacterAt(int row, int column, int characterID)
   {
     try
@@ -84,17 +122,18 @@ public class GameBoard
     }
   }
   
-  public int getRPCharacterAt(int row, int column)
-  {
-    return getRPCharacterAt(this,row,column);
-  }
   
-  public static int getRPCharacterAt(RPObject obj,int row, int column)
+  /**
+   * @param row the row
+   * @param column the column
+   * @return
+   **/
+  public int getRPCharacterAt(int row, int column)
   {
     int id = -1;
     try
     {
-      id = Integer.parseInt(obj.get(row+"X"+column));
+      id = Integer.parseInt(get(row+"X"+column));
     }
     catch (NumberFormatException e)
     {
@@ -107,14 +146,146 @@ public class GameBoard
     return id;
   }
   
-  public int getWinner()
-  {
-    return -1;
-  }
-  
+  /**
+   * @see Interface SimpleGameDataModelIF
+   **/
   public void addGameUpdateListener(simplegame.SimpleGameDataModelIF.GameUpdateListener ul)
   {
     //no need to implement it
+  }
+  
+  
+  /**
+   * checks if someone already has won.
+   * @param gb GameBoard to look for a winner
+   * @return the id of the winner, or -1 if nobody wins
+   * @exception RemisException if nobody won and no more moves can be made
+   **/
+  public int checkWinCondition()
+  {
+    int winner = -1;
+    try
+    {
+      winner = checkRows();
+      if(winner==-1)
+      {
+        winner = checkColumns();
+      }
+      if(winner==-1)
+      {
+        winner = checkDiagonals();
+      }
+      if(winner!=-1)
+      {
+        put("w_id",winner);
+      }
+    }
+    finally
+    {
+      marauroad.trace("SimpleRPRuleProcessor::checkWinCondition","D","Winner is "+winner+"\n"+toString());
+    }
+    return(winner);
+  }
+  
+  public boolean hasFreeMoves()
+  {
+    int size = getSize();
+    boolean has_free_moves = true;
+    for (int i = 0; i < size && has_free_moves; i++)
+    {
+      for (int j = 0; j < size && has_free_moves; j++)
+      {
+        if(getRPCharacterAt(i,j)==-1)
+        {
+          has_free_moves = false;
+        }
+      }
+    }
+    return(has_free_moves);
+  }
+  
+  private int checkDiagonals()
+  {
+    int size = getSize();
+    int winner = -1;
+    boolean the_same = true;
+    int first = getRPCharacterAt(0,0);
+    if(first!=-1)
+    {
+      for (int i = 1; i < size && the_same; i++)
+      {
+        the_same = the_same && first == getRPCharacterAt(i,i);
+      }
+    }
+    if(the_same && first!=-1)
+    {
+      winner = first;
+    }
+    else
+    {
+      the_same = true;
+      first = getRPCharacterAt(0,size-1);
+      if(first!=-1)
+      {
+        for (int i = 1; i < size && the_same; i++)
+        {
+          the_same = the_same && first == getRPCharacterAt(i,size-i-1);
+        }
+        if(the_same)
+        {
+          winner = first;
+        }
+      }
+    }
+    return(winner);
+  }
+  
+  private int checkColumns()
+  {
+    int size = getSize();
+    int winner = -1;
+    for (int i = 0; i < size; i++)
+    {
+      int first = getRPCharacterAt(0,i);
+      if(first!=-1)
+      {
+        boolean the_same = true;
+        for (int j = 1; j < size && the_same; j++)
+        {
+          the_same = the_same && first == getRPCharacterAt(j,i);
+        }
+        if(the_same)
+        {
+          winner = first;
+          break;
+        }
+      }
+    }
+    return(winner);
+  }
+  
+  private int checkRows()
+  {
+    int size = getSize();
+    int winner = -1;
+    for (int i = 0; i < size; i++)
+    {
+      int first = getRPCharacterAt(i,0);
+      if(first!=-1)
+      {
+        boolean the_same = true;
+        for (int j = 1; j < size && the_same; j++)
+        {
+          the_same = the_same && first == getRPCharacterAt(i,j);
+        }
+        if(the_same)
+        {
+          winner = first;
+          break;
+        }
+      }
+    }
+    return(winner);
   }
   
   
@@ -140,5 +311,6 @@ public class GameBoard
     sb.append('\n');
     return(sb.toString());
   }
+  
 }
 
