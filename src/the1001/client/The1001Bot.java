@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.35 2004/05/04 16:24:37 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.36 2004/05/17 18:12:24 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,6 +125,13 @@ public class The1001Bot
 	  if(timeout_count>=100)
 	  {	    
 	    gm.onTimeout();
+	  }	 
+	  try
+	  {
+	    Thread.sleep(350);
+	  }
+	  catch(InterruptedException ie)
+	  {
 	  }
 	}
       }
@@ -222,7 +229,7 @@ public class The1001Bot
           marauroad.trace("The1001Bot::messageLoop","D","Timeout "+recieved+"...");
           try
           {
-            Thread.sleep(15);
+            Thread.sleep(350);
           }
           catch (InterruptedException e)
           {
@@ -300,7 +307,7 @@ public class The1001Bot
         marauroad.trace("The1001Bot::messageLoop","D","Timeout "+recieved+"...");
         try
         {
-          Thread.sleep(15);
+          Thread.sleep(350);
         }
         catch (InterruptedException e)
         {
