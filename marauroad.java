@@ -49,16 +49,16 @@ public class marauroad
 	
   public static void println(String text)
     {
-    //System.out.println(text);
+    System.out.println(text);
     }
 
   public static void println()
     {
-    //System.out.println();
+    System.out.println();
     }
   
   public static void report(String text)
     {
-    //System.out.println(text);
+    System.out.println(text);
     }
   }

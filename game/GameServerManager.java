@@ -112,6 +112,10 @@ public class GameServerManager extends Thread
       {
       marauroad.report(e.getMessage());
       }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      marauroad.report(e.getMessage());
+      }
     }
 
   private void processChooseCharacterEvent(MessageC2SChooseCharacter msg)
@@ -155,6 +159,10 @@ public class GameServerManager extends Thread
 	    }
       }
     catch(PlayerEntryContainer.NoSuchClientIDException e)      
+      {
+      marauroad.report(e.getMessage());
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.report(e.getMessage());
       }

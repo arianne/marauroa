@@ -29,6 +29,7 @@ public class RunTests
 	
 	suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
 	suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
+	suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
 
 	return suite;
 	}

@@ -8,21 +8,10 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\Test_PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\Test_Attributes.java" #[EndFile]
 #[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\Test_PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "C:\\j2sdk1.4.2\\src.zip!java\\net\\URLClassLoader.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\Attributes.java" #[EndFile]
 
 ! Start Breakpoint Structure
 

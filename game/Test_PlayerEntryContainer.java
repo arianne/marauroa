@@ -55,6 +55,7 @@ public class Test_PlayerEntryContainer extends TestCase
     try
       {     
       container.getUsername(randomClientID);
+      fail("Exception did not happened");
       }
     catch(PlayerEntryContainer.NoSuchClientIDException e)
       {
@@ -66,6 +67,7 @@ public class Test_PlayerEntryContainer extends TestCase
     try
       {     
       container.getState(randomClientID);
+      fail("Exception did not happened");
       }
     catch(PlayerEntryContainer.NoSuchClientIDException e)
       {
@@ -77,6 +79,7 @@ public class Test_PlayerEntryContainer extends TestCase
     try
       {     
       container.removePlayer(randomClientID);
+      fail("Exception did not happened");
       }
     catch(PlayerEntryContainer.NoSuchClientIDException e)
       {
@@ -88,6 +91,7 @@ public class Test_PlayerEntryContainer extends TestCase
     try
       {     
       container.setState(randomClientID,PlayerEntryContainer.STATE_NULL);
+      fail("Exception did not happened");
       }
     catch(PlayerEntryContainer.NoSuchClientIDException e)
       {

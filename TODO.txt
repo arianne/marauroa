@@ -37,4 +37,10 @@ Tasks to do:
 - Write document about error reporting.
 
 - Create an XML database.
+- Create an iterator for XML database
+
+- Add remove method for players and characters.
+- Add method to get latest logins.
+
+- Replace the PlayerDatabase class by an interface to allow future expansion.
   

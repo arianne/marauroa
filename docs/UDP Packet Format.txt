@@ -1,35 +1,36 @@
-<p>
-<b>Title  :</b> UDP Packet Format<br>
-<b>Info   :</b> Description of the internal structure of an UDP Packet for Marauroa<br>
-<b>Keyword:</b> UDP, packet, net, TCP/IP, client, Message, Protocol<br>
-<b>Author :</b> Miguel Angel Blanch Lardin<br>
-<b>Created:</b> 2003/08/26<br>
-<b>status :</b> planning<p>
+Title  : UDP Packet Format
+Info   : Description of the internal structure of an UDP Packet for Marauroa
+Keyword: UDP, packet, net, TCP/IP, client, Message, Protocol 
+Author : Miguel Angel Blanch Lardin
+Created: 2003/08/26
+status : planning
 
-It is based on Messages transmited using UDP Packets.<br>
+
+%% BEGIN %%
+
+It is based on Messages transmited using UDP Packets.
 Each message is selfcontained on a SINGLE UDP Packet, and there isn't any 
-mechanism to recovery from lost messages or repeated ones.<p>
+mechanism to recovery from lost messages or repeated ones.
 
-Each UDP Packet is composed of:<ul>
-<li>Protocol version ( 1 byte           )</li>
-<li>Type of Message  ( 1 byte           )</li>
-<li>Client ID        ( 2 bytes          )</li>
-<li>Rest of Message  ( up to 1496 bytes )</li>
-</ul>
+Each UDP Packet is composed of:
+- Protocol version ( 1 byte           )
+- Type of Message  ( 1 byte           )
+- Client ID        ( 2 bytes          )
+- Rest of Message  ( up to 1496 bytes )
 
-Messages are sent from server by simply serializing them.<br>
+Messages are sent from server by simply serializing them.
 So the message itself contains the protocol version, the type of message and
-the clientid.<p>
+the clientid.
 
-To recieve the message is a bit more complex.<br>
+To recieve the message is a bit more complex.
 We need to determine that we are running a compatible version of the protocol,
 once we have agreed that the protocol is compatible we read type of message 
 and we ask a MessageFactory ( "Java Design Patterns" ) to build an object of
-that type with the data.<br>
+that type with the data.
 Once the message is build we simply store it on a queue of incomming messages 
-waiting to be processed.<p>
+waiting to be processed.
 
-<pre>
+
 Thread Read
   {
   recieve UDP
@@ -44,4 +45,5 @@ Thread Write
   {
   send UDP
   } 
-</pre>
+
+%% END %%
