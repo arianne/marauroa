@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.39 2004/01/25 22:28:46 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.40 2004/01/28 18:54:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -231,17 +231,17 @@ class RPServerManager extends Thread
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
             RPZone.Perception perception;
-//            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
               deltaPerceptionSend=0;
               }
-//            else
-//              {
-//              marauroad.trace("RPServerManager::buildPerceptions","D","Perception DELTA for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
-//              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
-//              }
+            else
+              {
+              marauroad.trace("RPServerManager::buildPerceptions","D","Perception DELTA for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
+              }
             
             Message messages2cPerception=new MessageS2CPerception(source, perception.type, perception.modifiedList, perception.deletedList);
             messages2cPerception.setClientID(clientid);

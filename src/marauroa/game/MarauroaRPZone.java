@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.14 2004/01/07 14:44:38 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.15 2004/01/28 18:54:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,8 @@ public class MarauroaRPZone implements RPZone
   private HashMap objects;
   private List listObjects;
   private Perception perception;
+  private Perception[] perceptions;
+  private byte lastPerceptionUsed;
 
   private static Random rand=new Random();
   
@@ -30,7 +32,13 @@ public class MarauroaRPZone implements RPZone
     objects=new HashMap();
     
     listObjects=new LinkedList();
-    perception=new Perception(Perception.DELTA);
+  
+    perceptions=new Perception[2];
+    perceptions[0]=new Perception(Perception.DELTA);
+    perceptions[1]=new Perception(Perception.DELTA);
+    lastPerceptionUsed=0;
+    
+    perception=perceptions[0];
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -139,7 +147,16 @@ public class MarauroaRPZone implements RPZone
   
   public void nextTurn() 
     {
-    perception=new Perception(Perception.DELTA);
+    if(lastPerceptionUsed==0)
+      {
+      ++lastPerceptionUsed;
+      perception=perceptions[1];
+      }
+    else
+      {
+      lastPerceptionUsed=0;
+      perception=perceptions[0];
+      }
     }  
   }
 
