@@ -48,11 +48,15 @@ public class MessageS2CPerception extends Message
     this.deletedRPObjects=deletedRPObjects;
     }
   
+  /** This method returns the list of modified objects 
+   *  @return List<RPObject> of modified objects */
   public List getModifiedRPObjects() 
     {
     return modifiedRPObjects;
     }  
 
+  /** This method returns the list of deleted objects 
+   *  @return List<RPObject> of deleted objects */
   public List getDeletedRPObjects() 
     {
     return deletedRPObjects;
