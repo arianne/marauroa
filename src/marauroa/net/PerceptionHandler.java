@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.14 2004/07/11 22:36:32 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.15 2004/07/12 11:54:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -325,31 +325,11 @@ public class PerceptionHandler
           w_object.applyDifferences(null,object);        
           }
         }
-      }
-    catch(IRPZone.RPObjectNotFoundException e)
-      {
-      e.printStackTrace();
-      System.out.println(world);
-      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects/DELETED","X",e.getMessage());
-      throw e;
-      }
-    catch(Exception e)
-      {
-      e.printStackTrace();
-      System.out.println(world);
-      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects/DELETED","X",e.getMessage());
-      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
-      }
-      
-    try
-      {
-      Iterator it;
-      
+     
       it=message.getModifiedAddedRPObjects().iterator();
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        System.out.println(object.getID());
         RPObject w_object=(RPObject)world.get(object.getID());    
         if(!listener.onModifiedAdded(w_object,object))
           {
@@ -361,14 +341,14 @@ public class PerceptionHandler
       {
       System.out.println(world);
       e.printStackTrace();
-      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects/ADDED","X",e.getMessage());
+      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
       throw e;
       }
     catch(Exception e)
       {
       System.out.println(world);
       e.printStackTrace();
-      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects/ADDED","X",e.getMessage());
+      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
       throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
