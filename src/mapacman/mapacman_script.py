@@ -130,13 +130,13 @@ class RealPythonRP(PythonRP):
         instance.createEnviroment()
     
     def createRPClasses(self):
-        # TODO: Refactor this once you add RPClass heritance
         STRING=RPClass.STRING
         SHORT_STRING=RPClass.STRING
         INT=RPClass.INT
         SHORT=RPClass.SHORT
         BYTE=RPClass.BYTE
         FLAG=RPClass.FLAG
+        
         HIDDEN=RPClass.HIDDEN
 
         objclass=RPClass("position")
