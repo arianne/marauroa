@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.31 2004/01/30 18:09:53 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.32 2004/02/02 13:06:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -246,8 +246,16 @@ public class marauroad extends Thread
     getMarauroa().message("");
     }
     
-  private static boolean filter(String word,String[] allowed)
+  private static boolean filter(String word)
     {
+    for(int j=0;j<rejected.length;++j)
+      {
+      if(word.indexOf(rejected[i])!=-1)
+        {
+        return false;
+        }
+      }
+      
     for(int i=0;i<allowed.length;++i)
       {
       if(word.indexOf(allowed[i])!=-1)
@@ -265,6 +273,7 @@ public class marauroad extends Thread
     }
   
   private static String[] allowed={"*","RPCode","the1001"};
+  private static String[] rejected={"PlayerEntryContainer"};
   
   public static void trace(String module,String event)
     {
@@ -273,7 +282,7 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event,String text)
     {
-    if(filter(module,allowed))
+    if(filter(module))
       {
       timestamp.setTime(System.currentTimeMillis());
 	  String ts = formatter.format(timestamp);

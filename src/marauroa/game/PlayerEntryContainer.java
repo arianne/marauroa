@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.17 2004/01/12 19:14:02 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.18 2004/02/02 13:06:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,9 @@ public class PlayerEntryContainer
     public String choosenCharacter;   
     /** The name of the player */
     public String username;
+    
+    /** The rp object of the player */
+    public RPObject.ID characterid;
     }
     
   static public class NoSuchClientIDException extends Exception
@@ -545,7 +548,9 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        return playerDatabase.getRPObject(entry.username,character);
+        RPObject object=playerDatabase.getRPObject(entry.username,character);
+        entry.characterid=new RPObject.ID(object);
+        return object;
         }
       else
         {
@@ -558,6 +563,11 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
       marauroad.trace("PlayerEntryContainer::getRPObject","!","This should never happens");
       System.exit(-1);
+      throw new NoSuchPlayerException("- not available -");
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObject","X",e.getMessage());
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
@@ -595,6 +605,7 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         playerDatabase.setRPObject(entry.username,entry.choosenCharacter,object);
+        entry.characterid=new RPObject.ID(object);
         }      
       else
         {
@@ -607,6 +618,11 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
       marauroad.trace("PlayerEntryContainer::setRPObject","!","This should never happens");
       System.exit(-1);
+      throw new NoSuchPlayerException("- not available -");
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObject","X",e.getMessage());
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
@@ -641,7 +657,7 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        return new RPObject.ID(playerDatabase.getRPObject(entry.username,entry.choosenCharacter));
+        return entry.characterid;
         }
       else
         {
@@ -649,28 +665,6 @@ public class PlayerEntryContainer
         throw new NoSuchClientIDException(clientid);
         }
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
-      {
-      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Player(unknown)");
-      marauroad.trace("PlayerEntryContainer::getRPObjectID","!","This should never happens");
-      System.exit(-1);
-      throw new NoSuchPlayerException("- not available -");
-      }
-    catch(PlayerDatabase.CharacterNotFoundException e)
-      {
-      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Character(unknown)");
-      throw new NoSuchCharacterException("- not available -");
-      }        
-    catch(Attributes.AttributeNotFoundException e)
-      {
-      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such attribute(object_id)");
-      throw new NoSuchCharacterException("- not available -");
-      }        
-    catch(PlayerDatabase.GenericDatabaseException e)
-      {
-      marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
-      throw new NoSuchCharacterException("- not available -");
-      }        
     finally
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","<");
