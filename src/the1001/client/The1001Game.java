@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.5 2004/02/19 20:27:59 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.6 2004/02/26 06:22:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public class The1001Game
 		chatTextArea.setLineWrap(false);
 		JScrollPane sp = new JScrollPane(chatTextArea);
 		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		sp.setPreferredSize(new Dimension(500,80));
+		sp.setPreferredSize(new Dimension(500,120));
 		
 		final JTextField tf = new JTextField(40);
 		tf.addActionListener(new ActionListener()
@@ -170,6 +170,7 @@ public class The1001Game
 							RPObject obj = (RPObject)modified_objects.get(i);
 							if("arena".equals(obj.get("type")))
 							{
+								gm.setArena(obj);
 								String name = obj.get("name");
 								String status = obj.get("status");
 								gm.setStatus(status);
@@ -190,7 +191,7 @@ public class The1001Game
 								}
 								
 //								gm.setWaiting("waiting".equalsIgnoreCase(status));
-								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " [" + status+"]" );
+								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
 								try
 								{
 									RPSlot slot = obj.getSlot("gladiators");
@@ -238,7 +239,8 @@ public class The1001Game
 								{
 									RPSlot glad_slot   = obj.getSlot("gladiators");
 									RPObject gladiator = glad_slot.get();
-									gm.setGladiator(gladiator);
+									gm.setOwnGladiator(gladiator);
+									gm.setOwnCharacter(obj);
 								}
 								if(obj.has(RPCode.var_text))
 								{
@@ -387,7 +389,7 @@ public class The1001Game
 		private void paintFighter(int x_f, int y_f, RPObject fighter, Graphics g)
 		{
 			int radius = getWidth()/18;
-			boolean own_gladiator = fighter.equals(gm.getGladiator());
+			boolean own_gladiator = fighter.equals(gm.getOwnGladiator());
 			if(own_gladiator)
 			{
 				g.setColor(Color.blue);
@@ -480,6 +482,7 @@ public class The1001Game
 			int recieved=0;
 			String[] characters=null;
 			String[] serverInfo=null;
+			client_id=-1;
 			
 			while(!complete && recieved<20)
 			{
@@ -497,15 +500,16 @@ public class The1001Game
 					break;
 				case Message.TYPE_S2C_CHARACTERLIST: //2
 					characters=((MessageS2CCharacterList)message).getCharacters();
-					client_id = message.getClientID();
+//					client_id = message.getClientID();
 					++recieved;
 					break;
 				case Message.TYPE_S2C_SERVERINFO: //7
 					serverInfo=((MessageS2CServerInfo)message).getContents();
+//					client_id = message.getClientID();
 					++recieved;
 					break;
 				}
-				complete = ((serverInfo!=null) && (characters!=null));
+				complete = ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
 			}
 			marauroad.trace("The1001Game::connectAndChooseCharacter","D","characters: "+characters);
 			if(characters!=null && characters.length>0)

@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.4 2004/02/19 20:27:59 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.5 2004/02/26 06:22:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,7 +43,9 @@ public final class GameDataModel
 	public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
 	public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
 	
-	private RPObject gladiator;
+	private RPObject ownGladiator;
+	private RPObject ownCharacter;
+	private RPObject arena;
 	private Map spectators;
 	private Map fighters;
 	private transient NetworkClientManager netMan;
@@ -58,6 +60,47 @@ public final class GameDataModel
 		fighters   = new HashMap(2);
 		listeners  = new ArrayList(1);
 		commandListener = new ActionHandler();
+	}
+	
+	/**
+	 * Sets Arena
+	 *
+	 * @param    Arena               a  RPObject
+	 */
+	public void setArena(RPObject arena)
+	{
+		this.arena = arena;
+	}
+	
+	/**
+	 * Returns Arena
+	 *
+	 * @return    a  RPObject
+	 */
+	public RPObject getArena()
+	{
+		return arena;
+	}
+	
+
+	/**
+	 * Sets OwnCharacter
+	 *
+	 * @param    OwnCharacter        a  RPObject
+	 */
+	public void setOwnCharacter(RPObject ownCharacter)
+	{
+		this.ownCharacter = ownCharacter;
+	}
+	
+	/**
+	 * Returns OwnCharacter
+	 *
+	 * @return    a  RPObject
+	 */
+	public RPObject getOwnCharacter()
+	{
+		return ownCharacter;
 	}
 	
 	public ActionListener getActionHandler()
@@ -81,9 +124,9 @@ public final class GameDataModel
 	 *
 	 * @param    Gladiator           a  RPObject
 	 */
-	public void setGladiator(RPObject gladiator)
+	public void setOwnGladiator(RPObject gladiator)
 	{
-		this.gladiator = gladiator;
+		this.ownGladiator = gladiator;
 	}
 	
 	/**
@@ -91,9 +134,9 @@ public final class GameDataModel
 	 *
 	 * @return    a  RPObject
 	 */
-	public RPObject getGladiator()
+	public RPObject getOwnGladiator()
 	{
-		return gladiator;
+		return ownGladiator;
 	}
 	
 //		public String getName()
@@ -282,13 +325,13 @@ public final class GameDataModel
 	
 	public void requestFight()
 	{
-		RPObject gladiator = getGladiator();
+		RPObject gladiator = getOwnGladiator();
 		if(gladiator!=null)
 		{
 			int gl_id = RPObject.INVALID_ID.getObjectID();
 			try
 			{
-				gl_id = getGladiator().getInt("object_id");
+				gl_id = getOwnGladiator().getInt("object_id");
 			}
 			catch (Attributes.AttributeNotFoundException e)
 			{
@@ -313,13 +356,13 @@ public final class GameDataModel
 	
 	public void setFightMode(String mode)
 	{
-		RPObject gladiator = getGladiator();
+		RPObject gladiator = getOwnGladiator();
 		if(gladiator!=null)
 		{
 			int gl_id = RPObject.INVALID_ID.getObjectID();
 			try
 			{
-				gl_id = getGladiator().getInt("object_id");
+				gl_id = getOwnGladiator().getInt("object_id");
 			}
 			catch (Attributes.AttributeNotFoundException e)
 			{
@@ -336,13 +379,13 @@ public final class GameDataModel
 	
 	public void vote(String vote)
 	{
-		RPObject gladiator = getGladiator();
+		RPObject gladiator = getOwnGladiator();
 		if(gladiator!=null)
 		{
 			int gl_id = RPObject.INVALID_ID.getObjectID();
 			try
 			{
-				gl_id = getGladiator().getInt("object_id");
+				gl_id = getOwnGladiator().getInt("object_id");
 			}
 			catch (Attributes.AttributeNotFoundException e)
 			{

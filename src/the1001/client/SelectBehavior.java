@@ -1,4 +1,4 @@
-/* $Id: SelectBehavior.java,v 1.1 2004/02/19 00:28:50 root777 Exp $ */
+/* $Id: SelectBehavior.java,v 1.2 2004/02/26 06:22:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -137,8 +137,6 @@ public class SelectBehavior extends Behavior
 							result = canvas.pickAllSorted();
 							if (result != null)
 							{
-								PickIntersection pi =
-									result[0].getClosestIntersection(eyePos);
 								Object obj = result[0].getObject();
 								if(obj!=null)
 								{
@@ -148,46 +146,51 @@ public class SelectBehavior extends Behavior
 										fireListener(user_obj);
 									}
 								}
-								GeometryArray curGeomArray = pi.getGeometryArray();
-								
-								Vector3d v = new Vector3d();
-								Point3d intPt = pi.getPointCoordinatesVW();
-								v.set(intPt);
-								spht3.setTranslation (v);
-								sphTrans[0].setTransform (spht3);
-								
-								Point3d closestVert = pi.getClosestVertexCoordinatesVW();
-								v.set(closestVert);
-								spht3.setTranslation (v);
-								sphTrans[1].setTransform (spht3);
-								
-								Point3d []ptw = pi.getPrimitiveCoordinatesVW();
-								Point3d []pt = pi.getPrimitiveCoordinates();
-								for (int k=0;k<pt.length;k++)
+								PickIntersection pi =
+									result[0].getClosestIntersection(eyePos);
+								if(pi!=null)
 								{
-									v.set(ptw[k]);
-									spht3.setTranslation (v);
-									sphTrans[k+2].setTransform (spht3);
-								}
-								
-								Color4f iColor4 = null;
-								Color3f iColor = null;
-								
-								if (curGeomArray != null)
-								{
-									int vf = curGeomArray.getVertexFormat();
+									GeometryArray curGeomArray = pi.getGeometryArray();
 									
-									if (((vf &
-													(GeometryArray.COLOR_3 |
-														 GeometryArray.COLOR_4)) != 0) &&
-												(null != (iColor4 =
-																		pi.getPointColor())))
+									Vector3d v = new Vector3d();
+									Point3d intPt = pi.getPointCoordinatesVW();
+									v.set(intPt);
+									spht3.setTranslation (v);
+									sphTrans[0].setTransform (spht3);
+									
+									Point3d closestVert = pi.getClosestVertexCoordinatesVW();
+									v.set(closestVert);
+									spht3.setTranslation (v);
+									sphTrans[1].setTransform (spht3);
+									
+									Point3d []ptw = pi.getPrimitiveCoordinatesVW();
+									Point3d []pt = pi.getPrimitiveCoordinates();
+									for (int k=0;k<pt.length;k++)
 									{
-										iColor =
-											new Color3f(iColor4.x, iColor4.y, iColor4.z);
+										v.set(ptw[k]);
+										spht3.setTranslation (v);
+										sphTrans[k+2].setTransform (spht3);
+									}
+									
+									Color4f iColor4 = null;
+									Color3f iColor = null;
+									
+									if (curGeomArray != null)
+									{
+										int vf = curGeomArray.getVertexFormat();
 										
-										// Change the point's color
-										look3.setMaterial(new Material(iColor, new Color3f (0.0f, 0.0f, 0.0f), iColor, new Color3f(1.0f, 1.0f, 1.0f), 50.0f));
+										if (((vf &
+														(GeometryArray.COLOR_3 |
+															 GeometryArray.COLOR_4)) != 0) &&
+													(null != (iColor4 =
+																			pi.getPointColor())))
+										{
+											iColor =
+												new Color3f(iColor4.x, iColor4.y, iColor4.z);
+											
+											// Change the point's color
+											look3.setMaterial(new Material(iColor, new Color3f (0.0f, 0.0f, 0.0f), iColor, new Color3f(1.0f, 1.0f, 1.0f), 50.0f));
+										}
 									}
 								}
 							}
