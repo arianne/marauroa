@@ -18,7 +18,7 @@
   <property name="docs" value="javadocs"/>
 
   <!-- set hier what should be build -->
-  <property name="build.the1001.client" value="true"/>
+  <property name="build.the1001.client" value="false"/>
   <property name="build.the1001.server" value="true"/> 
   <property name="build.mapacman" value="true"/>
 
@@ -69,7 +69,7 @@
 
   <target name="compile_the1001_server" depends="compile_marauroa" if="build.the1001.server">
     <javac srcdir="${src}/the1001" destdir="${build}" debug="true" 
-           debuglevel="source,lines" exclude="${src}/the1001/client/**/*.java">
+           debuglevel="source,lines" excludes="${src}/the1001/client/**/*.java">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
