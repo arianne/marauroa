@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.16 2004/01/29 17:15:36 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.17 2004/01/30 18:09:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -124,6 +124,11 @@ public class MarauroaRPZone implements RPZone
       
       return p;
       }
+    }
+    
+  public long size()
+    {
+    return listObjects.size();
     }
   
   public void print(PrintStream out)

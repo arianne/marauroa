@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.27 2003/12/30 10:24:35 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.28 2004/01/30 18:09:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -130,6 +130,8 @@ public class GameServerManager extends Thread
             
           playerContainer.getLock().releaseLock();
           }
+          
+        Statistics.setOnlinePlayers(playerContainer.size());
         }
       }
     finally
@@ -214,6 +216,7 @@ public class GameServerManager extends Thread
 	  if(playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()))
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","D","Correct username/password");
+        Statistics.addPlayerLogin();
 
 	    /* Correct: The login is correct */
 	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
@@ -240,6 +243,8 @@ public class GameServerManager extends Thread
 	  else
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
+        Statistics.addPlayerInvalidLogin();
+
         if(playerContainer.hasPlayer(msg.getUsername()))
           {
 	      playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
@@ -374,7 +379,9 @@ public class GameServerManager extends Thread
 	  playerContainer.removeRuntimePlayer(clientid);
 	  
 	  /* Send Logout ACK message */
-	  MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
+      Statistics.addPlayerLogout();
+   
+      MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
       msgLogout.setClientID(clientid);
 	  netMan.addMessage(msgLogout);
       }

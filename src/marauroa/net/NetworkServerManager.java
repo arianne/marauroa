@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.10 2004/01/29 19:57:35 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.11 2004/01/30 18:09:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -189,6 +189,7 @@ public class NetworkServerManager
           
           /*** Statistics ***/
           Statistics.addBytesRecv(packet.getLength());
+          Statistics.addMessageRecv();
 
           Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
           marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
@@ -203,6 +204,8 @@ public class NetworkServerManager
           }
         catch(IOException e)
           {
+          Statistics.addMessageIncorrect();
+
           /* Report the exception */
           marauroad.trace("NetworkServerManagerRead::run","X",e.getMessage());
           }
@@ -243,6 +246,7 @@ public class NetworkServerManager
   
           /*** Statistics ***/
           Statistics.addBytesSend(buffer.length);
+          Statistics.addMessageSend();
   
           marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
