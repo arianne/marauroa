@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.11 2005/03/12 17:23:15 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.12 2005/03/18 07:49:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,8 @@ public class RPServerManager extends Thread
   private volatile boolean isfinished;
   /** The time elapsed between 2 turns. */
   private long turnDuration;
+  /** The number of the turn that we are executing now */
+  private int turn;  
   /** The scheduler needed to organize actions */
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
@@ -75,6 +77,7 @@ public class RPServerManager extends Thread
       String duration=conf.get("rp_turnDuration");
 
       turnDuration=Long.parseLong(duration);
+      turn=0;
       
       start();
       }
@@ -88,6 +91,11 @@ public class RPServerManager extends Thread
       {
       Logger.trace("RPServerManager","<");
       }
+    }
+  
+  public int getTurn()
+    {
+    return turn;
     }
   
   /** This method finish the thread that run the RPServerManager */
@@ -447,6 +455,8 @@ public class RPServerManager extends Thread
 
             /** Move zone to the next turn */
             world.nextTurn();
+            
+            turn++;
             
             ruleProcessor.beginTurn();
             }

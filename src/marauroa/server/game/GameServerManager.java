@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.4 2005/03/18 07:49:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -450,6 +450,8 @@ public final class GameServerManager extends Thread
 
       action.put("sourceid",id.getObjectID());
       action.put("zoneid",id.getZoneID());
+      action.put("when",rpMan.getTurn());
+      
       if(action.has("type"))
         {
         stats.addActionsAdded(action.get("type"),clientid,action.toString());

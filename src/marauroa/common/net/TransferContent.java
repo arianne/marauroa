@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.2 2005/01/26 09:38:01 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.3 2005/03/18 07:49:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,6 +80,7 @@ public class TransferContent
     {
     out.write(name);
     out.write(data);
+    out.write(timestamp);
     out.write((byte)(cacheable?1:0));
     }
   
@@ -87,6 +88,7 @@ public class TransferContent
     {
     name=in.readString();
     data=in.readByteArray();      
+    timestamp=in.readInt();
     cacheable=(in.readByte()==1);      
     }
   }
