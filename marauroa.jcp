@@ -267,6 +267,12 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPRuleProcessor.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPZone.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\mapacman\\README" #[EndFile]
+#[BeginFolder]
+LABEL := "client"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\mapacman\\client\\nullClient.java" #[EndFile]
+#[EndFolder]
 #[EndFolder]
 #[EndFolder]
 #[EndFolder]
