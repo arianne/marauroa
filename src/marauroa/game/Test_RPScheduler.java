@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.9 2003/12/12 16:18:24 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.10 2003/12/29 11:02:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,21 @@ public class Test_RPScheduler extends TestCase
     
     public void nextTurn()
       {
+      }
+
+    public boolean onInit(RPObject object)
+      {
+      return true;
+      }
+    
+    public boolean onExit(RPObject.ID id)
+      {
+      return true;
+      }
+    
+    public boolean onTimeout(RPObject.ID id)
+      {
+      return true;
       }
     }
 	

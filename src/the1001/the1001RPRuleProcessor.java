@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.3 2003/12/12 18:57:56 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.4 2003/12/29 11:02:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,6 +80,21 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
+    }
+
+  public boolean onInit(RPObject object)
+    {
+    return true;
+    }
+    
+  public boolean onExit(RPObject.ID id)
+    {
+    return true;
+    }
+    
+  public boolean onTimeout(RPObject.ID id)
+    {
+    return true;
     }
   }
     

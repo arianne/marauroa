@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.31 2003/12/20 10:22:11 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.32 2003/12/29 11:02:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,22 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   public void nextTurn()
   {
   }
-  
+
+  public boolean onInit(RPObject object)
+    {
+    return true;
+    }
+    
+  public boolean onExit(RPObject.ID id)
+    {
+    return true;
+    }
+    
+  public boolean onTimeout(RPObject.ID id)
+    {
+    return true;
+    }
+      
   private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)
     throws NumberFormatException,
     Attributes.AttributeNotFoundException,

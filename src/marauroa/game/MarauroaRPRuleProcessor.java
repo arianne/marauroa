@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.9 2003/12/29 11:02:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,5 +43,20 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
 
   public void nextTurn()
     {
+    }
+
+  public boolean onInit(RPObject object)
+    {
+    return true;
+    }
+    
+  public boolean onExit(RPObject.ID id)
+    {
+    return true;
+    }
+    
+  public boolean onTimeout(RPObject.ID id)
+    {
+    return true;
     }
   }
