@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.14 2004/03/24 15:25:32 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.15 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ class createaccount
     PrintWriter out=null;
     String username=null;
     String password=null;
+    String email=null;
     String character=null;
     String character_model=null;
     String gladiator=null;
@@ -45,6 +46,10 @@ class createaccount
       else if(args[i].equals("-p"))
         {
         password=args[i+1];
+        }
+      else if(args[i].equals("-e"))
+        {
+        email=args[i+1];
         }
       else if(args[i].equals("-c"))
         {
@@ -70,7 +75,8 @@ class createaccount
       }
     if(username==null) return (1);
     if(password==null) return (1);
-    if(character==null) return (1);
+    if(email==null) return (1);
+    if(password==null) return (1);
     if(character_model==null) return (1);
     if(gladiator==null) return (1);
     if(gladiator_model==null) return (1);
@@ -84,8 +90,7 @@ class createaccount
         +"character_model("+character_model+"), gladiator("+gladiator+"), gladiator_model("+gladiator_model+")");
       out.flush();
       
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
-      JDBCRPObjectDatabase rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+      JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
 
       trans=playerDatabase.getTransaction();
       out.println("Checking for valid string");
@@ -98,6 +103,11 @@ class createaccount
       if(playerDatabase.validString(password)==false)
         {
         out.println("String not valid: "+password);
+        return (2);
+        }
+      if(playerDatabase.validString(email)==false)
+        {
+        out.println("String not valid: "+email);
         return (2);
         }
       if(playerDatabase.validString(character)==false)
@@ -131,6 +141,11 @@ class createaccount
         out.println("String size not valid: "+password);
         return (3);
         }
+      if(password.length()>50 || password.length()<5) 
+        {
+        out.println("String size not valid: "+password);
+        return (3);
+        }
       if(character.length()>20 || character.length()<4) 
         {
         out.println("String size not valid: "+character);
@@ -158,13 +173,13 @@ class createaccount
         return (4);
         }
       out.println("Adding player");
-      playerDatabase.addPlayer(trans, username,password);
+      playerDatabase.addPlayer(trans,username,password,email);
 
-      RPObject object=new Player(rpobjectDatabase.getValidRPObjectID(trans),character);
+      RPObject object=new Player(playerDatabase.getValidRPObjectID(trans),character);
 
       object.put("look",character_model);
       
-      Gladiator gladiator_obj=new Gladiator(rpobjectDatabase.getValidRPObjectID(trans));
+      Gladiator gladiator_obj=new Gladiator(playerDatabase.getValidRPObjectID(trans));
 
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);

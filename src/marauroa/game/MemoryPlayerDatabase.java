@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.8 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -335,7 +335,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param password is a string used to verify access.
    *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
-  public void addPlayer(Transaction trans, String username, String password) throws PlayerAlreadyAddedException
+  public void addPlayer(Transaction trans, String username, String password,String email) throws PlayerAlreadyAddedException
     {
     marauroad.trace("MemoryPlayerDatabase::addPlayer",">");
     try

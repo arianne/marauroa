@@ -45,7 +45,7 @@ public class JDBCTransaction extends Transaction
       }
     }
   
-  public void rollback() throws TransactionException
+  public void rollback()
     {
     try
       {
@@ -53,7 +53,8 @@ public class JDBCTransaction extends Transaction
       }
     catch(SQLException e)
       {
-      throw new TransactionException(e.getMessage());
+      //throw new TransactionException(e.getMessage());
+      marauroad.trace("JDBCTransaction::rollback","!",e.getMessage());
       }
     }
   
@@ -81,7 +82,7 @@ public class JDBCTransaction extends Transaction
         }
       catch(SQLException sqle)
         {
-        marauroad.trace("JDBCTransaction::isValid","D","Invalid!: "+sqle.getMessage());
+        marauroad.trace("JDBCTransaction::isValid","X","Invalid!: "+sqle.getMessage());
         }
       }
     return(valid);

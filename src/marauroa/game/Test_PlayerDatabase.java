@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.15 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.16 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,7 +51,7 @@ public class Test_PlayerDatabase extends TestCase
       Transaction trans = playerDatabase.getTransaction();
 
       assertNotNull(playerDatabase);
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       assertTrue(playerDatabase.hasPlayer(trans,"Test Player"));
       assertFalse(playerDatabase.hasPlayer(trans,"b\" or 1=1 or username like 'b"));
       assertFalse(playerDatabase.hasPlayer(trans,"b\' or 1=1 or username like 'b"));
@@ -88,7 +88,7 @@ public class Test_PlayerDatabase extends TestCase
       int size=playerDatabase.getPlayerCount(trans);
       
       assertFalse(playerDatabase.hasPlayer(trans,"Test Player"));
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       assertTrue(playerDatabase.hasPlayer(trans,"Test Player"));
       assertTrue(playerDatabase.verifyAccount(trans,"Test Player","Test Password"));
       playerDatabase.addCharacter(trans,"Test Player", "Test Character",new RPObject());
@@ -134,9 +134,9 @@ public class Test_PlayerDatabase extends TestCase
       }
     try
       {
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       assertTrue(playerDatabase.hasPlayer(trans,"Test Player"));
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       fail("Player added twice");
       }
     catch(PlayerDatabase.PlayerAlreadyAddedException e)
@@ -166,7 +166,7 @@ public class Test_PlayerDatabase extends TestCase
       }
     try
       {
-      playerDatabase.addPlayer(trans,"A new Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"A new Test Player","Test Password","test@marauroa.ath.cx");
       playerDatabase.addCharacter(trans,"A new Test Player", "Test Character", new RPObject());
       playerDatabase.addCharacter(trans,"A new Test Player", "Test Character", new RPObject());
       fail("Player already exists");
@@ -267,7 +267,7 @@ public class Test_PlayerDatabase extends TestCase
       }
     try
       {
-      playerDatabase.addPlayer(trans,"A new Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"A new Test Player","Test Password","test@marauroa.ath.cx");
       playerDatabase.setRPObject(trans,"A new Test Player","Test Character",new RPObject());
       fail("Character does not exists");
       }
@@ -305,7 +305,7 @@ public class Test_PlayerDatabase extends TestCase
       }
     try
       {
-      playerDatabase.addPlayer(trans,"A new Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"A new Test Player","Test Password","test@marauroa.ath.cx");
       playerDatabase.getRPObject(trans,"A new Test Player","Test Character");
       fail("Character does not exists");
       }

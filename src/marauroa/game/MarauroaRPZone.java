@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.25 2004/03/24 17:14:56 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.26 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ public class MarauroaRPZone implements RPZone
   private Map previous_turn;
   private Map objects;
   private Perception perception;
-  private JDBCRPObjectDatabase rpobjectDatabase;
+  private JDBCPlayerDatabase rpobjectDatabase;
   private Transaction transaction;
   private static Random rand=new Random();
   public MarauroaRPZone()
@@ -38,7 +38,7 @@ public class MarauroaRPZone implements RPZone
     perception=new Perception(Perception.DELTA);
     try
       {
-      rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+      rpobjectDatabase=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
       transaction=rpobjectDatabase.getTransaction();
       }
     catch(Exception e)

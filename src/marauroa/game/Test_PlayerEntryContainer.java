@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.12 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.13 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class Test_PlayerEntryContainer extends TestCase
       }
     try
       {
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       assertTrue(playerDatabase.hasPlayer(trans,"Test Player"));
       playerDatabase.verifyAccount(trans,"Test Player","Test Password");
       

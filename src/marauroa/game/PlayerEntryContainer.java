@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.23 2004/03/24 17:14:56 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.24 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -328,17 +328,25 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(String username, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
+  public void addLoginEvent(String username, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException, GameDatabaseException.GenericDatabaseException
     {
     marauroad.trace("PlayerEntryContainer::addLoginEvent",">");
     try
       {
       playerDatabase.addLoginEvent(transaction,username,source,correctLogin);
+      transaction.commit();
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
+      transaction.rollback();
       marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player("+username+")");
       throw new NoSuchPlayerException(username);
+      }
+    catch(Transaction.TransactionException e)
+      {
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","X","Transaction error: "+e.getMessage());
+      transaction=playerDatabase.getTransaction();
+      //TODO: Throw a GenericDatabaseException to notify upper layer about the event.
       }
     finally
       {
@@ -604,7 +612,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public void setRPObject(int clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
+  public void setRPObject(int clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException, GameDatabaseException.GenericDatabaseException
     {
     marauroad.trace("PlayerEntryContainer::setRPObject",">");
     try
@@ -615,9 +623,11 @@ public class PlayerEntryContainer
 
         playerDatabase.setRPObject(transaction,entry.username,entry.choosenCharacter,object);
         entry.characterid=new RPObject.ID(object);
+        transaction.commit();
         }
       else
         {
+        transaction.rollback();
         marauroad.trace("PlayerEntryContainer::setRPObject","X","No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
@@ -641,6 +651,12 @@ public class PlayerEntryContainer
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
       throw new NoSuchCharacterException("- not available -");
+      }
+    catch(Transaction.TransactionException e)
+      {
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","X","Transaction error: "+e.getMessage());
+      transaction=playerDatabase.getTransaction();
+      //TODO: Throw a GenericDatabaseException to notify upper layer about the event.
       }
     finally
       {

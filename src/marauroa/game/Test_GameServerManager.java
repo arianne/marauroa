@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.14 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.15 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class Test_GameServerManager extends TestCase
         playerDatabase.removePlayer(trans,"Test Player");
         }
       assertFalse(playerDatabase.hasPlayer(trans,"Test Player"));
-      playerDatabase.addPlayer(trans,"Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
 
       RPObject SonGoku=new RPObject();
 

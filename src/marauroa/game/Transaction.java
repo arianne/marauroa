@@ -15,7 +15,7 @@ public class Transaction
     {
     }
   
-  public void rollback() throws TransactionException
+  public void rollback()
     {
     }
   }

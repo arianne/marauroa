@@ -1,4 +1,4 @@
-/* $Id: Test_JDBCRPObjectDatabase.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_JDBCRPObjectDatabase.java,v 1.6 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,12 +57,12 @@ public class Test_JDBCRPObjectDatabase extends TestCase
   public void testStoreRPObject()
     {
     String initial="Hi World 'example', See \"This is \\ an example \" Rocks, isn't it?!";
-    String escaped=JDBCRPObjectDatabase.EscapeString(initial);
+    String escaped=JDBCPlayerDatabase.EscapeString(initial);
 
-    assertEquals(JDBCRPObjectDatabase.UnescapeString(escaped),initial);
+    assertEquals(JDBCPlayerDatabase.UnescapeString(escaped),initial);
     try
       {
-      JDBCRPObjectDatabase database=JDBCRPObjectDatabase.getDatabase();
+      JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
       Transaction trans = database.getTransaction();
       int total=500;
       long t1,t2,t3,t4,t5;
@@ -76,7 +76,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
         }
       t2=new Date().getTime();
       
-      JDBCRPObjectDatabase.RPObjectIterator it=database.iterator(trans);
+      JDBCPlayerDatabase.RPObjectIterator it=database.iterator(trans);
       
       while(it.hasNext())
         {
@@ -112,7 +112,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
     {
     try
       {
-      JDBCRPObjectDatabase database=JDBCRPObjectDatabase.getDatabase();
+      JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
       Transaction trans = database.getTransaction();
       RPObject example=new RPObject();
 

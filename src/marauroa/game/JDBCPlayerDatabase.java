@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.23 2004/03/24 17:14:56 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.25 2004/03/25 16:44:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,10 +15,8 @@ package marauroa.game;
 import java.sql.*;
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.Properties;
-import java.util.Vector;
-import marauroa.net.InputSerializer;
-import marauroa.net.OutputSerializer;
+import java.util.*;
+import marauroa.net.*;
 import marauroa.*;
 
 /** This is JDBC interface to the database.
@@ -41,6 +39,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       return "Login "+(correct?"SUCESSFULL":"FAILED")+" at "+time.toString()+" from "+address;
       }
     }
+    
   public boolean validString(String string)
     {
     if(string.indexOf('\\')!=-1) return false;
@@ -50,17 +49,22 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     if(string.indexOf(';')!=-1) return false;
     if(string.indexOf(':')!=-1) return false;
     if(string.indexOf('#')!=-1) return false;
-    if(string.indexOf('@')!=-1) return false;
     return true;
     }
+    
   private static PlayerDatabase playerDatabase=null;
-  private static JDBCRPObjectDatabase rpobjectDatabase=null;
+
+  /** connection info **/
+  private Properties connInfo;
+
   /** Constructor that connect using a set of Properties.
    *  @param connInfo a Properties set with the options to create the database.
    *  Refer to JDBC Database HOWTO document. */
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
-    initDB();
+    this.connInfo=connInfo;
+    random=new Random();
+    runDBScript("marauroa_init.sql");
     }
   
   private static PlayerDatabase resetDatabaseConnection() throws Exception
@@ -82,10 +86,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::getDatabase",">");
     try
       {
-      if(rpobjectDatabase==null)
-        {
-        rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
-        }
       if(playerDatabase==null)
         {
         playerDatabase=resetDatabaseConnection();
@@ -198,12 +198,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param password is a string used to verify access.
    *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
-  public void addPlayer(Transaction trans, String username, String password) throws PlayerAlreadyAddedException
+  public void addPlayer(Transaction trans, String username, String password, String email) throws PlayerAlreadyAddedException
     {
     marauroad.trace("JDBCPlayerDatabase::addPlayer",">");
     try
       {
-      if(!validString(username) || !validString(password))
+      if(!validString(username) || !validString(password) || !validString(email) )
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
         }
@@ -223,8 +223,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
-        query = "insert into player values(NULL,'"+username+"','"+password+"')";
-        stmt.execute(query);
+        query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL)";
+        stmt.execute(query);        
         }
       }
     catch(SQLException sqle)
@@ -486,11 +486,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
-      String query = "insert into loginEvent values("+id+",'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
-      PreparedStatement prep_stmt = connection.prepareStatement(query);
-
-      prep_stmt.setTimestamp(1,new Timestamp(System.currentTimeMillis()));
-      prep_stmt.execute();
+      Statement stmt = connection.createStatement();
+      String query = "insert into loginEvent values("+id+",'"+source.getHostName()+"',NULL,"+(correctLogin?1:0)+")";
+      stmt.execute(query);
       }
     catch(SQLException sqle)
       {
@@ -536,23 +534,20 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         String query = "insert into characters values("+id+",'"+character+"',"+object.get("object_id")+")";
 
         stmt.execute(query);
-        rpobjectDatabase.storeRPObject(trans,object);
+        storeRPObject(trans,object);
         }
-      }
-    catch(SQLException sqle)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      trans.rollback();
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Invalid RPObject: Lacks of attribute "+e.getAttribute());
       throw new PlayerNotFoundException(username);
       }
-    catch(PlayerNotFoundException e)
+    catch(Exception sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database doesn't contains that username("+username+")");
-      throw e;
+      trans.rollback();
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
+      throw new GenericDatabaseException(username);
       }
     finally
       {
@@ -631,7 +626,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           throw new CharacterNotFoundException(username);
           }
         }
-      rpobjectDatabase.storeRPObject(getTransaction(),object);
+      
+      storeRPObject(getTransaction(),object);
       }
     catch(SQLException sqle)
       {
@@ -681,7 +677,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         int object_id=result.getInt(1);
         
-        return rpobjectDatabase.loadRPObject(getTransaction(),new RPObject.ID(object_id));
+        return loadRPObject(getTransaction(),new RPObject.ID(object_id));
         }
       else
         {
@@ -711,38 +707,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","<");
-      }
-    }
-  
-  /** Create a connection to the JDBC Database or return null
-   *  @param props is a Properties set that contains
-   *  @return Connection to the database or null if error.*/
-  private Connection createConnection(Properties props) throws GenericDatabaseException
-    {
-    marauroad.trace("JDBCPlayerDatabase::createConnection",">");
-    try
-      {
-      Class.forName((String)props.get("jdbc_class")).newInstance();
-      
-      Properties connInfo = new Properties();
-
-      connInfo.put("user", props.get("jdbc_user"));
-      connInfo.put("password", props.get("jdbc_pwd"));
-      connInfo.put("charSet", "UTF-8");
-
-      Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-      
-      conn.setAutoCommit(true);
-      return conn;
-      }
-    catch (Exception e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::createConnection","X",e.getMessage());
-      throw new GenericDatabaseException(e.getMessage());
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::createConnection","<");
       }
     }
   
@@ -779,7 +743,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::reInitDB",">");
     try
       {
-      return (dropDB() && initDB());
+      return (runDBScript("marauroa_drop.sql") && runDBScript("marauroa_init.sql"));
       }
     catch(GenericDatabaseException e)
       {
@@ -792,9 +756,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
-  private boolean dropDB() throws GenericDatabaseException
+  private boolean runDBScript(String file) throws GenericDatabaseException
     {
-    marauroad.trace("JDBCPlayerDatabase::dropDB",">");
+    marauroad.trace("JDBCPlayerDatabase::runDBScript",">");
 
     boolean ret = true;
     JDBCTransaction transaction = (JDBCTransaction)getTransaction();
@@ -803,64 +767,22 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     try
       {
       Statement stmt = con.createStatement();
-      String query = "drop table if exists player";
-
-      stmt.addBatch(query);
-      query = "drop table if exists characters";
-      stmt.addBatch(query);
-      query = "drop table if exists loginEvent";
-      stmt.addBatch(query);
-
-      int ret_array[] = stmt.executeBatch();
+      InputStream init_file=getClass().getClassLoader().getResourceAsStream(file);
+      BufferedReader in= new BufferedReader(new InputStreamReader(init_file));
       
-      for (int i = 0; i < ret_array.length; i++)
+      String line;
+      StringBuffer is=new StringBuffer();
+      while((line=in.readLine())!=null)
         {
-        if(ret_array[i]<0)
+        is.append(line);
+        if(line.indexOf(';')!=-1)
           {
-          ret = false;
-          break;
+          String query=is.toString();
+          marauroad.trace("JDBCPlayerDatabase::runDBScript","D",query);
+          stmt.addBatch(query);
+          is=new StringBuffer();
           }
         }
-      if(ret)
-        {
-        con.commit();
-        }
-      else
-        {
-        con.rollback();
-        }
-      return ret;
-      }
-    catch (SQLException e)
-      {
-      try{con.rollback();}catch (SQLException ex) {}
-      marauroad.trace("JDBCPlayerDatabase::dropDB","X",e.getMessage());
-      throw new GenericDatabaseException(e.getMessage());
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::dropDB","<");
-      }
-    }
-  
-  private boolean initDB() throws GenericDatabaseException
-    {
-    marauroad.trace("JDBCPlayerDatabase::initDB",">");
-
-    boolean ret = true;
-    JDBCTransaction transaction = (JDBCTransaction)getTransaction();
-    Connection con = transaction.getConnection();
-
-    try
-      {
-      Statement stmt = con.createStatement();
-      String query = "CREATE TABLE IF NOT EXISTS player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
-
-      stmt.addBatch(query);
-      query = "CREATE TABLE IF NOT EXISTS characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, object_id integer not null, PRIMARY KEY(charname))";
-      stmt.addBatch(query);
-      query = "CREATE TABLE IF NOT EXISTS loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
-      stmt.addBatch(query);
       
       int ret_array[] = stmt.executeBatch();
 
@@ -872,31 +794,418 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           break;
           }
         }
-      if(ret)
-        {
-        con.commit();
-        }
-      else
-        {
-        con.rollback();
-        }
+
       return ret;
       }
-    catch (SQLException e)
+    catch(Exception e)
       {
-      try{con.rollback();}catch (SQLException ex) {}
-      marauroad.trace("JDBCPlayerDatabase::initDB","X",e.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::runDBScript","X",e.getMessage());
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
-      marauroad.trace("JDBCPlayerDatabase::initDB","<");
+      marauroad.trace("JDBCPlayerDatabase::runDBScript","<");
       }
     }
   
-  public Transaction getTransaction()
-    throws GameDatabaseException.GenericDatabaseException
+  private JDBCTransaction transaction;
+  
+  public Transaction getTransaction() throws GameDatabaseException.GenericDatabaseException
     {
-    return(rpobjectDatabase.getTransaction());
+    if(transaction==null || !transaction.isValid())
+      {
+      transaction=new JDBCTransaction(createConnection(connInfo));
+      if(transaction==null || !transaction.isValid())
+        {
+        throw new GenericDatabaseException("can't create connection");
+        }
+      }
+    return(transaction);
+    }
+
+  private Connection createConnection(Properties props) throws GenericDatabaseException
+    {
+    marauroad.trace("JDBCRPObjectDatabase::createConnection",">");
+    try
+      {
+      Class.forName((String)props.get("jdbc_class")).newInstance();
+      
+      Properties connInfo = new Properties();
+
+      connInfo.put("user", props.get("jdbc_user"));
+      connInfo.put("password", props.get("jdbc_pwd"));
+      connInfo.put("charSet", "UTF-8");
+
+      Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
+
+      conn.setAutoCommit(false);
+      return conn;
+      }
+    catch (Exception e)
+      {
+      marauroad.trace("JDBCRPObjectDatabase::createConnection","X",e.getMessage());
+      throw new GenericDatabaseException(e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("JDBCRPObjectDatabase::createConnection","<");
+      }
+    }
+  
+
+  public static String EscapeString(String text)
+    {
+    StringBuffer result=new StringBuffer();
+    
+    for(int i=0;i<text.length();++i)
+      {
+      if(text.charAt(i)=='\'' || text.charAt(i)=='\"' || text.charAt(i)=='\\')
+        {
+        result.append("\\");
+        }
+      result.append(text.charAt(i));
+      }
+    return result.toString();
+    }
+  
+  public static String UnescapeString(String text)
+    {
+    StringBuffer result=new StringBuffer();
+    
+    for(int i=0;i<text.length();++i)
+      {
+      if(text.charAt(i)!='\\' || (text.charAt(i)=='\\' && text.charAt(((i-1)>0?i-1:0))=='\\'))
+        {
+        result.append(text.charAt(i));
+        }
+      }
+    return result.toString();
+    }
+  
+  public static class RPObjectIterator
+    {
+    private ResultSet set;
+    public RPObjectIterator(ResultSet set)
+      {
+      this.set=set;
+      }
+    
+    public boolean hasNext()
+      {
+      try
+        {
+        return set.next();
+        }
+      catch(SQLException e)
+        {
+        return false;
+        }
+      }
+    
+    public RPObject.ID next() throws SQLException
+      {
+      return new RPObject.ID(set.getInt(1));
+      }
+    }
+    
+  public RPObjectIterator iterator(Transaction trans)
+    {
+    marauroad.trace("JDBCPlayerDatabase::iterator",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "select id from rpobject where slot_id=0";
+
+      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
+      
+      ResultSet result = stmt.executeQuery(query);
+
+      return new RPObjectIterator(result);
+      }
+    catch(SQLException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::iterator","X",e.getMessage());
+      return null;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::iterator","<");
+      }
+    }
+  
+  public boolean hasRPObject(Transaction trans, RPObject.ID id)
+    {
+    marauroad.trace("JDBCPlayerDatabase::hasRPObject",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "select count(*) from rpobject where id="+id.getObjectID();
+
+      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
+      
+      ResultSet result = stmt.executeQuery(query);
+      
+      if(result.next())
+        {
+        if(result.getInt(1)!=0)
+          {
+          return true;
+          }
+        }
+      return false;
+      }
+    catch(SQLException e)
+      {
+      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","X",e.getMessage());
+      return false;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::hasRPObject","<");
+      }
+    }
+  
+  public RPObject loadRPObject(Transaction trans, RPObject.ID id) throws Exception
+    {
+    marauroad.trace("JDBCPlayerDatabase::loadRPObject",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+
+      if(hasRPObject(trans,id))
+        {
+        RPObject object=new RPObject();
+        
+        loadRPObject(trans,object,id.getObjectID());
+        return object;
+        }
+      else
+        {
+        throw new SQLException("RPObject not found: "+id.toString());
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("JDBCRPObjectDatabase::loadRPObject","X",e.getMessage());
+      throw e;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::loadRPObject","<");
+      }
+    }
+  
+  private void loadRPObject(Transaction trans, RPObject object,int object_id) throws SQLException, RPObject.SlotAlreadyAddedException
+    {
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+    Statement stmt = connection.createStatement();
+    String query=null;
+    
+    query = "select name,value from rpattribute where object_id="+object_id+";";
+    marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+    
+    ResultSet result = stmt.executeQuery(query);
+
+    while(result.next())
+      {
+      object.put(UnescapeString(result.getString(1)),UnescapeString(result.getString(2)));
+      }
+    query = "select name,slot_id from rpslot where object_id="+object_id+";";
+    marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+    result = stmt.executeQuery(query);
+    while(result.next())
+      {
+      RPSlot slot=new RPSlot(UnescapeString(result.getString(1)));
+
+      object.addSlot(slot);
+      
+      int slot_id=result.getInt(2);
+      
+      query = "select id from rpobject where slot_id="+slot_id+";";
+      marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+
+      ResultSet resultSlot = connection.createStatement().executeQuery(query);
+      
+      while(resultSlot.next())
+        {
+        RPObject slotObject=new RPObject();
+
+        loadRPObject(trans,slotObject,resultSlot.getInt(1));
+        slot.add(slotObject);
+        }
+      }
+    }
+  
+  public void deleteRPObject(Transaction trans, RPObject.ID id) throws SQLException
+    {
+    marauroad.trace("JDBCPlayerDatabase::deleteRPObject",">");
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+
+    try
+      {
+      if(hasRPObject(trans,id))
+        {
+        deleteRPObject(trans,id.getObjectID());
+        }
+      else
+        {
+        throw new SQLException("RPObject not found: "+id.toString());
+        }
+      }
+    catch(SQLException e)
+      {
+      marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","X",e.getMessage());
+      throw e;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::deleteRPObject","<");
+      }
+    }
+  
+  private void deleteRPObject(Transaction trans, int id) throws SQLException
+    {
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+    Statement stmt = connection.createStatement();
+    String query=null;
+    
+    query = "select id from rpobject,rpslot where object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
+    marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    
+    ResultSet result = stmt.executeQuery(query);
+
+    while(result.next())
+      {
+      deleteRPObject(trans,result.getInt(1));
+      }
+    query = "delete from rpslot where object_id="+id+";";
+    marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    stmt.execute(query);
+    query = "delete from rpattribute where object_id="+id+";";
+    marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    stmt.execute(query);
+    query = "delete from rpobject where id="+id+";";
+    marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    stmt.execute(query);
+    }
+  
+  public void storeRPObject(Transaction trans, RPObject object) throws SQLException
+    {
+    marauroad.trace("JDBCPlayerDatabase::storeRPObject",">");
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+
+    try
+      {
+      if(hasRPObject(trans,new RPObject.ID(object)))
+        {
+        deleteRPObject(trans,new RPObject.ID(object));
+        }
+      
+      List attribToRemove=new LinkedList();
+      Iterator it=object.iterator();
+
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+
+        if(attrib.charAt(0)=='?')
+          {
+          attribToRemove.add(attrib);
+          }
+        }
+      it=attribToRemove.iterator();
+      while(it.hasNext())
+        {
+        object.remove((String)it.next());
+        }
+      storeRPObject(trans,object,0);
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
+      throw new SQLException(e.getMessage());
+      }
+    catch(SQLException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
+      throw e;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::storeRPObject","<");
+      }
+    }
+  
+  private void storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, Attributes.AttributeNotFoundException
+    {
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+    Statement stmt = connection.createStatement();
+    String query=null;
+    String object_id=object.get("object_id");
+
+    query = "insert into rpobject values("+object_id+","+slot_id+");";
+    marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+    stmt.execute(query);
+    
+    Iterator it=object.iterator();
+
+    while(it.hasNext())
+      {
+      String attrib=(String) it.next();
+      String value=object.get(attrib);
+      
+      query = "insert into rpattribute values("+object_id+",'"+EscapeString(attrib)+"','"+EscapeString(value)+"');";
+      marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      stmt.execute(query);
+      }
+    
+    RPObject.SlotsIterator sit=object.slotsIterator();
+
+    while(sit.hasNext())
+      {
+      RPSlot slot=(RPSlot) sit.next();
+      
+      query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
+      marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      stmt.execute(query);
+      query = "select slot_id from rpslot where object_id="+object_id+" and name like '"+EscapeString(slot.getName())+"';";
+      marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+
+      int object_slot_id;
+      ResultSet result = stmt.executeQuery(query);
+
+      if(result.next())
+        {
+        object_slot_id = result.getInt(1);
+        }
+      else
+        {
+        throw new SQLException("Not able to select RPSlot("+slot.getName()+") that have just been inserted");
+        }
+      
+      Iterator oit=slot.iterator();
+
+      while(oit.hasNext())
+        {
+        RPObject objectInSlot=(RPObject)oit.next();
+
+        storeRPObject(trans,objectInSlot,object_slot_id);
+        }
+      }
+    }
+
+  private Random random;
+  public RPObject.ID getValidRPObjectID(Transaction trans)
+    {
+    Connection connection = ((JDBCTransaction)trans).getConnection();
+    RPObject.ID id=new RPObject.ID(random.nextInt());
+
+    while(hasRPObject(trans,id))
+      {
+      id=new RPObject.ID(random.nextInt());
+      }
+    return id;
     }
   }

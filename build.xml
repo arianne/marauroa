@@ -37,6 +37,9 @@
       </fileset>
     </copy>
     <copy todir="${build}" file="${src}/marauroa.ini"/>
+    <copy todir="${build}" file="${src}/marauroa_init.sql"/>
+    <copy todir="${build}" file="${src}/marauroa_drop.sql"/>
+    
     <copy todir="${build}" file="${src}/simplegame/simplegame.ini"/>
     <copy todir="${build}" file="${src}/the1001/the1001.ini"/>
   </target>
