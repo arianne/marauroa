@@ -1,3 +1,5 @@
+package simplegame.objects;
+
 import marauroa.game.RPObject;
 import marauroa.game.RPObjectFactory;
 import marauroa.game.Attributes;
@@ -6,6 +8,7 @@ import marauroa.net.InputSerializer;
 import marauroa.marauroad;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Iterator;
 
 
@@ -89,7 +92,7 @@ public class CharacterList
 
   public CharEntryIterator iterator()
   {
-    return(new CharEntryIterator(charList);
+    return(new CharEntryIterator(charList));
   }
  
   private class CharEntryIterator

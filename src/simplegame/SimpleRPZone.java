@@ -23,15 +23,15 @@ public class SimpleRPZone
   
   public SimpleRPZone()
   {
-  deletedList=new LinkedList();
+    deletedList=new LinkedList();
   }
   
   public Perception getPerception(RPObject.ID id)
   {
     /** Using TOTAL perception per turn */
     RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
-    perception.modifiedList=new LinkedList();
-    perception.deletedList =deletedList;
+    perception.modifiedList = new LinkedList();
+    perception.deletedList  = deletedList;
     try
     {
       RPObject player = get(id);

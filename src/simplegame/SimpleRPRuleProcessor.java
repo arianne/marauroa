@@ -14,6 +14,7 @@ import simplegame.actions.ChallengeAction;
 import simplegame.actions.GetCharacterListAction;
 import simplegame.actions.MoveAction;
 import simplegame.objects.GameBoard;
+import simplegame.objects.CharacterList;
 
 public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
@@ -173,13 +174,32 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       if(iter!=null)
       {
         RPSlot playerlist = new RPSlot("ear");
+        CharacterList clist = new CharacterList();
         while(iter.hasNext())
         {
           RPObject object = (RPObject)iter.next();
           int oid = Integer.parseInt(object.get("object_id"));
           if(oid!=id.getObjectID())
           {
+            String name = object.get("name");
+            String pl_status = "idle";
+            try
+            {
+              pl_status = (object.getSlot("hand").get()==null?"idle":"busy");
+            }
+            catch(Exception ex)
+            {
+              pl_status = "idle";
+            }
+            clist.addCharacter(oid,object.get("name"),pl_status);
           }
+        }
+        try
+        {
+          rp_player.addSlot(playerlist);
+        }
+        catch(RPObject.SlotAlreadyAddedException saae)
+        {
         }
       }
     }
