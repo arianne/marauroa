@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.10 2004/06/21 17:11:34 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.11 2004/06/22 11:47:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class PerceptionHandler
     
     public int onPerceptionBegin(byte type, int timestamp);
     public int onPerceptionEnd(byte type, int timestamp);
-    public int onException(Exception e) throws Exception;
+    public int onException(Exception e, MessageS2CPerception perception) throws Exception;
     }
   
   static public class DefaultPerceptionListener implements IPerceptionListener
@@ -104,9 +104,10 @@ public class PerceptionHandler
       return 0;
       }
       
-    public int onException(Exception e) throws Exception
+    public int onException(Exception e, MessageS2CPerception perception) throws Exception
       {
       System.out.println(e.getMessage());
+      System.out.println(perception);
       e.printStackTrace();
       
       throw e;      
@@ -158,13 +159,16 @@ public class PerceptionHandler
 
         if(!synced)
           {
+            System.out.println("<World>");
+            System.out.println(world_instance.toString());
+            System.out.println("</World>");
           synced=true;
           listener.onSynced();
           }
         }
       catch(Exception e)
         {
-        listener.onException(e);
+        listener.onException(e,message);
         }
       }
     else if(message.getTypePerception()==Perception.DELTA && previousTimestamp+1==message.getPerceptionTimestamp())
@@ -181,7 +185,10 @@ public class PerceptionHandler
         }
       catch(Exception e)
         {
-        listener.onException(e);
+            System.out.println("<World>");
+            System.out.println(world_instance.toString());
+            System.out.println("</World>");
+        listener.onException(e, message);
         }
       }
     else
@@ -206,7 +213,7 @@ public class PerceptionHandler
             }
           catch(Exception e)
             {
-            listener.onException(e);
+            listener.onException(e, message);
             }
           
           it.remove();

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.35 2004/06/15 22:28:36 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.36 2004/06/22 11:47:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,7 +118,7 @@ public class Attributes implements marauroa.net.Serializable
     {
     /* This is for Delta-delta feature */
     added.put(attribute,value);
-    
+
     if(attribute.equals("type") && RPClass.hasRPClass(value))
       {
       try 
@@ -128,6 +128,7 @@ public class Attributes implements marauroa.net.Serializable
       catch(RPClass.SyntaxException e)
         {
         /* NOTE: Can't ever happen */
+        marauroad.trace("Attributes::Put","!","Syntax error: "+e.getMessage());
         }
       }
     
@@ -202,8 +203,15 @@ public class Attributes implements marauroa.net.Serializable
     {
     if(content.containsKey(attribute))
       {
-      /* This is for Delta-delta feature */
-      deleted.put(attribute,"");
+      if(added.containsKey(attribute))
+        {
+        added.remove(attribute);
+        }
+      else
+        {
+        /* This is for Delta-delta feature */
+        deleted.put(attribute,"");
+        }
       
       content.remove(attribute);
       }

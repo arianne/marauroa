@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.27 2004/05/17 18:38:24 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.28 2004/06/22 11:47:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,11 +25,7 @@ import marauroa.game.RPAction;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.marauroad;
-import marauroa.net.MessageC2SAction;
-import marauroa.net.MessageC2SLogout;
-import marauroa.net.MessageS2CActionACK;
-import marauroa.net.NetworkClientManager;
-import marauroa.net.PerceptionHandler;
+import marauroa.net.*;
 import the1001.RPCode;
 
 /**
@@ -1264,7 +1260,7 @@ public final class GameDataModel
    * @return   an int
    *
    */
-  public int onException(Exception e)
+  public int onException(Exception e, MessageS2CPerception message)
   {
     // TODO
     return 0;

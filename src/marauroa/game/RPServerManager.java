@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.103 2004/06/21 17:11:33 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.104 2004/06/22 11:47:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -286,7 +286,7 @@ public class RPServerManager extends Thread
           {
           if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_LOADED && deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
             {
-            marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are to send a SYNC perception"); 
+            marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are going to send a SYNC perception"); 
             playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
             }
             
@@ -309,8 +309,8 @@ public class RPServerManager extends Thread
               }
             else
               {
-              marauroad.trace("RPServerManager::buildPerceptions","D","NO Perception: Out of sync player ("+playerContainer.getRPObjectID(clientid).toString()+")");
-              perception=new Perception(Perception.SYNC);
+              marauroad.trace("RPServerManager::buildPerceptions","X","NO Perception: Out of sync player ("+playerContainer.getRPObjectID(clientid).toString()+")");
+              perception=null;
               }
             
             int timestamp=playerContainer.getPerceptionTimestamp(clientid);
@@ -498,13 +498,14 @@ public class RPServerManager extends Thread
         /** Execute AI stuff */
         aiMan.compute(0);
 
-        /** Move zone to the next turn */
-        zone.nextTurn();
         /** Compute game RP rules to move to the next turn */
         ruleProcessor.nextTurn();
 
         /** Tell player what happened */
         buildPerceptions();
+
+        /** Move zone to the next turn */
+        zone.nextTurn();
         }
       playerContainer.getLock().releaseLock();
       
