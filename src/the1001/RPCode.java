@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.45 2004/01/28 16:35:32 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.46 2004/01/28 17:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,6 +175,8 @@ public class RPCode
    
     try
       {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+
       if(player.has(RPCode.var_fighting))
         {
         player.remove(RPCode.var_fighting);
@@ -199,6 +201,8 @@ public class RPCode
         {
         player.remove(RPCode.var_hidden_vote);
         }
+      
+      zone.modify(player);
       }
     catch(Exception e)
       {
@@ -257,6 +261,7 @@ public class RPCode
         player.remove(RPCode.var_hidden_vote);
         }
       
+      zone.modify(player);
       return true;
       }
     catch(Exception e)
