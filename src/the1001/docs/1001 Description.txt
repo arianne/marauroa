@@ -1,0 +1,6 @@
+Title  : 1001 Description
+Info   : Description of the idea behind 1001
+Keyword: basic, design, game, rp, idea
+Author : Miguel Angel Blanch Lardin
+Created: 2003/12/10
+status : planning

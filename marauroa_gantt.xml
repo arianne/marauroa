@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "http://ganttproject.sourceforge.net/dtd/ganttproject.dtd">
 
-<project name="" company="" view-date="1/9/2003" view-zoom="4" version="1.9.9">
+<project name="" company="" view-date="1/9/2003" view-zoom="5" version="1.9.9">
     <description>    </description>
 
     <tasks color="#8cb6ce">
@@ -67,7 +67,7 @@
             <depend id="85" type="2"/>
         </task>
         <task id="85" name="Release Marauroa 0.02" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="7/12/2003" duration="2" complete="100" priority="1">
-            <depend id="86" type="2"/>
+            <depend id="93" type="2"/>
         </task>
         <task id="81" name="Implement Delta Perception" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="12/11/2003" duration="28" complete="100" priority="1">
             <depend id="93" type="2"/>
@@ -78,8 +78,8 @@
         <task id="95" name="Update documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/11/2003" duration="13" complete="100" priority="1">
             <depend id="93" type="2"/>
         </task>
-        <task id="93" name="Release Marauroa 0.03" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="10/12/2003" duration="3" complete="100" priority="1">
-            <depend id="86" type="2"/>
+        <task id="93" name="Release Marauroa 0.03" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="3" complete="100" priority="1">
+            <depend id="113" type="2"/>
         </task>
         <task id="79" name="Create a simple game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="3/12/2003" duration="8" complete="90" priority="1">
             <depend id="86" type="2"/>
@@ -87,13 +87,19 @@
         <task id="96" name="Document SimpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="8/12/2003" duration="9" complete="20" priority="1">
             <depend id="86" type="2"/>
         </task>
+        <task id="114" name="Fix FATAL bug at NetworkServerManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="2" complete="100" priority="1">
+            <depend id="113" type="2"/>
+        </task>
+        <task id="113" name="Release Marauroa 0.04" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="13/12/2003" duration="3" complete="100" priority="2">
+            <depend id="86" type="2"/>
+        </task>
         <task id="86" name="Release Marauroa 0.10" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="17/12/2003" duration="3" complete="0" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="12" complete="0" priority="1">
+        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="12" complete="3" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="109" name="Document 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="7" complete="0" priority="1">
+        <task id="109" name="Document 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="7" complete="12" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="110" name="Release Marauroa 0.20" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/12/2003" duration="3" complete="0" priority="1"/>

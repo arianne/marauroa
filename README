@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.10-CVS version 
+0.04 version 
 
 Status
 ------
@@ -83,9 +83,9 @@ Please refer to docs/JDBC Database HOWTO.txt
 
 Changelog
 ---------
-0.10 	Dic XX, 2003
+0.04 	Dic 11, 2003
+- Fixed FATAL bug at NetworkServerManager and JMarauroa
 - Added ServerInfo message
-
 
 0.03	Dic 09, 2003
 - Delta Perception
