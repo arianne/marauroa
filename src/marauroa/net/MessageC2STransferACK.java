@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.2 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.3 2004/11/18 20:53:23 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,7 @@ public class MessageC2STransferACK extends Message
     contents.add(content);
     }
   
-  public List getContents()
+  public List<TransferContent> getContents()
     {
     return contents;
     }
@@ -53,10 +53,8 @@ public class MessageC2STransferACK extends Message
     int size=contents.size();
     out.write(size);
     
-    Iterator it=contents.iterator();
-    while(it.hasNext())
+    for(TransferContent content: contents)
       {
-      TransferContent content=(TransferContent)it.next();
       content.writeACK(out);
       }    
     }
