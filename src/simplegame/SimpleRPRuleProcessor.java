@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.26 2003/12/13 19:27:22 root777 Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.27 2003/12/15 07:29:17 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,17 @@ import simplegame.actions.GetCharacterListAction;
 import simplegame.actions.MoveAction;
 import simplegame.objects.CharacterList;
 import simplegame.objects.GameBoard;
+
+/**
+ * @TODO Actions:
+ * @TODO get player list with status (idle,busy)
+ * @TODO challenge idle player
+ * @TODO accept challenge
+ * @TODO reject challenge
+ * @TODO make move
+ * @TODO give up(the oppenent wins)
+ **/
+
 
 public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
@@ -207,7 +218,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         GameBoard gb = new GameBoard(3);
         slot.add(gb);
         slot2.add(gb);
-                
+        
         marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+id +" got the board");
         marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+oppenent_id +" got the board");
         status = RPAction.STATUS_SUCCESS;
