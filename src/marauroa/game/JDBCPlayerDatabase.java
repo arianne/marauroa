@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32 2004/04/26 14:09:46 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.33 2004/04/26 16:01:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1217,13 +1217,36 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
-    Connection connection = ((JDBCTransaction)trans).getConnection();
+    if(last_idAssigned==1)
+      {
+      try
+        {
+        Connection connection = ((JDBCTransaction)trans).getConnection();
+        Statement stmt=connection.createStatement();
+      
+        String query = "select max(id) from player";
+        marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
+
+        ResultSet result = stmt.executeQuery(query);
+
+        if(result.next())
+          {
+          last_idAssigned=result.getInt(1);
+          }
+        }
+      catch(Exception e)
+        {
+        marauroad.trace("JDBCRPObjectDatabase::storeRPObject","X",e.getMessage());
+        }
+      }
+
     RPObject.ID id=new RPObject.ID(last_idAssigned++);
 
     while(hasRPObject(trans,id))
       {
       id=new RPObject.ID(last_idAssigned++);
       }
+
     return id;
     }
 
