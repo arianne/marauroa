@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.17 2004/03/22 18:12:59 root777 Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.18 2004/03/22 18:56:45 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,9 +27,6 @@ import marauroa.*;
  *  Actually it is limited to MySQL because we are using the AUTO_INCREMENT keyword. */
 public class JDBCPlayerDatabase implements PlayerDatabase
 {
-  /** connection info **/
-  private Properties connInfo;
-  
   /** Class to store the login events */
   private static class LoginEvent
   {
@@ -64,8 +61,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     return true;
   }
   
-  /** A connection to the JDBC database */
-  private JDBCTransaction transaction;
   private static PlayerDatabase playerDatabase=null;
   private static JDBCRPObjectDatabase rpobjectDatabase=null;
   
@@ -74,13 +69,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  Refer to JDBC Database HOWTO document. */
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
   {
-    this.connInfo = connInfo;
-    //    connection=createConnection(connInfo);
-    //    if(connection==null)
-    //    {
-    //      throw new NoDatabaseConfException();
-    //    }
-    //
     initDB();
   }
   
@@ -104,16 +92,16 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::getDatabase",">");
     try
     {
-      if(playerDatabase==null)
-      {
-        playerDatabase=resetDatabaseConnection();
-      }
-      
       if(rpobjectDatabase==null)
       {
         rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
       }
       
+      if(playerDatabase==null)
+      {
+        playerDatabase=resetDatabaseConnection();
+      }
+
       return playerDatabase;
     }
     catch(Exception e)
@@ -588,7 +576,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         String query = "insert into characters values("+id+",'"+character+"',"+object.get("object_id")+")";
         stmt.execute(query);
         
-        rpobjectDatabase.storeRPObject(object);
+        rpobjectDatabase.storeRPObject(trans,object);
       }
     }
     catch(SQLException sqle)
@@ -682,7 +670,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       }
       
-      rpobjectDatabase.storeRPObject(object);
+      rpobjectDatabase.storeRPObject(trans,object);
     }
     catch(SQLException sqle)
     {
@@ -730,7 +718,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
         int object_id=result.getInt(1);
         
-        return rpobjectDatabase.loadRPObject(new RPObject.ID(object_id));
+        return rpobjectDatabase.loadRPObject(trans,new RPObject.ID(object_id));
       }
       else
       {
@@ -937,69 +925,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   public Transaction getTransaction()
     throws GameDatabaseException.GenericDatabaseException
   {
-    if (transaction==null || !transaction.isValid())
-    {
-      transaction=new JDBCTransaction(createConnection(connInfo));
-      if(transaction==null || !transaction.isValid())
-      {
-        throw new GenericDatabaseException("can't create connection");
-      }
-    }
-    return(transaction);
+    return(rpobjectDatabase.getTransaction());
   }
-  
-  //  public Connection getConnection()
-  //    throws GameDatabaseException.GenericDatabaseException
-  //  {
-  //    if (connection==null || !isValidConnection(connection))
-  //    {
-  //      connection=createConnection(connInfo);
-  //      if(connection==null)
-  //      {
-  //        throw new GenericDatabaseException("can't create connection");
-  //      }
-  //    }
-  //    return(connection);
-  //  }
-  //
-  //  private boolean isValidConnection(Connection con)
-  //  {
-  //  }
-  //
-  //  public boolean isConnectionClosed()
-  //  {
-  //    marauroad.trace("JDBCPlayerDatabase::isConnectionClosed",">");
-  //
-  //    try
-  //    {
-  //      Statement stmt = connection.createStatement();
-  //      String query = "select count(*) from player";
-  //      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","D",query);
-  //
-  //      ResultSet result = stmt.executeQuery(query);
-  //
-  //      return true;
-  //    }
-  //    catch(SQLException sqle)
-  //    {
-  //      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","D","CLOSED!: "+sqle.getMessage());
-  //
-  //      try
-  //      {
-  //        playerDatabase=resetDatabaseConnection();
-  //      }
-  //      catch(Exception e)
-  //      {
-  //        marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","!",e.getMessage());
-  //        System.exit(1);
-  //      }
-  //
-  //      return true;
-  //    }
-  //    finally
-  //    {
-  //      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","<");
-  //    }
-  //  }
 }
+
 
