@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.1 2005/01/23 21:00:42 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.2 2005/02/08 20:20:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,6 +131,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
   /** This method set the value of an attribute
    *  @param attribute the attribute to be set.
    *  @param value the value we want to set. */
+  public void put(String attribute, double value)
+    {
+    put(attribute,Double.toString(value));
+    }
+    
+  /** This method set the value of an attribute
+   *  @param attribute the attribute to be set.
+   *  @param value the value we want to set. */
   public void put(String attribute, List value)
     {
     put(attribute,Attributes.ListToString(value));
@@ -163,7 +171,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       throw new AttributeNotFoundException(attribute);
       }
     }
-	
+
+  public double getDouble(String attribute) throws AttributeNotFoundException
+    {
+    if(content.containsKey(attribute))
+      {
+      return Double.parseDouble(content.get(attribute));
+      }
+    else
+      {
+      throw new AttributeNotFoundException(attribute);
+      }
+    }
+    
   public List getList(String attribute) throws AttributeNotFoundException
     {
     if(content.containsKey(attribute))

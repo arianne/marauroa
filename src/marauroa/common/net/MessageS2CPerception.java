@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.2 2005/02/08 20:22:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -295,7 +295,7 @@ public class MessageS2CPerception extends Message
       }
       
     static CachedCompressedPerception instance;
-    static public CachedCompressedPerception get()
+    synchronized static public CachedCompressedPerception get()
       {
       if(instance==null)
         {
@@ -305,12 +305,12 @@ public class MessageS2CPerception extends Message
       return instance;
       }
      
-    public void clear()
+    synchronized public void clear()
       {
       cachedContent.clear();
       }
     
-    public byte[] get(MessageS2CPerception perception) throws IOException
+    synchronized public byte[] get(MessageS2CPerception perception) throws IOException
       {
       CacheKey key=new CacheKey(perception.typePerception, perception.zoneid);
       

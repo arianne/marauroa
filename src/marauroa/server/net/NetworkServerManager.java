@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.3 2005/01/29 17:59:43 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.4 2005/02/08 20:22:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,7 +73,7 @@ public final class NetworkServerManager
 
       messagesToSend = new LinkedList<Message>();
 
-      int writer_count = 5;
+      int writer_count = 1;
       writeManager = new NetworkServerManagerWrite[writer_count];
       for(int i = 0; i<writeManager.length; i++)
         {
