@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.13 2004/02/18 12:09:41 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.14 2004/03/01 23:01:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,6 +47,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   public boolean validString(String string)
     {
+    if(string.indexOf('\\')!=-1) return false;
     if(string.indexOf('\'')!=-1) return false;
     if(string.indexOf('"')!=-1) return false;
     if(string.indexOf('%')!=-1) return false;

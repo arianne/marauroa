@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.18 2004/02/02 13:06:14 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.19 2004/03/01 23:01:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -378,8 +378,6 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
-          marauroad.trace("PlayerEntryContainer::getLoginEvent","!","This should never happens");
-          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -448,8 +446,6 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(-not available-)");
-          marauroad.trace("PlayerEntryContainer::hasCharacter","!","This should never happens");
-          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -515,8 +511,6 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
-          marauroad.trace("PlayerEntryContainer::getCharacterList","!","This should never happens");
-          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -561,8 +555,6 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
-      marauroad.trace("PlayerEntryContainer::getRPObject","!","This should never happens");
-      System.exit(-1);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(Attributes.AttributeNotFoundException e)
@@ -616,8 +608,6 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
-      marauroad.trace("PlayerEntryContainer::setRPObject","!","This should never happens");
-      System.exit(-1);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(Attributes.AttributeNotFoundException e)

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.47 2004/02/24 14:08:41 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.48 2004/03/01 23:01:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -319,8 +319,7 @@ class RPServerManager extends Thread
       }
     catch(Exception e)
       {
-      marauroad.trace("RPServerManager::notifyTimedoutPlayers","!","Can't notify a player(-not available-) that timedout");
-      //System.exit(-1);
+      marauroad.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player(-not available-) that timedout");
       }
     finally
       {
