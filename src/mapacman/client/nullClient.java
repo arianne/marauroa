@@ -278,6 +278,7 @@ public class nullClient extends Thread
             {
             System.out.println("Out of sync");
             System.out.println(msgPer);
+            System.exit(0);
             
             MessageC2SOutOfSync mes=new MessageC2SOutOfSync(address);
             mes.setClientID(clientid);
