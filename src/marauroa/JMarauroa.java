@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.13 2003/12/15 17:00:47 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.14 2003/12/15 17:10:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -372,8 +372,8 @@ public class JMarauroa
 		
 		
 		JComboBox cb_server = new JComboBox();
-		cb_server.addItem("192.168.100.100");
 		cb_server.addItem("127.0.0.1");
+		cb_server.addItem("192.168.100.100");
 		cb_server.addItem("localhost");
 		cb_server.setEditable(true);
 		message[1] = cb_server;
