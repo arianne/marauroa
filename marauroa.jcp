@@ -51,6 +51,7 @@ FILTER := ""
 LABEL := "RP section"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\NoRPZoneException.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPWorld.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\SlotAlreadyAddedException.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObjectNotFoundException.java" #[EndFile]
@@ -98,9 +99,7 @@ LABEL := "Test"
 FILTER := ""
 
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPClass.java" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
@@ -116,6 +115,13 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabaseFactory.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Transaction.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\TransactionException.java" #[EndFile]
+#[BeginFolder]
+LABEL := "Test"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
+#[EndFolder]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.62 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.63 2004/09/17 18:45:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,6 +129,18 @@ public class MarauroaRPZone implements IRPZone
       }
       
     return new RPObject(id);
+    }
+
+  public void assignRPObjectID(RPObject object)
+    {
+    RPObject.ID id=new RPObject.ID(++lastNonPermanentIdAssigned,zoneid);
+    while(has(id))
+      {
+      id=new RPObject.ID(++lastNonPermanentIdAssigned,zoneid);
+      }
+      
+    /** TODO: Ugly */
+    object.put("id",id.getObjectID());
     }
     
   public Iterator iterator()

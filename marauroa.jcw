@@ -9,6 +9,9 @@ LABEL := "marauroa"
 
 ! Start Last Document Structure
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\IRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObject.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\NoRPZoneException.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPWorld.java" #[EndFile]
 
 ! Start Breakpoint Structure

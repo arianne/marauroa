@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.7 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.8 2004/09/17 18:45:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -99,6 +99,7 @@ public interface IRPZone
 
   /** This method create a new RPObject with a valid id */
   public RPObject create();
+  public void assignRPObjectID(RPObject object);
   
   /** Iterates over the elements of the zone */
   public Iterator iterator();
