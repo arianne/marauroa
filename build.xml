@@ -57,6 +57,11 @@
       </fileset>
     </javadoc>
   </target>
+
+  <target name="test" depends="jar">
+  <!-- Create a JUnit task to run tests -->
+  </target>
+  
   
   <target name="clean">
     <delete dir="${build}"/>
