@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.72 2004/08/30 19:25:55 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.73 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -265,7 +265,7 @@ public class RPCode
         int gladiator_id=player.getInt(RPCode.var_choose);
         player.remove(RPCode.var_choose);
 
-        arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(gladiator_id,-1));
+        arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(gladiator_id,""));
         marauroad.trace("RPCode::RemovePlayer","D","Gladiator("+gladiator_id+") removed from Arena");
         zone.modify(arena);
         }
@@ -616,7 +616,7 @@ public class RPCode
 
           if(arena.has(RPCode.var_winner))
             {
-            winner_id=new RPObject.ID(arena.getInt(RPCode.var_winner),-1);
+            winner_id=new RPObject.ID(arena.getInt(RPCode.var_winner),"");
             }
           else
             {
@@ -697,7 +697,7 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        RPObject gladiator=arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(player.getInt(RPCode.var_choose),-1));
+        RPObject gladiator=arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(player.getInt(RPCode.var_choose),""));
         
         /** HACK: We need to update the gladiator on player */
         player.getSlot(RPCode.var_myGladiators).add(gladiator);
@@ -738,7 +738,7 @@ public class RPCode
           {
           /** Closely related to RequestFight code. We should avoid duplication */
           RPObject player=(RPObject)it.next();
-          RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose),-1));
+          RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose),""));
 
           marauroad.trace("RPCode::SetUpNextCombat","D","Added player("+new RPObject.ID(player).toString()+") with gladiator("+new RPObject.ID(gladiator).toString()+")");
           player.remove(RPCode.var_requested);

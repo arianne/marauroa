@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.17 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.18 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -594,11 +594,11 @@ public class Test_Messages extends TestCase
 
     int clientid=14324;
     
-    Perception perception=new Perception(Perception.SYNC,new IRPZone.ID(-1));
-    perception.added(new RPObject(new RPObject.ID(12,-1)));
-    perception.added(new RPObject(new RPObject.ID(13,-1)));
-    perception.added(new RPObject(new RPObject.ID(14,-1)));
-    perception.added(new RPObject(new RPObject.ID(15,-1)));
+    Perception perception=new Perception(Perception.SYNC,new IRPZone.ID(""));
+    perception.added(new RPObject(new RPObject.ID(12,"")));
+    perception.added(new RPObject(new RPObject.ID(13,"")));
+    perception.added(new RPObject(new RPObject.ID(14,"")));
+    perception.added(new RPObject(new RPObject.ID(15,"")));
     
     MessageS2CPerception msg=new MessageS2CPerception(null, perception);
 

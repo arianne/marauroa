@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.30 2004/08/30 19:25:55 arianne_rpg Exp $ */
+/* $Id: GameDataModel.java,v 1.31 2004/09/05 09:09:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -677,7 +677,7 @@ public final class GameDataModel
 	  String own_glad_id = own_glad==null?null:own_glad.get(RPCode.var_object_id);
 	  RPObject rp_arena = getArena();
 	  RPSlot sl_glads = rp_arena.getSlot(RPCode.var_gladiators);
-	  RPObject my_glad = sl_glads.get(new RPObject.ID(Integer.parseInt(own_glad_id),-1));
+      RPObject my_glad = sl_glads.get(new RPObject.ID(Integer.parseInt(own_glad_id),""));
           int own_damage = 0;
           try
           {
@@ -855,7 +855,7 @@ public final class GameDataModel
           String karma;
           String strtg;
           RPObject gladiator = null;
-          if(ownCharacterId.equals(new RPObject.ID(spec_id,-1)))
+          if(ownCharacterId.equals(new RPObject.ID(spec_id,"")))
           {
             gladiator = getFirstOwnGladiator();
             name="*"+name;
@@ -1146,7 +1146,7 @@ public final class GameDataModel
     {
       try
       {
-        setOwnCharacterID(new RPObject.ID(object.getInt(RPCode.var_object_id),-1));
+        setOwnCharacterID(new RPObject.ID(object.getInt(RPCode.var_object_id),""));
       }
       catch (AttributeNotFoundException e)
       {

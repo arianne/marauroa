@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.18 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.19 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class Test_RPObject extends TestCase
       assertEquals(SonGoku.getSlot("left_hand"),slot);
       
       RPObject.ID id=new RPObject.ID(SonGoku);
-      RPObject.ID id_1=new RPObject.ID(1,-1);
+      RPObject.ID id_1=new RPObject.ID(1,"");
 
       assertEquals(id,id_1);
       }

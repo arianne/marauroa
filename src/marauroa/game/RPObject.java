@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.47 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.48 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,7 @@ public class RPObject extends Attributes
       }
     }
     
-  public final static ID INVALID_ID=new ID(-1,-1);
+  public final static ID INVALID_ID=new ID(-1,"");
   
   /** Constructor */
   public RPObject()
@@ -584,11 +584,11 @@ public class RPObject extends Attributes
   public static class ID implements marauroa.net.Serializable
     {
     private int id;
-    private int zoneid;
+    private String zoneid;
     
     /** Constructor
      *  @param oid the object id */
-    public ID(int oid,int zid)
+    public ID(int oid,String zid)
       {
       id=oid;
       zoneid=zid;
@@ -623,7 +623,7 @@ public class RPObject extends Attributes
       return id;
       }
 
-    public int getZoneID()
+    public String getZoneID()
       {
       return zoneid;
       }
@@ -665,7 +665,7 @@ public class RPObject extends Attributes
     public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
       {
       id=in.readInt();
-      zoneid=in.readInt();
+      zoneid=in.readString();
       }
     }
   }

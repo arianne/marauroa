@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.61 2004/09/04 20:25:00 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.62 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ public class MarauroaRPZone implements IRPZone
 
   public MarauroaRPZone()
     {
-    zoneid=new ID(-1);
+    zoneid=new ID("");
     rand.setSeed(new Date().getTime());
     objects=new LinkedHashMap();
     modified=new LinkedHashMap();

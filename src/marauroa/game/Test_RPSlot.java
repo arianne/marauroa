@@ -1,4 +1,4 @@
-/* $Id: Test_RPSlot.java,v 1.5 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: Test_RPSlot.java,v 1.6 2004/09/05 09:09:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,7 +74,7 @@ public class Test_RPSlot extends TestCase
       {
       RPSlot slot=new RPSlot();
 
-      slot.remove(new RPObject.ID(10123,-1));
+      slot.remove(new RPObject.ID(10123,""));
       fail("Should have thrown exception");
       }
     catch(Exception e)

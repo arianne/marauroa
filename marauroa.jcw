@@ -8,13 +8,12 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaDBRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmancreateaccount.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\the1001createaccount.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa_init.sql" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\stendhal\\stendhalcreateaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\IPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPServerManager.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]
