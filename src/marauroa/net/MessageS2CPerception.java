@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.10 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.11 2004/01/20 00:27:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -91,7 +91,7 @@ public class MessageS2CPerception extends Message
     super.writeObject(out);
     
     out.write(typePerception);
-    out.write(modifiedRPObjects.size());
+    out.write((int)modifiedRPObjects.size());
     
     Iterator it_mod=modifiedRPObjects.iterator();
     while(it_mod.hasNext())
@@ -99,7 +99,7 @@ public class MessageS2CPerception extends Message
       out.write((RPObject)it_mod.next());
       }
 
-    out.write(deletedRPObjects.size());
+    out.write((int)deletedRPObjects.size());
 
     Iterator it_del=deletedRPObjects.iterator();
     while(it_del.hasNext())

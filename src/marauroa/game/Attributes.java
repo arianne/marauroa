@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.17 2004/01/08 23:09:25 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.18 2004/01/20 00:27:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -194,8 +194,22 @@ public class Attributes implements marauroa.net.Serializable
 
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
-    Iterator  it=content.entrySet().iterator();
-    out.write((int)content.size());
+    Iterator it=content.entrySet().iterator();
+    int size=content.size();
+
+    while(it.hasNext())
+      {
+      Map.Entry entry=(Map.Entry)it.next();
+      
+      String key=(String)entry.getKey();
+      if(key.charAt(0)=='!')      
+        {
+        --size;
+        }
+      }
+
+    out.write(size);
+    it=content.entrySet().iterator();
     
     while(it.hasNext())
       {

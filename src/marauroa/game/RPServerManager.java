@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.37 2004/01/19 22:50:28 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.38 2004/01/20 00:27:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -242,6 +242,7 @@ class RPServerManager extends Thread
               }
             
             Message messages2cPerception=new MessageS2CPerception(source, perception.type, perception.modifiedList, perception.deletedList);
+            messages2cPerception.setClientID(clientid);
             netMan.addMessage(messages2cPerception);            
             }
             
