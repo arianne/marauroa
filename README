@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.23 version 
+0.24 version 
 
 
 Status
@@ -92,6 +92,12 @@ Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.24	Mar 02,	2004
+- Fixed SQL bug that can cause a denial of service on server
+- Fixed bug on Fame to be assigned to winner
+- Fixed correctly the no-winner situation
+- Fixed test cases to correctly pass the PlayerEntryContainer
+
 0.23	Feb 15,	2004
 - Added chat
 - Added statistics
