@@ -1,4 +1,4 @@
-create table if not exists player 
+create table if not exists player
   (
   id integer auto_increment not null,
   username VARCHAR(30) not null,
@@ -8,27 +8,31 @@ create table if not exists player
   timedate TIMESTAMP,
   
   primary key(id)
-  );
+  )
+  TYPE=INNODB;
 
-create table if not exists characters 
+
+create table if not exists characters
   (
   player_id integer not null,
   charname VARCHAR(30) not null,
-  object_id integer not null, 
+  object_id integer not null,
   
   PRIMARY KEY(charname,player_id)
-  );
+  )
+  TYPE=INNODB;
+  
 
-create table if not exists loginEvent 
-  ( 
+create table if not exists loginEvent
+  (
   player_id integer not null,
-  address VARCHAR(40), 
+  address VARCHAR(40),
   timedate TIMESTAMP,
   result TINYINT
   );
 
-create table if not exists statistics 
-  ( 
+create table if not exists statistics
+  (
   timedate timestamp,
   
   bytes_send integer,
@@ -44,9 +48,9 @@ create table if not exists statistics
 
 create table if not exists rpobject
   (
-  id integer not null primary key, 
+  id integer not null primary key,
   slot_id integer
-  ) 
+  )
   TYPE=INNODB;
   
 create table if not exists rpattribute
@@ -60,12 +64,12 @@ create table if not exists rpattribute
 
 create table if not exists rpslot
   (
-  object_id integer not null, 
-  name varchar(64) not null, 
+  object_id integer not null,
+  name varchar(64) not null,
   slot_id integer auto_increment not null,
   
   primary key(slot_id)
-  ) 
+  )
   TYPE=INNODB;
 
 
