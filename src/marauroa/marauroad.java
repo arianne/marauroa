@@ -55,6 +55,7 @@ public class marauroad extends Thread
     marauroad.trace("marauroad::run",">");
     boolean finish=false;
     println("Marauroa server       - An open source MMORPG Server -");
+    println("Running on [@version@]");
     println("(C) 2003 Miguel Angel Blanch Lardin");
     println();
     println("This program is free software; you can redistribute it and/or modify");
