@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.9 2003/12/08 23:40:10 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.10 2004/03/02 15:49:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,7 @@ public class NetworkClientManager
     socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
     
     msgFactory=MessageFactory.getFactory();
-    pendingPackets=new HashMap();
+    pendingPackets=Collections.synchronizedMap(new HashMap());
     }
   
   /** This method notify the thread to finish it execution */

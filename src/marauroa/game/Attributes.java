@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.21 2004/02/06 21:38:45 root777 Exp $ */
+/* $Id: Attributes.java,v 1.22 2004/03/02 15:49:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,118 +26,118 @@ import org.w3c.dom.NodeList;
 
 /** This class host a list of Attributes stored as a pair String=String */
 public class Attributes implements marauroa.net.Serializable
-{
+  {
   /** A Map<String,String> that contains the attributes */
   private Map content;
   
   public static class AttributeNotFoundException extends Exception
 	{
-		private String attribute;
+	private String attribute;
 		
-		public AttributeNotFoundException(String attrib)
-		{
-			super("Attribute ["+attrib+"] not found");
-			attribute=attrib;
-		}
+	public AttributeNotFoundException(String attrib)
+  	  {
+	  super("Attribute ["+attrib+"] not found");
+	  attribute=attrib;
+	  }
 		
-		public String getAttribute()
-		{
-			return attribute;
-		}
+	public String getAttribute()
+	  {
+	  return attribute;
+	  }
 	}
 	
   /** Constructor */
   public Attributes()
 	{
-		content=new HashMap();
+	content=new HashMap();
 	}
 	
   /** This method returns true if the attribute exists
-	 *  @param attribute the attribute name to check
-	 *  @return true if it exist or false otherwise */
+	*  @param attribute the attribute name to check
+	*  @return true if it exist or false otherwise */
   public boolean has(String attribute)
 	{
-		return content.containsKey(attribute);
+	return content.containsKey(attribute);
 	}
 	
   /** This method set the value of an attribute
-	 *  @param attribute the attribute to be set.
-	 *  @param value the value we want to set. */
+	*  @param attribute the attribute to be set.
+	*  @param value the value we want to set. */
   public void put(String attribute, String value)
 	{
-		content.put(attribute,value);
+	content.put(attribute,value);
 	}
 	
   /** This method set the value of an attribute
-	 *  @param attribute the attribute to be set.
-	 *  @param value the value we want to set. */
+	*  @param attribute the attribute to be set.
+	*  @param value the value we want to set. */
   public void put(String attribute, int value)
 	{
-		content.put(attribute,Integer.toString(value));
+	content.put(attribute,Integer.toString(value));
 	}
 	
   /** This method set the value of an attribute
-	 *  @param attribute the attribute to be set.
-	 *  @param value the value we want to set. */
+	*  @param attribute the attribute to be set.
+	*  @param value the value we want to set. */
   public void put(String attribute, List value)
 	{
-		content.put(attribute,Attributes.ListToString(value));
+	content.put(attribute,Attributes.ListToString(value));
 	}
 	
   /** This methods return the value of an attribute
-	 *  @param attribute the attribute we want to get
-	 *  @return the value of the attribute
-	 *  @throw AttributesNotFoundException if the attributes doesn't exist. */
+	*  @param attribute the attribute we want to get
+	*  @return the value of the attribute
+	*  @throw AttributesNotFoundException if the attributes doesn't exist. */
   public String get(String attribute) throws AttributeNotFoundException
 	{
-		if(content.containsKey(attribute))
-		{
-			return (String)content.get(attribute);
-		}
-		else
-		{
-			throw new AttributeNotFoundException(attribute);
-		}
+	if(content.containsKey(attribute))
+	  {
+	  return (String)content.get(attribute);
+	  }
+	else
+	  {
+	  throw new AttributeNotFoundException(attribute);
+	  }
 	}
 	
   public int getInt(String attribute) throws AttributeNotFoundException
 	{
-		if(content.containsKey(attribute))
-		{
-			return Integer.parseInt((String)content.get(attribute));
-		}
-		else
-		{
-			throw new AttributeNotFoundException(attribute);
-		}
+	if(content.containsKey(attribute))
+	  {
+	  return Integer.parseInt((String)content.get(attribute));
+	  }
+	else
+	  {
+	  throw new AttributeNotFoundException(attribute);
+	  }
 	}
 	
   public List getList(String attribute) throws AttributeNotFoundException
 	{
-		if(content.containsKey(attribute))
-		{
-			return StringToList((String)content.get(attribute));
-		}
-		else
-		{
-			throw new AttributeNotFoundException(attribute);
-		}
+	if(content.containsKey(attribute))
+	  {
+	  return StringToList((String)content.get(attribute));
+	  }
+	else
+	  {
+	  throw new AttributeNotFoundException(attribute);
+	  }
 	}
 	
 	
   /** This methods remove the attribute from the container
-	 *  @param attribute the attribute we want to remove
-	 *  @throw AttributesNotFoundException if the attributes doesn't exist. */
+    *  @param attribute the attribute we want to remove
+	*  @throw AttributesNotFoundException if the attributes doesn't exist. */
   public void remove(String attribute) throws AttributeNotFoundException
 	{
-		if(content.containsKey(attribute))
-		{
-			content.remove(attribute);
-		}
-		else
-		{
-			throw new AttributeNotFoundException(attribute);
-		}
+	if(content.containsKey(attribute))
+	  {
+	  content.remove(attribute);
+	  }
+	else
+	  {
+	  throw new AttributeNotFoundException(attribute);
+	  }
 	}
 	
   /** This method returns true of both object are equal.

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.42 2004/02/25 18:49:19 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.43 2004/03/02 15:49:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,6 @@ public class marauroad extends Thread
     
     while(i!=args.length)
       {
-      System.out.println(args[i]);
       if(args[i].equals("-c"))
         {
         Configuration.setConfigurationFile(args[i+1]);

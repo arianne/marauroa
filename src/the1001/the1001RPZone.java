@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.13 2004/02/06 21:38:32 root777 Exp $ */
+/* $Id: the1001RPZone.java,v 1.14 2004/03/02 15:49:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,10 @@
  ***************************************************************************/
 package the1001;
 
-import marauroa.game.MarauroaRPZone;
-import marauroa.game.RPObject;
-import marauroa.game.RPSlot;
 import marauroa.marauroad;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import marauroa.game.*;
+import org.w3c.dom.*;
+import java.util.*;
 
 public class the1001RPZone extends MarauroaRPZone
 {
@@ -84,9 +81,28 @@ public class the1001RPZone extends MarauroaRPZone
 	
   public RPObject create(RPObject object)
 	{
-		/** TODO: Must copy the object and assign a new Object id
-		 *  It is used in the Buy action. */
-		return null;
+	/** TODO: Must copy the object and assign a new Object id
+	 *  It is used in the Buy action. */
+	try
+	  {
+	  RPObject result=super.create();
+	
+	  Iterator it=object.iterator();
+	  while(it.hasNext())
+	    {
+	    String attrib=(String)it.next();
+	    if(attrib.equals(RPCode.var_object_id)==false)
+	      {
+	      result.put(attrib,object.get(attrib));
+	      }
+	    }
+	  
+	  return result;
+	  }
+	catch(Exception e)
+	  {
+      return null;	 
+      }
 	}
 	
 	public Document toXML()
