@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.8 2004/12/23 10:33:26 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.9 2004/12/26 13:00:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.game;
 
 import java.util.*;
+import marauroa.marauroad;
 
 public class RPWorld 
   {
@@ -66,11 +67,14 @@ public class RPWorld
         if(object.has("clientid"))
           {
           playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
+          PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(object.getInt("clientid"));
+          entry.perception_OutOfSync=true;
           }
         }        
       }
     catch(Exception e)
       {
+      marauroad.thrown("RPWorld::add","X",e);
       throw new NoRPZoneException();  
       }
     }
@@ -102,17 +106,47 @@ public class RPWorld
     }
   
     
-  public void changeZone(IRPZone.ID oldzone, IRPZone.ID newzone, RPObject object)
+  public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) throws NoRPZoneException
     {
-    /* TODO: Do this, lazy guy */
+    marauroad.trace("RPWorld::changeZone",">");
+    try
+      {
+      if(newzoneid.equals(oldzoneid))
+        {
+        return;
+        }
+      
+      IRPZone newzone=getRPZone(newzoneid);
+      IRPZone oldzone=getRPZone(oldzoneid);
+    
+      oldzone.remove(object.getID());
+      object.put("zoneid",newzoneid.getID());
+      add(object);    
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("RPWorld::changeZone","X",e);
+      throw new NoRPZoneException();
+      }
+    finally
+      {
+      marauroad.trace("RPWorld::changeZone","<");
+      }
+    }  
+
+  public void changeZone(String oldzone, String newzone, RPObject object) throws NoRPZoneException
+    {
+    changeZone(new IRPZone.ID(oldzone),new IRPZone.ID(newzone),object);
     }  
   
   public void nextTurn()
     {
+    marauroad.trace("RPWorld::nextTurn",">");
     for(IRPZone zone: zones.values())
       {
       zone.nextTurn();
       }
+    marauroad.trace("RPWorld::nextTurn","<");
     }
   
   public int size()

@@ -75,25 +75,7 @@ public class nullClient extends Thread
 
       msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
-      while(recieved!=4)
-        {
-        Message msg=null;
 
-        while(msg==null) msg=netMan.getMessage();
-        if(msg instanceof MessageS2CChooseCharacterACK)
-          {
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CPerception)
-          {
-          }
-        else
-          {
-          throw new Exception();
-          }
-        }
-        
-      
       PerceptionHandler handler=new PerceptionHandler(new DefaultPerceptionListener()
         {
         public int onSynced()
@@ -129,11 +111,17 @@ public class nullClient extends Thread
         });
         
       boolean cond=true;
+      int i=0;
       while(cond)  
         {
+        ++i;
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
-        if(msg instanceof MessageS2CPerception)
+        if(msg instanceof MessageS2CChooseCharacterACK)
+          {
+          System.out.println("ChooseCharacterACK: "+msg);
+          }
+        else if(msg instanceof MessageS2CPerception)
           {
           System.out.println("Sending Perception ACK");
           MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
@@ -144,13 +132,42 @@ public class nullClient extends Thread
           handler.apply(msgPer,world_objects);
           
           RPAction action=new RPAction();
-          action.put("type","add");
-          action.put("a","1");
-          action.put("b","2");
+          if(i%5==0)
+            {
+            action.put("type","change");
+            action.put("dest","village");
+            }
+          else if(i%5==2)
+            {
+            action.put("type","change");
+            action.put("dest","city");
+            }
+          else
+            {          
+            action.put("type","add");
+            action.put("a",1);
+            if(myRPObject.has("result"))
+              {
+              action.put("b",2+myRPObject.getInt("result"));
+              }
+            else
+              {
+              action.put("b",2);
+              }
+            }
           
           MessageC2SAction msgAction=new MessageC2SAction(msg.getAddress(),action);
           msgAction.setClientID(clientid);
           netMan.addMessage(msgAction);
+          
+          System.out.println("<World contents ------------------------------------->");
+          int j=0;
+          for(RPObject object: world_objects.values())
+            {
+            j++;
+            System.out.println(j+". "+object);
+            }
+          System.out.println("</World contents ------------------------------------->");
           }
         else if(msg instanceof MessageS2CTransferREQ)        
           {

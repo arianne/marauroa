@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.60 2004/12/23 10:33:25 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.61 2004/12/26 13:00:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -311,7 +311,7 @@ public final class GameServerManager extends Thread
         object.put("clientid",clientid);
 
         rpMan.onInit(object);
-        playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_LOADED);
+        playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
 
         /* Correct: Character exist */
         MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());

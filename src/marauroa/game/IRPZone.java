@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.9 2004/11/21 14:17:31 root777 Exp $ */
+/* $Id: IRPZone.java,v 1.10 2004/12/26 13:00:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public interface IRPZone extends Iterable
       {
       if(anotherid!=null)
         {
-        return (id==((IRPZone.ID)anotherid).id);
+        return (id.equals(((IRPZone.ID)anotherid).id));
         }
       else
         {

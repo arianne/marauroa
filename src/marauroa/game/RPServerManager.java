@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.118 2004/11/28 20:35:29 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.119 2004/12/26 13:00:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -163,51 +163,24 @@ public class RPServerManager extends Thread
       }
     }
     
-  private int deltaPerceptionSend=0;
-  
-  private void addIncubatorPlayers()
-    {
-    for(RPObject object: incubator)
-      {
-      try
-        {
-        marauroad.trace("RPServerManager::addIncubatorPlayers","D","Adding object("+object.get("id")+") from incubator");
-        if(!ruleProcessor.onInit(object))
-          {
-          marauroad.trace("RPServerManager::addIncubatorPlayers","W","Can't add to game "+object.toString());
-          }
-        }
-      catch(Exception e) 
-        {
-        marauroad.thrown("RPServerManager::addIncubatorPlayers","X",e);
-        }
-      }
-    
-    incubator.clear();
-    }
-  
   private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry entry)
     {
     Perception perception=null;
 
     IRPZone zone=world.getRPZone(entry.characterid);
     
-    if(deltaPerceptionSend<=SYNC_PERCEPTION_FRECUENCY && !entry.perception_OutOfSync)
+    if(entry.perception_OutOfSync==false)
       {
       marauroad.trace("RPServerManager::getPlayerPerception","D","Perception DELTA for player ("+entry.characterid.toString()+")");
       perception=zone.getPerception(entry.characterid,Perception.DELTA);
       }
-    else if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
+    else
       {
       entry.perception_OutOfSync=false;
       marauroad.trace("RPServerManager::getPlayerPerception","D","Perception SYNC for player ("+entry.characterid.toString()+")");
       perception=zone.getPerception(entry.characterid,Perception.SYNC);
       }
-    else
-      {
-      marauroad.trace("RPServerManager::getPlayerPerception","D","NO Perception: Out of sync player ("+entry.characterid.toString()+")");
-      }
-    
+
     return perception;
     }
     
@@ -243,14 +216,6 @@ public class RPServerManager extends Thread
 	/** We reset the cache at Perceptions */
     MessageS2CPerception.clearPrecomputedPerception();
     
-    ++deltaPerceptionSend;
-      
-    if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
-      {
-      /* We add new players on the SYNC frame. */
-      addIncubatorPlayers();
-      }
-
     PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
       
     while(it.hasNext())
@@ -261,12 +226,6 @@ public class RPServerManager extends Thread
         {
         PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
         
-        if(entry.state==playerContainer.STATE_GAME_LOADED && deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
-          {
-          marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are going to send a SYNC perception"); 
-          entry.state=playerContainer.STATE_GAME_BEGIN;
-          }
-            
         if(entry.state==playerContainer.STATE_GAME_BEGIN)
           {
           Perception perception=getPlayerPerception(entry);
@@ -295,11 +254,6 @@ public class RPServerManager extends Thread
         }
       }
         
-    if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
-      {
-      deltaPerceptionSend=0;
-      }
- 
     notifyUpdatesOnPlayer(playersToUpdate);
     notifyTimedoutPlayers(playersToRemove);
 
@@ -398,14 +352,12 @@ public class RPServerManager extends Thread
   /** This method is called when a player is added to the game */
   public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
-    incubator.add(object);
-    return true;
+    return ruleProcessor.onInit(object);
     }
     
   /** This method is called when a player leave to the game */
   public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException
     {
-    // TODO: Remove from incubator 
     scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);
     }
