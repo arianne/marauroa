@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.7 2003/12/17 17:21:59 arianne_rpg Exp $ */
+/* $Id: CharacterList.java,v 1.8 2003/12/17 17:34:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,13 +48,13 @@ public class CharacterList extends RPObject
     return Integer.parseInt(list[0]);
     } 
 
-  public static int getId(String player)
+  public static int getName(String player)
     {
     String[] list=player.split(",");
     return Integer.parseInt(list[1]);
     } 
 
-  public static int getId(String player)
+  public static int getStatus(String player)
     {
     String[] list=player.split(",");
     return Integer.parseInt(list[2]);
