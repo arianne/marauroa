@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.3 2004/02/19 00:28:50 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.4 2004/02/19 20:27:59 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,9 +93,10 @@ public class The1001Game3D
 		BranchGroup button_stone = createButton(GameDataModel.CMD_STONE,"stone_Button.png");
 		TransformGroup tgs = new TransformGroup();
 		Transform3D trs1 = new Transform3D();
-		trs1.setScale(0.1);
+		trs1.setScale(0.03);
 		Transform3D trs2 = new Transform3D();
-		Vector3f v3f = new Vector3f(-0.85f,0.6f,0.0f);
+		Vector3f v3f = new Vector3f(-0.33f,0.22f,1.5f);
+//		Vector3f v3f = new Vector3f(-0.0f,0.0f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -105,9 +106,9 @@ public class The1001Game3D
 		BranchGroup button_paper = createButton(GameDataModel.CMD_PAPER,"paper_Button.png");
 		tgs = new TransformGroup();
 		trs1 = new Transform3D();
-		trs1.setScale(0.1);
+		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(-0.85f,0.3f,0.0f);
+		v3f = new Vector3f(-0.33f,0.12f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -117,13 +118,49 @@ public class The1001Game3D
 		BranchGroup button_scissor = createButton(GameDataModel.CMD_SCISSOR,"scissor_Button.png");
 		tgs = new TransformGroup();
 		trs1 = new Transform3D();
-		trs1.setScale(0.1);
+		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(-0.85f,0.0f,0.0f);
+		v3f = new Vector3f(-0.33f,0.02f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
 		tgs.addChild(button_scissor);
+		root.addChild(tgs);
+		
+		BranchGroup button_fight = createButton(GameDataModel.CMD_FIGHT,"RequestFight_Button.png");
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.03);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(+0.33f,0.02f,1.5f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_fight);
+		root.addChild(tgs);
+		
+		BranchGroup button_vote_up = createButton(GameDataModel.CMD_VOTE_DOWN,"thumbDown_Button.png");
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.03);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(+0.33f,0.22f,1.5f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_vote_up);
+		root.addChild(tgs);
+		
+		BranchGroup button_vote_down = createButton(GameDataModel.CMD_VOTE_UP,"thumbUp_Button.png");
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.03);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(+0.33f,0.12f,1.5f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_vote_down);
 		root.addChild(tgs);
 		
 		arena = createArene();
@@ -186,6 +223,9 @@ public class The1001Game3D
 			pick.setActionListener(GameDataModel.CMD_PAPER,gdm.getActionHandler());
 			pick.setActionListener(GameDataModel.CMD_SCISSOR,gdm.getActionHandler());
 			pick.setActionListener(GameDataModel.CMD_STONE,gdm.getActionHandler());
+			pick.setActionListener(GameDataModel.CMD_FIGHT,gdm.getActionHandler());
+			pick.setActionListener(GameDataModel.CMD_VOTE_UP,gdm.getActionHandler());
+			pick.setActionListener(GameDataModel.CMD_VOTE_DOWN,gdm.getActionHandler());
 		}
 		root.compile();
 		
@@ -442,9 +482,10 @@ public class The1001Game3D
 //				PickTool.setCapabilities(cylinder, PickTool.INTERSECT_FULL);
 				addChild(tg2);
 			}
-			setCapability(Arena.ALLOW_CHILDREN_WRITE);
-			setCapability(Arena.ALLOW_CHILDREN_EXTEND);
-			setCapability(Arena.ALLOW_DETACH);
+			setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+			setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+			setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+			
 		}
 		
 		public void setArenaMode(String mode)
@@ -454,20 +495,53 @@ public class The1001Game3D
 		
 		public void setSpectators(RPObject[] spectators)
 		{
+			HashSet hs = new HashSet();
+			try
+			{
+				for (int i = 0; i < spectators.length; i++)
+				{
+					
+					hs.add(spectators[i].get(RPCode.var_object_id));
+				}
+			}
+			catch (Attributes.AttributeNotFoundException e) {}
+			
+			List al_removed = new ArrayList();
+			for (Iterator iter = mSpectators.keySet().iterator(); iter.hasNext();)
+			{
+				Object id = iter.next();
+				if(!hs.contains(id))
+				{
+					//remove....
+					ModelAndBranch mab = (ModelAndBranch)mSpectators.get(id);
+					if(mab != null && mab.bgroup!=null)
+					{
+						removeChild(mab.bgroup);
+						al_removed.add(id);
+					}
+				}
+			}
+			for (int i = 0; i < al_removed.size(); i++)
+			{
+				mSpectators.remove(al_removed.get(i));
+			}
+			
 			for (int i = 0; i < spectators.length; i++)
 			{
 				try
 				{
 					String id = spectators[i].get(RPCode.var_object_id);
 					
-					MD2ModelInstance model = (MD2ModelInstance)mSpectators.get(id);
-					if(model==null)
+					ModelAndBranch mab = (ModelAndBranch)mSpectators.get(id);
+					if(mab==null)
 					{
 						String name = spectators[i].get(RPCode.var_name);
-						model = loadModel("billgates");
-						placeModel(name,model,radius+radius*0.1);
+						MD2ModelInstance model = loadModel("billgates");
+						mab = new ModelAndBranch();
+						mab.model = model;
+						placeModel(name,mab,radius+radius*0.1);
 						marauroad.trace("Arena::setSpectators","D","new setSpectators added: " + name);
-						mSpectators.put(id,model);
+						mSpectators.put(id,mab);
 					}
 					else
 					{
@@ -481,68 +555,7 @@ public class The1001Game3D
 			}
 		}
 		
-		private void placeModel(String name, MD2ModelInstance model, double radius)
-		{
-			BranchGroup bg_model = new BranchGroup();
-			TransformGroup tg_model_scale = new TransformGroup();
-			Transform3D trans1 = new Transform3D();
-			trans1.setScale(0.2f);
-			
-			Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
-															new FontExtrusion());
-			Text3D txt = new Text3D(f3d, name);
-			Shape3D sh_txt = new Shape3D();
-			Appearance app_txt = new Appearance();
-			Material mm_txt = new Material();
-			mm_txt.setLightingEnable(true);
-			mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
-			mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
-			mm_txt.setDiffuseColor(new Color3f(0.0f,0.0f,1.0f));
-			mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
-			app_txt.setMaterial(mm_txt);
-			sh_txt.setGeometry(txt);
-			sh_txt.setAppearance(app_txt);
-			sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
-			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
-			
-			double angle = Math.random()*2*Math.PI;
-			double sin = Math.sin(angle);
-			double cos = Math.cos(angle);
-			TransformGroup tg = new TransformGroup();
-			Transform3D t = new Transform3D();
-			Vector3f v3f = new Vector3f((float)(sin*radius),0.26f,(float)(cos*radius));
-			t.set(v3f);
-			TransformGroup tgt = new TransformGroup();
-			Transform3D tx = new Transform3D();
-			Vector3f v3f1 = new Vector3f(0,0.20f,0);
-			tx.set(v3f1);
-			Transform3D tt = new Transform3D();
-			tt.setScale(0.03);
-			tx.mul(tt);
-			
-			Transform3D trot = new Transform3D();
-			trot.rotY(v3f.angle(new Vector3f(-1.0f,0.0f,0.0f)));
-			tx.mul(trot);
-			tgt.setTransform(tx);
-			tgt.addChild(sh_txt);
-			tg.setTransform(t);
-			
-			trans1.mul(trot);
-			tg_model_scale.setTransform(trans1);
-			tg_model_scale.addChild(model);
-			bg_model.addChild(tg_model_scale);
-			
-			
-			tg.addChild(bg_model);
-			tg.addChild(tgt);
-			BranchGroup bg = new BranchGroup();
-			bg.addChild(tg);
-			bg.compile();
-			addChild(bg);
-			bg.setCapability(BranchGroup.ALLOW_DETACH);
-			model.setUserData(bg);
-			
-		}
+		
 		
 		public void setFighters(RPObject[] fighters)
 		{
@@ -557,18 +570,27 @@ public class The1001Game3D
 			}
 			catch (Attributes.AttributeNotFoundException e) {}
 			
+			List al_removed = new ArrayList();
 			for (Iterator iter = mFighters.keySet().iterator(); iter.hasNext();)
 			{
 				Object id = iter.next();
 				if(!hs.contains(id))
 				{
 					//remove....
-					MD2ModelInstance model = (MD2ModelInstance)mFighters.get(id);
-					BranchGroup bg = (BranchGroup)model.getUserData();
-					removeChild(bg);
+					ModelAndBranch mab = (ModelAndBranch)mFighters.get(id);
+					if(mab != null && mab.bgroup!=null)
+					{
+						removeChild(mab.bgroup);
+						al_removed.add(id);
+					}
 				}
 			}
-						
+			for (int i = 0; i < al_removed.size(); i++)
+			{
+				mFighters.remove(al_removed.get(i));
+			}
+			
+			
 			for (int i = 0; i < fighters.length; i++)
 			{
 				try
@@ -576,17 +598,20 @@ public class The1001Game3D
 					String id = fighters[i].get(RPCode.var_object_id);
 					String name = fighters[i].get(RPCode.var_name);
 					marauroad.trace("Arena::setFighters","D","Name = " + name);
-					MD2ModelInstance model = (MD2ModelInstance)mFighters.get(id);
-					if(model==null)
+					ModelAndBranch mab = (ModelAndBranch)mFighters.get(id);
+					if(mab==null)
 					{
 						String look = fighters[i].get(RPCode.var_look);
-						model = loadModel(look);
-						placeModel(name,model,radius*0.1f);
+						MD2ModelInstance model = loadModel(look);
+						mab = new ModelAndBranch();
+						mab.model = model;
+						placeModel(name,mab,radius*0.1f);
 						marauroad.trace("Arena::setFighters","D","new fighter added: " + name + ", look = " +look);
-						mFighters.put(id,model);
+						mFighters.put(id,mab);
 					}
 					else
 					{
+						MD2ModelInstance model = mab.model;
 						if(GameDataModel.ARENA_MODE_FIGHTING.equals(mode))
 						{
 							marauroad.trace("Arena::setFighters","D","Arena is in fight mode");
@@ -645,191 +670,70 @@ public class The1001Game3D
 				}
 			}
 		}
-	}
-	
-	
-//		public void setFighters_(RPObject[] fighters)
-//		{
-//			for (int i = 0; i < fighters.length; i++)
-//			{
-//				try
-//				{
-//					String id = fighters[i].get(RPCode.var_object_id);
-//					String name = fighters[i].get(RPCode.var_name);
-//					marauroad.trace("Arena::setFighters","D","Name = " + name);
-//					MD2ModelInstance model = (MD2ModelInstance)mFighters.get(id);
-//					if(model==null)
-//					{
-//						String look = fighters[i].get(RPCode.var_look);
-//						model = loadModel(look);
-//
-//						BranchGroup bg_model = new BranchGroup();
-//						TransformGroup tg_model_scale = new TransformGroup();
-//						Transform3D trans1 = new Transform3D();
-//						trans1.setScale(0.2f);
-//
-//
-//
-//
-//						Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
-//																		new FontExtrusion());
-//						Text3D txt = new Text3D(f3d, name);
-//						Shape3D sh = new Shape3D();
-//						Appearance app = new Appearance();
-//						Material mm = new Material();
-//						mm.setLightingEnable(true);
-//						mm.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
-//						mm.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
-//						mm.setSpecularColor(new Color3f(0.0f,0.0f,1.0f));
-//						mm.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
-//						app.setMaterial(mm);
-//						sh.setGeometry(txt);
-//						sh.setAppearance(app);
-//						double angle = Math.random()*2*Math.PI;
-//						double sin   = Math.sin(angle);
-//						double cos   = Math.cos(angle);
-//						TransformGroup tg = new TransformGroup();
-//						Transform3D t = new Transform3D();
-//						Vector3f v3f = new Vector3f((float)(sin*(radius*0.4)),0.26f,(float)(cos*(radius*0.4)));
-//						t.set(v3f);
-//						tg.setTransform(t);
-//
-//						sh.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
-//						PickTool.setCapabilities(sh, PickTool.INTERSECT_FULL);
-//
-//						TransformGroup tgt = new TransformGroup();
-//						Transform3D tx = new Transform3D();
-//						v3f = new Vector3f(0,0.20f,0);
-//						tx.set(v3f);
-//						Transform3D tt = new Transform3D();
-//						tt.setScale(0.03);
-//						tx.mul(tt);
-//						tgt.setTransform(tx);
-//						tgt.addChild(sh);
-//						tg.addChild(tgt);
-//
-//						Transform3D trot = new Transform3D();
-//						trot.rotY(v3f.angle(new Vector3f(-1.0f,0.0f,0.0f)));
-//						tx.mul(trot);
-//						tgt.setTransform(tx);
-//						tgt.addChild(sh_txt);
-//						tg.setTransform(t);
-//
-//
-//						tg_model_scale.addChild(model);
-//						bg_model.addChild(tg_model_scale);
-//						tg.addChild(bg_model);
-//
-//						BranchGroup bg = new BranchGroup();
-//						bg.addChild(tg);
-//						bg.compile();
-//						addChild(bg);
-//						marauroad.trace("Arena::setFighters","D","new fighter added: " + name + ", look = " +look);
-//						mFighters.put(id,model);
-//					}
-//					else
-//					{
-//						if(GameDataModel.ARENA_MODE_FIGHTING.equals(mode))
-//						{
-//							int damage = -1;
-//							try
-//							{
-//								damage = fighters[i].getInt(RPCode.var_damage);
-//							}
-//							catch (Attributes.AttributeNotFoundException e) {}
-//							marauroad.trace("Arena::setFighters","D","Damage:"+damage);
-//							if(damage>0)
-//							{
-//								model.setAnimation("pain");
-//							}
-//							else
-//							{
-//								model.setAnimation("attack");
-//							}
-//						}
-//						else if(GameDataModel.ARENA_MODE_REQ_FAME.equals(mode))
-//						{
-//							int hp =-1;
-//							try
-//							{
-//								hp =fighters[i].getInt(RPCode.var_hp);
-//							}
-//							catch (Attributes.AttributeNotFoundException e) {}
-//							marauroad.trace("Arena::setFighters","D","Heal points:"+hp);
-//							if(hp<=0)
-//							{
-//								model.setAnimation("dead");
-//							}
-//						}
-//					}
-//				}
-//				catch (Attributes.AttributeNotFoundException e)
-//				{
-//					marauroad.trace("Arena::setFighters","X",e.getMessage());
-//				}
-//			}
-//		}
-//	}
-	
-	/**
-	 *
-	 */
-	public static void main(String[] args)
-	{
-		JFrame frame = new JFrame("Arena");
-		The1001Game3D gamedisplay = new The1001Game3D(null);
-		frame.getContentPane().add(gamedisplay);
-		frame.setSize(800,600);
-		frame.setUndecorated(true);
-		RPObject [] spectators = new RPObject[2];
-		RPObject [] fighters   = new RPObject[2];
-		for (int i = 0; i < spectators.length; i++)
-		{
-			RPObject rp = new RPObject();
-			rp.put("object_id","spec_"+i);
-			rp.put("name","Spectator_"+i);
-			spectators[i] = rp;
-		}
-		for (int i = 0; i < fighters.length; i++)
-		{
-			try
-			{
-				RPObject rp = new Gladiator(new RPObject.ID(i));
-				rp.put("object_id","glad_"+i);
-				fighters[i] = rp;
-			}
-			catch (RPObject.SlotAlreadyAddedException e) {}
-		}
 		
-		gamedisplay.arena.setSpectators(spectators);
-		gamedisplay.arena.setFighters(fighters);
-//
-//		GraphicsDevice vDevice = GraphicsEnvironment.
-//		getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//		if(vDevice.isDisplayChangeSupported())
-//		{
-//			System.out.println("display change supported");
-//		}
-//
-//		DisplayMode modes[] = vDevice.getDisplayModes();
-//		vDevice.setDisplayMode(modes[67]);
-//		vDevice.setFullScreenWindow(frame);
-//		DisplayMode mode =vDevice.getDisplayMode();
-//		System.out.println(mode.getWidth()+"x"+mode.getHeight()+", "+mode.getBitDepth() + " @"+mode.getRefreshRate());
-//
-////		DisplayMode modes[] = vDevice.getDisplayModes();
-//		for (int i = 0; i < modes.length; i++)
-//		{
-//			System.out.println("["+i+"]="+modes[i].getWidth()+"x"+modes[i].getHeight()+", "+modes[i].getBitDepth() + " @"+modes[i].getRefreshRate());
-//		}
-//
-//
-//		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//		vDevice.setFullScreenWindow(SwingUtilities.getWindowAncestor(frame));
-//		frame.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
-		frame.show();
-		
-	}
+		private void placeModel(String name, ModelAndBranch model_br, double radius)
+		{
+			BranchGroup bg_model = new BranchGroup();
+			TransformGroup tg_model_scale = new TransformGroup();
+			Transform3D trans1 = new Transform3D();
+			trans1.setScale(0.2f);
+			
+			Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
+															new FontExtrusion());
+			Text3D txt = new Text3D(f3d, name);
+			Shape3D sh_txt = new Shape3D();
+			Appearance app_txt = new Appearance();
+			Material mm_txt = new Material();
+			mm_txt.setLightingEnable(true);
+			mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,0.0f,1.0f));
+			mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
+			app_txt.setMaterial(mm_txt);
+			sh_txt.setGeometry(txt);
+			sh_txt.setAppearance(app_txt);
+			sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
+			
+			double angle = Math.random()*2*Math.PI;
+			double sin = Math.sin(angle);
+			double cos = Math.cos(angle);
+			TransformGroup tg = new TransformGroup();
+			Transform3D t = new Transform3D();
+			Vector3f v3f = new Vector3f((float)(sin*radius),0.26f,(float)(cos*radius));
+			t.set(v3f);
+			TransformGroup tgt = new TransformGroup();
+			Transform3D tx = new Transform3D();
+			Vector3f v3f1 = new Vector3f(0,0.20f,0);
+			tx.set(v3f1);
+			Transform3D tt = new Transform3D();
+			tt.setScale(0.03);
+			tx.mul(tt);
+			
+			Transform3D trot = new Transform3D();
+			trot.rotY(v3f.angle(new Vector3f(-1.0f,0.0f,0.0f)));
+			tx.mul(trot);
+			tgt.setTransform(tx);
+			tgt.addChild(sh_txt);
+			tg.setTransform(t);
+			
+			trans1.mul(trot);
+			tg_model_scale.setTransform(trans1);
+			tg_model_scale.addChild(model_br.model);
+			bg_model.addChild(tg_model_scale);
+			
+			
+			tg.addChild(bg_model);
+			tg.addChild(tgt);
+			BranchGroup bg = new BranchGroup();
+			bg.addChild(tg);
+			model_br.bgroup=bg;
+			bg.setCapability(BranchGroup.ALLOW_DETACH);
+			bg.compile();
+			addChild(bg);
+			
+		}
+	} //Arena
 	
 	private BranchGroup createButton(String id, String image)
 	{
@@ -870,53 +774,58 @@ public class The1001Game3D
 		return(bg);
 	}
 	
+	//because MD2ModelInstance's set/get/UserData dont work :-(
+	private final class ModelAndBranch
+	{
+		public MD2ModelInstance model;
+		public BranchGroup bgroup;
+	}
 	
-//	public class MouseHandler extends Behavior
-//	{
-//		private WakeupCondition wCond;
-//		private PickCanvas pickCanvas;
-//
-//		// Constructor
-//		public MouseHandler(BranchGroup bGroup, Canvas3D canvas3D)
+	/**
+	 *
+	 */
+	public static void main(String[] args)
+	{
+		JFrame frame = new JFrame("Arena");
+		The1001Game3D gamedisplay = new The1001Game3D(null);
+		frame.getContentPane().add(gamedisplay);
+		frame.setSize(800,600);
+//		frame.setUndecorated(true);
+//		RPObject [] spectators = new RPObject[2];
+//		RPObject [] fighters   = new RPObject[2];
+//		for (int i = 0; i < spectators.length; i++)
 //		{
-//			//event that runs your processStimulus method
-//			wCond = new WakeupOnAWTEvent(MouseEvent.MOUSE_PRESSED);
-//
-//			//create and initialize picking object
-//			pickCanvas = new PickCanvas(canvas3D, bGroup);
-//			pickCanvas.setTolerance(1.1f); //accuracy
-//			pickCanvas.setMode(PickCanvas.GEOMETRY_INTERSECT_INFO);
+//			RPObject rp = new RPObject();
+//			rp.put("object_id","spec_"+i);
+//			rp.put("name","Spectator_"+i);
+//			spectators[i] = rp;
 //		}
-//
-//		// Initialization
-//		public void initialize()
+//		for (int i = 0; i < fighters.length; i++)
 //		{
-//			//start waiting for event
-//			wakeupOn(wCond);
+//			try
+//			{
+//				RPObject rp = new Gladiator(new RPObject.ID(i));
+//				rp.put("object_id","glad_"+i);
+//				fighters[i] = rp;
+//			}
+//			catch (RPObject.SlotAlreadyAddedException e) {}
 //		}
+		frame.show();
+		
+//		gamedisplay.arena.setSpectators(spectators);
+//		gamedisplay.arena.setFighters(fighters);
 //
-//		// Event handling
-//		public void processStimulus(Enumeration criteria)
+//		try
 //		{
-//			//get event that occured
-//			MouseEvent event = (MouseEvent) ((WakeupOnAWTEvent)
-//																			 criteria.nextElement()).getAWTEvent()[0];
-//
-//			pickCanvas.setShapeLocation(event);
-////			Point3d eyePos = pickCanvas.getStartPosition();
-//
-//			//get result of event
-//			PickResult pickResult = pickCanvas.pickClosest();
-//
-//			//... and picked object
-//			Node node = pickResult.getObject();
-//			marauroad.trace("MouseHandler::processStimulus","D","Node selected: " + node);
-//			//start waiting for next event
-//			wakeupOn(wCond);
+//			Thread.sleep(4000);
 //		}
-//	}
-	
-	
-	
+//		catch (InterruptedException e)
+//		{
+//		}
+//		RPObject [] lllfighters   = new RPObject[0];
+//		System.out.println("removing fighters.....");
+//		System.out.flush();
+//		gamedisplay.arena.setFighters(lllfighters);
+	}
 }
 

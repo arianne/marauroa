@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.4 2004/02/19 00:28:50 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.5 2004/02/19 20:27:59 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,8 +50,9 @@ public class The1001Game
 	private JLabel statusLine;
 	private boolean continueGamePlay;
 	private transient GameDataModel gm;
-	private JButton btnRqFight;
+//	private JButton btnRqFight;
 	private JTextArea chatTextArea;
+	private OggPlayer player;
 	
 	
 	public The1001Game(NetworkClientManager netman, RPObject.ID characterID)
@@ -62,6 +63,7 @@ public class The1001Game
 		initComponents();
 		setTitle("Gladiators (the1001)");
 		addWindowListener(new MWindowListener());
+		player = new OggPlayer();
 	}
 	
 	private void initComponents()
@@ -70,17 +72,17 @@ public class The1001Game
 		gm = new GameDataModel(netMan);
 //		GameDisplay  gd = new GameDisplay(gm);
 //		main_panel.add(gd,BorderLayout.WEST);
-		btnRqFight = new JButton("Request fight");
-		btnRqFight.addActionListener(new ActionListener()
-																 {
-					public void actionPerformed(ActionEvent e)
-					{
-						gm.requestFight();
-					}
-				});
-		btnRqFight.setEnabled(true);
+//		btnRqFight = new JButton("Request fight");
+//		btnRqFight.addActionListener(new ActionListener()
+//																 {
+//					public void actionPerformed(ActionEvent e)
+//					{
+//						gm.requestFight();
+//					}
+//				});
+//		btnRqFight.setEnabled(true);
 		statusLine = new JLabel("<html><body>Launching <font color=blue>Gladiators</font>...</body></html>");
-		main_panel.add(btnRqFight,BorderLayout.NORTH);
+//		main_panel.add(btnRqFight,BorderLayout.NORTH);
 //		main_panel.add(statusLine,BorderLayout.SOUTH);
 		The1001Game3D g3d = new The1001Game3D(gm);
 		g3d.setSize(500,500);
@@ -139,8 +141,10 @@ public class The1001Game
 	 */
   public void addChatMessage(String name,String msg)
   {
-		chatTextArea.append(name+":"+msg+"\n");
+		String text = name+":"+msg;
+		chatTextArea.append(text+"\n");
 		chatTextArea.setCaretPosition(chatTextArea.getText().length());
+//		statusLine.setText(text);
   }
 	
 	public void run()
@@ -169,6 +173,21 @@ public class The1001Game
 								String name = obj.get("name");
 								String status = obj.get("status");
 								gm.setStatus(status);
+								if(RPCode.var_waiting.equals(status))
+								{
+									player.play("Waiting_Gladiators.ogg");
+									statusLine.setText("Arena waiting...");
+								}
+								else if(RPCode.var_request_fame.equals(status))
+								{
+									player.play("Request_Fame_JudgingThoseWhoRemain.ogg");
+									statusLine.setText("Vote!!!");
+								}
+								else if(RPCode.var_fighting.equals(status))
+								{
+									player.play("Fighting_Gladiators.ogg");
+									statusLine.setText("Fighting!!!");
+								}
 								
 //								gm.setWaiting("waiting".equalsIgnoreCase(status));
 								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " [" + status+"]" );
