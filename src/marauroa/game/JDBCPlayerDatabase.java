@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.30 2004/04/18 15:51:47 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.31 2004/04/24 01:12:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -223,7 +223,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       else
         {
         query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL)";
-        stmt.execute(query);        
+        stmt.execute(query);
         }
       }
     catch(SQLException sqle)
@@ -1213,14 +1213,16 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     }
 
   private Random random;
+  private static int last_idAssigned=1;
+  
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
-    RPObject.ID id=new RPObject.ID(random.nextInt());
+    RPObject.ID id=new RPObject.ID(last_idAssigned++);
 
     while(hasRPObject(trans,id))
       {
-      id=new RPObject.ID(random.nextInt());
+      id=new RPObject.ID(last_idAssigned++);
       }
     return id;
     }

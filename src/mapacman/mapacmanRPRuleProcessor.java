@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.1 2004/04/23 18:45:22 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.2 2004/04/24 01:11:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,10 +32,8 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     zone=null;
     interpreter=new PythonInterpreter();
     interpreter.execfile("mapacman_script.py");
-
-    PyInstance object=(PyInstance)interpreter.eval("RealPythonRP()");
-    pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
     }
+  
 
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
@@ -44,6 +42,9 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     this.zone=(mapacmanRPZone)zone;
     interpreter.set("zone",this.zone);
     interpreter.set("ruleprocessor",this);
+
+    PyInstance object=(PyInstance)interpreter.eval("RealPythonRP()");
+    pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
     }
     
   public mapacmanRPZone getRPZone()
@@ -61,7 +62,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.
    *  @param action the action to execute
-   *  @returns the action status, that can be Success, Fail or incomplete, please 
+   *  @returns the action status, that can be Success, Fail or incomplete, please
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {
@@ -79,8 +80,8 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       {
       marauroad.trace("mapacmanRPRuleProcessor::execute","X",e.getMessage());
       e.printStackTrace();
-      return RPAction.STATUS_FAIL;      
-      }      
+      return RPAction.STATUS_FAIL;
+      }
     finally
       {
       marauroad.trace("mapacmanRPRuleProcessor::execute","<");
@@ -90,8 +91,8 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
   /** Notify it when a new turn happens */
   synchronized public void nextTurn()
     {
-    marauroad.trace("mapacmanRPRuleProcessor::nextTurn",">");    
-    pythonRP.nextTurn();    
+    marauroad.trace("mapacmanRPRuleProcessor::nextTurn",">");
+    pythonRP.nextTurn();
     marauroad.trace("mapacmanRPRuleProcessor::nextTurn","<");
     }
   
@@ -158,9 +159,9 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
         action.put("type","turn");
         action.put("dir","S");
         
-        pacmanRP.execute(new RPObject.ID(action),action);        
+        pacmanRP.execute(new RPObject.ID(action),action);
         System.out.println(player);
-        }        
+        }
       
       pacmanRP.nextTurn();
       System.out.println(player);
@@ -180,12 +181,13 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       long stop=System.currentTimeMillis();
       System.out.println("Python load: "+(start-init));
       System.out.println("Python execute: "+(stop-start));
+      
+      pacmanRP.getRPZone().print(System.out);
       }
     catch(Exception e)
       {
       e.printStackTrace();
       }
     }
-    
-  }  
+  }
 

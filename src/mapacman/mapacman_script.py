@@ -11,6 +11,7 @@ pacman_mapfile='map_definition.txt'
 
 class RealPythonRP(PythonRP):
     map
+    removed_elements=[]
     
     def __init__(self):
         self.map=mapacmanRPMap(pacman_mapfile)
@@ -43,6 +44,21 @@ class RealPythonRP(PythonRP):
         """ execute actions needed to place this code on the next turn """
         for player in _online_players:
             pos=move(player,self.map)
+            if self.map.hasZoneRPObject(pos):
+                object_in_pos=self.map.getZoneRPObject(pos)
+                if object_in_pos.get("type")=="ball":
+                    zone.remove(RPObject.ID(object_in_pos))
+                    self.map.removeZoneRPObject(pos)
+                    player.put("score",player.getInt("score")+1)
+                    self.removed_elements.append((object_in_pos.get("!respawn"),object_in_pos))
+                elif object_in_pos.get("type")=="superball":
+                    pass
+        
+        for object in self.removed_elements:
+            if object[0]==0:
+                pass
+                
+        
         
     def onInit(self, object):
         """ Do what you need to initialize this player """
@@ -72,6 +88,7 @@ class mapacmanRPMap:
     grid=[]
     respawnPoints=[]
     last_respawnPoints=0
+    objects_grid={}
     
     def __init__(self, sizex, sizey):
         self.grid=[]
@@ -86,8 +103,14 @@ class mapacmanRPMap:
         line=f.readline()
         i=0
         while line<>'':
-        	for char in line
-        		print "Character: "+char
+            j=0
+            for char in line[:-1]:
+                if char=='.':
+                    self.addZoneRPObject(createBall(j,i))
+                elif char=='0':
+                    self.addZoneRPObject(createSuperBall(j,i))
+                j=j+1
+                
             self.grid.append(line[:-1])
             self.computeRespawnPoints(i,line)
             line=f.readline()
@@ -103,6 +126,22 @@ class mapacmanRPMap:
     
     def get(self,x,y):
         return (self.grid[y])[x]
+    
+    def hasZoneRPObject(self, pos):
+        return self.objects_grid.has_key(pos)
+    
+    def getZoneRPObject(self,pos):
+        return self.objects_grid[pos]
+    
+    def addZoneRPObject(self,object):
+        x=object.getInt("x")
+        y=object.getInt("y")
+        
+        self.objects_grid[(x,y)]=object
+        zone.add(object)
+    
+    def removeZoneRPObject(self,pos):
+        del self.objects_grid[pos]
 
     def sizey(self):
         return len(self.grid)
@@ -135,7 +174,8 @@ def randomDirection():
 def createPlayer(name):
     """ This function create a player """
     object=RPObject()
-    object.put("id",zone.getValidId())
+    object.put("id",zone.create().get("id"))
+    object.put("type","player");
     object.put("name",name)
     object.put("x",0)
     object.put("y",0)
@@ -146,7 +186,8 @@ def createPlayer(name):
 def createGhost(name):
     """ This function create a ghost """
     object=RPObject()
-    object.put("id",zone.getValidId())
+    object.put("id",zone.create().get("id"))
+    object.put("type","ghost");
     object.put("name",name)
     object.put("x",0)
     object.put("y",0)
@@ -157,7 +198,8 @@ def createBall(x,y):
     """ This function create a Ball object that when eats by player increments
     its score. """
     object=RPObject()
-    object.put("id",zone.getValidId());
+    object.put("id",zone.create().get("id"));
+    object.put("type","ball");
     object.put("x",x)
     object.put("y",y)
     object.put("!score",1)
@@ -168,6 +210,7 @@ def createSuperBall(x,y):
     """ This function create a SuperBall object that when eats by player
     make it to be able to eat and destroy the ghosts """
     object=createBall(x,y)
+    object.put("type","superball");
     object.put("!timeout",15)
     return object;
     
@@ -194,7 +237,7 @@ def move(player,map):
     elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
         x=x+1
         player.put("x",x)
-    
+        
     return (x,y)
     
 
