@@ -628,10 +628,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
-  
+  /** Create a connection to the JDBC Database or return null
+   *  @param props is a Properties set that contains
+   *  @return Connection to the database or null if error.*/
   private Connection createConnection(Properties props)
     {
-    Connection conn = null;
+    marauroad.trace("JDBCPlayerDatabase::createConnection",">");
     
     try
       {
@@ -641,15 +643,20 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       connInfo.put("user", props.get("jdbc_user"));
       connInfo.put("password", props.get("jdbc_pwd"));
       connInfo.put("charSet", "UTF-8");
-      conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
+      Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
       conn.setAutoCommit(true);
+      
+      return conn;
       }
     catch (Throwable e)
       {
-      e.printStackTrace();
+      marauroad.trace("JDBCPlayerDatabase::createConnection","X",e.getMessage());
+      return null;
       }
-    
-    return(conn);
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::createConnection","<");
+      }   
     }
   
   private int getDatabasePlayerId(String username) throws PlayerNotFoundException, SQLException
@@ -675,43 +682,52 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   private boolean reInitDB()
     {
-    return (dropDB() && initDB());
+    marauroad.trace("JDBCPlayerDatabase::reInitDB",">");         
+    
+    try
+      {
+      return (dropDB() && initDB());
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::reInitDB","<");         
+      }
     }
   
   private boolean dropDB()
     {
-    boolean ret = false;
+    marauroad.trace("JDBCPlayerDatabase::dropDB",">");         
 
     try
       {
-      Statement stmt = connection.createStatement();
-      
+      Statement stmt = connection.createStatement();      
       String query = "drop table if exists player";
-
       stmt.addBatch(query);
       query = "drop table if exists characters";
-
       stmt.addBatch(query);
       query = "drop table if exists loginEvent";
-
       stmt.addBatch(query);
       int ret_array[] = stmt.executeBatch();
-      ret = true;
+
       for (int i = 0; i < ret_array.length; i++)
         {
         if(ret_array[i]<0)
           {
-          ret = false;
-          break;
+          return false;
           }
         }
+        
+      return true;
       }
     catch (SQLException e)
       {
-      e.printStackTrace(System.out);
-      ret = false;
+      /* TODO: Should drop exception */
+      return false;
       }
-    return ret;
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::dropDB","<");         
+      }      
     }
   
   private boolean initDB()
