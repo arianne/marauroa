@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.2 2004/02/15 23:23:51 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.3 2004/02/19 00:28:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ package the1001.client;
 
 import java.util.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import marauroa.game.Attributes;
 import marauroa.game.RPAction;
 import marauroa.game.RPObject;
@@ -29,11 +31,23 @@ import the1001.RPCode;
  */
 public final class GameDataModel
 {
+	public final static String CMD_SCISSOR = "SCISSOR";
+	public final static String CMD_STONE   = "STONE";
+	public final static String CMD_PAPER   = "PAPER";
+	public final static String CMD_FIGHT   = "FIGHT";
+	
+	
+	public final static String ARENA_MODE_WAITING  = RPCode.var_waiting;
+	public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
+	public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
+	
 	private RPObject gladiator;
 	private Map spectators;
 	private Map fighters;
 	private transient NetworkClientManager netMan;
 	private List listeners;
+	private ActionListener commandListener;
+	private String status;
 	
 	public GameDataModel(NetworkClientManager net_man)
 	{
@@ -41,7 +55,24 @@ public final class GameDataModel
 		spectators = new HashMap(8);
 		fighters   = new HashMap(2);
 		listeners  = new ArrayList(1);
+		commandListener = new ActionHandler();
 	}
+	
+	public ActionListener getActionHandler()
+	{
+		return(commandListener);
+	}
+	
+	public void setStatus(String mode)
+	{
+		this.status = mode;
+	}
+	
+	public String getStatus()
+	{
+		return(status);
+	}
+	
 	
 	/**
 	 * Sets the own Gladiator
@@ -136,17 +167,15 @@ public final class GameDataModel
 		{
 			try
 			{
-				marauroad.trace("The1001Game::addSpectator","D","Adding spectator " + spectator);
-				if(spectators.put(spectator.get("object_id"),spectator)==null)
-				{
-					fireListeners();
-				}
+//				marauroad.trace("The1001Game::addSpectator","D","Adding spectator " + spectator);
+				spectators.put(spectator.get(RPCode.var_object_id),spectator);
+				fireListeners();
 			}
 			catch (Attributes.AttributeNotFoundException e)
 			{
 				marauroad.trace("The1001Game::addSpectator","X",e.getMessage());
 			}
-			dumpList(spectators.values());
+//			dumpList(spectators.values());
 		}
 		
 	}
@@ -174,7 +203,7 @@ public final class GameDataModel
 		{
 			try
 			{
-				if(spectators.remove(spectator.get("object_id"))!=null)
+				if(spectators.remove(spectator.get(RPCode.var_object_id))!=null)
 				{
 					fireListeners();
 				}
@@ -208,19 +237,17 @@ public final class GameDataModel
 	{
 		synchronized(fighters)
 		{
-			marauroad.trace("The1001Game::addFighter","D","Adding fighter " + fighter);
+//			marauroad.trace("The1001Game::addFighter","D","Adding fighter " + fighter);
 			try
 			{
-				if(fighters.put(fighter.get("object_id"),fighter)==null)
-				{
-					fireListeners();
-				}
+				fighters.put(fighter.get(RPCode.var_object_id),fighter);
+				fireListeners();
 			}
 			catch (Attributes.AttributeNotFoundException e)
 			{
 				marauroad.trace("The1001Game::addFighter","X",e.getMessage());
 			}
-			dumpList(fighters.values());
+//			dumpList(fighters.values());
 		}
 	}
 	
@@ -231,7 +258,7 @@ public final class GameDataModel
 	{
 		try
 		{
-			if(fighters.remove(fighter.get("object_id"))!=null)
+			if(fighters.remove(fighter.get(RPCode.var_object_id))!=null)
 			{
 				fireListeners();
 			}
@@ -272,6 +299,36 @@ public final class GameDataModel
 		}
 	}
 	
+	public void sendMessage(String msg)
+	{
+		RPAction action = new RPAction();
+		action.put(RPCode.var_type,RPCode.var_chat);
+		action.put(RPCode.var_content,msg);
+		netMan.addMessage(new MessageC2SAction(null,action));
+	}
+	
+	public void setFightMode(String mode)
+	{
+		RPObject gladiator = getGladiator();
+		if(gladiator!=null)
+		{
+			int gl_id = RPObject.INVALID_ID.getObjectID();
+			try
+			{
+				gl_id = getGladiator().getInt("object_id");
+			}
+			catch (Attributes.AttributeNotFoundException e)
+			{
+				marauroad.trace("The1001Game::requestFight","X","Gladiator has no or invalid object id.");
+			}
+			RPAction action = new RPAction();
+			action.put(RPCode.var_gladiator_id,gl_id);
+			action.put(RPCode.var_type,"fight_mode");
+			action.put("fight_mode",mode);
+			netMan.addMessage(new MessageC2SAction(null,action));
+		}
+	}
+	
 	/**
 	 * adds a new listener
 	 **/
@@ -305,6 +362,41 @@ public final class GameDataModel
 		for (int i = 0; i < listeners.size(); i++)
 		{
 			((GameDataModelListenerIF)listeners.get(i)).modelUpdated(this);
+		}
+	}
+	
+	private final class ActionHandler
+		implements ActionListener
+	{
+		/**
+		 * Invoked when an action occurs.
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e!=null)
+			{
+				String command = e.getActionCommand();
+				if(CMD_FIGHT.equals(command))
+				{
+					requestFight();
+				}
+				else if(CMD_SCISSOR.equals(command))
+				{
+					setFightMode(RPCode.var_scissor);
+				}
+				else if(CMD_PAPER.equals(command))
+				{
+					setFightMode(RPCode.var_paper);
+				}
+				else if(CMD_STONE.equals(command))
+				{
+					setFightMode(RPCode.var_rock);
+				}
+				else
+				{
+					marauroad.trace("GameDataModel","D","Unknown command "+command + ", e="+e);
+				}
+			}
 		}
 	}
 }

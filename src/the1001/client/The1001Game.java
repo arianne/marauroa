@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.3 2004/02/15 23:24:13 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.4 2004/02/19 00:28:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,15 +23,17 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.SocketException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.marauroad;
-import java.awt.event.WindowEvent;
+import the1001.RPCode;
 
 /**
  *
@@ -39,7 +41,7 @@ import java.awt.event.WindowEvent;
  *@author Waldemar Tribus
  */
 public class The1001Game
-extends JFrame implements Runnable
+	extends JFrame implements Runnable
 {
 	private final static long serialVersionUID = 4714;
 	private transient NetworkClientManager netMan;
@@ -49,6 +51,7 @@ extends JFrame implements Runnable
 	private boolean continueGamePlay;
 	private transient GameDataModel gm;
 	private JButton btnRqFight;
+	private JTextArea chatTextArea;
 	
 	
 	public The1001Game(NetworkClientManager netman, RPObject.ID characterID)
@@ -78,13 +81,67 @@ extends JFrame implements Runnable
 		btnRqFight.setEnabled(true);
 		statusLine = new JLabel("<html><body>Launching <font color=blue>Gladiators</font>...</body></html>");
 		main_panel.add(btnRqFight,BorderLayout.NORTH);
-		main_panel.add(statusLine,BorderLayout.SOUTH);
+//		main_panel.add(statusLine,BorderLayout.SOUTH);
 		The1001Game3D g3d = new The1001Game3D(gm);
 		g3d.setSize(500,500);
 		main_panel.add(g3d,BorderLayout.CENTER);
+		
+		
+		chatTextArea = new JTextArea();
+		chatTextArea.setEditable(false);
+		chatTextArea.setLineWrap(false);
+		JScrollPane sp = new JScrollPane(chatTextArea);
+		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		sp.setPreferredSize(new Dimension(500,80));
+		
+		final JTextField tf = new JTextField(40);
+		tf.addActionListener(new ActionListener()
+												 {
+					public void actionPerformed(ActionEvent ae)
+					{
+						String text = tf.getText();
+						if(!"".equals(text))
+						{
+							gm.sendMessage(text);
+							tf.setText("");
+						}
+					}
+				});
+		JButton btn = new JButton("Send");
+		btn.addActionListener(new ActionListener()
+													{
+					public void actionPerformed(ActionEvent ae)
+					{
+						String text = tf.getText();
+						if(!"".equals(text))
+						{
+							gm.sendMessage(text);
+							tf.setText("");
+						}
+					}
+				});
+		
+		JPanel pnl_chat = new JPanel();
+		pnl_chat.add(tf);
+		pnl_chat.add(btn);
+		
+		JPanel all_chat = new JPanel(new BorderLayout());
+		all_chat.add(sp,BorderLayout.CENTER);
+		all_chat.add(statusLine,BorderLayout.NORTH);
+		all_chat.add(pnl_chat,BorderLayout.SOUTH);
+		main_panel.add(all_chat,BorderLayout.SOUTH);
 //		main_panel.add(g3d);
 		setContentPane(main_panel);
 	}
+	
+	/**
+	 * adds a message into reportPane
+	 */
+  public void addChatMessage(String name,String msg)
+  {
+		chatTextArea.append(name+":"+msg+"\n");
+		chatTextArea.setCaretPosition(chatTextArea.getText().length());
+  }
 	
 	public void run()
 	{
@@ -111,22 +168,42 @@ extends JFrame implements Runnable
 							{
 								String name = obj.get("name");
 								String status = obj.get("status");
+								gm.setStatus(status);
+								
 //								gm.setWaiting("waiting".equalsIgnoreCase(status));
-								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " " + status );
+								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " [" + status+"]" );
 								try
 								{
 									RPSlot slot = obj.getSlot("gladiators");
+									RPObject[] old_fighters = gm.getFighters();
+									RPObject[] new_fighters = new RPObject[slot.size()];
+									int k = 0;
+									HashSet hs = new HashSet();
 									for (Iterator iter = slot.iterator(); iter.hasNext() ; )
 									{
 										RPObject gladiator = (RPObject)iter.next();
 										if("gladiator".equalsIgnoreCase(gladiator.get("type")))
 										{
-											gm.addFighter(gladiator);
+											//gm.addFighter(gladiator);
+											new_fighters[k++]=gladiator;
+											hs.add(gladiator.get(RPCode.var_object_id));
 										}
 										else
 										{
 											marauroad.trace("The1001Game::messageLoop","D","Ignored wrong object in arena");
 										}
+									}
+									for (int x = 0; x < old_fighters.length; x++)
+									{
+										if(!hs.contains(old_fighters[x].get(RPCode.var_object_id)))
+										{
+											gm.deleteFighter(old_fighters[x]);
+										}
+									}
+									
+									for (int x = 0; x < new_fighters.length; x++)
+									{
+										gm.addFighter(new_fighters[x]);
 									}
 								}
 								catch (RPObject.NoSlotFoundException e)
@@ -143,6 +220,15 @@ extends JFrame implements Runnable
 									RPSlot glad_slot   = obj.getSlot("gladiators");
 									RPObject gladiator = glad_slot.get();
 									gm.setGladiator(gladiator);
+								}
+								if(obj.has(RPCode.var_text))
+								{
+									String text = obj.get(RPCode.var_text);
+									String name = obj.get(RPCode.var_name);
+									if(!"".equals(text))
+									{
+										addChatMessage(name,text);
+									}
 								}
 							}
 							else
@@ -204,7 +290,7 @@ extends JFrame implements Runnable
 	 * represents the gameboard
 	 **/
 	private final class GameDisplay
-	extends JPanel
+		extends JPanel
 	{
 		private final static long serialVersionUID = 4715;
 		private transient GameDataModel gm;
@@ -543,7 +629,7 @@ extends JFrame implements Runnable
 	
 	
 	private final class MWindowListener
-	implements WindowListener
+		implements WindowListener
 	{
 		
 		/**
@@ -617,4 +703,5 @@ extends JFrame implements Runnable
 		}
 	}
 }
+
 
