@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.5 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.6 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,6 +127,126 @@ public class Test_RPObject extends TestCase
       }
     catch(Exception e)
       {      
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+  public void testRPObjectClonable()  
+    {    
+    try
+      {
+      RPObject example=new RPObject();
+      example.put("object_id",10);
+      example.put("type","gladiator");
+      example.put("name","Stupid random name");
+      
+      RPObject example_mod=new RPObject();
+      example_mod.copy(example);
+      assertTrue(example.equals(example_mod));
+      
+      example.remove("name");
+      assertFalse(example.equals(example_mod));
+      }
+    catch(Exception e)
+      {
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectClonable","<");
+      }
+    }
+
+  public void testRPObjectDifferences()  
+    {    
+    try
+      {
+      RPObject example=new RPObject();
+      example.put("object_id",10);
+      example.put("type","gladiator");
+      example.put("name","Stupid random name");
+      example.put("look","database_look");
+      example.put("!hp",100);
+      example.put("hp",100);
+      example.put("attack",5);
+      example.put("karma",100);
+  
+      example.addSlot(new RPSlot("l_hand"));
+      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);
+      
+      example.getSlot("l_hand").add(item);
+      
+      example.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+//      item.put("object_id",12);
+//      item.put("type","sword");
+//      item.put("def",0);
+//      item.put("price",100);
+//      
+//      example.getSlot("r_hand").add(item);
+
+      RPObject example_mod=new RPObject();
+      example_mod.put("object_id",10);
+      example_mod.put("type","gladiator");
+      example_mod.put("name","A better stupid random name");
+      example_mod.put("look","database_look");
+      example_mod.put("!hp",100);
+      example_mod.put("hp",90);
+  
+      example_mod.addSlot(new RPSlot("l_hand"));
+      
+      RPObject item_mod=new RPObject();
+      item_mod.put("object_id",11);
+      item_mod.put("type","shield");
+      item_mod.put("def",10);
+      item_mod.put("price",50);
+      
+      example_mod.getSlot("l_hand").add(item_mod);
+      
+      example_mod.addSlot(new RPSlot("r_hand"));
+
+      item_mod=new RPObject();
+      item_mod.put("object_id",12);
+      item_mod.put("type","sword");
+      item_mod.put("def",0);
+      item_mod.put("price",100);
+      
+      example_mod.getSlot("r_hand").add(item_mod);
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+      
+      example_mod.getDifferencesFrom(example,added,deleted);
+      assertTrue(added.has("name"));
+      assertTrue(added.has("hp"));
+      assertTrue(deleted.has("karma"));
+      assertTrue(deleted.has("attack"));
+      
+      System.out.println("Original --> "+example.toString());
+      System.out.println("Added --> "+added.toString());
+      System.out.println("Deleted --> "+deleted.toString());
+      System.out.println("New --> "+example_mod.toString());
+      
+      RPObject build=example.applyDifferences(added,deleted);
+      System.out.println("Build --> "+build.toString());
+      
+      assertTrue(example_mod.equals(build));      
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example_mod.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
       fail("Failed to serialize object");
       }
     finally

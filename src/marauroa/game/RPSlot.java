@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.20 2004/02/07 19:50:37 root777 Exp $ */
+/* $Id: RPSlot.java,v 1.21 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class RPSlot implements marauroa.net.Serializable
+public class RPSlot implements marauroa.net.Serializable, Cloneable
 {
   public static class RPObjectNotFoundException extends Exception
 	{
@@ -47,6 +47,20 @@ public class RPSlot implements marauroa.net.Serializable
 		name="";
 		objects=new LinkedList();
 	}
+  
+  public Object copy()
+    {
+    RPSlot slot=new RPSlot();
+    slot.name=name;
+    Iterator it=objects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      slot.add((RPObject)object.copy());
+      }
+      
+    return slot;
+    }
   
   public RPSlot(String name)
 	{

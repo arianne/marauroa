@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.22 2004/03/02 15:49:07 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.23 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,12 +45,42 @@ public class Attributes implements marauroa.net.Serializable
 	  return attribute;
 	  }
 	}
-	
+
+  public Object copy()
+    {
+    Attributes attr=new Attributes();
+    Iterator it=content.entrySet().iterator();
+    while(it.hasNext())
+      {
+      Map.Entry entry=(Map.Entry)it.next();
+      attr.put((String)entry.getKey(),(String)entry.getValue());
+      }    
+    
+    return attr;
+    }
+
+  public Object copy(Attributes attr)
+    {
+    Iterator it=attr.content.entrySet().iterator();
+    while(it.hasNext())
+      {
+      Map.Entry entry=(Map.Entry)it.next();
+      put((String)entry.getKey(),(String)entry.getValue());
+      }    
+    
+    return this;
+    }
+    
   /** Constructor */
   public Attributes()
 	{
 	content=new HashMap();
 	}
+  
+  public boolean isEmpty()
+    {
+    return content.isEmpty();
+    }
 	
   /** This method returns true if the attribute exists
 	*  @param attribute the attribute name to check

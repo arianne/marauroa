@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.36 2004/03/16 22:43:57 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.37 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,10 +74,10 @@ public class RunTests
       String timestamp=Long.toString(new Date().getTime());
       
       System.err.println("Test will last around 93.0 seconds. Please wait!");
-      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
+//      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
       wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
       Date end=new Date();
       
@@ -175,7 +175,7 @@ public class RunTests
   public static Test suiteOneTest ( )
     {
     TestSuite suite= new TestSuite("One Test case marauroa Tests");
-    suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
 
     return suite;
     }

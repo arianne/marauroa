@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.17 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.18 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -88,18 +88,19 @@ public class the1001RPZone extends MarauroaRPZone
 	 *  It is used in the Buy action. */
 	try
 	  {
-	  RPObject result=super.create();
+	  RPObject result=(RPObject)object.copy();
+	  result.put(RPCode.var_object_id,new RPObject.ID(super.create()).getObjectID());
 	
-	  Iterator it=object.iterator();
-	  while(it.hasNext())
-	    {
-	    String attrib=(String)it.next();
-	    if(attrib.equals(RPCode.var_object_id)==false)
-	      {
-	      result.put(attrib,object.get(attrib));
-	      }
-	    }
-	  
+//	  Iterator it=object.iterator();
+//	  while(it.hasNext())
+//	    {
+//	    String attrib=(String)it.next();
+//	    if(attrib.equals(RPCode.var_object_id)==false)
+//	      {
+//	      result.put(attrib,object.get(attrib));
+//	      }
+//	    }
+//	  
 	  return result;
 	  }
 	catch(Exception e)
@@ -108,54 +109,5 @@ public class the1001RPZone extends MarauroaRPZone
       }
 	}
 	
-	public Document toXML()
-	{
-		Document xml_doc = super.toXML();
-		Element zone_elem = xml_doc.getDocumentElement();
-		if(heroesHouse!=null)
-		{
-			Element heroes_house_elem = xml_doc.createElement("heroes_house");
-			heroesHouse.toXML(heroes_house_elem);
-			zone_elem.appendChild(heroes_house_elem);
-		}
-		if(arena!=null)
-		{
-			Element arena_elem = xml_doc.createElement("arena");
-			arena.toXML(arena_elem);
-			zone_elem.appendChild(arena_elem);
-		}
-		return(xml_doc);
-	}
-	
-	public void fromXML(Document document)
-	{
-		if(document!=null)
-		{
-			super.fromXML(document);
-			Element zone_elem = document.getDocumentElement();
-			heroesHouse = null;
-			arena = null;
-			NodeList nl = zone_elem.getElementsByTagName("heroes_house");
-			if(nl.getLength()==1)
-			{
-				heroesHouse = new RPObject();
-				heroesHouse.fromXML((Element)nl.item(0));
-			}
-			else
-			{
-				marauroad.trace("MarauroaRPZone","D","No heroes house element in XML");
-			}
-			nl = zone_elem.getElementsByTagName("arena");
-			if(nl.getLength()==1)
-			{
-				arena = new RPObject();
-				arena.fromXML((Element)nl.item(0));
-			}
-			else
-			{
-				marauroad.trace("MarauroaRPZone","D","No arena element in XML");
-			}
-		}
-	}
 }
 

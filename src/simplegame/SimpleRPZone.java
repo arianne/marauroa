@@ -1,4 +1,4 @@
-/* $Id: SimpleRPZone.java,v 1.17 2004/02/06 21:42:16 root777 Exp $ */
+/* $Id: SimpleRPZone.java,v 1.18 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,12 +43,12 @@ public class SimpleRPZone
 		marauroad.trace("SimpleRPZone::getPerception",">");
 		/** Using TOTAL perception per turn */
 		RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
-		perception.modifiedList = new LinkedList();
+		perception.addedList = new LinkedList();
 		perception.deletedList  = deletedList;
 		try
 		{
 			RPObject player = get(id);
-			perception.modifiedList.add(player);
+			perception.addedList.add(player);
 		}
 		catch (RPObjectNotFoundException e)
 		{

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.28 2004/03/04 17:04:39 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.29 2004/03/22 18:31:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,6 +90,11 @@ public class RPObject extends Attributes
 		slots=new LinkedList();
 		put("object_id",id.getObjectID());
 	}
+	
+  public boolean isEmpty()
+    {
+    return super.isEmpty() && slots.isEmpty();
+    }
   
   /** This method returns true if the object has that slot
 	 *  @param name the name of the slot
@@ -124,6 +129,27 @@ public class RPObject extends Attributes
 			throw new SlotAlreadyAddedException(slot.getName());
 		}
 	}
+
+  public void removeSlot(String name) throws NoSlotFoundException
+    {
+        if(hasSlot(name))
+        {
+        Iterator it=slots.iterator();
+        while(it.hasNext())
+        {
+            RPSlot slot=(RPSlot)it.next();
+            if(name.equals(slot.getName()))
+            {
+                it.remove();
+                return;                                
+            }
+        }
+        }
+        else
+        {
+            throw new NoSlotFoundException(name);
+        }
+    }
   
   /** This method returns a slot whose name is name
 	 *  @param name the name of the slot
@@ -221,7 +247,249 @@ public class RPObject extends Attributes
 			slots.add((RPSlot)in.readObject(new RPSlot()));
 		}
 	}
-	
+
+  /** TODO: Refactor this method. Looks like it claims for bugs!" */	
+  public void getDifferencesFrom(RPObject object, RPObject added, RPObject deleted) throws Exception 
+    {
+    added.put("object_id",get("object_id"));
+    deleted.put("object_id",get("object_id"));
+    
+    Iterator it=object.iterator();
+    
+    /* get modified or deleted attributes */
+    while(it.hasNext())
+      {
+      String attrib=(String)it.next();
+      if(has(attrib))
+        {
+        if(!get(attrib).equals(object.get(attrib)))
+          {
+          added.put(attrib,get(attrib));        
+          }
+        }    
+      else
+        {
+        deleted.put(attrib,"");
+        }    
+      }    
+
+    /* get new attributes */
+    it=iterator();
+    
+    while(it.hasNext())
+      {
+      String attrib=(String)it.next();
+      if(!object.has(attrib))
+        {
+        added.put(attrib,get(attrib));        
+        }    
+      }    
+    
+    /* get deleted or modified slots */ 
+    SlotsIterator sit=object.slotsIterator();     
+    while(sit.hasNext())
+      {
+      RPSlot slot=(RPSlot)sit.next();
+      if(hasSlot(slot.getName()))
+        {
+        RPSlot actualSlot=getSlot(slot.getName());
+        
+        /* Check if objects match: deleted and modified*/
+        Iterator objects=slot.iterator();
+        while(objects.hasNext())
+          {
+          RPObject objectInSlot=(RPObject)objects.next();
+          if(actualSlot.has(new ID(objectInSlot)))
+            {
+            RPObject slotAdded=new RPObject();
+            RPObject slotDeleted=new RPObject();
+            
+            actualSlot.get(new ID(objectInSlot)).getDifferencesFrom(objectInSlot,slotAdded,slotDeleted);
+            
+            /** TODO: If there are no changes it shouldn't be added */
+            String id=slotAdded.get("object_id");
+            slotAdded.remove("object_id");
+            if(!slotAdded.isEmpty())
+              {
+              slotAdded.put("object_id",id);
+              if(!added.hasSlot(slot.getName()))
+                {
+                added.addSlot(new RPSlot(slot.getName()));
+                }            
+              added.getSlot(slot.getName()).add(slotAdded);
+              }
+            
+            id=slotDeleted.get("object_id");
+            slotDeleted.remove("object_id");
+            if(!slotDeleted.isEmpty())
+              {
+              slotDeleted.put("object_id",id);
+              if(!deleted.hasSlot(slot.getName()))
+                {
+                deleted.addSlot(new RPSlot(slot.getName()));
+                }            
+              deleted.getSlot(slot.getName()).add(slotDeleted);
+              }
+            }
+          else
+            {            
+            if(!added.hasSlot(slot.getName()))
+              {
+              added.addSlot(new RPSlot(slot.getName()));
+              }
+            
+            added.getSlot(slot.getName()).add((RPObject)objectInSlot.copy());
+            }
+          }        
+          
+        /** New objects only */
+        objects=actualSlot.iterator();
+        while(objects.hasNext())
+          {
+          RPObject objectInSlot=(RPObject)objects.next();
+          if(!slot.has(new ID(objectInSlot)))
+            {
+            if(!added.hasSlot(slot.getName()))
+              {
+              added.addSlot(new RPSlot(slot.getName()));
+              }
+            
+            added.getSlot(slot.getName()).add((RPObject)objectInSlot.copy());
+            }
+          }            
+        }
+      else
+        {
+        deleted.addSlot(new RPSlot(slot.getName()));
+        }
+      }  
+    
+    /* get new slots */  
+    sit=slotsIterator();     
+    while(sit.hasNext())
+      {
+      RPSlot slot=(RPSlot)sit.next();
+      if(!object.hasSlot(slot.getName()))
+        {
+        added.addSlot((RPSlot)slot.copy());
+        }
+      }  
+    }
+    
+  public RPObject applyDifferences(RPObject added, RPObject deleted) throws Exception
+    {
+    if(deleted!=null)
+      {
+      Iterator it=deleted.iterator();
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+        if(!attrib.equals("object_id"))
+          {
+          remove(attrib);
+          }
+        }
+      
+      SlotsIterator sit=deleted.slotsIterator();
+      while(sit.hasNext())
+        {
+        RPSlot slot=(RPSlot)sit.next();
+        if(slot.size()==0)
+          {
+          removeSlot(slot.getName());
+          }
+        else
+          {
+          /** for each of the objects, delete it*/
+          Iterator objects=slot.iterator();
+          while(objects.hasNext())
+            {
+            RPObject object=(RPObject)objects.next();
+            getSlot(slot.getName()).get(new ID(object)).applyDifferences(null,object);
+            }
+          }
+        }        
+      }
+
+    if(added!=null)
+      {
+      Iterator it=added.iterator();
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+        if(!attrib.equals("object_id"))
+          {
+          put(attrib,added.get(attrib));
+          }
+        }
+      
+      SlotsIterator sit=added.slotsIterator();
+      while(sit.hasNext())
+        {
+        RPSlot slot=(RPSlot)sit.next();
+        
+        if(!hasSlot(slot.getName()))
+          {
+          addSlot(new RPSlot(slot.getName()));
+          }
+
+        /** for each of the objects, add it*/
+        Iterator objects=slot.iterator();
+        while(objects.hasNext())
+          {
+          RPObject object=(RPObject)objects.next();
+          if(getSlot(slot.getName()).has(new ID(object)))
+            {
+            getSlot(slot.getName()).get(new ID(object)).applyDifferences(object,null);
+            }
+          else
+            {
+            getSlot(slot.getName()).add(object);            
+            }
+          }
+        }        
+      }
+    
+    return this;  
+    }
+  
+  public Object copy()
+    {
+    RPObject object=new RPObject();
+    
+    object.copy((Attributes)this);
+    
+    try
+      {
+      Iterator it=slots.iterator();
+      while(it.hasNext())
+        {
+        RPSlot slot=(RPSlot)it.next();
+        addSlot((RPSlot)slot.copy());
+        }
+      }
+    catch(SlotAlreadyAddedException e)
+      {
+      //Should never happen
+      }
+    
+    return object;
+    }
+    
+  public boolean equals(Object obj) 
+    {
+    RPObject object=(RPObject)obj;
+    
+    if(super.equals(obj) && slots.equals(object.slots))
+      {
+      return true;
+      }
+    else
+      {
+      return false;
+      }
+    }
+  
   /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
 	{
@@ -293,7 +561,7 @@ public class RPObject extends Attributes
 			id=in.readInt();
 		}
 	}
-	
+		
 	public void toXML(Element xml_rp_object)
 	{
 		if(xml_rp_object!=null)
