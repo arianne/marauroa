@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.9 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.10 2004/06/01 16:16:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,12 +82,16 @@ public class MessageS2CMap extends Message
     long savedBytes=out_stream.getBytesWritten()-content.length;
     Statistics.getStatistics().addBytesSaved(savedBytes);
     
+    out.write((int)out_stream.getBytesWritten());
     out.write(content);
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws IOException, ClassNotFoundException
     {
     super.readObject(in);
+    
+    /*NOTE: We don't need it. It is for the C side */
+    in.readInt();
     
     ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
