@@ -217,7 +217,7 @@ public class JMarauroa
     addLog("Starting network client manager\n");
     try
     {
-      netMan=new NetworkClientManager("192.168.100.100");
+      netMan=new NetworkClientManager("127.0.0.1");
     }
     catch(java.net.SocketException e)
     {
