@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.14 2004/03/31 08:26:53 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.15 2004/04/02 08:06:33 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,6 +41,9 @@ public final class GameDataModel
   public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
   public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
   // private RPObject ownGladiator;
+  private long switchStrategyTimeOut; //all 30 mins choose strategy
+  private long switchStrategyTS;
+  private int strategy;               //1 - smart, 2 - more random, other - completely random
   private RPObject ownCharacter;
   private RPObject arena;
   private Map spectators;
@@ -54,6 +57,7 @@ public final class GameDataModel
   private String currentFightMode;
   private String lastFightMode;
   private long lastReqFightTS;
+  private long arenaWaitingTS;
   private boolean voted;
   private Random random=new Random(System.currentTimeMillis());
   private String myName;
@@ -71,6 +75,10 @@ public final class GameDataModel
     lastReqFightTS = System.currentTimeMillis()-REQ_FIGHT_WAIT_TIME/2;
     mAllObjects = new HashMap();
     voted=false;
+    arenaWaitingTS=-1;
+    switchStrategyTimeOut=30*60*1000;
+    switchStrategyTS=System.currentTimeMillis();
+    strategy = 1;
   }
   
   /**
@@ -426,31 +434,45 @@ public final class GameDataModel
     marauroad.trace("The1001Game::sendMessage","D","Chat message sent.");
   }
   
-  public void setRandomFightMode()
+  public void setRandomFightMode(int strategy)
   {
-    HashSet hs = new HashSet(3);
-    hs.add(RPCode.var_scissor);
-    hs.add(RPCode.var_rock);
-    hs.add(RPCode.var_paper);
-    System.out.print(myName+":"+lastFightMode+"->"+currentFightMode+"->");
-    hs.remove(lastFightMode);
-    hs.remove(currentFightMode);
-    lastFightMode = currentFightMode;
-    setFightMode((String)hs.iterator().next());
-    System.out.println(currentFightMode);
-    hs = null;
-    //    if(RPCode.var_scissor.equals(getFightMode()))
-    //    {
-    //      setFightMode(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
-    //    }
-    //    else if(RPCode.var_paper.equals(getFightMode()))
-    //    {
-    //      setFightMode(Math.random()>0.5?RPCode.var_scissor:RPCode.var_rock);
-    //    }
-    //    else
-    //    {
-    //      setFightMode(Math.random()>0.5?RPCode.var_scissor:RPCode.var_paper);
-    //    }
+    System.out.print(myName+"["+strategy+"]:"+lastFightMode+"->"+getFightMode()+"->");
+    switch(strategy)
+    {
+    case 1:
+      HashSet hs = new HashSet(3);
+      hs.add(RPCode.var_scissor);
+      hs.add(RPCode.var_rock);
+      hs.add(RPCode.var_paper);
+      hs.remove(lastFightMode);
+      hs.remove(getFightMode());
+      lastFightMode = currentFightMode;
+      setFightMode((String)hs.iterator().next());
+      hs = null;
+      break;
+    case 2:
+      int random_value = random.nextInt(2);
+      lastFightMode = currentFightMode;
+      if(RPCode.var_scissor.equals(getFightMode()))
+      {
+        setFightMode(random_value==0?RPCode.var_paper:RPCode.var_rock);
+      }
+      else if(RPCode.var_paper.equals(getFightMode()))
+      {
+        setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_rock);
+      }
+      else
+      {
+        setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_paper);
+      }
+      break;
+    default:
+      random_value = random.nextInt(3);
+      lastFightMode = currentFightMode;
+      setFightMode(random_value==0?RPCode.var_scissor:(random_value==1?RPCode.var_rock:RPCode.var_paper));
+      break;
+    }
+    System.out.println(getFightMode());
   }
   
   public String getFightMode()
@@ -590,7 +612,21 @@ public final class GameDataModel
     }
     if(RPCode.var_waiting.equals(getStatus())||RPCode.var_request_fame.equals(getStatus()))
     {
-      if(REQ_FIGHT_WAIT_TIME<(System.currentTimeMillis()-lastReqFightTS))
+      if(RPCode.var_waiting.equals(getStatus()))
+      {
+        if(arenaWaitingTS==-1)
+        {
+          arenaWaitingTS=System.currentTimeMillis();
+        }
+      }
+      else
+      {
+        arenaWaitingTS=-1;
+      }
+      if(REQ_FIGHT_WAIT_TIME<(System.currentTimeMillis()-lastReqFightTS)||
+           (spectators!=null && spectators.size()<=2) ||
+           (arenaWaitingTS>0&& System.currentTimeMillis()-arenaWaitingTS>30*1000)
+        )
       {
         requestFight();
         lastReqFightTS = System.currentTimeMillis();
@@ -599,7 +635,11 @@ public final class GameDataModel
       currentFightMode=null;
       lastFightMode=null;
     }
-    else if(RPCode.var_request_fame.equals(getStatus()))
+    else
+    {
+      arenaWaitingTS=-1;
+    }
+    if(RPCode.var_request_fame.equals(getStatus()))
     {
       if(!voted)
       {
@@ -616,23 +656,23 @@ public final class GameDataModel
       {
         try
         {
-          int damage = 0;
+          int own_damage = 0;
           try
           {
             if(getFirstOwnGladiator()!=null&&getFirstOwnGladiator().has(RPCode.var_damage))
             {
-              damage = getFirstOwnGladiator().getInt(RPCode.var_damage);
+              own_damage = getFirstOwnGladiator().getInt(RPCode.var_damage);
             }
           }
           catch(Exception e)
           {
             e.printStackTrace();
           }
-          if(getFightMode()==null || damage>0)
+          if(getFightMode()==null || own_damage>0)
           {
-            setRandomFightMode();
+            setRandomFightMode(strategy%3);
           }
-          if(damage==0)
+          if(own_damage==0)
           {
             lastFightMode = null;
           }
@@ -649,9 +689,18 @@ public final class GameDataModel
       
       if(cite!=null && cite.length()>0)
       {
-        sendMessage(("cite: " +cite).replace('\t',' ').replace('\n',' '));
+        sendMessage(("QOTD \"" +cite+"\"").replace('\t',' ').replace('\n',' '));
       }
     }
+    if(System.currentTimeMillis()-switchStrategyTS>=switchStrategyTimeOut)
+    {
+      System.out.print("Strategy switched from "+strategy);
+      //time to change strategy...
+      strategy = random.nextInt(3);
+      System.out.println(" to "+strategy);
+      switchStrategyTS=System.currentTimeMillis();
+    }
+    
     if(doPrint)
     {
       System.out.println(dumpToString());
@@ -702,7 +751,7 @@ public final class GameDataModel
       catch (Attributes.AttributeNotFoundException e) {}
       ret+="|"+setStringWidth("Characters ",' ',80)+"|\n";
       ret+=middle;
-      ret+="|"+setStringWidth(setStringWidth("Name",' ',25)+setStringWidth("Fame",' ',6)+setStringWidth("Karma",' ',6)+setStringWidth("fmode",' ',10)+setStringWidth("freq",' ',10)+setStringWidth("Message",' ',23),' ',80)+"|\n";
+      ret+="|"+setStringWidth(setStringWidth("Name",' ',21)+setStringWidth("Fame",' ',6)+setStringWidth("Karma",' ',6)+setStringWidth("s",' ',3)+setStringWidth("fmode",' ',10)+setStringWidth("freq",' ',10)+setStringWidth("Message",' ',23),' ',80)+"|\n";
       ret+=middle;
       for (int i = 0; i < spectators.length; i++)
       {
@@ -736,7 +785,7 @@ public final class GameDataModel
             wait_to_req_fight ="";
             karma = "";
           }
-          ret+="|"+setStringWidth(setStringWidth(name,' ',25)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',29),' ',80)+"|\n";
+          ret+="|"+setStringWidth(setStringWidth(name,' ',21)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(""+strategy,' ',3)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',29),' ',80)+"|\n";
         }
         catch (Attributes.AttributeNotFoundException e) {}
       }
@@ -779,7 +828,7 @@ public final class GameDataModel
           
           int won       = fighters[i].getInt(RPCode.var_num_victory);
           int lost      = fighters[i].getInt(RPCode.var_num_defeat);
-          double winp   = ((double)won)/(won+lost+0.0001);
+          double winp   = ((double)won)/Math.max(won+lost,1);
           
           winp*=100;
           

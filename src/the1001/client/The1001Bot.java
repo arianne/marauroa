@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.20 2004/03/31 08:26:53 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.21 2004/04/02 08:06:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -481,7 +481,6 @@ public class The1001Bot
   public static String getCite()
   {
     String cite = "";
-    
     try
     {
       Process process = Runtime.getRuntime().exec("fortune -s");
