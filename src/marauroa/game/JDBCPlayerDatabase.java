@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.43 2004/05/26 12:56:01 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.44 2004/05/27 12:25:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -414,22 +414,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         
       return false;
       }
-    catch(SQLException sqle)
+    catch(Exception e)
       {
-      marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",sqle);
-      throw new GenericDatabaseException(sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",e);
+      throw new GenericDatabaseException(e.getMessage());
       }
-    catch(java.io.UnsupportedEncodingException ex)//should never be thrown here, as UTF-8 is normally supported
-      {
-       marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",ex);
-       throw new GenericDatabaseException(ex.getMessage());
-      }
-    catch(java.security.NoSuchAlgorithmException ex)//should never be thrown here, as md5 is normally supported
-      {
-       marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",ex);
-       throw new GenericDatabaseException(ex.getMessage());
-      }
-
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","<");
