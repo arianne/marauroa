@@ -5,16 +5,18 @@
   <property name="extras" value="extras"/>
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
+  <property name="docs" value="javadocs"/>
   
+  <!-- EDIT HERE TO CONFIGURE YOUR JAR FILE NAMES -->
   <property name="connectorJ_jar" value="mysql-connector.jar"/>
   <property name="jython_jar" value="jython.jar"/>
+  <!-- [END] -->
   
   <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
   <property name="jython" value="${libdir}/${jython_jar}"/>
   <property name="classpath" value="${build};${connectorJ};${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
-  <property name="docs" value="javadocs"/>
 
   <target name="clean">
     <delete dir="${build}"/>
@@ -52,13 +54,26 @@
     </javac>
   </target>
 
+  <target name="docs" depends="compile">
+    <javadoc packagenames="marauroa.*"           
+           defaultexcludes="yes"
+           destdir="${docs}"
+           author="true"
+           version="true"
+           use="true"
+	   classpath="${classpath}"
+           windowtitle="Marauroa API Documentation Version: ${version}">
+      <fileset dir="${src}">
+          <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+
   <target name="jar" depends="compile">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>    
     <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
   </target>
 
-  <target name="release" depends="release_binary,release_source"/>
-  
   <target name="release_binary" depends="jar">
     <replaceregexp file="${extras}/marauroad.bat    "
                    match="set LOCALCLASSPATH=.*"
@@ -103,19 +118,6 @@
 
     <delete dir="marauroa-${version}"/>
   </target>
-  
-  <target name="docs" depends="compile">
-    <javadoc packagenames="marauroa.*"           
-           defaultexcludes="yes"
-           destdir="${docs}"
-           author="true"
-           version="true"
-           use="true"
-	   classpath="${classpath}"
-           windowtitle="Marauroa API Documentation Version: ${version}">
-      <fileset dir="${src}">
-          <include name="**/*.java"/>
-      </fileset>
-    </javadoc>
-  </target>
+
+  <target name="release" depends="release_binary,release_source"/>
 </project>
