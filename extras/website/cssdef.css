@@ -1,0 +1,25 @@
+BODY{ font-family: Arial, Helvetica, Geneva, Sans-serif;}
+
+A:link{color: #445EE2;}
+A:visited{color: #B444E2;}
+A.navi{ color: #000000; text-decoration: none;}
+A.navi:hover{ color: #D6B917; text-decoration: none;}
+A.naviLight{ color: #FFFFFF; text-decoration: none;}
+A.naviLight:hover{ color: #CACCFA; text-decoration: none;}
+
+A.footer{ text-decoration: none; color: #000000;}
+A.footer:hover{ text-decoration: underline; color: #000000;}
+
+H1{font-family: Arial,Helvetica,Geneva,Sans-Serif; font-size: 18pt; font-weight: light; color: #111ABB; }
+H2{font-family: Arial,Helvetica,Geneva,Sans-Serif; font-size: 16pt; font-weight: light; color: #111ABB; }
+H3{font-family: Arial,Helvetica,Geneva,Sans-Serif; font-size: 14pt; font-weight: light; color: #111ABB;}
+H4{font-family: Arial,Helvetica,Geneva,Sans-Serif; font-size: 12pt; font-weight: light; color: #111ABB;}
+
+P{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+P.abstract{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+P.footer{ font-size: 8pt;}
+UL{ font-family: Arial, Helvetica, Geneva, Sans-Serif; }
+LI{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+BLOCKQUOTE{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+STRONG{ font-weight: bold;}
+.code{ font-family: courier, monospaced; }
