@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.7 2005/03/01 07:18:54 root777 Exp $ */
+/* $Id: RPServerManager.java,v 1.8 2005/03/02 09:06:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,7 +97,13 @@ public class RPServerManager extends Thread
     keepRunning=false;
     while(isfinished==false)
       {
-      Thread.yield();
+      try
+        {
+        Thread.sleep(1000);
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        }
       }
     
     try
@@ -347,36 +353,42 @@ public class RPServerManager extends Thread
   
   private void deliverTransferContent()
     {
-    for(RPObject.ID id: contentsToTransfer.keySet())
+    synchronized(contentsToTransfer)
       {
-      try
+      for(RPObject.ID id: contentsToTransfer.keySet())
         {
-        List<TransferContent> content=contentsToTransfer.get(id);
-      
-        int clientid=playerContainer.getClientidPlayer(id);
-        PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
-      
-        entry.contentToTransfer=content;
-    
-        MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
-        mes.setClientID(entry.clientid);
-     
-        netMan.addMessage(mes);
+        try
+          {
+          List<TransferContent> content=contentsToTransfer.get(id);
+          
+          int clientid=playerContainer.getClientidPlayer(id);
+          PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
+          
+          entry.contentToTransfer=content;
+        
+          MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
+          mes.setClientID(entry.clientid);
+         
+          netMan.addMessage(mes);
+          }
+        catch(NoSuchClientIDException e)
+          {
+          Logger.thrown("RPServerManager::deliverTransferContent","X",e);
+          }
         }
-      catch(NoSuchClientIDException e)
-        {
-        Logger.thrown("RPServerManager::transferContent","X",e);
-        }
+          
+      contentsToTransfer.clear();
       }
-      
-    contentsToTransfer.clear();
     }
   
   
   /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
-    contentsToTransfer.put(id,content);
+    synchronized(contentsToTransfer)
+      {
+      contentsToTransfer.put(id,content);
+      }
     }
 
   /** This method is triggered to send content to the clients */
@@ -437,7 +449,6 @@ public class RPServerManager extends Thread
         {
         Logger.trace("RPServerManager::run", "!", "Unhandled exception, server will shut down.");
         Logger.thrown("RPServerManager::run", "!", thr);
-        //throw thr;
         keepRunning=false;
         error = true;
         }

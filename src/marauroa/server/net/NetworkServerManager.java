@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.6 2005/02/20 17:14:33 root777 Exp $ */
+/* $Id: NetworkServerManager.java,v 1.7 2005/03/02 09:06:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,14 +106,16 @@ public final class NetworkServerManager
         while(!messagesToSend.isEmpty()) //wait until the queue is empty....
           {
           try{messagesToSend.wait(10);}catch(InterruptedException e){}
+          if(!keepRunning) return;
           }
-          synchronized(messagesProcessing)
+        synchronized(messagesProcessing)
+          {
+          while(!messagesProcessing.isEmpty()) //and then wait until all messages are processed
             {
-            while(!messagesProcessing.isEmpty()) //and then wait until all messages are processed
-              {
-              try{messagesProcessing.wait(10);}catch(InterruptedException e){}
-              }
+            try{messagesProcessing.wait(10);}catch(InterruptedException e){}
+            if(!keepRunning) return;
             }
+          }
         }
       }
     finally

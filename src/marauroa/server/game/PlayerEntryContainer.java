@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.2 2005/01/30 12:24:35 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.3 2005/03/02 09:06:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,6 +139,18 @@ public class PlayerEntryContainer
         }
       
       return null;
+      }
+    
+    public String toString()
+      {
+      StringBuffer st=new StringBuffer("PlayerEntry(");
+      st.append(characterid+",");
+      st.append(choosenCharacter+",");
+      st.append(clientid+",");
+      st.append(state+",");
+      st.append(username+")");
+      
+      return st.toString();
       }
     }
   
@@ -498,8 +510,10 @@ public class PlayerEntryContainer
         {
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
+
+        Logger.trace("PlayerEntryContainer::getClientidPlayer","D",playerEntry.toString());
         
-        if(playerEntry.characterid.equals(id))
+        if(playerEntry.state==STATE_GAME_BEGIN && playerEntry.characterid.equals(id))
           {
           return playerEntry.clientid;
           }
