@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.25 2004/03/25 16:44:31 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.24 2004/03/25 16:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,7 +64,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     {
     this.connInfo=connInfo;
     random=new Random();
-    runDBScript("marauroa_init.sql");
+    initDB();
     }
   
   private static PlayerDatabase resetDatabaseConnection() throws Exception
@@ -743,7 +743,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::reInitDB",">");
     try
       {
-      return (runDBScript("marauroa_drop.sql") && runDBScript("marauroa_init.sql"));
+      return (dropDB() && initDB());
       }
     catch(GenericDatabaseException e)
       {
@@ -756,9 +756,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
-  private boolean runDBScript(String file) throws GenericDatabaseException
+  private boolean dropDB() throws GenericDatabaseException
     {
-    marauroad.trace("JDBCPlayerDatabase::runDBScript",">");
+    marauroad.trace("JDBCPlayerDatabase::dropDB",">");
 
     boolean ret = true;
     JDBCTransaction transaction = (JDBCTransaction)getTransaction();
@@ -767,7 +767,50 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     try
       {
       Statement stmt = con.createStatement();
-      InputStream init_file=getClass().getClassLoader().getResourceAsStream(file);
+      String query = "drop table if exists player";
+
+      stmt.addBatch(query);
+      query = "drop table if exists characters";
+      stmt.addBatch(query);
+      query = "drop table if exists loginEvent";
+      stmt.addBatch(query);
+
+      int ret_array[] = stmt.executeBatch();
+      
+      for (int i = 0; i < ret_array.length; i++)
+        {
+        if(ret_array[i]<0)
+          {
+          ret = false;
+          break;
+          }
+        }
+
+      return ret;
+      }
+    catch (SQLException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::dropDB","X",e.getMessage());
+      throw new GenericDatabaseException(e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::dropDB","<");
+      }
+    }
+  
+  private boolean initDB() throws GenericDatabaseException
+    {
+    marauroad.trace("JDBCPlayerDatabase::initDB",">");
+
+    boolean ret = true;
+    JDBCTransaction transaction = (JDBCTransaction)getTransaction();
+    Connection con = transaction.getConnection();
+
+    try
+      {
+      Statement stmt = con.createStatement();
+      InputStream init_file=getClass().getClassLoader().getResourceAsStream("marauroa_init.sql");
       BufferedReader in= new BufferedReader(new InputStreamReader(init_file));
       
       String line;
@@ -778,7 +821,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         if(line.indexOf(';')!=-1)
           {
           String query=is.toString();
-          marauroad.trace("JDBCPlayerDatabase::runDBScript","D",query);
+          marauroad.trace("JDBCPlayerDatabase::initDB","D",query);
           stmt.addBatch(query);
           is=new StringBuffer();
           }
@@ -799,12 +842,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Exception e)
       {
-      marauroad.trace("JDBCPlayerDatabase::runDBScript","X",e.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::initDB","X",e.getMessage());
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
-      marauroad.trace("JDBCPlayerDatabase::runDBScript","<");
+      marauroad.trace("JDBCPlayerDatabase::initDB","<");
       }
     }
   
