@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.19 2004/11/12 15:39:16 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.20 2004/11/18 20:42:51 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -143,8 +143,6 @@ public class PerceptionHandler
     {
     try
       {
-      Iterator it;
-      
       if(message.getTypePerception()==Perception.SYNC)
         {
         if(!listener.onClear())
@@ -153,10 +151,8 @@ public class PerceptionHandler
           }
         }
     
-      it=message.getAddedRPObjects().iterator();
-      while(it.hasNext())
+      for(RPObject object: message.getAddedRPObjects())
         {
-        RPObject object=(RPObject)it.next();
         if(!listener.onAdded(object))
           {
           world.put(object.getID(),object);
@@ -175,12 +171,8 @@ public class PerceptionHandler
     {
     try
       {
-      Iterator it;
-    
-      it=message.getDeletedRPObjects().iterator();
-      while(it.hasNext())
+      for(RPObject object: message.getDeletedRPObjects())
         {
-        RPObject object=(RPObject)it.next();
         if(!listener.onDeleted(object))
           {
           world.remove(object.getID());
@@ -200,24 +192,18 @@ public class PerceptionHandler
     {
     try
       {
-      Iterator it;
-      
-      it=message.getModifiedDeletedRPObjects().iterator();
-      while(it.hasNext())
+      for(RPObject object: message.getModifiedDeletedRPObjects())
         {
-        RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.getID());
+        RPObject w_object=world.get(object.getID());
         if(!listener.onModifiedDeleted(w_object,object))
           {
           w_object.applyDifferences(null,object);
           }
         }
      
-      it=message.getModifiedAddedRPObjects().iterator();
-      while(it.hasNext())
+      for(RPObject object: message.getModifiedAddedRPObjects())
         {
-        RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.getID());
+        RPObject w_object=world.get(object.getID());
         if(!listener.onModifiedAdded(w_object,object))
           {
           w_object.applyDifferences(object,null);
