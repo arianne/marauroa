@@ -76,7 +76,9 @@ class RealPythonAI(PythonAI):
             else:            
                 self.pythonRP.move(ghost)
                 self.pythonRP._zone.modify(ghost)
-                
+        
+        for player in self.pythonRP._online_players:
+            self.pythonRP._ghostCollisions(player)
                 
         return 1
     
@@ -86,6 +88,7 @@ class RealPythonRP(PythonRP):
         self._super_players=[]
         self._online_players=[]
         self._online_ghosts=[]
+        self._killedFlagGhosts=[]
 
         self._zone=zone
         self._map=mapacmanRPMap(self,pacman_mapfile)
@@ -220,19 +223,27 @@ class RealPythonRP(PythonRP):
                 player.put("super",timeout)
                 element={'timeout':timeout,'object':player}
                 self._super_players.append(element)
+    
+    def removeKilledFlag(self):
+        for object in self._killedFlagGhosts:
+            if object.has("?kill"):
+                object.remove("?kill")
+                self._zone.modify(object)
         
 
     def _ghostCollisions(self, player):
         pos=(player.getInt("x"),player.getInt("y"))
-        for player_in_pos in self.getGhosts(pos):
+        for ghost in self.getGhosts(pos):
             if player.has("super"):
                 # TODO: Eat the ghost
                 pass
             else:
                 # TODO: kill the player
                 print "Ghost killed player ",player.get("id") 
-                player_in_pos.add("score",1)
-                self._zone.modify(player_in_pos)
+                ghost.add("score",1)
+                ghost.put("?kill","")
+                self._killedFlagGhosts.append(ghost)
+                self._zone.modify(ghost)
                 
                 pos=self._map.getRandomRespawn()
                 player.put("x",pos[0])
@@ -251,6 +262,8 @@ class RealPythonRP(PythonRP):
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
+        self.removeKilledFlag()
+        
         for object in self._removed_elements:
             if object['timeout']==0:
                 self._addBall(object)
