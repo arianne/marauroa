@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.21 2004/01/08 14:14:47 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.22 2004/01/27 00:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -267,7 +267,7 @@ public class Test_RPCode extends TestCase
       /** We make sure that the combat has ends */
       rpu.nextTurn();
       
-      assertEquals(arena.get("winner"),gladiator.get("object_id"));
+      assertEquals(arena.get("winner"),gladiator.get(RPCode.var_object_id));
       
       assertFalse(gladiator.has("?damage"));
       assertFalse(newgladiator.has("?damage"));

@@ -1,4 +1,4 @@
-/* $Id: Player.java,v 1.2 2004/01/07 16:26:09 arianne_rpg Exp $ */
+/* $Id: Player.java,v 1.3 2004/01/27 00:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,13 +13,14 @@
 package the1001.objects;
 
 import marauroa.game.*;
+import the1001.RPCode;
 import java.util.*;
 
 public class Player extends RPObject
   {
   public Player(RPObject.ID id, String name) throws SlotAlreadyAddedException
     {
-    put("object_id",id.getObjectID());
+    put(RPCode.var_object_id,id.getObjectID());
     put("type","player");
     put("name",name);
     put("fame",0);

@@ -1,4 +1,4 @@
-/* $Id: Item.java,v 1.2 2003/12/30 17:26:35 arianne_rpg Exp $ */
+/* $Id: Item.java,v 1.3 2004/01/27 00:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,13 +13,14 @@
 package the1001.objects;
 
 import marauroa.game.*;
+import the1001.RPCode;
 import java.util.*;
 
 public class Item extends RPObject
   {
   public Item(RPObject.ID id,String type)
     {
-    put("object_id",id.getObjectID());
+    put(RPCode.var_object_id,id.getObjectID());
     put("type",type);
 	put("defend",5);
 	put("attack",5);

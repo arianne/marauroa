@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.39 2004/01/25 22:29:01 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.40 2004/01/27 00:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,40 @@ import java.util.*;
 
 public class RPCode
   {
-  public static byte GLADIATORS_PER_FIGHT=2;
+  public static byte GLADIATORS_PER_FIGHT=2;  
+  
+  public static String var_object_id="object_id";
+  public static String var_type="type";
+  public static String var_name="name";
+  public static String var_hp="hp";
+  public static String var_initial_hp="!hp";
+  public static String var_attack="attack";
+  public static String var_fame="fame";
+  public static String var_num_victory="num_victory";
+  public static String var_num_defeat="num_defeat";
+  public static String var_l_hand="l_hand";
+  public static String var_r_hand="r_hand";
+  public static String var_defend="defend";
+  public static String var_price="price";
+  public static String var_gladiators="gladiators";
+  public static String var_items="items";
+  public static String var_fighting="fighting";
+  public static String var_requested="requested";
+  public static String var_status="status";
+  public static String var_waiting="waiting";
+  public static String var_choose="choose";
+  public static String var_hidden_vote="!vote";
+  public static String var_rock="rock";
+  public static String var_paper="paper";
+  public static String var_scissor="scissor";
+  public static String var_combat_mode="!mode";
+  public static String var_request_fame="request_fame";
+  public static String var_timeout="timeout";
+  public static String var_thumbs_up="thumbs_up";
+  public static String var_thumbs_down="thumbs_down";
+  public static String var_damage="damage";
+  public static String var_up="up";
+  public static String var_winner="winner";  
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
@@ -300,7 +333,7 @@ public class RPCode
               }
             else
               {
-              arena.put("winner",gladiators[i].get("object_id"));
+              arena.put("winner",gladiators[i].get(var_object_id));
               }
             }
             
@@ -361,7 +394,7 @@ public class RPCode
       if(!gladiator1.has("!mode"))
         {
         /** Gladiator1 has not begin to fight. */
-        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator("+gladiator1.get("object_id")+") has not choose fight mode");
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator("+gladiator1.get(var_object_id)+") has not choose fight mode");
         return;
         }
          
@@ -369,7 +402,7 @@ public class RPCode
         {
         /** Gladiator2 is idle, no combat, just hit */
         int damage=gladiator1.getInt("attack");
-        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiator("+gladiator2.get("object_id")+") has not choose fight mode");
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiator("+gladiator2.get(var_object_id)+") has not choose fight mode");
         gladiator2.put("hp",gladiator2.getInt("hp")-damage);
         gladiator2.put("damage",damage);
         }
@@ -385,7 +418,7 @@ public class RPCode
         int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"))+1;
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiators has WIN to ("+mode_g1+") vs ("+mode_g2+")");
         gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-        gladiator2.put("?damage",damage);
+        gladiator2.put("damage",damage);
         ruleProcessor.trackObject(gladiator2);
         }  
       }

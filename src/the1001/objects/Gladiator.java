@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.8 2004/01/07 17:32:13 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.9 2004/01/27 00:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package the1001.objects;
 
+import the1001.RPCode;
 import marauroa.game.*;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class Gladiator extends RPObject
   
   public Gladiator(RPObject.ID id) throws SlotAlreadyAddedException
     {
-    put("object_id",id.getObjectID());
+    put(RPCode.var_object_id,id.getObjectID());
     put("type","gladiator");
     put("name",randomNames[Math.abs(random.nextInt()%randomNames.length)]);
     put("!hp",100);
