@@ -91,14 +91,11 @@ RPObject		Player
 				Arena
 				Heroes' House
 
-RPAction		Join Arena
-				Fight 
+RPAction		Fight 
 				Attack
 				Defend
 				Dogde
-				Decide
-				Kill
-				Indult
+				
 				AwardFame
 				Talk
 				Buy
@@ -106,9 +103,9 @@ RPAction		Join Arena
 				Retire
 				Train
 				
-Description of each element
----------------------------					
-
+				
+Description of each RPObject
+----------------------------					
 Player
 We need to have something to represent users in the virtual world, and we are 
 going to use an invisible avatar, that is a player. As player it has no just a
@@ -138,6 +135,7 @@ Attributes
 	skill_attack
 	skill_defend
 	skill_evasion
+	rp_health
 Slots
 	l_hand
 	r_hand
@@ -173,4 +171,70 @@ exist and it is our World
 
 Heroes' House
 It is a single object that contains all the heroes that have been retired. This 
-object has also the fact of create new Gladiators and Items on demand.
+object has also the fact of create new Gladiators and Items on demand. It has to 
+contain reference items so set prices and so.
+
+Slots
+	retiredGladiators
+	items
+	
+
+Description of each RPAction
+----------------------------					
+Fight
+This action is issue to request to participate on a Fight.
+It has no params
+It is replied with a "fight_granted" attribute in your player when you are allowed
+to enter the fight.
+
+
+Attack
+This action is issued to request your gladiator to move to offensive mode and 
+attack as much as he can ( breath attribute ) to the Gladiator you choose.
+
+Attributes
+	attack_gladiator
+	
+It is replied as with the attribute combat_mode and with the value equal to attack
+	
+
+Defend
+This actions is issued to request your gladiator to change to defensive behaviour
+and it will do its best to block rival hits. No attributes.
+It is replied as with the attribute combat_mode and with the value equal to defend
+
+
+Dogde
+This action is issued to request your gladiator to reduce breath of the rival by
+running around it while avoiding hits and hitting him. 
+It is replied as with the attribute combat_mode and with the value equal to dogde
+
+* Combat actions note
+On each of actions: attack, defend and dogde when you are damaged it is notified by
+the attribute damame_<attacker>=damage and your health value will be modified 
+respectively. All the actions will modify your attributes and skills accordingly.
+When health value reach 0 you are out of the battle, and the battle ends. Then the 
+AwardFame stage starts. Each player will give you and your rival a value of fame ranging
+from 0 to 100.
+
+
+AwardFame
+It is use to give fame to the fighters by the spectators. Each spectator will 
+issue an AwardFame action when they see on the players a "request_fame" attribute.
+After enough turns have been elapsed, we compute the mean of all the fame awards for both
+players and modify their fame accordingly.
+
+Attributes
+	fame_winner
+	fame_losser
+	
+To lose in 1001 Gladiator is just a defeat, you can even win more fame than the winner.
+It is replied with an attribute "fame_awarded" on the player that issued the action.
+
+
+Talk
+It is used to talk, you as player, not the gladiator.
+Attributes
+	text
+	
+You can see it on the reply of 
