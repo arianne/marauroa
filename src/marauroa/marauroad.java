@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.46 2004/03/04 23:20:36 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.47 2004/03/12 09:01:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,24 +104,24 @@ public class marauroad extends Thread
       SonGoku.put("object_id","1");
       SonGoku.put("name","Son Goku");
       SonGoku.put("type","character");
-      SonGoku.addSlot(new RPSlot("gladiators"));
-      SonGoku.getSlot("gladiators").add(new Gladiator(new RPObject.ID(4)));
+      SonGoku.addSlot(new RPSlot("!gladiators"));
+      SonGoku.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(4)));
       playerDatabase.addCharacter("Test Player", "Son Goku",SonGoku);
 
       RPObject MrBean=new RPObject();
       MrBean.put("object_id","2");
       MrBean.put("name","Mr Bean");
       MrBean.put("type","character");
-      MrBean.addSlot(new RPSlot("gladiators"));
-      MrBean.getSlot("gladiators").add(new Gladiator(new RPObject.ID(5)));
+      MrBean.addSlot(new RPSlot("!gladiators"));
+      MrBean.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(5)));
       playerDatabase.addCharacter("Another Test Player", "MrBean",MrBean);
       
       RPObject DrCoreDump=new RPObject();
       DrCoreDump.put("object_id","3");
       DrCoreDump.put("name","Dr CoreDump");
       DrCoreDump.put("type","character");
-      DrCoreDump.addSlot(new RPSlot("gladiators"));
-      DrCoreDump.getSlot("gladiators").add(new Gladiator(new RPObject.ID(6)));
+      DrCoreDump.addSlot(new RPSlot("!gladiators"));
+      DrCoreDump.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(6)));
       playerDatabase.addCharacter("Test Player", "Dr CoreDump",DrCoreDump);
       }
     catch(Exception e)

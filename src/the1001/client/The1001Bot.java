@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.8 2004/03/09 06:13:37 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.9 2004/03/12 09:01:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,7 +169,7 @@ public class The1001Bot
                 marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
                 try
                 {
-                  RPSlot slot = obj.getSlot("gladiators");
+                  RPSlot slot = obj.getSlot("!gladiators");
                   RPObject[] old_fighters = gm.getFighters();
                   RPObject[] new_fighters = new RPObject[slot.size()];
                   int k = 0;
@@ -261,9 +261,9 @@ public class The1001Bot
               else if("shop".equals(obj.get("type")))
               {
                 marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
-                if(obj.hasSlot("gladiators"))
+                if(obj.hasSlot("!gladiators"))
                 {
-                  RPSlot slot = obj.getSlot("gladiators");
+                  RPSlot slot = obj.getSlot("!gladiators");
                   Iterator iter = slot.iterator();
                   while(iter.hasNext())
                   {

@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.10 2004/02/24 14:02:50 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.11 2004/03/12 09:01:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -170,7 +170,7 @@ class createaccount
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);
       
-      object.getSlot("gladiators").add(gladiator_obj);
+      object.getSlot("!gladiators").add(gladiator_obj);
       
       out.println("Adding character");
       playerDatabase.addCharacter(username,character,object);
