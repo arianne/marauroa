@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.31 2003/12/17 16:05:28 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.32 2003/12/30 10:27:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,7 @@ public class RunTests
         {
         }
       
-      if(timeout<0)
+      if(timeout<=0)
         {
         System.err.println("ERROR: RunTests killed, please send the log files to:");
         System.err.println("http://sourceforge.net/tracker/?func=add&group_id=66537&atid=514826");

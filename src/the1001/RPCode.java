@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.4 2003/12/30 09:46:00 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.5 2003/12/30 10:26:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,7 @@ public class RPCode
       else
         {
         player.put("requested",/** TODO: Put turn here */0);
-        arena.put("waiting",Integer.parseInt(arena.get("waiting"))+1);
+        arena.put("waiting",arena.getInt("waiting")+1);
         }
       
       /** We check now if Arena is complete */

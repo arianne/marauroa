@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.5 2003/12/18 23:56:55 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.6 2003/12/30 10:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,6 +55,7 @@ public class Test_Attributes extends TestCase
       value=attr.get("Attribute");
       assertNotNull(value);
       assertEquals(1,Integer.parseInt(value));      
+      assertEquals(1,attr.getInt("Attribute"));      
 
       List list=new LinkedList();
       list.add("Hi");

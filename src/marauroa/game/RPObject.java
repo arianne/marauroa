@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.21 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.22 2003/12/30 10:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -207,14 +207,14 @@ public class RPObject extends Attributes
      *  @param attr an RPObject containing object_id attribute */
     public ID(RPObject attr) throws Attributes.AttributeNotFoundException
       {
-      id=new Integer(attr.get("object_id")).intValue();
+      id=attr.getInt("object_id");
       }
     
     /** Constructor
      *  @param attr an RPAction containing source_id attribute */
     public ID(RPAction attr) throws Attributes.AttributeNotFoundException
       {
-      id=new Integer(attr.get("source_id")).intValue();
+      id=attr.getInt("source_id");
       }
 
     /** This method returns the object id

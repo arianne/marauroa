@@ -1,4 +1,4 @@
-/* $Id: GameBoard.java,v 1.8 2003/12/20 14:01:38 arianne_rpg Exp $ */
+/* $Id: GameBoard.java,v 1.9 2003/12/30 10:26:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ public class GameBoard
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("last_id"));
+      ret = getInt("last_id");
     }
     catch (NumberFormatException e)
     {
@@ -81,7 +81,7 @@ public class GameBoard
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("winner_id"));
+      ret = getInt("winner_id");
     }
     catch (NumberFormatException e)
     {
@@ -101,7 +101,7 @@ public class GameBoard
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("size"));
+      ret = getInt("size");
     }
     catch (NumberFormatException e)
     {
@@ -147,7 +147,7 @@ public class GameBoard
     int id = -1;
     try
     {
-      id = Integer.parseInt(get(row+"X"+column));
+      id = getInt(row+"X"+column);
     }
     catch (NumberFormatException e)
     {

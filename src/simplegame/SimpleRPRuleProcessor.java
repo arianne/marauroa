@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.33 2003/12/29 11:46:01 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.34 2003/12/30 10:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,19 +77,19 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       RPObject rp_player = null;
       rp_player = zone.get(id);
       
-      if(action.get("type").equals(Integer.toString(MoveAction.ACTION_MOVE)))
+      if(action.getInt("type")==MoveAction.ACTION_MOVE)
       {
         status = makeMove(id, action);
       }
-      else if(action.get("type").equals(Integer.toString(GetCharacterListAction.ACTION_GETCHARLIST)))
+      else if(action.getInt("type")==GetCharacterListAction.ACTION_GETCHARLIST)
       {
         status = getCharacterList(id, action);
       }
-      else if(action.get("type").equals(Integer.toString(ChallengeAnswer.ACTION_CHALLENGE_ANSWER)))
+      else if(action.getInt("type")==ChallengeAnswer.ACTION_CHALLENGE_ANSWER)
       {
         status = challengeAnswer(id, action);
       }
-      else if(action.get("type").equals(Integer.toString(ChallengeAction.ACTION_CHALLENGE)))
+      else if(action.getInt("type")==ChallengeAction.ACTION_CHALLENGE)
       {
         status = challenge(id, action);
       }
@@ -153,7 +153,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     while(iter.hasNext())
       {
       RPObject object = (RPObject)iter.next();
-      int oid = Integer.parseInt(object.get("object_id"));
+      int oid = object.getInt("object_id");
       if(oid!=id.getObjectID())
         {
         String name = object.get("name");
@@ -206,7 +206,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       
       //it is enough just to send id/name...
       CharacterList clist = new CharacterList();
-      clist.addCharacter(Integer.parseInt(rp_player.get("object_id")),rp_player.get("name"),"wurst");
+      clist.addCharacter(rp_player.getInt("object_id"),rp_player.get("name"),"wurst");
       RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
       challenge_slot.add(clist);
       status = RPAction.STATUS_SUCCESS;
@@ -300,8 +300,8 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         }
         else
         {
-          int row = Integer.parseInt(action.get("row"));
-          int column = Integer.parseInt(action.get("column"));
+          int row = action.getInt("row");
+          int column = action.getInt("column");
           if(gb.getRPCharacterAt(row,column)==-1)
           {
             gb.setRPCharacterAt(row,column,id.getObjectID());

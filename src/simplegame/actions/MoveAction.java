@@ -1,4 +1,4 @@
-/* $Id: MoveAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: MoveAction.java,v 1.5 2003/12/30 10:26:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,7 +40,7 @@ public class MoveAction
     int row = -1;
     try
     {
-      row = Integer.parseInt(get("row"));
+      row = getInt("row");
     }
     catch (NumberFormatException e) {}
     catch (Attributes.AttributeNotFoundException e) {}
@@ -52,7 +52,7 @@ public class MoveAction
     int column = -1;
     try
     {
-      column = Integer.parseInt(get("column"));
+      column = getInt("column");
     }
     catch (NumberFormatException e) {}
     catch (Attributes.AttributeNotFoundException e) {}

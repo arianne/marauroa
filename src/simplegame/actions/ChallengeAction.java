@@ -1,4 +1,4 @@
-/* $Id: ChallengeAction.java,v 1.8 2003/12/20 10:22:12 arianne_rpg Exp $ */
+/* $Id: ChallengeAction.java,v 1.9 2003/12/30 10:26:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class ChallengeAction extends RPAction
     int ret = -1;
     try
       {
-      ret = Integer.parseInt(get("who"));
+      ret = getInt("who");
       }
     catch (Exception e)
       {
@@ -70,7 +70,7 @@ public class ChallengeAction extends RPAction
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("whom"));
+      ret = getInt("whom");
     }
     catch (NumberFormatException e)
     {

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.26 2003/12/29 11:33:03 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.27 2003/12/30 10:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -435,7 +435,7 @@ public class GameServerManager extends Thread
 	  rpMan.addRPAction(action);
 
 	  /* Notify client that we recieved the action */
-      MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),Integer.parseInt(action.get("action_id")));
+      MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),action.getInt("action_id"));
       msgAction.setClientID(clientid);
 	  netMan.addMessage(msgAction);	  
       }
