@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.5 2003/12/20 09:55:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,7 @@ package simplegame.actions;
 import marauroa.game.Attributes;
 import marauroa.marauroad;
 
-public class ChallengeAnswer
-  extends ChallengeAction
+public class ChallengeAnswer extends ChallengeAction
 {
   public final static int ACTION_CHALLENGE_ANSWER=4;
   
@@ -32,21 +31,16 @@ public class ChallengeAnswer
   
   public boolean isAccepted()
   {
-//    marauroad.trace("ChallengeAnswer::isAccepted",">");
     boolean ret = false;
     try
     {
       String acc = get("accept");
-//      marauroad.trace("ChallengeAnswer::isAccepted","D","["+acc+"]");
       ret = Boolean.valueOf(acc).booleanValue();
     }
     catch (Attributes.AttributeNotFoundException e)
     {
-//      marauroad.trace("ChallengeAnswer::isAccepted","D","AttributeNotFoundException");
       ret = false;
     }
-//    marauroad.trace("ChallengeAnswer::isAccepted","D","returning " +ret);
-//    marauroad.trace("ChallengeAnswer::isAccepted","<");
     return(ret);
   }
   

@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.34 2003/12/19 15:01:06 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.35 2003/12/20 09:55:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -110,7 +110,7 @@ public class SimpleGame
 						List modified_objects = perception.getModifiedRPObjects();
 						if(modified_objects.size()>0)
 						{
-							//the only object we should see hier is the player object itself.
+							//the only object we should see here is the player object itself.
 							RPObject obj = (RPObject)modified_objects.get(0);
 							addLog(obj.toString()+"\n");
 							

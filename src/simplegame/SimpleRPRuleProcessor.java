@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.29 2003/12/19 20:49:52 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.30 2003/12/20 09:55:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -143,14 +143,19 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
           {
             String name = object.get("name");
             String pl_status = "idle";
+            
             try
-            {
-              pl_status = (object.getSlot("hand").get()==null?"idle":"busy");
-            }
-            catch(Exception ex)
-            {
-              pl_status = "idle";
-            }
+              {
+              if(object.hasSlot("hand") && object.getSlot("hand").size()>0)            
+                {
+                pl_status="busy";              
+                }
+              }
+            catch(RPObject.NoSlotFoundException e)
+              {
+              /** Bad thing */
+              }
+            
             clist.addCharacter(oid,object.get("name"),pl_status);
           }
         }
@@ -330,6 +335,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       try
       {
         challenge_slot = player.getSlot(slot_name);
+        challenge_slot.clear();
       }
       catch (RPObject.NoSlotFoundException e)
       {
