@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.1 2004/04/30 17:40:44 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.2 2004/04/30 20:36:40 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ public class PerceptionHandler
   /*** HACK: From here and below all the stuff about applying perceptions, I 
    *  think it is asking for a refactoring ***/
 
-  interface IPerceptionListener
+  public interface IPerceptionListener
     {
     public boolean onAdded(RPObject object);
     public boolean onModifiedAdded(RPObject object, RPObject changes);
