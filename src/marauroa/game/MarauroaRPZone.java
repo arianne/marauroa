@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.54 2004/06/21 17:11:33 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.55 2004/06/23 12:34:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,12 +14,6 @@ package marauroa.game;
 
 import java.util.*;
 import java.io.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import javax.xml.transform.dom.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 import marauroa.marauroad;
 
 public class MarauroaRPZone implements IRPZone
@@ -27,9 +21,6 @@ public class MarauroaRPZone implements IRPZone
   private Map objects;
   private List modified;
   private Perception perception;
-
-  protected JDBCPlayerDatabase rpobjectDatabase;
-  protected Transaction transaction;
 
   private static Random rand=new Random();
 
@@ -39,39 +30,14 @@ public class MarauroaRPZone implements IRPZone
     objects=new LinkedHashMap();
     modified=new LinkedList();
     perception=new Perception(Perception.DELTA);
-    try
-      {
-      rpobjectDatabase=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
-      transaction=rpobjectDatabase.getTransaction();
-      }
-    catch(Exception e)
-      {
-      marauroad.thrown("MarauroaRPZone::MarauroaRPZone","X",e);
-      marauroad.trace("MarauroaRPZone::MarauroaRPZone","!",e.getMessage());
-      System.exit(1);
-      }
     }
   
   public void onInit() throws Exception
     {
-    JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
-    while(it.hasNext())
-      {
-      RPObject.ID id=it.next();
-      RPObject object=rpobjectDatabase.loadRPObject(transaction,id);
-        
-      add(object);
-      }
     }
 
   public void onFinish() throws Exception
     {
-    JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
-    while(it.hasNext())
-      {
-      RPObject.ID id=it.next();
-      rpobjectDatabase.storeRPObject(transaction,get(id));
-      }
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -79,23 +45,15 @@ public class MarauroaRPZone implements IRPZone
     try
       {
       RPObject.ID id=new RPObject.ID(object);
-      
+    
       object.resetAddedAndDeleted();
-
       objects.put(id,object);
+    
       perception.added(object);
-      
-      if(!rpobjectDatabase.hasInRPZone(transaction,object))
-        {
-        rpobjectDatabase.addToRPZone(transaction,object);
-        transaction.commit();
-        }
       }
-    catch(Exception e)
+    catch(Attributes.AttributeNotFoundException e)
       {
-      transaction.rollback();
-      marauroad.thrown("MarauroaRPZone::add","X",e);
-      throw new RPObjectInvalidException("id");
+      throw new RPObjectInvalidException(e.getMessage());
       }
     }
   
@@ -133,17 +91,6 @@ public class MarauroaRPZone implements IRPZone
       RPObject object=(RPObject)objects.remove(id);
       perception.removed(object);
 
-      try
-        {
-        rpobjectDatabase.removeFromRPZone(transaction,id);
-        transaction.commit();
-        }
-      catch(Exception e)
-        {
-        transaction.rollback();
-        throw new RPObjectNotFoundException(id);
-        }
-        
       return object;
       }
     else
@@ -174,12 +121,14 @@ public class MarauroaRPZone implements IRPZone
       }
     }
   
+  static private int lastNonPermanentIdAssigned=0;
+  
   public RPObject create()
     {
-    RPObject.ID id=rpobjectDatabase.getValidRPObjectID(transaction);
+    RPObject.ID id=new RPObject.ID(++lastNonPermanentIdAssigned);
     while(has(id))
       {
-      id=rpobjectDatabase.getValidRPObjectID(transaction);
+      id=new RPObject.ID(++lastNonPermanentIdAssigned);
       }
       
     return new RPObject(id);
