@@ -36,7 +36,7 @@ public class marauroad extends Thread
       RPObject DrCoreDump=new RPObject();
       DrCoreDump.put("object_id","3");
       DrCoreDump.put("name","Dr CoreDump");
-      playerDatabase.addCharacter("Another Test Player", "Dr CoreDump",new RPObject());
+      playerDatabase.addCharacter("Another Test Player", "Dr CoreDump",DrCoreDump);
       }
     catch(Exception e) 
       {
