@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.56 2004/03/27 10:57:13 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.57 2004/03/31 12:25:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,7 +145,6 @@ class RPServerManager extends Thread
     marauroad.trace("RPServerManager::addRPObject",">");
     try
       {
-      stats.addObjectAdded();
       marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
       zone.add(object);
       }
@@ -186,7 +185,6 @@ class RPServerManager extends Thread
     marauroad.trace("RPServerManager::removeRPObject",">");
     try
       {
-      stats.addObjectRemoved();
       marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
       return zone.remove(id);
       }
@@ -289,6 +287,8 @@ class RPServerManager extends Thread
         
         try
           {
+          stats.addPlayerTimeout(playerContainer.getUsername(clientid),clientid);
+          
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
           RPObject object=getRPObject(id);
 

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.36 2004/03/25 22:20:43 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.37 2004/03/31 12:25:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,14 +241,7 @@ public final class GameServerManager extends Thread
         {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
         stats.addPlayerInvalidLogin(msg.getUsername());
-        if(playerContainer.hasPlayer(msg.getUsername()))
-          {
-          playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
-          }
-        else
-          {
-          marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username: Can't add login event.");
-          }
+        playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
 
         /* Send player the Login NACK message */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);

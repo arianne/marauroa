@@ -27,7 +27,22 @@ create table if not exists loginEvent
   result TINYINT
   );
 
-create table if not exists  rpobject
+create table if not exists statistics 
+  ( 
+  timedate timestamp,
+  
+  bytes_send integer,
+  bytes_recv integer,
+  
+  players_login integer,
+  players_logout integer,
+  players_timeout integer,
+  players_online integer,
+  
+  PRIMARY KEY(timedate)
+  );
+
+create table if not exists rpobject
   (
   id integer not null primary key, 
   slot_id integer

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.26 2004/03/27 10:54:05 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.27 2004/03/31 12:25:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -408,7 +408,7 @@ public class PlayerEntryContainer
       }
     }
   
-  /** This method returns true if the database has the player pointed by username
+  /** This method returns true if the PlayerContainer has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
   public boolean hasPlayer(String username)

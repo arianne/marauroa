@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.26 2004/03/25 22:20:43 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.27 2004/03/31 12:25:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -483,7 +483,15 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
       
-      int id=getDatabasePlayerId(trans,username);
+      int id=-1;
+      try
+        {
+        id=getDatabasePlayerId(trans,username);
+        }
+      catch(PlayerNotFoundException e)
+        {
+        }
+      
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "insert into loginEvent values("+id+",'"+source.getHostName()+"',NULL,"+(correctLogin?1:0)+")";
@@ -493,11 +501,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
       throw new GenericDatabaseException(sqle.getMessage());
-      }
-    catch(PlayerNotFoundException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X","Database doesn't contains that username("+username+")");
-      throw e;
       }
     finally
       {
@@ -1218,5 +1221,34 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       id=new RPObject.ID(random.nextInt());
       }
     return id;
+    }
+
+
+  public void addStatisticsEvent(Transaction trans, Statistics.GatheredVariables var) throws GenericDatabaseException
+    {
+    marauroad.trace("JDBCPlayerDatabase::addStatisticsEvent",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      
+      String query = "insert into statistics values(NULL,"+
+        var.bytesSend+","+
+        var.bytesRecv+","+
+        var.playersLogin+","+
+        var.playersLogout+","+
+        var.playersTimeout+","+
+        var.playersOnline+")";
+      stmt.execute(query);
+      }
+    catch(SQLException sqle)
+      {
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
+      throw new GenericDatabaseException(sqle.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
+      }
     }
   }

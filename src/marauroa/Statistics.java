@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.21 2004/03/24 15:25:32 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.22 2004/03/31 12:25:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,29 +12,34 @@
  ***************************************************************************/
 package marauroa;
 
+import marauroa.game.*;
+
 import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 
 public class Statistics
   {
-  static class GatheredVariables
+  public static class GatheredVariables
     {
     public long bytesRecv=0;
     public long bytesSend=0;
     public long bytesSavedByCompression=0;
+    
     public long messagesRecv=0;
     public long messagesSend=0;
     public long messagesIncorrect=0;
+    
     public long playersLogin=0;
     public long playersInvalidLogin=0;
     public long playersLogout=0;
+    public long playersTimeout=0;
     public long playersOnline=0;
-    public long objectsAdded=0;
-    public long objectsRemoved=0;
+
     public long objectsNow=0;
     public long actionsAdded=0;
     public long actionsInvalid=0;
+    
     public void print(PrintWriter out, double diff)
       {
       out.println("Bytes RECV: "+String.valueOf(bytesRecv));
@@ -51,45 +56,59 @@ public class Statistics
       out.println("Players LOGIN: "+String.valueOf(playersLogin));
       out.println("Players LOGIN INVALID: "+String.valueOf(playersInvalidLogin));
       out.println("Players LOGOUT: "+String.valueOf(playersLogout));
-      out.println("Players TIMEDOUT: "+String.valueOf(playersLogin-playersLogout-playersOnline));
+      out.println("Players TIMEDOUT: "+String.valueOf(playersTimeout));
       out.println("Players ONLINE: "+String.valueOf(playersOnline));
       out.println();
-      // out.println("Objects ADDED: "+String.valueOf(objectsAdded));
-      // out.println("Objects REMOVED: "+String.valueOf(objectsRemoved));
       out.println("Objects ONLINE: "+String.valueOf(objectsNow));
       out.println("Actions ADDED: "+String.valueOf(actionsAdded));
       out.println("Actions INVALID: "+String.valueOf(actionsInvalid));
       }
-    
-    public void avg(GatheredVariables var)
+
+    public void add(GatheredVariables var)
       {
-      bytesRecv=(var.bytesRecv+bytesRecv)/2;
-      bytesSend=(var.bytesSend+bytesSend)/2;
-      messagesRecv=(var.messagesRecv+messagesRecv)/2;
-      messagesSend=(var.messagesSend+messagesSend)/2;
-      messagesIncorrect=(var.messagesIncorrect+messagesIncorrect)/2;
-      playersLogin=(var.playersLogin+playersLogin)/2;
-      playersInvalidLogin=(var.playersInvalidLogin+playersInvalidLogin)/2;
-      playersLogout=(var.playersLogout+playersLogout)/2;
-      playersOnline=(var.playersOnline+playersOnline)/2;
-      objectsAdded=(var.objectsAdded+objectsAdded)/2;
-      objectsRemoved=(var.objectsRemoved+objectsRemoved)/2;
-      objectsNow=(var.objectsNow+objectsNow)/2;
-      actionsAdded=(var.actionsAdded+actionsAdded)/2;
-      actionsInvalid=(var.actionsInvalid+actionsInvalid)/2;
+      bytesRecv=var.bytesRecv+bytesRecv;
+      bytesSend=var.bytesSend+bytesSend;
+      bytesSavedByCompression=var.bytesSavedByCompression+bytesSavedByCompression;
+      messagesRecv=var.messagesRecv+messagesRecv;
+      messagesSend=var.messagesSend+messagesSend;
+      messagesIncorrect=var.messagesIncorrect+messagesIncorrect;
+      playersLogin=var.playersLogin+playersLogin;
+      playersInvalidLogin=var.playersInvalidLogin+playersInvalidLogin;
+      playersTimeout=var.playersTimeout+playersTimeout;
+      playersLogout=var.playersLogout+playersLogout;
+      playersOnline=Math.round((var.playersOnline+playersOnline)/2.0f);
+      objectsNow=Math.round((var.objectsNow+objectsNow)/2.0f);
+      actionsAdded=var.actionsAdded+actionsAdded;
+      actionsInvalid=var.actionsInvalid+actionsInvalid;
       }
     }
+
+  private Date startTime;
+
+  private GatheredVariables nowVar;
+  private GatheredVariables allTimeVar;
+  private GatheredVariables meanMinuteVar;
+  
+  private PrintWriter eventfile;
+  private Date timestamp;
+  private Date lastStatisticsEventAdded;
+  private SimpleDateFormat formatter;
+    
   private Statistics()
     {
     timestamp=new Date();
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     startTime=new Date();
+    
+    lastStatisticsEventAdded=new Date();
+    
     nowVar=new GatheredVariables();
+    allTimeVar=new GatheredVariables();
+    meanMinuteVar=new GatheredVariables();
+    
     try
       {
       eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt",true));
-      eventfile.println("#Version: 1.0");
-      eventfile.println("#Fields: date time cs-uri");
       }
     catch(Exception e)
       {
@@ -106,11 +125,7 @@ public class Statistics
       }
     return stats;
     }
-  private Date startTime;
-  private GatheredVariables nowVar;
-  private PrintWriter eventfile;
-  private Date timestamp;
-  private SimpleDateFormat formatter;
+ 
   public void addEvent(String event,int session_id,String text)
     {
     marauroad.trace("Statistics::addEvent",">");
@@ -118,7 +133,7 @@ public class Statistics
 
     String ts = formatter.format(timestamp);
     
-    eventfile.println(ts+"\t/"+String.valueOf(session_id)+"/"+event+"?"+text);
+    eventfile.println(ts+"\t/"+String.valueOf(session_id)+"\t"+event+"\t"+text);
     eventfile.flush();
     marauroad.trace("Statistics::addEvent","<");
     }
@@ -170,20 +185,16 @@ public class Statistics
     addEvent("login FAIL",0,"username="+username);
     ++nowVar.playersInvalidLogin;
     }
+
+  public void addPlayerTimeout(String username, int id)
+    {
+    addEvent("timeout",id,"username="+username);
+    ++nowVar.playersTimeout;
+    } 
   
   public void setOnlinePlayers(long online)
     {
     nowVar.playersOnline=online;
-    }
-  
-  public void addObjectAdded()
-    {
-    ++nowVar.objectsAdded;
-    }
-  
-  public void addObjectRemoved()
-    {
-    ++nowVar.objectsRemoved;
     }
   
   public void setObjectsNow(long now)
@@ -223,15 +234,31 @@ public class Statistics
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
       
+      allTimeVar.add(nowVar);
+      meanMinuteVar.add(nowVar);
+      
+      if((actualTime.getTime()-lastStatisticsEventAdded.getTime())>60000)
+        {
+        lastStatisticsEventAdded=new Date();
+        
+        JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
+        Transaction transaction=database.getTransaction();
+        
+        database.addStatisticsEvent(transaction,meanMinuteVar);
+        meanMinuteVar=new GatheredVariables();        
+        }
+      
       out.println("-- Statistics ------");
       out.println("Uptime: "+String.valueOf(diff));
       out.println();
-      nowVar.print(out,diff);
+      allTimeVar.print(out,diff);
       out.println("-- Statistics ------");
       out.close();
       out=new PrintWriter(new FileOutputStream(webfolder+"server_up.txt"));
       out.println(actualTime.getTime()/1000);
       out.close();
+      
+      nowVar=new GatheredVariables();
       }
     catch(Exception e)
       {
