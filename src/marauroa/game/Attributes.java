@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.19 2004/01/27 17:03:12 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.20 2004/02/06 16:02:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,7 +193,12 @@ public class Attributes implements marauroa.net.Serializable
     return content.keySet().iterator();
     }
 
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException    
+    {
+    writeObject(out,false);
+    }
+    
+  public void writeObject(marauroa.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
     {
     Iterator it=content.entrySet().iterator();
     int size=content.size();
@@ -203,7 +208,7 @@ public class Attributes implements marauroa.net.Serializable
       Map.Entry entry=(Map.Entry)it.next();
       
       String key=(String)entry.getKey();
-      if(key.charAt(0)=='!')      
+      if(fulldata==false && key.charAt(0)=='!')      
         {
         --size;
         }
@@ -218,7 +223,7 @@ public class Attributes implements marauroa.net.Serializable
       
       /** NOTE: The attributes that begin with ! are not stored */
       String key=(String)entry.getKey();
-      if(key.charAt(0)!='!')
+      if(fulldata==true || key.charAt(0)!='!')
         {
         out.write(key);
         out.write((String)entry.getValue());

@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.11 2004/01/01 22:51:06 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.12 2004/02/06 16:02:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -86,9 +86,14 @@ public class RPAction extends Attributes
     {
     }
   
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException    
     {
-    super.writeObject(out);
+    writeObject(out,false);
+    }
+    
+  public void writeObject(marauroa.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
+    {
+    super.writeObject(out,fulldata);
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException

@@ -1,4 +1,4 @@
-/* $Id: GameConst.java,v 1.4 2003/12/08 23:10:02 arianne_rpg Exp $ */
+/* $Id: GameConst.java,v 1.5 2004/02/06 16:02:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,5 +17,5 @@ package marauroa.game;
 public class GameConst
   {
   /** Maximum number of player to ensure performance. */
-  final static public int MAX_NUMBER_PLAYERS=100;
+  final static public int MAX_NUMBER_PLAYERS=10;
   }

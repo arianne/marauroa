@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.11 2004/02/05 23:13:22 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.12 2004/02/06 16:02:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -539,7 +539,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       OutputSerializer os = new OutputSerializer(baos);
       try
         {
-        object.writeObject(os);
+        object.writeObject(os,true);
         }
       catch (IOException e)
         {
@@ -651,7 +651,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       OutputSerializer os = new OutputSerializer(baos);
       try
         {
-        object.writeObject(os);
+        object.writeObject(os,true);
         }
       catch (IOException e)
         {

@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.6 2004/02/05 23:13:22 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.7 2004/02/06 16:01:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,7 +81,7 @@ class createaccount
       
     try
       {      
-      out=new PrintWriter(new FileOutputStream("C:/Apache Group/Apache2/htdocs/createaccount_log.txt",true));
+      out=new PrintWriter(new FileOutputStream("C:/Apache Group/Apache2/logs/createaccount_log.txt",true));
       out.println("Trying to create username("+username+"), password("+password+"), character("+character+"),"
         +"character_model("+character_model+"), gladiator("+gladiator+"), gladiator_model("+gladiator_model+")");
       out.flush();

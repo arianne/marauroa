@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.23 2004/01/27 17:03:12 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.24 2004/02/06 16:02:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -165,16 +165,22 @@ public class RPObject extends Attributes
     return tmp.toString();
     }
   
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException    
     {
-    super.writeObject(out);
+    writeObject(out,false);
+    }
+
+  public void writeObject(marauroa.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
+    {
+    super.writeObject(out,fulldata);
     
     out.write((int)slots.size());
 
     SlotsIterator it=slotsIterator();
     while(it.hasNext())
       {
-      out.write(it.next());
+      RPSlot slot=(RPSlot)it.next();
+      slot.writeObject(out,fulldata);
       }
     }
   
