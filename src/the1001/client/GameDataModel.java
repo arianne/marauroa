@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.12 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: GameDataModel.java,v 1.13 2004/03/26 21:55:26 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,7 @@ public final class GameDataModel
   public final static String CMD_FIGHT   = "FIGHT";
   public final static String CMD_VOTE_UP = RPCode.var_voted_up;
   public final static String CMD_VOTE_DOWN = "VOTE_DOWN";
-  public final static int REQ_FIGHT_WAIT_TIME = 0*60*1000; // two minutes
+  public final static int REQ_FIGHT_WAIT_TIME = 2*60*1000; // two minutes
   public final static String ARENA_MODE_WAITING  = RPCode.var_waiting;
   public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
   public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
@@ -555,7 +555,7 @@ public final class GameDataModel
       {
       e.printStackTrace();
       }
-    if(RPCode.var_waiting.equals(getStatus()))
+    if(RPCode.var_waiting.equals(getStatus())||RPCode.var_request_fame.equals(getStatus()))
       {
       if(REQ_FIGHT_WAIT_TIME<(System.currentTimeMillis()-lastReqFightTS))
         {
