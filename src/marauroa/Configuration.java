@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.10 2004/05/07 13:50:31 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.11 2004/05/26 21:18:58 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa;
 
 import marauroa.*;
 import java.util.Properties;
+import java.util.Enumeration;
 import java.io.*;
 
 /** This class is a basic configuration file manager */
@@ -136,6 +137,11 @@ public class Configuration
       {
       marauroad.trace("Configuration::set","<");
       }
+    }
+  
+  public Enumeration propertyNames()
+    {
+      return properties.propertyNames();
     }
   
   public void store() throws PropertyFileNotFoundException
