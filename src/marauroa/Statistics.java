@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.10 2004/02/16 15:34:57 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.11 2004/02/16 15:42:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,6 +93,8 @@ public class Statistics
     try
       {
       eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt"));
+      eventfile.println("#Version: 1.0");
+      eventfile.println("#Fields: time cs-uri");
       }
     catch(Exception e)
       {
@@ -126,7 +128,7 @@ public class Statistics
     timestamp.setTime(System.currentTimeMillis());
     String ts = formatter.format(timestamp);
     
-    eventfile.println(ts+"\t"+event+"\t"+String.valueOf(session_id)+"\t"+text);
+    eventfile.println(ts+"\t/"+String.valueOf(session_id)+"/"+event+"?"+text);
     eventfile.flush();
     marauroad.trace("Statistics::addEvent","<");
     }
@@ -158,19 +160,19 @@ public class Statistics
   
   public void addPlayerLogin(String username, int id)
     {
-    addEvent("login OK",id,username);
+    addEvent("login OK",id,"username="+username);
     ++nowVar.playersLogin;
     }
   
   public void addPlayerLogout(String username, int id)
     {
-    addEvent("logout",id,username);
+    addEvent("logout",id,"username="+username);
     ++nowVar.playersLogout;
     }
   
   public void addPlayerInvalidLogin(String username)
     {
-    addEvent("login FAIL",0,username);
+    addEvent("login FAIL",0,"username="+username);
     ++nowVar.playersInvalidLogin;
     }
   
@@ -196,7 +198,7 @@ public class Statistics
   
   public void addActionsAdded(String action, int id)
     {
-    addEvent("action",id,action);
+    addEvent("action",id,"type="+action);
     ++nowVar.actionsAdded;
     }
   
