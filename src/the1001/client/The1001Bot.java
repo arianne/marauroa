@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.5 2004/03/08 19:22:46 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.6 2004/03/08 21:26:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,6 +67,8 @@ public class The1001Bot
   
   public void run()
   {
+    int time_out_max_count =10;
+    int timeout_count = 0;
     continueGamePlay = true;
     try
     {
@@ -75,8 +77,10 @@ public class The1001Bot
         if(netMan!=null)
         {
           Message msg = netMan.getMessage();
+          System.out.println("---------------------------------------------");
           if(msg!=null && msg instanceof MessageS2CPerception)
           {
+            timeout_count = 0;
             MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
             replyMsg.setClientID(msg.getClientID());
             netMan.addMessage(replyMsg);
@@ -85,12 +89,29 @@ public class The1001Bot
             RPObject my_object = perception.getMyRPObject();
             if(my_object!=null)
             {
+              String name = my_object.get(RPCode.var_name);
+              String fame = my_object.get(RPCode.var_fame);
+              System.out.println("Me Name: " +name);
+              System.out.println("Me Fame: " +fame);
               gm.setOwnCharacter(my_object);
               if(my_object.hasSlot(RPCode.var_myGladiators))
               {
                 for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
                 {
-                  gm.addMyGladiator((RPObject)iter.next());
+                  RPObject my_glad = (RPObject)iter.next();
+                  gm.addMyGladiator(my_glad);
+                  
+                  name = my_glad.get(RPCode.var_name);
+                  String karma = my_glad.get(RPCode.var_karma);
+                  String hp = my_glad.get(RPCode.var_hp);
+                  String victories = my_glad.get(RPCode.var_num_victory);
+                  String defeats = my_glad.get(RPCode.var_num_defeat);
+                  
+                  System.out.println("My G Name     : " +name);
+                  System.out.println("My G Karma    : " +karma);
+                  System.out.println("My G Health   : " +hp);
+                  System.out.println("My G Victories: " +victories);
+                  System.out.println("My G Defeats  : " +defeats);
                 }
               }
               else
@@ -158,6 +179,16 @@ public class The1001Bot
                       //gm.addFighter(gladiator);
                       new_fighters[k++]=gladiator;
                       hs.add(gladiator.get(RPCode.var_object_id));
+                      name = gladiator.get(RPCode.var_name);
+                      String karma = gladiator.get(RPCode.var_karma);
+                      String hp = gladiator.get(RPCode.var_hp);
+                      String victories = gladiator.get(RPCode.var_num_victory);
+                      String defeats = gladiator.get(RPCode.var_num_defeat);
+                      System.out.println("G Name     : " +name);
+                      System.out.println("G Karma    : " +karma);
+                      System.out.println("G Health   : " +hp);
+                      System.out.println("G Victories: " +victories);
+                      System.out.println("G Defeats  : " +defeats);
                     }
                     else
                     {
@@ -194,10 +225,10 @@ public class The1001Bot
                             System.out.println("AUCHH!! damage: "+damage);
                           }
                         }
+                        String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
+                        gm.setFightMode(fight_mode);
+                        System.out.println("Fight mode set to "+fight_mode);
                       }
-                      String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
-                      gm.setFightMode(fight_mode);
-                      System.out.println("Fight mode set to "+fight_mode);
                     }
                   }
                 }
@@ -210,10 +241,13 @@ public class The1001Bot
               {
                 marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
                 gm.addSpectator(obj);
+                String name = obj.get(RPCode.var_name);
+                String fame = obj.get(RPCode.var_fame);
+                System.out.println("C Name: " +name);
+                System.out.println("C Fame: " +fame);
                 if(obj.has(RPCode.var_text))
                 {
                   String text = obj.get(RPCode.var_text);
-                  String name = obj.get(RPCode.var_name);
                   if(!"".equals(text))
                   {
                     addChatMessage(name,text);
@@ -257,6 +291,13 @@ public class The1001Bot
           }
           else
           {
+            timeout_count++;
+            if(timeout_count>=time_out_max_count)
+            {
+              System.out.println("TIMEOUT. EXIT.");
+              System.exit(1);
+            }
+            System.out.println("TIMEOUT. SLEEPING.");
             sleep(1);
           }
         }

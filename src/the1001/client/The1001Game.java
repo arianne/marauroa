@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.10 2004/03/08 19:22:46 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.11 2004/03/08 21:26:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,6 +129,8 @@ public class The1001Game
   
   public void run()
   {
+    int time_out_max_count =10;
+    int timeout_count = 0;
     continueGamePlay = true;
     try
     {
@@ -139,6 +141,7 @@ public class The1001Game
           Message msg = netMan.getMessage();
           if(msg!=null && msg instanceof MessageS2CPerception)
           {
+            timeout_count = 0;
             MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
             replyMsg.setClientID(msg.getClientID());
             netMan.addMessage(replyMsg);
@@ -233,6 +236,27 @@ public class The1001Game
                   }
                 }
               }
+              else if("shop".equals(obj.get("type")))
+              {
+                marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
+                if(obj.hasSlot("gladiators"))
+                {
+                  RPSlot slot = obj.getSlot("gladiators");
+                  Iterator iter = slot.iterator();
+                  while(iter.hasNext())
+                  {
+                    RPObject shop_object = (RPObject)iter.next();
+                    if("gladiator".equals(shop_object.get(RPCode.var_type)))
+                    {
+                      gm.addShopGladiator(shop_object);
+                    }
+                    else
+                    {
+                      marauroad.trace("The1001Game::messageLoop","D","Uknown object in shop "+shop_object);
+                    }
+                  }
+                }
+              }
               else
               {
                 marauroad.trace("The1001Game::messageLoop","D","Ignored wrong object in perception");
@@ -252,6 +276,12 @@ public class The1001Game
           }
           else
           {
+            if(++timeout_count>=time_out_max_count)
+            {
+              System.out.println("TIMEOUT. EXIT.");
+              System.exit(-1);
+            }
+            System.out.println("TIMEOUT. SLEEPING.");
             sleep(1);
           }
         }
@@ -288,8 +318,9 @@ public class The1001Game
    */
   public static void main(String[] args)
   {
-    showSplash(1000);
-    login();
+    if(args.length!=3)
+      showSplash(1000);
+    login(args);
   }
   
   /**
@@ -348,12 +379,12 @@ public class The1001Game
             break;
           case Message.TYPE_S2C_CHARACTERLIST: //2
             characters=((MessageS2CCharacterList)message).getCharacters();
-//          client_id = message.getClientID();
+            //          client_id = message.getClientID();
             ++recieved;
             break;
           case Message.TYPE_S2C_SERVERINFO: //7
             serverInfo=((MessageS2CServerInfo)message).getContents();
-//          client_id = message.getClientID();
+            //          client_id = message.getClientID();
             ++recieved;
             break;
         }
@@ -395,7 +426,7 @@ public class The1001Game
       marauroad.trace("The1001Game::chooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_CHOOSECHARACTER_ACK + ", receivied "+message.getType());
       if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
       {
-//        MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)message;
+        //        MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)message;
         The1001Game game = new The1001Game(netman);
         game.pack();
         game.show();
@@ -410,83 +441,97 @@ public class The1001Game
     }
   }
   
-  private static void login()
+  private static void login(String args[])
   {
-    // Messages
-    Object[]      message = new Object[6];
-    message[0] = "Server to login:";
-    
-    
-    JComboBox cb_server = new JComboBox();
-    cb_server.addItem("marauroa.ath.cx");
-    cb_server.addItem("127.0.0.1");
-    cb_server.addItem("tribus.dyndns.org");
-    cb_server.addItem("192.168.100.100");
-    cb_server.addItem("localhost");
-    cb_server.setEditable(true);
-    message[1] = cb_server;
-    
-    message[2] = "User:";
-    
-    JComboBox cb_user = new JComboBox();
-    cb_user.addItem("Test Player");
-    cb_user.addItem("Another Test Player");
-    cb_user.setEditable(true);
-    message[3] = cb_user;
-    
-    message[4] = "Password:";
-    
-    JPasswordField pf_pwd = new JPasswordField();
-    pf_pwd.setText("Test Password");
-    message[5] = pf_pwd;
-    
-    
-    // Options
-    String[] options = {"Connect","Cancel",};
-    int result = JOptionPane.showOptionDialog(
-      null,                             // the parent that the dialog blocks
-      message,                                    // the dialog message array
-      "Login to...", // the title of the dialog window
-      JOptionPane.DEFAULT_OPTION,                 // option type
-      JOptionPane.INFORMATION_MESSAGE,            // message type
-      new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
-      options,                                    // options string array, will be made into buttons
-      options[0]                                  // option that should be made into a default button
-    );
-    switch(result)
+    String pwd = "";
+    String hostname = "";
+    String user_name = "";
+    if(args.length==3)
     {
-      case 0: // connect
-        {
-          String hostname = null;
-          if(cb_server.getSelectedItem()!=null)
-          {
-            hostname = String.valueOf(cb_server.getSelectedItem());
-          }
-          else
-          {
-            hostname = String.valueOf(cb_server.getEditor().getItem());
-          }
-          String user_name = null;
-          if(cb_user.getSelectedItem()!=null)
-          {
-            user_name = String.valueOf(cb_user.getSelectedItem());
-          }
-          else
-          {
-            user_name = String.valueOf(cb_user.getEditor().getItem());
-          }
-          String pwd  = new String(pf_pwd.getPassword());
-          connectAndChooseCharacter(hostname, user_name,pwd);
-          
-        }
-        break;
-      case 1: // cancel
-        marauroad.trace("The1001Game::chooseCharacter","E","User dont want to login, exiting...");
-        System.exit(-1);
-        break;
-      default:
-        break;
+      hostname = args[0];
+      user_name = args[1];
+      pwd = args[2];
     }
+    else
+    {
+      // Messages
+      Object[]      message = new Object[6];
+      message[0] = "Server to login:";
+      
+      
+      JComboBox cb_server = new JComboBox();
+      cb_server.addItem("marauroa.ath.cx");
+      cb_server.addItem("127.0.0.1");
+      cb_server.addItem("tribus.dyndns.org");
+      cb_server.addItem("192.168.100.100");
+      cb_server.addItem("localhost");
+      cb_server.setEditable(true);
+      message[1] = cb_server;
+      
+      message[2] = "User:";
+      
+      JComboBox cb_user = new JComboBox();
+      cb_user.addItem("Test Player");
+      cb_user.addItem("Another Test Player");
+      cb_user.setEditable(true);
+      message[3] = cb_user;
+      
+      message[4] = "Password:";
+      
+      JPasswordField pf_pwd = new JPasswordField();
+      pf_pwd.setText("Test Password");
+      message[5] = pf_pwd;
+      
+      
+      // Options
+      String[] options = {"Connect","Cancel",};
+      int result = JOptionPane.showOptionDialog(
+        null,                             // the parent that the dialog blocks
+        message,                                    // the dialog message array
+        "Login to...", // the title of the dialog window
+        JOptionPane.DEFAULT_OPTION,                 // option type
+        JOptionPane.INFORMATION_MESSAGE,            // message type
+        new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+        options,                                    // options string array, will be made into buttons
+        options[0]                                  // option that should be made into a default button
+      );
+      switch(result)
+      {
+        case 0: // connect
+          {
+            
+            if(cb_server.getSelectedItem()!=null)
+            {
+              hostname = String.valueOf(cb_server.getSelectedItem());
+            }
+            else
+            {
+              hostname = String.valueOf(cb_server.getEditor().getItem());
+            }
+            
+            if(cb_user.getSelectedItem()!=null)
+            {
+              user_name = String.valueOf(cb_user.getSelectedItem());
+            }
+            else
+            {
+              user_name = String.valueOf(cb_user.getEditor().getItem());
+            }
+            pwd = new String(pf_pwd.getPassword());
+            
+            
+            
+          }
+          break;
+        case 1: // cancel
+          marauroad.trace("The1001Game::chooseCharacter","E","User dont want to login, exiting...");
+          System.exit(-1);
+          break;
+        default:
+          break;
+      }
+    }
+    connectAndChooseCharacter(hostname, user_name,pwd);
   }
   
   private static void disconnect(NetworkClientManager net_man)
