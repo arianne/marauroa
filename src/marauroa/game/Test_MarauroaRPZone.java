@@ -1,4 +1,4 @@
-/* $Id: Test_MarauroaRPZone.java,v 1.10 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: Test_MarauroaRPZone.java,v 1.11 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,29 +72,29 @@ public class Test_MarauroaRPZone extends TestCase
       zone.add(SonGoku);
       assertTrue(zone.has(new RPObject.ID(SonGoku)));
 
-      RPZone.Perception perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
+      Perception perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.DELTA);
 
       assertEquals(perception.size(),1);
       assertEquals(SonGoku,perception.addedList.get(0));
       zone.nextTurn();
-      perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
+      perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.DELTA);
       assertEquals(perception.size(),0);
       zone.nextTurn();
-      perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
+      perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.DELTA);
       assertEquals(perception.size(),0);
       zone.nextTurn();
       zone.get(new RPObject.ID(SonGoku));
       SonGoku.put("name","A new SonGoku");
       zone.modify(SonGoku);
-      perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
+      perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.DELTA);
       assertEquals(perception.size(),0);
       zone.nextTurn();
-      perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.SYNC);
+      perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.SYNC);
       assertEquals(perception.size(),1);
       assertEquals(SonGoku,perception.addedList.get(0));
       zone.remove(new RPObject.ID(SonGoku));
       zone.nextTurn();
-      perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
+      perception=zone.getPerception(new RPObject.ID(SonGoku),Perception.DELTA);
       assertEquals(perception.size(),0);
       }
     catch(Exception e)

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.54 2004/05/31 08:12:31 root777 Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.55 2004/05/31 14:13:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -275,7 +275,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     return onExit(id);
     }
 
-  public List serializeMap(RPObject.ID id)
+  public List buildMapObjectsList(RPObject.ID id)
     {
     return new LinkedList();
     }      

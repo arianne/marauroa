@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.47 2004/05/28 07:54:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.48 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,7 @@ public class MessageS2CPerception extends Message
    *  @param modifiedRPObjects the list of object that has been modified.
    *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
-  public MessageS2CPerception(InetSocketAddress source,RPZone.Perception perception)
+  public MessageS2CPerception(InetSocketAddress source,Perception perception)
     {
     super(source);
     type=TYPE_S2C_PERCEPTION;
@@ -336,47 +336,6 @@ public class MessageS2CPerception extends Message
     else
       {
       myRPObject=null;
-      }
-    }
-    
-  /** This class just counts the bytes written into underlaying outputstream */
-  final static class ByteCounterOutputStream
-    extends OutputStream
-    {
-    OutputStream os;
-    long bytesWritten;
-    public ByteCounterOutputStream(OutputStream os)
-      {
-      if(os==null) throw new NullPointerException("OutputStream is null!!!");
-      this.os = os;
-      bytesWritten=0;
-      }
-
-    public void write(int b) throws IOException
-      {
-      os.write(b);
-      bytesWritten++;
-      }
-
-    public void write(byte[] b) throws IOException
-      {
-      os.write(b);
-      bytesWritten+=b.length;
-      }
-
-    public long getBytesWritten()
-      {
-      return(bytesWritten);
-      }
-    
-    public void flush() throws IOException
-      {
-      os.flush();
-      }
-    
-    public void close() throws IOException
-      {
-      os.close();
       }
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.8 2004/05/28 07:54:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.9 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,7 @@ public class MessageS2CMap extends Message
     super.writeObject(out);
 
     ByteArrayOutputStream array=new ByteArrayOutputStream();
-    MessageS2CPerception.ByteCounterOutputStream out_stream = new MessageS2CPerception.ByteCounterOutputStream(new DeflaterOutputStream(array));
+    ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
     OutputSerializer serializer=new OutputSerializer(out_stream);
       
     serializer.write((int)mapObjects.size());

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.93 2004/05/31 07:27:50 root777 Exp $ */
+/* $Id: marauroad.java,v 1.94 2004/05/31 14:13:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -266,7 +266,7 @@ public class marauroad extends Thread
     else
       {
       // Production setting
-      String[] _allowed={"RPServerManager::run","RPCode"};
+      String[] _allowed={"RPServerManager::run","RPCode","GameServer"};
       allowed=_allowed;
       String[] _rejected={};
       rejected=_rejected;

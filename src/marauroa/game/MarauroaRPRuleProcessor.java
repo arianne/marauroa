@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.17 2004/05/19 16:38:32 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.18 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,7 +58,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     return false;
     }
 
-  public List serializeMap(RPObject.ID id)
+  public List buildMapObjectsList(RPObject.ID id)
     {
     return new LinkedList();
     }

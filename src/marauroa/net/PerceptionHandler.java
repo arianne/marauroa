@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.7 2004/05/26 17:30:29 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.8 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,7 +144,7 @@ public class PerceptionHandler
     {
     listener.onPerceptionBegin(message.getTypePerception(), message.getPerceptionTimestamp());
     
-    if(message.getTypePerception()==RPZone.Perception.SYNC)
+    if(message.getTypePerception()==Perception.SYNC)
       {
       try
         {
@@ -166,7 +166,7 @@ public class PerceptionHandler
         listener.onException(e);
         }
       }
-    else if(message.getTypePerception()==RPZone.Perception.DELTA && previousTimestamp+1==message.getPerceptionTimestamp())
+    else if(message.getTypePerception()==Perception.DELTA && previousTimestamp+1==message.getPerceptionTimestamp())
       {
       try
         {
@@ -242,7 +242,7 @@ public class PerceptionHandler
       {
       Iterator it;
       
-      if(message.getTypePerception()==RPZone.Perception.SYNC)
+      if(message.getTypePerception()==Perception.SYNC)
         {
         if(!listener.onClear())
           {

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.4 2004/05/31 08:11:18 root777 Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.5 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -128,12 +128,12 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
     return onExit(id);
     }
 
-  synchronized public List serializeMap(RPObject.ID id)
+  synchronized public List buildMapObjectsList(RPObject.ID id)
     {
     marauroad.trace("PythonRPRuleProcessor::serializeMap",">");
     try
       {
-      return pythonRP.serializeMap();
+      return pythonRP.buildMapObjectsList();
       }
     catch(Exception e)
       {

@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.14 2004/05/19 16:38:35 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.15 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ public class Test_RPScheduler extends TestCase
     {
     return new TestSuite(Test_RPScheduler.class);
     }
+    
   private static class FakeRuleProcessor implements RPRuleProcessor
     {
     int i;
@@ -69,7 +70,7 @@ public class Test_RPScheduler extends TestCase
       return true;
       }
 
-    public java.util.List serializeMap(RPObject.ID id)
+    public java.util.List buildMapObjectsList(RPObject.ID id)
       {
       return null;
       }      

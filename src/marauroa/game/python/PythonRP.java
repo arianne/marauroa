@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.5 2004/05/31 07:31:46 root777 Exp $ */
+/* $Id: PythonRP.java,v 1.6 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,7 @@ public class PythonRP
     return false;
     }
   
-  public List serializeMap()
+  public List buildMapObjectsList()
     {
     return null;
     }

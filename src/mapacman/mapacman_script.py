@@ -221,7 +221,7 @@ class RealPythonRP(PythonRP):
     def onTimeout(self, objectid):
         return onExit(self,objectid)
     
-    def serializeMap(self):
+    def buildMapObjectsList(self):
         if self._serializedMap is None:
             self._serializedMap=self._map.serializeMap()
 

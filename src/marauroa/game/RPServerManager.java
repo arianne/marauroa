@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.92 2004/05/30 22:30:06 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.93 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,7 +85,7 @@ public class RPServerManager extends Thread
     catch(Exception e)
       {
       marauroad.thrown("RPServerManager","X",e);
-      marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone and RPRuleProcessor instances");
+      marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances");
       System.exit(-1);
       }
     finally
@@ -276,25 +276,25 @@ public class RPServerManager extends Thread
           if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN && !playerContainer.isOutOfSync(clientid))
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
-            RPZone.Perception perception;
+            Perception perception;
             RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
             if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
-              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.SYNC);
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),Perception.SYNC);
               }
             else
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception DELTA for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
-              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),Perception.DELTA);
               }
             
             int timestamp=playerContainer.getPerceptionTimestamp(clientid);
             
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
             
-            if(perception.type==RPZone.Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
+            if(perception.type==Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
               {
               messages2cPerception.setMyRPObject(object);
               }
@@ -440,10 +440,10 @@ public class RPServerManager extends Thread
     return ruleProcessor.onExit(id);
     }
   
-  public List serializeMap(RPObject.ID id)
+  public List buildMapObjectsList(RPObject.ID id)
     {
     scheduler.clearRPActions(id);
-    return ruleProcessor.serializeMap(id);
+    return ruleProcessor.buildMapObjectsList(id);
     }
   
   public void run()

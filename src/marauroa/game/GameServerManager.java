@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.48 2004/05/26 21:20:13 root777 Exp $ */
+/* $Id: GameServerManager.java,v 1.49 2004/05/31 14:13:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -335,7 +335,7 @@ public final class GameServerManager extends Thread
         netMan.addMessage(msgChooseCharacterACK);
         
         /* Send the map to the client */
-        MessageS2CMap msgMap=new MessageS2CMap(msg.getAddress(),rpMan.serializeMap(new RPObject.ID(object)));
+        MessageS2CMap msgMap=new MessageS2CMap(msg.getAddress(),rpMan.buildMapObjectsList(new RPObject.ID(object)));
         msgMap.setClientID(clientid);
         netMan.addMessage(msgMap);
         }
