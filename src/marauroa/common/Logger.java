@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.4 2005/03/02 15:53:34 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.5 2005/03/04 23:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,8 +116,9 @@ public class Logger
       getLogger().timestamp.setTime(System.currentTimeMillis());
 
       String ts = getLogger().formatter.format(getLogger().timestamp);
+      long threadid=Thread.currentThread().getId();
 
-      getLogger().message(ts+"\t"+event+"\t"+module+"\t"+text);
+      getLogger().message(ts+"\t("+threadid+")\t"+event+"\t"+module+"\t"+text);
       }
     }
   

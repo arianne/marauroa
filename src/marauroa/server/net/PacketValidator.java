@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.1 2005/01/23 21:00:48 arianne_rpg Exp $ */
+/* $Id: PacketValidator.java,v 1.2 2005/03/04 23:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ import marauroa.server.*;
  *   may be it will check more later)
  *
  */
-public final class PacketValidator
+public class PacketValidator
 {
   private InetAddressMask[] banList;
   
