@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.7 2003/12/08 12:39:53 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class Test_RPScheduler extends TestCase
       {
       }
       
-    public void approvedActions(RPActionList actionList)
+    public void approvedActions(RPObject.ID id, RPActionList actionList)
       {
       }
     

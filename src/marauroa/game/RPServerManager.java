@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.28 2003/12/08 12:08:22 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.29 2003/12/08 12:39:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -310,6 +310,7 @@ class RPServerManager extends Thread
       buildPerceptions();
 
       scheduler.nextTurn();      
+      ruleProcessor.nextTurn();
       zone.nextTurn();
       
       try

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.21 2003/12/08 12:39:54 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.22 2003/12/08 12:43:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("SimpleRPRuleProcessor::setContext","<");
   }
   
-  public void approvedActions(RPActionList actionList)
+  public void approvedActions(RPObject.ID id, RPActionList actionList)
   {
     while(actionList.size()>1)
     {

@@ -1,4 +1,4 @@
-/* $Id: RPActionFactory.java,v 1.7 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPActionFactory.java,v 1.8 2003/12/08 12:39:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,8 @@ import marauroa.marauroad;
 import marauroa.net.InputSerializer;
 import marauroa.net.OutputSerializer;
 
+/** This class is used to creating a RPAction object from a stream or to serialize
+ *  a RPAction object to a stream. */
 public class RPActionFactory
 {
   private static Map factoryArray;

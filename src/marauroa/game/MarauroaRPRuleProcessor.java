@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.7 2003/12/08 12:39:53 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     this.zone=zone;
     }
 
-  public void approvedActions(RPActionList actionList)
+  public void approvedActions(RPObject.ID id, RPActionList actionList)
     {
     }
   

@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.7 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public class RPScheduler
         RPObject.ID id=(RPObject.ID)val.getKey();
         RPActionList list=(RPActionList)val.getValue();
 
-        ruleProcessor.approvedActions(list);
+        ruleProcessor.approvedActions(id,list);
       
         Iterator action_it=list.iterator();
         while(action_it.hasNext())

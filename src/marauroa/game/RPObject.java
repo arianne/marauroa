@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.19 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.20 2003/12/08 12:39:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,6 +68,132 @@ public class RPObject extends Attributes
       }
     }
   
+  public static ID INVALID_ID=new ID(-1);
+    
+  /** Constructor */
+  public RPObject()
+    {
+    super();
+
+    slots=new LinkedList();
+      objectType=0;
+    }
+
+  /** Constructor
+   *  @param id the id of the object */
+  public RPObject(ID id)
+    {
+    super();
+
+    slots=new LinkedList();
+    put("object_id",id.getObjectID());
+    }
+  
+  /** This method returns true if the object has that slot
+   *  @param name the name of the slot
+   *  @return true if slot exists or false otherwise */
+  public boolean hasSlot(String name)
+    {
+    SlotsIterator it=slotsIterator();
+    
+    while(it.hasNext())
+      {
+      RPSlot slot=it.next();
+      if(name.equals(slot.getName()))
+        {
+        return true;
+        }
+      }
+    
+    return false;
+    }
+  
+  /** This method add the slot to the object
+   *  @param slot the RPSlot object 
+   *  @throws SlotAlreadyAddedException if the slot already exists */
+  public void addSlot(RPSlot slot) throws SlotAlreadyAddedException
+    {
+    if(!hasSlot(slot.getName()))
+      {
+      slots.add(slot);
+      }
+    else
+      {
+      throw new SlotAlreadyAddedException(slot.getName());
+      }
+    }
+  
+  /** This method returns a slot whose name is name 
+   *  @param name the name of the slot
+   *  @return the slot
+   *  @throws NoSlotFoundException if the slot is not found */
+  public RPSlot getSlot(String name) throws NoSlotFoundException
+    {
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
+      {
+      RPSlot slot=it.next();
+      if(name.equals(slot.getName()))
+        {
+        return slot;
+        }
+      }
+   
+    throw new NoSlotFoundException(name);
+    }
+
+  /** Returns a iterator over the slots 
+   *  @return an iterator over the slots*/  
+  public SlotsIterator slotsIterator()
+    {
+    return new SlotsIterator();
+    }
+  
+  /** This method returns a String that represent the object 
+   *  @return a string representing the object.*/
+  public String toString()
+    {
+    StringBuffer tmp=new StringBuffer("RPObject with ");
+    tmp.append(super.toString());
+    tmp.append(" and RPSlots ");
+    
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
+      {
+      RPSlot slot=(RPSlot)it.next();
+      tmp.append("["+slot.toString()+"]");
+      }
+    
+    return tmp.toString();
+    }
+  
+  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+    {
+    super.writeObject(out);
+    
+    out.write((int)slots.size());
+
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
+      {
+      out.write(it.next());
+      }
+    }
+  
+  public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+    super.readObject(in);
+    
+    int size=in.readInt();
+    marauroad.trace("RPObject.readObject()","D",size+" slots found");
+    slots=new LinkedList();
+    
+    for(int i=0;i<size;++i)
+      {
+      slots.add((RPSlot)in.readObject(new RPSlot()));
+      }
+    }
+
   /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
     {
@@ -138,131 +264,5 @@ public class RPObject extends Attributes
       {
       id=in.readInt();
       }
-    }
-  
-  public static ID INVALID_ID=new ID(-1);
-    
-  /** Constructor */
-  public RPObject()
-    {
-    super();
-
-    slots=new LinkedList();
-      objectType=0;
-    }
-
-  public RPObject(ID id)
-    {
-    super();
-
-    slots=new LinkedList();
-    put("object_id",id.getObjectID());
-    }
-  
-  public boolean hasSlot(String name)
-    {
-    SlotsIterator it=slotsIterator();
-    
-    while(it.hasNext())
-      {
-      RPSlot slot=it.next();
-      if(name.equals(slot.getName()))
-        {
-        return true;
-        }
-      }
-    
-    return false;
-    }
-  
-  public void addSlot(RPSlot slot) throws SlotAlreadyAddedException
-    {
-    if(!hasSlot(slot.getName()))
-      {
-      slots.add(slot);
-      }
-    else
-      {
-      throw new SlotAlreadyAddedException(slot.getName());
-      }
-    }
-  
-  public RPSlot getSlot(String name) throws NoSlotFoundException
-    {
-    SlotsIterator it=slotsIterator();
-    while(it.hasNext())
-      {
-      RPSlot slot=it.next();
-      if(name.equals(slot.getName()))
-        {
-        return slot;
-        }
-      }
-   
-    throw new NoSlotFoundException(name);
-    }
-  
-  public SlotsIterator slotsIterator()
-    {
-    return new SlotsIterator();
-    }
-  
-  public String toString()
-    {
-    StringBuffer tmp=new StringBuffer("RPObject with ");
-    tmp.append(super.toString());
-    tmp.append(" and RPSlots ");
-    
-    SlotsIterator it=slotsIterator();
-    while(it.hasNext())
-      {
-      RPSlot slot=(RPSlot)it.next();
-      tmp.append("["+slot.toString()+"]");
-      }
-    
-    return tmp.toString();
-    }
-  
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
-    {
-      try
-      {
-      marauroad.trace("RPObject.writeObject()","<");
-    super.writeObject(out);
-    
-    out.write((int)slots.size());
-
-    SlotsIterator it=slotsIterator();
-    while(it.hasNext())
-      {
-      out.write(it.next());
-      }
-    }
-    finally
-    {
-      marauroad.trace("RPObject.writeObject()",">");
-    }
-    }
-  
-  public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
-    {
-      try
-      {
-      marauroad.trace("RPObject.readObject()","<");
-    super.readObject(in);
-    
-    int size=in.readInt();
-    marauroad.trace("RPObject.readObject()","D",size+" slots found");
-    slots=new LinkedList();
-    
-    for(int i=0;i<size;++i)
-      {
-      slots.add((RPSlot)in.readObject(new RPSlot()));
-      }
-    }
-    finally
-    {
-      marauroad.trace("RPObject.readObject()",">");
-    }
-    }
+    }  
   }
