@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.24 2004/01/17 17:43:30 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.25 2004/01/27 15:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,25 +61,25 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     
     try
       {
-      if(action.get("type").equals("request_fight"))
+      if(action.get(RPCode.var_type).equals("request_fight"))
         {
-        int gladiator_id=action.getInt("gladiator_id");
+        int gladiator_id=action.getInt(RPCode.var_gladiator_id);
         status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
         }
-      else if(action.get("type").equals("fight_mode"))
+      else if(action.get(RPCode.var_type).equals("fight_mode"))
         {
-        int gladiator_id=action.getInt("gladiator_id");
+        int gladiator_id=action.getInt(RPCode.var_gladiator_id);
         String fight_mode=action.get("fight_mode");
         status=RPCode.FightMode(id, new RPObject.ID(gladiator_id),fight_mode);
         }
-      else if(action.get("type").equals("vote"))
+      else if(action.get(RPCode.var_type).equals(RPCode.var_vote))
         {
-        String vote=action.get("vote");
+        String vote=action.get(RPCode.var_vote);
         status=RPCode.Vote(id, vote);
         }
       else
         {
-        marauroad.trace("the1001RPRuleProcessor::execute","W","Action("+action.get("type")+") not supported");
+        marauroad.trace("the1001RPRuleProcessor::execute","W","Action("+action.get(RPCode.var_type)+") not supported");
         }
       
       /** We notify the player about the action result */
@@ -118,11 +118,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       removeOneTurnAttributes();      
 
       RPObject arena=zone.getArena();
-      if(arena.get("status").equals("fighting"))
+      if(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
         {
         RPCode.ResolveFight();
         }
-      else if(arena.get("status").equals("request_fame"))
+      else if(arena.get(RPCode.var_status).equals(RPCode.var_request_fame))
         {
         RPCode.RequestFame();
         }

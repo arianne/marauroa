@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.40 2004/01/27 00:07:39 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.41 2004/01/27 15:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ public class RPCode
   public static String var_type="type";
   public static String var_name="name";
   public static String var_hp="hp";
-  public static String var_initial_hp="!hp";
+  public static String var_initial_hp="!hp";  
   public static String var_attack="attack";
   public static String var_fame="fame";
   public static String var_num_victory="num_victory";
@@ -44,14 +44,17 @@ public class RPCode
   public static String var_rock="rock";
   public static String var_paper="paper";
   public static String var_scissor="scissor";
-  public static String var_combat_mode="!mode";
+  public static String var_hidden_combat_mode="!mode";
   public static String var_request_fame="request_fame";
   public static String var_timeout="timeout";
   public static String var_thumbs_up="thumbs_up";
   public static String var_thumbs_down="thumbs_down";
   public static String var_damage="damage";
-  public static String var_up="up";
+  public static String var_voted_up="up";
   public static String var_winner="winner";  
+  public static String var_gladiator_id="gladiator_id";  
+  public static String var_vote="vote";  
+  public static String var_combat_mode="mode";  
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
@@ -78,7 +81,7 @@ public class RPCode
    *
    *  BEGIN  
    *    Check that gladiator exists
-   *    gladiator=Get gladiator from Player in Slot "gladiators"
+   *    gladiator=Get gladiator from Player in Slot RPCode.var_gladiators
    *
    *    if combat has not began and there is still room
    *      player is on Arena
@@ -104,7 +107,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(!player.getSlot("gladiators").has(gladiator_id))
+      if(!player.getSlot(RPCode.var_gladiators).has(gladiator_id))
         {
         /** Failed because player does not own that object */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
@@ -112,7 +115,7 @@ public class RPCode
         return status;
         }
 
-      if(player.has("fighting"))
+      if(player.has(RPCode.var_fighting))
         {
         /** Failed because player is already fighting */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") is already fighting");
@@ -120,7 +123,7 @@ public class RPCode
         return status;
         }
 
-      if(player.has("requested"))
+      if(player.has(RPCode.var_requested))
         {
         /** Failed because player is already fighting */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") has already requested to fight");
@@ -128,29 +131,29 @@ public class RPCode
         return status;
         }
       
-      RPObject gladiator=player.getSlot("gladiators").get(gladiator_id);
+      RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(gladiator_id);
 
-      if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
+      if(arena.get(RPCode.var_status).equals(RPCode.var_waiting) && arena.getSlot(RPCode.var_gladiators).size()<GLADIATORS_PER_FIGHT)
         {
         marauroad.trace("RPCode::RequestFight","D","Player("+player_id.toString()+") PROCEED for fighting with gladiator("+gladiator_id.toString()+")");        
-        player.put("fighting","");
-        player.put("choose",gladiator_id.getObjectID());
-        arena.getSlot("gladiators").add(gladiator);
+        player.put(RPCode.var_fighting,"");
+        player.put(RPCode.var_choose,gladiator_id.getObjectID());
+        arena.getSlot(RPCode.var_gladiators).add(gladiator);
         playersFighting.add(player);
 
         /** We check now if Arena is complete */
-        if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
+        if(arena.getSlot(RPCode.var_gladiators).size()==GLADIATORS_PER_FIGHT)
           {
           marauroad.trace("RPCode::RequestFight","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
-          arena.put("status","fighting");
+          arena.put(RPCode.var_status,RPCode.var_fighting);
           }        
         }
       else
         {
         marauroad.trace("RPCode::RequestFight","D","Player("+player_id.toString()+") has to WAIT for fighting with gladiator("+gladiator_id.toString()+")");        
-        player.put("requested",ruleProcessor.getTurn());
-        player.put("choose",gladiator_id.getObjectID());
-        arena.put("waiting",arena.getInt("waiting")+1);
+        player.put(RPCode.var_requested,ruleProcessor.getTurn());
+        player.put(RPCode.var_choose,gladiator_id.getObjectID());
+        arena.put(RPCode.var_waiting,arena.getInt(RPCode.var_waiting)+1);
         playersWaiting.add(player);
         }
       
@@ -179,17 +182,17 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(player.has("requested"))
+      if(player.has(RPCode.var_requested))
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Waiting Gladiators List");
-        arena.put("waiting",arena.getInt("waiting")-1);
-        player.remove("requested");
-        player.remove("choose");
+        arena.put(RPCode.var_waiting,arena.getInt(RPCode.var_waiting)-1);
+        player.remove(RPCode.var_requested);
+        player.remove(RPCode.var_choose);
         
         playersWaiting.remove(player);
         }
        
-      if(player.has("fighting"))
+      if(player.has(RPCode.var_fighting))
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
         
@@ -197,10 +200,10 @@ public class RPCode
         playersFighting.remove(player);
         }
         
-      if(player.has("!vote"))
+      if(player.has(RPCode.var_hidden_vote))
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
-        player.remove("!vote");
+        player.remove(RPCode.var_hidden_vote);
         playersVoted.remove(player);
         }
       
@@ -224,7 +227,7 @@ public class RPCode
    *
    *  BEGIN  
    *    Check that gladiator exists
-   *    gladiator=Get gladiator from Player in Slot "gladiators"
+   *    gladiator=Get gladiator from Player in Slot RPCode.var_gladiators
    *    
    *    Change style
    *
@@ -247,7 +250,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(!player.getSlot("gladiators").has(gladiator_id))
+      if(!player.getSlot(RPCode.var_gladiators).has(gladiator_id))
         {
         /** Failed because player does not own that object */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
@@ -255,7 +258,7 @@ public class RPCode
         return status;
         }
 
-      if(!arena.getSlot("gladiators").has(gladiator_id))
+      if(!arena.getSlot(RPCode.var_gladiators).has(gladiator_id))
         {
         /** Failed because gladiator is not fighting on the arena*/
         RPAction.Status status=RPAction.Fail("Failed because gladiator("+gladiator_id.toString()+") is not fighting on the arena");
@@ -264,7 +267,7 @@ public class RPCode
         }
       
       /** NOTE: Here is the combat type choosal. */
-      if(!(fight_mode.equals("rock") || fight_mode.equals("paper") || fight_mode.equals("scissor")))
+      if(!(fight_mode.equals(RPCode.var_rock) || fight_mode.equals(RPCode.var_paper) || fight_mode.equals(RPCode.var_scissor)))
         {
         /** Failed because gladiator is fighting using an unsupported mode. */
         RPAction.Status status=RPAction.Fail("Failed because gladiator("+gladiator_id.toString()+") is fighting using an unsupported mode("+fight_mode+")");
@@ -273,8 +276,8 @@ public class RPCode
         }
       
       marauroad.trace("RPCode::FightMode","D","Player("+player_id.toString()+") choose MODE ("+fight_mode+") for gladiator("+gladiator_id.toString()+")");
-      RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
-      gladiator.put("!mode",fight_mode);
+      RPObject gladiator=arena.getSlot(RPCode.var_gladiators).get(gladiator_id);
+      gladiator.put(RPCode.var_combat_mode,fight_mode);
       
       return RPAction.STATUS_SUCCESS;
       }
@@ -295,12 +298,12 @@ public class RPCode
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject arena=zone.getArena();
       
-      if(arena.get("status").equals("fighting"))
+      if(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
         {
         RPObject[] gladiators=new RPObject[GLADIATORS_PER_FIGHT];
         int i=0;
         
-        Iterator it=arena.getSlot("gladiators").iterator();
+        Iterator it=arena.getSlot(RPCode.var_gladiators).iterator();
         while(it.hasNext())
           {
           gladiators[i]=(RPObject)it.next();
@@ -327,21 +330,21 @@ public class RPCode
           
           for(i=0;i<gladiators.length;++i)
             {
-            if(gladiators[i].getInt("hp")<=0)
+            if(gladiators[i].getInt(RPCode.var_hp)<=0)
               {
-              fame+=gladiators[i].getInt("fame");
+              fame+=gladiators[i].getInt(RPCode.var_fame);
               }
             else
               {
-              arena.put("winner",gladiators[i].get(var_object_id));
+              arena.put(RPCode.var_winner,gladiators[i].get(var_object_id));
               }
             }
             
-          arena.put("status","request_fame");
-          arena.put("fame",fame);
-          arena.put("timeout",60);
-          arena.put("thumbs_up",0);
-          arena.put("thumbs_down",0);
+          arena.put(RPCode.var_status,RPCode.var_request_fame);
+          arena.put(RPCode.var_fame,fame);
+          arena.put(RPCode.var_timeout,60);
+          arena.put(RPCode.var_thumbs_up,0);
+          arena.put(RPCode.var_thumbs_down,0);
           }
   
         zone.modify(arena);      
@@ -367,7 +370,7 @@ public class RPCode
     /** We check for dead players and determine if combat is finished. */
     for(int i=0;i<gladiators.length;++i)
       {
-      if(gladiators[i].getInt("hp")<=0)          
+      if(gladiators[i].getInt(RPCode.var_hp)<=0)          
         {
         --gladiatorsStillFighting;
         }
@@ -384,41 +387,41 @@ public class RPCode
     
     try
       {    
-      if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
+      if((gladiator1.getInt(RPCode.var_hp)<=0) || (gladiator2.getInt(RPCode.var_hp)<=0))
         {
         /** Failed because the gladiator is dead */
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator is dead (hp<=0)");
         return;
         }
     
-      if(!gladiator1.has("!mode"))
+      if(!gladiator1.has(RPCode.var_combat_mode))
         {
         /** Gladiator1 has not begin to fight. */
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator("+gladiator1.get(var_object_id)+") has not choose fight mode");
         return;
         }
          
-      if(!gladiator2.has("!mode"))
+      if(!gladiator2.has(RPCode.var_combat_mode))
         {
         /** Gladiator2 is idle, no combat, just hit */
-        int damage=gladiator1.getInt("attack");
+        int damage=gladiator1.getInt(RPCode.var_attack);
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiator("+gladiator2.get(var_object_id)+") has not choose fight mode");
-        gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-        gladiator2.put("damage",damage);
+        gladiator2.put(RPCode.var_hp,gladiator2.getInt(RPCode.var_hp)-damage);
+        gladiator2.put(RPCode.var_damage,damage);
         }
       
-      String mode_g1=gladiator1.get("!mode");
-      String mode_g2=gladiator2.get("!mode");
+      String mode_g1=gladiator1.get(RPCode.var_combat_mode);
+      String mode_g2=gladiator2.get(RPCode.var_combat_mode);
     
-      if((mode_g1.equals("rock") && mode_g2.equals("scissor")) ||
-        (mode_g1.equals("paper") && mode_g2.equals("rock"))    ||
-        (mode_g1.equals("scissor") && mode_g2.equals("paper")) ||
+      if((mode_g1.equals(RPCode.var_rock) && mode_g2.equals(RPCode.var_scissor)) ||
+        (mode_g1.equals(RPCode.var_paper) && mode_g2.equals(RPCode.var_rock))    ||
+        (mode_g1.equals(RPCode.var_scissor) && mode_g2.equals(RPCode.var_paper)) ||
         (mode_g1.equals(mode_g2)))
         {
-        int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"))+1;
+        int damage=Math.abs(rand.nextInt()%gladiator1.getInt(RPCode.var_attack))+1;
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiators has WIN to ("+mode_g1+") vs ("+mode_g2+")");
-        gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-        gladiator2.put("damage",damage);
+        gladiator2.put(RPCode.var_hp,gladiator2.getInt(RPCode.var_hp)-damage);
+        gladiator2.put(RPCode.var_damage,damage);
         ruleProcessor.trackObject(gladiator2);
         }  
       }
@@ -452,7 +455,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(player.has("!vote"))
+      if(player.has(RPCode.var_hidden_vote))
         {
         /** Failed because player already voted */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") already voted");
@@ -460,26 +463,26 @@ public class RPCode
         return status;
         }
 
-      if(!arena.get("status").equals("request_fame"))
+      if(!arena.get(RPCode.var_status).equals(RPCode.var_request_fame))
         {
         /** Failed because arena is not still requesting fame */
-        RPAction.Status status=RPAction.Fail("Failed because arena ("+arena.get("status")+") is not still requesting fame");
+        RPAction.Status status=RPAction.Fail("Failed because arena ("+arena.get(RPCode.var_status)+") is not still requesting fame");
         marauroad.trace("RPCode::Vote","D",status.toString());
         return status;
         }
       
-      if(vote.equals("up"))
+      if(vote.equals(RPCode.var_voted_up))
         {
         marauroad.trace("RPCode::Vote","D","Player("+player_id.toString()+") voted UP");
-        arena.put("thumbs_up",arena.getInt("thumbs_up")+1);
+        arena.put(RPCode.var_thumbs_up,arena.getInt(RPCode.var_thumbs_up)+1);
         }
       else
         {
         marauroad.trace("RPCode::Vote","D","Player("+player_id.toString()+") voted DOWN");
-        arena.put("thumbs_down",arena.getInt("thumbs_down")+1);
+        arena.put(RPCode.var_thumbs_down,arena.getInt(RPCode.var_thumbs_down)+1);
         }
       
-      player.put("!vote","");  
+      player.put(RPCode.var_hidden_vote,"");  
       playersVoted.add(player);
       
       zone.modify(arena);
@@ -503,14 +506,14 @@ public class RPCode
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject arena=zone.getArena();
       
-      if(arena.get("status").equals("request_fame"))
+      if(arena.get(RPCode.var_status).equals(RPCode.var_request_fame))
         {
-        if(arena.getInt("timeout")==0)
+        if(arena.getInt(RPCode.var_timeout)==0)
           {
           marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME completed");
-          int up=arena.getInt("thumbs_up");
-          int down=arena.getInt("thumbs_down");
-          int fame=arena.getInt("fame");
+          int up=arena.getInt(RPCode.var_thumbs_up);
+          int down=arena.getInt(RPCode.var_thumbs_down);
+          int fame=arena.getInt(RPCode.var_fame);
           int total=up+down;          
           /* If none vote we fake the result to give everything to the winner. */
           if(total==0)
@@ -520,16 +523,16 @@ public class RPCode
             }
           
           int fame_result=fame*up/total;
-          RPObject winner=arena.getSlot("gladiators").get(new RPObject.ID(arena.getInt("winner")));
-          winner.put("fame",winner.getInt("fame")+fame_result);    
+          RPObject winner=arena.getSlot(RPCode.var_gladiators).get(new RPObject.ID(arena.getInt(RPCode.var_winner)));
+          winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
         
           SetUpNextCombat();
           }
         else
           {
-          int timeout=arena.getInt("timeout")-1;
+          int timeout=arena.getInt(RPCode.var_timeout)-1;
           marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME timer ("+timeout+")");
-          arena.put("timeout",timeout);
+          arena.put(RPCode.var_timeout,timeout);
           }
         
         zone.modify(arena);
@@ -563,16 +566,16 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        player.remove("!vote");
+        player.remove(RPCode.var_hidden_vote);
         }
           
       playersVoted.clear();
 
-      arena.remove("thumbs_up");
-      arena.remove("thumbs_down");
-      arena.remove("fame");
-      arena.remove("timeout");
-      arena.remove("winner");
+      arena.remove(RPCode.var_thumbs_up);
+      arena.remove(RPCode.var_thumbs_down);
+      arena.remove(RPCode.var_fame);
+      arena.remove(RPCode.var_timeout);
+      arena.remove(RPCode.var_winner);
       
       marauroad.trace("RPCode::SetUpNextCombat","D","Restore fighters HP and set them to idle");
       /* Restore fighthing players */
@@ -580,22 +583,22 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
-        gladiator.put("hp",gladiator.get("!hp"));
+        RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+        gladiator.put(RPCode.var_hp,gladiator.get(RPCode.var_initial_hp));
 
-        player.remove("fighting");
-        player.remove("choose");
+        player.remove(RPCode.var_fighting);
+        player.remove(RPCode.var_choose);
         
         zone.modify(player);
         }
       
       marauroad.trace("RPCode::SetUpNextCombat","D","Setup Arena to waiting status");
       playersFighting.clear();
-      arena.getSlot("gladiators").clear();
-      arena.put("status","waiting");          
+      arena.getSlot(RPCode.var_gladiators).clear();
+      arena.put(RPCode.var_status,RPCode.var_waiting);          
       
       /* Choose new fighters if available */ 
-      if(arena.getInt("waiting")>0)
+      if(arena.getInt(RPCode.var_waiting)>0)
         {
         marauroad.trace("RPCode::SetUpNextCombat","D","Add waiting fighters to Arena");
         it=playersWaiting.iterator();
@@ -604,23 +607,23 @@ public class RPCode
           {
           /** Closely related to RequestFight code. We should avoid duplication */
           RPObject player=(RPObject)it.next();
-          RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
+          RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
 
           marauroad.trace("RPCode::SetUpNextCombat","D","Added player("+new RPObject.ID(player).toString()+") with gladiator("+new RPObject.ID(gladiator).toString()+")");
           
-          player.remove("requested");
-          arena.put("waiting",arena.getInt("waiting")-1);
+          player.remove(RPCode.var_requested);
+          arena.put(RPCode.var_waiting,arena.getInt(RPCode.var_waiting)-1);
           
-          player.put("fighting","");
-          arena.getSlot("gladiators").add(gladiator);
+          player.put(RPCode.var_fighting,"");
+          arena.getSlot(RPCode.var_gladiators).add(gladiator);
           
           playersFighting.add(player);
           it.remove();
           
-          if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
+          if(arena.getSlot(RPCode.var_gladiators).size()==GLADIATORS_PER_FIGHT)
             {
             marauroad.trace("RPCode::SetUpNextCombat","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
-            arena.put("status","fighting");
+            arena.put(RPCode.var_status,RPCode.var_fighting);
             break;
             }
           }        

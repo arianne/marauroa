@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.22 2004/01/27 00:07:39 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.23 2004/01/27 15:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,15 +44,15 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot("gladiators").add(gladiator);
+      player.getSlot(RPCode.var_gladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
       RPObject arena=zone.getArena();
-      assertEquals(arena.get("status"),"waiting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
-      assertTrue(player.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(gladiator)));
+      assertTrue(player.has(RPCode.var_fighting));
       
       /** If we try to add again it should fail */
       status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
@@ -61,29 +61,29 @@ public class Test_RPCode extends TestCase
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot("gladiators").add(newgladiator);
+      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      assertEquals(arena.get("status"),"fighting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
-      assertTrue(newplayer.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(newgladiator)));
+      assertTrue(newplayer.has(RPCode.var_fighting));
 
       /** We now add another player, but the fight has already begin... */
       RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(waitingPlayer);
       RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
-      waitingPlayer.getSlot("gladiators").add(waitingGladiator);
+      waitingPlayer.getSlot(RPCode.var_gladiators).add(waitingGladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(waitingPlayer),new RPObject.ID(waitingGladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      assertEquals(arena.get("status"),"fighting");
-      assertFalse(arena.getSlot("gladiators").has(new RPObject.ID(waitingGladiator)));
-      assertTrue(arena.has("waiting"));
-      assertFalse(waitingPlayer.has("fighting"));
-      assertEquals(waitingPlayer.getInt("requested"),rpu.getTurn());
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
+      assertFalse(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(waitingGladiator)));
+      assertTrue(arena.has(RPCode.var_waiting));
+      assertFalse(waitingPlayer.has(RPCode.var_fighting));
+      assertEquals(waitingPlayer.getInt(RPCode.var_requested),rpu.getTurn());
       }
     catch(Exception e)
       {
@@ -110,22 +110,22 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot("gladiators").add(gladiator);
+      player.getSlot(RPCode.var_gladiators).add(gladiator);
       
-      RPAction.Status status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      RPAction.Status status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_FAIL);
       
       status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
       RPObject arena=zone.getArena();
-      assertEquals(arena.get("status"),"waiting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
-      assertTrue(player.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(gladiator)));
+      assertTrue(player.has(RPCode.var_fighting));
       
-      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertEquals(gladiator.get("!mode"),"rock");
+      assertEquals(gladiator.get(RPCode.var_combat_mode),RPCode.var_rock);
       }
     catch(Exception e)
       {
@@ -152,53 +152,53 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot("gladiators").add(gladiator);
+      player.getSlot(RPCode.var_gladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
       RPObject arena=zone.getArena();
-      assertEquals(arena.get("status"),"waiting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
-      assertTrue(player.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(gladiator)));
+      assertTrue(player.has(RPCode.var_fighting));
       
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot("gladiators").add(newgladiator);
+      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      assertEquals(arena.get("status"),"fighting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
-      assertTrue(newplayer.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(newgladiator)));
+      assertTrue(newplayer.has(RPCode.var_fighting));
 
-      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scissor");
+      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),RPCode.var_scissor);
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
-      while(newgladiator.getInt("hp")>0)
+      while(newgladiator.getInt(RPCode.var_hp)>0)
         {
         /** Now it is turn to begin the fight */
         rpu.nextTurn();
         //RPCode.ResolveFight();
       
-        assertFalse(gladiator.has("?damage"));
-        assertTrue(newgladiator.has("?damage"));
-        assertTrue(newgladiator.getInt("?damage")<=newgladiator.getInt("attack"));
+        assertFalse(gladiator.has(RPCode.var_damage));
+        assertTrue(newgladiator.has(RPCode.var_damage));
+        assertTrue(newgladiator.getInt(RPCode.var_damage)<=newgladiator.getInt(RPCode.var_attack));
         }
 
       /** We make sure that the combat has ends */
       rpu.nextTurn();
       
-      assertFalse(gladiator.has("?damage"));
-      assertFalse(newgladiator.has("?damage"));
+      assertFalse(gladiator.has(RPCode.var_damage));
+      assertFalse(newgladiator.has(RPCode.var_damage));
 
-      assertEquals(arena.get("status"),"request_fame");
-      assertTrue(arena.has("fame"));      
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
+      assertTrue(arena.has(RPCode.var_fame));      
       }
     catch(Exception e)
       {
@@ -225,92 +225,92 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot("gladiators").add(gladiator);
+      player.getSlot(RPCode.var_gladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
       RPObject arena=zone.getArena();
-      assertEquals(arena.get("status"),"waiting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
-      assertTrue(player.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(gladiator)));
+      assertTrue(player.has(RPCode.var_fighting));
       
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot("gladiators").add(newgladiator);
+      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      assertEquals(arena.get("status"),"fighting");
-      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
-      assertTrue(newplayer.has("fighting"));
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
+      assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(newgladiator)));
+      assertTrue(newplayer.has(RPCode.var_fighting));
 
-      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scissor");
+      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),RPCode.var_scissor);
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
-      while(newgladiator.getInt("hp")>0)
+      while(newgladiator.getInt(RPCode.var_hp)>0)
         {
         /** Now it is turn to begin the fight */
         rpu.nextTurn();
         //RPCode.ResolveFight();
       
-        assertFalse(gladiator.has("?damage"));
-        assertTrue(newgladiator.has("?damage"));
-        assertTrue(newgladiator.getInt("?damage")<=newgladiator.getInt("attack"));
+        assertFalse(gladiator.has(RPCode.var_damage));
+        assertTrue(newgladiator.has(RPCode.var_damage));
+        assertTrue(newgladiator.getInt(RPCode.var_damage)<=newgladiator.getInt(RPCode.var_attack));
         }
 
       /** We make sure that the combat has ends */
       rpu.nextTurn();
       
-      assertEquals(arena.get("winner"),gladiator.get(RPCode.var_object_id));
+      assertEquals(arena.get(RPCode.var_winner),gladiator.get(RPCode.var_object_id));
       
-      assertFalse(gladiator.has("?damage"));
-      assertFalse(newgladiator.has("?damage"));
+      assertFalse(gladiator.has(RPCode.var_damage));
+      assertFalse(newgladiator.has(RPCode.var_damage));
 
-      assertEquals(arena.get("status"),"request_fame");
-      assertTrue(arena.has("fame"));      
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
+      assertTrue(arena.has(RPCode.var_fame));      
       
-      assertEquals(arena.getInt("thumbs_up"),0);
+      assertEquals(arena.getInt(RPCode.var_thumbs_up),0);
 
-      status=RPCode.Vote(new RPObject.ID(player),"up");
+      status=RPCode.Vote(new RPObject.ID(player),RPCode.var_voted_up);
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertTrue(player.has("!vote"));
-      status=RPCode.Vote(new RPObject.ID(newplayer),"up");
+      assertTrue(player.has(RPCode.var_hidden_vote));
+      status=RPCode.Vote(new RPObject.ID(newplayer),RPCode.var_voted_up);
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertTrue(newplayer.has("!vote"));
+      assertTrue(newplayer.has(RPCode.var_hidden_vote));
       
-      status=RPCode.Vote(new RPObject.ID(player),"up");
+      status=RPCode.Vote(new RPObject.ID(player),RPCode.var_voted_up);
       assertEquals(status,RPAction.STATUS_FAIL);
       
-      assertEquals(arena.getInt("thumbs_up"),2);
+      assertEquals(arena.getInt(RPCode.var_thumbs_up),2);
       
-      while(arena.getInt("timeout")>0)
+      while(arena.getInt(RPCode.var_timeout)>0)
         {
         RPCode.RequestFame();
         }
 
-      assertTrue(arena.has("timeout"));
-      assertTrue(arena.has("thumbs_up"));
-      assertTrue(arena.has("thumbs_down"));
-      assertTrue(arena.has("fame"));
-      assertTrue(player.has("!vote"));
-      assertTrue(newplayer.has("!vote"));
+      assertTrue(arena.has(RPCode.var_timeout));
+      assertTrue(arena.has(RPCode.var_thumbs_up));
+      assertTrue(arena.has(RPCode.var_thumbs_down));
+      assertTrue(arena.has(RPCode.var_fame));
+      assertTrue(player.has(RPCode.var_hidden_vote));
+      assertTrue(newplayer.has(RPCode.var_hidden_vote));
 
       RPCode.RequestFame();
       
-      assertEquals(arena.get("status"),"waiting");
+      assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
       
-      assertFalse(arena.has("timeout"));
-      assertFalse(arena.has("thumbs_up"));
-      assertFalse(arena.has("thumbs_down"));
-      assertFalse(arena.has("fame"));
-      assertFalse(player.has("!vote"));
-      assertFalse(newplayer.has("!vote"));
+      assertFalse(arena.has(RPCode.var_timeout));
+      assertFalse(arena.has(RPCode.var_thumbs_up));
+      assertFalse(arena.has(RPCode.var_thumbs_down));
+      assertFalse(arena.has(RPCode.var_fame));
+      assertFalse(player.has(RPCode.var_hidden_vote));
+      assertFalse(newplayer.has(RPCode.var_hidden_vote));
       }
     catch(Exception e)
       {

@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.9 2004/01/27 00:07:39 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.10 2004/01/27 15:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,16 +44,16 @@ public class Gladiator extends RPObject
   public Gladiator(RPObject.ID id) throws SlotAlreadyAddedException
     {
     put(RPCode.var_object_id,id.getObjectID());
-    put("type","gladiator");
-    put("name",randomNames[Math.abs(random.nextInt()%randomNames.length)]);
-    put("!hp",100);
-    put("hp",100);
-    put("attack",5);
-	put("fame",0);
-	put("num_victory",0);
-	put("num_defeat",0);    
+    put(RPCode.var_type,"gladiator");
+    put(RPCode.var_name,randomNames[Math.abs(random.nextInt()%randomNames.length)]);
+    put(RPCode.var_initial_hp,100);
+    put(RPCode.var_hp,100);
+    put(RPCode.var_attack,5);
+	put(RPCode.var_fame,0);
+	put(RPCode.var_num_victory,0);
+	put(RPCode.var_num_defeat,0);    
 	
-	this.addSlot(new RPSlot("l_hand"));
-	this.addSlot(new RPSlot("r_hand"));
+	this.addSlot(new RPSlot(RPCode.var_l_hand));
+	this.addSlot(new RPSlot(RPCode.var_r_hand));
     }
   }

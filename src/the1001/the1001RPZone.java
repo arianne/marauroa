@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.10 2004/01/08 14:14:47 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.11 2004/01/27 15:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,10 +28,10 @@ public class the1001RPZone extends MarauroaRPZone
     try
       {
       heroesHouse=super.create();
-      heroesHouse.put("type","shop");
-      heroesHouse.put("name","Heroes' House");
+      heroesHouse.put(RPCode.var_type,"shop");
+      heroesHouse.put(RPCode.var_name,"Heroes' House");
     
-      RPSlot gladiators=new RPSlot("gladiators");    
+      RPSlot gladiators=new RPSlot(RPCode.var_gladiators);    
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
@@ -39,7 +39,7 @@ public class the1001RPZone extends MarauroaRPZone
       gladiators.add(new Gladiator(new RPObject.ID(super.create())));
       heroesHouse.addSlot(gladiators);
       
-      RPSlot items=new RPSlot("items");
+      RPSlot items=new RPSlot(RPCode.var_items);
       items.add(new Item(new RPObject.ID(super.create()),"sword"));
       items.add(new Item(new RPObject.ID(super.create()),"shield"));
       heroesHouse.addSlot(items);      
@@ -47,12 +47,12 @@ public class the1001RPZone extends MarauroaRPZone
       add(heroesHouse);      
       
       arena=super.create();
-      arena.put("type","arena");
-      arena.put("name","Arena");
-      arena.put("status","waiting");
-      arena.put("waiting",0);
+      arena.put(RPCode.var_type,"arena");
+      arena.put(RPCode.var_name,"Arena");
+      arena.put(RPCode.var_status,RPCode.var_waiting);
+      arena.put(RPCode.var_waiting,0);
       
-      arena.addSlot(new RPSlot("gladiators"));      
+      arena.addSlot(new RPSlot(RPCode.var_gladiators));      
       /* Add to zone */
       add(arena);
       }
