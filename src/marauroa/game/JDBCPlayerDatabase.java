@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.41 2004/05/22 17:27:38 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.42 2004/05/26 05:53:13 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -207,7 +207,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
         }
-
+      password = Util.getMd5Hash(password);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select id from player where username like '"+username+"'";
@@ -231,6 +231,16 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       marauroad.thrown("JDBCPlayerDatabase::addPlayer","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
+      }
+    catch(java.io.UnsupportedEncodingException ex)//should never be thrown here, as UTF-8 is normally supported
+      {
+       marauroad.thrown("JDBCPlayerDatabase::addPlayer","X",ex);
+       throw new GenericDatabaseException(ex.getMessage());
+      }
+    catch(java.security.NoSuchAlgorithmException ex)//should never be thrown here, as md5 is normally supported
+      {
+       marauroad.thrown("JDBCPlayerDatabase::addPlayer","X",ex);
+       throw new GenericDatabaseException(ex.getMessage());
       }
     finally
       {
@@ -372,7 +382,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
         }
-
+      password = Util.getMd5Hash(password);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select status from player where username like '"+username+"' and password like '"+password+"'";
@@ -403,6 +413,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
+    catch(java.io.UnsupportedEncodingException ex)//should never be thrown here, as UTF-8 is normally supported
+      {
+       marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",ex);
+       throw new GenericDatabaseException(ex.getMessage());
+      }
+    catch(java.security.NoSuchAlgorithmException ex)//should never be thrown here, as md5 is normally supported
+      {
+       marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",ex);
+       throw new GenericDatabaseException(ex.getMessage());
+      }
+
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","<");
