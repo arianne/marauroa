@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.60 2004/04/15 16:47:40 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.61 2004/04/15 17:55:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -336,16 +336,21 @@ class RPServerManager extends Thread
   public void run()
     {
     marauroad.trace("RPServerManager::run",">");
+    long start=System.currentTimeMillis(),stop;
+    
     while(keepRunning)
       {
       scheduler.visit(ruleProcessor);      
+      
+      stop=System.currentTimeMillis();
       try
         {
-        Thread.sleep(turnDuration);
+        Thread.sleep(turnDuration-(stop-start));
         }
       catch(InterruptedException e)
         {
         }
+      start=System.currentTimeMillis();
 
       playerContainer.getLock().requestWriteLock();
 
