@@ -1,6 +1,10 @@
 package marauroa.game;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import marauroa.marauroad;
 
 /** This class implements an Object. Please refer to Objects Explained document */
 public class RPObject extends Attributes
@@ -36,17 +40,17 @@ public class RPObject extends Attributes
       }
     
     /** This method returns true if there are still most elements.
-     *  @return true if there are more elements. */    
+     *  @return true if there are more elements. */
     public boolean hasNext()
       {
       return it.hasNext();
       }
     
     /** This method returs the RPSlot and move the pointer to the next element
-     *  @return an RPSlot */ 
+     *  @return an RPSlot */
     public RPSlot next() throws NoSuchElementException
       {
-      return (RPSlot)it.next();      
+      return (RPSlot)it.next();
       }
     }
   
@@ -55,28 +59,28 @@ public class RPObject extends Attributes
     {
     private int id;
     
-    /** Constructor 
+    /** Constructor
      *  @param oid the object id */
     public ID(int oid)
       {
       id=oid;
       }
     
-    /** Constructor 
+    /** Constructor
      *  @param attr an RPObject containing object_id attribute */
     public ID(RPObject attr) throws Attributes.AttributeNotFoundException
       {
       id=new Integer(attr.get("object_id")).intValue();
       }
     
-    /** Constructor 
+    /** Constructor
      *  @param attr an RPAction containing source_id attribute */
     public ID(RPAction attr) throws Attributes.AttributeNotFoundException
       {
       id=new Integer(attr.get("source_id")).intValue();
       }
 
-    /** This method returns the object id 
+    /** This method returns the object id
      *  @return the object id. */
     public int getObjectID()
       {
@@ -104,7 +108,7 @@ public class RPObject extends Attributes
       return id;
       }
     
-    /** This method returns a String that represent the object 
+    /** This method returns a String that represent the object
      *  @return a string representing the object.*/
     public String toString()
       {
@@ -134,7 +138,7 @@ public class RPObject extends Attributes
     {
     super();
 
-    slots=new LinkedList();    
+    slots=new LinkedList();
     put("object_id",id.getObjectID());
     }
   
@@ -204,6 +208,9 @@ public class RPObject extends Attributes
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
+      try
+      {
+      marauroad.trace("RPObject.writeObject()","<");
     super.writeObject(out);
     
     out.write((int)slots.size());
@@ -214,17 +221,31 @@ public class RPObject extends Attributes
       out.write(it.next());
       }
     }
+    finally
+    {
+      marauroad.trace("RPObject.writeObject()",">");
+    }
+    }
   
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
+      try
+      {
+      marauroad.trace("RPObject.readObject()","<");
     super.readObject(in);
     
     int size=in.readInt();
+    marauroad.trace("RPObject.readObject()","D",size+" slots found");
     slots=new LinkedList();
     
     for(int i=0;i<size;++i)
       {
       slots.add((RPSlot)in.readObject(new RPSlot()));
       }
+    }
+    finally
+    {
+      marauroad.trace("RPObject.readObject()",">");
+    }
     }
   }
