@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.3 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.4 2004/01/27 17:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.net;
 
 import java.io.*;
+import marauroa.*;
 
 /** InputSerializer is used to serialize classes that implement the Serializable
  *  interface from a InputStream.
@@ -61,6 +62,12 @@ public class InputSerializer
   public byte[] readByteArray() throws IOException, java.lang.ClassNotFoundException
     {
     int size=readInt();
+    
+    if(size>TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Ilegal request of an array of "+String.valueOf(size)+" size");
+      }
+    
     byte[] buffer=new byte[size];
     
     in.read(buffer);
@@ -127,6 +134,11 @@ public class InputSerializer
   public String[] readStringArray() throws IOException, java.lang.ClassNotFoundException
     {
     int size=readInt();
+
+    if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Ilegal request of an array of "+String.valueOf(size)+" size");
+      }
     
     String[] buffer=new String[size];
     for(int i=0;i<size;i++)

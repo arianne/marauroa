@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.15 2004/01/07 16:26:07 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.16 2004/01/27 17:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,8 @@ package marauroa.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import marauroa.marauroad;
+import java.io.IOException;
+import marauroa.*;
 
 public class RPSlot implements marauroa.net.Serializable
 {
@@ -200,6 +201,12 @@ public class RPSlot implements marauroa.net.Serializable
   {
     name = in.readString();
     int size=in.readInt();
+
+    if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
+    {
+      throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
+    }
+
     objects.clear();
       
     for(int i=0;i<size;++i)

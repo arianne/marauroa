@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.22 2003/12/30 10:24:35 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.23 2004/01/27 17:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import marauroa.marauroad;
+import java.io.IOException;
+import marauroa.*;
 
 /** This class implements an Object. Please refer to Objects Explained document */
 public class RPObject extends Attributes
@@ -182,7 +183,11 @@ public class RPObject extends Attributes
     super.readObject(in);
     
     int size=in.readInt();
-    marauroad.trace("RPObject.readObject()","D",size+" slots found");
+    if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
+      }
+
     slots=new LinkedList();
     
     for(int i=0;i<size;++i)

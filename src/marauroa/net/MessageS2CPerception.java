@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.11 2004/01/20 00:27:11 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.12 2004/01/27 17:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import marauroa.game.RPObject;
 import marauroa.game.RPZone;
-import marauroa.marauroad;
+import marauroa.*;
 
 
 /** This message indicate the client the objects that the server has determined that
@@ -118,6 +118,12 @@ public class MessageS2CPerception extends Message
     deletedRPObjects=new LinkedList();
     
     int mod=in.readInt();
+
+    if(mod>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(mod)+" size");
+      }
+
     marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
     for(int i=0;i<mod;++i)
       {
@@ -125,6 +131,12 @@ public class MessageS2CPerception extends Message
       }
 
     int del=in.readInt();
+
+    if(del>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(del)+" size");
+      }
+
     marauroad.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.18 2004/01/20 00:27:11 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.19 2004/01/27 17:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,8 @@
 package marauroa.game;
 
 import java.util.*;
-import marauroa.marauroad;
+import marauroa.*;
+import java.io.IOException;
 
 /** This class host a list of Attributes stored as a pair String=String */
 public class Attributes implements marauroa.net.Serializable
@@ -228,6 +229,12 @@ public class Attributes implements marauroa.net.Serializable
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
     int size=in.readInt();
+
+    if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
+      }
+
     content.clear();
         
     for(int i=0;i<size;++i)
