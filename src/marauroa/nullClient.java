@@ -205,6 +205,33 @@ public class nullClient extends Thread
     {
     try
       {
+      if(args.length>0)
+        {
+        int i=0;
+        String username=null;
+        String password=null;
+        String character=null;
+     
+        while(i!=args.length)
+          {
+          if(args[i].equals("-u"))
+            {
+            username=args[i+1];
+            }
+          else if(args[i].equals("-p"))
+            {
+            password=args[i+1];
+            }
+          else if(args[i].equals("-c"))
+            {
+            character=args[i+1];
+            }
+          }        
+        
+        new nullClient(username,password,character).start();
+        return;
+        }
+
       int num=28;
       nullClient test[]=new nullClient[num];
       

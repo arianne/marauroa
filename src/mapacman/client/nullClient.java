@@ -426,6 +426,7 @@ public class nullClient extends Thread
           }        
         
         new nullClient(username,password,character).start();
+        return;
         }
 
       int num=1;
