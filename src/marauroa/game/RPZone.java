@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.11 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.12 2003/12/31 12:32:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,10 @@ public interface RPZone
     
     public void modified(RPObject object)
       {
-      modifiedList.add(object);
+      if(!modifiedList.contains(object))
+        {
+        modifiedList.add(object);
+        }
       }
 
     public void removed(RPObject object)

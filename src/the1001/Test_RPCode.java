@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.4 2003/12/31 12:16:17 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.5 2003/12/31 12:32:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,8 @@ public class Test_RPCode extends TestCase
     
   public void testRequestFight()
     {
-    marauroad.trace("Test_RPCode::testRequestFight","?"/*TODO*/);      
+    marauroad.trace("Test_RPCode::testRequestFight","?","This test case add Gladiators to Arena to see if the code "
+      +"behaves as expected and it does the expected checks.");      
     marauroad.trace("Test_RPCode::testRequestFight",">");
     
     try
@@ -56,6 +57,33 @@ public class Test_RPCode extends TestCase
       /** If we try to add again it should fail */
       status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_FAIL);      
+      
+      RPObject newplayer=new Player(new RPObject.ID(zone.create()));
+      zone.add(newplayer);
+      RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
+      newplayer.getSlot("gladiators").add(newgladiator);
+
+      status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+
+      assertEquals(arena.get("status"),"fighting");
+      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
+      assertEquals(newplayer.get("status"),"onArena");
+
+      /** We now add another player, but the fight has already begin... */
+      RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()));
+      zone.add(waitingPlayer);
+      RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
+      waitingPlayer.getSlot("gladiators").add(waitingGladiator);
+
+      status=RPCode.RequestFight(new RPObject.ID(waitingPlayer),new RPObject.ID(waitingGladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+
+      assertEquals(arena.get("status"),"fighting");
+      assertFalse(arena.getSlot("gladiators").has(new RPObject.ID(waitingGladiator)));
+      assertTrue(arena.has("waiting"));
+      assertFalse(waitingPlayer.get("status").equals("onArena"));
+      assertEquals(waitingPlayer.getInt("requested"),rpu.getTurn());
       }
     catch(Exception e)
       {
