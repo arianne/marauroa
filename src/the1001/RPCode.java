@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.21 2004/01/02 00:21:30 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.22 2004/01/06 17:42:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -208,6 +208,10 @@ public class RPCode
               {
               fame+=gladiators[i].getInt("fame");
               }
+            else
+              {
+              arena.put("winner",gladiators[i].get("object_id"));
+              }
             }
             
           arena.put("status","request_fame");
@@ -285,28 +289,121 @@ public class RPCode
       gladiator1.put("?damage",damage);
       ruleProcessor.trackObject(gladiator1);
       }
-    else if(mode_g1.equals("rock") && mode_g2.equals("scissor"))
+    else if((mode_g1.equals("rock") && mode_g2.equals("scissor")) ||
+      (mode_g1.equals("paper") && mode_g2.equals("rock"))   ||
+      (mode_g1.equals("scissor") && mode_g2.equals("paper")))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("?damage",damage);
       ruleProcessor.trackObject(gladiator2);
       }  
-    else if(mode_g1.equals("paper") && mode_g2.equals("rock"))
+    }
+  
+  private static List playersVoted;
+  
+  static
+    {
+    playersVoted=new LinkedList();
+    }
+  
+  public static RPAction.Status Vote(RPObject.ID player_id, String vote) throws Exception
+    {
+    marauroad.trace("RPCode::Vote",">");
+   
+    try
       {
-      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
-      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("?damage",damage);
-      ruleProcessor.trackObject(gladiator2);
-      }  
-    else if(mode_g1.equals("scissor") && mode_g2.equals("paper"))
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+      RPObject player=zone.get(player_id);
+      
+      if(player.has("vote"))
+        {
+        /** Failed because player already voted */
+        return RPAction.Fail("Failed because player already voted");
+        }
+
+      if(!arena.get("status").equals("request_fame"))
+        {
+        /** Failed because arena is not still requesting fame */
+        return RPAction.Fail("Failed because arena is not still requesting fame");
+        }
+      
+      if(vote.equals("up"))
+        {
+        arena.put("thumbs_up",arena.getInt("thumbs_up")+1);
+        }
+      else
+        {
+        arena.put("thumbs_down",arena.getInt("thumbs_down")+1);
+        }
+      
+      player.put("vote","");  
+      playersVoted.add(player_id);
+      
+      return RPAction.STATUS_SUCCESS;
+      }
+    finally
       {
-      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
-      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("?damage",damage);
-      ruleProcessor.trackObject(gladiator2);
-      }  
-    }  
+      marauroad.trace("RPCode::Vote","<");
+      }
+    }
+  
+  public static void RequestFame()
+    {
+    marauroad.trace("RPCode::RequestFame",">");
+   
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+      
+      if(arena.get("status").equals("request_fame"))
+        {
+        if(arena.getInt("timeout")==0)
+          {
+          int up=arena.getInt("thumbs_up");
+          int down=arena.getInt("thumbs_up");
+          int fame=arena.getInt("fame");
+          int total=up+down;          
+          
+          int fame_result=fame*up/total;
+          RPObject winner=zone.get(new RPObject.ID(arena.getInt("winner")));
+          winner.put("fame",winner.getInt("fame")+fame_result);    
+          
+          arena.put("status","waiting");
+          arena.getSlot("gladiators").clear();
+          
+          Iterator it=playersVoted.iterator();
+          while(it.hasNext())
+            {
+            RPObject player=(RPObject)it.next();
+            player.remove("vote");
+            }
+          
+          playersVoted.clear();
+
+          arena.remove("thumbs_up");
+          arena.remove("thumbs_down");
+          arena.remove("fame");
+          arena.remove("timeout");
+          arena.remove("winner");
+          }
+        else
+          {
+          arena.put("timeout",arena.getInt("timeout")-1);
+          }
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPCode::RequestFame","X",e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("RPCode::RequestFame","<");
+      }
+    }
   }
   
   
