@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.14 2003/12/15 17:10:15 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.15 2003/12/15 17:58:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -330,10 +330,10 @@ public class JMarauroa
 				addLog("Character choosen correctly(id is "+characterID+")\n");
 
 				/** Automagically create a new simplegame event */
-				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
-				sg.pack();
-				sg.show();
-				new Thread(sg,"Lets play thread...").start();
+//				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
+//				sg.pack();
+//				sg.show();
+//				new Thread(sg,"Lets play thread...").start();
 			}
 			
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
