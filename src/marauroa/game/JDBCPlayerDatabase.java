@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.37 2004/05/07 17:28:24 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.38 2004/05/10 13:57:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1327,6 +1327,78 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
+      }
+    }
+
+  public RPObjectIterator zoneIterator(Transaction trans)
+    {
+    marauroad.trace("JDBCPlayerDatabase::zoneIterator",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "select object_id from rpzone";
+
+      marauroad.trace("JDBCRPObjectDatabase::zoneIterator","D",query);
+      
+      ResultSet result = stmt.executeQuery(query);
+
+      return new RPObjectIterator(result);
+      }
+    catch(SQLException e)
+      {
+      marauroad.thrown("JDBCPlayerDatabase::zoneIterator","X",e);
+      return null;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::zoneIterator","<");
+      }
+    }
+  
+  public void addToRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+    {
+    marauroad.trace("JDBCPlayerDatabase::addToRPZone",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "insert into rpzone values('"+object.get("id")+"')";
+
+      marauroad.trace("JDBCRPObjectDatabase::addToRPZone","D",query);
+      stmt.execute(query);
+      }
+    catch(SQLException e)
+      {
+      marauroad.thrown("JDBCPlayerDatabase::addToRPZone","X",e);      
+      throw e;
+      }      
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
+      }
+    }
+
+  public void removeFromRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+    {
+    marauroad.trace("JDBCPlayerDatabase::removeFromRPZone",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "delete from rpzone where object_id='"+object.get("id")+"'";
+
+      marauroad.trace("JDBCRPObjectDatabase::removeFromRPZone","D",query);
+      stmt.execute(query);
+      }
+    catch(SQLException e)
+      {
+      marauroad.thrown("JDBCPlayerDatabase::removeFromRPZone","X",e);      
+      throw e;
+      }      
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::removeFromRPZone","<");
       }
     }
   }

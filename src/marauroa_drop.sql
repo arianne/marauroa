@@ -4,5 +4,7 @@ drop table if exists loginEvent;
 drop table if exists rpobject;
 drop table if exists rpattribute;
 drop table if exists rpslot;
+drop table if exists rpzone;
+
 
 
