@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.79 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.80 2004/05/10 11:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -280,7 +280,9 @@ class RPServerManager extends Thread
             
             if(perception.type==RPZone.Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
               {
-              messages2cPerception.setMyRPObject(object);
+              RPObject reduced_object=(RPObject)object.copy();
+              reduced_object.removeAllButHidden();
+              messages2cPerception.setMyRPObject(reduced_object);
               }
             else
               {

@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.2 2004/04/30 20:36:40 root777 Exp $ */
+/* $Id: PerceptionHandler.java,v 1.3 2004/05/10 11:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -301,7 +301,8 @@ public class PerceptionHandler
         {
         if(!listener.onMyRPObject(true,myObject))
           {
-          world.put(myObject.get("id"),myObject);
+          RPObject w_object=(RPObject)world.get(myObject.get("id"));    
+          w_object.applyDifferences(myObject,null);        
           }        
         }
       else

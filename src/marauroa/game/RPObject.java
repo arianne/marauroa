@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.39 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.40 2004/05/10 11:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -573,6 +573,38 @@ public class RPObject extends Attributes
       return -1;
       }
     }
+  
+  public void removeAllButHidden()
+    {
+    try
+      {
+      Iterator it=iterator();
+     
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+        if(!attrib.startsWith("!"))
+          {
+          remove(attrib);
+          }
+        }    
+     
+      SlotsIterator sit=this.slotsIterator();
+      while(sit.hasNext())
+        {
+        RPSlot slot=sit.next();
+        if(!slot.getName().startsWith("!"))
+          {
+          removeSlot(slot.getName());
+          }
+        }
+      }
+    catch(Exception e)
+      {
+      /** NOTE: Shouldn't happen */
+      }
+    }  
+      
     
   /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
@@ -644,6 +676,7 @@ public class RPObject extends Attributes
       id=in.readInt();
       }
     }
+    
   public void toXML(Element xml_rp_object)
     {
     if(xml_rp_object!=null)

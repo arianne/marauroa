@@ -161,6 +161,7 @@ FILTER := ""
 LABEL := "Types"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SOutOfSync.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CInvalidMessage.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CServerInfo.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CPerception.java" #[EndFile]

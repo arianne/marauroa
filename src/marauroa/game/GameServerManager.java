@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.45 2004/05/07 13:50:33 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.46 2004/05/10 11:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -110,6 +110,10 @@ public final class GameServerManager extends Thread
             case Message.TYPE_C2S_PERCEPTION_ACK:
               marauroad.trace("GameServerManager::run","D","Processing C2S Perception ACK Message");
               processPerceptionACKEvent((MessageC2SPerceptionACK)msg);
+              break;
+            case Message.TYPE_C2S_OUTOFSYNC:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
+              processOutOfSyncEvent((MessageC2SOutOfSync)msg);
               break;
             default:
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
@@ -494,6 +498,45 @@ public final class GameServerManager extends Thread
     finally
       {
       marauroad.trace("GameServerManager::processPerceptionACKEvent","<");
+      }
+    }
+
+
+  private void processOutOfSyncEvent(MessageC2SOutOfSync msg)
+    {
+    marauroad.trace("GameServerManager::processOutOfSyncEvent",">");
+    try
+      {
+      int clientid=msg.getClientID();
+      
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
+        marauroad.trace("GameServerManager::processOutOfSyncEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+        return;
+        }
+      if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+        {
+        /* Error: Player has not choose a character yey. */
+        marauroad.trace("GameServerManager::processOutOfSyncEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
+        marauroad.trace("GameServerManager::processOutOfSyncEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
+        return;
+        }
+      
+      /** TODO: Notify PlayerEntryContainer that this player is out of Sync */  
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("GameServerManager::processOutOfSyncEvent","X",e);
+      }
+    finally
+      {
+      marauroad.trace("GameServerManager::processOutOfSyncEvent","<");
       }
     }
   }

@@ -11,9 +11,13 @@ LABEL := "marauroa"
 #[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\nullClient.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SOutOfSync.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Message.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\the1001createaccount.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]

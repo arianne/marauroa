@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.19 2004/05/07 17:16:59 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.20 2004/05/10 11:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,8 @@ public class NetConst
    * 10 - Added conditional myRPObject send to Perception
    * 11 - Added Map message 
    *    - Added Timestamp to all Messages
-   *    - Changed the ordering inside Perception message */
+   *    - Changed the ordering inside Perception message 
+   * 12 - Changed perception to send only what is hidden on myRPObject */
   final static public byte NETWORK_PROTOCOL_VERSION=11;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   static
