@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.25 2004/05/01 16:26:58 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.26 2004/05/02 21:34:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -160,7 +160,7 @@ public abstract class createaccount
       if(playerDatabase.hasPlayer(trans, get("username")))
         {
         out.println("ERROR: Player exists");
-        return (4);
+        return 4;
         }
         
       out.println("Adding player");
@@ -188,7 +188,7 @@ public abstract class createaccount
           out.println("Failed Rollback: "+ae.getMessage());
           }
         }
-      return (5);
+      return 5;
       }
     finally
       {
@@ -199,6 +199,6 @@ public abstract class createaccount
         }
       }
       
-    return (0);
+    return 0;
     }
   }
