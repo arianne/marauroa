@@ -16,12 +16,20 @@ public class SimpleRPZone
 {
   private int rows;
   private int columns;
-  
+  private RPObject.ID cellArray[][];
   
   public SimpleRPZone()
   {
     rows    = 3;
     columns = 3;
+    cellArray = new RPObject.ID[rows][columns];
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < rows; j++)
+      {
+        cellArray[i][j]=null;
+      }
+    }
   }
   
   public int getColumnsCount()
@@ -37,27 +45,26 @@ public class SimpleRPZone
   public void setColorAt(int row, int column, byte color)
   {
     RPObject cell = null;
-    RPObject.ID id = new  RPObject.ID(row*columns+column);
-    try
+    RPObject.ID id = cellArray[row][column];
+    if(id==null)
     {
-      cell = get(id);
-      //if we reach this point...
-      //something went wrong - the color is already set
-    }
-    catch (RPZone.RPObjectNotFoundException e)
-    {
-      cell = new RPObject();
-      cell.put("object_id",String.valueOf(id.getObjectID()));
+      cell = create();
       cell.put("type","cell");
       cell.put("color",String.valueOf(color));
+      cell.put("row",String.valueOf(row));
+      cell.put("column",String.valueOf(column));
       try
       {
         add(cell);
       }
-      catch (marauroa.game.RPZone.RPObjectInvalidException ex)
+      catch (RPZone.RPObjectInvalidException ex)
       {
         ex.printStackTrace();
       }
+    }
+    else
+    {
+      //not allowed - the cell is already set
     }
   }
   
@@ -65,23 +72,26 @@ public class SimpleRPZone
   {
     RPObject cell = null;
     byte color = -1;
-    RPObject.ID id = new  RPObject.ID(row*columns+column);
-    try
+    RPObject.ID id = cellArray[row][column];
+    if(id!=null)
     {
-      cell = get(id);
-      color = Byte.parseByte(cell.get("color"));
-    }
-    catch (RPZone.RPObjectNotFoundException e)
-    {
-      color = -1;
-    }
-    catch (NumberFormatException e)
-    {
-      color = -1;
-    }
-    catch (marauroa.game.Attributes.AttributeNotFoundException e)
-    {
-      color = -1;
+      try
+      {
+        cell = get(id);
+        color = Byte.parseByte(cell.get("color"));
+      }
+      catch (RPZone.RPObjectNotFoundException e)
+      {
+        color = -1;
+      }
+      catch (NumberFormatException e)
+      {
+        color = -1;
+      }
+      catch (marauroa.game.Attributes.AttributeNotFoundException e)
+      {
+        color = -1;
+      }
     }
     return color;
   }

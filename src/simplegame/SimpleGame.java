@@ -80,9 +80,9 @@ public class SimpleGame
                   if("cell".equals(obj.get("type")))
                   {
                     byte color = Byte.parseByte(obj.get("color"));
-                    int id = Integer.parseInt(obj.get("object_id"));
-                    int row = id/gdm.getRowsCount();
-                    int column = id%gdm.getRowsCount();
+//                    int id = Integer.parseInt(obj.get("object_id"));
+                    int row = Integer.parseInt(obj.get("row"));
+                    int column = Integer.parseInt(obj.get("column"));
                     gdm.setColorAt(row,column,color);
                   }
                 }
