@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.9 2004/02/23 15:35:06 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.10 2004/02/24 14:02:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,7 +127,7 @@ class createaccount
         out.println("String size not valid: "+username);
         return (3);
         }
-      if(password.length()>10 || password.length()<4) 
+      if(password.length()>10 || password.length()<1) 
         {
         out.println("String size not valid: "+password);
         return (3);
@@ -137,7 +137,7 @@ class createaccount
         out.println("String size not valid: "+character);
         return (3);
         }
-      if(character_model.length()>10 || character_model.length()<4) 
+      if(character_model.length()>10 || character_model.length()<1) 
         {
         out.println("String size not valid: "+character_model);
         return (3);
@@ -147,7 +147,7 @@ class createaccount
         out.println("String size not valid: "+gladiator);
         return (3);
         }
-      if(gladiator_model.length()>10 || gladiator_model.length()<4) 
+      if(gladiator_model.length()>10 || gladiator_model.length()<1) 
         {
         out.println("String size not valid: "+gladiator_model);
         return (3);
