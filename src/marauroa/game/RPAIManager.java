@@ -1,4 +1,4 @@
-/* $Id: RPAIManager.java,v 1.1 2004/05/30 14:35:22 arianne_rpg Exp $ */
+/* $Id: RPAIManager.java,v 1.2 2004/05/30 22:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ package marauroa.game;
  *  Implement it to personalize the AI */
 public interface RPAIManager 
   {
-  public void setScheduler(RPScheduler sched);
-  public void setZone(RPZone zone);
+  public void setContext(RPZone zone, RPScheduler sched);
   public boolean compute(long timelimit);
   }

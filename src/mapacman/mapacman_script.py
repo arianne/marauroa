@@ -21,6 +21,24 @@ def randomDirection():
 # PythonRP Interface for Java classes
 #
 
+class RealPythonZone(PythonZone):
+    def __init__(self, zone):
+        self._zone=zone
+
+    def onInit(self):
+        return 1
+
+    def onFinish(self):
+        return 1
+
+class RealPythonAI(PythonAI):
+    def __init__(self, zone, sched):
+        self._zone=zone
+        self._sched=sched
+
+    def compute(self,timelimit):
+        return 1
+    
 class RealPythonRP(PythonRP):
     def __init__(self,zone):
         self._removed_elements=[]
@@ -204,7 +222,7 @@ class RealPythonRP(PythonRP):
         return onExit(self,objectid)
     
     def serializeMap(self):
-        if self._serializedMap is None
+        if self._serializedMap is None:
             self._serializedMap=self._map.serializeMap()
 
         return self._serializedMap

@@ -1,4 +1,4 @@
-/* $Id: PythonRPAIManager.java,v 1.1 2004/05/30 14:35:22 arianne_rpg Exp $ */
+/* $Id: PythonRPAIManager.java,v 1.2 2004/05/30 22:30:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,9 +12,6 @@
  ***************************************************************************/
 package marauroa.game.python;
 
-import org.python.util.PythonInterpreter;
-import org.python.core.*;
-
 import marauroa.marauroad;
 import marauroa.game.*;
 import marauroa.*;
@@ -23,24 +20,25 @@ import marauroa.*;
  *  Implement it to personalize the AI */
 public class PythonRPAIManager implements RPAIManager
   {
-  private PythonInterpreter interpreter;
+  private GameScript gameScript;
   private PythonAI pythonAI;
 
   public PythonRPAIManager() throws Exception 
     {
     marauroad.trace("PythonRPZone::PythonRPZone",">");
-    
-    Configuration conf=Configuration.getConfiguration();
-    interpreter=new PythonInterpreter();
-    interpreter.execfile(conf.get("python_script"));
+    marauroad.trace("PythonRPZone::PythonRPZone","<");
+    }
+  
+  public void setContext(RPZone zone, RPScheduler sched)
+    {
+    marauroad.trace("PythonRPZone::setContext",">");
 
     try
       {
-      interpreter.set("zone",this);
-
-      String pythonRPZoneClass=conf.get("python_script_ai_class");
-      PyInstance object=(PyInstance)interpreter.eval(pythonRPZoneClass+"(zone)");
-      pythonAI=(PythonAI)object.__tojava__(PythonAI.class);
+      gameScript=GameScript.getGameScript();
+      gameScript.setRPZone(zone);
+      gameScript.setRPScheduler(sched);
+      pythonAI=gameScript.getAI();
       }
     catch(Exception e)
       {
@@ -48,19 +46,11 @@ public class PythonRPAIManager implements RPAIManager
       System.exit(-1);
       }
 
-    marauroad.trace("PythonRPZone::PythonRPZone","<");
-    }
-    
-  public void setScheduler(RPScheduler sched)
-    {
-    }
-    
-  public void setZone(RPZone zone)
-    {
+    marauroad.trace("PythonRPZone::setContext","<");
     }
     
   public boolean compute(long timelimit)
     {
-    return true;
+    return pythonAI.compute(timelimit);
     }    
   }

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.2 2004/05/30 14:35:22 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.3 2004/05/30 22:30:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,17 +22,11 @@ import java.io.*;
 
 public class PythonRPRuleProcessor implements RPRuleProcessor
   {
-  private RPZone zone;
-  private PythonInterpreter interpreter;
+  private GameScript gameScript;
   private PythonRP pythonRP;
 
   public PythonRPRuleProcessor() throws Configuration.PropertyNotFoundException, Configuration.PropertyFileNotFoundException
     {
-    zone=null;
-    
-    Configuration conf=Configuration.getConfiguration();
-    interpreter=new PythonInterpreter();
-    interpreter.execfile(conf.get("python_script"));
     }
 
 
@@ -40,26 +34,17 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
    *  @param zone The zone where actions happens. */
   public void setContext(RPZone zone)
     {
-    this.zone=zone;
-    interpreter.set("zone",this.zone);
-
     try
       {
-      Configuration conf=Configuration.getConfiguration();
-      String pythonRPClass=conf.get("python_script_rules_class");
-      PyInstance object=(PyInstance)interpreter.eval(pythonRPClass+"(zone)");
-      pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
+      gameScript=GameScript.getGameScript();
+      gameScript.setRPZone(zone);
+      pythonRP=gameScript.getGameRules();
       }
     catch(Exception e)
       {
       marauroad.thrown("PythonRPRuleProcessor::setContext","!",e);
       System.exit(-1);
       }
-    }
-
-  public RPZone getRPZone()
-    {
-    return zone;
     }
 
   /** Pass the whole list of actions so that it can approve or deny the actions in it.

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.91 2004/05/30 14:35:22 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.92 2004/05/30 22:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,7 @@ public class RPServerManager extends Thread
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
   private RPRuleProcessor ruleProcessor;
+  private RPAIManager aiMan;
   /** The place where the objects are stored */
   private RPZone zone;
   private Statistics stats;
@@ -62,13 +63,17 @@ public class RPServerManager extends Thread
       
       Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
-
       zone=(RPZone)zoneClass.newInstance();
       
+      zone.onInit();
+      
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
-
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
+      
+      Class AIManagerClass=Class.forName(conf.get("rp_RPAIClass"));
+      aiMan=(RPAIManager)AIManagerClass.newInstance();
+      aiMan.setContext(zone,scheduler);
       
       String duration =conf.get("rp_turnDuration");
 
@@ -445,6 +450,7 @@ public class RPServerManager extends Thread
     {
     marauroad.trace("RPServerManager::run",">");
     long start=System.currentTimeMillis(),stop;
+    long delay=0;
     
     while(keepRunning)
       {
@@ -452,14 +458,19 @@ public class RPServerManager extends Thread
       playerContainer.getLock().requestWriteLock();
         {
         buildPerceptions();
+
+        stop=System.currentTimeMillis();
+ 
+        delay=turnDuration-(stop-start);
+        aiMan.compute(delay<0?0:delay);
         }
       playerContainer.getLock().releaseLock();
-
+            
       stop=System.currentTimeMillis();
       try
         {
         marauroad.trace("RPServerManager::run","D","Turn time elapsed: "+Long.toString(stop-start));
-        long delay=turnDuration-(stop-start);
+        delay=turnDuration-(stop-start);
         Thread.sleep(delay<0?0:delay);
         }
       catch(InterruptedException e)
