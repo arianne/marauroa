@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.19 2004/02/07 20:40:59 root777 Exp $ */
+/* $Id: JMarauroa.java,v 1.20 2004/02/08 09:10:40 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import marauroa.game.RPObject;
 import simplegame.SimpleGame;
-import the1001client.The1001Game;
+//import the1001client.The1001Game;
 
 
 /**
@@ -331,10 +331,15 @@ public class JMarauroa extends JFrame implements WindowListener
 				addLog("Character choosen correctly(id is "+characterID+")\n");
 				
 				/** Automagically create a new simplegame event */
-				The1001Game game = new The1001Game(netMan,JMarauroa.this,characterID);
-				game.pack();
-				game.show();
-				new Thread(game,"Game thread...").start();
+				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
+				sg.pack();
+				sg.show();
+				new Thread(sg,"Lets play thread...").start();
+				
+//				The1001Game game = new The1001Game(netMan,JMarauroa.this,characterID);
+//				game.pack();
+//				game.show();
+//				new Thread(game,"Game thread...").start();
 			}
 			
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
