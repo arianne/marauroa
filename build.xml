@@ -43,7 +43,7 @@
 
   <target name="compile" depends="init,installation">
     <!-- run javac to compile the source files -->
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines">
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" excludes="the1001/client/**">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
