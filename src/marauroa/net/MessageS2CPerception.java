@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.55 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.56 2004/11/18 20:37:06 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ public class MessageS2CPerception extends Message
     type=TYPE_S2C_PERCEPTION;
     
     typePerception=perception.type;
-	zoneid=perception.zoneid;
+    zoneid=perception.zoneid;
     addedRPObjects=perception.addedList;
     modifiedAddedAttribsRPObjects=perception.modifiedAddedAttribsList;
     modifiedDeletedAttribsRPObjects=perception.modifiedDeletedAttribsList;
@@ -103,28 +103,28 @@ public class MessageS2CPerception extends Message
     
   /** This method returns the list of modified objects
    *  @return List<RPObject> of added objects */
-  public List getAddedRPObjects()
+  public List<RPObject> getAddedRPObjects()
     {
     return addedRPObjects;
     }
 
   /** This method returns the list of modified objects
    *  @return List<RPObject> of modified objects that has attributes added*/
-  public List getModifiedAddedRPObjects()
+  public List<RPObject> getModifiedAddedRPObjects()
     {
     return modifiedAddedAttribsRPObjects;
     }
 
   /** This method returns the list of modified objects
    *  @return List<RPObject> of modified objects that has attributes removed*/
-  public List getModifiedDeletedRPObjects()
+  public List<RPObject> getModifiedDeletedRPObjects()
     {
     return modifiedDeletedAttribsRPObjects;
     }
   
   /** This method returns the list of deleted objects
    *  @return List<RPObject> of deleted objects */
-  public List getDeletedRPObjects()
+  public List<RPObject> getDeletedRPObjects()
     {
     return deletedRPObjects;
     }
@@ -133,41 +133,31 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    Iterator it;
-      
     StringBuffer perception_string=new StringBuffer();
     perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
 
     perception_string.append("\n  zoneid: "+zoneid+"\n");
     perception_string.append("\n  added: \n");
-    it=addedRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: addedRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       perception_string.append("    "+object.toString()+"\n");
       }
 
     perception_string.append("\n  modified added: \n");
-    it=modifiedAddedAttribsRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: modifiedAddedAttribsRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       perception_string.append("    "+object.toString()+"\n");
       }
 
     perception_string.append("\n  modified deleted: \n");
-    it=modifiedDeletedAttribsRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: modifiedDeletedAttribsRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       perception_string.append("    "+object.toString()+"\n");
       }
     
     perception_string.append("\n  deleted: \n");
-    it=deletedRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: deletedRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       perception_string.append("    "+object.toString()+"\n");
       }
 
@@ -375,37 +365,27 @@ public class MessageS2CPerception extends Message
     ser.write((byte)typePerception);
     ser.write(zoneid);
     
-    Iterator it=null;
-    
-    it=addedRPObjects.iterator();
     ser.write((int)addedRPObjects.size());
-    while(it.hasNext())
+    for(RPObject object: addedRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       ser.write(object);
       }
 
     ser.write((int)modifiedAddedAttribsRPObjects.size());
-    it=modifiedAddedAttribsRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: modifiedAddedAttribsRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       ser.write(object);
       }
 
     ser.write((int)modifiedDeletedAttribsRPObjects.size());
-    it=modifiedDeletedAttribsRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: modifiedDeletedAttribsRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       ser.write(object);
       }
     
     ser.write((int)deletedRPObjects.size());
-    it=deletedRPObjects.iterator();
-    while(it.hasNext())
+    for(RPObject object: deletedRPObjects)
       {
-      RPObject object=(RPObject)it.next();
       ser.write(object);
       }
     }
