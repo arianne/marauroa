@@ -1,5 +1,9 @@
+
+package marauroa.game.python;
+
 import marauroa.game.*;
 import java.util.*;
+
 
 
 public class PythonRP
