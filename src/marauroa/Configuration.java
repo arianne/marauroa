@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.7 2004/03/24 15:25:32 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.8 2004/03/25 22:30:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,9 +41,7 @@ public class Configuration
     PropertyFileNotFoundException()
       {
       super();
-      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
-
-      message="Property File ["+file+"] not found";
+      message="Property File ["+configurationFile+"] not found";
       }
     
     public String getMessage()
@@ -59,7 +57,7 @@ public class Configuration
       {
       properties=new Properties();
 
-      InputStream is = getClass().getClassLoader().getResourceAsStream(configurationFile);
+      InputStream is = new FileInputStream(configurationFile);
 
       if(is!=null)
         {
@@ -152,9 +150,7 @@ public class Configuration
     marauroad.trace("Configuration::store",">");
     try
       {
-      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
-
-      properties.store(new FileOutputStream(file),"Marauroa Configuration file");
+      properties.store(new FileOutputStream(configurationFile),"Marauroa Configuration file");
       }
     catch(FileNotFoundException e)
       {
