@@ -62,7 +62,7 @@ CREATE TABLE characters
   charname VARCHAR(30) NOT NULL,
   contents VARCHAR(4096)
   
-  PRIMARY KEY(id,character)
+  PRIMARY KEY(character)
   );
   
 CREATE TABLE loginEvent

@@ -29,7 +29,7 @@ CREATE TABLE characters
   charname VARCHAR(30) NOT NULL,
   contents VARCHAR(4096)
  
-  PRIMARY KEY(id,charname)
+  PRIMARY KEY(charname)
   );
  
 CREATE TABLE loginEvent
@@ -655,7 +655,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       String query = "CREATE TABLE IF NOT EXIST player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
       stmt.addBatch(query);
 
-      query = "CREATE TABLE IF NOT EXIST characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(id,charname))";
+      query = "CREATE TABLE IF NOT EXIST characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(charname))";
       stmt.addBatch(query);
 
       query = "CREATE TABLE IF NOT EXIST loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
