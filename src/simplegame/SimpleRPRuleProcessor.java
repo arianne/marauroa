@@ -7,19 +7,19 @@
 package simplegame;
 
 import marauroa.game.*;
-
-import java.awt.Color;
 import marauroa.marauroad;
 
 public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
   private SimpleRPZone zone;
   private RPObject.ID lastPlayerID;
+  private byte color;
   
   public SimpleRPRuleProcessor()
   {
     marauroad.trace("SimpleRPRuleProcessor::<init>",">");
     lastPlayerID = null;
+    color = 0;
     marauroad.trace("SimpleRPRuleProcessor::<init>","<");
   }
   
@@ -65,7 +65,13 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
             zone.gameDataModel.setColorAt(row,column,(byte)1);
             lastPlayerID = id;
             status = RPAction.STATUS_SUCCESS;
+            //swap color
+            color = color==1?(byte)0:(byte)1;
             marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.gameDataModel.toString());
+          }
+          else
+          {
+            //this field is already set
           }
         }
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" - no actions???.");

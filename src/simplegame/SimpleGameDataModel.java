@@ -80,17 +80,17 @@ public class SimpleGameDataModel
   public String toString()
   {
     StringBuffer sb = new StringBuffer("\n");
-    for (int i = 0; i < columns; i++)
+    for (int i = 0; i < rows; i++)
     {
-      for (int j = 0; j < rows; j++)
+      for (int j = 0; j < columns; j++)
       {
-        if(gameBoard[j][i]==-1)
+        if(gameBoard[i][j]==-1)
         {
           sb.append('-');
         }
         else
         {
-          sb.append(gameBoard[j][i]);
+          sb.append(gameBoard[i][j]);
         }
       }
       sb.append('\n');
