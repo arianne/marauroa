@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.9 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.10 2004/04/24 12:12:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ public class Message implements marauroa.net.Serializable
   public final static byte TYPE_S2C_ACTION_ACK=50;
   public final static byte TYPE_S2C_PERCEPTION=6;
   public final static byte TYPE_C2S_PERCEPTION_ACK=61;
+  public final static byte TYPE_S2C_MAP=62;
   public final static byte TYPE_S2C_SERVERINFO=7;  
   public final static byte TYPE_S2C_INVALIDMESSAGE=8;
   

@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.1 2004/04/23 18:45:22 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.2 2004/04/24 12:12:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package mapacman;
 
 import marauroa.game.*;
+import java.io.*;
 
 public class PythonRP
   {
@@ -42,5 +43,10 @@ public class PythonRP
   public boolean onTimeout(RPObject.ID id)
     {
     return false;
+    }
+  
+  public ByteArrayOutputStream serializeMap()
+    {
+    return null;
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.37 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.38 2004/04/24 12:12:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -132,6 +132,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     {
     zone.remove(id);
     return true;
+    }
+
+  public byte[] serializeMap(RPObject.ID id)
+    {
+    return null;
     }
       
   private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)

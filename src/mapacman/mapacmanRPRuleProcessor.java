@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.3 2004/04/24 10:17:38 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.4 2004/04/24 12:12:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import org.python.core.*;
 import marauroa.game.*;
 import marauroa.*;
 import java.util.*;
+import java.io.*;
 
 public class mapacmanRPRuleProcessor implements RPRuleProcessor
   {
@@ -132,6 +133,11 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     return onExit(id);
     }
 
+  synchronized public byte[] serializeMap(RPObject.ID id)
+    {
+    return pythonRP.serializeMap().toByteArray();
+    }
+
   public static void main(String[] args) throws Exception
     {
     try
@@ -183,7 +189,16 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       System.out.println("Python load: "+(start-init));
       System.out.println("Python execute: "+(stop-start));
       
-      pacmanRP.getRPZone().print(System.out);
+      byte[] map=pacmanRP.pythonRP.serializeMap().toByteArray();
+      
+      ByteArrayInputStream array=new ByteArrayInputStream(map);
+      marauroa.net.InputSerializer ser=new marauroa.net.InputSerializer(array);
+      
+      int size=ser.readInt();
+      for(int i=0;i<size;++i)
+        {
+        System.out.println(ser.readString());
+        }      
       }
     catch(Exception e)
       {

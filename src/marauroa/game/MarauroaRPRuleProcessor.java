@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.14 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.15 2004/04/24 12:12:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,19 +45,22 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
 
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
-    zone.add(object);
-    return true;
+    return false;
     }
     
   public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
-    zone.remove(id);
-    return true;
+    return false;
     }
     
   public boolean onTimeout(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
-    zone.remove(id);
-    return true;
+    return false;
     }
+
+  public byte[] serializeMap(RPObject.ID id)
+    {
+    return null;
+    }
+      
   }

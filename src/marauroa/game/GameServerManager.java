@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.39 2004/04/20 15:11:32 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.40 2004/04/24 12:12:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,6 +126,7 @@ public final class GameServerManager extends Thread
       marauroad.trace("GameServerManager::run","<");
       }
     }
+    
   private static class ServerInfo
     {
     static private String typeGame;
@@ -166,6 +167,7 @@ public final class GameServerManager extends Thread
       return result;
       }
     }  
+    
   private void processLoginEvent(MessageC2SLogin msg)
     {
     marauroad.trace("GameServerManager::processLoginEvent",">");
@@ -298,9 +300,13 @@ public final class GameServerManager extends Thread
 
         /* Correct: Character exist */
         MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
-
         msgChooseCharacterACK.setClientID(clientid);
         netMan.addMessage(msgChooseCharacterACK);
+        
+        /* Send the map to the client */
+        MessageS2CMap msgMap=new MessageS2CMap(msg.getAddress(),rpMan.serializeMap(new RPObject.ID(object)));
+        msgMap.setClientID(clientid);
+        netMan.addMessage(msgMap);
         }
       else
         {

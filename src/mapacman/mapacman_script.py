@@ -1,6 +1,8 @@
 from marauroa.game import *
+from marauroa.net import *
 from mapacman import *
-#from mapacman_script import *
+
+from java.io import ByteArrayOutputStream
 
 pacman_mapfile='map_definition.txt'
 
@@ -118,6 +120,16 @@ class RealPythonRP(PythonRP):
 
     def onTimeout(self, objectid):
         return onExit(self,objectid)
+    
+    def serializeMap(self):
+        by=ByteArrayOutputStream()
+        out=OutputSerializer(by)
+        out.write(int(len(self.map.grid)))
+        for item in self.map.grid:
+            out.write(item)
+        
+        return by
+    
 
 class RemovedElement:
     timeout=0

@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.9 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.10 2004/04/24 12:12:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,6 +75,7 @@ public class MessageFactory
     register(Message.TYPE_C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
     register(Message.TYPE_S2C_SERVERINFO,MessageS2CServerInfo.class);
     register(Message.TYPE_S2C_INVALIDMESSAGE,MessageS2CInvalidMessage.class);
+    register(Message.TYPE_S2C_MAP,MessageS2CMap.class);
     marauroad.trace("MessageFactory::register","<");
     }
       
