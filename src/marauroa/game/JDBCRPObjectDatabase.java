@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.5 2004/03/18 18:22:07 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.6 2004/03/19 13:16:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -147,6 +147,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     catch(SQLException e)
       {
+      isConnectionClosed();
       marauroad.trace("JDBCPlayerDatabase::iterator","X",e.getMessage());
       return null;
       }
@@ -181,6 +182,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     catch(SQLException e)
       {
       marauroad.trace("JDBCRPObjectDatabase::hasRPObject","X",e.getMessage());
+      isConnectionClosed();
       return false;
       }
     finally
@@ -210,6 +212,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     catch(Exception e)
       {
+      isConnectionClosed();
       marauroad.trace("JDBCRPObjectDatabase::loadRPObject","X",e.getMessage());
       throw e;
       }
@@ -278,6 +281,8 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     catch(SQLException e)
       {
+      isConnectionClosed();
+
       connection.rollback();      
       marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","X",e.getMessage());
       throw e;
@@ -355,6 +360,8 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     catch(SQLException e)
       {
+      isConnectionClosed();
+      
       connection.rollback();      
       marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
       throw e;
@@ -487,6 +494,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     catch (SQLException e)
       {
       marauroad.trace("JDBCRPObjectDatabase::initDB","X",e.getMessage());         
+      isConnectionClosed();
       throw new GenericDatabaseException(e.getMessage());
       }
     finally 
@@ -502,7 +510,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     try
       {
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from rpslot";
+      String query = "select count(*) from player limit 1";
       marauroad.trace("JDBCRPObjectDatabase::isConnectionClosed","D",query);
         
       ResultSet result = stmt.executeQuery(query);
