@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.1 2004/05/20 12:34:52 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.2 2004/05/30 14:35:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,7 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
     try
       {
       Configuration conf=Configuration.getConfiguration();
-      String pythonRPClass=conf.get("python_script_class");
+      String pythonRPClass=conf.get("python_script_rules_class");
       PyInstance object=(PyInstance)interpreter.eval(pythonRPClass+"(zone)");
       pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
       }

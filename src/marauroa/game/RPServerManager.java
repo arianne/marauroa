@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.90 2004/05/27 18:49:00 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.91 2004/05/30 14:35:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.*;
 
 /** This class is responsible for adding actions to scheduler, and to build and
  *  sent perceptions */
-class RPServerManager extends Thread
+public class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
   private final static int TOTAL_PERCEPTION_RELATION=6;
@@ -127,6 +127,16 @@ class RPServerManager extends Thread
         {
         }
       }
+    
+    try
+      {
+      zone.onFinish();
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("RPServerManager::finish","X",e);
+      }
+    
     marauroad.trace("RPServerManager::finish","<");
     }
   

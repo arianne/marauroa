@@ -29,6 +29,7 @@ class RealPythonRP(PythonRP):
 
         self._zone=zone
         self._map=mapacmanRPMap(self,pacman_mapfile)
+        self._serializedMap=None
         
     def getZone(self):
         return self._zone
@@ -203,7 +204,10 @@ class RealPythonRP(PythonRP):
         return onExit(self,objectid)
     
     def serializeMap(self):
-        return self._map.serializeMap()
+        if self._serializedMap is None
+            self._serializedMap=self._map.serializeMap()
+
+        return self._serializedMap
 
 
     def createPlayer(self, name):

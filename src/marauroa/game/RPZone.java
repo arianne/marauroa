@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.26 2004/05/25 22:12:16 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.27 2004/05/30 14:35:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,6 +198,9 @@ public interface RPZone
       deletedList.clear();
       }
     }
+    
+  public void onInit() throws Exception;
+  public void onFinish() throws Exception;
   public void add(RPObject object) throws RPObjectInvalidException;
   public void modify(RPObject object) throws RPObjectInvalidException;
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
