@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.7 2004/01/08 01:42:57 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.8 2004/01/08 13:52:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,13 +102,27 @@ public class Test_the1001 extends TestCase
         {
         ++combatRound;
         
-        if(combatRound<100 && rand.nextBoolean())
+        if(combatRound>3 && combatRound<100)
           {
-          int j=rand.nextInt(NUM_PLAYERS);
+          RPAction.Status status=RPAction.STATUS_FAIL;
+          while(status.equals(RPAction.STATUS_FAIL))
+            {
+            int j=rand.nextInt(NUM_PLAYERS);
 
-          marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
-          RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
-          marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
+            marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
+            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
+            marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
+            }
+
+          status=RPAction.STATUS_FAIL;
+          while(status.equals(RPAction.STATUS_FAIL))
+            {
+            int j=rand.nextInt(NUM_PLAYERS);
+
+            marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
+            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
+            marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
+            }
           }
           
         marauroad.trace("Test_the1001::testFullGame","D","Combat begin: "+combatRound);
@@ -117,16 +131,11 @@ public class Test_the1001 extends TestCase
           {
           for(int i=0;i<players.length;++i)
             {
-            String[] options={"rock","paper","scissor"};
-                     
-            RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()),options[rand.nextInt(3)]);
             if(players[i].has("fighting"))
               {
+              String[] options={"rock","paper","scissor"};                      
+              RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()),options[rand.nextInt(3)]);
               assertEquals(status,RPAction.STATUS_SUCCESS);
-              }
-            else
-              {
-              assertEquals(status,RPAction.STATUS_FAIL);
               }
             }
     
@@ -183,7 +192,6 @@ public class Test_the1001 extends TestCase
           }
 
         marauroad.trace("Test_the1001::testFullGame","D","Combat end: "+combatRound);
-        System.out.println(arena.get("status"));
         }
       
       System.out.println("Turns done: "+rpu.getTurn());

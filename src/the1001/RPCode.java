@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.35 2004/01/08 13:31:34 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.36 2004/01/08 13:52:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -237,6 +237,7 @@ public class RPCode
         return status;
         }
       
+      marauroad.trace("RPCode::FightMode","D","Player("+player_id.toString()+") choose MODE ("+fight_mode+") for gladiator("+gladiator_id.toString()+")");
       RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
       gladiator.put("!mode",fight_mode);
       

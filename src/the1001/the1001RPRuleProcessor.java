@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.20 2004/01/08 01:42:57 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.21 2004/01/08 13:55:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,9 +103,24 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     ++turn;
     
-    removeOneTurnAttributes();      
-    RPCode.ResolveFight();
-    RPCode.RequestFame();
+    try
+      {
+      removeOneTurnAttributes();      
+
+      RPObject arena=zone.getArena();
+      if(arena.get("status").equals("fighting"))
+        {
+        RPCode.ResolveFight();
+        }
+      else if(arena.get("status").equals("request_fame"))
+        {
+        RPCode.RequestFame();
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("the1001RPRuleProcessor::nextTurn","X",e.getMessage());
+      }
         
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
