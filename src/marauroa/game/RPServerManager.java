@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.34 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.35 2004/01/12 16:23:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -279,19 +279,27 @@ class RPServerManager extends Thread
       while(it_notified.hasNext())
         {
         int clientid=((Integer)it_notified.next()).intValue();
-     
-        RPObject.ID id=playerContainer.getRPObjectID(clientid);
-        RPObject object=getRPObject(id);
-        if(ruleProcessor.onTimeout(id))
+        
+        try
           {
-          /* NOTE: Set the Object so that it is stored in Database */
-          playerContainer.setRPObject(clientid,object);  
-          }      
-          
-        playerContainer.removeRuntimePlayer(clientid);
-
-        marauroad.trace("RPServerManager::notifyTimedoutPlayers","D","Notified player ("+clientid+")");
-  	    }
+          RPObject.ID id=playerContainer.getRPObjectID(clientid);
+          RPObject object=getRPObject(id);
+          if(ruleProcessor.onTimeout(id))
+            {
+            /* NOTE: Set the Object so that it is stored in Database */
+            playerContainer.setRPObject(clientid,object);  
+            }      
+    	  }
+        catch(Exception e)
+          {
+          marauroad.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player("+clientid+") that timedout");
+          }
+        finally
+          {
+          playerContainer.removeRuntimePlayer(clientid);
+          marauroad.trace("RPServerManager::notifyTimedoutPlayers","D","Notified player ("+clientid+")");
+          }
+        }
       }
     catch(Exception e)
       {
