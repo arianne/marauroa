@@ -46,6 +46,16 @@ public class MessageS2CPerception extends Message
     typePerception=RPZone.Perception.TOTAL;
     this.modifiedRPObjects=modifiedRPObjects;
     this.deletedRPObjects=deletedRPObjects;
+    }
+  
+  public List getModifiedRPObjects() 
+    {
+    return modifiedRPObjects;
+    }  
+
+  public List getDeletedRPObjects() 
+    {
+    return deletedRPObjects;
     }  
   
   /** This method returns a String that represent the object 
