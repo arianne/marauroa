@@ -33,7 +33,7 @@ public class Message implements marauroa.net.Serializable
 
   protected byte type;
   protected int clientid;
-   
+  
   protected InetSocketAddress source;
   
   /** Constructor with a TCP/IP source/destination of the message

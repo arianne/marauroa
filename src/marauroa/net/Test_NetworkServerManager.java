@@ -18,10 +18,12 @@ public class Test_NetworkServerManager extends TestCase
     marauroad.trace("Test_NetworkServerManager::testNetworkServerManager",">");
 
     NetworkServerManager netManager=null;
-
+	NetworkClientManager netClient=null;
+	
     try
       {
       netManager=new NetworkServerManager();
+      netClient=new NetworkClientManager("127.0.0.1");
       }
     catch(SocketException e)
       {
@@ -30,12 +32,12 @@ public class Test_NetworkServerManager extends TestCase
       }
        
     assertNotNull(netManager);
+    assertNotNull(netClient);
       
-    InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
-    Message msg=new MessageC2SLogin(address,"Test username","Test password");
+    Message msg=new MessageC2SLogin(null,"Test username","Test password");
     msg.setClientID(1423);
     
-    netManager.addMessage(msg);
+    netClient.addMessage(msg);
     Message result=netManager.getMessage();
     
     MessageC2SLogin realResult=(MessageC2SLogin)result;

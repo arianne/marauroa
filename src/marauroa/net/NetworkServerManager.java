@@ -3,6 +3,7 @@ package marauroa.net;
 import java.net.*;
 import java.util.*;
 import java.io.*;
+import java.math.*;
 
 import marauroa.marauroad;
 
@@ -201,10 +202,13 @@ public class NetworkServerManager
   class NetworkServerManagerWrite
     {
     private String name;
+    private Random rand;
     
     public NetworkServerManagerWrite()
       {
       name="NetworkServerManagerWrite";
+      rand=new Random();
+      rand.setSeed(new Date().getTime());
       }
     
     /** Method that execute the writting */
@@ -222,15 +226,42 @@ public class NetworkServerManager
  	   
  	      byte[] buffer=out.toByteArray();
  	      
- 	      if(buffer.length>NetConst.UDP_PACKET_SIZE)
- 	        {
-            marauroad.trace("NetworkServerManagerWrite::write","X","No more room for packet sending");
- 	        throw new IOException("No more room for packet sending");
- 	        }
- 	        
-   	      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
- 	     
- 	      socket.send(pkt);
+// 	      if(buffer.length>NetConst.UDP_PACKET_SIZE)
+// 	        {
+//          marauroad.trace("NetworkServerManagerWrite::write","X","No more room for packet sending");
+// 	        throw new IOException("No more room for packet sending");
+// 	        }
+// 	        
+//   	  DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
+// 	     
+// 	      socket.send(pkt);
+//        marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
+
+		  int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
+		  byte signature=(byte)rand.nextInt();
+		  for(int i=0;i<total;++i)
+		    {
+		    int size=0;
+		    if(((NetConst.UDP_PACKET_SIZE-3)*i)-buffer.length<0)
+		      {
+		      size=buffer.length;
+		      }
+		    else
+		      {
+		      size=NetConst.UDP_PACKET_SIZE;
+  		      }
+		      
+		    byte[] data=new byte[size+3];
+		    data[0]=(byte)total;
+		    data[1]=(byte)i;
+		    data[2]=signature;
+		    System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
+
+   	        DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress()); 	     
+            socket.send(pkt);
+            marauroad.trace("NetworkServerManagerWrite::write","D","Sent packet "+(i+1)+" of "+total);
+		    }
+		    
           marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
  	      }
  	    }
@@ -239,8 +270,10 @@ public class NetworkServerManager
         /* Report the exception */
         marauroad.trace("NetworkServerManagerWrite::write","X",e.getMessage());
  	    }
-
-      marauroad.trace("NetworkServerManagerWrite::write","<");
+ 	  finally
+ 	    {
+        marauroad.trace("NetworkServerManagerWrite::write","<");
+        }
  	  }
     }    
   }

@@ -16,6 +16,16 @@ public class NetworkClientManager
   
   private MessageFactory msgFactory;
   
+  static private class PacketContainer
+    {
+    public byte signature;
+    public byte position;
+    public byte total;
+    public byte[] content;
+    }    
+
+  private List pendingPackets;
+
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
       to recieve new messages from the network. */
   public NetworkClientManager(String host) throws SocketException
@@ -26,6 +36,7 @@ public class NetworkClientManager
     socket.setSoTimeout(100);
        
     msgFactory=MessageFactory.getFactory();
+    pendingPackets=new LinkedList();
     }
   
   /** This method notify the thread to finish it execution */
@@ -33,7 +44,7 @@ public class NetworkClientManager
     {
     socket.close();
     }
-
+    
   /** This method returns a message if it is available or null
    *  @return a Message*/
   public Message getMessage()
@@ -44,15 +55,39 @@ public class NetworkClientManager
     try
       {
       socket.receive(packet);          
-      Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());      
-      System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
+      byte[] data=packet.getData();
       
-      if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+      /* We look the two first byte to see if it is a full message or not */
+      if(data[0]==1)
         {
-        clientid=msg.getClientID();        
-        }
+        byte[] messageData=new byte[data.length-3];
+        System.arraycopy(data,3,messageData,0,data.length-3);
+        
+        Message msg=msgFactory.getMessage(messageData,(InetSocketAddress)packet.getSocketAddress());      
+        System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
+      
+        if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+          {
+          clientid=msg.getClientID();        
+          }
 
-      return msg;
+        return msg;
+        }
+      else
+        {
+        /* A multipart message. We try to read the rest now. 
+         * We need to check on the list if the message exist and it exist we add this one. */
+        System.out.println("NetworkClientManager: receive multipart message ("+data[0]+")");
+//        PacketContainer container=new PacketContainer();
+//        container.total=data[0];
+//        container.position=data[1];
+//        container.signature=data[2];
+//
+//        container.content=new byte[data.length-3];
+//        System.arraycopy(data,3,container.content,0,data.length-3);      
+
+        return null;
+        }
       }
     catch(java.net.SocketTimeoutException e)
       {

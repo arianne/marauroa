@@ -11,13 +11,11 @@ public class NetConst
   /** Maximum size in bytes of the UDP packet. */
   final static public int UDP_PACKET_SIZE=1500;
   /** Number of the protocol version */
-  final static public byte NETWORK_PROTOCOL_VERSION=1;
+  final static public byte NETWORK_PROTOCOL_VERSION=3;
   
-  private static boolean initialize=onInit();
-  
-  private static boolean onInit()
+  static
     {
-    marauroad.trace("NetConst::onInit",">");
+    marauroad.trace("NetConst::(static)",">");
     try
       {
       Configuration conf=Configuration.getConfiguration();
@@ -25,11 +23,10 @@ public class NetConst
       }
     catch(Exception e)
       {
-      marauroad.trace("NetConst::onInit","X","Using default: "+e.getMessage());
+      marauroad.trace("NetConst::(static)","X","Using default: "+e.getMessage());
       marauroa_PORT=3214;
       }
 
-    marauroad.trace("NetConst::onInit","<");
-    return true;
+    marauroad.trace("NetConst::(static)","<");
     }
   }
