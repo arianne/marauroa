@@ -288,7 +288,7 @@ public class JMarauroa
     sp.setOpaque(false);
     sp.setBackground(Color.green);
     reportsTextArea.setBackground(Color.red);
-    main_panel.setBackGroundImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_FULL.png")).getImage());
+    main_panel.setBackGroundImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_BG.png")).getImage());
     main_panel.setOpaque(false);
     main_panel.setBackground(Color.blue);
     

@@ -7,7 +7,7 @@
   <property name="lib"  value="lib"/>
   
   <!-- Modify to point to your junit.jar file -->
-  <property name="junitlib" value="../../../classes/junit.jar"/>  
+  <property name="junitlib" value="="../../../classes/junit.jar"/>  
   <property name="classpath"  value="classes;${junitlib}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
@@ -20,15 +20,6 @@
     <mkdir dir="${docs}" />
   </target>
 
-  <target name="compile" depends="init">
-    <!-- run javac to compile the source files -->
-    <javac srcdir="${src}" destdir="${build}">
-      <classpath>
-        <pathelement path="${classpath}"/>
-      </classpath>
-    </javac>
-  </target>
-
   <target name="installation" depends="init">
     <copy todir="${images}">
       <fileset dir="images">
@@ -39,7 +30,16 @@
     <copy todir="${build}" file="${src}/marauroa.ini"/>
   </target>
 
-  <target name="jar" depends="compile,installation">
+  <target name="compile" depends="init,installation">
+    <!-- run javac to compile the source files -->
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
   </target>
   
