@@ -45,6 +45,15 @@ public class RPActionList
   }
   
   /**
+   *  gets the size
+   * @return count of RPActions in this list
+   **/
+  public int size()
+  {
+    return(actionsList.size());
+  }
+  
+  /**
    * gets the RP Actions Iterator
    * @return RPActionIterator
    **/
