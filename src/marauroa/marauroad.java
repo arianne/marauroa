@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.76 2004/05/01 00:44:30 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.77 2004/05/01 10:29:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import the1001.objects.*;
 public class marauroad extends Thread
   {
   final private static boolean DEBUG=false;
+  final private static String VERSION="0.32";
   
   private static PrintWriter out;
   private static marauroad marauroa;
@@ -79,7 +80,7 @@ public class marauroad extends Thread
   public static void main (String[] args)
     {
     println("Marauroa           - An open source MORPG Framework -");
-    println("Running on version @version@");
+    println("Running on version "+VERSION);
     println("(C) 2003-2004 Miguel Angel Blanch Lardin");
     println();
     println("This program is free software; you can redistribute it and/or modify");
