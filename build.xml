@@ -30,11 +30,14 @@
 
   <target name="images" depends="init">
     <copy todir="${images}">
-      <fileset dir="images"/>
+      <fileset dir="images">
+        <include name="**/*.*"/>
+	<exclude name="CVS"/>
+      </fileset>
     </copy>
   </target>
 
-  <target name="jar" depends="compile">
+  <target name="jar" depends="compile,images">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
   </target>
   
