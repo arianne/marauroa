@@ -1,4 +1,4 @@
-/* $Id: Resources.java,v 1.1 2004/02/15 19:21:06 root777 Exp $ */
+/* $Id: Resources.java,v 1.2 2004/02/19 22:28:14 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,11 +63,18 @@ public class Resources
 	 **/
 	public static URL getModelUrl(String resource)
 	{
+		URL ret = null;
 		if(resource!=null)
 		{
 			String modelname = resource.substring(0,resource.lastIndexOf("."));
-			return(loader.getResource("models/"+modelname+"/"+resource));
+			String extension = resource.substring(resource.lastIndexOf(".")+1);
+			ret = loader.getResource("models/"+modelname+"/"+resource);
+			if(ret==null && "md2".equalsIgnoreCase(extension))
+			{
+				//try to find tris.md2
+				ret = loader.getResource("models/"+modelname+"/tris.md2");
+			}
 		}
-		return(null);
+		return(ret);
 	}
 }
