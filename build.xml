@@ -59,8 +59,14 @@
   <target name="jar" depends="compile">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
 
+    <copy todir="${lib}" file="${src}/mapacman/mapacman_script.py"/>
+    <copy todir="${lib}" file="${src}/mapacman/map_definition.txt"/>
+    <copy todir="${lib}" file="${src}/mapacman/mapacman.ini"/>
+    
     <copy todir="${lib}" file="${src}/marauroa.ini"/>
+    
     <copy todir="${lib}" file="${src}/simplegame/simplegame.ini"/>
+    
     <copy todir="${lib}" file="${src}/the1001/the1001.ini"/>
   </target>
   

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.41 2004/04/25 01:19:33 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.42 2004/04/25 13:34:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,6 +198,7 @@ public final class GameServerManager extends Thread
           }
         playerContainer.removeRuntimePlayer(clientid);
         }
+        
       if(playerContainer.size()==GameConst.MAX_NUMBER_PLAYERS)
         {
         /* Error: Too many clients logged on the server. */
@@ -209,6 +210,7 @@ public final class GameServerManager extends Thread
         netMan.addMessage(msgLoginNACK);
         return;
         }
+        
       if(playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()))
         {
         marauroad.trace("GameServerManager::processLoginEvent","D","Correct username/password");
@@ -253,6 +255,7 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
+      e.printStackTrace();
       marauroad.trace("GameServerManager::processLoginEvent","X",e.getMessage());
       }
     finally
