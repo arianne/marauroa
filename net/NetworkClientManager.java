@@ -12,6 +12,7 @@ public class NetworkClientManager
   {
   private DatagramSocket socket;
   private InetSocketAddress address;
+  private short clientid;
   
   private MessageFactory msgFactory;
   
@@ -19,6 +20,7 @@ public class NetworkClientManager
       to recieve new messages from the network. */
   public NetworkClientManager(String host) throws SocketException
     {
+    clientid=0;
     address=new InetSocketAddress(host,NetConst.marauroa_PORT);
     socket=new DatagramSocket();
     socket.setSoTimeout(100);
@@ -33,7 +35,7 @@ public class NetworkClientManager
     socket.close();
     }
 
-  /** This method blocks until a message is available 
+  /** This method returns a message if it is available or null
    *  @return a Message*/
   public Message getMessage()
     {
@@ -45,6 +47,11 @@ public class NetworkClientManager
       socket.receive(packet);          
       Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());      
       System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
+      
+      if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+        {
+        clientid=msg.getClientID();        
+        }
 
       return msg;
       }
@@ -70,6 +77,7 @@ public class NetworkClientManager
       {
       /* We enforce the remote endpoint */
       msg.setAddress(address);
+      msg.setClientID(clientid);
       
       ByteArrayOutputStream out=new ByteArrayOutputStream();
       OutputSerializer s=new OutputSerializer(out);
