@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.6 2004/01/01 19:43:56 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.7 2004/01/01 19:52:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,6 +92,32 @@ public class Test_RPCode extends TestCase
     finally
       {     
       marauroad.trace("Test_RPCode::testRequestFight","<");
+      }
+    }
+  
+  public void testFightMode()
+    {
+    marauroad.trace("Test_RPCode::testFightMode",">");
+    try
+      {
+      fail();
+      }
+    finally
+      {     
+      marauroad.trace("Test_RPCode::testFightMode","<");
+      }
+    }
+    
+  public void testResolveFight()
+    {
+    marauroad.trace("Test_RPCode::testResolveFight",">");
+    try
+      {
+      fail();
+      }
+    finally
+      {     
+      marauroad.trace("Test_RPCode::testResolveFight","<");
       }
     }
   }
