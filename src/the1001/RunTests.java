@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.4 2004/01/07 14:44:38 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.5 2004/01/07 14:54:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,8 +65,8 @@ public class RunTests
     {
     TestSuite suite= new TestSuite("All marauroa Tests");
 
-    suite.addTest(new TestSuite(the1001.Test_RPCode.class));
-//    suite.addTest(new TestSuite(the1001.Test_the1001.class));
+//    suite.addTest(new TestSuite(the1001.Test_RPCode.class));
+    suite.addTest(new TestSuite(the1001.Test_the1001.class));
 
     return suite;
     }

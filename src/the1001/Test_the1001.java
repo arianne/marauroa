@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.2 2004/01/07 14:44:38 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.3 2004/01/07 14:54:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,8 @@ public class Test_the1001 extends TestCase
       {
       objects[i]=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(objects[i]);
+
+      /** NOTE: The rest of the test expect one gladiator per player */
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
       objects[i].getSlot("gladiators").add(gladiator);
       }
@@ -53,10 +55,13 @@ public class Test_the1001 extends TestCase
       zone=new the1001RPZone();
       rpu=new the1001RPRuleProcessor();
       rpu.setContext(zone);
-    
+
       assertEquals(rpu.getTurn(),0);
-      
+
+      RPObject arena=zone.getArena();    
       RPObject[] players=createPlayers(10);
+
+      assertEquals(arena.get("status"),"waiting");
       
       for(int i=0;i<players.length;++i)
         {
@@ -66,6 +71,22 @@ public class Test_the1001 extends TestCase
         if(rand.nextBoolean())
           {
           rpu.nextTurn();
+          }
+          
+        if(i<RPCode.GLADIATORS_PER_FIGHT)
+          {
+          assertEquals(arena.get("status"),"waiting");
+          assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(players[i].getSlot("gladiators").get())));
+          assertTrue(players[i].has("fighting"));      
+          assertFalse(players[i].has("requested"));      
+          }
+        else
+          {
+          assertEquals(arena.get("status"),"fighting");
+          assertTrue(arena.has("waiting"));
+          assertFalse(arena.getSlot("gladiators").has(new RPObject.ID(players[i].getSlot("gladiators").get())));
+          assertFalse(players[i].has("fighting"));    
+          assertTrue(players[i].has("requested"));      
           }
         }
 

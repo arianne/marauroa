@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.28 2004/01/07 14:44:38 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.29 2004/01/07 14:54:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,8 @@ import java.util.*;
 
 public class RPCode
   {
-  private static byte GLADIATORS_PER_FIGHT=2;
+  public static byte GLADIATORS_PER_FIGHT=2;
+  
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
   
