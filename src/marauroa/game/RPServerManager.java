@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.94 2004/06/01 13:47:56 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.95 2004/06/01 17:14:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,13 +67,14 @@ public class RPServerManager extends Thread
       
       zone.onInit();
       
-      Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
-      ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
-      ruleProcessor.setContext(zone);
       
       Class AIManagerClass=Class.forName(conf.get("rp_RPAIClass"));
       aiMan=(RPAIManager)AIManagerClass.newInstance();
       aiMan.setContext(zone,scheduler);
+
+      Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
+      ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
+      ruleProcessor.setContext(zone);
       
       String duration =conf.get("rp_turnDuration");
 

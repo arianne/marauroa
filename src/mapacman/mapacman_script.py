@@ -31,10 +31,27 @@ class RealPythonZone(PythonZone):
     def onFinish(self):
         return 1
 
+
+def getPythonAI():
+    return variable_PythonAI
+
+def setPythonAI(pythonAI):
+	global variable_PythonAI
+	variable_PythonAI=None
+	
+	if variable_PythonAI is None:
+		variable_PythonAI=pythonAI    
+
 class RealPythonAI(PythonAI):
     def __init__(self, zone, sched):
         self._zone=zone
         self._sched=sched
+        self.pythonRP=None
+        
+        setPythonAI(self)
+        
+    def setPythonRP(self, pythonRP):
+        self.pythonRP=pythonRP
 
     def compute(self,timelimit):
         return 1
@@ -48,6 +65,9 @@ class RealPythonRP(PythonRP):
         self._zone=zone
         self._map=mapacmanRPMap(self,pacman_mapfile)
         self._serializedMap=None
+
+        instance=getPythonAI()
+        instance.setPythonRP(self)
         
     def getZone(self):
         return self._zone
