@@ -123,7 +123,6 @@ class TestClient extends Thread
               timestamp.setTime(System.currentTimeMillis());
               String ts = formatter.format(timestamp);
 
-              previous_timestamp=msgPer.getTimestamp();
               System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
               out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
               
@@ -176,15 +175,15 @@ class TestClient extends Thread
     {
     try
       {
-      int num=1;
+      int num=6;
       TestClient test[]=new TestClient[num];
       
       test[0]=new TestClient("miguel","qwerty","miguel");
-//      test[1]=new TestClient("prueba","qwerty","prueba");
-//      test[2]=new TestClient("bot_8","nopass","bot_8");
-//      test[3]=new TestClient("bot_9","nopass","bot_9");
-//      test[4]=new TestClient("bot_10","nopass","bot_10");
-//      test[5]=new TestClient("bot_11","nopass","bot_11");
+      test[1]=new TestClient("prueba","qwerty","prueba");
+      test[2]=new TestClient("bot_8","nopass","bot_8");
+      test[3]=new TestClient("bot_9","nopass","bot_9");
+      test[4]=new TestClient("bot_10","nopass","bot_10");
+      test[5]=new TestClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.29 2004/04/17 10:02:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.30 2004/04/19 22:39:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -314,6 +314,140 @@ public class MessageS2CPerception extends Message
     public void close() throws IOException
       {
       os.close();
+      }
+    }
+  
+  static public class OutOfSyncException extends Exception
+    {
+    public OutOfSyncException()
+      {
+      super("Out of sync Exception");
+      }
+    }
+  
+  /** This method applys perceptions to the Map<RPObject::ID,RPObject> passed as argument. 
+   *  It may clear the map if it is a sync perception and it will add the perception to 
+   *  unattended perceptions if it is out of sync, in the hope that a soon to come perception
+   *  help us to fix the situation. 
+   *  This method returns this perception timestamp. */
+  public int applyPerception(Map world, int previous, List unattended_perceptions) throws OutOfSyncException
+    {
+    try
+      {
+      if(previous+1==timestamp)
+        { 
+        applyPerceptionDeletedRPObjects(world);
+        applyPerceptionModifiedRPObjects(world);
+        applyPerceptionAddedRPObjects(world);
+        
+        if(myRPObject!=null)
+          {
+          world.put(myRPObject.get("id"),myRPObject);
+          }
+        }        
+      else
+        {
+        /* Out of Sync */
+        /* TODO: Handle out of order perceptions 
+        unattended_perceptions.add(this);
+        */
+        throw new OutOfSyncException();
+        }
+      }
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      marauroad.trace("MessageS2CPerception::applyPerception","X",e.getMessage());
+      throw new OutOfSyncException();
+      }
+
+    return timestamp;
+    }
+
+
+  /** This method applys perceptions addedto the Map<RPObject::ID,RPObject> passed as argument.
+   *  It clears the map if this is a sync perception */
+  public void applyPerceptionAddedRPObjects(Map world) throws RPZone.RPObjectNotFoundException
+    {
+    try
+      {
+      Iterator it;
+      
+      if(typePerception==RPZone.Perception.SYNC)
+        {
+        world.clear();
+        }
+    
+      it=getAddedRPObjects().iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        world.put(object.get("id"),object);    
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("MessageS2CPerception::applyPerceptionAddedRPObjects","X",e.getMessage());
+      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      }
+    }
+
+  /** This method applys perceptions deleted to the Map<RPObject::ID,RPObject> passed as argument. */
+  public void applyPerceptionDeletedRPObjects(Map world) throws RPZone.RPObjectNotFoundException
+    {
+    try
+      {
+      Iterator it;
+    
+      it=getDeletedRPObjects().iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        world.remove(object.get("id"));    
+        /** TODO: Check that object exists */
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("MessageS2CPerception::applyPerceptionDeletedRPObjects","X",e.getMessage());
+      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      }
+    }
+
+  /** This method applys perceptions modified added and modified deleted to the
+   *  Map<RPObject::ID,RPObject> passed as argument. */
+  public void applyPerceptionModifiedRPObjects(Map world) throws RPZone.RPObjectNotFoundException
+    {
+    try
+      {
+      Iterator it;
+    
+      it=getModifiedDeletedRPObjects().iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        RPObject w_object=(RPObject)world.get(object.get("id"));    
+        w_object.applyDifferences(null,object);        
+        }
+
+      it=getModifiedAddedRPObjects().iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        RPObject w_object=(RPObject)world.get(object.get("id"));    
+        w_object.applyDifferences(object,null);        
+        }
+      }
+    catch(RPZone.RPObjectNotFoundException e)
+      {
+      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
+      throw e;
+      }
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
+      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
   }
