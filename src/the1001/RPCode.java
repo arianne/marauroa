@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.48 2004/02/09 18:13:34 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.49 2004/02/10 13:30:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -206,6 +206,21 @@ public class RPCode
         {
         player.remove(RPCode.var_damage);
         }
+
+      Iterator it=player.getSlot("gladiators").iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(object.has(RPCode.var_damage))
+          {
+          object.remove(RPCode.var_damage);
+          }
+
+        if(object.has(RPCode.var_hidden_combat_mode))
+          {
+          object.remove(RPCode.var_hidden_combat_mode);
+          }
+        }
       }
     catch(Exception e)
       {
@@ -272,6 +287,11 @@ public class RPCode
         if(object.has(RPCode.var_damage))
           {
           object.remove(RPCode.var_damage);
+          }
+
+        if(object.has(RPCode.var_hidden_combat_mode))
+          {
+          object.remove(RPCode.var_hidden_combat_mode);
           }
         }
       
