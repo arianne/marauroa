@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.9 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.10 2003/12/17 16:21:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,5 +186,10 @@ public class Attributes implements marauroa.net.Serializable
       }
     
     return result;
+    }
+    
+  Iterator iterator()
+    {
+    return content.keySet().iterator();
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.24 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.25 2003/12/17 16:21:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,17 +64,6 @@ public class SimpleGame
   {
     netMan = netman;
     
-//    //register our objects
-//    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
-//    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST_ENTRY,CharacterList.CharEntry.class);
-//    RPObjectFactory.getFactory().register(GameBoard.TYPE_GAME_BOARD,GameBoard.class);
-//    
-//    //register our actions
-//    RPActionFactory.getFactory().register(ChallengeAction.ACTION_CHALLENGE,ChallengeAction.class);
-//    RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
-//    RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
-//    RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
-    
     this.marauroa = marauroa;
     this.ownCharacterID=characterID.getObjectID();
     this.otherCharacterID=-1;
@@ -98,6 +87,8 @@ public class SimpleGame
   public void run()
   {
     continueGamePlay = true;
+    try
+    {    
     while(continueGamePlay)
     {
       if(netMan!=null)
@@ -119,11 +110,39 @@ public class SimpleGame
               RPObject obj = (RPObject)modified_objects.get(0);
               addLog(obj.toString()+"\n");
               
-//              if(obj.hasSlot("hand"))
-//                {
-//                /** Game already started. Only */
-//                GameBoard gameBoard=(GameBoard)obj.getSlot("hand").get();
-//                }
+              if(obj.hasSlot("hand"))
+                {
+                /** Game already started. Only */
+                GameBoard gameBoard=(GameBoard)obj.getSlot("hand").get();
+                
+                int size = gameBoard.getSize();
+                for(int i=0;i<size;++i)
+                  {
+                  for(int j=0;j<size;++j)
+                    {
+                    int id = gameBoard.getRPCharacterAt(i,j);
+                    gdm.setRPCharacterAt(i,j,id);
+                    }
+                  }
+                               
+                if(gameBoard.getWinnerID()!=-1)
+                  {
+                  String msgResolution;
+                  if(gameBoard.getWinnerID()==ownCharacterID)
+                    {
+                    msgResolution = "You won.";
+                    }
+                  else
+                    {
+                    msgResolution = "You lost.";
+                    }
+                  JOptionPane.showMessageDialog(marauroa,msgResolution,msgResolution,JOptionPane.INFORMATION_MESSAGE);
+                  continueGamePlay  = false;
+                  continueMusicPlay = false;
+                  
+                  SimpleGame.this.dispose();
+                  }                
+                }
               
               try //gameboard
               {
@@ -237,6 +256,10 @@ public class SimpleGame
       {
         sleep(50);
       }
+    }
+    }
+  catch(Exception e)
+    {    
     }
   }
   
