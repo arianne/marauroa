@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.35 2004/03/05 16:27:46 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.36 2004/03/06 12:35:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -210,12 +210,25 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       RPObject.ID valid_id=new RPObject.ID(zone.create());
       object.put(RPCode.var_object_id,valid_id.getObjectID());
       
+      if(object.hasSlot(RPCode.var_gladiators))
+        {
+        object.getSlot(RPCode.var_gladiators).setName(RPCode.var_myGladiators);
+        }
+
+      if(object.hasSlot(RPCode.var_items))
+        {
+        object.getSlot(RPCode.var_items).setName(RPCode.var_myItems);
+        }
+/*      
+      if(object.get("name").equals("miguel"))
+        {
+        object.getSlot(RPCode.var_myGladiators).add(new the1001.objects.Gladiator(new RPObject.ID(zone.create())));
+        }
+*/
       Iterator it=object.getSlot(RPCode.var_myGladiators).iterator();
       while(it.hasNext())
         {
         RPObject slot_object=(RPObject)it.next();
-        
-        slot_object.put(RPCode.var_hp,slot_object.get(RPCode.var_initial_hp));
         
         valid_id=new RPObject.ID(zone.create());
         slot_object.put(RPCode.var_object_id,valid_id.getObjectID());

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.60 2004/03/05 16:27:46 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.61 2004/03/06 12:35:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -217,10 +217,13 @@ public class RPCode
         player.remove(RPCode.var_damage);
         }
 
-      Iterator it=player.getSlot("gladiators").iterator();
+      Iterator it=player.getSlot(RPCode.var_myGladiators).iterator();
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
+
+        object.put(RPCode.var_hp,object.get(RPCode.var_initial_hp));
+
         if(object.has(RPCode.var_damage))
           {
           object.remove(RPCode.var_damage);
@@ -290,7 +293,7 @@ public class RPCode
         }
        
        
-      Iterator it=player.getSlot("gladiators").iterator();
+      Iterator it=player.getSlot(RPCode.var_myGladiators).iterator();
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
