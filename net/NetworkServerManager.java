@@ -180,6 +180,12 @@ public class NetworkServerManager
  	      s.write(message);
  	   
  	      byte[] buffer=out.toByteArray();
+ 	      
+ 	      if(buffer.length>NetConst.UDP_PACKET_SIZE)
+ 	        {
+ 	        throw new IOException("Message size is too big"); 
+ 	        }
+ 	      
    	      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,message.getAddress());
  	     
  	      socket.send(pkt);
