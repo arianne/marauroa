@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.44 2003/12/21 12:09:16 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.45 2003/12/21 12:21:01 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -170,7 +170,7 @@ public class SimpleGame
                                 addLog("Accepted challenge from " + otherCharacterID);
                                 playMidi();
                             }
-                            else if(obj.hasSlot("ear"))
+                            else if(obj.hasSlot("ear") && otherCharacterID==-1)
                             {
                                 if(obj.getSlot("ear").size()==0)
                                 {
