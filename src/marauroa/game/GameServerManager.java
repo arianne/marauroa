@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.25 2003/12/29 11:19:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.26 2003/12/29 11:33:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -357,12 +357,14 @@ public class GameServerManager extends Thread
 	  
 	  if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
 	    {
-	    RPObject.ID id=playerContainer.getRPObjectID(clientid);	  
-        RPObject object=rpMan.getRPObject(id);      
-	    rpMan.removeRPObject(id);
-      
-        /* NOTE: Set the Object so that it is stored in Database */
-        playerContainer.setRPObject(clientid,object);  
+	    RPObject.ID id=playerContainer.getRPObjectID(clientid);	          
+        RPObject object=rpMan.getRPObject(id);
+
+        if(rpMan.onExit(id))
+          {      
+          /* NOTE: Set the Object so that it is stored in Database */
+          playerContainer.setRPObject(clientid,object);  
+          }
         }
       else
         {

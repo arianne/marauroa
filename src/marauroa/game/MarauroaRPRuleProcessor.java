@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.10 2003/12/29 11:19:14 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.11 2003/12/29 11:33:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,8 +51,9 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     return true;
     }
     
-  public boolean onExit(RPObject.ID id)
+  public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
+    zone.remove(id);
     return true;
     }
     

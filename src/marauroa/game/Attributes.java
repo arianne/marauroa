@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.12 2003/12/18 23:56:55 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.13 2003/12/29 11:33:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,32 +131,6 @@ public class Attributes implements marauroa.net.Serializable
       
     return tmp.toString();
     }
-
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
-    {
-    Iterator  it=content.entrySet().iterator();
-    out.write((int)content.size());
-    
-    while(it.hasNext())
-      {
-      Map.Entry entry=(Map.Entry)it.next();
-      out.write((String)entry.getKey());
-      out.write((String)entry.getValue());
-      }
-    }
-    
-  public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
-    {
-    int size=in.readInt();
-    content.clear();
-        
-    for(int i=0;i<size;++i)
-      {
-      String key   = in.readString();
-      String value = in.readString();
-      content.put(key,value);
-      }
-    }
     
   private static String ListToString(List list)
     {
@@ -191,5 +165,31 @@ public class Attributes implements marauroa.net.Serializable
   public Iterator iterator()
     {
     return content.keySet().iterator();
+    }
+
+  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+    {
+    Iterator  it=content.entrySet().iterator();
+    out.write((int)content.size());
+    
+    while(it.hasNext())
+      {
+      Map.Entry entry=(Map.Entry)it.next();
+      out.write((String)entry.getKey());
+      out.write((String)entry.getValue());
+      }
+    }
+    
+  public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+    int size=in.readInt();
+    content.clear();
+        
+    for(int i=0;i<size;++i)
+      {
+      String key   = in.readString();
+      String value = in.readString();
+      content.put(key,value);
+      }
     }
   }
