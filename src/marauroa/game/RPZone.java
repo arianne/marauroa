@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.21 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.22 2004/04/15 15:16:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,31 +66,84 @@ public interface RPZone
           {
           addedList.remove(object);
           }
+          
         addedList.add(object);
+        object.resetAddedAndDeleted();
         }
       }
       
     public void modified(RPObject modified) throws Exception
       {
-      RPObject added=new RPObject();
-      RPObject deleted=new RPObject();
-      
-      modified.getDifferences(added,deleted);
-      
-      if(added.size()>0)
+      if(!removedHas(modified) && !addedHas(modified))
         {
-        modifiedAddedAttribsList.add(added);
-        }
+        RPObject added=new RPObject();
+        RPObject deleted=new RPObject();
+      
+        modified.getDifferences(added,deleted);
+      
+        if(added.size()>0)
+          {
+          modifiedAddedAttribsList.add(added);
+          }
 
-      if(deleted.size()>0)
+        if(deleted.size()>0)
+          {
+          modifiedDeletedAttribsList.add(deleted);
+          }
+        }
+      else
         {
-        modifiedDeletedAttribsList.add(deleted);
+        modified.resetAddedAndDeleted();
         }
       }
     
     public void removed(RPObject object)
       {
       deletedList.add(object);
+      object.resetAddedAndDeleted();
+      }
+    
+    private boolean removedHas(RPObject object)
+      {
+      try
+        {
+        Iterator it=deletedList.iterator();
+        while(it.hasNext())
+          {
+          RPObject deleted=(RPObject)it.next();
+          if(deleted.get("id").equals(object.get("id")))
+            {
+            return true;
+            }
+          }
+        }
+      catch(Attributes.AttributeNotFoundException e)
+        {
+        }
+      
+      return false;
+      }
+    
+
+    private boolean addedHas(RPObject object)
+      {
+      try
+        {
+        Iterator it=addedList.iterator();
+        while(it.hasNext())
+          {
+          RPObject added=(RPObject)it.next();
+          if(added.get("id").equals(object.get("id")))
+            {
+            return true;
+            }
+          }
+        }
+      catch(Attributes.AttributeNotFoundException e)
+        {
+        }
+      
+      return false;
       }
     
     public int size()
