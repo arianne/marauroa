@@ -1,4 +1,4 @@
-/* $Id: Util.java,v 1.1 2004/05/26 05:53:13 root777 Exp $ */
+/* $Id: Util.java,v 1.2 2004/05/26 06:05:10 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -99,11 +99,13 @@ public class Util
   private synchronized static MessageDigest getMD5Instance()
     throws NoSuchAlgorithmException
   {
-    if(md5DigestRef==null || md5DigestRef.get()==null)
+    MessageDigest md = null;
+    if(md5DigestRef==null || (md=(MessageDigest)md5DigestRef.get())==null)
     {
-      md5DigestRef = new WeakReference(MessageDigest.getInstance("MD5"));
+      md = MessageDigest.getInstance("MD5");
+      md5DigestRef = new WeakReference(md);
     }
-    MessageDigest md = (MessageDigest)md5DigestRef.get();
+    md = (MessageDigest)md5DigestRef.get();
     md.reset();
     return(md);
   }
@@ -117,6 +119,17 @@ public class Util
     {
       System.out.println(getMd5Hash("test"));
       int count = 100;
+      if(argv.length>0)
+      {
+        try
+	{
+          count = Integer.parseInt(argv[0]);
+	}
+	catch(Throwable thr)
+	{
+	  count = 100;
+	}
+      }
       long start = System.currentTimeMillis();
       for (int i = 0; i < count; i++)
       {
