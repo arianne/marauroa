@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.2 2005/01/28 20:01:02 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.3 2005/03/12 17:23:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ public class TimeoutConf
   /** This indicate when the client remove the incomplete packet from its queue */
   final public static int CLIENT_MESSAGE_DROPPED_TIMEOUT=60000;
   /** Indicate how many packets can be read from network before returing */
-  final public static int CLIENT_NETWORK_NUM_READ=5;
+  final public static int CLIENT_NETWORK_NUM_READ=20;
   
   /** This indicate that the player is totally dead and must be removed.
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */

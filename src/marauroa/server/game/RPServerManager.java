@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.10 2005/03/07 19:36:44 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.11 2005/03/12 17:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -385,10 +385,12 @@ public class RPServerManager extends Thread
   /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
+    Logger.trace("RPServerManager::transferContent",">");
     synchronized(contentsToTransfer)
       {
       contentsToTransfer.put(id,content);
       }
+    Logger.trace("RPServerManager::transferContent","<");
     }
 
   /** This method is triggered to send content to the clients */

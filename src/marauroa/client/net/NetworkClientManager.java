@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.4 2005/02/17 15:16:04 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.5 2005/03/12 17:23:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,6 +50,7 @@ public class NetworkClientManager
     socket=new DatagramSocket();
     socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
     socket.setTrafficClass(0x08|0x10);
+    socket.setReceiveBufferSize(128*1024);
       
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
@@ -96,7 +97,7 @@ public class NetworkClientManager
 
       if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
         {
-        Logger.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
+        Logger.trace("NetworkClientManager::processPendingPackets","D","deleted incompleted message after timedout");
         it.remove();
         continue;
         }
@@ -108,7 +109,7 @@ public class NetworkClientManager
 
         Message msg=msgFactory.getMessage(message.content,message.address);
 
-        Logger.trace("NetworkClientManager::getMessage","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
+        Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
         if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
           {
           clientid=msg.getClientID();
@@ -132,7 +133,7 @@ public class NetworkClientManager
     byte position=data[1];
     byte signature=data[2];
 
-    Logger.trace("NetworkClientManager::getMessage","D","receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
+    Logger.trace("NetworkClientManager::storePacket","D","receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
     if(!pendingPackets.containsKey(new Byte(signature)))
       {
       /** This is the first packet */
@@ -154,7 +155,7 @@ public class NetworkClientManager
       --message.remaining;
       if(message.remaining<0)
         {
-        Logger.trace("NetworkClientManager::getMessage","D","ERROR: We confused the messages("+message.signature+")");
+        Logger.trace("NetworkClientManager::storePacket","D","ERROR: We confused the messages("+message.signature+")");
         }
       else
         {

@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.1 2005/01/23 21:00:41 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.2 2005/03/12 17:23:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,12 +23,13 @@ public interface IPerceptionListener
 	 *  Return true to stop further processing. */
 	public boolean onAdded(RPObject object);
 	/** onModifiedAdded is called when an object is modified by adding or changing
-	 *  one of its attributes. Return true to stop further processing. */
+	 *  one of its attributes. Return true to stop further processing.
+	 *  Note that the method is called *before* modifing the object. */
 	public boolean onModifiedAdded(RPObject object, RPObject changes);
 	/** onModifiedDeleted is called each time the object has one of its attributes
-	 *  removed. Return true to stop further processing. */
-
-	public boolean onModifiedDeleted(RPObject object, RPObject changes);
+	 *  removed. Return true to stop further processing.
+     *  Note that the method is called *before* modifing the object. */
+    public boolean onModifiedDeleted(RPObject object, RPObject changes);
 	/** onDeleted is called when an object is removed of the world
 	 *  Return true to stop further processing. */
 	public boolean onDeleted(RPObject object);

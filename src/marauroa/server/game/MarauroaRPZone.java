@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.2 2005/03/02 15:54:02 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.3 2005/03/12 17:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,8 @@ import marauroa.common.game.*;
 public class MarauroaRPZone implements IRPZone
   {
   protected ID zoneid;	
-  private Map<RPObject.ID,RPObject> objects;
+  protected Map<RPObject.ID,RPObject> objects;
+  
   private Map<RPObject.ID,RPObject> modified;
   private Perception perception;
 
@@ -60,6 +61,14 @@ public class MarauroaRPZone implements IRPZone
 
   public void onFinish() throws Exception
     {
+    }
+
+  public void setEntryPoint(String entryPoint)
+    {
+    }
+  
+  public void placeObjectAtEntryPoint(RPObject object)
+    {    
     }
   
   public void add(RPObject object) throws RPObjectInvalidException

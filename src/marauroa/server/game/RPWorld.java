@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.3 2005/03/02 15:54:02 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.4 2005/03/12 17:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,6 +56,11 @@ public class RPWorld
   
   public void add(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
     {
+    add(object, false);
+    }
+    
+  public void add(RPObject object,boolean entrypoint) throws NoRPZoneException, RPObjectInvalidException  
+    {
     try
       {
       if(object.has("zoneid"))
@@ -63,6 +68,11 @@ public class RPWorld
         IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
         zone.add(object);
+        
+        if(entrypoint)
+          {
+          zone.placeObjectAtEntryPoint(object);
+          }
 
         /** NOTE: Document this hack */        
         if(object.has("clientid"))

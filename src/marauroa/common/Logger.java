@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.7 2005/03/07 19:36:41 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.8 2005/03/12 17:23:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 public class Logger
   {
-  private static String[] allowed={"Stendhal","RPServerManager"};
+  private static String[] allowed={"Stendhal","RPServerManager","GameServerManager"};
   private static String[] rejected={};
   
   private static Logger logger;
@@ -32,7 +32,17 @@ public class Logger
     timestamp=new Date();
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     }
-  
+ 
+  public static void setAllowed(String[] allowed)  
+    {
+    Logger.allowed=allowed;
+    }
+    
+  public static void setRejected(String[] rejected)  
+    {
+    Logger.rejected=rejected;
+    }
+
   public static void initialize()
     {    
     getLogger().out=null;

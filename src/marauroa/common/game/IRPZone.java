@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.4 2005/03/12 17:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -114,4 +114,10 @@ public interface IRPZone extends Iterable
   public Perception getPerception(RPObject.ID id, byte type);
   /** This method is called to take zone to the next turn */
   public void nextTurn();
+  
+  /** This method set the point where the object will enter this zone **/
+  public void setEntryPoint(String entryPoint);
+
+  /** This method set the object to this zone entry point. **/
+  public void placeObjectAtEntryPoint(RPObject object);
   }
