@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.47 2004/11/21 10:52:17 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.48 2004/11/21 11:00:21 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -425,14 +425,12 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
   public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
-    //Iterator it=attr.deleted.entrySet().iterator();
     
     int i=0;
-    //while(it.hasNext())
-    for(String key: attr.deleted.keySet()) 
+    for(Map.Entry<String,String> entry: attr.deleted.entrySet()) 
       {
       ++i;
-      put(key,attr.get(key));
+      put(entry.getKey(),entry.getValue());
       }       
 
     if(i>0)
