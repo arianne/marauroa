@@ -6,6 +6,7 @@ create table if not exists player
   
   email VARCHAR(50) not null,
   timedate TIMESTAMP,
+  status ENUM('active','inactive','banned') not null default 'inactive',
   
   primary key(id)
   )
