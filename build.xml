@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="0.32"/>
+  <property name="version" value="0.33"/>
   <property name="src" value="src"/>
   <property name="build" value="build"/>
   <property name="images" value="${build}/images"/>
@@ -10,7 +10,8 @@
   <!-- Modify to point to your junit.jar file -->
   <property name="junitlib" value="c:/j2sdk1.4.2_03/junit/junit.jar"/>
   <property name="connectorJ" value="c:/j2sdk1.4.2_03/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
-  <property name="classpath" value="classes;${junitlib};${connectorJ}"/>
+  <property name="jython" value="c:/archivos de programa/jython-2.1/jython.jar"/>
+  <property name="classpath" value="classes;${junitlib};${connectorJ};${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>

@@ -257,5 +257,21 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAnswer.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
+#[BeginFolder]
+LABEL := "mapacman"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\mapacman\\mapacman\\mapacmanRPMap.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\README" #[EndFile]
+#[BeginFolder]
+LABEL := "Python"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\mapacman\\mapacman.py" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\Python\\PythonRP.java" #[EndFile]
+#[EndFolder]
+#[EndFolder]
 #[EndFolder]
 #[EndFolder]
