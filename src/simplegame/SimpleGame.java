@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.37 2003/12/20 14:01:38 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.38 2003/12/20 19:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,6 +59,7 @@ public class SimpleGame
 	private boolean continueMusicPlay;
 	private boolean continueGamePlay;
 	private JLabel statusLine;
+	private boolean gameHaveStarted;
 	
 	public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
 	{
@@ -67,6 +68,7 @@ public class SimpleGame
 		this.marauroa = marauroa;
 		this.ownCharacterID=characterID.getObjectID();
 		this.otherCharacterID=-1;
+		gameHaveStarted=false;
 		gdm = new SimpleGameDataModel(3);
 		initComponents();
 		addWindowListener(new WindowAdapter()
@@ -117,6 +119,7 @@ public class SimpleGame
 							if(obj.hasSlot("hand"))
 							{
 								/** CASE 1: Game already started. */
+                                gameHaveStarted=true;
 								GameBoard gameBoard= new GameBoard(obj.getSlot("hand").get());
 								
 								int size = gameBoard.getSize();
@@ -336,7 +339,7 @@ public class SimpleGame
 		{
 			public void mouseClicked(MouseEvent e)
 			{
-				if(otherCharacterID==-1)
+                if(!gameHaveStarted)
 				{
 					addLog("get the list of players...\n");
 					GetCharacterListAction rpaction = new GetCharacterListAction();
