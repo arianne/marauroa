@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.8 2003/12/10 16:18:46 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.9 2003/12/10 16:23:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -138,6 +138,8 @@ public class Test_PlayerEntryContainer extends TestCase
 
   public void testPlayerEntryContainerExceptions()
     {
+    marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainerExceptions","?","This test case try to show that"+
+      " when operatted incorrectly playerEntryContainer will throw several types of exceptions");
     marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainerExceptions",">");
     PlayerEntryContainer container=PlayerEntryContainer.getContainer();
     

@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.10 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.11 2003/12/10 16:23:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,8 @@ public class Test_PlayerDatabase extends TestCase
 	
   private void testPlayerDatabase(String type)
     {
+    marauroad.trace("Test_PlayerDatabase::testPlayerDatabase","?","This test case operates the Database in a similar"+
+      " way of what PlayerEntryContainer does, by adding, getting and removing players and login events");
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabase",">");
     
     try
@@ -92,6 +94,8 @@ public class Test_PlayerDatabase extends TestCase
 
   private void testPlayerDatabaseExceptions(String type)
     {
+    marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions","?","This test case try to show that"+
+      " when operatted incorrectly PlayerDatabase will throw several types of exceptions");
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions",">");
     PlayerDatabase playerDatabase=null;
     
