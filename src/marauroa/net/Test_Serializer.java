@@ -1,4 +1,4 @@
-/* $Id: Test_Serializer.java,v 1.3 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Test_Serializer.java,v 1.4 2003/12/10 16:14:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ abstract class Test_Serializer extends TestCase
 	
   protected void test(Object[] data) 
     {
+    marauroad.trace("Test_Serializer::test","?","This test case serialize and deserialize the data type shown");
     marauroad.trace("Test_Serializer::test",">");
 
     out=new ByteArrayOutputStream();

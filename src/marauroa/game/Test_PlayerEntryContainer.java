@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.7 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.8 2003/12/10 16:18:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -79,6 +79,9 @@ public class Test_PlayerEntryContainer extends TestCase
     
   public void testPlayerEntryContainer()
     {
+    marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainer","?","This test case try to use the PlayerEntryContainer"+
+      " in a very similar way of what the server would do, by adding players, getting them, changing the state and checking that"+
+      " the value contained is the expected");
     marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainer",">");
 
     createDatabase();
