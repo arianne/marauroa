@@ -7,7 +7,8 @@
   <property name="lib"  value="lib"/>
   
   <!-- Modify to point to your junit.jar file -->
-  <property name="junitlib" value="="../../../classes/junit.jar"/>  
+  
+  <property name="junitlib" value="../../../classes/junit.jar"/>
   <property name="classpath"  value="classes;${junitlib}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
