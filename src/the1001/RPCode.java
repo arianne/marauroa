@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.17 2004/01/01 23:32:14 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.18 2004/01/01 23:34:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -216,7 +216,7 @@ public class RPCode
   
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
-    if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
+    if(gladiator1.getInt("hp")<=0)
       {
       /** Failed because the gladiator is dead */
       return;
