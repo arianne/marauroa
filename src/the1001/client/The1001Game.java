@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.7 2004/03/03 06:34:55 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.8 2004/03/07 20:29:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -164,6 +164,9 @@ public class The1001Game
 						netMan.addMessage(replyMsg);
 						
 						MessageS2CPerception perception = (MessageS2CPerception)msg;
+						marauroad.trace("The1001Game::messageLoop","D","Perception type " + (perception.getTypePerception()==1?"FULL":"DELTA"));
+						RPObject my_object = perception.getMyRPObject();
+						marauroad.trace("The1001Game::messageLoop","D","my object " + my_object);
 						List modified_objects = perception.getModifiedRPObjects();
 						for (int i = 0; i < modified_objects.size(); i++)
 						{
@@ -237,10 +240,13 @@ public class The1001Game
 								int id = obj.getInt("object_id");
 								if(ownCharacterID==id)
 								{
-									RPSlot glad_slot   = obj.getSlot("gladiators");
-									RPObject gladiator = glad_slot.get();
-									gm.setOwnGladiator(gladiator);
 									gm.setOwnCharacter(obj);
+									if(obj.hasSlot("!gladiators"))
+									{
+										RPSlot glad_slot   = obj.getSlot("!gladiators");
+										RPObject gladiator = glad_slot.get();
+										gm.setOwnGladiator(gladiator);										
+									}
 								}
 								if(obj.has(RPCode.var_text))
 								{

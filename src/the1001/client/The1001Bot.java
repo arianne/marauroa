@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.2 2004/03/07 18:33:58 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.3 2004/03/07 20:29:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -196,21 +196,37 @@ public class The1001Bot
 							}
 							else if("character".equals(obj.get("type")))
 							{
+								marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
 								gm.addSpectator(obj);
 								int id = obj.getInt("object_id");
 								if(ownCharacterID==id)
 								{
-								    if(obj.hasSlot("!gladiators"))
-								      {
-									  RPSlot glad_slot   = obj.getSlot("!gladiators");
-									  RPObject gladiator = glad_slot.get();
-									  gm.setOwnGladiator(gladiator);
-									  gm.setOwnCharacter(obj);
-									  }
+									gm.setOwnCharacter(obj);
+									marauroad.trace("The1001Bot::messageLoop","D","Own character:"+obj);
+									if(obj.hasSlot("!gladiators"))
+									{
+										try
+										{
+											RPSlot glad_slot   = obj.getSlot("!gladiators");
+											RPObject gladiator = glad_slot.get();
+											gm.setOwnGladiator(gladiator);
+											gm.setOwnCharacter(obj);
+											marauroad.trace("The1001Bot::messageLoop","D","Own gladiator:"+gladiator);
+										}
+										catch(Exception e)
+										{
+											e.printStackTrace();
+										}
+									}
 									else
-									  {
-                                      marauroad.trace("The1001Bot::messageLoop","D","Our own player has not !gladiators slot");
-                                      }
+									{
+										RPObject glads_in_shop[] = gm.getShopGladiators();
+										if(glads_in_shop.length>0)
+										{
+											RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
+											gm.buyGladiator(first_avail_glad.get(RPCode.var_object_id));										
+										}
+									}
 								}
 								if(obj.has(RPCode.var_text))
 								{
@@ -222,9 +238,30 @@ public class The1001Bot
 									}
 								}
 							}
+							else if("shop".equals(obj.get("type")))
+							{
+								marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
+								if(obj.hasSlot("gladiators"))
+								{
+									RPSlot slot = obj.getSlot("gladiators");
+									Iterator iter = slot.iterator();
+									while(iter.hasNext())
+									{
+										RPObject shop_object = (RPObject)iter.next();
+										if("gladiator".equals(shop_object.get(RPCode.var_type)))
+										{
+											gm.addShopGladiator(shop_object);
+										}
+										else
+										{
+											marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
+										}
+									}
+								}
+							}
 							else
 							{
-								marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception");
+								marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
 							}
 						}
 						

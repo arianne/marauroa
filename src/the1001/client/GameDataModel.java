@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.5 2004/02/26 06:22:09 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.6 2004/03/07 20:30:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ public final class GameDataModel
 	private RPObject arena;
 	private Map spectators;
 	private Map fighters;
+	private Map shopGladiators;
 	private transient NetworkClientManager netMan;
 	private List listeners;
 	private ActionListener commandListener;
@@ -58,6 +59,7 @@ public final class GameDataModel
 		netMan     = net_man;
 		spectators = new HashMap(8);
 		fighters   = new HashMap(2);
+		shopGladiators = new HashMap(4);
 		listeners  = new ArrayList(1);
 		commandListener = new ActionHandler();
 	}
@@ -82,7 +84,7 @@ public final class GameDataModel
 		return arena;
 	}
 	
-
+	
 	/**
 	 * Sets OwnCharacter
 	 *
@@ -139,67 +141,7 @@ public final class GameDataModel
 		return ownGladiator;
 	}
 	
-//		public String getName()
-//		{
-//			String str = "";
-//			if(gladiator!=null)
-//			{
-//				try
-//				{
-//					str = gladiator.get(RPCode.var_name);
-//				}
-//				catch (Attributes.AttributeNotFoundException e)
-//				{
-//					str = "<unknown>";
-//				}
-//			}
-//			return(str);
-//		}
-//
-//		public String getInitHP()
-//		{
-//			String str = "";
-//			if(gladiator!=null)
-//			{
-//				try
-//				{
-//					str = gladiator.get(RPCode.var_initial_hp);
-//				}
-//				catch (Attributes.AttributeNotFoundException e)
-//				{
-//					str = "<unknown>";
-//				}
-//			}
-//			return(str);
-//		}
 	
-//		public String getHP()
-//		{
-//			String str = "";
-//			if(gladiator!=null)
-//			{
-//				try
-//				{
-//					str = gladiator.get(RPCode.var_hp);
-//				}
-//				catch (Attributes.AttributeNotFoundException e)
-//				{
-//					str = "<unknown>";
-//				}
-//			}
-//			return(str);
-//		}
-	
-//		public int getGladiatorId()
-//		{
-//			int id = -1;
-//			try
-//			{
-//				id = getGladiator().getInt("object_id");
-//			}
-//			catch (Attributes.AttributeNotFoundException e) {}
-//			return(id);
-//		}
 	
 	/**
 	 * adds a new spectator to world.
@@ -226,6 +168,30 @@ public final class GameDataModel
 	}
 	
 	/**
+	 * adds a new spectator to world.
+	 * if the spectator is already there then the old instance
+	 * will be replaced by a new one
+	 **/
+	public void addShopGladiator(RPObject gladiator)
+	{
+		synchronized(gladiator)
+		{
+			try
+			{
+//				marauroad.trace("The1001Game::addSpectator","D","Adding spectator " + spectator);
+				shopGladiators.put(gladiator.get(RPCode.var_object_id),gladiator);
+				fireListeners();
+			}
+			catch (Attributes.AttributeNotFoundException e)
+			{
+				marauroad.trace("The1001Game::addShopGladiator","X",e.getMessage());
+			}
+//			dumpList(spectators.values());
+		}
+		
+	}
+	
+	/**
 	 * Method dumpList
 	 *
 	 * @param    spectators          a  List
@@ -237,6 +203,28 @@ public final class GameDataModel
 		{
 			marauroad.trace("#","D",""+iter.next());
 		}
+	}
+	
+	/**
+	 * deletes the spectator from world, if he was there.
+	 **/
+	public void deleteShopGladiator(RPObject gladiator)
+	{
+		synchronized(shopGladiators)
+		{
+			try
+			{
+				if(shopGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
+				{
+					fireListeners();
+				}
+			}
+			catch (Attributes.AttributeNotFoundException e)
+			{
+				marauroad.trace("The1001Game::deleteShopGladiator","X",e.getMessage());
+			}
+		}
+		fireListeners();
 	}
 	
 	/**
@@ -270,6 +258,18 @@ public final class GameDataModel
 		{
 			RPObject[] spectators_a = new RPObject[spectators.size()];
 			return((RPObject[])spectators.values().toArray(spectators_a));
+		}
+	}
+	
+	/**
+	 * returns all the gladiator in the shop
+	 **/
+	public RPObject[] getShopGladiators()
+	{
+		synchronized(shopGladiators)
+		{
+			RPObject[] gladiators_a = new RPObject[shopGladiators.size()];
+			return((RPObject[])shopGladiators.values().toArray(gladiators_a));
 		}
 	}
 	
@@ -375,6 +375,15 @@ public final class GameDataModel
 			netMan.addMessage(new MessageC2SAction(null,action));
 			marauroad.trace("The1001Game::setFightMode","D","Fight mode set.");
 		}
+	}
+	
+	public void buyGladiator(String gladiator_id)
+	{
+		RPAction action = new RPAction();
+		action.put(RPCode.var_type,RPCode.var_buyGladiator); 
+		action.put(RPCode.var_choosen_item,gladiator_id);
+		netMan.addMessage(new MessageC2SAction(null,action));
+		marauroad.trace("The1001Game::buyGladiator","D","Want to buy ["+gladiator_id+"].");
 	}
 	
 	public void vote(String vote)
