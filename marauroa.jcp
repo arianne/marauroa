@@ -51,6 +51,7 @@ FILTER := ""
 LABEL := "RP section"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPWorld.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\SlotAlreadyAddedException.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObjectNotFoundException.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObjectInvalidException.java" #[EndFile]

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.52 2004/09/04 21:10:07 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.53 2004/09/15 18:33:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1204,23 +1204,37 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
-
-    String query="insert into rpobject values(NULL,"+slot_id+")";
-    marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
-    stmt.execute(query);
-
-    /* We get the stored id */
-    query = "select LAST_INSERT_ID() as inserted_id from rpobject";
-    marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
-    ResultSet result = stmt.executeQuery(query);
-
-    result.next();
-    int object_id=result.getInt("inserted_id");
     
-    /** We update the object to contain the database reference, so we can know in 
-     *  the future if this object was stored on database. */
-    object.put("#db_id",object_id);    
+    String query;
+    int object_id;
     
+    if(object.has("#db_id"))
+      {
+      object_id=object.getInt("#db_id");
+      
+      query="insert into rpobject values("+object_id+","+slot_id+")";
+      marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      stmt.execute(query);
+      }
+    else
+      {
+      query="insert into rpobject values(NULL,"+slot_id+")";
+      marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      stmt.execute(query);
+
+      /* We get the stored id */
+      query = "select LAST_INSERT_ID() as inserted_id from rpobject";
+      marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
+      ResultSet result = stmt.executeQuery(query);
+
+      result.next();
+      object_id=result.getInt("inserted_id");
+    
+      /** We update the object to contain the database reference, so we can know in 
+       *  the future if this object was stored on database. */
+      object.put("#db_id",object_id);        
+      }
+
     Iterator it=object.iterator();
 
     while(it.hasNext())
