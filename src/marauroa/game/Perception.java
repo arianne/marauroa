@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.1 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.2 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,6 @@ public class Perception
       RPObject deleted=new RPObject();
     
       modified.getDifferences(added,deleted);
-    
       if(added.size()>0)
         {
         modifiedAddedAttribsList.add(added);

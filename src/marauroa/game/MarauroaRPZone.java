@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.51 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.52 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,6 @@ public class MarauroaRPZone implements IRPZone
     {
     try
       {
-      /** Uncoment to disable Delta-delta: */
       boolean already_added=false;
 
       Iterator it=modified.iterator();

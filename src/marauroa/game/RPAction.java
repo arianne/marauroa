@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.15 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.16 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,5 +84,6 @@ public class RPAction extends Attributes
   /** Constructor */
   public RPAction()
     {
+    super(RPClass.getBaseRPActionDefault());
     }  
   }

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.4 2004/05/31 08:10:20 root777 Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.5 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,9 @@
  ***************************************************************************/
 package marauroa.net;
   
+import marauroa.game.*;
 import java.net.InetSocketAddress;
+import java.util.*;
 import java.io.*;
 
 /** The CharacterListMessage is sent from server to client to inform client about
@@ -64,12 +66,26 @@ public class MessageS2CServerInfo extends Message
     {
     super.writeObject(out);
     out.write(contents);
+    
+    out.write(RPClass.size());    
+    Iterator it=RPClass.iterator();
+    while(it.hasNext())
+      {
+      out.write((RPClass)it.next());
+      }
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
     contents=in.readStringArray();
+    
+    int size=in.readInt();
+    for(int i=0;i<size;++i)
+      {
+      in.readObject(new RPClass());
+      }
+    
     if(type!=TYPE_S2C_SERVERINFO)
       {
       throw new java.lang.ClassNotFoundException();

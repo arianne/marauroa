@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.24 2004/05/28 17:09:02 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.25 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -307,7 +307,7 @@ public final class NetworkServerManager
       catch(IOException e)
         {
         /* Report the exception */
-        marauroad.trace("NetworkServerManagerWrite::write","X",e.getMessage());
+        marauroad.thrown("NetworkServerManagerWrite::write","X",e);
         }
       finally
         {

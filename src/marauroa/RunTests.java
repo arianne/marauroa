@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.44 2004/05/02 17:21:07 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.45 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,11 +71,11 @@ public class RunTests
       String timestamp=Long.toString(new Date().getTime());
       
       System.err.println("Test will last around 93.0 seconds. Please wait!");
-      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();
-      //wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
+//      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
 
       Date end=new Date();
       
@@ -127,6 +127,7 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPClass.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPSlot.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPScheduler.class));
     suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
@@ -163,7 +164,7 @@ public class RunTests
     {
     TestSuite suite= new TestSuite("One Test case marauroa Tests");
 
-    suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPClass.class));
     return suite;
     }
 

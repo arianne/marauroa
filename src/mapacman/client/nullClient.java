@@ -25,6 +25,7 @@ public class nullClient extends Thread
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
+        System.out.println(object);
         if(object.getInt("x")>maxh) maxh=object.getInt("x");
         if(object.getInt("y")>maxv) maxv=object.getInt("y");
         }
@@ -434,13 +435,17 @@ public class nullClient extends Thread
         }
 
       System.out.println("Non parameter operation");
-      int num=4;
+      int num=8;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("bot_0","nopass","bot_0");
       test[1]=new nullClient("bot_1","nopass","bot_1");
       test[2]=new nullClient("bot_2","nopass","bot_2");
       test[3]=new nullClient("bot_3","nopass","bot_3");
+      test[4]=new nullClient("bot_4","nopass","bot_4");
+      test[5]=new nullClient("bot_5","nopass","bot_5");
+      test[6]=new nullClient("bot_6","nopass","bot_6");
+      test[7]=new nullClient("bot_7","nopass","bot_7");
       
       for(int i=0;i<num;++i)
         {

@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.8 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,7 @@ public class Test_Attributes extends TestCase
     marauroad.trace("Test_Attributes::testAttributes",">");
     try
       {
-      Attributes attr=new Attributes();
+      Attributes attr=new Attributes(RPClass.getBaseRPObjectDefault());
 
       assertNotNull(attr);
       attr.put("Attribute","value");
@@ -85,7 +85,7 @@ public class Test_Attributes extends TestCase
     marauroad.trace("Test_Attributes::testAttributesException",">");
     try
       {
-      Attributes attr=new Attributes();
+      Attributes attr=new Attributes(RPClass.getBaseRPObjectDefault());
 
       assertNotNull(attr);
     
@@ -109,7 +109,7 @@ public class Test_Attributes extends TestCase
     marauroad.trace("Test_Attributes::testAttributesSerialization","?","Thjis test case tests that the serialization of the attribute is fine");
     marauroad.trace("Test_Attributes::testAttributesSerialization",">");
     
-    Attributes attr=new Attributes();
+    Attributes attr=new Attributes(RPClass.getBaseRPObjectDefault());
 
     assertNotNull(attr);
     attr.put("Attribute","value");
@@ -127,7 +127,7 @@ public class Test_Attributes extends TestCase
       fail("Exception happened when serializing data out");
       }
     
-    Attributes result=new Attributes();
+    Attributes result=new Attributes(RPClass.getBaseRPObjectDefault());
   
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);

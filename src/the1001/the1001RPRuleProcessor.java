@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.56 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.57 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
     trackedObjects=new LinkedList();
     RPCode.setCallback(this);
     }
-
+  
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
   public void setContext(IRPZone zone)

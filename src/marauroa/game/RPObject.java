@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.43 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.44 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,24 +141,43 @@ public class RPObject extends Attributes
       }
     }
   public final static ID INVALID_ID=new ID(-1);
+  
   /** Constructor */
   public RPObject()
     {
-    super();
-    slots=new LinkedList();
-    added=new LinkedList();
-    deleted=new LinkedList();
+    super(RPClass.getBaseRPObjectDefault());
+    initialize();
     }
 	
   /** Constructor
    *  @param id the id of the object */
   public RPObject(ID id)
     {
-    super();
+    super(RPClass.getBaseRPObjectDefault());
+    initialize();
+    put("id",id.getObjectID());
+    }
+    
+  public RPObject(RPClass rpclass)
+    {
+    super(rpclass);
+    initialize();
+    }
+    
+  /** Constructor
+   *  @param id the id of the object */
+  public RPObject(ID id, RPClass rpclass)
+    {
+    super(rpclass);
+    initialize();
+    put("id",id.getObjectID());
+    }
+  
+  private void initialize()
+    {
     slots=new LinkedList();
     added=new LinkedList();
     deleted=new LinkedList();
-    put("id",id.getObjectID());
     }
   
   public RPObject.ID getID() throws Attributes.AttributeNotFoundException

@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.14 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.15 2004/06/15 15:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,8 +45,11 @@ public class Gladiator extends RPObject
     "orc"    
     };
   private static Random random=new Random();
+
   public Gladiator(RPObject.ID id) throws SlotAlreadyAddedException
     {
+    super();
+
     put(RPCode.var_object_id,id.getObjectID());
     put(RPCode.var_type,"gladiator");
     put(RPCode.var_name,randomNames[Math.abs(random.nextInt()%randomNames.length)]);

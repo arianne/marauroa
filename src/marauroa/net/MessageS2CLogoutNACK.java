@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutNACK.java,v 1.4 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CLogoutNACK.java,v 1.5 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,7 +56,4 @@ public class MessageS2CLogoutNACK extends Message
       }
     }    
   }
-
-
-;  
 

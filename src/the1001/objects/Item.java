@@ -1,4 +1,4 @@
-/* $Id: Item.java,v 1.6 2004/03/24 15:25:36 arianne_rpg Exp $ */
+/* $Id: Item.java,v 1.7 2004/06/15 15:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,8 +33,11 @@ public class Item extends RPObject
     price_val.put("sword","50");
     price_val.put("shield","30");
     }
+
   public Item(RPObject.ID id,String type)
     {
+    super();
+
     put(RPCode.var_object_id,id.getObjectID());
     put(RPCode.var_type,type);
     put(RPCode.var_defend,(String)defend_val.get(type));

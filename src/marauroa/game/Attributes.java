@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.30 2004/05/31 08:11:15 root777 Exp $ */
+/* $Id: Attributes.java,v 1.31 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,12 +13,8 @@
 package marauroa.game;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import marauroa.TimeoutConf;
+import java.util.*;
+import marauroa.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +28,8 @@ public class Attributes implements marauroa.net.Serializable
   
   /** A Map<String,String> that contains the attributes */
   private Map content;
+  private RPClass rpClass;
+
   public static class AttributeNotFoundException extends Exception
     {
     private String attribute;
@@ -49,7 +47,7 @@ public class Attributes implements marauroa.net.Serializable
     
   public Object copy()
     {
-    Attributes attr=new Attributes();
+    Attributes attr=new Attributes(this.rpClass);
     Iterator it=content.entrySet().iterator();
 
     while(it.hasNext())
@@ -63,6 +61,7 @@ public class Attributes implements marauroa.net.Serializable
 
   public Object copy(Attributes attr)
     {
+    setRPClass(attr.rpClass);
     Iterator it=attr.content.entrySet().iterator();
 
     while(it.hasNext())
@@ -75,11 +74,23 @@ public class Attributes implements marauroa.net.Serializable
     }
     
   /** Constructor */
-  public Attributes()
+  public Attributes(RPClass rpclass)
     {
+    rpClass=rpclass;
+    
     content=new HashMap();
     added=new HashMap();
     deleted=new HashMap();
+    }
+  
+  public void setRPClass(RPClass rpclass)
+    {
+    rpClass=rpclass;
+    }
+  
+  public RPClass getRPClass()
+    {
+    return rpClass;
     }
   
   public boolean isEmpty()
@@ -107,6 +118,18 @@ public class Attributes implements marauroa.net.Serializable
     {
     /* This is for Delta-delta feature */
     added.put(attribute,value);
+    
+    if(attribute.equals("type") && RPClass.hasRPClass(value))
+      {
+      try 
+        {
+        setRPClass(RPClass.getRPClass(value));
+        }
+      catch(RPClass.SyntaxException e)
+        {
+        /* NOTE: Can't ever happen */
+        }
+      }
     
     content.put(attribute,value);
     }
@@ -207,7 +230,7 @@ public class Attributes implements marauroa.net.Serializable
    *  @return a string representing the object.*/
   public String toString()
     {
-    StringBuffer tmp=new StringBuffer("Attributes: ");
+    StringBuffer tmp=new StringBuffer("Attributes of Class("+rpClass.getName()+"): ");
     Iterator  it=content.entrySet().iterator();
 		
     while(it.hasNext())
@@ -217,6 +240,7 @@ public class Attributes implements marauroa.net.Serializable
       tmp.append("["+(String)entry.getKey());
       tmp.append("="+(String)entry.getValue()+"]");
       }
+      
     return tmp.toString();
     }
 	
@@ -253,6 +277,11 @@ public class Attributes implements marauroa.net.Serializable
     {
     return content.keySet().iterator();
     }
+  
+  public boolean instanceOf(RPClass rpClass)
+    {
+    return this.rpClass.getName()==rpClass.getName();
+    }
 	
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
@@ -269,11 +298,13 @@ public class Attributes implements marauroa.net.Serializable
       Map.Entry entry=(Map.Entry)it.next();
       String key=(String)entry.getKey();
 
-      if(fulldata==false && key.charAt(0)=='!')
+      if(fulldata==false && (rpClass.getVisibility(key)==RPClass.HIDDEN))
         {
         --size;
         }
       }
+    
+    out.write(rpClass.getName());    
     out.write(size);
     it=content.entrySet().iterator();
     while(it.hasNext())
@@ -282,29 +313,98 @@ public class Attributes implements marauroa.net.Serializable
       /** NOTE: The attributes that begin with ! are not stored */
       String key=(String)entry.getKey();
 
-      if(fulldata==true || key.charAt(0)!='!')
-        {
-        out.write(key);
-        out.write((String)entry.getValue());
+      if(fulldata==true || (rpClass.getVisibility(key)==RPClass.VISIBLE))
+        {        
+        short code=-1;
+        
+        try
+          {
+          code=rpClass.getCode(key);
+          }
+        catch(RPClass.SyntaxException e)
+          {
+          code=-1;        
+          }
+        
+        out.write(code);
+        
+        if(code==-1)
+          {
+          out.write(key);
+          }
+
+        if(rpClass.getType(key)==RPClass.STRING)
+          {
+          out.write((String)entry.getValue());
+          }
+        else if(rpClass.getType(key)==RPClass.INT)
+          {
+          out.write(Integer.parseInt((String)entry.getValue()));
+          }
+        else if(rpClass.getType(key)==RPClass.SHORT)
+          {
+          out.write(Short.parseShort((String)entry.getValue()));
+          }
+        else if(rpClass.getType(key)==RPClass.BYTE)
+          {
+          out.write(Byte.parseByte((String)entry.getValue()));
+          }
+        else if(rpClass.getType(key)==RPClass.FLAG)
+          {
+          }
+        else
+          {
+          /* NOTE: Must never happen */
+          }
         }
       }
     }
 	
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
+    rpClass=RPClass.getRPClass(in.readString());
     int size=in.readInt();
 		
     if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
       }
+      
     content.clear();
+    
     for(int i=0;i<size;++i)
       {
-      String key=in.readString();
-      String value=in.readString();
-
-      content.put(key,value);
+      short code=in.readShort();
+      String key;
+      if(code==-1)
+        {
+        key=in.readString();
+        }
+      else
+        {
+        key=rpClass.getName(code);      
+        }
+        
+      if(rpClass.getType(key)==RPClass.STRING)
+        {
+        content.put(key,in.readString());
+        }
+      else if(rpClass.getType(key)==RPClass.INT)
+        {
+        content.put(key,Integer.toString(in.readInt()));
+        }
+      else if(rpClass.getType(key)==RPClass.SHORT)
+        {
+        content.put(key,Integer.toString(in.readShort()));
+        }
+      else if(rpClass.getType(key)==RPClass.BYTE)
+        {
+        content.put(key,Integer.toString(in.readByte()));
+        }
+      else if(rpClass.getType(key)==RPClass.FLAG)
+        {
+        content.put(key,"");
+        }
       }
     }
 	
@@ -353,6 +453,7 @@ public class Attributes implements marauroa.net.Serializable
 
   public void setAddedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
     {
+    rpClass=attr.rpClass;
     Iterator it=attr.added.entrySet().iterator();
     
     int i=0;
@@ -373,6 +474,7 @@ public class Attributes implements marauroa.net.Serializable
 
   public void setDeletedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
     {
+    rpClass=attr.rpClass;
     Iterator it=attr.deleted.entrySet().iterator();
     
     int i=0;

@@ -118,14 +118,66 @@ class RealPythonRP(PythonRP):
         self._online_players=[]
         self._online_ghosts=[]
         self._killedFlagGhosts=[]
+       
+        self.createRPClasses()
 
         self._zone=zone
         self._map=mapacmanRPMap(self,pacman_mapfile)
         self._serializedMap=None
-
+        
         instance=getPythonAI()
         instance.setPythonRP(self)
         instance.createEnviroment()
+    
+    def createRPClasses(self):
+        # TODO: Refactor this once you add RPClass heritance
+        STRING=RPClass.STRING
+        INT=RPClass.INT
+        SHORT=RPClass.SHORT
+        BYTE=RPClass.BYTE
+        FLAG=RPClass.FLAG
+        HIDDEN=RPClass.HIDDEN
+        
+        objclass=RPClass("player")
+        objclass.add("name",STRING)
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+        objclass.add("dir",STRING)
+        objclass.add("score",INT)
+        objclass.add("super",BYTE)
+        objclass.add("!vdir",STRING,HIDDEN)
+        objclass.add("!hdir",STRING,HIDDEN)
+        
+        objclass=RPClass("ghost")
+        objclass.add("name",STRING)
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+        objclass.add("dir",STRING)
+        objclass.add("score",INT)
+        objclass.add("!vdir",STRING,HIDDEN)
+        objclass.add("!hdir",STRING,HIDDEN)
+        objclass.add("!target",INT,HIDDEN)
+        objclass.add("!decision",INT,HIDDEN)
+        objclass.add("?kill",FLAG)        
+        
+        objclass=RPClass("block")
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+
+        objclass=RPClass("ball")
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+        objclass.add("dir",STRING)
+        objclass.add("!score",INT,HIDDEN)
+        objclass.add("!respawn",INT,HIDDEN)
+        
+        objclass=RPClass("superball")
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+        objclass.add("dir",STRING)
+        objclass.add("!score",INT,HIDDEN)
+        objclass.add("!respawn",INT,HIDDEN)
+        objclass.add("!timeout",INT,HIDDEN)
         
     def getZone(self):
         return self._zone
@@ -276,7 +328,7 @@ class RealPythonRP(PythonRP):
                 pos=self._map.getRandomRespawn()
                 player.put("x",pos[0])
                 player.put("y",pos[1])
-                player.put("score",player.getInt("score")/2)
+                player.put("score",int(player.getInt("score")*0.75))
                 self._zone.modify(player)
     
     def _foreachPlayer(self):
@@ -322,6 +374,7 @@ class RealPythonRP(PythonRP):
         pos=self._map.getRandomRespawn()
         object.put("x",pos[0])
         object.put("y",pos[1])
+        object.setRPClass(RPClass.getRPClass("player"))
         
         self._zone.add(object)
         self._online_players.append(object)
@@ -366,13 +419,14 @@ class RealPythonRP(PythonRP):
         object.put("y",0)
         object.put("dir",randomDirection())
         object.put("score",0)
+        object.setRPClass(RPClass.getRPClass("player"))
         return object;
 
     lastNonStorableId=1;
     
     def createGhost(self, name):
         """ This function create a ghost """
-        object=RPObject()
+        object=RPObject(RPClass.getRPClass("ghost"))
         object.put("id",RealPythonRP.lastNonStorableId)
         RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
         object.put("type","ghost");
@@ -387,7 +441,7 @@ class RealPythonRP(PythonRP):
     def createBall(self, x,y):
         """ This function create a Ball object that when eats by player increments
         its score. """
-        object=RPObject()
+        object=RPObject(RPClass.getRPClass("ball"))
         object.put("id",RealPythonRP.lastNonStorableId)
         RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
         object.put("type","ball");
@@ -403,6 +457,7 @@ class RealPythonRP(PythonRP):
         object=self.createBall(x,y)
         object.put("type","superball");
         object.put("!timeout",15)
+        object.setRPClass(RPClass.getRPClass("superball"))
         return object;
 
     
@@ -484,7 +539,7 @@ class mapacmanRPMap:
     
     def serializeMap(self):
         def createBlock(pos):
-            object=RPObject()
+            object=RPObject(RPClass.getRPClass("block"))
             object.put("x",pos[0])
             object.put("y",pos[1])
             object.put("type","block")

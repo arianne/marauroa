@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.23 2004/05/28 07:54:30 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.24 2004/06/15 15:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,8 +42,10 @@ public class NetConst
    *    - Added Out of Sync Message
    *    - Improved speed of perception creation
    * 13 - Redefined Map message 
-   * 14 - Compressed the Map message */
-  final static public byte NETWORK_PROTOCOL_VERSION=14;
+   * 14 - Compressed the Map message
+   * 15 - Modified ServerInfo message to add RPClass stuff */
+  final static public byte NETWORK_PROTOCOL_VERSION=15;
+  
   final static public long PACKET_TIMEOUT_VALUE=5000;
   static
     {
