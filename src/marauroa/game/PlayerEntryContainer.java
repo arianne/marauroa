@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.31 2004/04/17 10:52:13 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.32 2004/04/17 12:10:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -898,13 +898,8 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         RPObject pre=entry.perception_previousRPObject;
-        if(pre==null)
-          {
-          entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
-          return true;          
-          }          
-        
-        if(pre.equals(perception_actualRPObject))
+
+        if(pre!=null && pre.equals(perception_actualRPObject))
           {
           return false;
           }
