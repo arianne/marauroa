@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.33 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.34 2004/03/19 17:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -459,7 +459,7 @@ public class GameServerManager extends Thread
 
       if(action.has("type"))
         {
-        stats.addActionsAdded(action.get("type"),clientid);
+        stats.addActionsAdded(action.get("type"),clientid,action.toString());
         }
       else
         {

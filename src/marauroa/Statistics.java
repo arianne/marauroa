@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.19 2004/03/16 00:25:00 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.20 2004/03/19 17:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,10 +202,16 @@ public class Statistics
   {
     nowVar.objectsNow=now;
   }
-  
+
   public void addActionsAdded(String action, int id)
   {
     addEvent("action",id,"type="+action);
+    ++nowVar.actionsAdded;
+  }
+  
+  public void addActionsAdded(String action, int id, String text)
+  {
+    addEvent("action",id,"type="+action+"&extra=\""+text+"\"");
     ++nowVar.actionsAdded;
   }
   
