@@ -1,0 +1,9 @@
+Title  : Implementation walkthrough
+Info   : Description of how we are going to implement it
+Keyword: basic, design, game, rp, idea
+Author : Miguel Angel Blanch Lardin
+Created: 2003/12/30
+status : planning
+
+
+

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.32 2003/12/29 11:02:47 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.33 2003/12/29 11:46:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,20 +118,23 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   {
   }
 
-  public boolean onInit(RPObject object)
-    {
+  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  {
+    zone.add(object);
     return true;
-    }
+  }
     
-  public boolean onExit(RPObject.ID id)
-    {
+  public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  {
+    zone.remove(id);
     return true;
-    }
+  }
     
-  public boolean onTimeout(RPObject.ID id)
-    {
+  public boolean onTimeout(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  {
+    zone.remove(id);
     return true;
-    }
+  }
       
   private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)
     throws NumberFormatException,
