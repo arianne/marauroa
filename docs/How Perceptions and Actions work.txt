@@ -5,3 +5,18 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/11/27
 status : planning
 
+Actions are sent from client to server in order to make their character to do
+an action. In order for the client to know the result of the action Server need
+to send it to client. How?
+
+On a first try, we used to send client back an action that was the result, but
+make code really hard because we had to update to different things, perceptions
+and actions, so the idea appeared intuitively: Why not join action reply and 
+perceptions.
+
+So the action reply is stored inside each object ( that executed the action ) 
+with a set of attributes that determine the action return status and the 
+attributes. This way of working make a bit harder to RPManager but it simplify
+a lot the creation of new clients.
+
+See Actions reply in Objects document to know exactly what is returned.
