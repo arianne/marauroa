@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.71 2004/04/25 01:19:33 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.72 2004/04/26 14:09:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import the1001.objects.*;
  */
 public class marauroad extends Thread
   {
-  final private static boolean DEBUG=false;
+  final private static boolean DEBUG=true;
   
   private static PrintWriter out;
   private static marauroad marauroa;

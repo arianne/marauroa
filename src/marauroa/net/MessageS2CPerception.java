@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.35 2004/04/25 10:31:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.36 2004/04/26 14:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,7 +78,7 @@ public class MessageS2CPerception extends Message
   
   public void setTimestamp(int timestamp)
     {
-    this.timestampPerception=timestampPerception;
+    this.timestampPerception=timestamp;
     }
   
   public int getPerceptionTimestamp()

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.31 2004/04/24 01:12:23 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32 2004/04/26 14:09:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -473,7 +473,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param source the IP address of the player
    *  @param correctLogin true if the login has been correct.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException, GenericDatabaseException
+  public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent",">");
     try
