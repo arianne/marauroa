@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.7 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.8 2004/01/29 18:36:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,7 +43,20 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       return "Login "+(correct?"SUCESSFULL":"FAILED")+" at "+time.toString()+" from "+address;
       }
-    }  
+    }
+  
+  private static boolean validString(String string)
+    {
+    if(string.indexOf('\'')!=-1) return false;
+    if(string.indexOf('"')!=-1) return false;
+    if(string.indexOf('%')!=-1) return false;
+    if(string.indexOf(';')!=-1) return false;
+    if(string.indexOf(':')!=-1) return false;
+    if(string.indexOf('#')!=-1) return false;
+    if(string.indexOf('@')!=-1) return false;
+    
+    return true;
+    }
 
   /** A connection to the JDBC database */
   private Connection connection;  
@@ -105,9 +118,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username))
+        {
+        throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+        }
+
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player where username like '"+username+"'";
+      marauroad.trace("JDBCPlayerDatabase::hasPlayer","D",query);
+        
       ResultSet result = stmt.executeQuery(query);
+
       if(result.next())
         {
         if(result.getInt(1)!=0)
@@ -140,12 +161,18 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
+      if(!validString(username))
+        {
+        throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+        }
+
       String[] characters = null;
 
       int id=getDatabasePlayerId(username);
         
       Statement stmt = connection.createStatement();
       String query = "select charname from characters where player_id="+id;
+      marauroad.trace("JDBCPlayerDatabase::getCharacterList","D",query);
       ResultSet charactersSet = stmt.executeQuery(query);
         
       Vector vector = new Vector();
@@ -184,8 +211,14 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(password))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
+        }
+
       Statement stmt = connection.createStatement();
       String query = "select id from player where username like '"+username+"'";
+      marauroad.trace("JDBCPlayerDatabase::addPlayer","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -218,6 +251,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username))
+        {
+        throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+        }
+
       int id=getDatabasePlayerId(username);
       
       Statement stmt = connection.createStatement();
@@ -257,6 +295,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
+      if(!validString(username) || !validString(character))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
+        }
+
       int id=getDatabasePlayerId(username);
       
       if(!hasCharacter(username,character))
@@ -296,9 +339,15 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(password))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
+        }
+
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player where username like '"+username+"' and password like '"+password+"'";
 
+      marauroad.trace("JDBCPlayerDatabase::verifyAccount","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -331,12 +380,18 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username))
+        {
+        throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+        }
+
       String[] loginEvents = null;
       int id=getDatabasePlayerId(username);
       
       Statement stmt = connection.createStatement();
       String query = "select address,timedate,result from loginEvent where player_id="+id+" order by timedate";
 
+      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","D",query);
       ResultSet result = stmt.executeQuery(query);
       Vector vector = new Vector();
       
@@ -382,11 +437,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(character))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
+        }
+
       int id=getDatabasePlayerId(username);
 
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
 
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -425,6 +486,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username))
+        {
+        throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+        }
+
       int id=getDatabasePlayerId(username);
 
       String query = "insert into loginEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
@@ -461,6 +527,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(character))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
+        }
+
       Statement stmt = connection.createStatement();
       int id=getDatabasePlayerId(username);
       
@@ -517,6 +588,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player";
 
+      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -554,11 +626,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(character))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
+        }
+
       int id=getDatabasePlayerId(username);
 
       Statement stmt = connection.createStatement();
       String query = "select count(*) from characters where charname like '"+character+"'";
 
+      marauroad.trace("JDBCPlayerDatabase::setRPObject","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -618,10 +696,16 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      if(!validString(username) || !validString(character))
+        {
+        throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
+        }
+
       int id=getDatabasePlayerId(username);
 
       Statement stmt = connection.createStatement();
       String query = "select contents from characters where player_id="+id+" and charname like '"+character+"'";  
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
@@ -700,8 +784,14 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     Statement stmt=connection.createStatement();
     
     int id;
+
+    if(!validString(username))
+      {
+      throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
+      }
     
     String query = "select id from player where username like '"+username+"'";
+    marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
     ResultSet result = stmt.executeQuery(query);
     if(result.next())
       {

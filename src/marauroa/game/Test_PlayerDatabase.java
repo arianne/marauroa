@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.12 2004/01/29 17:15:37 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.13 2004/01/29 18:36:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,8 +51,15 @@ public class Test_PlayerDatabase extends TestCase
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       assertNotNull(playerDatabase);
 
-      assertFalse(playerDatabase.hasPlayer("\" or 1=1"));
-      assertFalse(playerDatabase.hasPlayer("\' or 1=1"));
+      playerDatabase.addPlayer("Test Player","Test Password");
+      assertTrue(playerDatabase.hasPlayer("Test Player"));
+      
+      assertFalse(playerDatabase.hasPlayer("b\" or 1=1 or username like 'b"));
+      assertFalse(playerDatabase.hasPlayer("b\' or 1=1 or username like 'b"));
+      assertFalse(playerDatabase.verifyAccount("b\' or 1=1 or username like 'b","b\' or 1=1 or password like 'b"));
+      assertFalse(playerDatabase.verifyAccount("b\" or 1=1 or username like 'b","b\' or 1=1 or password like 'b"));
+
+      playerDatabase.removePlayer("Test Player");
       }
     catch(Exception e)
       {
