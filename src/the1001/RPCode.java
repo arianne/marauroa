@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.31 2004/01/07 17:32:10 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.32 2004/01/07 23:29:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -441,7 +441,6 @@ public class RPCode
       }
     catch(Exception e)
       {
-      e.printStackTrace();
       marauroad.trace("RPCode::RequestFame","X",e.getMessage());
       }
     finally
@@ -500,10 +499,12 @@ public class RPCode
       /* Choose new fighters if available */ 
       if(arena.getInt("waiting")>0)
         {
+        int i=0;
         it=playersWaiting.iterator();
         
         while(it.hasNext())
           {
+          ++i;
           RPObject player=(RPObject)it.next();
           RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
           player.remove("requested");
@@ -512,6 +513,15 @@ public class RPCode
           player.put("fighting","");
           arena.getSlot("gladiators").add(gladiator);
           arena.put("waiting",arena.getInt("waiting")-1);
+          
+          playersFighting.add(player);
+          it.remove();
+          
+          if(i==GLADIATORS_PER_FIGHT)
+            {
+            arena.put("status","fighting");
+            break;
+            }
           }        
         } 
       }

@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.4 2004/01/07 16:26:09 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.5 2004/01/07 23:29:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,74 +95,91 @@ public class Test_the1001 extends TestCase
           assertTrue(players[i].has("requested"));      
           }
         }
-
+      
+      int combatRound=0;
       while(arena.get("status").equals("fighting"))
         {
-        for(int i=0;i<players.length;++i)
-          {
-          String[] options={"rock","paper","scissor"};
-                  
-          RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()),options[rand.nextInt(3)]);
-          if(players[i].has("fighting"))
-            {
-            assertEquals(status,RPAction.STATUS_SUCCESS);
-            }
-          else
-            {
-            assertEquals(status,RPAction.STATUS_FAIL);
-            }
-          }
-
-        rpu.nextTurn();
-        }
-
-      rpu.nextTurn();
-      
-      zone.print(System.out);
-
-      for(int i=0;i<players.length;++i)
-        {
-        assertFalse(players[i].has("?damage"));
-        }
-
-      assertEquals(arena.get("status"),"request_fame");
-      assertTrue(arena.has("fame"));      
-      
-      assertEquals(arena.getInt("thumbs_up"),0);
-      assertEquals(arena.getInt("thumbs_down"),0);
-      
-      for(int i=0;i<players.length;++i)
-        {
-        String[] options={"up","down"};
-        RPAction.Status status=RPCode.Vote(new RPObject.ID(players[i]),"up");
-        assertEquals(status,RPAction.STATUS_SUCCESS);
+        ++combatRound;
         
-        if(rand.nextBoolean())
+        if(combatRound<10)
           {
+          RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()));
+          assertEquals(status,RPAction.STATUS_SUCCESS);
+          }
+          
+        marauroad.trace("Test_the1001::testFullGame","D","Combat begin: "+combatRound);
+
+        while(arena.get("status").equals("fighting"))
+          {
+          for(int i=0;i<players.length;++i)
+            {
+            String[] options={"rock","paper","scissor"};
+                     
+            RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()),options[rand.nextInt(3)]);
+            if(players[i].has("fighting"))
+              {
+              assertEquals(status,RPAction.STATUS_SUCCESS);
+              }
+            else
+              {
+              assertEquals(status,RPAction.STATUS_FAIL);
+              }
+            }
+    
           rpu.nextTurn();
           }
-        }
-        
-      while(arena.getInt("timeout")>0)
-        {
+    
         rpu.nextTurn();
-        }            
+          
+        zone.print(System.out);
+    
+        for(int i=0;i<players.length;++i)
+          {
+          assertFalse(players[i].has("?damage"));
+          }
+    
+        assertEquals(arena.get("status"),"request_fame");
+        assertTrue(arena.has("fame"));      
+        
+        assertEquals(arena.getInt("thumbs_up"),0);
+        assertEquals(arena.getInt("thumbs_down"),0);
+          
+        for(int i=0;i<players.length;++i)
+          {
+          String[] options={"up","down"};
+          RPAction.Status status=RPCode.Vote(new RPObject.ID(players[i]),"up");
+          assertEquals(status,RPAction.STATUS_SUCCESS);
+          
+          if(rand.nextBoolean())
+            {
+            rpu.nextTurn();
+            }
+          }
+            
+        while(arena.getInt("timeout")>0)
+          {
+          rpu.nextTurn();
+          }            
+    
+        assertTrue(arena.has("timeout"));
+        assertTrue(arena.has("thumbs_up"));
+        assertTrue(arena.has("thumbs_down"));
+        assertTrue(arena.has("fame"));
+    
+        rpu.nextTurn();
+    
+        assertFalse(arena.has("timeout"));
+        assertFalse(arena.has("thumbs_up"));
+        assertFalse(arena.has("thumbs_down"));
+        assertFalse(arena.has("fame"));
+    
+        for(int i=0;i<players.length;++i)
+          {
+          assertFalse(players[i].has("!vote"));
+          }
 
-      assertTrue(arena.has("timeout"));
-      assertTrue(arena.has("thumbs_up"));
-      assertTrue(arena.has("thumbs_down"));
-      assertTrue(arena.has("fame"));
-
-      rpu.nextTurn();
-
-      assertFalse(arena.has("timeout"));
-      assertFalse(arena.has("thumbs_up"));
-      assertFalse(arena.has("thumbs_down"));
-      assertFalse(arena.has("fame"));
-
-      for(int i=0;i<players.length;++i)
-        {
-        assertFalse(players[i].has("!vote"));
+        marauroad.trace("Test_the1001::testFullGame","D","Combat end: "+combatRound);
+        System.out.println(arena.get("status"));
         }
       
       System.out.println("Turns done: "+rpu.getTurn());

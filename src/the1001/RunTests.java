@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.6 2004/01/07 17:32:10 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.7 2004/01/07 23:29:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class RunTests
     String filename="output_"+testSuite.getName()+"_"+timestamp+".txt";
 
     System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
-//    System.setOut(new PrintStream(new FileOutputStream(filename)));
+    System.setOut(new PrintStream(new FileOutputStream(filename)));
     TestResult result=junit.textui.TestRunner.run(e);
     String testResult=(result.wasSuccessful()?"Correct":"Failed");
     System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
@@ -63,9 +63,9 @@ public class RunTests
   
   public static Test suite()
     {
-    TestSuite suite= new TestSuite("All marauroa Tests");
+    TestSuite suite= new TestSuite("All Gladiators Tests");
 
-    suite.addTest(new TestSuite(the1001.Test_RPCode.class));
+//    suite.addTest(new TestSuite(the1001.Test_RPCode.class));
     suite.addTest(new TestSuite(the1001.Test_the1001.class));
 
     return suite;
