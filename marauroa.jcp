@@ -9,7 +9,7 @@ OUTPUTPATH := "\\classes"
 COMPILER := "<Default>"
 
 ! Start RunTime Configuration Structure
-#[BeginRunTime]LABEL := "<Default>" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "-c the1001.ini -l" RUN := "marauroa.marauroad" CHECK := "10" #[EndRunTime]
+#[BeginRunTime]LABEL := "<Default>" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "-c mapacman.ini -l" RUN := "marauroa.marauroad" CHECK := "10" #[EndRunTime]
 ! Start Required Libraries Structure
 
 ! Start Project Folder Structure
@@ -266,6 +266,13 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Attributes.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPRuleProcessor.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
+#[BeginFolder]
+LABEL := "Python RP"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\python\\PythonRPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\python\\PythonRP.java" #[EndFile]
+#[EndFolder]
 #[BeginFolder]
 LABEL := "Test"
 FILTER := ""
