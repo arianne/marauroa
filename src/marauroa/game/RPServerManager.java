@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.44 2004/02/10 22:22:17 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.45 2004/02/15 11:24:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,7 +219,7 @@ class RPServerManager extends Thread
     
     try
       {
-      playerContainer.getLock().requestReadLock();
+      playerContainer.getLock().requestWriteLock();
 
       ++deltaPerceptionSend;
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
@@ -266,15 +266,18 @@ class RPServerManager extends Thread
         deltaPerceptionSend=0;
         }
 
-      playerContainer.getLock().releaseLock();
+// NOTE: If we use the Read/Write lock, it can happen a race condition between 
+// unlock and lock that may result in a bad operation.
+//
+//      playerContainer.getLock().releaseLock();
+//      /* Removing the players is a write operation */
+//      playerContainer.getLock().requestWriteLock();
 
-	  /* Removing the players is a write operation */
-      playerContainer.getLock().requestWriteLock();
       notifyTimedoutPlayers(playersToRemove);
-      playerContainer.getLock().releaseLock();
       }      
     finally
       {
+      playerContainer.getLock().releaseLock();
       marauroad.trace("RPServerManager::buildPerceptions","<");
       }
     }

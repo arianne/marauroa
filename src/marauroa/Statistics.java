@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.5 2004/02/09 18:13:33 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.6 2004/02/15 11:24:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,9 @@ import java.util.*;
 import java.io.*;
 
 public class Statistics
-{
-  static class GatheredVariables
   {
+  static class GatheredVariables
+    {
     public long bytesRecv=0;
     public long bytesSend=0;
     public long messagesRecv=0;
@@ -37,7 +37,7 @@ public class Statistics
     public long actionsInvalid=0;
     
     public void print(PrintWriter out, double diff)
-    {
+      {
       out.println("Bytes RECV: "+String.valueOf(bytesRecv));
       out.println("Bytes RECV (avg secs): "+String.valueOf((int)(bytesRecv/diff)));
       out.println("Bytes SEND: "+String.valueOf(bytesSend));
@@ -59,10 +59,10 @@ public class Statistics
       out.println("Objects ONLINE: "+String.valueOf(objectsNow));
       out.println("Actions ADDED: "+String.valueOf(actionsAdded));
       out.println("Actions INVALID: "+String.valueOf(actionsInvalid));
-    }
+      }
     
     public void avg(GatheredVariables var)
-    {
+      {
       bytesRecv=(var.bytesRecv+bytesRecv)/2;
       bytesSend=(var.bytesSend+bytesSend)/2;
       messagesRecv=(var.messagesRecv+messagesRecv)/2;
@@ -79,99 +79,99 @@ public class Statistics
       objectsNow=(var.objectsNow+objectsNow)/2;
       actionsAdded=(var.actionsAdded+actionsAdded)/2;
       actionsInvalid=(var.actionsInvalid+actionsInvalid)/2;
+      }
     }
-  }
   
   private static Date startTime;
   
   private static GatheredVariables nowVar;
   
   static
-  {
+    {
     startTime=new Date();
     nowVar=new GatheredVariables();
-  }
+    }
   
   public static void addBytesRecv(long bytes)
-  {
+    {
     nowVar.bytesRecv+=bytes;
-  }
+    }
   
   public static void addBytesSend(long bytes)
-  {
+    {
     nowVar.bytesSend+=bytes;
-  }
+    }
   
   public static void addMessageRecv()
-  {
+    {
     ++nowVar.messagesRecv;
-  }
+    }
   
   public static void addMessageSend()
-  {
+    {
     ++nowVar.messagesSend;
-  }
+    }
   
   public static void addMessageIncorrect()
-  {
+    {
     ++nowVar.messagesIncorrect;
-  }
+    }
   
   public static void addPlayerLogin()
-  {
+    {
     ++nowVar.playersLogin;
-  }
+    }
   
   public static void addPlayerLogout()
-  {
+    {
     ++nowVar.playersLogout;
-  }
+    }
   
   public static void addPlayerInvalidLogin()
-  {
+    {
     ++nowVar.playersInvalidLogin;
-  }
+    }
   
   public static void setOnlinePlayers(long online)
-  {
+    {
     nowVar.playersOnline=online;
-  }
+    }
   
   public static void addObjectAdded()
-  {
+    {
     ++nowVar.objectsAdded;
-  }
+    }
   
   public static void addObjectRemoved()
-  {
+    {
     ++nowVar.objectsRemoved;
-  }
+    }
   
   public static void setObjectsNow(long now)
-  {
+    {
     nowVar.objectsNow=now;
-  }
+    }
   
   public static void addActionsAdded()
-  {
+    {
     ++nowVar.actionsAdded;
-  }
+    }
   
   public static void addActionsInvalid()
-  {
+    {
     ++nowVar.actionsInvalid;
-  }
+    }
   
   public static GatheredVariables getVariables()
-  {
+    {
     return(nowVar);
-  }
+    }
   
   public static void print()
-  {
+    {
     
     try
-    {
+      {
       PrintWriter out=new PrintWriter(new FileOutputStream("server_stats.txt"));
       
       Date actualTime=new Date();
@@ -181,12 +181,15 @@ public class Statistics
       out.println("Uptime: "+String.valueOf(diff));
       out.println();
       nowVar.print(out,diff);
-      out.println("-- Statistics ------");
-      
+      out.println("-- Statistics ------");      
       out.close();
-    }
+      
+      out=new PrintWriter(new FileOutputStream("server_up.txt"));
+      out.println(actualTime.toString());
+      out.close();      
+      }
     catch(Exception e)
-    {
+      {
+      }
     }
   }
-}
