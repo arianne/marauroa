@@ -20,9 +20,17 @@ Actually to compile Marauroa you need:
 
 Build
 -----
-TODO
+You need ant properly installed on your system to build Marauroa.
+Once you have ant running, simple move to marauroa directory and run ant.
+
+cd /foo/bar/marauroa
+ant jar
+
+You will have a marauroa-0.01.jar file in the lib folder.
 
 
 Running
 -------
-TODO
+Use the BAT files to run it:
+- marauroad is the server 
+- JMarauroa is the client 
