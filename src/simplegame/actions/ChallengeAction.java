@@ -1,4 +1,4 @@
-/* $Id: ChallengeAction.java,v 1.5 2003/12/10 22:49:46 root777 Exp $ */
+/* $Id: ChallengeAction.java,v 1.6 2003/12/12 07:48:49 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,11 +46,11 @@ public class ChallengeAction
     }
     catch (NumberFormatException e)
     {
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
     catch (Attributes.AttributeNotFoundException e)
     {
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
     return(ret);
   }
@@ -64,11 +64,11 @@ public class ChallengeAction
     }
     catch (NumberFormatException e)
     {
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
     catch (Attributes.AttributeNotFoundException e)
     {
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
     return(ret);
   }
