@@ -4,6 +4,7 @@
   <property name="src" value="src"/>
   <property name="build" value="build"/>
   <property name="images" value="${build}/images"/>
+  <property name="sounds" value="${build}/sounds"/>
   <property name="lib"  value="lib"/>
   
   <!-- Modify to point to your junit.jar file -->
@@ -16,6 +17,7 @@
   <target name="init">
     <mkdir dir="${build}" />
     <mkdir dir="${images}" />
+    <mkdir dir="${sounds}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
   </target>
@@ -23,6 +25,12 @@
   <target name="installation" depends="init">
     <copy todir="${images}">
       <fileset dir="images">
+        <include name="**/*.*"/>
+	    <exclude name="CVS"/>
+      </fileset>
+    </copy>
+    <copy todir="${sounds}">
+      <fileset dir="sounds">
         <include name="**/*.*"/>
 	    <exclude name="CVS"/>
       </fileset>
