@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.25 2004/01/07 11:16:24 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.26 2004/01/07 11:21:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -347,8 +347,22 @@ public class RPCode
     {
     playersVoted=new LinkedList();
     }
-  
-  public static RPAction.Status Vote(RPObject.ID player_id, String vote) throws Exception
+    
+  /** This action is used to vote for a gladiator once the fight is over.
+   *
+   *  Pseudocode:
+   *
+   *  BEGIN  
+   *    Check that player has not voted
+   *    Vote UP or DOWN
+   *
+   *  END
+   *
+   *  @param player_id the Object id of the player 
+   *  @param vote the type of vote: UP or DOWN.
+   *  @return the result of executing the action, either success or fail. 
+   **/
+   public static RPAction.Status Vote(RPObject.ID player_id, String vote) throws Exception
     {
     marauroad.trace("RPCode::Vote",">");
    
