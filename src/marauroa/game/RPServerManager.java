@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.40 2004/01/28 18:54:28 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.41 2004/01/29 17:15:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,7 +219,6 @@ class RPServerManager extends Thread
 
       ++deltaPerceptionSend;
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
-    
       
       while(it.hasNext())
         {
@@ -342,9 +341,9 @@ class RPServerManager extends Thread
         {
         }
 
+      zone.nextTurn();      
       scheduler.nextTurn();      
       ruleProcessor.nextTurn();
-      zone.nextTurn();      
       }
       
     isfinished=true;    

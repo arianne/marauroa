@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.15 2004/01/28 18:54:28 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.16 2004/01/29 17:15:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,6 @@ public class MarauroaRPZone implements RPZone
   private HashMap objects;
   private List listObjects;
   private Perception perception;
-  private Perception[] perceptions;
-  private byte lastPerceptionUsed;
 
   private static Random rand=new Random();
   
@@ -32,13 +30,7 @@ public class MarauroaRPZone implements RPZone
     objects=new HashMap();
     
     listObjects=new LinkedList();
-  
-    perceptions=new Perception[2];
-    perceptions[0]=new Perception(Perception.DELTA);
-    perceptions[1]=new Perception(Perception.DELTA);
-    lastPerceptionUsed=0;
-    
-    perception=perceptions[0];
+    perception=new Perception(Perception.DELTA);
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -49,7 +41,7 @@ public class MarauroaRPZone implements RPZone
       objects.put(id,object);
       
       listObjects.add(object);
-      perception.modified(object);
+      modify(object);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
@@ -58,7 +50,7 @@ public class MarauroaRPZone implements RPZone
       }
     }
   
-  public void modify(RPObject object) throws RPObjectNotFoundException
+  public void modify(RPObject object)
     {
     perception.modified(object);
     }
@@ -147,16 +139,7 @@ public class MarauroaRPZone implements RPZone
   
   public void nextTurn() 
     {
-    if(lastPerceptionUsed==0)
-      {
-      ++lastPerceptionUsed;
-      perception=perceptions[1];
-      }
-    else
-      {
-      lastPerceptionUsed=0;
-      perception=perceptions[0];
-      }
+    perception=new Perception(Perception.DELTA);
     }  
   }
 

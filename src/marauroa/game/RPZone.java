@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.13 2004/01/02 00:02:03 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.14 2004/01/29 17:15:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,8 +50,13 @@ public interface RPZone
     
     public void modified(RPObject object)
       {
-      if(!modifiedList.contains(object))
+      if(!deletedList.contains(object))
         {
+        if(modifiedList.contains(object))
+          {
+          modifiedList.remove(object);          
+          }
+
         modifiedList.add(object);
         }
       }
@@ -64,6 +69,12 @@ public interface RPZone
     public int size()
       {
       return (modifiedList.size()+deletedList.size());
+      }
+    
+    public void clear()
+      {
+      modifiedList.clear();
+      deletedList.clear();
       }
     }
   

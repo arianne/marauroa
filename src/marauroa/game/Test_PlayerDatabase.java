@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.11 2003/12/10 16:23:18 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.12 2004/01/29 17:15:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,28 @@ public class Test_PlayerDatabase extends TestCase
     testPlayerDatabaseExceptions("JDBCPlayerDatabase");
     }
     
-	
+  public void testJDBCPlayerDatabaseSecurity()
+    {
+    marauroad.trace("Test_PlayerDatabase::testJDBCPlayerDatabaseSecurity",">");
+
+    try
+      {
+      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
+      assertNotNull(playerDatabase);
+
+      assertFalse(playerDatabase.hasPlayer("\" or 1=1"));
+      assertFalse(playerDatabase.hasPlayer("\' or 1=1"));
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("Test_PlayerDatabase::testJDBCPlayerDatabaseSecurity","X",e.getMessage());
+      }
+    finally 
+      {
+      marauroad.trace("Test_PlayerDatabase::testJDBCPlayerDatabaseSecurity","<");
+      }
+    }
+
   private void testPlayerDatabase(String type)
     {
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabase","?","This test case operates the Database in a similar"+
