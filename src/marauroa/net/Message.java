@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.6 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.7 2003/12/08 15:38:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,9 +20,10 @@ import java.io.*;
  */
 public class Message implements marauroa.net.Serializable
   {
-  public final static byte TYPE_INVALID=-1;
   public final static byte CLIENTID_INVALID=-1;
   
+  public final static byte TYPE_INVALID=-1;
+
   public final static byte TYPE_C2S_LOGIN=1;
   public final static byte TYPE_S2C_LOGIN_ACK=10;
   public final static byte TYPE_S2C_LOGIN_NACK=11;
@@ -42,6 +43,8 @@ public class Message implements marauroa.net.Serializable
   
   public final static byte TYPE_S2C_PERCEPTION=6;
   public final static byte TYPE_C2S_PERCEPTION_ACK=61;
+  
+  public final static byte TYPE_S2C_SERVERINFO=7;  
 
   protected byte type;
   protected int clientid;

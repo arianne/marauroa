@@ -66,16 +66,28 @@
         <task id="83" name="Add traces" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="22/11/2003" duration="13" complete="100" priority="1">
             <depend id="85" type="2"/>
         </task>
-        <task id="85" name="Release Marauroa 0.02" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/12/2003" duration="2" complete="100" priority="1">
+        <task id="85" name="Release Marauroa 0.02" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="7/12/2003" duration="2" complete="100" priority="1">
+            <depend id="86" type="2"/>
+        </task>
+        <task id="81" name="Implement Delta Perception" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="12/11/2003" duration="28" complete="100" priority="1">
+            <depend id="93" type="2"/>
+        </task>
+        <task id="94" name="Multipacket UDP support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/12/2003" duration="8" complete="100" priority="1">
+            <depend id="93" type="2"/>
+        </task>
+        <task id="95" name="Update documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/11/2003" duration="13" complete="100" priority="1">
+            <depend id="93" type="2"/>
+        </task>
+        <task id="93" name="Release Marauroa 0.03" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="10/12/2003" duration="3" complete="100" priority="1">
             <depend id="86" type="2"/>
         </task>
         <task id="79" name="Create a simple game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="3/12/2003" duration="8" complete="100" priority="1">
             <depend id="86" type="2"/>
         </task>
-        <task id="81" name="Implement Delta Perception" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="12/11/2003" duration="29" complete="45" priority="1">
+        <task id="96" name="Document SimpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="8/12/2003" duration="9" complete="20" priority="1">
             <depend id="86" type="2"/>
         </task>
-        <task id="86" name="Release Marauroa 0.10" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="11/12/2003" duration="4" complete="0" priority="1"/>
+        <task id="86" name="Release Marauroa 0.10" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="4" complete="0" priority="1"/>
     </tasks>
 
     <resources>
