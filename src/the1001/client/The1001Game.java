@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.6 2004/02/26 06:22:09 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.7 2004/03/03 06:34:55 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -509,7 +509,7 @@ public class The1001Game
 					++recieved;
 					break;
 				}
-				complete = ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
+				complete = complete || ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
 			}
 			marauroad.trace("The1001Game::connectAndChooseCharacter","D","characters: "+characters);
 			if(characters!=null && characters.length>0)
@@ -518,7 +518,8 @@ public class The1001Game
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(null,"No characters received from server");
+				JOptionPane.showMessageDialog(null,"No characters received from server - wrong username/password?");
+				System.exit(-1);
 			}
 		}
 		catch(SocketException e)

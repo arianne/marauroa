@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.6 2004/02/26 06:22:09 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.7 2004/03/03 06:34:55 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,29 +47,30 @@ import org.newdawn.j3d.loaders.md2.MD2Loader;
 import org.newdawn.j3d.loaders.md2.MD2Model;
 import org.newdawn.j3d.loaders.md2.MD2ModelInstance;
 import the1001.RPCode;
+import the1001.objects.Gladiator;
 
 /**
  *@author Waldemar Tribus
  */
 public class The1001Game3D
-	extends Canvas3D implements KeyListener, GameDataModelListenerIF
+  extends Canvas3D implements KeyListener, GameDataModelListenerIF
 {
-	
+  
   private SimpleUniverse universe;
   private List modelInstances;
   private ModelAnimator animator;
-	//  private String animations[] = {"pain","stand","jump","flip","salute","taunt",
-//		"wave","point","crstand","crwalk","crattack",
-//		"crpain","crdeath","death","run","attack"};
-	//  private int currAnim;
-	private GameDataModel gdm;
-	private Arena arena;
-	
-	private BranchGroup bgCenterText;
-	private Text3D centerText3D;
-	
-	private Map models;
-	private MD2Loader md2Loader;
+  //  private String animations[] = {"pain","stand","jump","flip","salute","taunt",
+  //    "wave","point","crstand","crwalk","crattack",
+  //    "crpain","crdeath","death","run","attack"};
+  //  private int currAnim;
+  private GameDataModel gdm;
+  private Arena arena;
+  
+  private BranchGroup bgCenterText;
+  private Text3D centerText3D;
+  
+  private Map models;
+  private MD2Loader md2Loader;
   
   public The1001Game3D(GameDataModel gdm)
   {
@@ -181,10 +182,10 @@ public class The1001Game3D
 		Shape3D sh_txt = new Shape3D();
 		Appearance app_txt = new Appearance();
 		Material mm_txt = new Material();
-//		mm_txt.setLightingEnable(true);
-//		mm_txt.setSpecularColor(new Color3f(1.0f,0.0f,0.0f));
-//		mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
-//		mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+		//    mm_txt.setLightingEnable(true);
+		//    mm_txt.setSpecularColor(new Color3f(1.0f,0.0f,0.0f));
+		//    mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+		//    mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
 		mm_txt.setEmissiveColor(new Color3f(1.0f,1.0f,1.0f));
 		app_txt.setMaterial(mm_txt);
 		sh_txt.setGeometry(centerText3D);
@@ -231,7 +232,7 @@ public class The1001Game3D
 		tr2.mul(tr1);
 		tg.setTransform(tr2);
 		tg.addChild(trans);
-//		tg.addChild(rotator);
+		//    tg.addChild(rotator);
 		
 		
 		
@@ -241,21 +242,21 @@ public class The1001Game3D
 		objTrans.addChild(tg);
 		
 		MouseRotate behavior = new MouseRotate();
-	  behavior.setTransformGroup(objTrans);
-	  objTrans.addChild(behavior);
-	  behavior.setSchedulingBounds(bounds);
+		behavior.setTransformGroup(objTrans);
+		objTrans.addChild(behavior);
+		behavior.setSchedulingBounds(bounds);
 		
-	  // Create the zoom behavior node
-	  MouseZoom behavior2 = new MouseZoom();
-	  behavior2.setTransformGroup(objTrans);
-	  objTrans.addChild(behavior2);
-	  behavior2.setSchedulingBounds(bounds);
+		// Create the zoom behavior node
+		MouseZoom behavior2 = new MouseZoom();
+		behavior2.setTransformGroup(objTrans);
+		objTrans.addChild(behavior2);
+		behavior2.setSchedulingBounds(bounds);
 		
-	  // Create the translate behavior node
-	  MouseTranslate behavior3 = new MouseTranslate();
-	  behavior3.setTransformGroup(objTrans);
-	  objTrans.addChild(behavior3);
-	  behavior3.setSchedulingBounds(bounds);
+		// Create the translate behavior node
+		MouseTranslate behavior3 = new MouseTranslate();
+		behavior3.setTransformGroup(objTrans);
+		objTrans.addChild(behavior3);
+		behavior3.setSchedulingBounds(bounds);
 		
 		root.addChild(objTrans);
 		
@@ -277,13 +278,13 @@ public class The1001Game3D
 		return root;
   }
   
-	private Arena createArene()
-	{
+  private Arena createArene()
+  {
 		Arena arena = new Arena();
 		return(arena);
-	}
-	
-	
+  }
+  
+  
   private BranchGroup createSky()
   {
 		TextureLoader loader = new TextureLoader(Resources.getImageUrl("SkyDome.jpg"), this);
@@ -305,7 +306,7 @@ public class The1001Game3D
 		bg.compile();
 		return(bg);
   }
-	
+  
   
   
   private MD2ModelInstance loadModel(String modelname)
@@ -315,8 +316,18 @@ public class The1001Game3D
 			MD2Model model = (MD2Model)models.get(modelname);
 			if(model==null)
 			{
-				InputStream model_is = Resources.getModelUrl(modelname+".md2").openStream();
-				InputStream skin_is  = Resources.getModelUrl(modelname+".pcx").openStream();
+				URL url = Resources.getModelUrl(modelname+".md2");
+				if(url==null)
+				{
+					url = Resources.getModelUrl("billgates.md2");
+				}
+				InputStream model_is = url.openStream();
+				url = Resources.getModelUrl(modelname+".pcx");
+				if(url==null)
+				{
+					url = Resources.getModelUrl("billgates.pcx");
+				}
+				InputStream skin_is  = url.openStream();
 				model = md2Loader.loadWithPCX(model_is, skin_is);
 				models.put(modelname,model);
 			}
@@ -347,42 +358,42 @@ public class The1001Game3D
 		}
 		return null;
   }
-	
-	
-	/**
+  
+  
+  /**
 	 * Invoked when a key has been typed.
 	 * See the class description for {@link KeyEvent} for a definition of
 	 * a key typed event.
 	 */
-	public void keyTyped(KeyEvent e)
-	{
-	}
-	
-	/**
+  public void keyTyped(KeyEvent e)
+  {
+  }
+  
+  /**
 	 * Invoked when a key has been pressed.
 	 * See the class description for {@link KeyEvent} for a definition of
 	 * a key pressed event.
 	 */
-	public void keyPressed(KeyEvent e)
-	{
+  public void keyPressed(KeyEvent e)
+  {
 		if(KeyEvent.VK_ESCAPE == e.getKeyCode())
 		{
 			System.exit(-1);
 		}
 		System.out.println(e);
-	}
-	
-	/**
+  }
+  
+  /**
 	 * Invoked when a key has been released.
 	 * See the class description for {@link KeyEvent} for a definition of
 	 * a key released event.
 	 */
-	public void keyReleased(KeyEvent e)
-	{
-	}
-	
-	public void modelUpdated(GameDataModel gdm)
-	{
+  public void keyReleased(KeyEvent e)
+  {
+  }
+  
+  public void modelUpdated(GameDataModel gdm)
+  {
 		RPObject[] spectators = gdm.getSpectators();
 		RPObject[] fighters = gdm.getFighters();
 		arena.setSpectators(spectators);
@@ -391,7 +402,7 @@ public class The1001Game3D
 		arena.setArenaMode(gdm.getStatus());
 		arena.setOwnGladiator(gdm.getOwnGladiator());
 		arena.setOwnCharacter(gdm.getOwnCharacter());
-	}
+  }
   
   private class ModelAnimator
 		extends Thread
@@ -429,11 +440,11 @@ public class The1001Game3D
 			}
 		}
   }
-	
-	
-	private final class Arena
+  
+  
+  private final class Arena
 		extends BranchGroup
-	{
+  {
 		private final static double radius = 2.0;
 		private final static int columnCount = 12;
 		
@@ -521,22 +532,22 @@ public class The1001Game3D
 			URL url_model = Resources.getModelUrl("Orc_Arena.3DS");
 			Inspector3DS inloader = new Inspector3DS(url_model); // constructor
 			marauroad.trace("Arena","D",""+url_model.toExternalForm());
-//			String path = url_model.getPath();
-//			path = "file:/P:/edonkey/work/classes/data/models/Orc_Arena/";
+			//      String path = url_model.getPath();
+			//      path = "file:/P:/edonkey/work/classes/data/models/Orc_Arena/";
 			marauroad.trace("Arena","D",Resources.getModelBaseUrl("Orc_Arena.3DS").toExternalForm());
-//			try
-//			{
-//				URL url_base = new URL(;);
+			//      try
+			//      {
+			//        URL url_base = new URL(;);
 			inloader.setURLBase(Resources.getModelBaseUrl("Orc_Arena.3DS").toExternalForm());
-//			}
-//			catch (MalformedURLException e)
-//			{
-//				e.printStackTrace();
-//			}
+			//      }
+			//      catch (MalformedURLException e)
+			//      {
+			//        e.printStackTrace();
+			//      }
 			
-//			loader.setURLBase(Resources.getModelUrl("Orc_Arena.3DS").get);
-//			inloader.setLogging(true);
-//			inloader.setDetail(7);
+			//      loader.setURLBase(Resources.getModelUrl("Orc_Arena.3DS").get);
+			//      inloader.setLogging(true);
+			//      inloader.setDetail(7);
 			inloader.parseIt(); // process the file
 			TransformGroup the_model = inloader.getModel();
 			Transform3D t = new Transform3D();
@@ -702,7 +713,7 @@ public class The1001Game3D
 								mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,0.0f));
 								Appearance appearance = new Appearance();
 								appearance.setMaterial(mm_txt);
-								mab.text.setAppearance(appearance);
+								mab.nameLabel.setAppearance(appearance);
 							}
 						}
 					}
@@ -785,12 +796,12 @@ public class The1001Game3D
 							if(damage>0)
 							{
 								model.setAnimation("pain");
-								((Text3D)mab.text.getUserData()).setString(name+ " " + hp + " : "+damage);
+								((Text3D)mab.nameLabel.getUserData()).setString(name+ " " + hp + " : "+damage);
 							}
 							else
 							{
 								model.setAnimation("attack");
-								((Text3D)mab.text.getUserData()).setString(name+ " " + hp);
+								((Text3D)mab.nameLabel.getUserData()).setString(name+ " " + hp);
 							}
 						}
 						catch (Attributes.AttributeNotFoundException e)
@@ -811,7 +822,7 @@ public class The1001Game3D
 								mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,0.0f));
 								Appearance appearance = new Appearance();
 								appearance.setMaterial(mm_txt);
-								mab.text.setAppearance(appearance);
+								mab.nameLabel.setAppearance(appearance);
 							}
 						}
 						
@@ -855,11 +866,106 @@ public class The1001Game3D
 		
 		private void placeModel(String name, ModelAndBranch model_br, double radius)
 		{
+			double angle = Math.random()*2*Math.PI;
+			double sin = Math.sin(angle);
+			double cos = Math.cos(angle);
+			BranchGroup bg_main = new BranchGroup();
+			model_br.bgroup = new BranchGroup();
+			TransformGroup tg_scale_all = new TransformGroup();
+			Transform3D trans_scale_and_translate_all = new Transform3D();
+			Vector3f v3f = new Vector3f((float)(sin*radius),0.26f,(float)(cos*radius));
+			trans_scale_and_translate_all.set(v3f);
+			Transform3D trot = new Transform3D();
+			float angle_rot = v3f.angle(new Vector3f(-1.0f,0.0f,0.0f));
+			if(angle>=Math.PI/2 && angle<=3*Math.PI/2)
+			{
+				angle_rot = -angle_rot;
+			}
+//
+			trot.rotY(angle_rot);
+			Transform3D t = new Transform3D();
+			t.setScale(0.2f);
+			trot.mul(t);
+			trans_scale_and_translate_all.mul(trot);
+			tg_scale_all.setTransform(trans_scale_and_translate_all);
+			
+			
+			// name label
+			Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
+															new FontExtrusion());
+			Text3D txt = new Text3D(f3d, name);
+			txt.setCapability(Text3D.ALLOW_STRING_WRITE);
+			txt.setCapability(Text3D.ALLOW_STRING_READ);
+//			txt.setString(""+(angle*180/Math.PI));
+			Shape3D sh_txt = new Shape3D();
+			Appearance appearance = new Appearance();
+			Material mm_txt = new Material();
+			mm_txt.setLightingEnable(true);
+			mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+			mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
+			appearance.setMaterial(mm_txt);
+			sh_txt.setGeometry(txt);
+			sh_txt.setAppearance(appearance);
+			sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
+			model_br.nameLabel = sh_txt;
+			sh_txt.setUserData(txt);
+			
+			tg_scale_all.addChild(sh_txt);
+			
+			//health label
+			
+			f3d = new Font3D(new Font("default", Font.PLAIN, 2),
+											 new FontExtrusion());
+			txt = new Text3D(f3d, name);
+			txt.setCapability(Text3D.ALLOW_STRING_WRITE);
+			txt.setCapability(Text3D.ALLOW_STRING_READ);
+			sh_txt = new Shape3D();
+			appearance = new Appearance();
+			mm_txt = new Material();
+			mm_txt.setLightingEnable(true);
+			mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,0.0f,1.0f));
+			mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
+			appearance.setMaterial(mm_txt);
+			sh_txt.setGeometry(txt);
+			sh_txt.setAppearance(appearance);
+			sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
+			txt.setString("100");
+			model_br.healthLabel = sh_txt;
+			sh_txt.setUserData(txt);
+			Transform3D trans = new Transform3D();
+			trans.rotX(Math.PI/2);
+			Transform3D trans2 = new Transform3D();
+			trans2.rotY(Math.PI);
+			trans.mul(trans2);
+			
+			TransformGroup tr_gr = new TransformGroup();
+			tr_gr.addChild(sh_txt);
+			tr_gr.setTransform(trans);
+//			tg_scale_all.addChild(tr_gr);
+			model_br.bgroup.addChild(model_br.model);
+			tg_scale_all.addChild(model_br.bgroup);
+			
+			bg_main.addChild(tg_scale_all);
+			addChild(bg_main);
+		}
+		
+		private void _placeModel(String name, ModelAndBranch model_br, double radius)
+		{
 			BranchGroup bg_model = new BranchGroup();
 			TransformGroup tg_model_scale = new TransformGroup();
 			Transform3D trans1 = new Transform3D();
 			trans1.setScale(0.2f);
 			
+			// name label
 			Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
 															new FontExtrusion());
 			Text3D txt = new Text3D(f3d, name);
@@ -880,8 +986,9 @@ public class The1001Game3D
 			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
 			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
-			model_br.text = sh_txt;
+			model_br.nameLabel = sh_txt;
 			sh_txt.setUserData(txt);
+			
 			
 			double angle = Math.random()*2*Math.PI;
 			double sin = Math.sin(angle);
@@ -903,6 +1010,44 @@ public class The1001Game3D
 			tx.mul(trot);
 			tgt.setTransform(tx);
 			tgt.addChild(sh_txt);
+			
+			//health label
+			
+			f3d = new Font3D(new Font("default", Font.PLAIN, 2),
+											 new FontExtrusion());
+			txt = new Text3D(f3d, name);
+			txt.setCapability(Text3D.ALLOW_STRING_WRITE);
+			txt.setCapability(Text3D.ALLOW_STRING_READ);
+			sh_txt = new Shape3D();
+			appearance = new Appearance();
+			mm_txt = new Material();
+			mm_txt.setLightingEnable(true);
+			mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+			mm_txt.setDiffuseColor(new Color3f(0.0f,0.0f,1.0f));
+			mm_txt.setEmissiveColor(new Color3f(0.0f,1.0f,1.0f));
+			appearance.setMaterial(mm_txt);
+			sh_txt.setGeometry(txt);
+			sh_txt.setAppearance(appearance);
+			sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+			sh_txt.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
+			txt.setString("100");
+			model_br.healthLabel = sh_txt;
+			sh_txt.setUserData(txt);
+			Transform3D trans = new Transform3D();
+			trans.rotX(Math.PI/2);
+			Transform3D trans2 = new Transform3D();
+			trans2.rotY(Math.PI);
+			trans.mul(trans2);
+			
+			TransformGroup tr_gr = new TransformGroup();
+			tr_gr.addChild(sh_txt);
+			tr_gr.setTransform(trans);
+			
+			tgt.addChild(tr_gr);
+			
 			tg.setTransform(t);
 			
 			trans1.mul(trot);
@@ -921,10 +1066,13 @@ public class The1001Game3D
 			addChild(bg);
 			
 		}
-	} //Arena
+  } //Arena
 	
-	private BranchGroup createButton(String id, String image)
-	{
+	
+	
+  
+  private BranchGroup createButton(String id, String image)
+  {
 		BranchGroup bg = new BranchGroup();
 		QuadArray plane = new QuadArray(4, GeometryArray.COORDINATES
 																			| GeometryArray.TEXTURE_COORDINATE_2);
@@ -958,8 +1106,8 @@ public class The1001Game3D
 		shape.setUserData(id);
 		TransparencyAttributes ta = new TransparencyAttributes();
 		ta.setTransparencyMode (TransparencyAttributes.FASTEST);
-//		ta.setSrcBlendFunction(TransparencyAttributes.BLEND_SRC_ALPHA);
-//		ta.setDstBlendFunction(TransparencyAttributes.BLEND_SRC_ALPHA);
+		//    ta.setSrcBlendFunction(TransparencyAttributes.BLEND_SRC_ALPHA);
+		//    ta.setDstBlendFunction(TransparencyAttributes.BLEND_SRC_ALPHA);
 		ta.setTransparency (0.0f);
 		appearance.setTransparencyAttributes(ta);
 		
@@ -984,47 +1132,48 @@ public class The1001Game3D
 		bg.addChild(tg);
 		bg.compile();
 		return(bg);
-	}
-	
-	//because MD2ModelInstance's set/get/UserData dont work :-(
-	private final class ModelAndBranch
-	{
+  }
+  
+  //because MD2ModelInstance's set/get/UserData dont work :-(
+  private final class ModelAndBranch
+  {
 		public MD2ModelInstance model;
 		public BranchGroup bgroup;
-		public Shape3D text;
-	}
-	
-	/**
+		public Shape3D nameLabel;
+		public Shape3D healthLabel;
+  }
+  
+  /**
 	 *
 	 */
-	public static void main(String[] args)
-	{
+  public static void main(String[] args)
+  {
 		JFrame frame = new JFrame("Arena");
 		The1001Game3D gamedisplay = new The1001Game3D(null);
 		frame.getContentPane().add(gamedisplay);
 		frame.setSize(640,480);
-//		frame.setUndecorated(true);
-//		RPObject [] spectators = new RPObject[8];
-//		RPObject [] fighters   = new RPObject[2];
-//		for (int i = 0; i < spectators.length; i++)
-//		{
-//			RPObject rp = new RPObject();
-//			rp.put("object_id","spec_"+i);
-//			rp.put("name","Spectator_"+i);
-//			spectators[i] = rp;
-//		}
-//		for (int i = 0; i < fighters.length; i++)
-//		{
-//			try
-//			{
-//				RPObject rp = new Gladiator(new RPObject.ID(i));
-//				rp.put("object_id","glad_"+i);
-//				fighters[i] = rp;
-//			}
-//			catch (RPObject.SlotAlreadyAddedException e) {}
-//		}
-//		gamedisplay.arena.setSpectators(spectators);
-//		gamedisplay.arena.setFighters(fighters);
+		frame.setUndecorated(true);
+		RPObject [] spectators = new RPObject[8];
+		RPObject [] fighters   = new RPObject[2];
+		for (int i = 0; i < spectators.length; i++)
+		{
+			RPObject rp = new RPObject();
+			rp.put("object_id","spec_"+i);
+			rp.put("name","Spectator_"+i);
+			spectators[i] = rp;
+		}
+		for (int i = 0; i < fighters.length; i++)
+		{
+			try
+			{
+				RPObject rp = new Gladiator(new RPObject.ID(i));
+				rp.put("object_id","glad_"+i);
+				fighters[i] = rp;
+			}
+			catch (RPObject.SlotAlreadyAddedException e) {}
+		}
+		gamedisplay.arena.setSpectators(spectators);
+		gamedisplay.arena.setFighters(fighters);
 		frame.show();
 		
 		
@@ -1036,11 +1185,11 @@ public class The1001Game3D
 		catch (InterruptedException e)
 		{
 		}
-//		gamedisplay.centerText3D.setString("Kein Wurst");
-//		RPObject [] lllfighters   = new RPObject[0];
-//		System.out.println("removing fighters.....");
-//		System.out.flush();
-//		gamedisplay.arena.setFighters(lllfighters);
-	}
+		//    gamedisplay.centerText3D.setString("Kein Wurst");
+		//    RPObject [] lllfighters   = new RPObject[0];
+		//    System.out.println("removing fighters.....");
+		//    System.out.flush();
+		//    gamedisplay.arena.setFighters(lllfighters);
+  }
 }
 

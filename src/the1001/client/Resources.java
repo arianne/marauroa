@@ -1,4 +1,4 @@
-/* $Id: Resources.java,v 1.3 2004/02/26 06:22:09 root777 Exp $ */
+/* $Id: Resources.java,v 1.4 2004/03/03 06:34:55 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@
 package the1001.client;
 
 import java.net.URL;
+import marauroa.marauroad;
 
 /**
  *@author Waldemar Tribus
@@ -73,6 +74,10 @@ public class Resources
 			{
 				//try to find tris.md2
 				ret = loader.getResource("models/"+modelname+"/tris.md2");
+			}
+			if(ret==null)
+			{
+				marauroad.trace("getModelUrl","X","nixda "+resource);
 			}
 		}
 		return(ret);
