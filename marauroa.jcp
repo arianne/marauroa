@@ -17,6 +17,7 @@ COMPILER := "<Default>"
 LABEL := "Root"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\RWLock.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Configuration.java" #[EndFile]

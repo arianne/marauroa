@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.2 2004/01/30 20:02:46 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.3 2004/01/30 20:34:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa;
+package the1001;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,7 +21,7 @@ import the1001.objects.*;
 
 class createaccount
   {
-  public static void main (String[] args)
+  public static int main (String[] args)
     {
     int i=0;
     PrintWriter out=null;
@@ -68,12 +68,12 @@ class createaccount
       ++i;
       }
     
-    if(username==null) return;
-    if(password==null) return;
-    if(character==null) return;
-    if(character_model==null) return;
-    if(gladiator==null) return;
-    if(gladiator_model==null) return;
+    if(username==null) return 1;
+    if(password==null) return 1;
+    if(character==null) return 1;
+    if(character_model==null) return 1;
+    if(gladiator==null) return 1;
+    if(gladiator_model==null) return 1;
       
     try
       {      
@@ -87,71 +87,71 @@ class createaccount
       if(playerDatabase.validString(username)==false) 
         {
         out.println("String not valid: "+username);
-        return;
+        return 2;
         }
       if(playerDatabase.validString(password)==false)
         {
         out.println("String not valid: "+password);
-        return;
+        return 2;
         }
       if(playerDatabase.validString(character)==false)
         {
         out.println("String not valid: "+character);
-        return;
+        return 2;
         }
       if(playerDatabase.validString(character_model)==false)       
         {
         out.println("String not valid: "+character_model);
-        return;
+        return 2;
         }
       if(playerDatabase.validString(gladiator)==false)
         {
         out.println("String not valid: "+gladiator);
-        return;
+        return 2;
         }
       if(playerDatabase.validString(gladiator_model)==false)       
         {
         out.println("String not valid: "+gladiator_model);
-        return;
+        return 2;
         }
 
       out.println("Checking string size");
       if(username.length()>10) 
         {
         out.println("String size not valid: "+username);
-        return;
+        return 3;
         }
       if(password.length()>10) 
         {
         out.println("String size not valid: "+password);
-        return;
+        return 3;
         }
       if(character.length()>20) 
         {
         out.println("String size not valid: "+character);
-        return;
+        return 3;
         }
       if(character_model.length()>10) 
         {
         out.println("String size not valid: "+character_model);
-        return;
+        return 3;
         }
       if(gladiator.length()>20) 
         {
         out.println("String size not valid: "+gladiator);
-        return;
+        return 3;
         }
       if(gladiator_model.length()>10) 
         {
         out.println("String size not valid: "+gladiator_model);
-        return;
+        return 3;
         }
         
       out.println("Checking if player exists");
       if(playerDatabase.hasPlayer(username))
         {
         out.println("ERROR: Player exists");
-        return;
+        return 4;
         }
 
       out.println("Adding player");
@@ -173,10 +173,12 @@ class createaccount
       playerDatabase.addCharacter(username,character,object);
       
       out.println("Correctly created");
+      return 0;
       }
     catch(Exception e)
       {
       out.println("Failed: "+e.getMessage());
+      return 5;
       }    
     finally
       {
