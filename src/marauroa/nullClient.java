@@ -126,47 +126,8 @@ class TestClient extends Thread
               previous_timestamp=msgPer.getTimestamp();
               System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
               out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
-          
-              Iterator it;
-              it=msgPer.getDeletedRPObjects().iterator();
-              while(it.hasNext())
-                {
-                RPObject object=(RPObject)it.next();
-                out.println("D: "+object);
-                world_objects.remove(object.get("id"));            
-                }
               
-              it=msgPer.getModifiedDeletedRPObjects().iterator();
-              while(it.hasNext())
-                {
-                RPObject object=(RPObject)it.next();
-                out.println("MD: "+object);
-                RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
-                w_object.applyDifferences(null,object);        
-                }
-    
-              it=msgPer.getModifiedAddedRPObjects().iterator();
-              while(it.hasNext())
-                {
-                RPObject object=(RPObject)it.next();
-                out.println("MA: "+object);
-                RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
-                w_object.applyDifferences(object,null);        
-                }
-    
-              it=msgPer.getAddedRPObjects().iterator();
-              while(it.hasNext())
-                {
-                RPObject object=(RPObject)it.next();
-                out.println("A: "+object);
-                world_objects.put(object.get("id"),object);            
-                }
-              
-              out.println("MY: "+msgPer.getMyRPObject());
-              if(msgPer.getMyRPObject()!=null)
-                {
-                world_objects.put(msgPer.getMyRPObject().get("id"),msgPer.getMyRPObject());
-                }   
+              previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);          
               }       
             }
           }
@@ -215,15 +176,15 @@ class TestClient extends Thread
     {
     try
       {
-      int num=6;
+      int num=1;
       TestClient test[]=new TestClient[num];
       
       test[0]=new TestClient("miguel","qwerty","miguel");
-      test[1]=new TestClient("prueba","qwerty","prueba");
-      test[2]=new TestClient("bot_8","nopass","bot_8");
-      test[3]=new TestClient("bot_9","nopass","bot_9");
-      test[4]=new TestClient("bot_10","nopass","bot_10");
-      test[5]=new TestClient("bot_11","nopass","bot_11");
+//      test[1]=new TestClient("prueba","qwerty","prueba");
+//      test[2]=new TestClient("bot_8","nopass","bot_8");
+//      test[3]=new TestClient("bot_9","nopass","bot_9");
+//      test[4]=new TestClient("bot_10","nopass","bot_10");
+//      test[5]=new TestClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {
