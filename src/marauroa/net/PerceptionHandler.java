@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.5 2004/05/15 15:06:17 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.6 2004/05/20 12:34:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -113,6 +113,7 @@ public class PerceptionHandler
     }
     
   private IPerceptionListener listener;
+  private List previousPerceptions;
   private int previousTimestamp;
   private boolean synced;
   
@@ -120,6 +121,7 @@ public class PerceptionHandler
     {
     this.listener=new DefaultPerceptionListener();
     synced=false;
+    previousPerceptions=new LinkedList();
     }
 
   public PerceptionHandler(IPerceptionListener listener)
@@ -147,6 +149,7 @@ public class PerceptionHandler
         {
         /** OnSync: Keep processing */
         previousTimestamp=message.getPerceptionTimestamp();
+        previousPerceptions.clear();
         
         applyPerceptionAddedRPObjects(message,world_instance);
         applyPerceptionMyRPObject(message,world_instance);
@@ -181,8 +184,44 @@ public class PerceptionHandler
       }
     else
       {
-      synced=false;
-      listener.onUnsynced();
+      previousPerceptions.add(message);
+      
+      Iterator it=previousPerceptions.iterator();
+      while(it.hasNext())
+        {
+        MessageS2CPerception previousmessage=(MessageS2CPerception ) it.next();
+        if(previousTimestamp+1==previousmessage.getPerceptionTimestamp())         
+          {
+          try
+            {
+            /** OnSync: Keep processing */
+            previousTimestamp=previousmessage.getPerceptionTimestamp();
+        
+            applyPerceptionDeletedRPObjects(previousmessage,world_instance);
+            applyPerceptionModifiedRPObjects(previousmessage,world_instance);
+            applyPerceptionAddedRPObjects(previousmessage,world_instance);
+            applyPerceptionMyRPObject(previousmessage,world_instance);
+            }
+          catch(Exception e)
+            {
+            listener.onException(e);
+            }
+          
+          it.remove();
+          it=previousPerceptions.iterator();
+          }
+        }
+     
+      if(previousPerceptions.size()==0)
+        {
+        synced=true;
+        listener.onSynced();
+        }
+      else
+        {
+        synced=false;
+        listener.onUnsynced();
+        }
       }
 
     if(message.getPerceptionTimestamp()-previousTimestamp>50)

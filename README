@@ -48,7 +48,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.34 version 
+0.35 version 
 
 
 Status
@@ -111,7 +111,11 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
-0.34	May XX, 2004
+0.35
+- Changed RPMap message
+- Client can try to resync using old perceptions
+
+0.34	May 17, 2004
 - Added out of sync message
 - Improved perception creation
 
