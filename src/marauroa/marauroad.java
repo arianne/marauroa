@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.35 2004/02/06 16:08:54 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.36 2004/02/08 22:51:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,7 +56,8 @@ public class marauroad extends Thread
         try
           {
           String time=String.valueOf(new Date().getTime());
-          out=new PrintWriter(new FileOutputStream("server_log_"+time+".txt"));
+          new File("logs").mkdir();
+          out=new PrintWriter(new FileOutputStream("logs/server_log_"+time+".txt"));
           }
         catch(FileNotFoundException e)
           {
@@ -81,6 +82,11 @@ public class marauroad extends Thread
     try
       {
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+      
+      if(playerDatabase.getPlayerCount()>0)
+        {
+        return;
+        }        
       
       if(playerDatabase.hasPlayer("Test Player"))
         {
@@ -162,7 +168,7 @@ public class marauroad extends Thread
     marauroad.trace("marauroad::run",">");
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
-    //instance.setTestDatabase();
+    instance.setTestDatabase();
 
     instance.init();
 
