@@ -57,12 +57,12 @@ public class PlayerEntryContainer
     }
     
   /** This class is a iterator over the player in PlayerEntryContainer */
-  static public class PlayerEntryContainerIterator implements Iterator
+  static public class ClientIDIterator
     {
     private Iterator entryIter;
     
     /** Constructor */
-    private PlayerEntryContainerIterator(Iterator iter)
+    private ClientIDIterator(Iterator iter)
       {
       entryIter = iter;
       }
@@ -76,10 +76,10 @@ public class PlayerEntryContainer
      
     /** This method returs the clientid and move the pointer to the next element
      *  @return an clientid */
-    public Object next()
+    public short next()
       {
       Map.Entry entry=(Map.Entry)entryIter.next();
-      return entry.getKey();
+      return ((Short)entry.getKey()).shortValue();
       }
     
     public void remove()
@@ -88,9 +88,9 @@ public class PlayerEntryContainer
     }
   
   /** This method returns an iterator of the players in the container */  
-  public Iterator iterator()
+  public ClientIDIterator iterator()
     {
-    return new PlayerEntryContainerIterator(listPlayerEntries.entrySet().iterator());
+    return new ClientIDIterator(listPlayerEntries.entrySet().iterator());
     }
     
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */

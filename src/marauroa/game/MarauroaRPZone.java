@@ -1,14 +1,17 @@
 package marauroa.game;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class MarauroaRPZone implements RPZone
   {
   private HashMap objects;
+  /** TODO: This is not delta perception */
+  private List listObjects;
   
   public MarauroaRPZone()
     {
     objects=new HashMap();
+    listObjects=new LinkedList();
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -17,6 +20,7 @@ public class MarauroaRPZone implements RPZone
       {
       RPObject.ID id=new RPObject.ID(object);
       objects.put(id,object);
+      listObjects.add(object);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
@@ -28,7 +32,8 @@ public class MarauroaRPZone implements RPZone
     {
     if(objects.containsKey(id))
       {
-      objects.remove(id);
+      Object object=objects.remove(id);
+      listObjects.remove(object);
       }
     else
       {
@@ -57,5 +62,15 @@ public class MarauroaRPZone implements RPZone
       return false;
       }
     }
+
+  public Perception getPerception(RPObject.ID id)
+    {
+    /** Using TOTAL perception per turn */
+    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
+    perception.modifiedList=listObjects;
+    perception.deletedList=new LinkedList();    
+    
+    return perception;
+    }  
   }
 
