@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.36 2004/05/17 18:12:24 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.37 2004/06/03 13:04:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ import java.util.Random;
 import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
-import marauroa.game.RPZone;
+import marauroa.game.IRPZone;
 import marauroa.marauroad;
 import the1001.RPCode;
 

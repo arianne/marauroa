@@ -1,4 +1,4 @@
-/* $Id: mapacmancreateaccount.java,v 1.3 2004/04/26 15:25:30 arianne_rpg Exp $ */
+/* $Id: mapacmancreateaccount.java,v 1.4 2004/06/03 13:03:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class mapacmancreateaccount extends marauroa.createaccount
     Configuration.setConfigurationFile("mapacman.ini");
     }
   
-  public RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception
+  public RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception
     {
     Transaction trans=playerDatabase.getTransaction();
     RPObject object=new RPObject(((JDBCPlayerDatabase)playerDatabase).getValidRPObjectID(trans));

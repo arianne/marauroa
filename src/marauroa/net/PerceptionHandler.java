@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.8 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.9 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -236,7 +236,7 @@ public class PerceptionHandler
 
   /** This method applys perceptions addedto the Map<RPObject::ID,RPObject> passed as argument.
    *  It clears the map if this is a sync perception */
-  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map world) throws RPZone.RPObjectNotFoundException
+  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
     {
     try
       {
@@ -263,12 +263,12 @@ public class PerceptionHandler
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionAddedRPObjects","X",e.getMessage());
-      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
 
   /** This method applys perceptions deleted to the Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map world) throws RPZone.RPObjectNotFoundException
+  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
     {
     try
       {
@@ -287,13 +287,13 @@ public class PerceptionHandler
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionDeletedRPObjects","X",e.getMessage());
-      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
 
   /** This method applys perceptions modified added and modified deleted to the
    *  Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map world) throws RPZone.RPObjectNotFoundException
+  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
     {
     try
       {
@@ -321,7 +321,7 @@ public class PerceptionHandler
           }
         }
       }
-    catch(RPZone.RPObjectNotFoundException e)
+    catch(IRPZone.RPObjectNotFoundException e)
       {
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
       throw e;
@@ -330,11 +330,11 @@ public class PerceptionHandler
       {
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
-      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
   
-  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws RPZone.RPObjectNotFoundException
+  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
     {
     try
       {
@@ -355,7 +355,7 @@ public class PerceptionHandler
       {
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyPerceptionMyRPObject","X",e.getMessage());
-      throw new RPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
       

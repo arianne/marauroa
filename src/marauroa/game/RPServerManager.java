@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.96 2004/06/02 14:50:19 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.97 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,10 +34,10 @@ public class RPServerManager extends Thread
   /** The scheduler needed to organize actions */
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
-  private RPRuleProcessor ruleProcessor;
-  private RPAIManager aiMan;
+  private IRPRuleProcessor ruleProcessor;
+  private IRPAIManager aiMan;
   /** The place where the objects are stored */
-  private RPZone zone;
+  private IRPZone zone;
   private Statistics stats;
   /** The networkServerManager so that we can send perceptions */
   private NetworkServerManager netMan;
@@ -63,17 +63,17 @@ public class RPServerManager extends Thread
       
       Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
-      zone=(RPZone)zoneClass.newInstance();
+      zone=(IRPZone)zoneClass.newInstance();
       
       zone.onInit();
       
       
       Class AIManagerClass=Class.forName(conf.get("rp_RPAIClass"));
-      aiMan=(RPAIManager)AIManagerClass.newInstance();
+      aiMan=(IRPAIManager)AIManagerClass.newInstance();
       aiMan.setContext(zone,scheduler);
 
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
-      ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
+      ruleProcessor=(IRPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
       
       String duration =conf.get("rp_turnDuration");
@@ -97,7 +97,7 @@ public class RPServerManager extends Thread
   
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
-  public RPServerManager(NetworkServerManager netMan, RPZone zone, RPRuleProcessor ruleProcessor, long turnDuration)
+  public RPServerManager(NetworkServerManager netMan, IRPZone zone, IRPRuleProcessor ruleProcessor, long turnDuration)
     {
     super("RPServerManager");
     marauroad.trace("RPServerManager",">");
@@ -164,7 +164,7 @@ public class RPServerManager extends Thread
       }
     }
     
-  public void addRPObject(RPObject object) throws RPZone.RPObjectInvalidException
+  public void addRPObject(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     marauroad.trace("RPServerManager::addRPObject",">");
     try
@@ -182,7 +182,7 @@ public class RPServerManager extends Thread
       }
     }
   
-  public RPObject getRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public RPObject getRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::getRPObject",">");
     try
@@ -208,7 +208,7 @@ public class RPServerManager extends Thread
       }
     }
   
-  public RPObject removeRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public RPObject removeRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::removeRPObject",">");
     try
@@ -429,13 +429,13 @@ public class RPServerManager extends Thread
       }
     }
 
-  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     incubator.add(object);
     return true;
     }
     
-  public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);

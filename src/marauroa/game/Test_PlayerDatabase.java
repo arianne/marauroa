@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.17 2004/03/25 22:20:44 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.18 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class Test_PlayerDatabase extends TestCase
     marauroad.trace("Test_PlayerDatabase::testJDBCPlayerDatabaseSecurity",">");
     try
       {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
+      IPlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       Transaction trans = playerDatabase.getTransaction();
 
       assertNotNull(playerDatabase);
@@ -76,7 +76,7 @@ public class Test_PlayerDatabase extends TestCase
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabase",">");
     try
       {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase(type);
+      IPlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase(type);
       Transaction trans = playerDatabase.getTransaction();
 
       assertNotNull(playerDatabase);
@@ -119,7 +119,7 @@ public class Test_PlayerDatabase extends TestCase
       " when operatted incorrectly PlayerDatabase will throw several types of exceptions");
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions",">");
 
-    PlayerDatabase playerDatabase=null;
+    IPlayerDatabase playerDatabase=null;
     Transaction trans = null;
 
     try
@@ -139,7 +139,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       fail("Player added twice");
       }
-    catch(PlayerDatabase.PlayerAlreadyAddedException e)
+    catch(IPlayerDatabase.PlayerAlreadyAddedException e)
       {
       try
         {
@@ -151,7 +151,7 @@ public class Test_PlayerDatabase extends TestCase
         fail("Player has not been added");
         }
       }
-    catch(PlayerDatabase.GenericDatabaseException e)
+    catch(IPlayerDatabase.GenericDatabaseException e)
       {
       fail(e.getMessage());      
       }
@@ -161,7 +161,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.addCharacter(trans,"A new Test Player", "Test Character", new RPObject());
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -176,7 +176,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.addCharacter(trans,"A new Test Player", "Test Character", new RPObject());
       fail("Player already exists");
       }
-    catch(PlayerDatabase.CharacterAlreadyAddedException e)
+    catch(IPlayerDatabase.CharacterAlreadyAddedException e)
       {
       assertTrue(true);
       }
@@ -200,7 +200,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.removeCharacter(trans,"A new Test Player", "Test Character");
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -213,7 +213,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.getLoginEvent(trans,"A new Test Player");
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -227,11 +227,11 @@ public class Test_PlayerDatabase extends TestCase
 
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
-    catch(PlayerDatabase.GenericDatabaseException e)
+    catch(IPlayerDatabase.GenericDatabaseException e)
       {
       fail(e.getMessage());      
       }     
@@ -241,7 +241,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.hasCharacter(trans,"A new Test Player", "Test Character");
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -254,7 +254,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.addLoginEvent(trans,"A new Test Player", null, true);
       fail("Player does not exist");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -267,7 +267,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.setRPObject(trans,"A new Test Player","Test Character",new RPObject());
       fail("Player does not exists");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -281,7 +281,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.setRPObject(trans,"A new Test Player","Test Character",new RPObject());
       fail("Character does not exists");
       }
-    catch(PlayerDatabase.CharacterNotFoundException e)
+    catch(IPlayerDatabase.CharacterNotFoundException e)
       {
       assertTrue(true);
       }
@@ -295,11 +295,11 @@ public class Test_PlayerDatabase extends TestCase
         {
         playerDatabase.removePlayer(trans,"A new Test Player");
         }
-      catch(PlayerDatabase.PlayerNotFoundException epnf)
+      catch(IPlayerDatabase.PlayerNotFoundException epnf)
         {
         fail("Player has not been added");
         }
-      catch(PlayerDatabase.GenericDatabaseException e)
+      catch(IPlayerDatabase.GenericDatabaseException e)
         {
         fail(e.getMessage());      
         }
@@ -310,7 +310,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.getRPObject(trans,"A new Test Player","Test Character");
       fail("Player does not exists");
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
       }
@@ -324,7 +324,7 @@ public class Test_PlayerDatabase extends TestCase
       playerDatabase.getRPObject(trans,"A new Test Player","Test Character");
       fail("Character does not exists");
       }
-    catch(PlayerDatabase.CharacterNotFoundException e)
+    catch(IPlayerDatabase.CharacterNotFoundException e)
       {
       assertTrue(true);
       }
@@ -338,11 +338,11 @@ public class Test_PlayerDatabase extends TestCase
         {
         playerDatabase.removePlayer(trans,"A new Test Player");
         }
-      catch(PlayerDatabase.PlayerNotFoundException epnf)
+      catch(IPlayerDatabase.PlayerNotFoundException epnf)
         {
         fail("Player has not been added");
         }
-      catch(PlayerDatabase.GenericDatabaseException e)
+      catch(IPlayerDatabase.GenericDatabaseException e)
         {
         fail(e.getMessage());      
         }      

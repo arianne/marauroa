@@ -1,4 +1,4 @@
-/* $Id: Test_RPZone.java,v 1.8 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: Test_RPZone.java,v 1.9 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class Test_RPZone extends TestCase
     SonGoku.put("id","1");
     SonGoku.put("name","Son Goku");
 		
-    RPZone zone=new MarauroaRPZone();
+    IRPZone zone=new MarauroaRPZone();
 
     assertNotNull(zone);
     try
@@ -55,11 +55,11 @@ public class Test_RPZone extends TestCase
       zone.remove(id);
       assertFalse(zone.has(id));
       }
-    catch(RPZone.RPObjectInvalidException e)
+    catch(IRPZone.RPObjectInvalidException e)
       {
       fail("RPObject is not valid");
       }
-    catch(RPZone.RPObjectNotFoundException e)
+    catch(IRPZone.RPObjectNotFoundException e)
       {
       fail("RPObject doesn't exist");
       }

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.45 2004/05/31 08:11:17 root777 Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.46 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,7 @@ import marauroa.*;
 
 /** This is JDBC interface to the database.
  *  Actually it is limited to MySQL because we are using the AUTO_INCREMENT keyword. */
-public class JDBCPlayerDatabase implements PlayerDatabase
+public class JDBCPlayerDatabase implements IPlayerDatabase
   {
   /** Class to store the login events */
   private static class LoginEvent
@@ -52,7 +52,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     return true;
     }
     
-  private static PlayerDatabase playerDatabase=null;
+  private static IPlayerDatabase playerDatabase=null;
 
   /** connection info **/
   private Properties connInfo;
@@ -67,7 +67,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     runDBScript("marauroa_init.sql");
     }
   
-  private static PlayerDatabase resetDatabaseConnection() throws Exception
+  private static IPlayerDatabase resetDatabaseConnection() throws Exception
     {
     Configuration conf=Configuration.getConfiguration();
     Properties props = new Properties();
@@ -81,7 +81,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   /** This method returns an instance of PlayerDatabase
    *  @return A shared instance of PlayerDatabase */
-  public static PlayerDatabase getDatabase() throws NoDatabaseConfException
+  public static IPlayerDatabase getDatabase() throws NoDatabaseConfException
     {
     marauroad.trace("JDBCPlayerDatabase::getDatabase",">");
     try

@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.15 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.16 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ public class Test_RPScheduler extends TestCase
     return new TestSuite(Test_RPScheduler.class);
     }
     
-  private static class FakeRuleProcessor implements RPRuleProcessor
+  private static class FakeRuleProcessor implements IRPRuleProcessor
     {
     int i;
     public FakeRuleProcessor()
@@ -32,7 +32,7 @@ public class Test_RPScheduler extends TestCase
       i=0;
       }
     
-    public void setContext(RPZone zone) 
+    public void setContext(IRPZone zone) 
       {
       }
       

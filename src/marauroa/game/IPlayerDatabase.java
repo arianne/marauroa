@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.13 2004/05/31 08:11:17 root777 Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.1 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
 import java.sql.Connection;
 
 /** The interface that all the databases marauroa use MUST implement. */
-public interface PlayerDatabase extends GameDatabaseException
+public interface IPlayerDatabase extends GameDatabaseException
   {
   /** Retursn true if the strign is valid and doesn't contains any strange character */
   public boolean validString(String string);

@@ -1,4 +1,4 @@
-/* $Id: Test_MarauroaRPZone.java,v 1.11 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: Test_MarauroaRPZone.java,v 1.12 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ public class Test_MarauroaRPZone extends TestCase
     marauroad.trace("Test_MarauroaRPZone::testRPZone",">");
     try
       {
-      RPZone zone=new MarauroaRPZone();
+      IRPZone zone=new MarauroaRPZone();
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");
@@ -63,7 +63,7 @@ public class Test_MarauroaRPZone extends TestCase
     marauroad.trace("Test_MarauroaRPZone::testRPZonePerception",">");
     try
       {
-      RPZone zone=new MarauroaRPZone();
+      IRPZone zone=new MarauroaRPZone();
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");

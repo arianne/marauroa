@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.16 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.17 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,9 +24,9 @@ public class Test_PlayerEntryContainer extends TestCase
     return new TestSuite(Test_PlayerEntryContainer.class);
     }
   
-  private PlayerDatabase createDatabase()
+  private IPlayerDatabase createDatabase()
     {
-    PlayerDatabase playerDatabase=null;
+    IPlayerDatabase playerDatabase=null;
     Transaction trans = null;
     
     try
@@ -63,7 +63,7 @@ public class Test_PlayerEntryContainer extends TestCase
   
   private void cleanDatabase()
     {
-    PlayerDatabase playerDatabase=null;
+    IPlayerDatabase playerDatabase=null;
     
     try
       {

@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.18 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.19 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,7 @@ public class Test_GameServerManager extends TestCase
     assertTrue("NetworkManager and GameManager inited",netMan!=null && gameMan!=null);
     try
       {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+      IPlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
       Transaction trans = playerDatabase.getTransaction();
 
       if(playerDatabase.hasPlayer(trans,"Test Player"))
@@ -74,7 +74,7 @@ public class Test_GameServerManager extends TestCase
     netServerMan.finish();
     try
       {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("MemoryPlayerDatabase");
+      IPlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("MemoryPlayerDatabase");
       Transaction trans = playerDatabase.getTransaction();
 
       playerDatabase.removeCharacter(trans,"Test Player", "Son Goku");

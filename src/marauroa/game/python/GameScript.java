@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.2 2004/05/31 07:20:46 root777 Exp $ */
+/* $Id: GameScript.java,v 1.3 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ class GameScript
   
   private static GameScript gameScript=null;
   
-  public void setRPZone(RPZone zone)
+  public void setRPZone(IRPZone zone)
     {    
     interpreter.set("gamescript__zone",zone);   
     }

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.50 2004/05/30 22:30:06 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.51 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import marauroa.marauroad;
 
-public class MarauroaRPZone implements RPZone
+public class MarauroaRPZone implements IRPZone
   {
   private Map objects;
   private List modified;

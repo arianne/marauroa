@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.55 2004/05/31 14:13:10 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.56 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import marauroa.game.*;
 import marauroa.*;
 import java.util.*;
 
-public class the1001RPRuleProcessor implements RPRuleProcessor
+public class the1001RPRuleProcessor implements IRPRuleProcessor
   {
   private the1001RPZone zone;
   private List trackedObjects;
@@ -31,7 +31,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
 
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
-  public void setContext(RPZone zone)
+  public void setContext(IRPZone zone)
     {
     this.zone=(the1001RPZone)zone;
     }
@@ -215,7 +215,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     trackedObjects.add(object);
     }
 
-  synchronized public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  synchronized public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     marauroad.trace("the1001RPRuleProcessor::onInit",">");
     try

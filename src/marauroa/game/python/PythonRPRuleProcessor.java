@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.5 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.6 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.*;
 import java.util.*;
 import java.io.*;
 
-public class PythonRPRuleProcessor implements RPRuleProcessor
+public class PythonRPRuleProcessor implements IRPRuleProcessor
   {
   private GameScript gameScript;
   private PythonRP pythonRP;
@@ -32,7 +32,7 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
 
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
-  public void setContext(RPZone zone)
+  public void setContext(IRPZone zone)
     {
     try
       {
@@ -92,7 +92,7 @@ public class PythonRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("PythonRPRuleProcessor::nextTurn","<");
     }
 
-  synchronized public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  synchronized public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     marauroad.trace("PythonRPRuleProcessor::onInit",">");
     try

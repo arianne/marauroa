@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.15 2004/05/24 17:23:09 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.16 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,7 +93,7 @@ public class RPScheduler
   
   /** For each action in the actual turn, make it to be run in the ruleProcessor
    *  Depending on the result the action needs to be added for next turn. */
-  public void visit(RPRuleProcessor ruleProcessor)
+  public void visit(IRPRuleProcessor ruleProcessor)
     {
     marauroad.trace("RPScheduler::visit",">");
     try

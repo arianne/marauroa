@@ -1,4 +1,4 @@
-/* $Id: the1001createaccount.java,v 1.4 2004/04/26 15:43:17 arianne_rpg Exp $ */
+/* $Id: the1001createaccount.java,v 1.5 2004/06/03 13:04:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class the1001createaccount extends marauroa.createaccount
     Configuration.setConfigurationFile("the1001.ini");
     }
   
-  public RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception
+  public RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception
     {
     Transaction trans=playerDatabase.getTransaction();
 

@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.12 2004/05/31 08:11:17 root777 Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.13 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,10 @@ import marauroa.net.*;
 
 /** This is memory interface to the database, when you init it, it is empty, and when
  *  you finish the application it is emptied. */
-public class MemoryPlayerDatabase implements PlayerDatabase
+public class MemoryPlayerDatabase implements IPlayerDatabase
   {
   private final static byte MAX_NUMBER_OF_LOGIN_EVENTS=5;
-  private static PlayerDatabase playerDatabase=null;
+  private static IPlayerDatabase playerDatabase=null;
   /** Class to store the login events */
   static private class LoginEvent
     {
@@ -79,7 +79,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
   
   /** This method returns an instance of PlayerDatabase
    *  @return A shared instance of PlayerDatabase */
-  public static PlayerDatabase getDatabase()
+  public static IPlayerDatabase getDatabase()
     {
     marauroad.trace("MemoryPlayerDatabase::getDatabase",">");
     try

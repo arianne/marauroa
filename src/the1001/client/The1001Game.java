@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.21 2004/05/01 07:41:52 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.22 2004/06/03 13:04:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ import java.awt.event.WindowListener;
 import java.net.SocketException;
 import java.util.Map;
 import marauroa.game.RPObject;
-import marauroa.game.RPZone;
+import marauroa.game.IRPZone;
 import marauroa.marauroad;
 import the1001.RPCode;
 

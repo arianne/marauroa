@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.28 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.1 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import marauroa.*;
 
-public interface RPZone
+public interface IRPZone
   {
   public static class RPObjectNotFoundException extends Exception
     {

@@ -1,5 +1,5 @@
 <!--
-/*  $Id: index.jsp,v 1.2 2004/05/09 19:11:05 root777 Exp $ */
+/*  $Id: index.jsp,v 1.3 2004/06/03 13:04:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,12 +17,12 @@
 <%@ page import="the1001.objects.Player" %>
 <%@ page import="marauroa.game.Transaction" %>
 <%@ page import="marauroa.game.PlayerDatabaseFactory" %>
-<%@ page import="marauroa.game.PlayerDatabase" %>
+<%@ page import="marauroa.game.IPlayerDatabase" %>
 <%@ page import="marauroa.game.RPObject" %>
 <%@ page import="marauroa.Configuration" %>
 
 <%!
-  static PlayerDatabase playerDatabase;
+  static IPlayerDatabase playerDatabase;
   static
   {
     try

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.18 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.19 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,14 +15,14 @@ package marauroa.game;
 import java.util.*;
 import marauroa.marauroad;
 
-public class MarauroaRPRuleProcessor implements RPRuleProcessor
+public class MarauroaRPRuleProcessor implements IRPRuleProcessor
   {
-  private RPZone zone;
+  private IRPZone zone;
   public MarauroaRPRuleProcessor()
     {
     }
 
-  public void setContext(RPZone zone)
+  public void setContext(IRPZone zone)
     {
     this.zone=zone;
     }
@@ -43,17 +43,17 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     {
     }
 
-  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     return false;
     }
     
-  public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     return false;
     }
     
-  public boolean onTimeout(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public boolean onTimeout(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     return false;
     }

@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.6 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.7 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ public class PlayerDatabaseFactory
   {
   /** This method returns an instance of PlayerDatabase choosen using the Configuration file.
    *  @return A shared instance of PlayerDatabase */
-  public static PlayerDatabase getDatabase() throws PlayerDatabase.NoDatabaseConfException
+  public static IPlayerDatabase getDatabase() throws IPlayerDatabase.NoDatabaseConfException
     {
     marauroad.trace("PlayerDatabaseFactory::getDatabase",">");
     try
@@ -39,12 +39,12 @@ public class PlayerDatabaseFactory
         return JDBCPlayerDatabase.getDatabase();
         }
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
-      throw new PlayerDatabase.NoDatabaseConfException();
+      throw new IPlayerDatabase.NoDatabaseConfException();
       }
     catch(Exception e)
       {
       marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new PlayerDatabase.NoDatabaseConfException();      
+      throw new IPlayerDatabase.NoDatabaseConfException();      
       }
     finally
       {     
@@ -55,7 +55,7 @@ public class PlayerDatabaseFactory
   /** This method returns an instance of PlayerDatabase choosen using the param.
    *  @param type A String containing the type of database
    *  @return A shared instance of PlayerDatabase */
-  public static PlayerDatabase getDatabase(String database_type) throws PlayerDatabase.NoDatabaseConfException
+  public static IPlayerDatabase getDatabase(String database_type) throws IPlayerDatabase.NoDatabaseConfException
     {
     marauroad.trace("PlayerDatabaseFactory::getDatabase",">");
     try
@@ -71,12 +71,12 @@ public class PlayerDatabaseFactory
         return JDBCPlayerDatabase.getDatabase();
         }
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
-      throw new PlayerDatabase.NoDatabaseConfException();
+      throw new IPlayerDatabase.NoDatabaseConfException();
       }
     catch(Exception e)
       {
       marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new PlayerDatabase.NoDatabaseConfException();      
+      throw new IPlayerDatabase.NoDatabaseConfException();      
       }
     finally
       {     

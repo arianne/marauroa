@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.27 2004/05/24 19:04:28 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.28 2004/06/03 13:04:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,7 +73,7 @@ public abstract class createaccount
     throw new Attributes.AttributeNotFoundException(name);
     }
     
-  public abstract RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception;
+  public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
 
   protected int run(String[] args)
     {

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.37 2004/05/27 18:49:00 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.38 2004/06/03 13:04:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,7 @@ public class PlayerEntryContainer
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */
   private HashMap listPlayerEntries;
   /** A object representing the database */
-  private PlayerDatabase playerDatabase;
+  private IPlayerDatabase playerDatabase;
   private Transaction transaction;  
   
   /** A reader/writers lock for controlling the access */
@@ -358,7 +358,7 @@ public class PlayerEntryContainer
       playerDatabase.addLoginEvent(transaction,username,source,correctLogin);
       transaction.commit();
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       transaction.rollback();
       marauroad.thrown("PlayerEntryContainer::addLoginEvent","X",e);
@@ -397,7 +397,7 @@ public class PlayerEntryContainer
 
           return playerDatabase.getLoginEvent(transaction,entry.username);
           }
-        catch(PlayerDatabase.PlayerNotFoundException e)
+        catch(IPlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.thrown("PlayerEntryContainer::getLoginEvent","X",e);
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
@@ -498,7 +498,7 @@ public class PlayerEntryContainer
 
           return playerDatabase.hasCharacter(transaction,entry.username,character);
           }
-        catch(PlayerDatabase.PlayerNotFoundException e)
+        catch(IPlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.thrown("PlayerEntryContainer::hasCharacter","X",e);
           marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(-not available-)");
@@ -570,7 +570,7 @@ public class PlayerEntryContainer
 
           return playerDatabase.getCharactersList(transaction,entry.username);
           }
-        catch(PlayerDatabase.PlayerNotFoundException e)
+        catch(IPlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.thrown("PlayerEntryContainer::getCharacterList","X",e);
           marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
@@ -622,7 +622,7 @@ public class PlayerEntryContainer
         throw new NoSuchClientIDException(clientid);
         }
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
@@ -633,7 +633,7 @@ public class PlayerEntryContainer
       marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       throw new NoSuchPlayerException("- not available -");
       }
-    catch(PlayerDatabase.CharacterNotFoundException e)
+    catch(IPlayerDatabase.CharacterNotFoundException e)
       {
       marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Character(unknown)");
@@ -681,7 +681,7 @@ public class PlayerEntryContainer
         throw new NoSuchClientIDException(clientid);
         }
       }
-    catch(PlayerDatabase.PlayerNotFoundException e)
+    catch(IPlayerDatabase.PlayerNotFoundException e)
       {
       transaction.rollback();
       marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
@@ -694,7 +694,7 @@ public class PlayerEntryContainer
       marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
       throw new NoSuchPlayerException("- not available -");
       }
-    catch(PlayerDatabase.CharacterNotFoundException e)
+    catch(IPlayerDatabase.CharacterNotFoundException e)
       {
       transaction.rollback();
       marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
