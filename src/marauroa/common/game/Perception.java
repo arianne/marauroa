@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.1 2005/02/20 17:18:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,10 +10,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game;
+package marauroa.common.game;
 
 import java.util.*;
-import marauroa.common.game.*;
 import marauroa.common.*;
 
 

@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.1 2005/01/23 21:00:42 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.2 2005/02/20 17:18:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,7 @@ public interface IRPZone extends Iterable
   public long size();
   
   /** This method return the perception of a zone for a player */
-  public marauroa.server.game.Perception getPerception(RPObject.ID id, byte type);
+  public Perception getPerception(RPObject.ID id, byte type);
   /** This method is called to take zone to the next turn */
   public void nextTurn();
   }

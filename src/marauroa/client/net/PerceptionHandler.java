@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.1 2005/01/23 21:00:41 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.2 2005/02/20 17:18:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,9 +18,6 @@ import java.util.*;
 import marauroa.common.game.*;
 import marauroa.common.net.*;
 import marauroa.common.*;
-
-/** FIXME: BUG: TODO: Remove reference to Server package */
-import marauroa.server.game.Perception;
 
 /** The PerceptionHandler class is in charge of applying correctly the perceptions
  *  to the world. You should always use this class because it is a complex task that

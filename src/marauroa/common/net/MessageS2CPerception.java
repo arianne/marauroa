@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.3 2005/02/09 20:22:28 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.4 2005/02/20 17:18:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,7 +56,7 @@ public class MessageS2CPerception extends Message
    *  @param modifiedRPObjects the list of object that has been modified.
    *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
-  public MessageS2CPerception(InetSocketAddress source,marauroa.server.game.Perception perception)
+  public MessageS2CPerception(InetSocketAddress source,Perception perception)
     {
     super(source);
     type=TYPE_S2C_PERCEPTION;
