@@ -203,12 +203,11 @@ class RPServerManager extends Thread
     
     while(keepRunning)
       {
-      marauroad.trace("RPServerManager::run","D","[iteration - BEGIN -]");      
-      scheduler.visit(ruleProcessor);
-      scheduler.nextTurn();
-      
+      scheduler.visit(ruleProcessor);      
       buildPerceptions();
-      marauroad.trace("RPServerManager::run","D","[iteration -  END  -]");      
+
+      scheduler.nextTurn();      
+      zone.nextTurn();
       
       try
         {

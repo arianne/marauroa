@@ -6,7 +6,7 @@ public class MarauroaRPZone implements RPZone
   {
   private HashMap objects;
   /** TODO: This is not delta perception */
-  private List listObjects;
+  private Perception listObjects;
   private static Random rand=new Random();
   
   public MarauroaRPZone()
@@ -90,6 +90,10 @@ public class MarauroaRPZone implements RPZone
     perception.deletedList=new LinkedList();    
     
     return perception;
+    }
+  
+  public void nextTurn() 
+    {
     }  
   }
 

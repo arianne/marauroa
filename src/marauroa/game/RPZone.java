@@ -32,6 +32,18 @@ public interface RPZone
     public Perception(byte type)
       {
       this.type=type;
+      modifiedList=new LinkedList();
+      deletedList=new LinkedList();
+      }
+    
+    public void modified(RPObject object)
+      {
+      modifiedList.add(object);
+      }
+
+    public void deleted(RPObject object)
+      {
+      modifiedList.add(object);
       }
     }
   
@@ -42,4 +54,5 @@ public interface RPZone
   public RPObject create();
   public Iterator iterator();
   public Perception getPerception(RPObject.ID id, byte type);
+  public void nextTurn();
   }
