@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.82 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.84 2004/05/10 14:46:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.game.*;
-import the1001.objects.*;
 
 /**
  * The launcher of the whole Marauroa Server.
@@ -24,7 +23,7 @@ import the1001.objects.*;
 public class marauroad extends Thread
   {
   final private static boolean DEBUG=false;
-  final private static String VERSION="0.33";
+  final private static String VERSION="0.34";
   
   private static PrintWriter out;
   private static marauroad marauroa;
@@ -284,11 +283,11 @@ public class marauroad extends Thread
   
   public static void thrown(String module, String event, Throwable exception)
     {
-    StringBuffer sb=new StringBuffer();
+    StringBuffer sb=new StringBuffer("Exception stackTrace:\n");
     StackTraceElement[] ste=exception.getStackTrace();
     for(int i=0;i<ste.length;++i)
       {
-      sb.append(ste[i].toString()+"\n");
+      sb.append("  "+ste[i].toString()+"\n");
       }    
     
     trace(module,"X",exception.getMessage());

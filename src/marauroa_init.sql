@@ -76,6 +76,8 @@ create table if not exists rpslot
 create table if not exists rpzone
   (
   object_id integer not null,
+  
+  primary key(object_id)
   )
   TYPE=INNODB;
 

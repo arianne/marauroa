@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.23 2004/04/15 15:27:44 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.24 2004/05/10 14:46:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -165,6 +165,8 @@ public interface RPZone
   public RPObject create();
   public Iterator iterator();
   public long size();
+  
   public Perception getPerception(RPObject.ID id, byte type);
+  
   public void nextTurn();
   }

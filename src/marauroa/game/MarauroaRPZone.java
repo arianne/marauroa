@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.45 2004/05/10 14:09:25 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.46 2004/05/10 14:46:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,8 +28,8 @@ public class MarauroaRPZone implements RPZone
   private List modified;
   private Perception perception;
 
-  private JDBCPlayerDatabase rpobjectDatabase;
-  private Transaction transaction;
+  protected JDBCPlayerDatabase rpobjectDatabase;
+  protected Transaction transaction;
 
   private static Random rand=new Random();
 
@@ -77,7 +77,7 @@ public class MarauroaRPZone implements RPZone
     catch(Exception e)
       {
       marauroad.thrown("MarauroaRPZone::add","X",e);
-      throw new RPObjectInvalidException(e);
+      throw new RPObjectInvalidException("id");
       }
     }
   
@@ -116,7 +116,15 @@ public class MarauroaRPZone implements RPZone
       RPObject object=(RPObject)objects.remove(id);
       perception.removed(object);
 
-      rpobjectDatabase.removeFromRPZone(transaction,object);
+      try
+        {
+        rpobjectDatabase.removeFromRPZone(transaction,object);
+        }
+      catch(Exception e)
+        {
+        throw new RPObjectNotFoundException(id);
+        }
+        
       return object;
       }
     else
