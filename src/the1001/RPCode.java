@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.57 2004/02/25 18:49:23 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.58 2004/03/04 13:42:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ public class RPCode
   final public static String var_initial_hp="!hp";  
   final public static String var_attack="attack";
   final public static String var_fame="fame";
+  final public static String var_karma="karma";
   final public static String var_num_victory="num_victory";
   final public static String var_num_defeat="num_defeat";
   final public static String var_l_hand="l_hand";
@@ -421,13 +422,13 @@ public class RPCode
         if(combatCompleted(gladiators))
           {
           marauroad.trace("RPCode::ResolveFight","D","Combat is FINISHED");
-          int fame=0;
+          int karma=0;
           
           for(i=0;i<gladiators.length;++i)
             {
             if(gladiators[i].getInt(RPCode.var_hp)<=0)
               {
-              fame+=gladiators[i].getInt(RPCode.var_fame);
+              karma+=gladiators[i].getInt(RPCode.var_karma);
               gladiators[i].put(RPCode.var_num_defeat,gladiators[i].getInt(RPCode.var_num_defeat)+1);
               }
             else
@@ -438,7 +439,7 @@ public class RPCode
             }
             
           arena.put(RPCode.var_status,RPCode.var_request_fame);
-          arena.put(RPCode.var_fame,(int)Math.log((fame>0?fame:1)));
+          arena.put(RPCode.var_karma,(int)Math.log((karma>0?karma:1)));
           arena.put(RPCode.var_timeout,30);
           arena.put(RPCode.var_thumbs_up,0);
           arena.put(RPCode.var_thumbs_down,0);
@@ -620,7 +621,7 @@ public class RPCode
           marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME completed");
           int up=arena.getInt(RPCode.var_thumbs_up);
           int down=arena.getInt(RPCode.var_thumbs_down);
-          int fame=arena.getInt(RPCode.var_fame);
+          int karma=arena.getInt(RPCode.var_karma);
           int total=up+down;          
           /* If none vote we fake the result to give everything to the winner. */
           if(total==0)
@@ -629,7 +630,7 @@ public class RPCode
             total=1;
             }
           
-          int fame_result=fame*up/total;
+          int karma_result=karma*up/total;
 
           RPObject.ID winner_id;
           if(arena.has(RPCode.var_winner))
@@ -644,13 +645,13 @@ public class RPCode
           if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
             {
             RPObject winner=arena.getSlot(RPCode.var_gladiators).get(winner_id);
-            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") assigned to "+winner.get("name"));            
-            winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
+            marauroad.trace("RPCode::RequestFame","D","Karma("+karma_result+") assigned to "+winner.get("name"));            
+            winner.put(RPCode.var_karma,winner.getInt(RPCode.var_karma)+karma_result);    
             }
           else
             {
             /* Winner was not present... */
-            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") not assigned to because winner wasn't logged in");
+            marauroad.trace("RPCode::RequestFame","D","Karma("+karma_result+") not assigned to because winner wasn't logged in");
             }
         
           SetUpNextCombat();
@@ -705,7 +706,7 @@ public class RPCode
 
       arena.remove(RPCode.var_thumbs_up);
       arena.remove(RPCode.var_thumbs_down);
-      arena.remove(RPCode.var_fame);
+      arena.remove(RPCode.var_karma);
       arena.remove(RPCode.var_timeout);
       if(arena.has(RPCode.var_winner))
         {

@@ -1,4 +1,4 @@
-/* $Id: Item.java,v 1.4 2004/01/27 15:51:14 arianne_rpg Exp $ */
+/* $Id: Item.java,v 1.5 2004/03/04 13:42:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,12 +18,31 @@ import java.util.*;
 
 public class Item extends RPObject
   {
+  private static Map defend_val;
+  private static Map attack_val;
+  private static Map price_val;
+  
+  static
+    {
+    defend_val=new HashMap();
+    defend_val.put("sword","1");
+    defend_val.put("shield","10");
+    
+    attack_val=new HashMap();
+    attack_val.put("sword","10");
+    attack_val.put("shield","0");
+
+    price_val=new HashMap();
+    price_val.put("sword","50");
+    price_val.put("shield","30");
+    }
+  
   public Item(RPObject.ID id,String type)
     {
     put(RPCode.var_object_id,id.getObjectID());
     put(RPCode.var_type,type);
-	put(RPCode.var_defend,5);
-	put(RPCode.var_attack,5);
-	put(RPCode.var_price,"30");
+	put(RPCode.var_defend,(String)defend_val.get(type));
+    put(RPCode.var_attack,(String)attack_val.get(type));
+    put(RPCode.var_price,(String)price_val.get(type));
     }
   }

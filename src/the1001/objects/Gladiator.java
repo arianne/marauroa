@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.12 2004/01/28 16:35:47 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.13 2004/03/04 13:42:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,7 @@ public class Gladiator extends RPObject
     put(RPCode.var_initial_hp,100);
     put(RPCode.var_hp,100);
     put(RPCode.var_attack,5);
-	put(RPCode.var_fame,100);
+	put(RPCode.var_karma,100);
 	put(RPCode.var_num_victory,0);
 	put(RPCode.var_num_defeat,0);    
 	
