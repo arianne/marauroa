@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.25 2004/04/30 20:42:12 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.26 2004/05/04 16:25:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -572,7 +572,7 @@ public final class GameDataModel
       ((GameDataModelListenerIF)listeners.get(i)).modelUpdated(this);
     }
   }
-  
+
   public void react()
   {
     try
@@ -671,36 +671,34 @@ public final class GameDataModel
       currentFightMode=null;
       lastFightMode=null;
     }
-    else if(RPCode.var_fighting.equals(getStatus()) || (getOwnCharacter()!=null && getOwnCharacter().has(RPCode.var_damage)))
+    else if(RPCode.var_fighting.equals(getStatus()))
     {
-      if(!RPCode.var_fighting.equals(getStatus()))
-      {
-        System.out.println("BUG!!! Already fighting(damage is there) but the arena is not in fight status!!!");
-      }
       voted=false;
-      RPObject own_char = getOwnCharacter();
-      if(own_char!=null && (own_char.has(RPCode.var_fighting) || own_char.has(RPCode.var_damage)))
+      RPObject own_char  = getOwnCharacter();
+      
+      if(own_char!=null && own_char.has(RPCode.var_fighting) )
       {
-        if(!own_char.has(RPCode.var_fighting))
-        {
-          System.out.println("BUG!!! Already fighting(damage is there) but the fighting attributes is not there!!!");
-        }
-        try
-        {
+        RPObject own_glad  = getFirstOwnGladiator();
+	try
+	{
+	  String own_glad_id = own_glad==null?null:own_glad.get(RPCode.var_object_id);
+	  RPObject rp_arena = getArena();
+	  RPSlot sl_glads = rp_arena.getSlot(RPCode.var_gladiators);
+	  RPObject my_glad = sl_glads.get(new RPObject.ID(Integer.parseInt(own_glad_id)));
           int own_damage = 0;
           try
           {
-            if(getFirstOwnGladiator()!=null)
+            if(my_glad!=null)
             {
-              if(getFirstOwnGladiator().has(RPCode.var_damage))
+              if(my_glad.has(RPCode.var_damage))
               {
-                own_damage = getFirstOwnGladiator().getInt(RPCode.var_damage);
+                own_damage = my_glad.getInt(RPCode.var_damage);
               }
             }
           }
           catch(Exception e)
           {
-            marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
+            marauroad.trace("GameDataModel::react","E",e.getMessage());
             e.printStackTrace(System.out);
           }
           if(getFightMode()==null || own_damage>0)
@@ -712,6 +710,11 @@ public final class GameDataModel
             lastFightMode = null;
           }
         }
+	catch(Exception e)
+	{
+	   marauroad.trace("GameDataModel::react","E",e.getMessage());
+	   e.printStackTrace(System.out);		       
+	}
         finally
         {
           
