@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.28 2003/12/10 13:44:39 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.29 2003/12/10 16:51:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,6 +74,7 @@ public class RunTests
       Date start=new Date();
       String timestamp=Long.toString(new Date().getTime());
       
+      System.err.println("Test will long around 93.0 seconds. Please wait!");
       runTest(suiteBase(),timestamp);
       runTest(suiteNet(),timestamp);
       runTest(suiteGame(),timestamp);
