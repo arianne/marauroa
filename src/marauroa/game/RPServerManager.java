@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.74 2004/04/29 14:59:58 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.75 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -157,6 +157,7 @@ class RPServerManager extends Thread
         {
         marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
         }
+        
       zone.add(object);
       }
     finally
@@ -207,7 +208,7 @@ class RPServerManager extends Thread
     
   private int deltaPerceptionSend=0;
   
-  private void buildPerceptions()
+  synchronized private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
 
@@ -250,6 +251,12 @@ class RPServerManager extends Thread
         
         try
           {
+          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_LOADED && deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+            {
+            marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are to send a SYNC perception"); 
+            playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
+            }
+            
           if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
@@ -281,7 +288,7 @@ class RPServerManager extends Thread
               }
               
             messages2cPerception.setClientID(clientid);
-            messages2cPerception.setTimestamp(timestamp);
+            messages2cPerception.setPerceptionTimestamp(timestamp);
             
             netMan.addMessage(messages2cPerception);
           
@@ -291,14 +298,6 @@ class RPServerManager extends Thread
               playersToUpdate.add(new Integer(clientid));
               }
             }
-          else
-            {
-            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION) 
-              {
-              playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
-              }
-            }
-            
           if(playerContainer.timedout(clientid))
             {
             playersToRemove.add(new Integer(clientid));
@@ -307,6 +306,7 @@ class RPServerManager extends Thread
         catch(Exception e)
           {
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
+          //playersToRemove.add(new Integer(clientid));
           }
         }
       if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
@@ -435,12 +435,6 @@ class RPServerManager extends Thread
       {
       scheduler.visit(ruleProcessor);
 
-      playerContainer.getLock().requestWriteLock();
-        {
-        buildPerceptions();
-        }
-      playerContainer.getLock().releaseLock();
-      
       stop=System.currentTimeMillis();
       try
         {
@@ -455,6 +449,7 @@ class RPServerManager extends Thread
 
       playerContainer.getLock().requestWriteLock();
         {
+        buildPerceptions();
         zone.nextTurn();
         scheduler.nextTurn();
         ruleProcessor.nextTurn();

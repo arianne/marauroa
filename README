@@ -112,12 +112,15 @@ Read the1001/README about how to run Gladiators
 Changelog
 ---------
 0.33 	Apr XX, 2004
-- Static part of the perception, that one that doesn't change depending of the player is precomputed
-- Added Python RP rules system
-- Added mapacman game
+- Static part of the perception, that one that doesn't change depending of the player is precomputed.
+- Added Python RP rules system.
+- Added mapacman game.
 - Added messages timestamps so that it is more reliable on bad UDP connections.
 - Factorized createaccount method, each application has now to modify a very small part of it.
-- Updated documentation about Marauroa
+- Updated documentation about Marauroa.
+- Added proper shutdown procedure.
+- Fixed the bug that allows players to vote several times.
+- Added RPMap message
 
 0.32 	Apr 21, 2004
 - Fix a bug that happens when an object is added and deleted on the same turn from a slot.

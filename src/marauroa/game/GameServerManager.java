@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.43 2004/04/28 15:26:17 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.44 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -326,6 +326,7 @@ public final class GameServerManager extends Thread
     catch(Exception e)
       {
       marauroad.trace("GameServerManager::processChooseCharacterEvent","X",e.getMessage());
+      e.printStackTrace();
       }
     finally
       {

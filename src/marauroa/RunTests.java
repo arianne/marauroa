@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.42 2004/04/14 22:41:10 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.43 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -121,7 +121,7 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
     suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
-    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
+//    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
@@ -171,7 +171,7 @@ public class RunTests
     {
     TestSuite suite= new TestSuite("Game marauroa Tests");
    
-    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
+//    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));

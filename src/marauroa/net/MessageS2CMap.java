@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.4 2004/04/26 15:51:06 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.5 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,5 +70,10 @@ public class MessageS2CMap extends Message
     {
     super.readObject(in);
     mapByteArray=in.readByteArray();
+
+    if(type!=TYPE_S2C_MAP)
+      {
+      throw new java.lang.ClassNotFoundException();
+      }
     }
   }

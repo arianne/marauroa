@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.11 2004/04/25 10:31:41 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.12 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,7 +53,7 @@ public class Message implements marauroa.net.Serializable
     this.type=TYPE_INVALID;
     this.clientid=CLIENTID_INVALID;
     this.source=source;
-    timestampMessage=(int)(System.currentTimeMillis()&0xFFFFFFFF);
+    timestampMessage=(int)(System.currentTimeMillis());
     }
 
   public void setAddress(InetSocketAddress source)

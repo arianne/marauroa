@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.16 2004/04/25 10:31:41 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.17 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,6 +92,13 @@ public class NetworkClientManager
         Map.Entry entry=(Map.Entry)it.next();
         PacketContainer message=(PacketContainer)entry.getValue();
 
+        if(new Date().getTime()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
+          {
+          marauroad.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
+          pendingPackets.remove(new Byte(message.signature));
+          it = pendingPackets.entrySet().iterator();
+          }
+
         if(message.remaining==0)
           {
           // delete the message from queue to prevent loop if it is a bad message
@@ -106,23 +113,21 @@ public class NetworkClientManager
             }
             
           processedMessages.add(msg);
-          }
-        if(new Date().getTime()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
-          {
-          marauroad.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
-          pendingPackets.remove(new Byte(message.signature));
-          it = pendingPackets.entrySet().iterator();
+          break;
           }
         }
       }
     catch(MessageFactory.InvalidVersionException e)
       {
+      e.printStackTrace();
+      marauroad.trace("NetworkClientManager::getMessage","X",e.getMessage());
       throw e;
       }
     catch(Exception e)
       {
       /* Report the exception */
-      marauroad.report(e.getMessage());
+      e.printStackTrace();
+      marauroad.trace("NetworkClientManager::getMessage","X",e.getMessage());
       // delete the bad message from queue
       return null;
       }
@@ -184,7 +189,8 @@ public class NetworkClientManager
     catch(IOException e)
       {
       /* Report the exception */
-      marauroad.report(e.getMessage());
+      e.printStackTrace();
+      marauroad.trace("NetworkClientManager::getMessage","X",e.getMessage());
       return null;
       }
     }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.50 2004/04/28 16:52:53 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.51 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -278,7 +278,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
 
   public byte[] serializeMap(RPObject.ID id)
     {
-    return null;
+    return new byte[0];
     }      
   }  
 

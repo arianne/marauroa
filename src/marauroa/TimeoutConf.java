@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.15 2004/04/27 22:42:47 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.16 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,5 +29,5 @@ public class TimeoutConf
   final public static int GAMESERVER_PLAYER_STORE_LAPSUS=60000;
   
   final public static int MAX_BYTE_ARRAY_ELEMENTS=8*1024;
-  final public static int MAX_ARRAY_ELEMENTS=8*1024;
+  final public static int MAX_ARRAY_ELEMENTS=256;
   }

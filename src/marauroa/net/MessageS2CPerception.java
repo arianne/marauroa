@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.37 2004/04/29 12:25:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.38 2004/04/30 12:24:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,6 @@ import marauroa.*;
  */
 public class MessageS2CPerception extends Message
   {
-  private int timestampPerception;
   private byte typePerception;
 
   private List addedRPObjects;
@@ -35,6 +34,7 @@ public class MessageS2CPerception extends Message
   private List modifiedDeletedAttribsRPObjects;
   private List deletedRPObjects;
     
+  private int timestampPerception;
   private RPObject myRPObject;
   
   /** Constructor for allowing creation of an empty message */
@@ -76,9 +76,9 @@ public class MessageS2CPerception extends Message
     return myRPObject;
     }
   
-  public void setTimestamp(int timestamp)
+  public void setPerceptionTimestamp(int ts)
     {
-    this.timestampPerception=timestamp;
+    timestampPerception=ts;
     }
   
   public int getPerceptionTimestamp()
