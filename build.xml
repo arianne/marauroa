@@ -24,7 +24,7 @@
     <copy todir="${images}">
       <fileset dir="images">
         <include name="**/*.*"/>
-	<exclude name="CVS"/>
+	    <exclude name="CVS"/>
       </fileset>
     </copy>
     <copy todir="${build}" file="${src}/marauroa.ini"/>
