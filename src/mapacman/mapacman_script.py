@@ -12,6 +12,8 @@ pacman_mapfile='map_definition.txt'
 class RealPythonRP(PythonRP):
     map
     removed_elements=[]
+    super_players=[]
+    online_players=[]
     
     def __init__(self):
         self.map=mapacmanRPMap(pacman_mapfile)
@@ -42,23 +44,57 @@ class RealPythonRP(PythonRP):
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
-        for player in _online_players:
+        for player in self.online_players:
             pos=move(player,self.map)
             if self.map.hasZoneRPObject(pos):
                 object_in_pos=self.map.getZoneRPObject(pos)
                 if object_in_pos.get("type")=="ball":
                     zone.remove(RPObject.ID(object_in_pos))
                     self.map.removeZoneRPObject(pos)
+                    element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
+                    self.removed_elements.append(element)
                     player.put("score",player.getInt("score")+1)
-                    self.removed_elements.append((object_in_pos.get("!respawn"),object_in_pos))
+                    zone.modify(player)
                 elif object_in_pos.get("type")=="superball":
-                    pass
+                    zone.remove(RPObject.ID(object_in_pos))
+                    self.map.removeZoneRPObject(pos)
+                    element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
+                    self.removed_elements.append(element)
+                    timeout=object_in_pos.getInt("!timeout")
+                    player.put("super",timeout)
+                    element=RemovedElement(timeout,player)
+                    self.super_players.append(element)
+                    zone.modify(player)
+
+            for player_in_pos in self.getPlayers(pos):
+                if player_in_pos.get("type")=="ghost":
+                    if player.has("super"):
+                        # Eat the ghost
+                        pass
+                    else:
+                        # kill the player
+                        pass
         
         for object in self.removed_elements:
-            if object[0]==0:
-                pass
-                
-        
+            if object.timeout==0:
+                self.map.addZoneRPObject(object.object)
+            else:
+                object.timeout=object.timeout-1
+
+        for object in self.super_players:
+            if object.timeout==0:
+                object.object.remove("super")
+            else:
+                object.timeout=object.timeout-1
+                object.put("super",object.timeout)
+                zone.modify(object)
+
+    def getPlayers(self,pos):
+        list=[]
+        for player in self.online_players:
+            if pos[0]==player.getInt("x") and pos[1]==player.getInt("y"):
+                list.append(player)
+        return list
         
     def onInit(self, object):
         """ Do what you need to initialize this player """
@@ -67,14 +103,14 @@ class RealPythonRP(PythonRP):
         object.put("y",pos[1])
         
         zone.add(object)
-        _online_players.append(object)
+        self.online_players.append(object)
         return 1
 
     def onExit(self, objectid):
         """ Do what you need to remove this player """
         for x in _online_players:
             if x.get("id")==playerid.getObjectID():
-                _online_players.remove(x)
+                self.online_players.remove(x)
                 break
             
         zone.remove(objectid)
@@ -83,7 +119,14 @@ class RealPythonRP(PythonRP):
     def onTimeout(self, objectid):
         return onExit(self,objectid)
 
-
+class RemovedElement:
+    timeout=0
+    object=0
+    
+    def __init__(self,timeout,object):
+        self.timeout=timeout
+        self.object=object
+    
 class mapacmanRPMap:
     grid=[]
     respawnPoints=[]
@@ -161,8 +204,6 @@ SUCCESS=0
 FAILED=1
 
 _directions=['N','W','S','E']
-_online_players=[]
-_player_tracked=[]
 
 def randomDirection():
     return directions[int((rand()/32768)*4)]

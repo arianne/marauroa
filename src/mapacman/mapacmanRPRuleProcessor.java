@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.2 2004/04/24 01:11:39 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.3 2004/04/24 10:17:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,6 +141,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
 //      pacmanRP.interpreter.eval("mapacmanRPMap('map_definition.txt').get(0,0)");
 
       RPObject player=new RPObject();
+      player.put("type","player");
       player.put("id",1);
       player.put("name",1);
       player.put("x",0);
@@ -190,4 +191,5 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       }
     }
   }
+
 
