@@ -71,15 +71,12 @@ class RealPythonAI(PythonAI):
             return 1
             
         for ghost in self.ghosts:
-            print ghost.toString()
-
             ghost.add("!decision",-1)
             
             target=None
             if not ghost.has("!target"):
                 players=self.pythonRP._online_players
                 target=players[random.randint(0,len(players)-1)]
-                print target.toString()
                 ghost.put("!target",target.get("id"))
             else:
                 try:
@@ -91,7 +88,6 @@ class RealPythonAI(PythonAI):
                 ghost.put("!decision",5)
                 difx=target.getInt("x")-ghost.getInt("x")
                 dify=target.getInt("y")-ghost.getInt("y")
-                print difx, " <-> ", dify
                 
                 if difx>0:
                     ghost.put("!hdir","E")
@@ -104,7 +100,6 @@ class RealPythonAI(PythonAI):
                     ghost.put("!vdir","N")
                 
             if self.pythonRP.canMove(ghost)==0:
-                print "Can't move: Changing direction"
                 dir=randomDirection()
                 ghost.put("dir",dir)
             else:            
@@ -148,8 +143,6 @@ class RealPythonRP(PythonRP):
         else:
             print "action not registered"
         
-        print "Player doing ", action.toString()," with result ", result
-    
         return result
         
     def move(self, player):
@@ -289,11 +282,10 @@ class RealPythonRP(PythonRP):
     def _foreachPlayer(self):
         for player in self._online_players:
             if(self.canMove(player)):
-                print 'You move in %s direction' % player.get("dir")
                 self._movePlayer(player)
                 self._ghostCollisions(player)
             else:
-                print 'You CAN\'T move in %s direction' % player.get("dir")
+                pass
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
@@ -376,9 +368,13 @@ class RealPythonRP(PythonRP):
         object.put("score",0)
         return object;
 
+    lastNonStorableId=1;
+    
     def createGhost(self, name):
         """ This function create a ghost """
-        object=self._zone.create()
+        object=RPObject()
+        object.put("id",RealPythonRP.lastNonStorableId)
+        RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
         object.put("type","ghost");
         object.put("name",name)
         object.put("x",0)
@@ -391,7 +387,9 @@ class RealPythonRP(PythonRP):
     def createBall(self, x,y):
         """ This function create a Ball object that when eats by player increments
         its score. """
-        object=self._zone.create()
+        object=RPObject()
+        object.put("id",RealPythonRP.lastNonStorableId)
+        RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
         object.put("type","ball");
         object.put("x",x)
         object.put("y",y)

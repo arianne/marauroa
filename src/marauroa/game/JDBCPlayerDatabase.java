@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.46 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.47 2004/06/08 18:28:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1280,18 +1280,21 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     }
 
   private Random random;
-  private static int last_idAssigned=1;
+
+  final private static int INITIAL_STORED_RPOBJECT_ID=100000;
+  
+  private static int last_idAssigned=INITIAL_STORED_RPOBJECT_ID;
   
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
-    if(last_idAssigned==1)
+    if(last_idAssigned==INITIAL_STORED_RPOBJECT_ID)
       {
       try
         {
         Connection connection = ((JDBCTransaction)trans).getConnection();
         Statement stmt=connection.createStatement();
       
-        String query = "select max(id) from player";
+        String query = "select max(id) from rpobject";
         marauroad.trace("JDBCPlayerDatabase::getValidRPObjectID","D",query);
 
         ResultSet result = stmt.executeQuery(query);
@@ -1299,7 +1302,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         if(result.next())
           {
           last_idAssigned=result.getInt(1);
-	  if(last_idAssigned<1) last_idAssigned=1;
+          if(last_idAssigned<INITIAL_STORED_RPOBJECT_ID) last_idAssigned=INITIAL_STORED_RPOBJECT_ID;
           }
         }
       catch(Exception e)
