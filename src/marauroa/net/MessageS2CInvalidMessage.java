@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.5 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.1 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,82 +10,69 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 package marauroa.net;
-
+  
 import java.net.InetSocketAddress;
 import java.io.*;
-
-/** This message indicate the client that the server has reject its login Message
+  
+/** This message indicate the server that the client wants to login and send the
+ *  needed info: username and password to login to server.
  *  @see marauroa.net.Message
  */
-
-public class MessageS2CLoginNACK extends Message
+public class MessageS2CInvalidMessage extends Message
   {
-  public final static byte UNKNOWN_REASON=0;
-  public final static byte USERNAME_WRONG=1;
-  public final static byte SERVER_IS_FULL=2;
-
-  static private String[] text=
-      {
-    "Unknown reason",
-    "Username/Password incorrect.",
-    "Server is full.",
-    "Marauroa Network Protocol invalid version: Running "+Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION)
-    };
-  private byte reason;
-
+  private String reason;
+  
   /** Constructor for allowing creation of an empty message */
-  public MessageS2CLoginNACK()
+  public MessageS2CInvalidMessage()
     {
     super(null);
-    type=TYPE_S2C_LOGIN_NACK;
+    type=TYPE_S2C_INVALIDMESSAGE;
+    reason=new String();
     }
 
-  /** Constructor with a TCP/IP source/destination of the message
+  /** Constructor with a TCP/IP source/destination of the message and the name
+   *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
-   *  @param resolution the reason to deny the login */
-  public MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
+   *  @param username the username of the user that wants to login
+   *  @param password the plain password of the user that wants to login
+   */
+  public MessageS2CInvalidMessage(InetSocketAddress source,String reason)
     {
     super(source);
-    type=TYPE_S2C_LOGIN_NACK;
-    reason=resolution;
-    }
-
-  /** This method returns the resolution of the login event
-   *  @return a byte representing the resolution given.*/
-  public byte getResolutionCode()
+    type=TYPE_S2C_INVALIDMESSAGE;
+    this.reason=reason;
+    }  
+  
+  /** This method returns the reason
+   *  @return the reason */
+  public String getReason()
     {
-    return reason;
+    return reason;    
     }
-
-  /** This method returns a String that represent the resolution given to the login event
-   *  @return a string representing the resolution.*/
-  public String getResolution()
-    {
-    return text[reason];
-    }
-
-  /** This method returns a String that represent the object
+    
+  /** This method returns a String that represent the object 
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Login NACK) from ("+source.toString()+") CONTENTS: ("+getResolution()+")";
+    return "Message (S2C Message Invalid) from ("+source.toString()+") CONTENTS: (reason:"+reason+")";
     }
-
+      
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
     out.write(reason);
     }
-
+    
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    reason=in.readByte();
-    if(type!=TYPE_S2C_LOGIN_NACK)
+    reason=in.readString();
+
+    if(type!=TYPE_S2C_INVALIDMESSAGE)
       {
       throw new java.lang.ClassNotFoundException();
       }
-    }
-  };
+    }    
+  };  
+

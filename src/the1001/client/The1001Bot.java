@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.18 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.19 2004/03/26 16:27:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,7 +125,7 @@ public class The1001Bot
                   }
                 }
 
-              List modified_objects = perception.getModifiedRPObjects();
+              List modified_objects = perception.getAddedRPObjects();
 
               for (int i = 0; i < modified_objects.size(); i++)
                 {
@@ -386,6 +386,11 @@ public class The1001Bot
         System.exit(-1);
         }
       }
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      System.out.println("Not able to connect to server because you are using an outdated client");
+      System.exit(-1);
+      }
     catch(SocketException e)
       {
       marauroad.trace("The1001Bot::connectAndChooseCharacter","X",e.getMessage());
@@ -405,7 +410,15 @@ public class The1001Bot
     
     while(!complete && recieved<40)
       {
-      message=netman.getMessage();
+      try
+        {
+        message=netman.getMessage();
+        }
+      catch(MessageFactory.InvalidVersionException e)
+        {
+        // Should never happens 
+        }
+        
       recieved++;
       if(message!=null)
         {

@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.8 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.9 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,22 @@ import marauroa.marauroad;
  *  the stream of bytes.
  */
 public class MessageFactory
-  {  
+  {
+  public static class InvalidVersionException extends Exception
+    {
+    private int version;
+    public InvalidVersionException(int version)
+      {
+      super();
+      this.version=version;
+      }
+    
+    public int getVersion()
+      {
+      return version;
+      }
+    }  
+    
   private static Map factoryArray;
   private static MessageFactory messageFactory;
   private MessageFactory()
@@ -59,6 +74,7 @@ public class MessageFactory
     register(Message.TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
     register(Message.TYPE_C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
     register(Message.TYPE_S2C_SERVERINFO,MessageS2CServerInfo.class);
+    register(Message.TYPE_S2C_INVALIDMESSAGE,MessageS2CInvalidMessage.class);
     marauroad.trace("MessageFactory::register","<");
     }
       
@@ -72,7 +88,7 @@ public class MessageFactory
    @param source the source of the message needed to build the object. 
    
    @throws IOException in case of problems with the message */  
-  public Message getMessage(byte[] data, InetSocketAddress source) throws IOException
+  public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
     {
     marauroad.trace("MessageFactory::getMessage",">");
     try
@@ -81,15 +97,24 @@ public class MessageFactory
         {
         if(factoryArray.containsKey(new Integer(data[1])))
           {
-          Class messageType=(Class) factoryArray.get(new Integer(data[1]));
-          Message tmp=(Message) messageType.newInstance();
-          ByteArrayInputStream in=new ByteArrayInputStream(data);
-          InputSerializer s=new InputSerializer(in);
+          try 
+            {
+            Class messageType=(Class) factoryArray.get(new Integer(data[1]));
+            Message tmp=(Message) messageType.newInstance();
+            ByteArrayInputStream in=new ByteArrayInputStream(data);
+            InputSerializer s=new InputSerializer(in);
 	
-          tmp.readObject(s);
-          tmp.setAddress(source);
-          marauroad.trace("MessageFactory::getMessage","<");
-          return tmp;
+            tmp.readObject(s);
+            tmp.setAddress(source);
+            marauroad.trace("MessageFactory::getMessage","<");
+            return tmp;
+            }
+          catch(Exception e)
+            {
+            marauroad.trace("MessageFactory::getMessage","X",e.getMessage());
+            e.printStackTrace();
+            throw new IOException(e.getMessage());
+            }
           }
         else
           {
@@ -100,14 +125,8 @@ public class MessageFactory
       else
         {      
         marauroad.trace("MessageFactory::getMessage","X","Message has incorrect protocol version");
-        throw new IOException("Message has incorrect protocol version: "+data[0]+" ( expected "+NetConst.NETWORK_PROTOCOL_VERSION+")");
+        throw new InvalidVersionException(data[0]);
         }
-      }
-    catch(Exception e)
-      {
-      marauroad.trace("MessageFactory::getMessage","X",e.getMessage());
-      e.printStackTrace();
-      throw new IOException(e.getMessage());
       }
     finally
       {

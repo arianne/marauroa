@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.15 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.16 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,7 +202,7 @@ public class Test_GameServerManager extends TestCase
         {
         Message msg=null;
 
-        while(msg==null) msg=netMan.getMessage();
+        while(msg==null) msg=netMan.getMessage();          
         if(msg instanceof MessageS2CLoginNACK)
           {
           assertTrue("Correct login failure",true);
@@ -306,6 +306,10 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can't logout. Got "+msg.toString());
           }
         }
+      }
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      fail();
       }
     finally
       {
@@ -445,6 +449,10 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      fail();
+      }
     finally
       {
       finalizeEnviroment();
@@ -482,6 +490,10 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      fail();
+      }
     finally
       {
       finalizeEnviroment();
@@ -518,6 +530,10 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can add action. Got "+msg.toString());
           }
         }
+      }
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      fail();
       }
     finally
       {

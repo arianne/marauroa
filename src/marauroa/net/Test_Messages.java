@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.11 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.12 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -593,14 +593,14 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CPerception",">");
 
     int clientid=14324;
-    LinkedList list=new LinkedList();
-
-    list.add(new RPObject(new RPObject.ID(12)));
-    list.add(new RPObject(new RPObject.ID(13)));
-    list.add(new RPObject(new RPObject.ID(14)));
-    list.add(new RPObject(new RPObject.ID(15)));
     
-    MessageS2CPerception msg=new MessageS2CPerception(null, RPZone.Perception.TOTAL, list, new LinkedList());
+    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
+    perception.added(new RPObject(new RPObject.ID(12)));
+    perception.added(new RPObject(new RPObject.ID(13)));
+    perception.added(new RPObject(new RPObject.ID(14)));
+    perception.added(new RPObject(new RPObject.ID(15)));
+    
+    MessageS2CPerception msg=new MessageS2CPerception(null, perception);
 
     msg.setClientID(clientid);
     out=new ByteArrayOutputStream();
@@ -632,7 +632,7 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    assertEquals(result.getModifiedRPObjects(),list);
+    assertEquals(result.getAddedRPObjects(),perception.addedList);
     assertEquals(Message.TYPE_S2C_PERCEPTION,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CPerception","<");

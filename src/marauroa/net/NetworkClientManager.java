@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.13 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.14 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class NetworkClientManager
     
   /** This method returns a message if it is available or null
    *  @return a Message*/
-  public Message getMessage()
+  public Message getMessage() throws MessageFactory.InvalidVersionException
     {
     try
       {
@@ -87,7 +87,11 @@ public class NetworkClientManager
           }
         }
       }
-    catch(IOException e)
+    catch(MessageFactory.InvalidVersionException e)
+      {
+      throw e;
+      }
+    catch(Exception e)
       {
       /* Report the exception */
       marauroad.report(e.getMessage());

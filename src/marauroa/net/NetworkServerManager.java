@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.17 2004/03/25 22:20:44 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.18 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -177,12 +177,19 @@ public final class NetworkServerManager
           /*** Statistics ***/
           stats.addBytesRecv(packet.getLength());
           stats.addMessageRecv();
-
-          Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
-
-          marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
-          messages.add(msg);
-          newMessageArrived();
+          
+          try
+            {
+            Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
+            marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
+            messages.add(msg);
+            newMessageArrived();
+            }
+          catch(MessageFactory.InvalidVersionException e)
+            {
+            MessageS2CInvalidMessage msg=new MessageS2CInvalidMessage((InetSocketAddress)packet.getSocketAddress(),"Invalid client version: Update client");
+            addMessage(msg);
+            }
           }
         catch(java.net.SocketTimeoutException e)
           {

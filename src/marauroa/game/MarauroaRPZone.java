@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.26 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.27 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,16 +68,14 @@ public class MarauroaRPZone implements RPZone
     {
     try 
       {
-        // if(previous_turn.containsKey(new RPObject.ID(object)))
-        // {
-        // RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
-        // perception.modified(object,previous);
-        // previous_turn.remove(new RPObject.ID(object));      
-        // }
-        // else
+      if(previous_turn.containsKey(new RPObject.ID(object)))
         {
-        // TODO: This
-        // marauroad.trace("MarauroaRPZone::modify","X","Unable to use DELTA perception for this object because it was never get. Sending FULL instead");
+        RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
+        perception.modified(object,previous);
+        previous_turn.remove(new RPObject.ID(object));      
+        }
+      else
+        {
         perception.added(object);
         }
       }

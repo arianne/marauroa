@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.20 2004/03/25 22:20:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.21 2004/03/26 16:27:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,19 +12,12 @@
  ***************************************************************************/
 package marauroa.net;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.DeflaterOutputStream;
-import marauroa.Statistics;
-import marauroa.TimeoutConf;
-import marauroa.game.RPObject;
-import marauroa.marauroad;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.zip.*;
+import marauroa.game.*;
+import marauroa.*;
 
 /** This message indicate the client the objects that the server has determined that
  *  this client is able to see.
@@ -35,9 +28,14 @@ import marauroa.marauroad;
 public class MessageS2CPerception extends Message
   {
   private byte typePerception;
-  private List modifiedRPObjects;
+
+  private List addedRPObjects;
+  private List modifiedAddedAttribsRPObjects;
+  private List modifiedDeletedAttribsRPObjects;
   private List deletedRPObjects;
+  
   private RPObject myRPObject;
+  
   /** Constructor for allowing creation of an empty message */
   public MessageS2CPerception()
     {
@@ -51,15 +49,18 @@ public class MessageS2CPerception extends Message
    *  @param modifiedRPObjects the list of object that has been modified.
    *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
-  public MessageS2CPerception(InetSocketAddress source,byte typePerception, List modifiedRPObjects, List deletedRPObjects)
+  public MessageS2CPerception(InetSocketAddress source,RPZone.Perception perception)
     {
     super(source);
     type=TYPE_S2C_PERCEPTION;
-    /** TODO: Make this choosable */
-    this.typePerception=typePerception;
-    this.modifiedRPObjects=modifiedRPObjects;
-    this.deletedRPObjects=deletedRPObjects;
-    this.myRPObject=new RPObject();
+    
+    typePerception=perception.type;
+    addedRPObjects=perception.addedList;
+    modifiedAddedAttribsRPObjects=perception.modifiedAddedAttribsList;
+    modifiedDeletedAttribsRPObjects=perception.modifiedDeletedAttribsList;
+    deletedRPObjects=perception.deletedList;
+    
+    myRPObject=new RPObject();
     }
   
   public void setMyRPObject(RPObject object)
@@ -79,9 +80,9 @@ public class MessageS2CPerception extends Message
   
   /** This method returns the list of modified objects
    *  @return List<RPObject> of modified objects */
-  public List getModifiedRPObjects()
+  public List getAddedRPObjects()
     {
-    return modifiedRPObjects;
+    return addedRPObjects;
     }
   
   /** This method returns the list of deleted objects
@@ -95,7 +96,7 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+modifiedRPObjects.size()+" modified objects and "+
+    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+addedRPObjects.size()+" modified objects and "+
       deletedRPObjects.size()+" deleted objects)";
     }
   
@@ -108,9 +109,9 @@ public class MessageS2CPerception extends Message
     OutputSerializer ser=new OutputSerializer(out_stream);
     
     ser.write((byte)typePerception);
-    ser.write((int)modifiedRPObjects.size());
+    ser.write((int)addedRPObjects.size());
     
-    Iterator it_mod=modifiedRPObjects.iterator();
+    Iterator it_mod=addedRPObjects.iterator();
 
     while(it_mod.hasNext())
       {
@@ -143,7 +144,7 @@ public class MessageS2CPerception extends Message
     InputSerializer ser=new InputSerializer(szlib);
     
     typePerception=ser.readByte();
-    modifiedRPObjects=new LinkedList();
+    addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     
     int mod=ser.readInt();
@@ -155,7 +156,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
     for(int i=0;i<mod;++i)
       {
-      modifiedRPObjects.add(ser.readObject(new RPObject()));
+      addedRPObjects.add(ser.readObject(new RPObject()));
       }
     
     int del=ser.readInt();
@@ -173,7 +174,7 @@ public class MessageS2CPerception extends Message
     myRPObject=(RPObject)ser.readObject(myRPObject);
     }
     
-  // just counts the bytes written into underlaying outputstream
+  /** This class just counts the bytes written into underlaying outputstream */
   private final static class ByteCounterOutputStream
     extends OutputStream
     {
