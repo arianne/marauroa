@@ -13,6 +13,7 @@ public class RPServerManager extends Thread
   private RPScheduler scheduler;
   private RPRuleProcessor ruleProcessor;
   private RPZone zone;
+  private long turnDuration;
   
   public RPServerManager()
     {
@@ -22,20 +23,29 @@ public class RPServerManager extends Thread
     
     keepRunning=true;
     scheduler=new RPScheduler();
-    
+    turnDuration = 60000;
+        
     try
       {
-      //the  class for the RPZone should come
-      //from Configuration
-      Configuration conf=Configuration.getConfiguration();    
+      Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
       zone=(RPZone)zoneClass.newInstance();
     
-      //the  class for the rule processor should come
-      //from Configuration
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
+      
+      try
+      {
+        String duration =conf.get("rp_turnDuration");
+        turnDuration = Long.parseLong(duration);
+      }
+      catch(Exception e)
+      {
+        turnDuration = 60000;
+        marauroad.trace("RPServerManager","D","Turn duration set to default("+turnDuration+")");
+      }
+      
       }
     catch(Throwable e)
       {
@@ -103,7 +113,7 @@ public class RPServerManager extends Thread
       
       try
         {
-        Thread.sleep(60000);
+        Thread.sleep(turnDuration);
         }
       catch(InterruptedException e)
         {
