@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.27 2004/01/28 16:35:46 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.28 2004/01/30 20:02:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -191,12 +191,19 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     try
       {
       object.put("?joined","");
+      RPObject.ID valid_id=new RPObject.ID(zone.create());
+      object.put(RPCode.var_object_id,valid_id.getObjectID());
       zone.add(object);
       trackObject(object);
   
       RPCode.AddPlayer(object);
 
       return true;
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("the1001RPRuleProcessor::onInit","X",e.getMessage());
+      return false;
       }
     finally
       {

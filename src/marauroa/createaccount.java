@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.1 2004/01/30 18:59:22 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.2 2004/01/30 20:02:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -83,25 +83,78 @@ class createaccount
       
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       
-      if(!playerDatabase.validString(username)) return;
-      if(!playerDatabase.validString(password)) return;
-      if(!playerDatabase.validString(character)) return;
-      if(!playerDatabase.validString(character_model)) return;       
-      if(!playerDatabase.validString(gladiator)) return;
-      if(!playerDatabase.validString(gladiator_model)) return;       
-
-      if(username.length()<10) return;
-      if(password.length()<10) return;
-      if(character.length()<10) return;
-      if(character_model.length()<10) return;
-      if(gladiator.length()<10) return;
-      if(gladiator_model.length()<10) return;
-        
-      if(playerDatabase.hasPlayer(username))
+      out.println("Checking for valid string");
+      if(playerDatabase.validString(username)==false) 
         {
+        out.println("String not valid: "+username);
+        return;
+        }
+      if(playerDatabase.validString(password)==false)
+        {
+        out.println("String not valid: "+password);
+        return;
+        }
+      if(playerDatabase.validString(character)==false)
+        {
+        out.println("String not valid: "+character);
+        return;
+        }
+      if(playerDatabase.validString(character_model)==false)       
+        {
+        out.println("String not valid: "+character_model);
+        return;
+        }
+      if(playerDatabase.validString(gladiator)==false)
+        {
+        out.println("String not valid: "+gladiator);
+        return;
+        }
+      if(playerDatabase.validString(gladiator_model)==false)       
+        {
+        out.println("String not valid: "+gladiator_model);
         return;
         }
 
+      out.println("Checking string size");
+      if(username.length()>10) 
+        {
+        out.println("String size not valid: "+username);
+        return;
+        }
+      if(password.length()>10) 
+        {
+        out.println("String size not valid: "+password);
+        return;
+        }
+      if(character.length()>20) 
+        {
+        out.println("String size not valid: "+character);
+        return;
+        }
+      if(character_model.length()>10) 
+        {
+        out.println("String size not valid: "+character_model);
+        return;
+        }
+      if(gladiator.length()>20) 
+        {
+        out.println("String size not valid: "+gladiator);
+        return;
+        }
+      if(gladiator_model.length()>10) 
+        {
+        out.println("String size not valid: "+gladiator_model);
+        return;
+        }
+        
+      out.println("Checking if player exists");
+      if(playerDatabase.hasPlayer(username))
+        {
+        out.println("ERROR: Player exists");
+        return;
+        }
+
+      out.println("Adding player");
       playerDatabase.addPlayer(username,password);
 
       RPObject object=new RPObject();
