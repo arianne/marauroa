@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.7 2004/03/03 06:34:55 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.8 2004/03/04 22:37:01 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -530,24 +530,10 @@ public class The1001Game3D
 			}
 			
 			URL url_model = Resources.getModelUrl("Orc_Arena.3DS");
-			Inspector3DS inloader = new Inspector3DS(url_model); // constructor
+			Inspector3DS inloader = new Inspector3DS(url_model); 
 			marauroad.trace("Arena","D",""+url_model.toExternalForm());
-			//      String path = url_model.getPath();
-			//      path = "file:/P:/edonkey/work/classes/data/models/Orc_Arena/";
 			marauroad.trace("Arena","D",Resources.getModelBaseUrl("Orc_Arena.3DS").toExternalForm());
-			//      try
-			//      {
-			//        URL url_base = new URL(;);
 			inloader.setURLBase(Resources.getModelBaseUrl("Orc_Arena.3DS").toExternalForm());
-			//      }
-			//      catch (MalformedURLException e)
-			//      {
-			//        e.printStackTrace();
-			//      }
-			
-			//      loader.setURLBase(Resources.getModelUrl("Orc_Arena.3DS").get);
-			//      inloader.setLogging(true);
-			//      inloader.setDetail(7);
 			inloader.parseIt(); // process the file
 			TransformGroup the_model = inloader.getModel();
 			Transform3D t = new Transform3D();
@@ -562,6 +548,7 @@ public class The1001Game3D
 			setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 			setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 			setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+			setCapability(ALLOW_DETACH);
 		}
 		
 		/**
@@ -870,11 +857,12 @@ public class The1001Game3D
 			double sin = Math.sin(angle);
 			double cos = Math.cos(angle);
 			BranchGroup bg_main = new BranchGroup();
-			model_br.bgroup = new BranchGroup();
-			TransformGroup tg_scale_all = new TransformGroup();
+			model_br.bgroup = new BranchGroup();		 
+			TransformGroup tg_scale_all = new TransformGroup();		  
 			Transform3D trans_scale_and_translate_all = new Transform3D();
 			Vector3f v3f = new Vector3f((float)(sin*radius),0.26f,(float)(cos*radius));
-			trans_scale_and_translate_all.set(v3f);
+			trans_scale_and_translate_all.set(v3f);		  
+		 
 			Transform3D trot = new Transform3D();
 			float angle_rot = v3f.angle(new Vector3f(-1.0f,0.0f,0.0f));
 			if(angle>=Math.PI/2 && angle<=3*Math.PI/2)
@@ -889,6 +877,9 @@ public class The1001Game3D
 			trans_scale_and_translate_all.mul(trot);
 			tg_scale_all.setTransform(trans_scale_and_translate_all);
 			
+			
+			Transform3D trans_scale_text = new Transform3D();
+			trans_scale_text.setScale(0.2);
 			
 			// name label
 			Font3D f3d = new Font3D(new Font("default", Font.PLAIN, 2),
@@ -913,8 +904,16 @@ public class The1001Game3D
 			PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
 			model_br.nameLabel = sh_txt;
 			sh_txt.setUserData(txt);
-			
-			tg_scale_all.addChild(sh_txt);
+			TransformGroup tg_label_name = new TransformGroup();
+			tg_label_name.addChild(sh_txt);
+			Transform3D tr_txt = new Transform3D();
+			Transform3D tr2_txt = new Transform3D();
+			tr2_txt.setTranslation(new Vector3f(0.0f,1.0f,0.0f));
+			tr_txt.rotY(Math.PI/2);
+			tr_txt.mul(tr2_txt);
+			tr_txt.mul(trans_scale_text);
+			tg_label_name.setTransform(tr_txt);
+			tg_scale_all.addChild(tg_label_name);
 			
 			//health label
 			
@@ -942,19 +941,26 @@ public class The1001Game3D
 			model_br.healthLabel = sh_txt;
 			sh_txt.setUserData(txt);
 			Transform3D trans = new Transform3D();
-			trans.rotX(Math.PI/2);
+			trans.rotX(-Math.PI/2);
 			Transform3D trans2 = new Transform3D();
-			trans2.rotY(Math.PI);
+      trans2.rotZ(-Math.PI/2);
 			trans.mul(trans2);
+			trans2 = new Transform3D();
+			trans2.setTranslation(new Vector3f(0.0f,0.0f,-0.5f));
+			trans.mul(trans2);
+//			trans.mul(trans_scale_text);
 			
 			TransformGroup tr_gr = new TransformGroup();
-			tr_gr.addChild(sh_txt);
 			tr_gr.setTransform(trans);
-//			tg_scale_all.addChild(tr_gr);
+			tr_gr.addChild(sh_txt);
+			
+			tg_scale_all.addChild(tr_gr);
 			model_br.bgroup.addChild(model_br.model);
 			tg_scale_all.addChild(model_br.bgroup);
 			
 			bg_main.addChild(tg_scale_all);
+			model_br.bgroup = bg_main;
+			bg_main.setCapability(BranchGroup.ALLOW_DETACH);
 			addChild(bg_main);
 		}
 		
