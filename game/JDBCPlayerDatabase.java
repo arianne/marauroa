@@ -161,6 +161,10 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
+  /** This method add the player to database with username and password as identificator.
+   *  @param username is the name of the player
+   *  @param password is a string used to verify access.
+   *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
   public void addPlayer(String username, String password) throws PlayerAlreadyAddedException
     {
     marauroad.trace("JDBCPlayerDatabase::addPlayer",">");
@@ -192,6 +196,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
+  /** This method remove the player with usernae from database.
+   *  @param username is the name of the player
+   *  @throws PlayerNotFoundException if the player doesn't exist in database. */
   public void removePlayer(String username) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::removePlayer",">");
@@ -212,17 +219,25 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::removePlayer","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::removePlayer","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::removePlayer","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::removePlayer","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::removePlayer","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::removePlayer","<");
+      }
     }
   
+  /** This method removes a character asociated with a player.
+   *  @param username is the name of the player
+   *  @param character is the name of the character that the username player owns.
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
+   *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
   public void removeCharacter(String username, String character) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::removeCharacter",">");
@@ -237,22 +252,29 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::removeCharacter","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::removeCharacter","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::removeCharacter","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::removeCharacter","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::removeCharacter","<");
+      }
     }
   
+  /** This method returns true if the username/password match with any of the accounts in 
+   *  database or false if none of them match.
+   *  @param username is the name of the player
+   *  @param password is the string used to verify access.
+   *  @return true if username/password is correct, false otherwise. */
   public boolean verifyAccount(String username, String password)
     {
     marauroad.trace("JDBCPlayerDatabase::verifyAccount",">");
 
-    boolean ret = false;
     try
       {
       Statement stmt = connection.createStatement();
@@ -263,17 +285,21 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         if(result.getInt(1)!=0)
           {
-          ret = true;
+          return true;
           }
         }
+ 
+      return false;
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","E",sqle.getMessage());
+      return false;
       }
-      
-    marauroad.trace("JDBCPlayerDatabase::verifyAccount","<");
-    return(ret);
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::verifyAccount","<");
+      }
     }
   
   public String[] getLoginEvent(String username) throws PlayerNotFoundException
