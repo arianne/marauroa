@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ganttproject.sourceforge.net>
 
-<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/2/2004" view-zoom="5" version="1.9.10">
+<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/4/2004" view-zoom="4" version="1.9.9">
     <description>
         Marauroa a an online development project aimed at create a open source multiplayer online framework.
     </description>
@@ -171,40 +171,45 @@
             <depend id="292" type="2"/>
             <depend id="293" type="2"/>
         </task>
-        <task id="160" name="Add Lua support" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/3/2004" duration="10" complete="0" priority="1">
-            <depend id="162" type="2"/>
-        </task>
-        <task id="162" name="Rewrite 1001 using Lua" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/3/2004" duration="15" complete="0" priority="1">
-            <depend id="279" type="2"/>
-        </task>
         <task id="292" name="Add Persistent Objects" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="10" complete="90" priority="1">
             <depend id="279" type="2"/>
             <depend id="257" type="2"/>
         </task>
-        <task id="293" name="Transactional database support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="7" complete="66" priority="1"/>
+        <task id="293" name="Transactional database support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="7" complete="100" priority="1"/>
         <task id="279" name="Release Marauroa 0.30" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="10/4/2004" duration="3" complete="0" priority="1">
             <depend id="257" type="2"/>
             <depend id="312" type="2"/>
             <depend id="316" type="2"/>
         </task>
-        <task id="312" name="Implement Delta-delta" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="14" complete="0" priority="1">
+        <task id="312" name="Implement Delta-delta" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="14" complete="100" priority="1">
             <depend id="314" type="2"/>
             <depend id="315" type="2"/>
         </task>
-        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="24" complete="46" priority="1">
-            <depend id="314" type="2"/>
-        </task>
-        <task id="315" name="Write Test cases for Delta-delta" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="27/4/2004" duration="5" complete="0" priority="1">
-            <depend id="314" type="2"/>
-        </task>
-        <task id="316" name="Timestamp Perception messages" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="2" complete="0" priority="1">
+        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="24" complete="55" priority="1">
             <depend id="314" type="2"/>
         </task>
         <task id="314" name="Release Marauroa 0.31" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="7/5/2004" duration="3" complete="0" priority="1">
             <depend id="260" type="2"/>
             <depend id="256" type="2"/>
             <depend id="258" type="2"/>
+            <depend id="335" type="2"/>
         </task>
+        <task id="316" name="Timestamp Perception messages" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="2" complete="100" priority="1">
+            <depend id="335" type="2"/>
+        </task>
+        <task id="315" name="Write Test cases for Delta-delta" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="27/4/2004" duration="5" complete="100" priority="1">
+            <depend id="335" type="2"/>
+        </task>
+        <task id="335" name="Release Marauroa 0.32" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="10/5/2004" duration="3" complete="0" priority="1">
+            <depend id="337" type="2"/>
+            <depend id="160" type="2"/>
+        </task>
+        <task id="160" name="Add Python support" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/5/2004" duration="10" complete="75" priority="1">
+            <depend id="162" type="2"/>
+            <depend id="337" type="2"/>
+        </task>
+        <task id="337" name="Release Marauroa 0.33" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="23/5/2004" duration="3" complete="0" priority="1"/>
+        <task id="162" name="Rewrite 1001 using Python" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="23/5/2004" duration="15" complete="0" priority="1"/>
         <task id="256" name="Enlarge World" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/5/2004" duration="20" complete="0" priority="1">
             <depend id="260" type="2"/>
         </task>
