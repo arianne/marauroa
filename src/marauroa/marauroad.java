@@ -154,7 +154,7 @@ public class marauroad extends Thread
     {
     getMarauroa().message("");
     }
-  
+    
   public static void trace(String module,String event)
     {
     getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+"\t"+event+"\t"+

@@ -4,6 +4,7 @@ import marauroa.*;
 import java.util.Properties;
 import java.io.*;
 
+/** This class is a basic configuration file manager */
 public class Configuration
   {
   private static String configurationFile="marauroa.ini";
