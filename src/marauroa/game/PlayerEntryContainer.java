@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.36 2004/05/11 22:11:38 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.37 2004/05/27 18:49:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -823,7 +823,7 @@ public class PlayerEntryContainer
         
         if(entry.database_storedRPObject==null)
           {
-          entry.database_storedRPObject=object;
+          entry.database_storedRPObject=(RPObject)object.copy();
           }
 
         if(!entry.database_storedRPObject.equals(object) && value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)

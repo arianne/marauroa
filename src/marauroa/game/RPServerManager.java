@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.89 2004/05/27 18:04:37 root777 Exp $ */
+/* $Id: RPServerManager.java,v 1.90 2004/05/27 18:49:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -264,7 +264,7 @@ class RPServerManager extends Thread
             RPZone.Perception perception;
             RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
-            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION /*|| object.has("?joined")*/)
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.SYNC);

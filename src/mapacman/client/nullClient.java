@@ -405,9 +405,9 @@ public class nullClient extends Thread
       if(args.length>0)
         {
         int i=0;
-        String username;
-        String password;
-        String character;
+        String username=null;
+        String password=null;
+        String character=null;
      
         while(i!=args.length)
           {
@@ -425,7 +425,7 @@ public class nullClient extends Thread
             }
           }        
         
-        new nullClient("prueba","qwerty","prueba").start();
+        new nullClient(username,password,character).start();
         }
 
       int num=1;

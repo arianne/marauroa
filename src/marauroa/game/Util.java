@@ -1,4 +1,4 @@
-/* $Id: Util.java,v 1.2 2004/05/26 06:05:10 root777 Exp $ */
+/* $Id: Util.java,v 1.3 2004/05/27 18:49:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,31 +117,11 @@ public class Util
   {
     try
     {
-      System.out.println(getMd5Hash("test"));
-      int count = 100;
-      if(argv.length>0)
-      {
-        try
-	{
-          count = Integer.parseInt(argv[0]);
+      System.out.println(getMd5Hash(argv[0])+" --");
 	}
-	catch(Throwable thr)
+	catch(Exception e)
 	{
-	  count = 100;
+	e.printStackTrace();
 	}
-      }
-      long start = System.currentTimeMillis();
-      for (int i = 0; i < count; i++)
-      {
-        getMd5Hash("testpassword");
-      }
-      long duration = System.currentTimeMillis()-start;
-      System.out.println("duration: "+duration + " count:"+count);
-      long duration_one = duration/count;
-      System.out.println("Call duration: "+duration_one);
-      
-    }
-    catch (UnsupportedEncodingException e) {e.printStackTrace();}
-    catch (NoSuchAlgorithmException e) {e.printStackTrace();}
   }
 }
