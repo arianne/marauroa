@@ -2,15 +2,26 @@ package marauroa.net;
 
 import java.io.*;
 
+/** ImputSerializer is used to serialize classes that implement the Serializable 
+ *  interface into a InputStream.
+ *  
+ * @author Miguel Angel Blanch Lardin
+ */
 public class InputSerializer
   {
-  InputStream in;
+  private InputStream in;
   
+  /** Constructor that pass the InputStream to the serializer 
+      @param in the InputStream */
   public InputSerializer(InputStream in)
     {
     this.in=in;
     }
-    
+  
+  /** This method serialize an object that implements the interface Serializable
+      allowing to implement this behaviour in several classes
+      @param obj the object were we will serialize the data
+      @return the object serialized, just for interface coherence */
   public Object readObject(marauroa.net.Serializable obj) throws IOException, java.lang.ClassNotFoundException
     {
     obj.readObject(this);

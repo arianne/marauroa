@@ -6,7 +6,7 @@ import java.io.*;
 /** Message is a class to represent all the kind of messages that are possible
  *  to exist in marauroa.
  *  
- * @author Miguel Angel Blanch Lardin <miguelangelblanchlardin@hotmail.com>
+ * @author Miguel Angel Blanch Lardin
  */
 public class Message implements marauroa.net.Serializable
   {
@@ -36,12 +36,17 @@ public class Message implements marauroa.net.Serializable
     {
     return source;
     }
-    
+
+  /** Set the clientID so that we can identify the client to which the
+      message is target, as only IP is easy to Fake
+      @param clientid a short that reprents the client id. */    
   public void setClientID(short clientid)
     {
     this.clientid=clientid;
     }
   
+  /** Returns the clientID of the Message.
+      @returns the ClientID */
   public short getClientID()
     {
     return clientid;
