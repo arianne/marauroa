@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.7 2003/12/30 08:10:47 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.8 2003/12/30 09:27:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,11 +58,10 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     
     try
       {
-      if(action.get("type")=="buy")
+      if(action.get("type")=="request_fight")
         {
-        String item_type=action.get("item_type");
-        String item_id=action.get("item_id");
-        return RPCode.Buy(id, item_type, item_id);
+        String gladiator_id=action.get("item_id");
+        return RPCode.RequestFight(id, gladiator_id);
         }
       else
         {
