@@ -42,10 +42,12 @@
   </target>
 
   <target name="compile" depends="init,installation">
+    <!--
     <replaceregexp file="${src}/marauroa/marauroad.java"
-                   match="final private static boolean DEBUG=false"
-                   replace="final private static boolean DEBUG=true"
-                   byline="true"/>
+                   match="final private static String VERSION=\".*""
+                   replace="final private static String VERSION=\"${version};\""
+                   byline="true"/>                   
+    -->
     <condition property="exclude.mapacman" value="**/mapacman/*.*">
       <not>
        <available file="${jython}"/>
