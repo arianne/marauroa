@@ -5,7 +5,8 @@ import java.util.*;
 /** This class implements an Object. Please refer to Objects Explained document */
 public class RPObject extends Attributes
   {
-  private RPSlot[] slots;
+  /** a List<RPSlot> of slots */
+  private List slots;
   
   public static class NoSlotFoundException extends Exception
     {
@@ -18,33 +19,26 @@ public class RPObject extends Attributes
   /** An iterator for properly acceding all the Slots. */
   public class SlotsIterator
     {
-    int i;
+    Iterator it;
     
     /** Constructor */
     public SlotsIterator()
       {
-      i=0;
+      it=slots.iterator();
       }
     
     /** This method returns true if there are still most elements.
      *  @return true if there are more elements. */    
     public boolean hasNext()
       {
-      return (i<slots.length);
+      return it.hasNext();
       }
     
     /** This method returs the RPSlot and move the pointer to the next element
      *  @return an RPSlot */ 
     public RPSlot next() throws NoSuchElementException
       {
-      if(i==slots.length) 
-        {
-        throw new NoSuchElementException("Acceding slots beyond limit");
-        }
-        
-      RPSlot obj=slots[i];
-      ++i;
-      return obj;
+      return (RPSlot)it.next();      
       }
     }
   
@@ -61,14 +55,14 @@ public class RPObject extends Attributes
       }
     
     /** Constructor 
-     *  @param attr an Attributes object( RPObject or RPAction ) containing object_id attribute */
-    public ID(Attributes attr) throws Attributes.AttributeNotFoundException
+     *  @param attr an RPObject containing object_id attribute */
+    public ID(RPObject attr) throws Attributes.AttributeNotFoundException
       {
       id=new Integer(attr.get("object_id")).intValue();
       }
     
     /** Constructor 
-     *  @param attr an Attributes object( RPObject or RPAction ) containing source_id attribute */
+     *  @param attr an RPAction containing source_id attribute */
     public ID(RPAction attr) throws Attributes.AttributeNotFoundException
       {
       id=new Integer(attr.get("source_id")).intValue();
@@ -124,24 +118,25 @@ public class RPObject extends Attributes
   public RPObject()
     {
     super();
-    /* TODO: Not sure it is the best thing... */
-    slots=new RPSlot[0];
+
+    slots=new LinkedList();
     }
 
   public RPObject(ID id)
     {
     super();
-    /* TODO: Not sure it is the best thing... */
-    slots=new RPSlot[0];
-    
+
+    slots=new LinkedList();    
     put("object_id",id.getObjectID());
     }
   
   public boolean hasSlot(String name)
     {
-    for(int i=0;i!=slots.length;++i)
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
       {
-      if(name.equals(slots[i].getName()))
+      RPSlot slot=it.next();
+      if(name.equals(slot.getName()))
         {
         return true;
         }
@@ -150,21 +145,23 @@ public class RPObject extends Attributes
     return false;
     }
   
-  public void addSlots(RPSlot[] slots)
+  public void addSlot(RPSlot slot)
     {
-    this.slots=slots;
+    slots.add(slot);
     }
   
   public RPSlot getSlot(String name) throws NoSlotFoundException
     {
-    for(int i=0;i!=slots.length;++i)
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
       {
-      if(name.equals(slots[i].getName()))
+      RPSlot slot=it.next();
+      if(name.equals(slot.getName()))
         {
-        return slots[i];
+        return slot;
         }
       }
-    
+   
     throw new NoSlotFoundException();
     }
   
@@ -193,10 +190,12 @@ public class RPObject extends Attributes
     {
     super.writeObject(out);
     
-    out.write((int)slots.length);
-    for(int i=0;i<slots.length;++i)
+    out.write((int)slots.size());
+
+    SlotsIterator it=slotsIterator();
+    while(it.hasNext())
       {
-      out.write(slots[i]);
+      out.write(it.next());
       }
     }
   
@@ -205,11 +204,11 @@ public class RPObject extends Attributes
     super.readObject(in);
     
     int size=in.readInt();
-    slots=new RPSlot[size];
+    slots=new LinkedList();
     
     for(int i=0;i<size;++i)
       {
-      slots[i]=(RPSlot)in.readObject(new RPSlot());
+      slots.add((RPSlot)in.readObject(new RPSlot()));
       }
     }
   }
