@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.7 2004/05/19 16:38:35 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.8 2004/05/28 07:54:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.net;
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.util.zip.*;
 import marauroa.game.*;
 import marauroa.*;
 
@@ -63,20 +64,36 @@ public class MessageS2CMap extends Message
     {
     super.writeObject(out);
 
-    out.write((int)mapObjects.size());
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    MessageS2CPerception.ByteCounterOutputStream out_stream = new MessageS2CPerception.ByteCounterOutputStream(new DeflaterOutputStream(array));
+    OutputSerializer serializer=new OutputSerializer(out_stream);
+      
+    serializer.write((int)mapObjects.size());
     Iterator it=mapObjects.iterator();
     while(it.hasNext())
       {
       RPObject object=(RPObject)it.next();
-      out.write(object);
+      serializer.write(object);
       }
+      
+    out_stream.close();
+    byte[] content=array.toByteArray();
+      
+    long savedBytes=out_stream.getBytesWritten()-content.length;
+    Statistics.getStatistics().addBytesSaved(savedBytes);
+    
+    out.write(content);
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws IOException, ClassNotFoundException
     {
     super.readObject(in);
     
-    int mapObjectsSize=in.readInt();
+    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
+    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
+    InputSerializer ser=new InputSerializer(szlib);
+    
+    int mapObjectsSize=ser.readInt();
     mapObjects=new LinkedList();
     
     if(mapObjectsSize>TimeoutConf.MAX_ARRAY_ELEMENTS)
@@ -86,7 +103,7 @@ public class MessageS2CMap extends Message
 
     for(int i=0;i<mapObjectsSize;++i)
       {
-      mapObjects.add(in.readObject(new RPObject()));
+      mapObjects.add(ser.readObject(new RPObject()));
       }
 
     if(type!=TYPE_S2C_MAP)

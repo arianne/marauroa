@@ -104,6 +104,7 @@ Changelog
 0.36 
 - Database modified to stored hashed passwords
 - Fixed the two turns delay on actions
+- Compressed RPMap message
 - Added command line support for nullClient 
 
 0.35

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.46 2004/05/16 10:37:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.47 2004/05/28 07:54:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -340,12 +340,12 @@ public class MessageS2CPerception extends Message
     }
     
   /** This class just counts the bytes written into underlaying outputstream */
-  private final static class ByteCounterOutputStream
+  final static class ByteCounterOutputStream
     extends OutputStream
     {
     OutputStream os;
     long bytesWritten;
-    private ByteCounterOutputStream(OutputStream os)
+    public ByteCounterOutputStream(OutputStream os)
       {
       if(os==null) throw new NullPointerException("OutputStream is null!!!");
       this.os = os;
