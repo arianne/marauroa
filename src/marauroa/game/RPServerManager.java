@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.65 2004/04/17 10:02:50 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.66 2004/04/20 15:11:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,11 @@ class RPServerManager extends Thread
     marauroad.trace("RPServerManager::addRPAction",">");
     try
       {
-      marauroad.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
+      if(marauroad.loggable("RPServerManager::addRPAction","D"))
+        {
+        marauroad.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
+        }
+        
       scheduler.addRPAction(action);
       }
     finally
@@ -145,7 +149,10 @@ class RPServerManager extends Thread
     marauroad.trace("RPServerManager::addRPObject",">");
     try
       {
-      marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
+      if(marauroad.loggable("RPServerManager::addRPObject","D"))
+        {
+        marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
+        }
       zone.add(object);
       }
     finally

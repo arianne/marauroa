@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.69 2004/04/18 15:51:46 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.70 2004/04/20 15:11:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,7 +32,7 @@ public class marauroad extends Thread
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
   
-  private static String filename;
+  private static String filename="";
   
   static
     {
@@ -40,6 +40,7 @@ public class marauroad extends Thread
     timestamp=new Date();
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     }
+
   private static void setArguments(String[] args)
     {
     int i=0;
@@ -267,6 +268,18 @@ public class marauroad extends Thread
 
       getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
       }
+    }
+    
+  public static boolean loggable(String module,String event)
+    {
+    boolean result=false;
+    
+    if(filter(module) || event.equals("X") || event.equals("!"))
+      {
+      result=true;
+      }
+    
+    return result;
     }
     
   public static void report(String text)

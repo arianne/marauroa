@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.38 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.39 2004/04/20 15:11:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -173,7 +173,7 @@ public final class GameServerManager extends Thread
       {
       if(playerContainer.hasRuntimePlayer(msg.getClientID()) || playerContainer.hasPlayer(msg.getUsername()))
         {
-        /* Error: Player is already logged. */
+        /* Warning: Player is already logged. */
         marauroad.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
 
         /* Notify player of the event: We send him/her a new ACK */

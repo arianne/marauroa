@@ -69,7 +69,7 @@ public class JDBCTransaction extends Transaction
         if(!connection.isClosed())
           {
           Statement stmt = connection.createStatement();
-          String query = "select id from player where id=-1";
+          String query = "show tables";
 
           marauroad.trace("JDBCTransaction::isValid","D",query);
           stmt.executeQuery(query);

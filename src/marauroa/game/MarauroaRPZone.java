@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.39 2004/04/17 10:02:49 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.40 2004/04/20 15:11:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -151,15 +151,18 @@ public class MarauroaRPZone implements RPZone
  
   public Perception getPerception(RPObject.ID id, byte type)
     {
-    StringBuffer world=new StringBuffer("World content: \n");
-    
-    Iterator world_it=objects.values().iterator();
-    while(world_it.hasNext())
+    if((prebuildDeltaPerception==null || prebuildTotalPerception==null) && marauroad.loggable("MarauroaRPZone::getPerception","D"))
       {
-      RPObject object=(RPObject)world_it.next();
-      world.append("  "+object.toString()+"\n");
+      StringBuffer world=new StringBuffer("World content: \n");
+      
+      Iterator world_it=objects.values().iterator();
+      while(world_it.hasNext())
+        {
+        RPObject object=(RPObject)world_it.next();
+        world.append("  "+object.toString()+"\n");
+        }
+      marauroad.trace("MarauroaRPZone::getPerception","D",world.toString());
       }
-    marauroad.trace("World content--","D",world.toString());
 
     if(type==Perception.DELTA)
       {

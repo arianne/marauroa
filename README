@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.31 version 
+0.32 version 
 
 
 Status
@@ -92,6 +92,12 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
+0.32 	Apr 20, 2004
+- Fix a bug that happens when an object is added and deleted on the same turn from a slot.
+- Added modification of the network protocol to send our RPObject only when changed
+- Fixed a path related problem with create account
+- Fixed an issue that rejects the creation of database on the first run.
+
 0.31	Apr 14, 2004
 - Added Delta-delta perception so now only diffs between actual and previous object is send.
 - Change attributes name to save even more bandwidth
