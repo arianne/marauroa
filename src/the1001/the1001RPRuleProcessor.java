@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.25 2004/01/27 15:51:14 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.26 2004/01/27 19:13:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,7 +108,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     }
     
   /** Notify it when a new turn happens */
-  public void nextTurn()
+  synchronized public void nextTurn()
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     ++turn;
@@ -185,7 +185,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     trackedObjects.add(object);
     }
 
-  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
+  synchronized public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
     marauroad.trace("the1001RPRuleProcessor::onInit",">");
     try
@@ -202,23 +202,29 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     }
     
-  public boolean onExit(RPObject.ID id)
+  synchronized public boolean onExit(RPObject.ID id)
     {
     try
       {
+      marauroad.trace("the1001RPRuleProcessor::onExit",">");
+      
       /** TODO: Deny logout to players that are in combat */
       RPCode.RemovePlayer(id);
-
-      zone.remove(id);
+      RPObject removed=zone.remove(id);
+      marauroad.trace("the1001RPRuleProcessor::onExit","D",removed.toString());     
       }
     catch(Exception e)
       {
       e.printStackTrace(System.out);
       }
+    finally
+      {
+      marauroad.trace("the1001RPRuleProcessor::onExit","<");
+      }
     return true;
     }
     
-  public boolean onTimeout(RPObject.ID id)
+  synchronized public boolean onTimeout(RPObject.ID id)
     {
     return onExit(id);
     }

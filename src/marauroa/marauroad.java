@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.24 2004/01/25 22:28:13 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.25 2004/01/27 19:13:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class marauroad extends Thread
         {
         try
           {
-          out=new PrintWriter(new FileOutputStream("server_log.txt",true));
+          out=new PrintWriter(new FileOutputStream("server_log.txt"));
           }
         catch(FileNotFoundException e)
           {
@@ -244,18 +244,34 @@ public class marauroad extends Thread
     getMarauroa().message("");
     }
     
+  private static boolean filter(String word,String[] allowed)
+    {
+    for(int i=0;i<allowed.length;++i)
+      {
+      if(word.indexOf(allowed[i])!=-1)
+        {
+        return true;
+        }
+      }
+    
+    return false;
+    }
+  
+  private static String[] allowed={"RPCode","the1001"};
+  
   public static void trace(String module,String event)
     {
-	timestamp.setTime(System.currentTimeMillis());
-	String ts = formatter.format(timestamp);
-    getMarauroa().message(ts+"\t"+event+"\t"+module);
+    trace(module,event,"");
     }
     
   public static void trace(String module,String event,String text)
     {
-    timestamp.setTime(System.currentTimeMillis());
-	String ts = formatter.format(timestamp);
-    getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
+    if(filter(module,allowed))
+      {
+      timestamp.setTime(System.currentTimeMillis());
+	  String ts = formatter.format(timestamp);
+      getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
+      }
     }
     
   public static void report(String text)

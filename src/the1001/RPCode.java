@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.42 2004/01/27 16:39:58 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.43 2004/01/27 19:13:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,41 +20,41 @@ public class RPCode
   {
   public static byte GLADIATORS_PER_FIGHT=2;  
   
-  public static String var_object_id="object_id";
-  public static String var_type="type";
-  public static String var_name="name";
-  public static String var_hp="hp";
-  public static String var_initial_hp="!hp";  
-  public static String var_attack="attack";
-  public static String var_fame="fame";
-  public static String var_num_victory="num_victory";
-  public static String var_num_defeat="num_defeat";
-  public static String var_l_hand="l_hand";
-  public static String var_r_hand="r_hand";
-  public static String var_defend="defend";
-  public static String var_price="price";
-  public static String var_gladiators="gladiators";
-  public static String var_items="items";
-  public static String var_fighting="fighting";
-  public static String var_requested="requested";
-  public static String var_status="status";
-  public static String var_waiting="waiting";
-  public static String var_choose="choose";
-  public static String var_hidden_vote="!vote";
-  public static String var_rock="rock";
-  public static String var_paper="paper";
-  public static String var_scissor="scissor";
-  public static String var_hidden_combat_mode="!mode";
-  public static String var_request_fame="request_fame";
-  public static String var_timeout="timeout";
-  public static String var_thumbs_up="thumbs_up";
-  public static String var_thumbs_down="thumbs_down";
-  public static String var_damage="?damage";
-  public static String var_voted_up="up";
-  public static String var_winner="winner";  
-  public static String var_gladiator_id="gladiator_id";  
-  public static String var_vote="vote";  
-  public static String var_combat_mode="mode";  
+  final public static String var_object_id="object_id";
+  final public static String var_type="type";
+  final public static String var_name="name";
+  final public static String var_hp="hp";
+  final public static String var_initial_hp="!hp";  
+  final public static String var_attack="attack";
+  final public static String var_fame="fame";
+  final public static String var_num_victory="num_victory";
+  final public static String var_num_defeat="num_defeat";
+  final public static String var_l_hand="l_hand";
+  final public static String var_r_hand="r_hand";
+  final public static String var_defend="defend";
+  final public static String var_price="price";
+  final public static String var_gladiators="gladiators";
+  final public static String var_items="items";
+  final public static String var_fighting="fighting";
+  final public static String var_requested="requested";
+  final public static String var_status="status";
+  final public static String var_waiting="waiting";
+  final public static String var_choose="choose";
+  final public static String var_hidden_vote="!vote";
+  final public static String var_rock="rock";
+  final public static String var_paper="paper";
+  final public static String var_scissor="scissor";
+  final public static String var_hidden_combat_mode="!mode";
+  final public static String var_request_fame="request_fame";
+  final public static String var_timeout="timeout";
+  final public static String var_thumbs_up="thumbs_up";
+  final public static String var_thumbs_down="thumbs_down";
+  final public static String var_damage="?damage";
+  final public static String var_voted_up="up";
+  final public static String var_winner="winner";  
+  final public static String var_gladiator_id="gladiator_id";  
+  final public static String var_vote="vote";  
+  final public static String var_combat_mode="mode";  
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
@@ -196,7 +196,14 @@ public class RPCode
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
         
-        /** TODO: Player abandon the fight. */        
+        /** Player abandon the fight. */        
+        playersFighting.remove(player);
+       
+        player.remove(RPCode.var_fighting);
+        int gladiator_id=player.getInt(RPCode.var_choose);          
+        arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(gladiator_id));
+        player.remove(RPCode.var_choose);
+
         playersFighting.remove(player);
         }
         
@@ -204,7 +211,6 @@ public class RPCode
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
         player.remove(RPCode.var_hidden_vote);
-        playersVoted.remove(player);
         }
       
       return true;
@@ -333,10 +339,12 @@ public class RPCode
             if(gladiators[i].getInt(RPCode.var_hp)<=0)
               {
               fame+=gladiators[i].getInt(RPCode.var_fame);
+              gladiators[i].put(RPCode.var_num_defeat,gladiators[i].getInt(RPCode.var_num_defeat)+1);
               }
             else
               {
               arena.put(RPCode.var_winner,gladiators[i].get(var_object_id));
+              gladiators[i].put(RPCode.var_num_victory,gladiators[i].getInt(RPCode.var_num_victory)+1);
               }
             }
             
@@ -471,6 +479,14 @@ public class RPCode
         marauroad.trace("RPCode::Vote","D",status.toString());
         return status;
         }
+        
+      if(playersVoted.contains(player))
+        {
+        /** Failed because player is exploiting a bug: Logout and Login to vote again */
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") is exploiting a bug: Logout and Login to vote again");
+        marauroad.trace("RPCode::Vote","D",status.toString());
+        return status;
+        }
       
       if(vote.equals(RPCode.var_voted_up))
         {
@@ -566,8 +582,10 @@ public class RPCode
       it=playersVoted.iterator();
       while(it.hasNext())
         {
-        RPObject player=(RPObject)it.next();
+        RPObject player=(RPObject)it.next();        
         player.remove(RPCode.var_hidden_vote);
+        /* NOTE: It will use some objects that are not really in the world now.
+         * but, who cares? :-) */
         }
           
       playersVoted.clear();
