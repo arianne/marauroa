@@ -42,8 +42,14 @@
   </target>
 
   <target name="compile" depends="init,installation">
+    <condition property="exclude.mapacman" value="**/mapacman/*.*">
+      <not>
+       <available file="${jython}"/>
+      </not>
+    </condition>
+		    
     <!-- run javac to compile the source files -->
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" excludes="the1001/client/**">
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" excludes="the1001/client/**,${exclude.mapacman}">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
