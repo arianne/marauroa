@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.6 2005/02/21 13:47:20 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.7 2005/03/01 07:18:54 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,9 +27,9 @@ import marauroa.common.game.*;
 public class RPServerManager extends Thread
   {
   /** The thread will be running while keepRunning is true */
-  private boolean keepRunning;
+  private volatile boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
-  private boolean isfinished;
+  private volatile boolean isfinished;
   /** The time elapsed between 2 turns. */
   private long turnDuration;
   /** The scheduler needed to organize actions */
@@ -392,7 +392,7 @@ public class RPServerManager extends Thread
     {
     Logger.trace("RPServerManager::run",">");
     long start=System.currentTimeMillis(),stop,delay;
-    
+    boolean error = false; 
     while(keepRunning)
       {
       stop=System.currentTimeMillis();
@@ -407,35 +407,49 @@ public class RPServerManager extends Thread
         }
       start=System.currentTimeMillis();
 
-      playerContainer.getLock().requestWriteLock();
+      try
         {
-        /** Get actions that players send */
-        scheduler.nextTurn();
+        playerContainer.getLock().requestWriteLock();
+          {
+          /** Get actions that players send */
+          scheduler.nextTurn();
 
-        /** Execute them all */
-        scheduler.visit(ruleProcessor);
+          /** Execute them all */
+          scheduler.visit(ruleProcessor);
 
-        /** Compute game RP rules to move to the next turn */
-        ruleProcessor.nextTurn();
-
-        /** Send content that is waiting to players */
-        deliverTransferContent();
+          /** Compute game RP rules to move to the next turn */
+          ruleProcessor.nextTurn();
+ 
+          /** Send content that is waiting to players */
+          deliverTransferContent();
         
-        /** Tell player what happened */
-        buildPerceptions();
+          /** Tell player what happened */
+          buildPerceptions();
         
-        /** wait until all messages are sent away **/
-        netMan.flushMessages();
+          /** wait until all messages are sent away **/
+          netMan.flushMessages();
 
-        /** Move zone to the next turn */
-        world.nextTurn();
+          /** Move zone to the next turn */
+          world.nextTurn();
+          }
         }
-      playerContainer.getLock().releaseLock();
-      
+      catch(Throwable thr)
+        {
+        Logger.trace("RPServerManager::run", "!", "Unhandled exception, server will shut down.");
+        Logger.thrown("RPServerManager::run", "!", thr);
+        //throw thr;
+        keepRunning=false;
+        error = true;
+        }
+      finally
+        {
+        playerContainer.getLock().releaseLock();
+        }
       stats.setObjectsNow(world.size());
       }
     
     isfinished=true;
+    if(error){System.exit(-4711);}
     Logger.trace("RPServerManager::run","<");
     }
   }
