@@ -95,7 +95,9 @@ Changelog
 0.23	Feb 15,	2004
 - Added chat
 - Added statistics
-- Fixed synchronization bug.
+- Added W3C Events Log format
+- Fixed synchronization bug
+- Fixed a bug that makes arena to not be able to exit from fight state
 
 0.22 	Feb 06, 2004
 - Fixed JDBC problem with accounts
