@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.12 2004/04/04 22:17:17 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.14 2004/04/11 11:05:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -164,9 +164,9 @@ public class Test_RPObject extends TestCase
       }
     }
 
-  public void testRPObjectDifferences()  
+  private RPObject createRPObject() throws Exception
     {
-    try
+    try 
       {
       RPObject player=new RPObject();
       player.put("id",1);
@@ -202,37 +202,58 @@ public class Test_RPObject extends TestCase
       item.put("price",100);
       example1.getSlot("r_hand").add(item);
       player.getSlot("!gladiators").add(example1);
-   
-      RPObject example2=new RPObject();
+      
+      return player;
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      throw e;
+      }
+    }
+  
+  private void changeRPObjectAttributes(RPObject object)
+    {
+    object.put("name","This is a test");
+    }
 
+  private void addRPObjectAttributes(RPObject object)
+    {
+    object.put("Fooo","This is a test");
+    object.put("bar","12312");
+    }
+
+  private void deleteRPObjectAttributes(RPObject object) throws Exception
+    {
+    object.remove("fame");
+    }
+
+  public void testRPObjectDifferences_NoChanges()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      player.getDifferences(added,deleted);
-      example2.applyDifferences(added,deleted);
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
       
-      System.out.println(player.toString());
-      System.out.println(added.toString());
-      System.out.println(deleted.toString());
-      System.out.println(example2.toString());
-      
-      assertTrue(player.equals(example2));  
-      
-      item.put("def",50);
-      assertFalse(player.equals(example2));            
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
 
       added=new RPObject();
       deleted=new RPObject();
-            
-      player.getDifferences(added,deleted);
-      example2.applyDifferences(added,deleted);
 
-      System.out.println(player.toString());
-      System.out.println(added.toString());
-      System.out.println(deleted.toString());
-      System.out.println(example2.toString());
-      
-      assertTrue(player.equals(example2));  
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
       }      
     catch(Exception e)
       {
@@ -241,531 +262,153 @@ public class Test_RPObject extends TestCase
       }
     }
 
-  public void testRPObjectDifferences_EqualObjects()  
-    {    
+  public void testRPObjectDifferences_ChangedAttributes()  
+    {
     try
       {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",100);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
+      RPObject player=createRPObject();
       
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      changeRPObjectAttributes(player);
 
-      RPObject build=example1.applyDifferences(added,deleted);
+      added=new RPObject();
+      deleted=new RPObject();
 
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(2,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
     catch(Exception e)
-      {      
+      {
       e.printStackTrace();
       fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
       }
     }
 
-  public void testRPObjectDifferences_AhasNewAttrib()  
-    {    
+  public void testRPObjectDifferences_AddedAttributes()  
+    {
     try
       {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
+      RPObject player=createRPObject();
       
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addRPObjectAttributes(player);
 
-      RPObject build=example1.applyDifferences(added,deleted);
+      added=new RPObject();
+      deleted=new RPObject();
 
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(3,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
     catch(Exception e)
-      {      
+      {
       e.printStackTrace();
       fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
       }
     }
 
-  public void testRPObjectDifferences_BhasNewAttrib()  
-    {    
+  public void testRPObjectDifferences_DeletedAttributes()  
+    {
     try
       {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",100);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
+      RPObject player=createRPObject();
       
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
-
-      RPObject build=example1.applyDifferences(added,deleted);
-
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
-    catch(Exception e)
-      {      
-      e.printStackTrace();
-      fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
-      }
-    }
-  
-  public void testRPObjectDifferences_AhasDifferentAttributes()  
-    {    
-    try
-      {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Another stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",80);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
       
-      RPObject added=new RPObject();
-      RPObject deleted=new RPObject();
-            
-      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      deleteRPObjectAttributes(player);
 
-      RPObject build=example1.applyDifferences(added,deleted);
+      added=new RPObject();
+      deleted=new RPObject();
 
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(0,added.size());
+      assertEquals(2,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
     catch(Exception e)
-      {      
+      {
       e.printStackTrace();
       fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
       }
     }
 
-  public void testRPObjectDifferences_AhasNewSlot()  
-    {    
+  public void testRPObjectDifferences_EverythingAttributes()  
+    {
     try
       {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",100);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
+      RPObject player=createRPObject();
       
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addRPObjectAttributes(player);
+      changeRPObjectAttributes(player);
+      deleteRPObjectAttributes(player);
 
-      RPObject build=example1.applyDifferences(added,deleted);
+      added=new RPObject();
+      deleted=new RPObject();
 
-      assertTrue(example2.equals(build));      
-      build.getSlot("l_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(4,added.size());
+      assertEquals(2,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
     catch(Exception e)
-      {      
+      {
       e.printStackTrace();
       fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
-      }
-    }
-
-  public void testRPObjectDifferences_BhasNewSlot()  
-    {    
-    try
-      {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",100);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
-      
-      RPObject added=new RPObject();
-      RPObject deleted=new RPObject();
-            
-      example2.getDifferencesFrom(example1,added,deleted);
-
-      RPObject build=example1.applyDifferences(added,deleted);
-
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
-      }
-    catch(Exception e)
-      {      
-      e.printStackTrace();
-      fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
-      }
-    }
-
-  public void testRPObjectDifferences_AhasDifferentSlot()  
-    {    
-    try
-      {
-      RPObject example1=new RPObject();
-
-      example1.put("id",10);
-      example1.put("type","gladiator");
-      example1.put("name","Stupid random name");
-      example1.put("look","database_look");
-      example1.put("!hp",100);
-      example1.put("hp",100);
-      example1.put("attack",5);
-      example1.put("karma",100);
-      example1.addSlot(new RPSlot("l_hand"));      
-
-      RPObject item=new RPObject();
-
-      item.put("id",11);
-      item.put("type","shield");
-      item.put("def",10);
-      item.put("price",50);      
-      example1.getSlot("l_hand").add(item);
-      example1.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example1.getSlot("r_hand").add(item);
-
-      RPObject example2=new RPObject();
-
-      example2.put("id",10);
-      example2.put("type","gladiator");
-      example2.put("name","Stupid random name");
-      example2.put("look","database_look");
-      example2.put("!hp",100);
-      example2.put("hp",100);
-      example2.put("attack",5);
-      example2.put("karma",100);
-      example2.addSlot(new RPSlot("l_hand"));      
-      item=new RPObject();
-      item.put("id",13);
-      item.put("type","sword");
-      item.put("def",10);
-      item.put("price",50);      
-      example2.getSlot("l_hand").add(item);
-      example2.addSlot(new RPSlot("r_hand"));
-      item=new RPObject();
-      item.put("id",12);
-      item.put("type","sword");
-      item.put("def",0);
-      item.put("price",100);
-      example2.getSlot("r_hand").add(item);
-      
-      RPObject added=new RPObject();
-      RPObject deleted=new RPObject();
-            
-      example2.getDifferencesFrom(example1,added,deleted);
-
-      RPObject build=example1.applyDifferences(added,deleted);      
-
-      assertTrue(example2.equals(build));      
-      build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));   
-      }
-    catch(Exception e)
-      {      
-      e.printStackTrace();
-      fail("Failed to serialize object");
-      }
-    finally
-      {
-      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
       }
     }
   }

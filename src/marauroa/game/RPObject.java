@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.33 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.34 2004/04/11 11:05:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -339,7 +339,7 @@ public class RPObject extends Attributes
       RPSlot added_slot=new RPSlot(slot.getName());            
       added_slot.setAddedRPObject(slot);
       
-      if(added_slot.size()>0)
+      if(added_slot.size()>0 && !oadded.hasSlot(added_slot.getName()))
         {
         oadded.addSlot(added_slot);
         }
@@ -347,7 +347,7 @@ public class RPObject extends Attributes
       RPSlot deleted_slot=new RPSlot(slot.getName());            
       deleted_slot.setDeletedRPObject(slot);
       
-      if(deleted_slot.size()>0)
+      if(deleted_slot.size()>0 && !odeleted.hasSlot(deleted_slot.getName()))
         {
         odeleted.addSlot(deleted_slot);
         }
