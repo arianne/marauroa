@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.34 2003/12/30 10:24:35 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.35 2004/01/01 19:43:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -289,7 +289,6 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       catch (RPSlot.RPObjectNotFoundException e)
       {
         e.printStackTrace();
-        // TODO: There is no object on the slot. Decide what to do
       }
       
       if(gb!=null)

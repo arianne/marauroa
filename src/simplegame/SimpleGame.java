@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.46 2003/12/23 09:05:24 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.47 2004/01/01 19:43:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,7 +174,6 @@ public class SimpleGame
                             {
                                 if(obj.getSlot("ear").size()==0)
                                 {
-                                    /** TODO: Sure you know a better way of telling that to the user. */
                                     addLog("Waiting for another player to join\n");
                                     statusLine.setText("Waiting for another player to join");
                                     addLog("get the UPDATED list of players...\n");

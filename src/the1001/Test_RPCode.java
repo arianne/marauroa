@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.5 2003/12/31 12:32:48 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.6 2004/01/01 19:43:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class Test_RPCode extends TestCase
     
       assertEquals(rpu.getTurn(),0);
     
-      RPObject player=new Player(new RPObject.ID(zone.create()));
+      RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
       player.getSlot("gladiators").add(gladiator);
@@ -58,7 +58,7 @@ public class Test_RPCode extends TestCase
       status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_FAIL);      
       
-      RPObject newplayer=new Player(new RPObject.ID(zone.create()));
+      RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
       newplayer.getSlot("gladiators").add(newgladiator);
@@ -71,7 +71,7 @@ public class Test_RPCode extends TestCase
       assertEquals(newplayer.get("status"),"onArena");
 
       /** We now add another player, but the fight has already begin... */
-      RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()));
+      RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(waitingPlayer);
       RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
       waitingPlayer.getSlot("gladiators").add(waitingGladiator);
