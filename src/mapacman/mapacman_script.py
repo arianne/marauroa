@@ -220,6 +220,9 @@ class RealPythonRP(PythonRP):
             else:
                 # TODO: kill the player
                 print "Ghost killed player ",player.get("id") 
+                player_in_pos.add("score",1)
+                self._zone.modify(player_in_pos)
+                
                 pos=self._map.getRandomRespawn()
                 player.put("x",pos[0])
                 player.put("y",pos[1])
