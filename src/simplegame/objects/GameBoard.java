@@ -1,4 +1,4 @@
-/* $Id: GameBoard.java,v 1.7 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: GameBoard.java,v 1.8 2003/12/20 14:01:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.marauroad;
 import simplegame.SimpleGameDataModelIF;
+import java.util.*;
 
 public class GameBoard
   extends RPObject
@@ -37,6 +38,19 @@ public class GameBoard
     //winner id
     put("winner_id",-1);
   }
+
+  public GameBoard(RPObject object) throws Attributes.AttributeNotFoundException
+  {
+    Iterator it=object.iterator();
+    while(it.hasNext())
+      {
+      String attr=(String)it.next();
+      put(attr,object.get(attr));
+      }
+      
+    put("type",TYPE_GAME_BOARD);
+  }
+
   
   /**
    * returns the character id of the player who made the last move

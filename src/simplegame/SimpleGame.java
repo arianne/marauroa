@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.36 2003/12/20 10:43:05 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.37 2003/12/20 14:01:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,7 @@ public class SimpleGame
 							if(obj.hasSlot("hand"))
 							{
 								/** CASE 1: Game already started. */
-								GameBoard gameBoard=(GameBoard)obj.getSlot("hand").get();
+								GameBoard gameBoard= new GameBoard(obj.getSlot("hand").get());
 								
 								int size = gameBoard.getSize();
 								for(int i=0;i<size;++i)
