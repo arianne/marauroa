@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.19 2003/12/08 23:40:09 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.20 2003/12/08 23:46:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,17 +23,17 @@ public class RunTests
     {
     try
       {
-      //System.setOut(new PrintStream(new FileOutputStream("output.txt")));
-      boolean untilFailure=true;
-      while(untilFailure)
-        {
+//      System.setOut(new PrintStream(new FileOutputStream("output.txt")));
+//      boolean untilFailure=true;
+//      while(untilFailure)
+//        {
         //junit.swingui.TestRunner.run(RunTests.class);
         TestResult result=junit.textui.TestRunner.run(suite());
-        if(!result.wasSuccessful())
-          {
-          untilFailure=false;
-          }
-        }
+//        if(!result.wasSuccessful())
+//          {
+//          untilFailure=false;
+//          }
+//        }
       }
     catch(Exception e) 
       {
