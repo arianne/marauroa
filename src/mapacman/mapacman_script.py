@@ -197,7 +197,7 @@ class RealPythonRP(PythonRP):
                 pos=self._map.getRandomRespawn()
                 player.put("x",pos[0])
                 player.put("y",pos[1])
-                player.put("score",player.get("score")/2)
+                player.put("score",player.getInt("score")/2)
                 self._zone.modify(player)
     
     def _foreachPlayer(self):
