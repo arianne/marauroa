@@ -79,6 +79,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       throw new NoDatabaseConfException();
       }
+      
+    reInitDB();
     }
   
   public static PlayerDatabase getDatabase() throws NoDatabaseConfException
@@ -128,35 +130,30 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
+      int id=getDatabasePlayerId(username);
+        
       Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
+      String query = "select charname from characters where player_id="+id;
+      ResultSet charactersSet = stmt.executeQuery(query);
+        
+      Vector vector = new Vector();
+      while(charactersSet.next())
         {
-        int id = result.getInt(1);
-        
-        query = "select charname from characters where player_id="+id;
-        ResultSet charactersSet = stmt.executeQuery(query);
-        
-        Vector vector = new Vector();
-        while(charactersSet.next())
-          {
-          vector.add(charactersSet.getString("characters.charname"));
-          }
+        vector.add(charactersSet.getString("characters.charname"));
+        }
           
-        characters = new String[vector.size()];
-        characters = (String[])vector.toArray(characters);
-        }
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::getCharactersList","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
-        }
+      characters = new String[vector.size()];
+      characters = (String[])vector.toArray(characters);
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getCharacterList","E",sqle.getMessage());
       }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getCharactersList","E","Database doesn't contains that username("+username+")");
+      throw e;
+      }     
 
     marauroad.trace("JDBCPlayerDatabase::getCharacterList","<");
     return characters;
@@ -196,31 +193,26 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
+      int id=getDatabasePlayerId(username);
+      
       Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
-        {
-        int id = result.getInt(1);
-        query = "delete from player where id="+id;
-  
-        stmt.execute(query);
-        query = "delete from characters where player_id="+id;
-  
-        stmt.execute(query);
-        query = "delete from loginEvent where player_id="+id;
-  
-        stmt.execute(query);
-        }
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::removePlayer","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
-        }
+      String query = "delete from player where id="+id;  
+      stmt.execute(query);
+      
+      query = "delete from characters where player_id="+id;  
+      stmt.execute(query);
+      
+      query = "delete from loginEvent where player_id="+id;  
+      stmt.execute(query);
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removePlayer","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::removePlayer","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
 
     marauroad.trace("JDBCPlayerDatabase::removePlayer","<");
@@ -232,26 +224,20 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
+      int id=getDatabasePlayerId(username);
+      
       Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
-
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
-        {
-        int id = result.getInt(1);
-        query = "delete from characters where player_id="+id+" and charname like '"+character+"'";
-  
-        stmt.execute(query);
-        }
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::removeCharacter","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
-        }
+      String query = "delete from characters where player_id="+id+" and charname like '"+character+"'";
+      stmt.execute(query);
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::removeCharacter","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
 
     marauroad.trace("JDBCPlayerDatabase::removeCharacter","<");
@@ -292,9 +278,10 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     String[] loginEvents = null;
     try
       {
-      /* TODO: Check that player exist */
+      int id=getDatabasePlayerId(username);
+      
       Statement stmt = connection.createStatement();
-      String query = "select address,timedate,result from player,loginEvent where player.username like '"+username+"' and loginEvent.player_id=player.id order by timedate";
+      String query = "select address,timedate,result from loginEvent where player_id="+id+" order by timedate";
 
       ResultSet result = stmt.executeQuery(query);
       Vector vector = new Vector();
@@ -316,6 +303,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","E",sqle.getMessage());
       }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","E","Database doesn't contains that username("+username+")");
+      throw e;
+      }
     
     marauroad.trace("JDBCPlayerDatabase::getLoginEvent","<");
     return(loginEvents);
@@ -328,7 +320,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     boolean ret = false;
     try
       {
-      /* TODO: Check that player exist */      
+      int id=getDatabasePlayerId(username);
+
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
 
@@ -343,7 +336,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
     
     marauroad.trace("JDBCPlayerDatabase::hasCharacter","<");
@@ -356,28 +354,22 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
-      Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
+      int id=getDatabasePlayerId(username);
 
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
-        {
-        int id = result.getInt(1);
-        PreparedStatement prep_stmt = connection.prepareStatement(query);
-        query = "insert into logEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
-        prep_stmt.setTimestamp(1,new Timestamp(System.currentTimeMillis()));
+      String query = "insert into logEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
+      PreparedStatement prep_stmt = connection.prepareStatement(query);
+      prep_stmt.setTimestamp(1,new Timestamp(System.currentTimeMillis()));
   
-        prep_stmt.execute();
-        }
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::removeCharacter","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
-        }
+      prep_stmt.execute();
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
 
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
@@ -390,39 +382,34 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     try
       {
       Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
-
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
+      int id=getDatabasePlayerId(username);
+      
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      OutputSerializer os = new OutputSerializer(baos);
+      try
         {
-        int id = result.getInt(1);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OutputSerializer os = new OutputSerializer(baos);
-        try
-          {
-          object.writeObject(os);
-          }
-        catch (IOException e)
-          {
-          /* TODO: need to drop an exception */
-          marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Error serializing character: "+e.getMessage());
-          }
+        object.writeObject(os);
+        }
+      catch (IOException e)
+        {
+        /* TODO: need to drop an exception */
+        marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Error serializing character: "+e.getMessage());
+        }
         
-        query = "insert into characters values("+id+",'"+character+"',?)";
-        PreparedStatement prep_stmt = connection.prepareStatement(query);
-        prep_stmt.setBytes(1,baos.toByteArray());
+      String query = "insert into characters values("+id+",'"+character+"',?)";
+      PreparedStatement prep_stmt = connection.prepareStatement(query);
+      prep_stmt.setBytes(1,baos.toByteArray());
   
-        prep_stmt.execute();
-        }
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
-        }
+      prep_stmt.execute();
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addCharacter","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
 
     marauroad.trace("JDBCPlayerDatabase::addCharacter","<");
@@ -446,7 +433,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","E",sqle.getMessage());
       }
 
     marauroad.trace("JDBCPlayerDatabase::getPlayerCount","<");
@@ -459,41 +446,34 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
     try
       {
-      Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
-
-      ResultSet result = stmt.executeQuery(query);
-      if(result.next())
+      int id=getDatabasePlayerId(username);
+      
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      OutputSerializer os = new OutputSerializer(baos);
+      try
         {
-        int id = result.getInt(1);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OutputSerializer os = new OutputSerializer(baos);
-        try
-          {
-          object.writeObject(os);
-          }
-        catch (IOException e)
-          {
-          /* TODO: Need to drop an exception */
-          //dont know now what to do
-          marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Error serializing character: "+e.getMessage());
-          }
-        
-        query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";
-        PreparedStatement prep_stmt = connection.prepareStatement(query);
-        prep_stmt.setBytes(1,baos.toByteArray());
-  
-        prep_stmt.execute();
-        } 
-      else
-        {
-        marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        object.writeObject(os);
         }
-      }
+      catch (IOException e)
+        {
+        /* TODO: Need to drop an exception */
+        marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Error serializing character: "+e.getMessage());
+        }
+        
+      String query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";
+      PreparedStatement prep_stmt = connection.prepareStatement(query);
+      prep_stmt.setBytes(1,baos.toByteArray());
+  
+      prep_stmt.execute();
+      } 
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::setRPObject","E",sqle.getMessage());
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
 
     marauroad.trace("JDBCPlayerDatabase::setRPObject","<");
@@ -506,49 +486,43 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     RPObject rp_object = null;
     try
       {
-      Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
+      int id=getDatabasePlayerId(username);
 
+      Statement stmt = connection.createStatement();
+      String query = "select contents from characters where player_id="+id+" and charname like '"+character+"'";  
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
-        int id = result.getInt(1);
-        query = "select contents from characters where player_id="+id+" and charname like '"+character+"'";
-  
-        ResultSet rs2 = stmt.executeQuery(query);
-        if(rs2.next())
+        ByteArrayInputStream bais = new ByteArrayInputStream(result.getBytes(1));
+        InputSerializer is = new InputSerializer(bais);
+        rp_object = new RPObject();
+        try
           {
-          ByteArrayInputStream bais = new ByteArrayInputStream(rs2.getBytes(1));
-          InputSerializer is = new InputSerializer(bais);
-          rp_object = new RPObject();
-          try
-            {
-            rp_object.readObject(is);
-            }
-          catch (IOException e)
-            {
-            /* TODO: Need to drop an exception */
-            }          
-          catch (ClassNotFoundException e)
-            {
-            /* TODO: Need to drop an exception */
-            }
+          rp_object.readObject(is);
           }
-        else
+        catch (IOException e)
           {
-          marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Player("+username+") doesn't contains that character("+character+")");
-         throw new CharacterNotFoundException();
+          /* TODO: Need to drop an exception */
+          }          
+        catch (ClassNotFoundException e)
+          {
+          /* TODO: Need to drop an exception */
           }
         }
       else
         {
-        marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Player("+username+") doesn't contains that character("+character+")");
+        throw new CharacterNotFoundException();
         }
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getRPObject","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","E",sqle.getMessage());      
+      }
+    catch(PlayerNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Database doesn't contains that username("+username+")");
+      throw e;
       }
     
     marauroad.trace("JDBCPlayerDatabase::getRPObject","<");
@@ -582,6 +556,26 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     return(conn);
     }
   
+  private int getDatabasePlayerId(String username) throws PlayerNotFoundException, SQLException
+    {
+    Statement stmt=connection.createStatement();
+    
+    int id;
+    
+    String query = "select id from player where username like '"+username+"'";
+    ResultSet result = stmt.executeQuery(query);
+    if(result.next())
+      {
+      id = result.getInt(1);
+      }
+    else
+      {
+      throw new PlayerNotFoundException();
+      }
+      
+    return(id);
+    }
+
   
   private boolean reInitDB()
     {

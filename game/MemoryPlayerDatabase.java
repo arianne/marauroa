@@ -202,8 +202,10 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       throw new CharacterNotFoundException();
       }
       
+    RPObject object=(RPObject)player.characters.get(character);
+    
     marauroad.trace("MemoryPlayerDatabase::getRPObject","<");
-    return (RPObject)player.characters.get(character);
+    return object;
     }
     
   public void addPlayer(String username, String password) throws PlayerAlreadyAddedException
@@ -245,8 +247,10 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       }
       
     PlayerEntry player=(PlayerEntry)players.get(username);
+    boolean has=player.characters.containsKey(character);
+    
     marauroad.trace("MemoryPlayerDatabase::hasCharacter","<");
-    return player.characters.containsKey(character);
+    return has;
     }
     
   public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException
