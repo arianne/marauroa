@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.4 2004/03/16 22:43:57 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.5 2004/03/18 18:22:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -466,11 +466,11 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     try
       {
       Statement stmt = connection.createStatement();      
-      String query = "create table if not exists  RPObject(id integer not null primary key, slot_id integer) TYPE=INNODB;";
+      String query = "create table if not exists  rpobject(id integer not null primary key, slot_id integer) TYPE=INNODB;";
       stmt.addBatch(query);
-      query = "create table if not exists RPAttribute(object_id integer not null, name varchar(64) not null, value varchar(255), primary key(object_id,name)) TYPE=INNODB;";
+      query = "create table if not exists rpattribute(object_id integer not null, name varchar(64) not null, value varchar(255), primary key(object_id,name)) TYPE=INNODB;";
       stmt.addBatch(query);
-      query = "create table if not exists  RPSlot(object_id integer not null, name varchar(64) not null, slot_id integer auto_increment primary key) TYPE=INNODB;";
+      query = "create table if not exists  rpslot(object_id integer not null, name varchar(64) not null, slot_id integer auto_increment primary key) TYPE=INNODB;";
       stmt.addBatch(query);
 
       int ret_array[] = stmt.executeBatch();
