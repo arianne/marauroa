@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.1 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.2 2004/06/20 18:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,4 @@ public interface IRPRuleProcessor
   /** Callback method called when a new player time out
    *  @param id the new player id that timeouts. */
   public boolean onTimeout(RPObject.ID id) throws IRPZone.RPObjectNotFoundException;
-
-  /** Method to create the map to send to player's client */
-  public java.util.List buildMapObjectsList(RPObject.ID id);
   }

@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.1 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.2 2004/06/20 18:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,4 +51,7 @@ public interface IRPZone
   public Perception getPerception(RPObject.ID id, byte type);
   
   public void nextTurn();
+
+  /** Method to create the map to send to player's client */
+  public java.util.List buildMapObjectsList(RPObject.ID id);
   }

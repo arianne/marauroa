@@ -1,3 +1,6 @@
+## TODO: There are extra helper methods that will surely make your life easier.
+## You either wait me to place them here or you take a look to mapacman
+
 from marauroa.game.python import *
 
 class TemplateGamePythonRP(PythonRP):
@@ -19,9 +22,6 @@ class TemplateGamePythonRP(PythonRP):
     def onTimeout(self, objectid):
         pass
 
-    def serializeMap(self):
-        pass
-
 class TemplateZonePythonRP(PythonZoneRP):
     def __init__(self, zone):
         self._zone=zone
@@ -30,6 +30,9 @@ class TemplateZonePythonRP(PythonZoneRP):
         pass
 
     def onFinish():
+        pass
+
+    def serializeMap(self, objectid):
         pass
 
 class TemplateAIPythonRP(PythonAIRP):

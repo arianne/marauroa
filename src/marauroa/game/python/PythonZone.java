@@ -1,4 +1,4 @@
-/* $Id: PythonZone.java,v 1.1 2004/05/30 14:35:22 arianne_rpg Exp $ */
+/* $Id: PythonZone.java,v 1.2 2004/06/20 18:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,6 +11,9 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.game.python;
+
+import java.util.*;
+import marauroa.game.*;
 
 public class PythonZone
   {
@@ -27,5 +30,10 @@ public class PythonZone
     {
     return false;
     }
-  }	
+
+  public List serializeMap(RPObject.ID id)
+    {
+    return null;
+    }
+  } 
 

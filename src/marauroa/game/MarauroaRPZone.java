@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.52 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.53 2004/06/20 18:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -280,4 +280,9 @@ public class MarauroaRPZone implements IRPZone
 
     perception=new Perception(Perception.DELTA);
     }
+
+  public List buildMapObjectsList(RPObject.ID id)
+    {
+    return new LinkedList();
+    }      
   }

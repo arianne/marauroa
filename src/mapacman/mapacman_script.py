@@ -20,21 +20,6 @@ _directions=['N','W','S','E']
 def randomDirection():
     return _directions[random.randint(0,3)]
 
-#
-# PythonRP Interface for Java classes
-#
-
-class RealPythonZone(PythonZone):
-    def __init__(self, zone):
-        self._zone=zone
-
-    def onInit(self):
-        return 1
-
-    def onFinish(self):
-        return 1
-
-
 def getPythonAI():
     return variable_PythonAI
 
@@ -44,6 +29,141 @@ def setPythonAI(pythonAI):
     
     if variable_PythonAI is None:
         variable_PythonAI=pythonAI    
+
+def getPythonZone():
+    return variable_PythonZone
+
+def setPythonZone(pythonZone):
+    global variable_PythonZone
+    variable_PythonZone=None
+    
+    if variable_PythonZone is None:
+        variable_PythonZone=pythonZone    
+
+
+#
+# PythonRP Interface for Java classes
+#
+
+class RealPythonZone(PythonZone):
+    def __init__(self, zone):
+        setPythonZone(self)
+        self._zone=zone
+       
+        self.createRPClasses()
+
+        self._map=mapacmanRPMap(self,pacman_mapfile)
+        self._serializedMap=None
+
+    def onInit(self):
+        return 1
+
+    def onFinish(self):
+        return 1
+
+    def getZone(self):
+        return self._zone
+
+    def getMap(self):
+        return self._map
+
+    def serializeMap(self, objectid):
+        if self._serializedMap is None:
+            self._serializedMap=self._map.serializeMap()
+
+        return self._serializedMap
+    
+    def createRPClasses(self):
+        STRING=RPClass.STRING
+        SHORT_STRING=RPClass.STRING
+        INT=RPClass.INT
+        SHORT=RPClass.SHORT
+        BYTE=RPClass.BYTE
+        FLAG=RPClass.FLAG
+        
+        HIDDEN=RPClass.HIDDEN
+
+        objclass=RPClass("position")
+        objclass.add("x",BYTE)
+        objclass.add("y",BYTE)
+        
+        objclass=RPClass("player")
+        objclass.isA("position")
+        objclass.add("name",SHORT_STRING)
+        objclass.add("dir",SHORT_STRING)
+        objclass.add("score",INT)
+        objclass.add("super",BYTE)
+        objclass.add("!vdir",STRING,HIDDEN)
+        objclass.add("!hdir",STRING,HIDDEN)
+        
+        objclass=RPClass("ghost")
+        objclass.isA("player")
+        objclass.add("!target",INT,HIDDEN)
+        objclass.add("!decision",INT,HIDDEN)
+        objclass.add("?kill",FLAG)        
+        
+        objclass=RPClass("block")
+        objclass.isA("position")
+
+        objclass=RPClass("ball")
+        objclass.isA("position")
+        objclass.add("!score",INT,HIDDEN)
+        objclass.add("!respawn",INT,HIDDEN)
+        
+        objclass=RPClass("superball")
+        objclass.isA("ball")
+        objclass.add("!timeout",INT,HIDDEN)
+        
+
+    def createPlayer(self, name):
+        """ This function create a player """
+        object=self._zone.create()
+        object.put("type","player");
+        object.put("name",name)
+        object.put("x",0)
+        object.put("y",0)
+        object.put("dir",randomDirection())
+        object.put("score",0)
+        object.setRPClass(RPClass.getRPClass("player"))
+        return object;
+
+    lastNonStorableId=1;
+    
+    def createGhost(self, name):
+        """ This function create a ghost """
+        object=RPObject(RPClass.getRPClass("ghost"))
+        object.put("id",RealPythonZone.lastNonStorableId)
+        RealPythonZone.lastNonStorableId+=1        
+        object.put("type","ghost");
+        object.put("name",name)
+        object.put("x",0)
+        object.put("y",0)
+        object.put("dir",randomDirection())
+        object.put("score",0)
+        object.put("!decision",10)
+        return object;
+
+    def createBall(self, x,y):
+        """ This function create a Ball object that when eats by player increments
+        its score. """
+        object=RPObject(RPClass.getRPClass("ball"))
+        object.put("id",RealPythonZone.lastNonStorableId)
+        RealPythonZone.lastNonStorableId+=1        
+        object.put("type","ball");
+        object.put("x",x)
+        object.put("y",y)
+        object.put("!score",1)
+        object.put("!respawn",60)
+        return object;
+
+    def createSuperBall(self, x,y):
+        """ This function create a SuperBall object that when eats by player
+        make it to be able to eat and destroy the ghosts """
+        object=self.createBall(x,y)
+        object.put("type","superball");
+        object.put("!timeout",15)
+        object.setRPClass(RPClass.getRPClass("superball"))
+        return object;
 
 class RealPythonAI(PythonAI):
     def __init__(self, zone, sched):
@@ -58,7 +178,9 @@ class RealPythonAI(PythonAI):
         self.pythonRP=pythonRP
      
     def createEnviroment(self):
-        ghost=self.pythonRP.createGhost('Sticky')
+        pythonZone=getPythonZone()
+        
+        ghost=pythonZone.createGhost('Sticky')
         self.pythonRP.onInitAIGhost(ghost)
         self.ghosts.append(ghost)
         
@@ -118,61 +240,15 @@ class RealPythonRP(PythonRP):
         self._online_players=[]
         self._online_ghosts=[]
         self._killedFlagGhosts=[]
-       
-        self.createRPClasses()
 
-        self._zone=zone
-        self._map=mapacmanRPMap(self,pacman_mapfile)
-        self._serializedMap=None
+        pythonZone=getPythonZone()
+        self._zone=pythonZone.getZone()
+        self._map=pythonZone.getMap()
         
         instance=getPythonAI()
         instance.setPythonRP(self)
         instance.createEnviroment()
     
-    def createRPClasses(self):
-        STRING=RPClass.STRING
-        SHORT_STRING=RPClass.STRING
-        INT=RPClass.INT
-        SHORT=RPClass.SHORT
-        BYTE=RPClass.BYTE
-        FLAG=RPClass.FLAG
-        
-        HIDDEN=RPClass.HIDDEN
-
-        objclass=RPClass("position")
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
-        
-        objclass=RPClass("player")
-        objclass.isA("position")
-        objclass.add("name",SHORT_STRING)
-        objclass.add("dir",SHORT_STRING)
-        objclass.add("score",INT)
-        objclass.add("super",BYTE)
-        objclass.add("!vdir",STRING,HIDDEN)
-        objclass.add("!hdir",STRING,HIDDEN)
-        
-        objclass=RPClass("ghost")
-        objclass.isA("player")
-        objclass.add("!target",INT,HIDDEN)
-        objclass.add("!decision",INT,HIDDEN)
-        objclass.add("?kill",FLAG)        
-        
-        objclass=RPClass("block")
-        objclass.isA("position")
-
-        objclass=RPClass("ball")
-        objclass.isA("position")
-        objclass.add("!score",INT,HIDDEN)
-        objclass.add("!respawn",INT,HIDDEN)
-        
-        objclass=RPClass("superball")
-        objclass.isA("ball")
-        objclass.add("!timeout",INT,HIDDEN)
-        
-    def getZone(self):
-        return self._zone
-
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants to do action action """      
         result=0
@@ -393,80 +469,23 @@ class RealPythonRP(PythonRP):
 
     def onTimeout(self, objectid):
         return self.onExit(objectid)
-    
-    def buildMapObjectsList(self):
-        if self._serializedMap is None:
-            self._serializedMap=self._map.serializeMap()
-
-        return self._serializedMap
-
-
-    def createPlayer(self, name):
-        """ This function create a player """
-        object=self._zone.create()
-        object.put("type","player");
-        object.put("name",name)
-        object.put("x",0)
-        object.put("y",0)
-        object.put("dir",randomDirection())
-        object.put("score",0)
-        object.setRPClass(RPClass.getRPClass("player"))
-        return object;
-
-    lastNonStorableId=1;
-    
-    def createGhost(self, name):
-        """ This function create a ghost """
-        object=RPObject(RPClass.getRPClass("ghost"))
-        object.put("id",RealPythonRP.lastNonStorableId)
-        RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
-        object.put("type","ghost");
-        object.put("name",name)
-        object.put("x",0)
-        object.put("y",0)
-        object.put("dir",randomDirection())
-        object.put("score",0)
-        object.put("!decision",10)
-        return object;
-
-    def createBall(self, x,y):
-        """ This function create a Ball object that when eats by player increments
-        its score. """
-        object=RPObject(RPClass.getRPClass("ball"))
-        object.put("id",RealPythonRP.lastNonStorableId)
-        RealPythonRP.lastNonStorableId=RealPythonRP.lastNonStorableId+1        
-        object.put("type","ball");
-        object.put("x",x)
-        object.put("y",y)
-        object.put("!score",1)
-        object.put("!respawn",60)
-        return object;
-
-    def createSuperBall(self, x,y):
-        """ This function create a SuperBall object that when eats by player
-        make it to be able to eat and destroy the ghosts """
-        object=self.createBall(x,y)
-        object.put("type","superball");
-        object.put("!timeout",15)
-        object.setRPClass(RPClass.getRPClass("superball"))
-        return object;
 
     
 class mapacmanRPMap:
-    def __init__(self, pythonRP, sizex, sizey):
+    def __init__(self, pythonZone, sizex, sizey):
         self._respawnPoints=[]
         self._last_respawnPoints=0
         self._objects_grid={}
         
         self._grid=[]
-        self._zone=pythonRP.getZone()
+        self._zone=pythonZone.getZone()
         for i in range(sizex):
             grid_line=''
             for j in range(sizey):
                 grid_line=grid_line+' '
             self._grid.append(grid_line)
     
-    def __init__(self, pythonRP, filename):
+    def __init__(self, pythonZone, filename):
         f=open(filename,'r')
         line=f.readline()
         
@@ -475,16 +494,16 @@ class mapacmanRPMap:
         self._objects_grid={}
         
         self._grid=[]
-        self._zone=pythonRP.getZone()
+        self._zone=pythonZone.getZone()
         
         i=0
         while line<>'':
             j=0
             for char in line[:-1]:
                 if char=='.':
-                    self.addZoneRPObject(pythonRP.createBall(j,i))
+                    self.addZoneRPObject(pythonZone.createBall(j,i))
                 elif char=='0':
-                    self.addZoneRPObject(pythonRP.createSuperBall(j,i))
+                    self.addZoneRPObject(pythonZone.createSuperBall(j,i))
                 j=j+1
                 
             self._grid.append(line[:-1])

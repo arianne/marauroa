@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.101 2004/06/20 17:54:03 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.102 2004/06/20 18:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,25 @@ import marauroa.*;
  *  sent perceptions */
 public class RPServerManager extends Thread
   {
-  /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
-  private final static int TOTAL_PERCEPTION_RELATION=50;
+  /** We send 1 TOTAL perception each SYNC_PERCEPTION_FRECUENCY DELTA perceptions */
+  private static int SYNC_PERCEPTION_FRECUENCY;
+
+  static
+    {
+    marauroad.trace("RPServerManager::(static)",">");
+    try
+      {
+      Configuration conf=Configuration.getConfiguration();
+      int value=Integer.parseInt(conf.get("syncPerception_frecuency"));
+
+      SYNC_PERCEPTION_FRECUENCY=value;
+      }
+    catch(Exception e)
+      {
+      SYNC_PERCEPTION_FRECUENCY=60;
+      }
+    marauroad.trace("NetConst::(static)","<");
+    }
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
@@ -236,7 +253,7 @@ public class RPServerManager extends Thread
       {
       ++deltaPerceptionSend;
       
-      if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+      if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
         {
         Iterator it=incubator.iterator();
         while(it.hasNext())
@@ -267,7 +284,7 @@ public class RPServerManager extends Thread
         
         try
           {
-          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_LOADED && deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_LOADED && deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
             {
             marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are to send a SYNC perception"); 
             playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
@@ -280,7 +297,7 @@ public class RPServerManager extends Thread
             Perception perception;
             RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
-            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+            if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),Perception.SYNC);
@@ -328,7 +345,7 @@ public class RPServerManager extends Thread
           playersToRemove.add(new Integer(clientid));
           }
         }
-      if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+      if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
         {
         deltaPerceptionSend=0;
         }
@@ -437,6 +454,7 @@ public class RPServerManager extends Thread
     
   public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
+    /** TODO: Remove from incubator */
     scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);
     }
@@ -444,7 +462,7 @@ public class RPServerManager extends Thread
   public List buildMapObjectsList(RPObject.ID id)
     {
     scheduler.clearRPActions(id);
-    return ruleProcessor.buildMapObjectsList(id);
+    return zone.buildMapObjectsList(id);
     }
   
   public void run()
