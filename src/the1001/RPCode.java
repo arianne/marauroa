@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.7 2003/12/31 12:16:17 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.8 2003/12/31 13:03:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -99,4 +99,50 @@ public class RPCode
       marauroad.trace("RPCode::RequestFight","<");
       }
     }
+
+  public static RPAction.Status FightMode(RPObject.ID player_id, RPObject.ID gladiator_id, String fight_mode) throws Exception
+    {
+    marauroad.trace("RPCode::FightMode",">");
+   
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+      RPObject player=zone.get(player_id);
+      
+      if(!player.getSlot("gladiators").has(gladiator_id))
+        {
+        /** Failed because player does not own that object */
+        return RPAction.STATUS_FAIL;
+        }
+
+      if(!player.get("status").equals("onArena"))
+        {
+        /** Failed because player is not fighting */
+        return RPAction.STATUS_FAIL;
+        }
+      
+      if(!arena.getSlot("gladiators").has(gladiator_id))
+        {
+        /** Failed because gladiator is not fighting on the arena*/
+        return RPAction.STATUS_FAIL;
+        }
+      
+      if(!(fight_mode.equals("attack") || fight_mode.equals("defend") || fight_mode.equals("dogde")))
+        {
+        /** Failed because gladiator is fighting using an unsupported mode. */
+        return RPAction.STATUS_FAIL;
+        }
+      
+      RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
+      gladiator.put("fight_mode",fight_mode);
+      
+      return RPAction.STATUS_SUCCESS;
+      }
+    finally
+      {
+      marauroad.trace("RPCode::FightMode","<");
+      }
+    }
+      
   }

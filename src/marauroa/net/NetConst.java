@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.6 2003/12/09 23:32:59 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.7 2003/12/31 13:03:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,8 +27,9 @@ public class NetConst
    *  1 - Added Action message 
    *  2 - Added Perception message 
    *  3 - Multipacket udp
-   *  4 - Added server info */
-  final static public byte NETWORK_PROTOCOL_VERSION=4;
+   *  4 - Added server info 
+   *  5 - Modified Action message */
+  final static public byte NETWORK_PROTOCOL_VERSION=5;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   
   static

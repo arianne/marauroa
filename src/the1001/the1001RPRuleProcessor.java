@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.11 2003/12/30 18:17:41 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.12 2003/12/31 13:03:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,18 +57,22 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {
     marauroad.trace("the1001RPRuleProcessor::execute",">");
+    RPAction.Status status=RPAction.STATUS_FAIL;
     
     try
       {
       if(action.get("type")=="request_fight")
         {
         int gladiator_id=action.getInt("gladiator_id");
-        return RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
+        status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
         }
-      else
-        {
-        return RPAction.STATUS_FAIL;
-        }
+      
+      /** We notify the player about the action result */
+      RPObject player=zone.get(id);
+      player.put("?"+action.get("action_id"), status.toString());
+      zone.modify(id);
+      
+      return status;
       }
     catch(Exception e)
       {
