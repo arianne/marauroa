@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.2 2005/02/17 22:55:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,8 +92,21 @@ public class RPWorld
       throw new NoRPZoneException();  
       }
     }
+
+  public RPObject remove(RPObject.ID id) throws NoRPZoneException, RPObjectNotFoundException  
+    {
+    try
+      {
+      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
+      return zone.remove(id);
+      }
+    catch(Exception e)
+      {
+      throw new NoRPZoneException();  
+      }
+    }
   
-  public void modify(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
+  public void modify(RPObject object) throws NoRPZoneException  
     {
     try
       {

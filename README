@@ -8,15 +8,6 @@
 | FOR A PARTICULAR PURPOSE.  See the file LICENSE for more details.
 -------------------------------------------------------------------------------
 
-
-
-NOTE: Concurrently I am adding support for Multizones, so please don't use this
-for tests or production as it WON'T work correctly or may even not compile.
-
-Miguel, 2004/08/24
-
-
-
 Marauroa
 --------
 Marauroa is a Multiplayer Online Engine Server, that you can use to build 
@@ -47,7 +38,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.41
+Version 0.90
 
 
 Status
@@ -59,6 +50,8 @@ You need Arianne's Gladiator client in order to be able to play.
 
 Version > 0.33 Contains a multiplayer pacman game using the Python rules.
 
+Version > 0.90 Contains a multiplayer Zelda like game using Java and Java2D
+
 
 Requeriments
 ------------
@@ -66,6 +59,8 @@ To actually compile Marauroa you will need:
 - Java SDK 1.4 http://java.sun.com
 - JUnit 1.3.8 http://junit.sourceforge.net
 - Ant 1.6 http://ant.apache.org
+
+Optionally:
 - Jython 2.1 http://www.jython.org/download.html
 
 In order to get it working with MySQL you will also need:
@@ -208,6 +203,7 @@ bandwidth is prone to be used.
 The available games actually now are:
 the1001
 mapacman
+stendhal
 
 It should be set at server_typeGame
 
@@ -254,6 +250,18 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.90 Feb XX, 2005
+- Major code refactoring
+- Added multizones feature
+- Added content streaming feature
+- Changed package structure
+- Created a new Logging facility
+- Added a client framework: ariannexp
+- Jython is optional
+- Filter banned IP packets
+- Removed games code, now each game package will contain its own server and client code.
+- Updated this README
+
 0.41 Jul 13, 2004
 - Cleaned code
 - Added javadocs comments
