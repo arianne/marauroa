@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.45 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.46 2004/05/16 10:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -256,25 +256,6 @@ public class MessageS2CPerception extends Message
     super.writeObject(out);
     out.write(getPrecomputedStaticPartPerception());
     out.write(getDynamicPartPerception());      
-    
-// TODO: Miguel changed this to improve speed of perception creation and he thinks
-//    he has fucked the stats system :D
-//
-//    ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
-//    ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
-//    OutputSerializer ser=new OutputSerializer(out_stream);
-//
-//    /** TODO: Join the dinamic part of the perception on a single block */
-//    out_stream.write(getPrecomputedStaticPartPerception());
-//    out_stream.write(getDynamicPartPerception());      
-//    
-//    out_stream.close();
-//
-//    byte [] array = compressed_array.toByteArray();
-//    long saved = out_stream.getBytesWritten()-array.length;
-//
-//    Statistics.getStatistics().addBytesSaved(saved);
-//    out.write(array);
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException

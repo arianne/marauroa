@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.86 2004/05/15 15:06:16 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.87 2004/05/16 10:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,7 +108,7 @@ public class marauroad extends Thread
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
 
-    /** TODO: Set database for MemoryDatabase, nice option would be to load it from a file */
+    /** TODO: Set database for MemoryDatabase, nice option would be to load it from a XML file */
 
     instance.init();
     while(!finish)

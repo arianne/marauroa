@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.41 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.42 2004/05/16 10:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -334,7 +334,6 @@ public class RPObject extends Attributes
     oadded.setAddedAttributes(this);
     odeleted.setDeletedAttributes(this);
     
-//    oadded.setAddedRPSlot(this);
     odeleted.setDeletedRPSlot(this);
     
     Iterator it=slots.iterator();
