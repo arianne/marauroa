@@ -4,3 +4,807 @@ Keyword: basic, design, game, rp, idea
 Author : Miguel Angel Blanch Lardin
 Created: 2003/12/10
 status : planning
+
+You are the player, and you OWN several characters, each characters is a 
+gladiator. As a gladiator your task is t fight and survive in the Arena.
+You can also play as a spectator, and join the arena to see the combat and
+decide the luck of the fighters, as spectator you can decide if the looser die
+or not and the amount of fame that is assigned to each of the fighters.
+Your main goal is to get fame so that you can buy better equipment, and better 
+gladiators.
+
+So your task as player is either fight for earn fame or watch fights for 
+assigning fame.
+
+Your gladiator can also train other gladiators for exchange of fame.
+
+Appart of fame, each gladiator has a set of attributes and skills. 
+Let's see the attributes:
+- Strengh
+	Determine the hit strengh of the character, the greater the more hard it will
+	hit.
+- Speed
+ 	Determine how fast the gladiator is, and this is related with the skill to 
+ 	defense and attack.
+- Size
+	Determine how easy is to take down your gladiator, and it is related with 
+	Strengh and speed.
+- Breath
+	Determine how tired you are.	
+- Fame
+	Determine the value of your gladiator and it is like a change value to adquiere
+	new gladiators and equipment.
+	
+They also have a set of Skills:
+- Attack skill
+	Determine how good you are at attacking, determine how fast and how hard you hit.
+- Defense skill
+	Determine how good you are absorbing hits.
+- Evasion skill
+	Determine your skill to avoid being hitted.
+	
+With the fame you have earnt you can buy new items and gladiators.
+The available items are:
+- Helm
+- Shield
+- Armor	
+	They are protection for the head, hit and body respectively
+- Weapons
+    · Sword
+    · Spear
+	They are the weapon gladiators use.
+
+You can buy new items and gladiators at "the 1001 Heroes House".
+Each one has a price in fame that you must pay.
+
+You can retire your gladiator to "the 1001 Heroes House" and you will also get
+extra fame for that.
+
+
+Elements in the game
+--------------------
+
+Player			Player
+Character		Player
+RPObject		Player
+				Gladiator
+				Items
+				  Helm
+				  Shield
+				  Armor
+				  Sword
+				  Spear
+				Arena
+				Heroes' House
+
+RPAction		Fight 
+				Attack
+				Defend
+				Dogde
+				AwardFame
+				Talk
+				Buy
+				ModifyEquiment
+				Retire
+				
+				
+Description of each RPObject
+----------------------------					
+Player
+We need to have something to represent users in the virtual world, and we are 
+going to use an invisible avatar, that is a player. As player it has no just a
+slot name "gladiators", that contains the gladiators that the player owns.
+Also the player will have a name to represent him/her.
+
+Attributes
+	type
+	name
+	fame
+Slots
+	gladiators
+	backpack
+		
+The backpack is the place for storing all the gladiator items that are not going
+to be used by the moment.
+		
+
+Gladiator
+This is the character that fights and die on the Arena, for the fame and glory of
+players. It will have all the attributes and skill posted above so:
+
+Attributes
+    type
+	name
+	rp_strengh
+	rp_speed
+	rp_size
+	rp_breath
+	rp_fame
+	rp_attack
+	rp_defend
+	rp_evasion
+	rp_health
+	num_victory
+	num_defeat	
+Slots
+	l_hand
+	r_hand
+	head
+	torso
+
+In the slots the gladiator will store the weapons and the items.		
+
+
+Helm, Shield & Armor
+It is a piece of leather, wood or metal for protecting head and the whole body by 
+blocking hits. It increase a lot the defend skill of the character but
+it also decrease a lot the evasion skill and the speed attribute
+
+Attributes
+	type
+ 	rp_attack
+	rp_defend	
+	rp_price
+
+
+Sword & Spear
+It is a piece of metal that is used to hit the rival. These items will determine
+the damage done to the rival and it is heavily modified by strengh, breath and 
+attack attributes.
+
+Attributes
+	type
+ 	rp_attack
+	rp_defend	
+	rp_price
+
+
+Arena
+Every player in 1001 Gladiators is in the Arena. So in fact this RPObject does not
+exist and it is our World
+
+
+Heroes' House
+It is a single object that contains all the heroes that have been retired. This 
+object has also the fact of create new Gladiators and Items on demand. It has to 
+contain reference items so set prices and so.
+
+Slots
+	type
+	retiredGladiators
+	items
+	
+
+Description of each RPAction
+----------------------------					
+Fight
+This action is issue to request to participate on a Fight.
+It has no params
+It is replied with a "fight_granted" attribute in your player when you are allowed
+to enter the fight. While you find another partner, you will have a "wanna_fight" 
+attribute.
+* NOTE: Combats are now 1vs1
+
+
+Attack
+This action is issued to request your gladiator to move to offensive mode and 
+attack as much as he can ( breath attribute ) to the Gladiator you choose.
+
+Attributes
+	attack_gladiator
+	
+It is replied as with the attribute combat_mode and with the value equal to attack
+	
+
+Defend
+This actions is issued to request your gladiator to change to defensive behaviour
+and it will do its best to block rival hits. No attributes.
+It is replied as with the attribute combat_mode and with the value equal to defend
+
+
+Dogde
+This action is issued to request your gladiator to reduce breath of the rival by
+running around it while avoiding hits and hitting him. 
+It is replied as with the attribute combat_mode and with the value equal to dogde
+
+* Combat actions note
+On each of actions: attack, defend and dogde when you are damaged it is notified by
+the attribute damame=damage and your health value will be modified 
+respectively. All the actions will modify your attributes and skills accordingly.
+When health value reach 0 you are out of the battle, and the battle ends. Then the 
+AwardFame stage starts. Each player will give you and your rival a value of fame ranging
+from 0 to 100.
+
+AwardFame
+It is use to give fame to the fighters by the spectators. Each spectator will 
+issue an AwardFame action when they see on the players a "request_fame" attribute.
+After enough turns have been elapsed, we compute the mean of all the fame awards for both
+players and modify their fame accordingly.
+
+Attributes
+	fame_winner
+	fame_losser
+	
+To lose in 1001 Gladiator is just a defeat, you can even win more fame than the winner.
+It is replied with an attribute "fame_awarded" on the player that issued the action.
+
+
+Talk
+It is used to talk, you as player, not the gladiator.
+Attributes
+	text
+	
+You can see it on the reply as a attribute in your player named "text"
+
+
+Buy
+This action is issue to buy a new item or gladiator with the fame your player has
+available. If you buy a gladiator it will be placed at the gladiator slot of your
+player and whatever other thing at the backpack container.
+
+Attributes
+	shop_item
+	
+
+This actions decrease your player's fame.	
+
+
+ModifyEquipment
+This action enable you to modify the equipment of your gladiators. You can move
+an equipment piece from and to gladiators from and to another gladiator or the backpack.
+
+Attributes
+	source_slot
+	source_id
+	dest_slot
+	dest_id
+	
+* We will see a example later.
+
+
+Retire
+This action remove the gladiator from your player and add it to the Hero house,
+and you will be awarded with a amount of fame that is proportional to the fame
+of your gladiator and the number of victories that it has had.
+
+Attributes
+	retire
+	
+
+
+These are the main objects and actions.
+Let's describe now how one game would look like, exactly as Marauroa server would
+see it.
+
+Example of a real game
+----------------------
+
+We can assume that player did already created a player for play the game.
+It it the next player:
+
+Player
+  {
+  name="Rufus"
+  password="zafe pazzword"
+  }
+
+So Rufus LOGIN into our Server, and it is granted login with a LOGIN ACK Message.
+Just after that server tell Rufus that he is playing "1001 Gladiators" with a SERVER
+INFO Message, and it sends Rufus his list of characters. Because the type of game we
+are creating Rufus has only one character.
+
+Character
+  {
+  type="character"
+  object_id="1"
+  name="Rufus Maximus"
+  fame="100"
+  
+  gladiators
+    {
+    empty
+    }
+    
+  backpack
+    {
+    empty
+    }
+  }
+  
+Rufus is a wise man and he decide to buy a above standard gladiator with his fame
+and just a simple sword. To do that he send a ACTION message to server with the info
+he saw at Heroes Shop object in the last perception.
+
+Perception
+  {
+  Heroes' shop
+    {
+    type="shop"
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="70"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0  
+        }
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1242"
+        name="Speedy Gonzalez"
+        rp_strengh="4"
+        rp_speed="10"
+        rp_size="5"
+        rp_breath="12"
+        rp_fame="70"
+        rp_attack="6"
+        rp_defend="5"
+        rp_evasion="14"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0        
+        }
+      }
+    
+    items
+      {
+      Sword
+        {
+        type="sword"
+        object_id="11672"
+        rp_attack="7"
+        rp_defend="3"
+        rp_price="30";
+        }
+      Shield
+        {
+        type="shield"
+        object_id="11673"
+        rp_attack="1"
+        rp_defend="10"
+        rp_price="70";
+        }
+      Spear
+        {
+        type="spear"
+        object_id="11674"
+        rp_attack="10"
+        rp_defend="0"
+        rp_price="10";
+        }        
+      }
+    }
+  }
+
+We ignored the empty slots for simplicity.
+So our mighty Rufus would send the next actions.
+
+Buy
+  {
+  action_id="1231"
+  shop_item="11672"
+  }
+  
+Buy
+  {
+  action_id="1232"
+  shop_item="1122"
+  }
+  
+See the order doesn't matter, as it will be stored into the player.
+On the next perception the wise Rufus will have his character as this:
+
+Perception
+  {
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_1231="success"
+    action_1232="success"
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+    }
+  }
+  
+Just a few points to notice:
+1) See how the rp_fame of Ragnar dropped from 70 to 0. You guessed it, it is the price.
+2) See that sword has a new different Object id.  
+3) rp_price was removed from the sword.
+4) See that the actions succedded.
+
+Ok, our mighty hero is now at the Arena watching "A-Bush" against "No MDW found".
+The combat is a really hard one... see it:
+
+"No MDW found" hits "A-Bush" with a powefull 15 points lose hit!.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="50"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="3"
+        num_defeat="1"  
+        mode="attack"   
+        damaged="15"
+        }
+      }
+    }
+  }
+
+And now it is time for "A-Bush" to hit "No MDW found" back. There is no Turns, it
+is just casual that one hits after the other, really the concept of turn doesn't
+exist.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="50"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="3"
+        num_defeat="1"  
+        mode="attack"   
+        }
+      }
+    }
+    
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Another Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1123"
+        name="No MDW found"
+        rp_strengh="3"
+        rp_speed="4"
+        rp_size="3"
+        rp_breath="2"
+        rp_fame="20"
+        rp_attack="7"
+        rp_defend="2"
+        rp_evasion="4"
+        rp_health="0"
+        num_victory="0"
+        num_defeat="1"  
+        mode="dogde"   
+        damage="37"
+        }
+      }
+    }
+  }
+
+See it has reduced health on "No MDW found" to 0. So the combat ends and it is now
+turn for the spectators to issue a score. To do that we create a new object that 
+will gather the scores:
+
+ArenaScore
+  {
+  turns="100"
+  winner_id="1122"
+  losser_id="1123"
+  fame_winner="100"
+  fame_losser="0"
+  number_electors="0"
+  }
+
+Here is the turn of our player "Rufus" to issue the score. So he sends a ACTION
+that is a AwardFame
+
+AwardFame
+  {
+  action_id="12131"
+  fame_winner="30"
+  fame_losser="70"
+  }
+  
+So on the next perception we will have:
+
+Perception
+  {
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_12131="success"
+    fame_awarded=""
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+    }
+
+  ArenaScore
+    {
+    turns="99"
+    winner_id="1122"
+    losser_id="1123"
+    fame_winner="30"
+    fame_losser="70"
+    number_electors="1"
+    }
+  }
+
+Nothing more happens, but turns MUST elapse before a new step is taken.
+Then when turns elapses, players are granted fame.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="80"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="4"
+        num_defeat="1"  
+        }
+      }
+    }
+    
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Another Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1123"
+        name="No MDW found"
+        rp_strengh="3"
+        rp_speed="4"
+        rp_size="3"
+        rp_breath="2"
+        rp_fame="90"
+        rp_attack="7"
+        rp_defend="2"
+        rp_evasion="4"
+        rp_health="0"
+        num_victory="0"
+        num_defeat="2"  
+        }
+      }
+    }
+
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+  }
+
+Observe that num_victory and num_defeat is changed accordinly the same that
+fame. Note also that characters are not healthed, they will health alone
+after a number of turns.
+  
+Now our mighty Rufus is going to fight against any brave gladiator, so he
+request a fight.  
+
+Fight
+  {
+  action_id="2393";
+  }
+  
+And again in the next perception we will have:
+
+Perception
+  {
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_12131="success"
+    fame_awarded=""
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        wanna_fight=""
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+  }
+
+TODO: Explain how "A-Bush" accept the fight and fight against rufus...
