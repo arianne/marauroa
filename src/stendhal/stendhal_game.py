@@ -33,6 +33,7 @@ class StendhalRP(PythonRP):
 
     def onInit(self, object):
         object.put("zoneid","village");
+        print self.world;
         self.world.add(object)
         return 1
 
