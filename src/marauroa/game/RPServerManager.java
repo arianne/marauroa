@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.77 2004/05/01 00:44:31 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.78 2004/05/06 13:00:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -293,7 +293,7 @@ class RPServerManager extends Thread
             netMan.addMessage(messages2cPerception);
           
             /** We check if we need to update player in the database */
-            if(playerContainer.shouldStoredUpdate(clientid))
+            if(playerContainer.shouldStoredUpdate(clientid,object))
               {
               playersToUpdate.add(new Integer(clientid));
               }

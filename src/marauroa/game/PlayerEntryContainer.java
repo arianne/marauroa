@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.33 2004/04/28 15:26:17 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.34 2004/05/06 13:00:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,7 @@ public class PlayerEntryContainer
 
     /** The time when the latest event was done in this player */
     public Date timestampLastStored;
+    public RPObject database_storedRPObject;
 
     /** The name of the choosen character */
     public String choosenCharacter;
@@ -799,7 +800,7 @@ public class PlayerEntryContainer
       }
     }
     
-  public boolean shouldStoredUpdate(int clientid) throws NoSuchClientIDException
+  public boolean shouldStoredUpdate(int clientid, RPObject object) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime",">");
     try
@@ -808,10 +809,16 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         long value=new Date().getTime()-entry.timestampLastStored.getTime();
+        
+        if(entry.database_storedRPObject==null)
+          {
+          entry.database_storedRPObject=object;
+          }
 
-        if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)
+        if(!entry.database_storedRPObject.equals(object) && value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)
           {
           entry.timestampLastStored=new Date();
+          entry.database_storedRPObject=(RPObject)object.copy();
           return true;
           }
         else
