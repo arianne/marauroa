@@ -1,84 +1,80 @@
-/**
- * RPActionList.java
- *
- * @author Created by wt
- */
-
 package marauroa.game;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-
-/**
- * a class that represents a list of RPActions
- * uses (currently )LinkedList as backstore.
+/** This class that represents a list of RPActions  uses a LinkedList as backstore.
  **/
 public class RPActionList
-{
+  {
+  /** A LinkedList<RPAction> that contains actions */
   private LinkedList actionsList;
   
   public RPActionList()
-  {
+    {
     actionsList = new LinkedList();
-  }
+    }
   
-  /**
-   *  adds a new rp action to list
+  /**This method adds a new rp action to list
    * @param rp_action - RPAction to add into list
    * @return actions that was just added
    **/
   public RPAction add(RPAction rp_action)
-  {
+    {
     actionsList.add(rp_action);
     return(rp_action);
-  }
+    }
   
-  /**
-   *  gets the RPAction
+  /** This method gets the RPAction
    * @param index index of RPAction to retrieve
    * @return actions that was just added
    **/
   public RPAction get(int index)
-  {
+    {
     return((RPAction)actionsList.get(index));
-  }
+    }
   
-  /**
-   *  gets the size
+  /** This method gets the size
    * @return count of RPActions in this list
    **/
   public int size()
-  {
+    {
     return(actionsList.size());
-  }
+    }
   
   /**
    * gets the RP Actions Iterator
    * @return RPActionIterator
    **/
   public RPActionIterator iterator()
-  {
+    {
     return(new RPActionIterator(actionsList.iterator()));
-  }
+    }
   
-  
+  /** An iterator for a RPActionList */
   public class RPActionIterator
-  {
+    {
     private Iterator actionsIter;
-    public RPActionIterator(Iterator iter)
-    {
+    
+    /** Constructor */
+    private RPActionIterator(Iterator iter)
+      {
       actionsIter = iter;
-    }
+      }
+     
+    /** This method returns true if there are still most elements.
+     *  @return true if there are more elements. */    
     public boolean hasNext()
-    {
+      {
       return(actionsIter.hasNext());
-    }
+      }
+     
+    /** This method returs the RPAction and move the pointer to the next element
+     *  @return an RPAction */
     public RPAction next()
-    {
+      {
       return((RPAction)actionsIter.next());
+      }
     }
   }
-  
-}
 

@@ -15,21 +15,39 @@ public class RPAction extends Attributes
     public final static byte INCOMPLETE=2;
     private byte val;
     
+    /** Constructor
+     *  @param val the status of the action */
     public Status(byte val)
       {
       this.val=val;
       }
     
+    /** Constructor
+     *  @param val the status of the action */
+    public Status(String val)
+      {
+      if(val.equalsIgnoreCase("success")) this.val=SUCCESS;
+      if(val.equalsIgnoreCase("fail")) this.val=FAIL;
+      if(val.equalsIgnoreCase("incomplete")) this.val=INCOMPLETE;
+      }
+    
+    /** This method returns the status of the action 
+     *  @return the status of the action */
     public byte getStatus()
       {
       return val;
       }
     
+    /** This method returns true of both object are equal.
+     *  @param status another Status object
+     *  @return true if they are equal, or false otherwise. */
     public boolean equals(Object status)
       {
       return val==((Status)status).val;
       }
     
+    /** This method returns a String that represent the object 
+     *  @return a string representing the object.*/
     public String toString()
       {
       if(val==0) return "success";
@@ -40,6 +58,7 @@ public class RPAction extends Attributes
       }
     }
   
+  /** Constructor */
   public RPAction()
     {
     super();

@@ -1,12 +1,4 @@
-/**
- * JMarauroa2.java
- * derived from JMarauroa
- * dont no if someone like it
- * @author
- */
-
 package marauroa;
-
 
 import java.awt.*;
 import java.awt.event.*;
