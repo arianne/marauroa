@@ -15,6 +15,14 @@ public class RPObject extends Attributes
       super("Slot not found");
       }
     }
+
+  public static class SlotAlreadyAddedException extends Exception
+    {
+    public SlotAlreadyAddedException()
+      {
+      super("Slot already added.");
+      }
+    }
   
   /** An iterator for properly acceding all the Slots. */
   public class SlotsIterator
@@ -145,9 +153,16 @@ public class RPObject extends Attributes
     return false;
     }
   
-  public void addSlot(RPSlot slot)
+  public void addSlot(RPSlot slot) throws SlotAlreadyAddedException
     {
-    slots.add(slot);
+    if(!has(slot.getName()))
+      {
+      slots.add(slot);
+      }
+    else
+      {
+      throw new SlotAlreadyAddedException();
+      }
     }
   
   public RPSlot getSlot(String name) throws NoSlotFoundException

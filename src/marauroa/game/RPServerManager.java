@@ -13,6 +13,8 @@ public class RPServerManager extends Thread
   {
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
+  /** isFinished is true when the thread has really exited. */
+  private boolean isfinished;
   /** The time elapsed between 2 turns. */
   private long turnDuration;
   
@@ -40,6 +42,8 @@ public class RPServerManager extends Thread
     try
       {
       keepRunning=true;
+      isfinished=false;
+      
       scheduler=new RPScheduler();
       playerContainer=PlayerEntryContainer.getContainer();    
       this.netMan=netMan;
@@ -71,6 +75,18 @@ public class RPServerManager extends Thread
     {
     marauroad.trace("RPServerManager::finish",">");
     keepRunning=false;
+
+    while(isfinished==false)
+      {
+      try
+        {
+        Thread.sleep(1000);
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        }
+      }
+
     marauroad.trace("RPServerManager::finish","<");
     }
   
@@ -200,7 +216,8 @@ public class RPServerManager extends Thread
         {
         }
       }
-    
+      
+    isfinished=true;    
     marauroad.trace("RPServerManager::run","<");
     }
   }

@@ -11,7 +11,7 @@ public class Test_RPObject extends TestCase
     return new TestSuite(Test_RPObject.class);
 	}
 	
-  public void testRPObject()
+  public void testRPObjectAttributes()
     {
     try
       {
@@ -33,12 +33,14 @@ public class Test_RPObject extends TestCase
       RPObject.ID id=new RPObject.ID(SonGoku);
       RPObject.ID id_1=new RPObject.ID(1);
       assertEquals(id,id_1);
-      
-      /* TODO: Test slots and serialization */
       }
     catch(Attributes.AttributeNotFoundException e)
       {
       fail(e.getMessage());
       }
+    }
+
+  public void testRPObjectException()
+    {
     }
   }

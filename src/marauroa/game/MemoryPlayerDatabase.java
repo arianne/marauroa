@@ -4,6 +4,7 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 import marauroa.marauroad;
+import marauroa.net.*;
 
 /** This is memory interface to the database, when you init it, it is empty, and when
  *  you finish the application it is emptied. */
@@ -279,7 +280,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
         marauroad.trace("MemoryPlayerDatabase::setRPObject","X","Player("+username+") doesn't contains that character("+character+")");
         throw new CharacterNotFoundException();
         }
-      
+        
       player.characters.put(character,object);
       }
     finally

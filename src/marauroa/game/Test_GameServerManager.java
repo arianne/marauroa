@@ -13,6 +13,7 @@ public class Test_GameServerManager extends TestCase
 	}
 
   private NetworkClientManager netMan;
+  private NetworkClientManager netManSpoffer;
   private NetworkServerManager netServerMan;
   private GameServerManager gameMan;
 
@@ -24,6 +25,7 @@ public class Test_GameServerManager extends TestCase
       NetConst.marauroa_PORT=NetConst.marauroa_PORT+1;
       
       netMan=new NetworkClientManager("127.0.0.1");
+      netManSpoffer=new NetworkClientManager("127.0.0.1");
       netServerMan=new NetworkServerManager();
       gameMan= new GameServerManager(netServerMan);
       }
@@ -55,11 +57,6 @@ public class Test_GameServerManager extends TestCase
   private void finalizeEnviroment()
     {
     gameMan.finish();
-    
-    /* To break the wait on a message */
-    InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
-    netMan.addMessage(new MessageC2SLogout(address));
-    
     netServerMan.finish();
 
     try
@@ -164,7 +161,7 @@ public class Test_GameServerManager extends TestCase
 	try
 	  {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
-      netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+      netMan.addMessage(new MessageC2SLogin(address,"Wrong Test Player","Wrong Test Password"));
       int clientid=-1;
 
       int recieved=0;
@@ -176,7 +173,6 @@ public class Test_GameServerManager extends TestCase
         if(msg instanceof MessageS2CLoginNACK)
           {
           assertTrue("Correct login failure",true);
-          clientid=msg.getClientID();
           ++recieved;
           }
         else
@@ -219,12 +215,64 @@ public class Test_GameServerManager extends TestCase
         if(msg instanceof MessageS2CLoginNACK)
           {
           assertTrue("Correct login failure",true);
-          clientid=msg.getClientID();
           ++recieved;
           }
         else
           {
           fail("ERROR: Can login. Got "+msg.toString());
+          }        
+        }
+        
+      Message msgLSpoffer=new MessageC2SLogout(address);
+      msgLSpoffer.setClientID(clientid);  
+      netManSpoffer.addMessage(msgLSpoffer);
+      
+      if(msgLSpoffer!=null)
+        {  
+        int i=0;
+        Message msg=null;
+        while(msg==null && i<10) 
+          {
+          msg=netMan.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can spof. Got "+msg.toString());
+          }
+
+	    i=0;
+        while(msg==null && i<10) 
+          {
+          msg=netManSpoffer.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can spof. Got "+msg.toString());
+          }
+        }
+
+
+      Message msgL=new MessageC2SLogout(address);
+      msgL.setClientID(clientid);      
+      netMan.addMessage(msgL);
+      
+      while(recieved!=5)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+
+        if(msg instanceof MessageS2CLogoutACK)
+          {
+          assertTrue("Correct logout parameters",true);
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can't logout. Got "+msg.toString());
           }        
         }
 	  }
@@ -235,7 +283,7 @@ public class Test_GameServerManager extends TestCase
     } 
 	
   public void testMainChooseCharacterFailures()
-    {
+    {    
 	createEnviroment();
 	
 	try
@@ -247,7 +295,8 @@ public class Test_GameServerManager extends TestCase
       msgCC.setClientID(clientid);  
       netMan.addMessage(msgCC);
       
-        
+      if(msgCC!=null)
+        {  
         int i=0;
         Message msg=null;
         while(msg==null && i<10) 
@@ -260,7 +309,175 @@ public class Test_GameServerManager extends TestCase
           {
           fail("ERROR: Can choose character. Got "+msg.toString());
           }
+        }
         
+	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+	  int recieved=0;
+      
+      while(recieved!=2)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+        
+        if(msg instanceof MessageS2CLoginACK)
+          {
+          assertTrue("Correct login parameter",true);
+          clientid=msg.getClientID();
+          ++recieved;
+          }
+        else if(msg instanceof MessageS2CCharacterList)
+          {
+          assertTrue("Recieved character list",true);
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can't login. Got "+msg.toString());
+          }        
+        }
+
+      Message msgCCFail=new MessageC2SChooseCharacter(address,"Wrong Son Goku");
+      msgCCFail.setClientID(clientid);  
+      netMan.addMessage(msgCCFail);
+      
+      while(recieved!=3)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+        
+        if(msg instanceof MessageS2CChooseCharacterNACK)
+          {
+          assertTrue("Correct choose character failure",true);
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can choose character. Got "+msg.toString());
+          }        
+        }
+
+      Message msgCCSpoffer=new MessageC2SChooseCharacter(address,"Son Goku");
+      msgCCSpoffer.setClientID(clientid);  
+      netManSpoffer.addMessage(msgCCSpoffer);
+      
+      if(msgCCSpoffer!=null)
+        {  
+        int i=0;
+        Message msg=null;
+        while(msg==null && i<10) 
+          {
+          msg=netMan.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can sppof. Got "+msg.toString());
+          }
+
+	    i=0;
+        while(msg==null && i<10) 
+          {
+          msg=netManSpoffer.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can sppof. Got "+msg.toString());
+          }
+        }
+        
+      Message msgL=new MessageC2SLogout(address);
+      msgL.setClientID(clientid);      
+      netMan.addMessage(msgL);
+      
+      while(recieved!=4)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+
+        if(msg instanceof MessageS2CLogoutACK)
+          {
+          assertTrue("Correct logout parameters",true);
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can't logout. Got "+msg.toString());
+          }        
+        }
+      }
+    finally
+      {
+      finalizeEnviroment();
+      }
+    }  
+
+  public void testMainLogoutFailures()
+    {    
+	createEnviroment();
+	
+	try
+	  {
+      InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
+      int clientid=-1;
+
+      Message msgL=new MessageC2SLogout(address);
+      msgL.setClientID(clientid);      
+      netMan.addMessage(msgL);
+      
+      if(msgL!=null)
+        {  
+        int i=0;
+        Message msg=null;
+        while(msg==null && i<10) 
+          {
+          msg=netMan.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can logout. Got "+msg.toString());
+          }
+        }
+	  }
+    finally
+      {
+      finalizeEnviroment();
+      }
+    }  
+
+
+  public void testMainActionFailures()
+    {    
+	createEnviroment();
+	
+	try
+	  {
+      InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
+      int clientid=-1;
+
+      Message msgA=new MessageC2SAction(address,new RPAction());
+      msgA.setClientID(clientid);      
+      netMan.addMessage(msgA);
+      
+      if(msgA!=null)
+        {  
+        int i=0;
+        Message msg=null;
+        while(msg==null && i<10) 
+          {
+          msg=netMan.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can add action. Got "+msg.toString());
+          }
+        }
 	  }
     finally
       {

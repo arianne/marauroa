@@ -16,6 +16,8 @@ public class GameServerManager extends Thread
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
+  /** isFinished is true when the thread has really exited. */
+  private boolean isfinished;
   
   /** Constructor that initialize also the RPManager 
    *  @param netMan a NetworkServerManager instance. */
@@ -40,6 +42,17 @@ public class GameServerManager extends Thread
     
     rpMan.finish();
     keepRunning=false;
+
+    while(isfinished==false)
+      {
+      try
+        {
+        Thread.sleep(1000);
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        }
+      }
     
     marauroad.trace("GameServerManager::finish","<");
     }
@@ -48,40 +61,46 @@ public class GameServerManager extends Thread
     {
     marauroad.trace("GameServerManager::run",">");
 
-    rpMan.start();    
-
-    while(keepRunning)
+    try
       {
-      Message msg=netMan.getMessage();
-      
-      if(msg!=null)
-        {    
-        switch(msg.getType()) 
-          {
-          case Message.TYPE_C2S_LOGIN:
-            marauroad.trace("GameServerManager::run","D","Processing C2S Login Message");
-            processLoginEvent((MessageC2SLogin)msg);
-            break;
-          case Message.TYPE_C2S_CHOOSECHARACTER:
-            marauroad.trace("GameServerManager::run","D","Processing C2S Choose Character Message");
-            processChooseCharacterEvent((MessageC2SChooseCharacter)msg);
-            break;
-          case Message.TYPE_C2S_LOGOUT:
-            marauroad.trace("GameServerManager::run","D","Processing C2S Logout Message");
-            processLogoutEvent((MessageC2SLogout)msg);
-            break;
-          case Message.TYPE_C2S_ACTION:
-            marauroad.trace("GameServerManager::run","D","Processing C2S Action Message");
-            processActionEvent((MessageC2SAction)msg);
-            break;
-          default:
-            marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
-            break;
+      rpMan.start();    
+ 
+      while(keepRunning)
+        {
+        Message msg=netMan.getMessage(1000);
+       
+        if(msg!=null)
+          {    
+          switch(msg.getType()) 
+            {
+            case Message.TYPE_C2S_LOGIN:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Login Message");
+              processLoginEvent((MessageC2SLogin)msg);
+              break;
+            case Message.TYPE_C2S_CHOOSECHARACTER:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Choose Character Message");
+              processChooseCharacterEvent((MessageC2SChooseCharacter)msg);
+              break;
+            case Message.TYPE_C2S_LOGOUT:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Logout Message");
+              processLogoutEvent((MessageC2SLogout)msg);
+              break;
+            case Message.TYPE_C2S_ACTION:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Action Message");
+              processActionEvent((MessageC2SAction)msg);
+              break;
+            default:
+              marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
+              break;
+            }
           }
         }
       }
-
-    marauroad.trace("GameServerManager::run","<");
+    finally
+      {
+      isfinished=true;
+      marauroad.trace("GameServerManager::run","<");
+      }
     }
     
   private void processLoginEvent(MessageC2SLogin msg)
@@ -250,12 +269,19 @@ public class GameServerManager extends Thread
 	    return;	    
 	    }
 	  
-	  RPObject.ID id=playerContainer.getRPObjectID(clientid);	  
-      RPObject object=rpMan.getRPObject(id);      
-	  rpMan.removeRPObject(id);
+	  if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
+	    {
+	    RPObject.ID id=playerContainer.getRPObjectID(clientid);	  
+        RPObject object=rpMan.getRPObject(id);      
+	    rpMan.removeRPObject(id);
       
-      /* NOTE: Set the Object so that it is stored in Database */
-      playerContainer.setRPObject(clientid,object);  
+        /* NOTE: Set the Object so that it is stored in Database */
+        playerContainer.setRPObject(clientid,object);  
+        }
+      else
+        {
+        marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
+        }
           
 	  playerContainer.removeRuntimePlayer(clientid);
 	  

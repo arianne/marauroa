@@ -113,11 +113,62 @@ public class Test_PlayerDatabase extends TestCase
       {
       assertTrue(true);
       }
-    catch(PlayerDatabase.GenericDatabaseException e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }
+
+    try
+      {
+      playerDatabase.addPlayer("A new Test Player","Test Password");
+      playerDatabase.addCharacter("A new Test Player", "Test Character", new RPObject());
+      playerDatabase.addCharacter("A new Test Player", "Test Character", new RPObject());
+      fail("Player already exists");
+      }
     catch(PlayerDatabase.CharacterAlreadyAddedException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+    finally
+      {
+      try
+        {
+        playerDatabase.removePlayer("A new Test Player");
+        }
+      catch(PlayerDatabase.PlayerNotFoundException epnf)
+        {
+        fail("Player has not been added");
+        }
+      }
+
+    try
+      {
+      playerDatabase.removeCharacter("A new Test Player", "Test Character");
+      fail("Player does not exist");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+
+    try
+      {
+      playerDatabase.getLoginEvent("A new Test Player");
+      fail("Player does not exist");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
       {
       fail(e.getMessage());
       }
@@ -130,6 +181,114 @@ public class Test_PlayerDatabase extends TestCase
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       assertTrue(true);
+      }
+
+    try
+      {
+      playerDatabase.hasCharacter("A new Test Player", "Test Character");
+      fail("Player does not exist");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+
+    try
+      {
+      playerDatabase.addLoginEvent("A new Test Player", null, true);
+      fail("Player does not exist");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+
+    try
+      {
+      playerDatabase.setRPObject("A new Test Player","Test Character",new RPObject());
+      fail("Player does not exists");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+
+    try
+      {
+      playerDatabase.addPlayer("A new Test Player","Test Password");
+      playerDatabase.setRPObject("A new Test Player","Test Character",new RPObject());
+      fail("Character does not exists");
+      }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+    finally
+      {
+      try
+        {
+        playerDatabase.removePlayer("A new Test Player");
+        }
+      catch(PlayerDatabase.PlayerNotFoundException epnf)
+        {
+        fail("Player has not been added");
+        }
+      }
+
+    try
+      {
+      playerDatabase.getRPObject("A new Test Player","Test Character");
+      fail("Player does not exists");
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+
+    try
+      {
+      playerDatabase.addPlayer("A new Test Player","Test Password");
+      playerDatabase.getRPObject("A new Test Player","Test Character");
+      fail("Character does not exists");
+      }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+    finally
+      {
+      try
+        {
+        playerDatabase.removePlayer("A new Test Player");
+        }
+      catch(PlayerDatabase.PlayerNotFoundException epnf)
+        {
+        fail("Player has not been added");
+        }
       }
     }
   }
