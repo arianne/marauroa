@@ -680,27 +680,5 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
     return ret;
     }
- 
-/*
-    public static void main(String argv[])
-    {
-    Configuration conf=Configuration.getConfiguration();
-    
-    Properties props = new Properties();        
-    props.put("jdbc_url",conf.get("jdbc_url"));
-    props.put("jdbc_class",conf.get("jdbc_class"));
-    props.put("jdbc_user",conf.get("jdbc_user"));
-    props.put("jdbc_pwd",conf.get("jdbc_pwd"));
-    
-    try
-      {
-      PlayerDatabase db = new JDBCPlayerDatabase(props);
-      ((JDBCPlayerDatabase)db).reInitDB();
-      }
-    catch(PlayerDatabase.NoDatabaseConfException e)
-      {
-      }
-    }
-*/    
   }
 
