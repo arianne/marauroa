@@ -208,8 +208,7 @@ class RealPythonRP(PythonRP):
 
     def createPlayer(self, name):
         """ This function create a player """
-        object=RPObject()
-        object.put("id",self._zone.create().get("id"))
+        object=self._zone.create()
         object.put("type","player");
         object.put("name",name)
         object.put("x",0)
@@ -220,8 +219,7 @@ class RealPythonRP(PythonRP):
 
     def createGhost(self, name):
         """ This function create a ghost """
-        object=RPObject()
-        object.put("id",self._zone.create().get("id"))
+        object=self._zone.create()
         object.put("type","ghost");
         object.put("name",name)
         object.put("x",0)
@@ -232,8 +230,7 @@ class RealPythonRP(PythonRP):
     def createBall(self, x,y):
         """ This function create a Ball object that when eats by player increments
         its score. """
-        object=RPObject()
-        object.put("id",self._zone.create().get("id"));
+        object=self._zone.create()
         object.put("type","ball");
         object.put("x",x)
         object.put("y",y)

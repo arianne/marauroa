@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.24 2004/05/10 14:46:07 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.25 2004/05/25 14:11:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import marauroa.*;
 
 public interface RPZone
   {
@@ -60,11 +61,27 @@ public interface RPZone
     
     public void added(RPObject object)
       {
-      if(!deletedList.contains(object))
+      if(!removedHas(object))
         {
-        if(addedList.contains(object))
+        try
           {
-          addedList.remove(object);
+          if(addedHas(object))
+            {
+            Iterator it=addedList.iterator();
+            while(it.hasNext())
+              {
+              RPObject added=(RPObject)it.next();
+              if(added.get("id").equals(object.get("id")))
+                {
+                it.remove();
+                break;
+                }
+              }
+            }
+          }
+        catch(Attributes.AttributeNotFoundException e)
+          {
+          marauroad.thrown("RPZone::Perception::added","X",e);
           }
           
         addedList.add(object);
