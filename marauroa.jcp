@@ -22,8 +22,11 @@ FILTER := ""
 LABEL := "game"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\game\\RPServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPSlot.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPObject.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\Attributes.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\Action.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
@@ -41,15 +44,21 @@ FILTER := ""
 LABEL := "doc"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\docs\\Actions and Objects.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
+#[BeginFolder]
+LABEL := "Tracker"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
+#[EndFolder]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "test"

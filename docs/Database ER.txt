@@ -1,0 +1,76 @@
+Title  : Database ER
+Info   : Description of the database ER model
+Keyword: Database, ER, SQL
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/07
+status : planning
+
+%% BEGIN %%
+The database ER schema is:
+
+Entities:
+---------
+
+entity PLAYER
+  {
+  PK(username)
+  password
+  }
+  
+entity CHARACTERS
+  {
+  PK(character)
+  content
+  }
+  
+entity LOGIN_EVENT
+  {
+  PK(id)
+  address
+  timedate
+  result
+  }
+  
+Relations:
+----------
+
+relation PLAYER_CHARACTERS
+  {
+  PK(player_username)
+  PK(characters_character)
+  }
+  
+relation PLAYER_LOGIN_EVENT
+  {
+  PK(player_username)
+  PK(login_event_id)
+  }
+
+
+So we can translate this to SQL easily and we would obtain:
+
+CREATE TABLE player
+  (
+  id BIGINT PRIMARY KEY NOT NULL,
+  username VARCHAR(30) NOT NULL,
+  password VARCHAR(30) NOT NULL
+  );
+  
+CREATE TABLE characters
+  (
+  id BIGINT NOT NULL,
+  character VARCHAR(30) NOT NULL,
+  contents VARCHAR(4096)
+  
+  PRIMARY KEY(id,character)
+  );
+  
+CREATE TABLE loginEvent
+  (
+  id BIGINT NOT NULL,
+  address VARCHAR(20),
+  timedate TIMEDATE,
+  result TINYINT
+  );
+
+%% END %%

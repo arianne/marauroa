@@ -1,0 +1,16 @@
+Title  : Error Log format
+Info   : Description of the format of the error output
+Keyword: error, exception, log, format, syslog
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/07
+status : planning
+
+%% BEGIN %%
+The format of the output should at least include:
+- Date and time
+- Location of the error
+- Explanation of the error
+- Resolution adopted.
+
+For the output we should consider to use a feature like syslogd.
+%% END %%

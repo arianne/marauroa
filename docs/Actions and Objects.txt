@@ -1,0 +1,40 @@
+Title  : Actions and Objects
+Info   : Description of the Actions and Objects
+Keyword: Actions, Objects, Attributes, World, Zone, ID
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/07
+status : planning
+
+%% BEGIN %%
+The whole Marauroa system is managed by two main entities:
+- RPAction
+- RPObject
+
+
+Actions
+-------
+To express the willing of a client to do something it must send the server a 
+MessageC2SAction message.
+
+A action is composed of several attributes, a attributed is similar to a 
+variable that has a name and contains a value.
+
+There are attributes that are optional and there are attributes that are 
+mandatory. If a mandatory attribute is not found, the message is skipped by the
+RPServerManager entity.
+
+Mandatory Actions Attributes:
+- object_id
+- zone_id
+- action_type
+
+Optional Actions Attributes:
+( Depend on each action type )
+
+
+Objects
+-------
+The containers of information of the whole Marauroa server is RPObjects.
+
+
+%% END %%

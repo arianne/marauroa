@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ganttproject.sourceforge.net>
+<project name="" company="" view-date="1/8/2003" view-zoom="4" version="1.9.8">
+    <description>    </description>
+
+    <tasks color="#8cb6ce">
+        <task id="0" name="Marauroa's Specification" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/9/2003" duration="18" complete="60" priority="2">
+            <depend id="1" type="2"/>
+            <depend id="3" type="2"/>
+        </task>
+        <task id="1" name="Redact Documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="31" priority="1">
+            <depend id="44" type="2"/>
+        </task>
+        <task id="3" name="Implement basic server" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="45" priority="1">
+            <task id="4" name="Implement NetworkManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="10" complete="70" priority="1">
+                <depend id="5" type="2"/>
+            </task>
+            <task id="5" name="Implement GameManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="29/9/2003" duration="10" complete="70" priority="1">
+                <depend id="6" type="2"/>
+            </task>
+            <task id="6" name="Implement RPManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="9/10/2003" duration="10" complete="0" priority="1">
+                <depend id="44" type="2"/>
+            </task>
+            <task id="7" name="Write Test Cases" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="45" priority="1">
+                <depend id="44" type="2"/>
+            </task>
+        </task>
+        <task id="2" name="Create Website" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/9/2003" duration="45" complete="90" priority="1">
+            <depend id="44" type="2"/>
+        </task>
+        <task id="44" name="Release Marauroa 0.1" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="20/10/2003" duration="3" complete="0" priority="1"/>
+    </tasks>
+
+    <resources>
+    </resources>
+
+    <allocations>
+    </allocations>
+
+</project>

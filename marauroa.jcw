@@ -8,10 +8,12 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\game\\Test_Attributes.java" #[EndFile]
-#[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
-#[BeginFile]SOURCE := "C:\\j2sdk1.4.2\\src.zip!java\\net\\URLClassLoader.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\Attributes.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPObject.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPSlot.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\RPServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Actions and Objects.txt" #[EndFile]
 
 ! Start Breakpoint Structure
 
