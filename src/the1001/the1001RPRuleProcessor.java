@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.43 2004/04/15 15:28:20 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.44 2004/04/15 16:47:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -105,10 +105,10 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       
       /** We notify the player about the action result */
       RPObject player=zone.get(id);
-
       player.put("?"+action.get("action_id"), "" /* TODO: Replace status.toString() for a numerical code */ );
       trackObject(player);
       zone.modify(player);
+      
       return status;
       }
     catch(Exception e)

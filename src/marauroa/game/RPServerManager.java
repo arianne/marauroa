@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.59 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.60 2004/04/15 16:47:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,7 +202,6 @@ class RPServerManager extends Thread
     
     try
       {
-      playerContainer.getLock().requestWriteLock();
       ++deltaPerceptionSend;
 
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
@@ -273,7 +272,6 @@ class RPServerManager extends Thread
       }      
     finally
       {
-      playerContainer.getLock().releaseLock();
       marauroad.trace("RPServerManager::buildPerceptions","<");
       }
     }
@@ -348,11 +346,17 @@ class RPServerManager extends Thread
       catch(InterruptedException e)
         {
         }
+
+      playerContainer.getLock().requestWriteLock();
+
       buildPerceptions();
 
       zone.nextTurn();      
       scheduler.nextTurn();      
       ruleProcessor.nextTurn();
+
+      playerContainer.getLock().releaseLock();
+      
       stats.setObjectsNow(zone.size());
       }
     isfinished=true;    
