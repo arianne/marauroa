@@ -5,15 +5,15 @@ import junit.framework.*;
  * TestSuite that runs all the sample tests
  */
 public class RunTests
-{
-  public static void main (String[] args)
   {
+  public static void main (String[] args)
+    {
     //junit.swingui.TestRunner.run(RunTests.class);
     junit.textui.TestRunner.run(suite());
-  }
+    }
   
   public static Test suite ( )
-  {
+    {
     TestSuite suite= new TestSuite("All marauroa Tests");
     
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
@@ -36,5 +36,5 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
     
     return suite;
+    }
   }
-}
