@@ -441,7 +441,7 @@ public class nullClient extends Thread
       test[0]=new nullClient("bot_0","nopass","bot_0");
       test[1]=new nullClient("bot_1","nopass","bot_1");
       test[2]=new nullClient("bot_2","nopass","bot_2");
-      test[3]=new nullClient("bot_3","nopass","bot_3");
+      test[3]=new nullClient("bot_3","nopass","bot_3");      
       test[4]=new nullClient("bot_4","nopass","bot_4");
       test[5]=new nullClient("bot_5","nopass","bot_5");
       test[6]=new nullClient("bot_6","nopass","bot_6");

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.102 2004/06/20 18:44:42 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.103 2004/06/21 17:11:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -288,24 +288,29 @@ public class RPServerManager extends Thread
             {
             marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are to send a SYNC perception"); 
             playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
-            playerContainer.setOutOfSync(clientid,false);
             }
             
-          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN && !playerContainer.isOutOfSync(clientid))
+          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
             Perception perception;
             RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
-            if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
+            if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY && playerContainer.isOutOfSync(clientid))
               {
-              marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
+              playerContainer.setOutOfSync(clientid,false);
+              marauroad.trace("RPServerManager::buildPerceptions","D","Perception SYNC for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),Perception.SYNC);
               }
-            else
+            else if(!playerContainer.isOutOfSync(clientid))
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception DELTA for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),Perception.DELTA);
+              }
+            else
+              {
+              marauroad.trace("RPServerManager::buildPerceptions","D","NO Perception: Out of sync player ("+playerContainer.getRPObjectID(clientid).toString()+")");
+              perception=new Perception(Perception.SYNC);
               }
             
             int timestamp=playerContainer.getPerceptionTimestamp(clientid);

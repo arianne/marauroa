@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.50 2004/06/02 12:51:52 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.51 2004/06/21 17:11:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -164,19 +164,24 @@ public class MessageS2CPerception extends Message
     return perception_string.toString();
     }
   
-  private static byte[] precomputed_StaticPartPerception=null;
-  private static long precomputed_StaticPartSavedBytes=0;
+  private static byte[] precomputed_StaticPartPerceptionDelta=null;
+  private static byte[] precomputed_StaticPartPerceptionSync=null;
+  private static byte precomputed_StaticPartPerceptionType=Perception.DELTA;
+  private static long precomputed_StaticPartSavedBytesDelta=0;
+  private static long precomputed_StaticPartSavedBytesSync=0;
   
   public static void clearPrecomputedPerception()
     {
-    precomputed_StaticPartPerception=null;
-    precomputed_StaticPartSavedBytes=0;
+    precomputed_StaticPartPerceptionDelta=null;
+    precomputed_StaticPartPerceptionSync=null;
+    precomputed_StaticPartSavedBytesDelta=0;
+    precomputed_StaticPartSavedBytesSync=0;
     }
   
   private byte[] getPrecomputedStaticPartPerception() throws IOException
     {
-    if(precomputed_StaticPartPerception==null)
-      {      
+    if(typePerception==Perception.DELTA && precomputed_StaticPartPerceptionDelta==null)
+      {
       ByteArrayOutputStream array=new ByteArrayOutputStream();
       ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
       OutputSerializer serializer=new OutputSerializer(out_stream);
@@ -184,13 +189,35 @@ public class MessageS2CPerception extends Message
       computeStaticPartPerception(serializer);
       
       out_stream.close();
-      precomputed_StaticPartPerception=array.toByteArray();
+      precomputed_StaticPartPerceptionDelta=array.toByteArray();
       
-      precomputed_StaticPartSavedBytes=out_stream.getBytesWritten()-precomputed_StaticPartPerception.length;
+      precomputed_StaticPartSavedBytesDelta=out_stream.getBytesWritten()-precomputed_StaticPartPerceptionDelta.length;
       }
+    else if(typePerception==Perception.SYNC && precomputed_StaticPartPerceptionSync==null)
+      {
+      ByteArrayOutputStream array=new ByteArrayOutputStream();
+      ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
+      OutputSerializer serializer=new OutputSerializer(out_stream);
+      
+      computeStaticPartPerception(serializer);
+      
+      out_stream.close();
+      precomputed_StaticPartPerceptionSync=array.toByteArray();
+      
+      precomputed_StaticPartSavedBytesSync=out_stream.getBytesWritten()-precomputed_StaticPartPerceptionSync.length;
+      }
+     
     
-    Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytes);
-    return precomputed_StaticPartPerception;
+    if(typePerception==Perception.SYNC)
+      {      
+      Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytesSync);
+      return precomputed_StaticPartPerceptionSync;
+      }
+    else
+      {
+      Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytesDelta);
+      return precomputed_StaticPartPerceptionDelta;
+      }    
     }
 
   private byte[] getDynamicPartPerception() throws IOException

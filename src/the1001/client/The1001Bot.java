@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.37 2004/06/03 13:04:45 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.38 2004/06/21 17:11:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,7 +93,13 @@ public class The1001Bot
             reply.setClientID(msg.getClientID());
             netMan.addMessage(reply);
             MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-            handler.apply(msgPer,gm.getAllObjects());
+            try
+              {
+              handler.apply(msgPer,gm.getAllObjects());
+              }
+            catch(Exception e)
+              {
+              }
           }
           else if(msg instanceof MessageS2CLogoutACK)
           {

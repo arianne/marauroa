@@ -240,6 +240,7 @@ Changelog
 - Changed the calling order in RPAImanager
 - Added classes of RPObjects: RPClass
 - Improved the speed feeling on the game by a change on RPServerManager
+- Added per player synchronization
 
 0.36 Jun 04, 2004
 - Database modified to stored hashed passwords

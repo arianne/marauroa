@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.9 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.10 2004/06/21 17:11:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class PerceptionHandler
     
     public int onPerceptionBegin(byte type, int timestamp);
     public int onPerceptionEnd(byte type, int timestamp);
-    public int onException(Exception e);
+    public int onException(Exception e) throws Exception;
     }
   
   static public class DefaultPerceptionListener implements IPerceptionListener
@@ -104,11 +104,12 @@ public class PerceptionHandler
       return 0;
       }
       
-    public int onException(Exception e)
+    public int onException(Exception e) throws Exception
       {
       System.out.println(e.getMessage());
       e.printStackTrace();
-      return 0;
+      
+      throw e;      
       }      
     }
     
@@ -140,7 +141,7 @@ public class PerceptionHandler
     }
   **/
     
-  public void apply(MessageS2CPerception message, Map world_instance)
+  public void apply(MessageS2CPerception message, Map world_instance) throws Exception
     {
     listener.onPerceptionBegin(message.getTypePerception(), message.getPerceptionTimestamp());
     

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.53 2004/06/20 18:44:42 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.54 2004/06/21 17:11:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -226,8 +226,6 @@ public class MarauroaRPZone implements IRPZone
             marauroad.thrown("MarauroaRPZone::getPerception","X",e);
             }
           }
-
-        reset();
         }
       
       return prebuildDeltaPerception;
@@ -238,8 +236,6 @@ public class MarauroaRPZone implements IRPZone
         {
         prebuildTotalPerception=new Perception(Perception.SYNC);
         prebuildTotalPerception.addedList=new ArrayList(objects.values());
-        
-        reset();
         }
         
       return prebuildTotalPerception;
@@ -274,6 +270,8 @@ public class MarauroaRPZone implements IRPZone
   
   public void nextTurn()
     {
+    reset();
+    
     prebuildTotalPerception=null;
     prebuildDeltaPerception=null;
     modified.clear();
