@@ -100,7 +100,7 @@ class TestClient
             if(previous_timestamp+1!=msgPer.getTimestamp())
               {
               System.err.println("We are out of sync. Waiting for sync perception");
-              System.err.println("Expected"+previous_timestamp+" but we got "+msgPer.getTimestamp());
+              System.err.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getTimestamp());
               outofsync=true;
               /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */                
               }

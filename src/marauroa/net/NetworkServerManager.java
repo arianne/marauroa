@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.18 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.19 2004/04/15 18:19:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,6 +44,8 @@ public final class NetworkServerManager
       /* Create the socket and set a timeout of 1 second */
       socket=new DatagramSocket(NetConst.marauroa_PORT);
       socket.setSoTimeout(1000);
+      socket.setTrafficClass(0x08|0x10);
+      
       msgFactory=MessageFactory.getFactory();
       keepRunning=true;
       isfinished=false;

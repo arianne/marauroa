@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.61 2004/04/15 17:55:12 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.62 2004/04/15 18:19:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -345,7 +345,9 @@ class RPServerManager extends Thread
       stop=System.currentTimeMillis();
       try
         {
-        Thread.sleep(turnDuration-(stop-start));
+        marauroad.trace("RPServerManager::run","D","Turn took: "+Long.toString(stop-start)+" - Turn duration is: "+Long.toString(turnDuration));
+        long delay=turnDuration-(stop-start);
+        Thread.sleep(delay<0?0:delay);
         }
       catch(InterruptedException e)
         {
