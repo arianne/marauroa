@@ -563,8 +563,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
-      System.out.println("[MOOO] jdbc_class="+(String)props.get("jdbc_class"));
-      
       Class.forName((String)props.get("jdbc_class")).newInstance();
 
       Properties connInfo = new Properties();
