@@ -127,4 +127,8 @@ exchange_destSlot is the slot where the other object is.
 The action MUST be executed by both peers on the same terms so they agree and
 the action is executed.
 
+
+Actions reply are placed inside Objects and sent to clients as perceptions, so 
+please refer to the Action reply in Objects document.
+
 %% END %%
