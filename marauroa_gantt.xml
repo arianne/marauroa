@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ganttproject.sourceforge.net>
 
-<project name="" company="" view-date="1/9/2003" view-zoom="4" version="1.9.9">
+<project name="" company="" view-date="1/10/2003" view-zoom="4" version="1.9.9">
     <description>    </description>
 
     <tasks color="#8cb6ce">
@@ -96,16 +96,16 @@
         <task id="86" name="Release Marauroa 0.10" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="17/12/2003" duration="3" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="127" name="Maraurorize simpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="6" complete="22" priority="1">
+        <task id="127" name="Maraurorize simpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="6" complete="100" priority="1">
             <depend id="129" type="2"/>
         </task>
-        <task id="128" name="Fix bugs at simpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="5" complete="10" priority="1">
+        <task id="128" name="Fix bugs at simpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/12/2003" duration="5" complete="100" priority="1">
             <depend id="129" type="2"/>
         </task>
         <task id="130" name="New graphics for simpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/12/2003" duration="5" complete="0" priority="1">
             <depend id="129" type="2"/>
         </task>
-        <task id="129" name="Release Marauroa 0.11" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/12/2003" duration="3" complete="0" priority="1">
+        <task id="129" name="Release Marauroa 0.11" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/12/2003" duration="3" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="12" complete="18" priority="1">
