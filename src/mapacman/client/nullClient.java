@@ -245,27 +245,13 @@ public class nullClient extends Thread
                 
               RPAction turn=new RPAction();
               turn.put("type","turn");
-/**
-    If Not bWall(Ghost.X - 1, Ghost.Y) Then i = i + 1 'Left
-    If Not bWall(Ghost.X + 1, Ghost.Y) Then i = i + 1 'Right
-    If Not bWall(Ghost.X, Ghost.Y - 1) Then i = i + 1 'Up
-    If Not bWall(Ghost.X, Ghost.Y + 1) Then i = i + 1 'Down
-    
-    Select Case i
-    Case 1
-        'Dead end
-        'Here we reverse ghost direction
-    Case 2
-        'Corner or straight
-        'Go off in the direction which does not make us go
-        'back (check iLastX and iLastY parameters)
-    Case Else
-        'Intersection of some sort
-        'Check which route brings us closest to pacman
-        'and move that way
-    End If
-**/
+
               int i=0;
+              if((dir.equals("N") && map_objects.get(x,y-1)=='*')||
+                 (dir.equals("S") && map_objects.get(x,y+1)=='*')||
+                 (dir.equals("W") && map_objects.get(x-1,y)=='*')||
+                 (dir.equals("E") && map_objects.get(x+1,y)=='*'))
+                {
               if(map_objects.get(x,y-1)=='*') i++;
               if(map_objects.get(x,y+1)=='*') i++;
               if(map_objects.get(x-1,y)=='*') i++;
@@ -305,6 +291,7 @@ public class nullClient extends Thread
                 Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
                 msgTurn.setClientID(clientid);
                 netMan.addMessage(msgTurn);
+                }
                 }
                 
               map_objects.print(System.out,world_objects);
