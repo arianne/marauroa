@@ -164,9 +164,9 @@ public class Test_GameServerManager extends TestCase
 	try
 	  {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
-      netMan.addMessage(new MessageC2SLogin(address,"Wrong Test Player","Wrong Test Password"));
+      netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
       int clientid=-1;
-      
+
       int recieved=0;
       while(recieved!=1)
         {
@@ -185,7 +185,7 @@ public class Test_GameServerManager extends TestCase
           }        
         }
 
-      netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
       
       while(recieved!=3)
         {
@@ -232,6 +232,39 @@ public class Test_GameServerManager extends TestCase
       {
       finalizeEnviroment();
       }
-    }  
+    } 
 	
+  public void testMainChooseCharacterFailures()
+    {
+	createEnviroment();
+	
+	try
+	  {
+      InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
+      int clientid=-1;
+
+      Message msgCC=new MessageC2SChooseCharacter(address,"Son Goku");
+      msgCC.setClientID(clientid);  
+      netMan.addMessage(msgCC);
+      
+        
+        int i=0;
+        Message msg=null;
+        while(msg==null && i<10) 
+          {
+          msg=netMan.getMessage();
+          ++i;
+          }
+
+        if(i!=10)
+          {
+          fail("ERROR: Can choose character. Got "+msg.toString());
+          }
+        
+	  }
+    finally
+      {
+      finalizeEnviroment();
+      }
+    }  
   }
