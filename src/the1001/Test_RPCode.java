@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.16 2004/01/06 17:42:05 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.17 2004/01/06 23:20:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -210,7 +210,7 @@ public class Test_RPCode extends TestCase
     
   public void testRequestFame()
     {
-    marauroad.trace("Test_RPCode::testResolveFight",">");
+    marauroad.trace("Test_RPCode::testRequestFame",">");
     try
       {
       zone=new the1001RPZone();
@@ -290,6 +290,24 @@ public class Test_RPCode extends TestCase
         {
         RPCode.RequestFame();
         }
+
+      assertTrue(arena.has("timeout"));
+      assertTrue(arena.has("thumbs_up"));
+      assertTrue(arena.has("thumbs_down"));
+      assertTrue(arena.has("fame"));
+      assertTrue(player.has("vote"));
+      assertTrue(newplayer.has("vote"));
+
+      RPCode.RequestFame();
+      
+      assertEquals(arena.get("status"),"waiting");
+      
+      assertFalse(arena.has("timeout"));
+      assertFalse(arena.has("thumbs_up"));
+      assertFalse(arena.has("thumbs_down"));
+      assertFalse(arena.has("fame"));
+      assertFalse(player.has("vote"));
+      assertFalse(newplayer.has("vote"));
       }
     catch(Exception e)
       {
@@ -297,7 +315,7 @@ public class Test_RPCode extends TestCase
       }
     finally
       {     
-      marauroad.trace("Test_RPCode::testResolveFight","<");
+      marauroad.trace("Test_RPCode::testRequestFame","<");
       }
     }
   }
