@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.39 2003/12/21 02:07:57 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.40 2003/12/21 09:12:20 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -258,7 +258,10 @@ public class SimpleGame
 		}
 	}
 	
-	
+	/**
+	 * causes the calling thread to sleep the specified amount of <br>seconds</br>
+	 * @param timeout the amount of seconds to sleep
+	 **/
 	private static void sleep(long timeout)
 	{
 		try
@@ -270,7 +273,9 @@ public class SimpleGame
 		}
 	}
 	
-	
+	/**
+	 * represents the gameboard
+	 **/
 	private final class GameDisplay
 		extends JPanel
 	{
