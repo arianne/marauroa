@@ -117,6 +117,7 @@ public class JMarauroa extends javax.swing.JFrame {
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         // Add your handling code here:
         /* TODO: Write here the code to send Logout message */
+        Message msg=new MessageC2SLogout(null);
         netMan.finish();
         
         connectButton.setEnabled(true);
