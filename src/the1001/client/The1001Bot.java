@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.6 2004/03/08 21:26:09 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.7 2004/03/08 21:33:15 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,9 +67,10 @@ public class The1001Bot
   
   public void run()
   {
-    int time_out_max_count =10;
+    int time_out_max_count = 20;
     int timeout_count = 0;
     continueGamePlay = true;
+    boolean iamfighting = false;
     try
     {
       while(continueGamePlay)
@@ -136,6 +137,7 @@ public class The1001Bot
                 gm.setStatus(status);
                 if(RPCode.var_waiting.equals(status))
                 {
+                  iamfighting = false;
                   System.out.println("Arena waiting...");
                   if(Math.random()>0.1)
                   {
@@ -146,19 +148,20 @@ public class The1001Bot
                 }
                 else if(RPCode.var_request_fame.equals(status))
                 {
+                  iamfighting = false;
                   System.out.println("Vote!!!");
                   gm.vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
                 }
                 else if(RPCode.var_fighting.equals(status))
                 {
                   System.out.println("Fighting!!!");
-                  if(Math.random()>0.9)
+                  if(Math.random()>0.9 && !iamfighting)
                   {
                     gm.requestFight();
                     System.out.println("Requesting fight...");
                   }
                 }
-                if(Math.random()>0.9)
+                if(Math.random()>0.95)
                 {
                   gm.sendMessage(rndMsg[Math.abs(random.nextInt()%rndMsg.length)]);
                 }
@@ -212,6 +215,7 @@ public class The1001Bot
                       String own_gl_id = own_gl.get(RPCode.var_object_id);
                       if(own_gl_id.equals(new_fighters[x].get(RPCode.var_object_id)))
                       {
+                        iamfighting = true;
                         if(new_fighters[x].has(RPCode.var_hp))
                         {
                           int hp     = new_fighters[x].getInt(RPCode.var_hp);
@@ -433,5 +437,6 @@ public class The1001Bot
   
   
 }
+
 
 
