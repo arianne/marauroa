@@ -226,7 +226,9 @@ public class nullClient extends Thread
             {
             character=args[i+1];
             }
-          }        
+          
+          i++;
+          }
         
         new nullClient(username,password,character).start();
         return;

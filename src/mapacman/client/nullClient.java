@@ -423,12 +423,15 @@ public class nullClient extends Thread
             {
             character=args[i+1];
             }
+            
+          i++;
           }        
-        
+        System.out.println("Parameter operation");
         new nullClient(username,password,character).start();
         return;
         }
 
+      System.out.println("Non parameter operation");
       int num=1;
       nullClient test[]=new nullClient[num];
       
