@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.47 2004/05/11 22:11:38 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.48 2004/05/26 21:20:13 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -133,21 +133,26 @@ public final class GameServerManager extends Thread
     
   private static class ServerInfo
     {
-    static private String typeGame;
-    static private String name;
-    static private String version;
-    static private String contact;
+      static Configuration config;
+//    static private String typeGame;
+//    static private String name;
+//    static private String version;
+//    static private String contact;
     static
       {
       marauroad.trace("GameServerManager::ServerInfo::(static)",">");
       try
         {
-        Configuration conf=Configuration.getConfiguration();
-        
-        typeGame=conf.get("server_typeGame");
-        name=conf.get("server_name");
-        version=conf.get("server_version");
-        contact=conf.get("server_contact");
+        config=Configuration.getConfiguration();
+        //just check if mandatory properties are set
+	config.get("server_typeGame");
+	config.get("server_name");
+	config.get("server_version");
+	config.get("server_contact");
+//        typeGame=conf.get("server_typeGame");
+//        name=conf.get("server_name");
+//        version=conf.get("server_version");
+//        contact=conf.get("server_contact");
         }
       catch(Exception e)
         {
@@ -162,12 +167,31 @@ public final class GameServerManager extends Thread
       }
     public static String[] get()
       {
-      String[] result=new String[4];
-      
-      result[0]=typeGame;
-      result[1]=name;
-      result[2]=version;
-      result[3]=contact;
+      String[] result=null;
+      List l_result = new ArrayList();
+      Enumeration props = config.propertyNames();
+      while(props.hasMoreElements())
+      {
+        String prop_name = String.valueOf(props.nextElement());
+        if(prop_name.startsWith("server_"))
+	{
+	  try
+	  {
+	    l_result.add(config.get(prop_name));
+	  }
+	  catch(marauroa.Configuration.PropertyNotFoundException pnfe)
+	  {
+	    //cant be. only in multithreaded emvironment possible
+	    marauroad.trace("GameServerManager::ServerInfo::get","!","Property "+prop_name+" is not set???");
+	  }
+	}
+      }
+      result = new String[l_result.size()];
+      result = (String[])l_result.toArray(result);
+//      result[0]=typeGame;
+//      result[1]=name;
+//      result[2]=version;
+//      result[3]=contact;
       return result;
       }
     }
