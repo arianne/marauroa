@@ -1,4 +1,4 @@
-/* $Id: MessageS2CActionACK.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CActionACK.java,v 1.3 2003/12/12 16:33:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,8 @@ import java.io.*;
  */
 public class MessageS2CActionACK extends Message
   {
+  private int actionId;
+  
   /** Constructor for allowing creation of an empty message */
   public MessageS2CActionACK()
     {
@@ -30,9 +32,10 @@ public class MessageS2CActionACK extends Message
 
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
-  public MessageS2CActionACK(InetSocketAddress source)
+  public MessageS2CActionACK(InetSocketAddress source, int actionId)
     {
     super(source);
+    this.actionId=actionId;
     
     type=TYPE_S2C_ACTION_ACK;
     }  
@@ -41,17 +44,19 @@ public class MessageS2CActionACK extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Action ACK) from ("+source.toString()+") CONTENTS: ()";
+    return "Message (S2C Action ACK) from ("+source.toString()+") CONTENTS: (action_id="+actionId+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
-    super.writeObject(out);
+    super.writeObject(out);    
+    out.write(actionId);
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
-    super.readObject(in);
+    super.readObject(in);    
+    actionId=in.readInt();
     
     if(type!=TYPE_S2C_ACTION_ACK)
       {

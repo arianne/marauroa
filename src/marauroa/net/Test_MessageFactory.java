@@ -1,4 +1,4 @@
-/* $Id: Test_MessageFactory.java,v 1.8 2003/12/10 15:45:55 arianne_rpg Exp $ */
+/* $Id: Test_MessageFactory.java,v 1.9 2003/12/12 16:33:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -185,7 +185,7 @@ public class Test_MessageFactory extends TestCase
     Message msg_8=new MessageS2CLoginNACK(null,MessageS2CLoginNACK.SERVER_IS_FULL);
     Message msg_9=new MessageS2CLogoutACK(null);
     Message msg_10=new MessageS2CLogoutNACK(null);
-    Message msg_11=new MessageS2CActionACK(null);
+    Message msg_11=new MessageS2CActionACK(null,10023);
     
     ByteArrayOutputStream out_0=new ByteArrayOutputStream();
     ByteArrayOutputStream out_1=new ByteArrayOutputStream();

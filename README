@@ -59,11 +59,12 @@ Build
 -----
 You need ant properly installed on your system to build Marauroa.
 Once you have ant running, simple move to marauroa directory and run ant.
-Before running Ant you need to edit build.xml to point to correct Junit.jar file.
+Before running ant you need to edit build.xml in Marauroa to point to correct 
+Junit.jar file.
 
   <property name="junitlib" value="../../../classes/junit.jar"/>
 
-The save and run Ant.
+Then save and run ant.
 
 cd /foo/bar/marauroa
 ant jar

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.22 2003/12/09 00:02:58 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.23 2003/12/12 16:33:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -386,6 +386,7 @@ public class GameServerManager extends Thread
       }
     }
     
+  static int lastActionIdGenerated=0;
     
   private void processActionEvent(MessageC2SAction msg)
     {
@@ -419,16 +420,19 @@ public class GameServerManager extends Thread
 	  /* Send the action to RP Manager */
 	  RPAction action=msg.getRPAction();
 	  
-	  /* Enforce source_id */
+	  /* Enforce source_id and action_id*/
 	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
 	  action.put("source_id",id.getObjectID());
+	  action.put("action_id",lastActionIdGenerated);
 	  
 	  rpMan.addRPAction(action);
 
 	  /* Notify client that we recieved the action */
-	  MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress());
+	  MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),lastActionIdGenerated);
       msgAction.setClientID(clientid);
 	  netMan.addMessage(msgAction);	  
+	  
+	  ++lastActionIdGenerated;
       }
     catch(Exception e)      
       {

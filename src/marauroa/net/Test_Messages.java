@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.7 2003/12/10 16:09:59 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.8 2003/12/12 16:33:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -597,7 +597,7 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CActionACK",">");
     int clientid=14324;
     
-    MessageS2CActionACK msg=new MessageS2CActionACK(null);
+    MessageS2CActionACK msg=new MessageS2CActionACK(null,123416);
     msg.setClientID(clientid);
     
     out=new ByteArrayOutputStream();
