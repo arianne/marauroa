@@ -32,7 +32,7 @@ public class Configuration
     public String getMessage()
       {
       return message;
-      }     
+      }
     }
 
   private Configuration() throws PropertyFileNotFoundException
@@ -41,8 +41,16 @@ public class Configuration
     try
       {
       properties=new Properties();
-      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
-      properties.load(new FileInputStream(file));
+//      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+    InputStream is = getClass().getClassLoader().getResourceAsStream(configurationFile);
+    if(is!=null)
+    {
+        properties.load(getClass().getClassLoader().getResourceAsStream(configurationFile));
+    }
+    else
+    {
+      //the configuration file is not found, what now???
+    }
       }
     catch(FileNotFoundException e)
       {
@@ -58,7 +66,7 @@ public class Configuration
       }
 
     marauroad.trace("Configuration","<");
-    }    
+    }
     
   public static Configuration getConfiguration() throws PropertyFileNotFoundException
     {
