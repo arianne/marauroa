@@ -125,7 +125,12 @@ public class generateini
 
     System.out.println("Using \""+databasepassword+"\" as database user password");
     System.out.println();
-    
+    System.out.println("In order to make efective these options please run:");
+    System.out.println("# mysql");
+    System.out.println("  create database "+databasename+";");
+    System.out.println("  grant all on "+databasename+".* to "+databaseuser+"@localhost identified by '"+databasepassword+"';");
+    System.out.println("  exit");   
+    System.out.println();
     
     /** Choose port that will be used */    
     System.out.print("Write UDP port used by Marauroa (>1024): ");
