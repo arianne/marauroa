@@ -9,7 +9,7 @@
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
 
-  <target name="init">
+  <target name="init" depends="clean">
     <mkdir dir="${build}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
