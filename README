@@ -90,10 +90,10 @@ Read simpleGame/README about how to play it.
 
 Changelog
 ---------
-0.10 	Dic XX, 2003
+0.10 	Dic 16, 2003
 - simpleGame working.
-- First steps of Gladiators
 - sound support
+- First steps of Gladiators
 
 0.04 	Dic 11, 2003
 - Fixed FATAL bug at NetworkServerManager and JMarauroa
