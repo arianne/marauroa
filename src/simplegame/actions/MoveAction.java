@@ -16,7 +16,7 @@ public class MoveAction
   
   public MoveAction()
   {
-    put("type",ACTION_MOVE);
+    actionType=ACTION_MOVE;
   }
   
   public void setRow(int row)

@@ -14,9 +14,11 @@ public class GameBoard
   extends RPObject
   implements SimpleGameDataModelIF
 {
+  public final static int TYPE_GAME_BOARD=3;
   
   public GameBoard(int size)
   {
+    objectType=TYPE_GAME_BOARD;
     put("size",size);
     put("l_id",-1);
   }

@@ -6,6 +6,7 @@
 
 package simplegame.actions;
 
+import marauroa.game.Attributes;
 import marauroa.game.RPAction;
 
 public class ChallengeAction
@@ -15,7 +16,7 @@ public class ChallengeAction
   
   public ChallengeAction()
   {
-    put("type",ACTION_CHALLENGE);
+    actionType=ACTION_CHALLENGE;
   }
   
   //Who is challenge
@@ -30,10 +31,30 @@ public class ChallengeAction
     put("whom",charID);
   }
   
-  //  public int getWho()
-  //  {
-  //    returnput("who",charID);
-  //  }
+  public int getWho()
+  {
+    int ret = -1;
+    try
+    {
+      ret = Integer.parseInt(get("who"));
+    }
+    catch (NumberFormatException e) {}
+    catch (Attributes.AttributeNotFoundException e) {}
+    return(ret);
+  }
+  
+  public int getWhom()
+  {
+    int ret = -1;
+    try
+    {
+      ret = Integer.parseInt(get("whom"));
+    }
+    catch (NumberFormatException e) {}
+    catch (Attributes.AttributeNotFoundException e) {}
+    return(ret);
+  }
+  
   
   
 }

@@ -12,9 +12,9 @@ public class GetCharacterListAction
   extends RPAction
 {
   public final static int ACTION_GETCHARLIST=3;
-    public GetCharacterListAction()
+  public GetCharacterListAction()
   {
-    put("type",ACTION_GETCHARLIST);
+    actionType=ACTION_GETCHARLIST;
   }
 }
 

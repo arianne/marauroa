@@ -20,9 +20,21 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
-import marauroa.game.*;
-import marauroa.net.*;
+import marauroa.game.Attributes;
+import marauroa.game.RPActionFactory;
+import marauroa.game.RPObject;
+import marauroa.game.RPObjectFactory;
+import marauroa.game.RPSlot;
+import marauroa.net.Message;
+import marauroa.net.MessageC2SAction;
+import marauroa.net.MessageC2SPerceptionACK;
+import marauroa.net.MessageS2CPerception;
+import marauroa.net.NetworkClientManager;
+import simplegame.actions.ChallengeAction;
+import simplegame.actions.ChallengeAnswer;
+import simplegame.actions.GetCharacterListAction;
 import simplegame.actions.MoveAction;
+import simplegame.objects.CharacterList;
 import simplegame.objects.GameBoard;
 
 public class SimpleGame
@@ -32,15 +44,27 @@ public class SimpleGame
   private NetworkClientManager netMan;
   private SimpleGameDataModel gdm;
   private JMarauroa marauroa;
-  private RPObject.ID ownCharacterID;
-  private RPObject.ID otherCharacterID;
+  private int ownCharacterID;
+  private int otherCharacterID;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
     netMan = netman;
+    
+    //register our objects
+    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
+    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST_ENTRY,CharacterList.CharEntry.class);
+    RPObjectFactory.getFactory().register(GameBoard.TYPE_GAME_BOARD,GameBoard.class);
+    
+    //register our actions
+    RPActionFactory.getFactory().register(ChallengeAction.ACTION_CHALLENGE,ChallengeAction.class);
+    RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
+    RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
+    RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
+    
     this.marauroa = marauroa;
-    this.ownCharacterID=characterID;
-    otherCharacterID = new RPObject.ID(4711);
+    this.ownCharacterID=characterID.getObjectID();
+    this.otherCharacterID=-1;
     gdm = new SimpleGameDataModel(3);
     initComponents();
     addWindowListener(new WindowAdapter()
@@ -68,46 +92,52 @@ public class SimpleGame
         {
           if(msg instanceof MessageS2CPerception)
           {
-          	MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
-          	replyMsg.setClientID(msg.getClientID());
-          	netMan.addMessage(replyMsg);
-          	
+            MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
+            replyMsg.setClientID(msg.getClientID());
+            netMan.addMessage(replyMsg);
             MessageS2CPerception perception = (MessageS2CPerception)msg;
             List modified_objects = perception.getModifiedRPObjects();
             if(modified_objects!=null && modified_objects.size()>0)
             {
-              for (int i = 0; i < modified_objects.size(); i++)
+              //the only object we should see hier is the player object itself.
+              RPObject obj = (RPObject)modified_objects.get(0);
+              addLog(obj.toString()+"\n");
+              
+              // now it can be one of three things:
+              // 1. GameBoard in "hand" slot
+              // 2. CharacterList in "ear" slot
+              // 3. other RPPlayer in "challenge" slot
+              
+              try //gameboard
               {
-                RPObject obj = (RPObject)modified_objects.get(i);
-                addLog(obj.toString()+"\n");
-                try
+                GameBoard gb = (GameBoard)obj.getSlot("hand").get();
+                int size = gb.getSize();
+                for (int k = 0; k < size; k++)
+                {
+                  for (int l = 0; l < size; l++)
+                  {
+                    int id = gb.getRPCharacterAt(k,l);
+                    gdm.setRPCharacterAt(k,l,id);
+                  }
+                }
+              }
+              catch (Exception e1)
+              {
+                try //charcterlist
+                {
+                  CharacterList clist = (CharacterList)obj.getSlot("ear").get();
+                  addLog(""+clist+"\n");
+                }
+                catch(Exception e2)
                 {
                   try
                   {
-                    RPObject gb = obj.getSlot("hand").get();
-                    int size = Integer.parseInt(gb.get("size"));
-                    for (int k = 0; k < size; k++)
-                    {
-                      for (int l = 0; l < size; l++)
-                      {
-                        int id = GameBoard.getRPCharacterAt(gb,k,l);
-                        gdm.setRPCharacterAt(k,l,id);
-                      }
-                    }
+                    RPObject other_player = obj.getSlot("challenge").get();
+                    addLog(""+other_player+"\n");
                   }
-                  catch (RPObject.NoSlotFoundException e)
+                  catch(Exception e3)
                   {
-                    e.printStackTrace();
                   }
-                  catch (RPSlot.RPObjectNotFoundException e)
-                  {
-                  	e.printStackTrace();
-                  }
-                }
-                catch (Attributes.AttributeNotFoundException e)
-                {
-                  e.printStackTrace();
-                  //e.printStackTrace();
                 }
               }
             }
@@ -116,7 +146,7 @@ public class SimpleGame
       }
       else
       {
-        sleep(5);
+        sleep(50);
       }
     }
   }
@@ -174,13 +204,13 @@ public class SimpleGame
         {
           y=starty+j*cell_height;
           Color color = null;
-          if(otherCharacterID!=null)
+          if(otherCharacterID!=-1)
           {
-            if(otherCharacterID.getObjectID()==gameDataModel.getRPCharacterAt(j,i))
+            if(otherCharacterID==gameDataModel.getRPCharacterAt(j,i))
             {
               color = Color.red;
             }
-            else if(ownCharacterID.getObjectID()==gameDataModel.getRPCharacterAt(j,i))
+            else if(ownCharacterID==gameDataModel.getRPCharacterAt(j,i))
             {
               color = Color.green;
             }
@@ -199,24 +229,34 @@ public class SimpleGame
     {
       public void mouseClicked(MouseEvent e)
       {
-        int w = getWidth();
-        int h = getHeight();
-        int board_size = gameDataModel.getSize();
-        int cell_width  = w/board_size;
-        int cell_height = h/board_size;
-        Point pnt = e.getPoint();
-        int column = pnt.x/cell_width + (pnt.x%cell_width>0?1:0)-1;
-        int row = pnt.y/cell_height + (pnt.y%cell_height>0?1:0)-1;
-        if(netMan!=null)
+        if(otherCharacterID==-1)
         {
-          MoveAction rpaction = new MoveAction();
-          rpaction.put("object_id", ""+ownCharacterID.getObjectID());
-          rpaction.setRow(row);
-          rpaction.setColumn(column);
+          addLog("get the list of players...\n");
+          GetCharacterListAction rpaction = new GetCharacterListAction();
           MessageC2SAction msg = new MessageC2SAction(null,rpaction);
           netMan.addMessage(msg);
         }
-        addLog("Player makes move on [" +row +","+column+"]\n");
+        else
+        {
+          int w = getWidth();
+          int h = getHeight();
+          int board_size = gameDataModel.getSize();
+          int cell_width  = w/board_size;
+          int cell_height = h/board_size;
+          Point pnt = e.getPoint();
+          int column = pnt.x/cell_width + (pnt.x%cell_width>0?1:0)-1;
+          int row = pnt.y/cell_height + (pnt.y%cell_height>0?1:0)-1;
+          if(netMan!=null)
+          {
+            MoveAction rpaction = new MoveAction();
+            rpaction.put("object_id", ""+ownCharacterID);
+            rpaction.setRow(row);
+            rpaction.setColumn(column);
+            MessageC2SAction msg = new MessageC2SAction(null,rpaction);
+            netMan.addMessage(msg);
+          }
+          addLog("Player makes move on [" +row +","+column+"]\n");
+        }
       }
     }
   }
