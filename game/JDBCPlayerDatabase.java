@@ -12,8 +12,7 @@ import marauroa.*;
 
 
 /** This is JDBC interface to the database.
- *  Actually it is limited to MySQL because we are using the AUTO_INCREMENT keyword.
- */
+ *  Actually it is limited to MySQL because we are using the AUTO_INCREMENT keyword. */
 public class JDBCPlayerDatabase implements PlayerDatabase
   {
   /** Class to store the login events */
