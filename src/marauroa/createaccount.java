@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.22 2004/04/26 15:18:34 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.24 2004/04/26 15:42:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,16 +46,12 @@ public abstract class createaccount
       }
     }
     
-  public static void execute(createaccount instance,String[] args)
-    {
-    System.exit(instance.run(args));
-    }
-  
   protected List information;
     
   public createaccount()
     {
     information= new LinkedList();
+    
     information.add(new Information("-u","username",4,20));
     information.add(new Information("-p","password",4,256));
     information.add(new Information("-e","email"));
@@ -68,7 +64,7 @@ public abstract class createaccount
       {
       Information item=(Information)it.next();
       
-      if(item.equals(name))
+      if(item.name.equals(name))
         {
         return item.value;
         }
@@ -79,7 +75,7 @@ public abstract class createaccount
     
   public abstract RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception;
 
-  private int run(String[] args)
+  protected int run(String[] args)
     {
     /** TODO: Factorize this method */
     int i=0;
@@ -90,9 +86,11 @@ public abstract class createaccount
         {
         Information item=(Information)it.next();
         
-        if(args[i].equals(item))
+        if(args[i].equals(item.param))
           {
           item.value=args[i+1];
+          System.out.println(item.name+"="+item.value);
+          break;
           }
         }
       
@@ -105,17 +103,8 @@ public abstract class createaccount
           System.out.println(item.param+" to use/add "+item.name);
           }
         }
+        
       ++i;
-      }
-    
-    for(Iterator it=information.iterator();it.hasNext();)
-      {
-      Information item=(Information)it.next();
-      
-      if(item.value.equals(""))
-        {        
-        return 1;
-        }
       }
     
     Transaction trans=null;
@@ -132,12 +121,24 @@ public abstract class createaccount
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       trans=playerDatabase.getTransaction();
       
+      out.println("Checking for null/empty string");
+      for(Iterator it=information.iterator();it.hasNext();)
+        {
+        Information item=(Information)it.next();
+       
+        if(item.value.equals(""))
+          {        
+          out.println("String is empty or null: "+item.name);
+          return 1;
+          }
+        }      
+
       out.println("Checking for valid string");
       for(Iterator it=information.iterator();it.hasNext();)
         {
         Information item=(Information)it.next();
         
-        if(playerDatabase.validString(item.value))
+        if(!playerDatabase.validString(item.value))
           {
           out.println("String not valid: "+item.name);
           return 2;
