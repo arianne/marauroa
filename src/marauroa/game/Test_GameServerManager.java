@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.8 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.9 2003/12/08 17:11:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,7 +102,7 @@ public class Test_GameServerManager extends TestCase
       int clientid=-1;
       
       int recieved=0;
-      while(recieved!=2)
+      while(recieved!=3)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -118,6 +118,11 @@ public class Test_GameServerManager extends TestCase
           assertTrue("Recieved character list",true);
           ++recieved;
           }
+        else if(msg instanceof MessageS2CServerInfo)
+          {
+          assertTrue("Recieved server info",true);
+          ++recieved;
+          }
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
@@ -128,7 +133,7 @@ public class Test_GameServerManager extends TestCase
       msgCC.setClientID(clientid);      
       netMan.addMessage(msgCC);
       
-      while(recieved!=3)
+      while(recieved!=4)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -151,7 +156,7 @@ public class Test_GameServerManager extends TestCase
       msgL.setClientID(clientid);      
       netMan.addMessage(msgL);
       
-      while(recieved!=4)
+      while(recieved!=5)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -210,7 +215,7 @@ public class Test_GameServerManager extends TestCase
 
 	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
       
-      while(recieved!=3)
+      while(recieved!=4)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -226,6 +231,11 @@ public class Test_GameServerManager extends TestCase
           assertTrue("Recieved character list",true);
           ++recieved;
           }
+        else if(msg instanceof MessageS2CServerInfo)
+          {
+          assertTrue("Recieved server info",true);
+          ++recieved;
+          }
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
@@ -234,7 +244,7 @@ public class Test_GameServerManager extends TestCase
 
       netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
       
-      while(recieved!=4)
+      while(recieved!=5)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -287,7 +297,7 @@ public class Test_GameServerManager extends TestCase
       msgL.setClientID(clientid);      
       netMan.addMessage(msgL);
       
-      while(recieved!=5)
+      while(recieved!=6)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -343,7 +353,7 @@ public class Test_GameServerManager extends TestCase
 	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
 	  int recieved=0;
       
-      while(recieved!=2)
+      while(recieved!=3)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -359,6 +369,11 @@ public class Test_GameServerManager extends TestCase
           assertTrue("Recieved character list",true);
           ++recieved;
           }
+        else if(msg instanceof MessageS2CServerInfo)
+          {
+          assertTrue("Recieved server info",true);
+          ++recieved;
+          }
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
@@ -369,7 +384,7 @@ public class Test_GameServerManager extends TestCase
       msgCCFail.setClientID(clientid);  
       netMan.addMessage(msgCCFail);
       
-      while(recieved!=3)
+      while(recieved!=4)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
@@ -421,7 +436,7 @@ public class Test_GameServerManager extends TestCase
       msgL.setClientID(clientid);      
       netMan.addMessage(msgL);
       
-      while(recieved!=4)
+      while(recieved!=5)
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
