@@ -20,7 +20,7 @@ public class MessageS2CChooseCharacterACK extends Message
     type=TYPE_S2C_CHOOSECHARACTER_ACK;
     }
 
-  /** Constructor with a TCP/IP source/destination of the message 
+  /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
   public MessageS2CChooseCharacterACK(InetSocketAddress source, RPObject.ID id)
     {
@@ -28,16 +28,16 @@ public class MessageS2CChooseCharacterACK extends Message
     this.id=id;
     
     type=TYPE_S2C_CHOOSECHARACTER_ACK;
-    }  
+    }
    
-  /** This method returns the object id of the choosen character 
+  /** This method returns the object id of the choosen character
    *  @returns RPObject.ID of the choosen character */
-  RPObject.ID getObjectID()
+  public RPObject.ID getObjectID()
     {
     return id;
     }
 
-  /** This method returns a String that represent the object 
+  /** This method returns a String that represent the object
    *  @return a string representing the object.*/
   public String toString()
     {
@@ -60,7 +60,7 @@ public class MessageS2CChooseCharacterACK extends Message
       {
       throw new java.lang.ClassNotFoundException();
       }
-    }    
+    }
   };
 
 
