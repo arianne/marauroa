@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.33 2004/03/04 17:04:42 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.34 2004/03/04 22:27:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -209,6 +209,8 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       while(it.hasNext())
         {
         RPObject slot_object=(RPObject)it.next();
+        
+        slot_object.put(RPCode.var_hp,slot_object.get(RPCode.var_initial_hp));
         
         valid_id=new RPObject.ID(zone.create());
         slot_object.put(RPCode.var_object_id,valid_id.getObjectID());
