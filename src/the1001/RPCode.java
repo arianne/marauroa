@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.53 2004/02/18 12:09:43 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.54 2004/02/19 19:45:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -785,7 +785,7 @@ public class RPCode
       }
     finally
       {
-      marauroad.trace("RPCode::Vote","<");
+      marauroad.trace("RPCode::Chat","<");
       }
     }
   }
