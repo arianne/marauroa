@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.4 2003/12/12 18:31:47 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.5 2003/12/12 18:57:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,5 +60,11 @@ public class the1001RPZone extends MarauroaRPZone
     {
     return heroesHouse;
     }
+    
+  public RPObject create(RPObject object)
+    {
+    /** TODO: Must copy the object and assign a new Object id */
+    return null;
+    }    
   }
   
