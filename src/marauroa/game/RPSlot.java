@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.33 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.34 2004/11/20 21:48:03 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /** This class represent a slot in an object */
-public class RPSlot implements marauroa.net.Serializable, Cloneable
+public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RPObject>
   {
   private List<RPObject> added;
   private List<RPObject> deleted;
@@ -289,9 +289,9 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     {
     return objects.size();
     }
-  
+
   /** Iterate over the objects of the slot */
-  public Iterator iterator()
+  public Iterator<RPObject> iterator()
     {
     return objects.iterator();
     }
