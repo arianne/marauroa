@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.14 2004/03/04 17:04:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.15 2004/03/04 20:12:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,7 +166,7 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
       
-    ser.readObject(myRPObject);
+    myRPObject=ser.readObject(new RPObject());
     }
     
   };
