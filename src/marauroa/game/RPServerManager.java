@@ -34,7 +34,6 @@ public class RPServerManager extends Thread
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
       
-      // NOTE: ( miguel: ) IMO We should avoid as much as possible optional components.
       try
         {
         String duration =conf.get("rp_turnDuration");
