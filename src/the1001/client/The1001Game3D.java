@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.15 2004/04/25 09:27:44 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.16 2004/05/01 10:22:08 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -641,14 +641,42 @@ public class The1001Game3D
           try
           {
             timeout      = rpArena.get(RPCode.var_timeout);
-            thumbs_up    = rpArena.get(RPCode.var_thumbs_up);
-            thumbs_down  = rpArena.get(RPCode.var_thumbs_down);
-            waiting      = rpArena.get(RPCode.var_waiting);
-            fame         = rpArena.get(RPCode.var_fame);
           }
           catch (Attributes.AttributeNotFoundException e)
           {
-            timeout ="no_attr";
+            timeout ="?";
+          }
+          try
+          {
+            thumbs_up    = rpArena.get(RPCode.var_thumbs_up);
+          }
+          catch (Attributes.AttributeNotFoundException e)
+          {
+            thumbs_up ="?";
+          }
+          try
+          {
+            thumbs_down  = rpArena.get(RPCode.var_thumbs_down);
+          }
+          catch (Attributes.AttributeNotFoundException e)
+          {
+            thumbs_down ="?";
+          }
+          try
+          {
+            waiting      = rpArena.get(RPCode.var_waiting);
+          }
+          catch (Attributes.AttributeNotFoundException e)
+          {
+            waiting ="?";
+          }
+          try
+          {
+            fame         = rpArena.get(RPCode.var_karma);
+          }
+          catch (Attributes.AttributeNotFoundException e)
+          {
+            fame ="?";
           }
         }
         centerText3D.setString("Request fame("+fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting);
@@ -656,6 +684,10 @@ public class The1001Game3D
       else if(RPCode.var_fighting.equals(mode))
       {
         centerText3D.setString("");
+      }
+      else if(RPCode.var_setting_next_combat.equals(mode))
+      {
+        centerText3D.setString("Wait for next combat...");
       }
     }
     
