@@ -30,9 +30,20 @@ public class RPClass implements Serializable
   static private class AttributeDesc implements Serializable
     {
     private static short lastCode=0;
-    private static short getValidCode()
+    private static Map attributeIntegerMap;
+    static
       {
-      return ++lastCode;
+      attributeIntegerMap=new HashMap();
+      }      
+    
+    private static short getValidCode(String name)
+      {
+      if(!attributeIntegerMap.containsKey(name))
+        {
+        attributeIntegerMap.put(name,new Short(++lastCode));
+        }
+
+      return ((Short)attributeIntegerMap.get(name)).shortValue();
       }
       
     public AttributeDesc()
@@ -41,7 +52,7 @@ public class RPClass implements Serializable
       
     public AttributeDesc(String name, byte type, byte visibility)
       {
-      code=getValidCode();
+      code=getValidCode(name);
       this.name=name;
       this.type=type;
       this.visibility=visibility;
