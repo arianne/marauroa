@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.29 2003/12/08 12:39:53 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.30 2003/12/08 23:10:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -293,6 +293,7 @@ class RPServerManager extends Thread
     catch(Exception e)
       {
       marauroad.trace("RPServerManager::removeTimedoutPlayers","!","Can't remove a player(-not available-) that timedout");
+      System.exit(-1);
       }
     finally
       {

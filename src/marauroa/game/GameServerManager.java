@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.19 2003/12/08 17:02:55 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.20 2003/12/08 23:10:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,7 +95,7 @@ public class GameServerManager extends Thread
       {
       while(keepRunning)
         {
-        Message msg=netMan.getMessage(1000);
+        Message msg=netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
        
         if(msg!=null)
           {

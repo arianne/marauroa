@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.7 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.8 2003/12/08 23:10:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,7 @@ package marauroa.net;
 import java.net.*;
 import java.util.*;
 import java.io.*;
-
-import marauroa.marauroad;
+import marauroa.*;
 
 /** The NetworkClientManager is in charge of sending and recieving the packages 
  *  from the network. */
@@ -46,7 +45,7 @@ public class NetworkClientManager
     clientid=0;
     address=new InetSocketAddress(host,NetConst.marauroa_PORT);
     socket=new DatagramSocket();
-    socket.setSoTimeout(100);
+    socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
     
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new HashMap();
@@ -83,7 +82,7 @@ public class NetworkClientManager
           return msg;
           }
         
-        if(new Date().getTime()-message.timestamp.getTime()>3000)
+        if(new Date().getTime()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
           {
           System.out.println("NetworkClientManager: deleted incompleted message after timedout");
           pendingPackets.remove(new Byte(message.signature));
@@ -104,7 +103,7 @@ public class NetworkClientManager
     try
       {
       /** We want to avoid this to block the whole client recieving messages */
-      while(i<5)
+      while(i<TimeoutConf.CLIENT_NETWORK_NUM_READ)
         {
         ++i;
         

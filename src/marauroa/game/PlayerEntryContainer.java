@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.15 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.16 2003/12/08 23:10:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -346,7 +346,6 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
-      marauroad.trace("PlayerEntryContainer::addLoginEvent","!","This should never happens");
       throw new NoSuchPlayerException(username);
       }
     finally
@@ -377,6 +376,7 @@ public class PlayerEntryContainer
           {
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
           marauroad.trace("PlayerEntryContainer::getLoginEvent","!","This should never happens");
+          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -444,7 +444,9 @@ public class PlayerEntryContainer
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
-          marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(unknown)");
+          marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(-not available-)");
+          marauroad.trace("PlayerEntryContainer::hasCharacter","!","This should never happens");
+          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -510,6 +512,8 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
+          marauroad.trace("PlayerEntryContainer::getCharacterList","!","This should never happens");
+          System.exit(-1);
           throw new NoSuchPlayerException("- not available -");
           }
         }
@@ -532,7 +536,7 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
-   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
+   *  @throws NoSuchPlayerException  if the player doesn't exist in database. */
   public RPObject getRPObject(int clientid, String character) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::getRPObject",">");
@@ -552,6 +556,8 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
+      marauroad.trace("PlayerEntryContainer::getRPObject","!","This should never happens");
+      System.exit(-1);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
@@ -599,6 +605,8 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
+      marauroad.trace("PlayerEntryContainer::setRPObject","!","This should never happens");
+      System.exit(-1);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
@@ -644,6 +652,8 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Player(unknown)");
+      marauroad.trace("PlayerEntryContainer::getRPObjectID","!","This should never happens");
+      System.exit(-1);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
@@ -751,7 +761,7 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));         
         long value=new Date().getTime()-entry.timestamp.getTime();
-        if(value>GameConst.TIMEOUT)
+        if(value>TimeoutConf.GAMESERVER_PLAYER_TIMEOUT)
           {
           return true;
           }
