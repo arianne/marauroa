@@ -616,13 +616,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       Statement stmt = connection.createStatement();
       
-      String query = "drop table player";
+      String query = "drop table if exists player";
 
       stmt.addBatch(query);
-      query = "drop table characters";
+      query = "drop table if exists characters";
 
       stmt.addBatch(query);
-      query = "drop table loginEvent";
+      query = "drop table if exists loginEvent";
 
       stmt.addBatch(query);
       int ret_array[] = stmt.executeBatch();
@@ -651,13 +651,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       Statement stmt = connection.createStatement();
       
-      String query = "CREATE TABLE IF NOT EXIST player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
+      String query = "CREATE TABLE IF NOT EXISTS player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
       stmt.addBatch(query);
 
-      query = "CREATE TABLE IF NOT EXIST characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(charname))";
+      query = "CREATE TABLE IF NOT EXISTS characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(charname))";
       stmt.addBatch(query);
 
-      query = "CREATE TABLE IF NOT EXIST loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
+      query = "CREATE TABLE IF NOT EXISTS loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
       stmt.addBatch(query);
 
       int ret_array[] = stmt.executeBatch();
