@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.20 2004/04/30 20:37:53 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.21 2004/05/01 07:41:52 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -142,59 +142,45 @@ public class The1001Game
     {
       try
       {
-        msg=netMan.getMessage();
-        if(msg!=null)
+        msg = null;
+        while(msg==null) msg=netMan.getMessage();
+        if(msg instanceof MessageS2CPerception)
         {
-          if(msg instanceof MessageS2CPerception)
-          {
-            MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
-            reply.setClientID(msg.getClientID());
-            netMan.addMessage(reply);
-            MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-            handler.apply(msgPer,gm.getAllObjects());
-          }
-          else if(msg instanceof MessageS2CLogoutACK)
-          {
-            loggedOut=true;
-            marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
-            sleep(30);
-            System.exit(-1);
-          }
-          else if(msg instanceof MessageS2CActionACK)
-          {
-            MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
-            marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
-          }
-          else
-          {
-            marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
-          }
+          MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+          reply.setClientID(msg.getClientID());
+          netMan.addMessage(reply);
+          MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+          handler.apply(msgPer,gm.getAllObjects());
         }
-        else // null message - sleep a little to not abuse cpu
+        else if(msg instanceof MessageS2CLogoutACK)
         {
-          sleep(5);
+          loggedOut=true;
+          marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
+          try
+          {
+            Thread.sleep(30000);
+          }
+          catch (InterruptedException e)
+          {
+          }
+          System.exit(-1);
         }
+        else if(msg instanceof MessageS2CActionACK)
+        {
+          MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
+          marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
+        }
+        else
+        {
+          marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
+        }
+        
       }
       catch (MessageFactory.InvalidVersionException e)
       {
         marauroad.trace("The1001Bot.messageLoop","X","Invalid protocol version");
         System.exit(-1);
       }
-    }
-  }
-  
-  /**
-   * causes the calling thread to sleep the specified amount of <b>seconds</b>
-   * @param timeout the amount of seconds to sleep
-   **/
-  private static void sleep(long timeout)
-  {
-    try
-    {
-      Thread.sleep(timeout*1000);
-    }
-    catch (InterruptedException e)
-    {
     }
   }
   
