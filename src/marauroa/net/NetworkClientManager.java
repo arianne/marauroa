@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.10 2004/03/02 15:49:07 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.11 2004/03/02 20:54:44 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,7 @@ import java.util.*;
 import java.io.*;
 import marauroa.*;
 
-/** The NetworkClientManager is in charge of sending and recieving the packages 
+/** The NetworkClientManager is in charge of sending and recieving the packages
  *  from the network. */
 public class NetworkClientManager
   {
@@ -32,9 +32,9 @@ public class NetworkClientManager
     public byte signature;
     public byte remaining;
     public byte[] content;
-    public InetSocketAddress address;    
+    public InetSocketAddress address;
     public Date timestamp;
-    }    
+    }
   
   private Map pendingPackets;
 
@@ -62,7 +62,7 @@ public class NetworkClientManager
   public Message getMessage()
     {
     try
-      {          
+      {
       Iterator it=pendingPackets.entrySet().iterator();
       while(it.hasNext())
         {
@@ -70,15 +70,15 @@ public class NetworkClientManager
         PacketContainer message=(PacketContainer)entry.getValue();
         if(message.remaining==0)
           {
-          Message msg=msgFactory.getMessage(message.content,message.address);      
+					//delete the message from queue to prevent loop if it is a bad message
+					pendingPackets.remove(new Byte(message.signature));
+          Message msg=msgFactory.getMessage(message.content,message.address);
           System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
       
           if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
             {
-            clientid=msg.getClientID();        
+            clientid=msg.getClientID();
             }
-              
-          pendingPackets.remove(new Byte(message.signature));
           return msg;
           }
         
@@ -86,6 +86,7 @@ public class NetworkClientManager
           {
           System.out.println("NetworkClientManager: deleted incompleted message after timedout");
           pendingPackets.remove(new Byte(message.signature));
+					it = pendingPackets.entrySet().iterator();
           }
         }
       }
@@ -93,6 +94,7 @@ public class NetworkClientManager
       {
       /* Report the exception */
       marauroad.report(e.getMessage());
+				//delete the bad message from queue
       return null;
       }
 
@@ -107,10 +109,10 @@ public class NetworkClientManager
         {
         ++i;
         
-        socket.receive(packet);          
+        socket.receive(packet);
         byte[] data=packet.getData();
       
-        /* A multipart message. We try to read the rest now. 
+        /* A multipart message. We try to read the rest now.
          * We need to check on the list if the message exist and it exist we add this one. */
  	    /* TODO: Looks like hardcoded, write it in a better way */
         byte total=data[0];
@@ -128,7 +130,7 @@ public class NetworkClientManager
           message.content=new byte[(NetConst.UDP_PACKET_SIZE-3)*total];
           message.timestamp=new Date();
           
-          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
+          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
           pendingPackets.put(new Byte(signature),message);
           }
         else
@@ -142,16 +144,16 @@ public class NetworkClientManager
             return null;
             }
 
-          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
+          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
           }
         }
         
-      return null;        
+      return null;
       }
     catch(java.net.SocketTimeoutException e)
       {
       /* We need the thread to check from time to time if user has requested an exit */
-      return null;        
+      return null;
       }
     catch(IOException e)
       {
@@ -183,9 +185,9 @@ public class NetworkClientManager
       socket.send(pkt);
       }
     catch(IOException e)
-      { 	 
+      {
       /* Report the exception */
       marauroad.report(e.getMessage());
       }
-    }       
+    }
   }
