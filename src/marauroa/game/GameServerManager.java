@@ -351,4 +351,47 @@ public class GameServerManager extends Thread
       marauroad.trace("GameServerManager::processActionEvent","<");
       }
     }       
+
+  private void processPerceptionACKEvent(MessageC2SPerceptionACK msg)
+    {
+    marauroad.trace("GameServerManager::processPerceptionACKEvent",">");
+    
+    try
+      {
+      int clientid=msg.getClientID();
+      
+	  if(!playerContainer.hasRuntimePlayer(clientid))
+	    {
+	    /* Error: Player didn't login. */
+        marauroad.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+	    return;
+	    }
+	      
+	  if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+	    {
+	    /* Error: Player has not choose a character yey. */
+        marauroad.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
+	    return;
+	    }
+
+	  if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+	    {
+	    /* Error: Player has not correct IP<->clientid relation */
+        marauroad.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
+	    return;	    
+	    }
+	  
+	  /* Enforce source_id */
+	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
+	  action.put("source_id",id.getObjectID());
+      }
+    catch(Exception e)      
+      {
+      marauroad.trace("GameServerManager::processPerceptionACKEvent","X",e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("GameServerManager::processPerceptionACKEvent","<");
+      }
+    }         
   }

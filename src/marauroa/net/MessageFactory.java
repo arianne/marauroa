@@ -48,6 +48,7 @@ public class MessageFactory
     register(Message.TYPE_S2C_LOGOUT_ACK,MessageS2CLogoutACK.class);
     register(Message.TYPE_S2C_LOGOUT_NACK,MessageS2CLogoutNACK.class);
     register(Message.TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
+    register(Message.TYPE_C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
     marauroad.trace("MessageFactory::register","<");
     }
       
