@@ -48,5 +48,38 @@ public class Configuration
     return configuration;
     }
     
-  /* TODO: Complete it. */
+  public String get(String property) throws PropertyNotFoundException
+    {
+    String result=properties.getProperty(property);
+    
+    if(result==null)
+      {
+      throw new PropertyNotFoundException(property);
+      }
+      
+    return result;
+    }
+    
+  public void set(String property, String value)
+    {
+    properties.put(property,value);
+    }
+  
+  public void store()
+    {
+    try
+      {
+      properties.store(new FileOutputStream(configurationFile),"Marauroa Configuration file");
+      }
+    catch(FileNotFoundException e)
+      {
+      marauroad.trace("Configuration::store","X","Configuration file not found: "+e.getMessage());
+      System.exit(-1);
+      }
+    catch(IOException e)
+      {
+      marauroad.trace("Configuration::store","X","Error loading Configuration file: "+e.getMessage());
+      System.exit(-1);
+      }
+    }
   }
