@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.13 2004/03/02 19:16:51 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.14 2004/03/04 17:04:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ public class MessageS2CPerception extends Message
   private byte typePerception;
   private List modifiedRPObjects;
   private List deletedRPObjects;
+  private RPObject myRPObject;
   
   /** Constructor for allowing creation of an empty message */
   public MessageS2CPerception()
@@ -55,7 +56,18 @@ public class MessageS2CPerception extends Message
     this.typePerception=typePerception;
     this.modifiedRPObjects=modifiedRPObjects;
     this.deletedRPObjects=deletedRPObjects;
+    this.myRPObject=null;
     }
+  
+  public void setMyRPObject(RPObject object)
+    {
+    myRPObject=object;
+    }
+    
+  public RPObject getMyRPObject()
+    {
+    return myRPObject;
+    }    
   
   public byte getTypePerception()
     {
@@ -108,6 +120,8 @@ public class MessageS2CPerception extends Message
       {
       ser.write((RPObject)it_del.next());
       }
+      
+    myRPObject.writeObject(ser,true);
     
     szlib.finish();
 
@@ -151,6 +165,8 @@ public class MessageS2CPerception extends Message
       {
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
+      
+    ser.readObject(myRPObject);
     }
     
   };

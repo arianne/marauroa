@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.58 2004/03/04 13:42:37 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.59 2004/03/04 17:04:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,6 +60,8 @@ public class RPCode
   final public static String var_chat="chat";  
   final public static String var_content="content";  
   final public static String var_text="?text";  
+  final public static String var_buy="buy";  
+  final public static String var_choosen_item="choosen_item";  
   
   
   private static the1001RPRuleProcessor ruleProcessor;
@@ -772,10 +774,10 @@ public class RPCode
     }
 
    public static RPAction.Status Chat(RPObject.ID player_id, String text) throws Exception
-    {
-    marauroad.trace("RPCode::Chat",">");
+     {
+     marauroad.trace("RPCode::Chat",">");
    
-    try
+     try
       {
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject player=zone.get(player_id);
@@ -790,6 +792,46 @@ public class RPCode
     finally
       {
       marauroad.trace("RPCode::Chat","<");
+      }
+    }
+
+   public static RPAction.Status Buy(RPObject.ID player_id, RPObject.ID object_to_buy) throws Exception
+     {
+     marauroad.trace("RPCode::Buy",">");
+   
+     try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject player=zone.get(player_id);
+      RPObject shop=zone.getHeroesHouse();
+      
+      if(shop.getSlot(RPCode.var_items).has(object_to_buy)==false)
+        {
+        /** Failed because shop has not such item*/
+        RPAction.Status status=RPAction.Fail("Failed because shop has not such item");
+        marauroad.trace("RPCode::Buy","D",status.toString());
+        return status;
+        }
+        
+      RPObject item=shop.getSlot(RPCode.var_items).get(object_to_buy);
+      
+      if(player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_price)<0)
+        {
+        RPAction.Status status=RPAction.Fail("Failed because player has not enough money");
+        marauroad.trace("RPCode::Buy","D",status.toString());
+        return status;
+        }
+       
+      player.getSlot(RPCode.var_items).add(zone.create(item));
+      player.put(RPCode.var_fame,player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_price));
+      
+      zone.modify(player);
+      
+      return RPAction.STATUS_SUCCESS;
+      }
+    finally
+      {
+      marauroad.trace("RPCode::Buy","<");
       }
     }
   }

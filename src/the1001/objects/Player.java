@@ -1,4 +1,4 @@
-/* $Id: Player.java,v 1.6 2004/02/05 23:13:23 arianne_rpg Exp $ */
+/* $Id: Player.java,v 1.7 2004/03/04 17:04:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,7 @@ public class Player extends RPObject
     put(RPCode.var_type,"character");
     put(RPCode.var_name,name);
     put(RPCode.var_look,randomLook[Math.abs(random.nextInt()%randomLook.length)]);
-    put(RPCode.var_fame,0);
+    put(RPCode.var_fame,50);
     
     addSlot(new RPSlot(RPCode.var_gladiators));
     addSlot(new RPSlot(RPCode.var_items));

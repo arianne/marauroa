@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.27 2004/03/02 15:49:07 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.28 2004/03/04 17:04:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -178,13 +178,29 @@ public class RPObject extends Attributes
 	{
 		super.writeObject(out,fulldata);
 		
-		out.write((int)slots.size());
+		int size=slots.size();
+
+        SlotsIterator it=slotsIterator();
+        while(it.hasNext())
+        {
+            RPSlot entry=it.next();
+
+            if(fulldata==false && entry.getName().charAt(0)=='!')
+            {
+                --size;
+            }
+        }
+        
+		out.write(size);
 		
-		SlotsIterator it=slotsIterator();
+		it=slotsIterator();
 		while(it.hasNext())
 		{
 			RPSlot slot=(RPSlot)it.next();
-			slot.writeObject(out,fulldata);
+            if(fulldata==true || slot.getName().charAt(0)!='!')
+              {
+              slot.writeObject(out,fulldata);
+              }              
 		}
 	}
   

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.32 2004/02/25 18:49:23 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.33 2004/03/04 17:04:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,6 +81,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         {
         String text=action.get(RPCode.var_content);
         status=RPCode.Chat(id,text);
+        }
+      else if(action.get(RPCode.var_type).equals(RPCode.var_buy))
+        {
+        String item_id=action.get(RPCode.var_choosen_item);        
+        status=RPCode.Buy(id,new RPObject.ID(Integer.parseInt(item_id)));
         }
       else
         {
@@ -207,9 +212,16 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         
         valid_id=new RPObject.ID(zone.create());
         slot_object.put(RPCode.var_object_id,valid_id.getObjectID());
-        if(slot_object.getInt(RPCode.var_fame)<0)
+
+        if(!slot_object.has(RPCode.var_karma))
           {
-          slot_object.put(RPCode.var_fame,0);
+          slot_object.put(RPCode.var_karma,slot_object.get(RPCode.var_fame));
+          slot_object.remove(RPCode.var_fame);
+          }
+          
+        if(slot_object.getInt(RPCode.var_karma)<0)
+          {
+          slot_object.put(RPCode.var_karma,0);
           }
         }
       
