@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.19 2004/04/16 12:23:42 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.20 2004/04/19 18:07:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,8 +85,11 @@ class createaccount
     Transaction trans=null;
       
     try
-      {      
-      out=new PrintWriter(new FileOutputStream("C:/Apache Group/Apache2/logs/createaccount_log.txt",true));
+      {
+      Configuration conf=Configuration.getConfiguration();
+      String webfolder=conf.get("server_logs_directory");
+
+      out=new PrintWriter(new FileOutputStream(webfolder+"/createaccount_log.txt",true));
       out.println(new Date().toString()+": Trying to create username("+username+"), password("+password+"), character("+character+"),"
         +"character_model("+character_model+"), gladiator("+gladiator+"), gladiator_model("+gladiator_model+")");
       out.flush();
@@ -96,7 +99,7 @@ class createaccount
       trans=playerDatabase.getTransaction();
       out.println("Checking for valid string");
       out.flush();
-      if(playerDatabase.validString(username)==false) 
+      if(playerDatabase.validString(username)==false)
         {
         out.println("String not valid: "+username);
         return (2);
@@ -116,7 +119,7 @@ class createaccount
         out.println("String not valid: "+character);
         return (2);
         }
-      if(playerDatabase.validString(character_model)==false)       
+      if(playerDatabase.validString(character_model)==false)
         {
         out.println("String not valid: "+character_model);
         return (2);
@@ -126,43 +129,43 @@ class createaccount
         out.println("String not valid: "+gladiator);
         return (2);
         }
-      if(playerDatabase.validString(gladiator_model)==false)       
+      if(playerDatabase.validString(gladiator_model)==false)
         {
         out.println("String not valid: "+gladiator_model);
         return (2);
         }
       out.println("Checking string size");
-      if(username.length()>10 || username.length()<4) 
+      if(username.length()>10 || username.length()<4)
         {
         out.println("String size not valid: "+username);
         return (3);
         }
-      if(password.length()>10 || password.length()<1) 
+      if(password.length()>10 || password.length()<1)
         {
         out.println("String size not valid: "+password);
         return (3);
         }
-      if(email.length()>50 || email.length()<5) 
+      if(email.length()>50 || email.length()<5)
         {
         out.println("String size not valid: "+password);
         return (3);
         }
-      if(character.length()>20 || character.length()<4) 
+      if(character.length()>20 || character.length()<4)
         {
         out.println("String size not valid: "+character);
         return (3);
         }
-      if(character_model.length()>10 || character_model.length()<1) 
+      if(character_model.length()>10 || character_model.length()<1)
         {
         out.println("String size not valid: "+character_model);
         return (3);
         }
-      if(gladiator.length()>20 || gladiator.length()<4) 
+      if(gladiator.length()>20 || gladiator.length()<4)
         {
         out.println("String size not valid: "+gladiator);
         return (3);
         }
-      if(gladiator_model.length()>10 || gladiator_model.length()<1) 
+      if(gladiator_model.length()>10 || gladiator_model.length()<1)
         {
         out.println("String size not valid: "+gladiator_model);
         return (3);
@@ -204,7 +207,7 @@ class createaccount
         out.println("Failed Rollback: "+ae.getMessage());
         }
       return (5);
-      }    
+      }
     finally
       {
       if(out!=null)

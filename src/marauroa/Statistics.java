@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.22 2004/03/31 12:25:36 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.23 2004/04/19 18:07:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -190,7 +190,7 @@ public class Statistics
     {
     addEvent("timeout",id,"username="+username);
     ++nowVar.playersTimeout;
-    } 
+    }
   
   public void setOnlinePlayers(long online)
     {
@@ -229,7 +229,7 @@ public class Statistics
     try
       {
       Configuration conf=Configuration.getConfiguration();
-      String webfolder=conf.get("server_webdirectory");
+      String webfolder=conf.get("server_stats_directory");
       PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.txt"));
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
@@ -245,7 +245,7 @@ public class Statistics
         Transaction transaction=database.getTransaction();
         
         database.addStatisticsEvent(transaction,meanMinuteVar);
-        meanMinuteVar=new GatheredVariables();        
+        meanMinuteVar=new GatheredVariables();
         }
       
       out.println("-- Statistics ------");
