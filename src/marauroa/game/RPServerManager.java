@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.112 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.113 2004/11/19 20:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -411,6 +411,7 @@ public class RPServerManager extends Thread
     return ruleProcessor.onExit(id);
     }
   
+  /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
     try

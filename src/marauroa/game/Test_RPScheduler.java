@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.19 2004/09/21 18:20:39 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.20 2004/11/19 20:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,9 @@
 package marauroa.game;
 
 import junit.framework.*;
+import java.util.*;
 import marauroa.game.*;
+import marauroa.net.*;
 import marauroa.*;
 import java.io.*;
 
@@ -48,7 +50,7 @@ public class Test_RPScheduler extends TestCase
     public RPAction.Status execute(RPObject.ID id, RPAction action)
       {
       i++;
-      return RPAction.STATUS_SUCCESS;
+      return RPAction.Status.SUCCESS;
       }
     
     public void nextTurn()
@@ -70,11 +72,11 @@ public class Test_RPScheduler extends TestCase
       return true;
       }
 
-    public java.util.List buildMapObjectsList(RPObject.ID id)
+    public void transferContent(RPObject.ID id, List<TransferContent> content)
       {
-      return null;
-      }      
+      }
     }
+
   public void testRPScheduler()
     {
     marauroad.trace("Test_RPScheduler::testRPScheduler","?","This test case show how the scheduler operates");

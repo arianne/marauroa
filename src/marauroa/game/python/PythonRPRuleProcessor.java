@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.11 2004/09/21 18:20:40 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.12 2004/11/19 20:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,13 +66,13 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     {
     marauroad.trace("PythonRPRuleProcessor::execute",">");
 
-    RPAction.Status status=RPAction.STATUS_FAIL;
+    RPAction.Status status=RPAction.Status.FAIL;
 
     try
       {
       if(pythonRP.execute(id,action)==1)
         {
-		status=RPAction.STATUS_SUCCESS;
+        status=RPAction.Status.SUCCESS;
 		}
       }
     catch(Exception e)

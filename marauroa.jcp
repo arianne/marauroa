@@ -4,7 +4,7 @@
 		<version>1.01</version>
 		<label>marauroa</label>
 		<root_path>\</root_path>
-		<output_path>classes\</output_path>
+		<output_path>D:\Desarrollo\arianne\marauroa\classes\</output_path>
 		<version>1.01</version>
 		<source_path>\</source_path>
 		<jdkprofile_ref>JDK version 1.5.0</jdkprofile_ref>
@@ -66,6 +66,10 @@
 			</fileitem>
 			<fileitem>
 				<path>marauroa_gantt.xml</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>marauroa_gantt_2ndage.xml</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>
@@ -552,6 +556,14 @@
 			</fileitem>
 			<fileitem>
 				<path>src\marauroa\net\TransferContent.java</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>src\stendhal\stendhal.ini</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>src\stendhal\stendhal_game.py</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.54 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.55 2004/11/19 20:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -180,12 +180,13 @@ public final class GameServerManager extends Thread
     marauroad.trace("GameServerManager::processLoginEvent",">");
     try
       {
-      if(playerContainer.hasRuntimePlayer(msg.getClientID()) || playerContainer.hasPlayer(msg.getUsername()))
+      /** NOTE: We need to avoid that another player sends a fake login to login a player. */
+      boolean tryingToLoginAgain=(playerContainer.hasPlayer(msg.getUsername()) && playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()));
+      if(playerContainer.hasRuntimePlayer(msg.getClientID()) || tryingToLoginAgain)
         {
         /* Warning: Player is already logged. */
         marauroad.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
 
-        /* Notify player of the event: We send him/her a new ACK */
         int clientid=playerContainer.getClientidPlayer(msg.getUsername());
         
         if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
@@ -203,6 +204,7 @@ public final class GameServerManager extends Thread
           {
           marauroad.trace("GameServerManager::processLoginEvent","D","Player trying to logout without choosing character");
           }
+          
         playerContainer.removeRuntimePlayer(clientid);
         }
         

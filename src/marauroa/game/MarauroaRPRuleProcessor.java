@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.24 2004/09/21 18:20:39 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.25 2004/11/19 20:30:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.game;
 
 import java.util.*;
+import marauroa.net.*;
 import marauroa.marauroad;
 
 public class MarauroaRPRuleProcessor implements IRPRuleProcessor
@@ -36,7 +37,7 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
   
   public RPAction.Status execute(RPObject.ID id, RPAction list)
     {
-    return new RPAction.Status(RPAction.Status.FAIL);
+    return RPAction.Status.FAIL;
     }
 
   public void nextTurn()
