@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.7 2004/03/23 15:23:32 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.8 2004/03/23 15:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -635,6 +635,8 @@ public class Test_RPObject extends TestCase
     {    
     try
       {
+      for(int i=0;i<100000;++i)
+      {
       RPObject example1=new RPObject();
       example1.put("object_id",10);
       example1.put("type","gladiator");
@@ -709,7 +711,8 @@ public class Test_RPObject extends TestCase
       assertTrue(example2.equals(build));      
 
       build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example2.equals(build));      
+      assertFalse(example2.equals(build));   
+      }   
       }
     catch(Exception e)
       {      

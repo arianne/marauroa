@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.30 2004/03/23 15:23:32 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.31 2004/03/23 15:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -345,7 +345,8 @@ public class RPObject extends Attributes
       else
         {
         /* Object doesn't exists in delta, so remove */
-        deleted.getSlot(delta.getName()).add((RPObject)object.copy());
+        RPObject deletedObject=new RPObject(new ID(object));
+        deleted.getSlot(delta.getName()).add(deletedObject);
         }    
       }    
 
@@ -401,7 +402,15 @@ public class RPObject extends Attributes
           while(objects.hasNext())
             {
             RPObject object=(RPObject)objects.next();
-            getSlot(slot.getName()).get(new ID(object)).applyDifferences(null,object);
+            if(object.size()==1)
+              {
+              getSlot(slot.getName()).remove(new ID(object));
+              }
+            else
+              {
+              RPObject actualObject=getSlot(slot.getName()).get(new ID(object));
+              actualObject.applyDifferences(null,object);
+              }
             }
           }
         }        

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.23 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.24 2004/03/23 15:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,6 +80,11 @@ public class Attributes implements marauroa.net.Serializable
   public boolean isEmpty()
     {
     return content.isEmpty();
+    }
+  
+  public int size()
+    {
+    return content.size();
     }
 	
   /** This method returns true if the attribute exists
