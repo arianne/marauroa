@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.75 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.76 2004/04/30 13:48:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -306,7 +306,8 @@ class RPServerManager extends Thread
         catch(Exception e)
           {
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
-          //playersToRemove.add(new Integer(clientid));
+          marauroad.trace("RPServerManager::buildPerceptions","X","Removing player("+clientid+") because it caused a Exception while contacting it");
+          playersToRemove.add(new Integer(clientid));
           }
         }
       if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)

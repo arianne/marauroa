@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLogin.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageC2SLogin.java,v 1.4 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,7 @@ public class MessageC2SLogin extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (C2S Login) from ("+source.toString()+") CONTENTS: (username:"+username+"\tpassword:"+password+")";
+    return "Message (C2S Login) from ("+source.getAddress().getHostAddress()+") CONTENTS: (username:"+username+"\tpassword:"+password+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.38 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.39 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -124,7 +124,7 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+addedRPObjects.size()+
+    return "Message (S2C Perception) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+addedRPObjects.size()+
       " added objects, "+modifiedAddedAttribsRPObjects.size()+" modified Added attributes objects, "+
       modifiedDeletedAttribsRPObjects.size()+" modified Deleted attributes objects and "+
       deletedRPObjects.size()+" deleted objects)";

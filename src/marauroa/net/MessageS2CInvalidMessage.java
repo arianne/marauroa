@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.2 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.3 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class MessageS2CInvalidMessage extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Message Invalid) from ("+source.toString()+") CONTENTS: (reason:"+reason+")";
+    return "Message (S2C Message Invalid) from ("+source.getAddress().getHostAddress()+") CONTENTS: (reason:"+reason+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

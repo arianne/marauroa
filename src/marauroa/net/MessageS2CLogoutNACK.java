@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutNACK.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CLogoutNACK.java,v 1.4 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public class MessageS2CLogoutNACK extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Logout NACK) from ("+source.toString()+") CONTENTS: ()";
+    return "Message (S2C Logout NACK) from ("+source.getAddress().getHostAddress()+") CONTENTS: ()";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.8 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.9 2004/04/30 13:48:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -171,7 +171,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       PlayerEntry player=(PlayerEntry)players.get(username);
       LoginEvent loginEvent=new LoginEvent();
 
-      loginEvent.address=source.toString();
+      loginEvent.address=source.getAddress().getHostAddress();
       loginEvent.time=new Date();
       loginEvent.correct=correctLogin;
       player.lastLogins.add(loginEvent);

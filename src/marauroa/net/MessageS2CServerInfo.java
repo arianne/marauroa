@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.2 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.3 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,7 +58,7 @@ public class MessageS2CServerInfo extends Message
       {
       text.append("["+contents[i]+"],");
       }
-    return "Message (S2C Server Info) from ("+source.toString()+") CONTENTS: ("+text.substring(0,text.length()-1)+")";
+    return "Message (S2C Server Info) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+text.substring(0,text.length()-1)+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

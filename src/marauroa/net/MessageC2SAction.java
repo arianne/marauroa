@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.6 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.7 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,7 @@ public class MessageC2SAction extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (C2S Action) from ("+source.toString()+") CONTENTS: ("+action.toString()+")";
+    return "Message (C2S Action) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+action.toString()+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.6 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.7 2004/04/30 13:48:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class MessageS2CChooseCharacterACK extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Choose Character ACK) from ("+source.toString()+") CONTENTS: ("+id.toString()+")";
+    return "Message (S2C Choose Character ACK) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+id.toString()+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
