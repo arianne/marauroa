@@ -15,6 +15,7 @@ public class marauroad extends Thread
   private void setTestDatabase()
     {
     marauroad.trace("marauroad::setTestDatabase",">");
+    
     try
       {
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
@@ -37,10 +38,14 @@ public class marauroad extends Thread
       }
     catch(Throwable e) 
       {
-      marauroad.trace("marauroad::setTestDatabase","F",e.getMessage());
+      marauroad.trace("marauroad::setTestDatabase","X",e.getMessage());
+      marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
       System.exit(-1);
       }
-    marauroad.trace("marauroad::setTestDatabase","<");
+    finally
+      {
+      marauroad.trace("marauroad::setTestDatabase","<");
+      }
     }
     
   public static void main (String[] args) 
@@ -118,7 +123,8 @@ public class marauroad extends Thread
       }
     catch(java.net.SocketException e)
       {
-      marauroad.trace("marauroad::init","F",e.getMessage());
+      marauroad.trace("marauroad::init","X",e.getMessage());
+      marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate server socket");
       System.exit(-1);
       }
     

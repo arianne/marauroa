@@ -78,6 +78,7 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.NoDatabaseConfException e)
       {
       marauroad.trace("PlayerEntryContainer","X", e.getMessage());
+      marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
       System.exit(-1);
       }
     }
@@ -355,206 +356,278 @@ public class PlayerEntryContainer
       }
     }
   
+
+  /** This method returns true if the database has the player pointed by username
+   *  @param username the name of the player we are asking if it exists.
+   *  @return true if player exists or false otherwise. */
   public boolean hasPlayer(String username)
     {
     marauroad.trace("PlayerEntryContainer::hasPlayer",">");
-    Iterator it=listPlayerEntries.entrySet().iterator();
     
-    while(it.hasNext())
+    try
       {
-      Map.Entry entry=(Map.Entry)it.next();
-      RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
-      
-      if(playerEntry.username.equals(username))
+      Iterator it=listPlayerEntries.entrySet().iterator();
+    
+      while(it.hasNext())
         {
-        marauroad.trace("PlayerEntryContainer::hasPlayer","<");
-        return true;
-        }      
+        Map.Entry entry=(Map.Entry)it.next();
+        RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
+      
+        if(playerEntry.username.equals(username))
+          {
+          return true;
+          }      
+        }
+    
+      return false;
       }
-    
-    marauroad.trace("PlayerEntryContainer::hasPlayer","<");
-    return false;
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::hasPlayer","<");
+      }
     }    
-    
+
+  /** This method returns true if the player has that character or false if it hasn't
+   *  @param clientid the runtime id of the player
+   *  @param character is the name of the character
+   *  @return true if player has the character or false if it hasn't
+   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public boolean hasCharacter(short clientid,String character) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::hasCharacter",">");
-    if(hasRuntimePlayer(clientid))
+    try
       {
-      try
+      if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-        
-        boolean has=playerDatabase.hasCharacter(entry.username,character);
-        
-        marauroad.trace("PlayerEntryContainer::hasCharacter","<");
-        return has;
+        try
+          {
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));        
+          return playerDatabase.hasCharacter(entry.username,character);
+          }
+        catch(PlayerDatabase.PlayerNotFoundException e)
+          {
+          marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(unknown)");
+          throw new NoSuchPlayerException();
+          }
         }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+      else
         {
-        marauroad.trace("PlayerEntryContainer::hasCharacter","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
-        }
+        marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }      
       }
-    else
+    finally
       {
-      marauroad.trace("PlayerEntryContainer::hasCharacter","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::hasCharacter","<");
       }
     }
     
+  /** This method assign the character to the playerEntry.
+   *  @param clientid the runtime id of the player
+   *  @param character is the name of the character
+   *
+   *  @throws NoSuchClientIDException if clientid is not found */
   public void setChoosenCharacter(short clientid,String character) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::setChoosenCharacter",">");
-    if(hasRuntimePlayer(clientid))
-      {
-      RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-      entry.choosenCharacter=character;
     
-      marauroad.trace("PlayerEntryContainer::setChoosenCharacter","<");
-      }
-    else
+    try
       {
-      marauroad.trace("PlayerEntryContainer::setChoosenCharacter","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        entry.choosenCharacter=character;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::setChoosenCharacter","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::setChoosenCharacter","<");
       }
     }
   
+  /** This method returns the lis of character that the player pointed by username has.
+   *  @param clientid the runtime id of the player
+   *  @return an array of String with the characters
+   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public String[] getCharacterList(short clientid) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::getCharacterList",">");
-    if(hasRuntimePlayer(clientid))
+    
+    try
       {
-      try
+      if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-    	String[] characters=playerDatabase.getCharactersList(entry.username);
-    	
-        marauroad.trace("PlayerEntryContainer::getCharacterList","<");
-        return characters;
+        try
+          {
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+      	  return playerDatabase.getCharactersList(entry.username);
+          }
+        catch(PlayerDatabase.PlayerNotFoundException e)
+          {
+          marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
+          throw new NoSuchPlayerException();
+          }
         }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+      else
         {
-        marauroad.trace("PlayerEntryContainer::getCharacterList","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
+        marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
         }
       }
-    else
+    finally
       {
-      marauroad.trace("PlayerEntryContainer::getCharacterList","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getCharacterList","<");
       }
     }
     
+  /** This method retrieves from Database the object for an existing player and character.
+   *  @param clientid the runtime id of the player
+   *  @param character is the name of the character that the username player wants to add.
+   *  @return a RPObject that is the RPObject that represent this character in game.
+   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchCharacterException if character is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public RPObject getRPObject(short clientid, String character) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::getRPObject",">");
-    if(hasRuntimePlayer(clientid))
+    try
       {
-      try
+      if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-        RPObject object=playerDatabase.getRPObject(entry.username,character);
-    
-        marauroad.trace("PlayerEntryContainer::getRPObject","<");
-        return object;
+        return playerDatabase.getRPObject(entry.username,character);
         }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+      else
         {
-        marauroad.trace("PlayerEntryContainer::getRPObject","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
+        marauroad.trace("PlayerEntryContainer::getRPObject","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
         }
-      catch(PlayerDatabase.CharacterNotFoundException e)
-        {
-        marauroad.trace("PlayerEntryContainer::getRPObject","E","No such Character(unknown)");
-        throw new NoSuchCharacterException();
-        }        
-      catch(PlayerDatabase.GenericDatabaseException e)
-        {
-        marauroad.trace("PlayerEntryContainer::getRPObject","E","Generic Database problem: "+e.getMessage());
-        throw new NoSuchCharacterException();
-        }        
       }
-    else
+    catch(PlayerDatabase.PlayerNotFoundException e)
       {
-      marauroad.trace("PlayerEntryContainer::getRPObject","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
+      throw new NoSuchPlayerException();
+      }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Character(unknown)");
+      throw new NoSuchCharacterException();
+      }        
+    catch(PlayerDatabase.GenericDatabaseException e)
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObject","X","Generic Database problem: "+e.getMessage());
+      throw new NoSuchCharacterException();
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObject","<");
       }
     }
     
+  /** This method is the opposite of getRPObject, and store in Database the object for
+   *  an existing player and character.
+   *  The difference between setRPObject and addCharacter are that setRPObject update it
+   *  while addCharacter add it to database and fails if it already exists
+   *  @param clientid the runtime id of the player
+   *  @param object is the RPObject that represent this character in game.
+   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchCharacterException if character is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public void setRPObject(short clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::setRPObject",">");
-    if(hasRuntimePlayer(clientid))
+    try
       {
-      try
+      if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
         playerDatabase.setRPObject(entry.username,entry.choosenCharacter,object);
-    
-        marauroad.trace("PlayerEntryContainer::setRPObject","<");
-        }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+        }      
+      else
         {
-        marauroad.trace("PlayerEntryContainer::setRPObject","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
-        }
-      catch(PlayerDatabase.CharacterNotFoundException e)
-        {
-        marauroad.trace("PlayerEntryContainer::setRPObject","E","No such Character(unknown)");
-        throw new NoSuchCharacterException();
-        }        
-      catch(PlayerDatabase.GenericDatabaseException e)
-        {
-        marauroad.trace("PlayerEntryContainer::setRPObject","E","Generic Database problem: "+e.getMessage());
-        throw new NoSuchCharacterException();
-        }        
+        marauroad.trace("PlayerEntryContainer::setRPObject","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }    
       }
-    else
+    catch(PlayerDatabase.PlayerNotFoundException e)
       {
-      marauroad.trace("PlayerEntryContainer::setRPObject","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
+      throw new NoSuchPlayerException();
+      }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Character(unknown)");
+      throw new NoSuchCharacterException();
+      }        
+    catch(PlayerDatabase.GenericDatabaseException e)
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
+      throw new NoSuchCharacterException();
+      }        
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObject","<");
       }    
     }
     
+  /** This method returns the RPObject.ID of the object the player whose clientid is clientid owns.
+   *  @param clientid the runtime id of the player
+   *  @return the RPObject.ID of the object that this player uses.
+   *   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchCharacterException if character is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public RPObject.ID getRPObjectID(short clientid) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::getRPObjectID",">");
-    if(hasRuntimePlayer(clientid))
+    
+    try
       {
-      try
+      if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-        RPObject.ID id=new RPObject.ID(playerDatabase.getRPObject(entry.username,entry.choosenCharacter));
-    
-        marauroad.trace("PlayerEntryContainer::getRPObjectID","<");
-        return id;
+        return new RPObject.ID(playerDatabase.getRPObject(entry.username,entry.choosenCharacter));
         }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+      else
         {
-        marauroad.trace("PlayerEntryContainer::getRPObjectID","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
+        marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
         }
-      catch(PlayerDatabase.CharacterNotFoundException e)
-        {
-        marauroad.trace("PlayerEntryContainer::getRPObjectID","E","No such Character(unknown)");
-        throw new NoSuchCharacterException();
-        }        
-      catch(Attributes.AttributeNotFoundException e)
-        {
-        marauroad.trace("PlayerEntryContainer::getRPObjectID","E","No such attribute(object_id)");
-        throw new NoSuchCharacterException();
-        }        
-      catch(PlayerDatabase.GenericDatabaseException e)
-        {
-        marauroad.trace("PlayerEntryContainer::setRPObject","E","Generic Database problem: "+e.getMessage());
-        throw new NoSuchCharacterException();
-        }        
       }
-    else
+    catch(PlayerDatabase.PlayerNotFoundException e)
       {
-      marauroad.trace("PlayerEntryContainer::getRPObjectID","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Player(unknown)");
+      throw new NoSuchPlayerException();
+      }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Character(unknown)");
+      throw new NoSuchCharacterException();
+      }        
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such attribute(object_id)");
+      throw new NoSuchCharacterException();
+      }        
+    catch(PlayerDatabase.GenericDatabaseException e)
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
+      throw new NoSuchCharacterException();
+      }        
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getRPObjectID","<");
       }
     }
 
@@ -577,37 +650,55 @@ public class PlayerEntryContainer
     return listPlayerEntries.size();
     }
 
+  /** This method returns the username of the player with runtime id equals to clientid.
+   *  @param clientid the runtime id of the player   *
+   *  @throws NoSuchClientIDException if clientid is not found */
   public String getUsername(short clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getUsername",">");
-    if(hasRuntimePlayer(clientid))
+    
+    try
       {
-      RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-         
-      marauroad.trace("PlayerEntryContainer::getUsername","<");
-      return entry.username;
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));         
+        return entry.username;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getUsername","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
       }
-    else
+    finally
       {
-      marauroad.trace("PlayerEntryContainer::getUsername","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getUsername","<");
       }
     }
     
+  /** The method returns the IP address of the player represented by clientid
+   *  @param clientid the runtime id of the player   *
+   *  @throws NoSuchClientIDException if clientid is not found */
   public InetSocketAddress getInetSocketAddress(short clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getInetSocketAddress",">");
-    if(hasRuntimePlayer(clientid))
+    
+    try
       {
-      RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-         
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));         
+        return entry.source;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getInetSocketAddress","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
+      }
+    finally
+      {
       marauroad.trace("PlayerEntryContainer::getInetSocketAddress","<");
-      return entry.source;
-      }
-    else
-      {
-      marauroad.trace("PlayerEntryContainer::getInetSocketAddress","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
-      }
+      } 
     }  
   }
