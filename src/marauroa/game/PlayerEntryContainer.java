@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.28 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.29 2004/04/14 22:41:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -664,28 +664,31 @@ public class PlayerEntryContainer
         }
       else
         {
-        transaction.rollback();
         marauroad.trace("PlayerEntryContainer::setRPObject","X","No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
+      transaction.rollback();
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
       throw new NoSuchPlayerException("- not available -");
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      transaction.rollback();
       marauroad.trace("PlayerEntryContainer::setRPObject","X",e.getMessage());
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
+      transaction.rollback();
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Character(unknown)");
       throw new NoSuchCharacterException("- not available -");
       }
     catch(Exception e)
       {
+      transaction.rollback();
       marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
       throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
       }

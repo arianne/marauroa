@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.37 2004/03/31 12:25:36 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.38 2004/04/14 22:41:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -345,19 +345,27 @@ public final class GameServerManager extends Thread
         }
       if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
         {
-        RPObject.ID id=playerContainer.getRPObjectID(clientid);	          
-        RPObject object=rpMan.getRPObject(id);
+        try
+          {
+          RPObject.ID id=playerContainer.getRPObjectID(clientid);	          
+          RPObject object=rpMan.getRPObject(id);
 
-        if(rpMan.onExit(id))
-          {      
-          /* NOTE: Set the Object so that it is stored in Database */
-          playerContainer.setRPObject(clientid,object);  
+          if(rpMan.onExit(id))
+            {      
+            /* NOTE: Set the Object so that it is stored in Database */
+            playerContainer.setRPObject(clientid,object);  
+            }
+          }
+        catch(Exception e)
+          {
+          marauroad.trace("GameServerManager::processLogoutEvent","X","Exception while storing character: "+e.getMessage());
           }
         }
       else
         {
         marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
         }
+        
       stats.addPlayerLogout(playerContainer.getUsername(clientid),clientid);
       playerContainer.removeRuntimePlayer(clientid);
 	  

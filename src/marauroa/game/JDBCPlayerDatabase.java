@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.28 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.29 2004/04/14 22:41:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1134,6 +1134,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         object.remove((String)it.next());
         }
+        
       storeRPObject(trans,object,0);
       }
     catch(Attributes.AttributeNotFoundException e)

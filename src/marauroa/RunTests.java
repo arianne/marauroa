@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.41 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.42 2004/04/14 22:41:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,10 +71,10 @@ public class RunTests
       String timestamp=Long.toString(new Date().getTime());
       
       System.err.println("Test will last around 93.0 seconds. Please wait!");
-      // wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
-      // wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
-      // wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
-      // wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
+      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
       wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
 
       Date end=new Date();

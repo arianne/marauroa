@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.64 2004/04/14 09:49:46 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.65 2004/04/14 22:41:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -699,7 +699,6 @@ public class RPCode
         RPObject gladiator=arena.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
         
         /** HACK: We need to update the gladiator on player */
-        player.getSlot(RPCode.var_myGladiators).remove(new RPObject.ID(gladiator));
         player.getSlot(RPCode.var_myGladiators).add(gladiator);
 
         gladiator.put(RPCode.var_hp,gladiator.get(RPCode.var_initial_hp));
@@ -707,10 +706,10 @@ public class RPCode
         player.remove(RPCode.var_choose);
         zone.modify(player);
         }
+
       marauroad.trace("RPCode::SetUpNextCombat","D","Setup Arena to waiting status");
-      playersFighting.clear();
-      // TODO: Delta-delta doesn't understand the clear thing...
       arena.getSlot(RPCode.var_gladiators).clear();
+      playersFighting.clear();
       
       arena.put(RPCode.var_status,RPCode.var_waiting);          
       /* Choose new fighters if available */ 
