@@ -50,14 +50,12 @@ you specify to collect them.
 	Indicates that a significant event took place, such as a state change.
 	
 To apply this to traces we have get a short name for each message or event type.
-- ! is audit
-- W is warning
-- T is terminate
-- F is fatal
+- ! is severe error. Application aborts.
+- W is warning message
+- D is debug message
+- X is exception
 - > is entry
 - < is exit
-- D is debug
-- E is event
 
 Traces must contain the entry and exit events always, so we can really trace what
 the application is exactly doing. Even when we exit the procedure using an exception.
