@@ -26,6 +26,4 @@ Tasks to do:
 - Replace the PlayerDatabase class by an interface to allow future expansion.
 
 - Implement Test case for Message Factory to test all the messages.
-
-- Make processChooseCharacterEvent to fill the id field of PlayerEntry.
   

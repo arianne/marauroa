@@ -2,8 +2,8 @@ package marauroa.net;
 
 import java.io.*;
 
-/** ImputSerializer is used to serialize classes that implement the Serializable 
- *  interface into a InputStream.
+/** InputSerializer is used to serialize classes that implement the Serializable 
+ *  interface from a InputStream.
  */
 public class InputSerializer
   {

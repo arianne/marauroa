@@ -13,6 +13,7 @@ public class RPRuleProcessor
     
   public RPAction.Status execute(RPObject.ID id, LinkedList list)
     {
+    /* TODO: Implement action procession code */
     return new RPAction.Status(RPAction.Status.FAIL);
     }
   }

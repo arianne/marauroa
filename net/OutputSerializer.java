@@ -2,10 +2,15 @@ package marauroa.net;
 
 import java.io.*;
 
+/** OutputSerializer is used to serialize classes that implement the Serializable 
+ *  interface into a OutputStream.
+ */
 public class OutputSerializer
   {
   OutputStream out;
   
+  /** Constructor that pass the OutputStream to the serializer 
+      @param in the InputStream */
   public OutputSerializer(OutputStream out)
     {
     this.out=out;
