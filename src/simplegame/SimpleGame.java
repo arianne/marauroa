@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.42 2003/12/21 11:59:24 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.43 2003/12/21 12:06:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,7 +53,6 @@ public class SimpleGame
     private NetworkClientManager netMan;
     private SimpleGameDataModel gdm;
     private JMarauroa marauroa;
-    private RPObject ownCharacter;
     private int ownCharacterID;
     private int otherCharacterID;
     private static Sequencer player;
@@ -68,7 +67,6 @@ public class SimpleGame
         this.marauroa = marauroa;
         this.ownCharacterID=characterID.getObjectID();
         this.otherCharacterID=-1;
-        ownCharacter=null;
         gdm = new SimpleGameDataModel(3);
         initComponents();
         addWindowListener(new WindowAdapter()
@@ -87,9 +85,7 @@ public class SimpleGame
         JPanel main_panel = new JPanel(new BorderLayout());
         GameDisplay  gd = new GameDisplay(gdm);
         main_panel.add(gd,BorderLayout.CENTER);
-        statusLine = new JLabel("<html><body>Launching <font 
-
-color=blue>Tic-Tac-Toe</font>...</body></html>");
+        statusLine = new JLabel("<html><body>Launching <font color=blue>Tic-Tac-Toe</font>...</body></html>");
         main_panel.add(statusLine,BorderLayout.SOUTH);
         setContentPane(main_panel);
     }
@@ -106,9 +102,7 @@ color=blue>Tic-Tac-Toe</font>...</body></html>");
                     Message msg = netMan.getMessage();
                     if(msg!=null && msg instanceof MessageS2CPerception)
                     {
-                        MessageC2SPerceptionACK replyMsg=new 
-
-MessageC2SPerceptionACK(msg.getAddress());
+                        MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
                         replyMsg.setClientID(msg.getClientID());
                         netMan.addMessage(replyMsg);
                         
@@ -116,29 +110,21 @@ MessageC2SPerceptionACK(msg.getAddress());
                         List modified_objects = perception.getModifiedRPObjects();
                         if(modified_objects.size()>0)
                         {
-                            //the only object we should see here is the player object 
-
-itself.
+                            //the only object we should see here is the player object itself.
                             RPObject obj = (RPObject)modified_objects.get(0);
-                            ownCharacter=obj;
-                            
                             addLog(obj.toString()+"\n");
                             
                             if(obj.hasSlot("hand"))
                             {
                                 /** CASE 1: Game already started. */
-                                GameBoard gameBoard= new 
-
-GameBoard(obj.getSlot("hand").get());
+                                GameBoard gameBoard= new GameBoard(obj.getSlot("hand").get());
                                 
                                 int size = gameBoard.getSize();
                                 for(int i=0;i<size;++i)
                                 {
                                     for(int j=0;j<size;++j)
                                     {
-                                        int id = 
-
-gameBoard.getRPCharacterAt(i,j);
+                                        int id = gameBoard.getRPCharacterAt(i,j);
                                         gdm.setRPCharacterAt(i,j,id);
                                     }
                                 }
@@ -155,9 +141,7 @@ gameBoard.getRPCharacterAt(i,j);
                                         msgResolution = "You lost.";
                                     }
                                     statusLine.setText(msgResolution);
-                                    
-
-JOptionPane.showMessageDialog(marauroa,msgResolution,msgResolution,JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showMessageDialog(marauroa,msgResolution,msgResolution,JOptionPane.INFORMATION_MESSAGE);
                                     continueGamePlay  = false;
                                     continueMusicPlay = false;
                                     
@@ -166,77 +150,42 @@ JOptionPane.showMessageDialog(marauroa,msgResolution,msgResolution,JOptionPane.I
                             }
                             else if(obj.hasSlot("challenge"))
                             {
-                                /* CASE 2: Player is challenged by another player. 
-
-We choose the first player. */
-                                CharacterList characterList=new 
-
-CharacterList(obj.getSlot("challenge").get());
+                                /* CASE 2: Player is challenged by another player. We choose the first player. */
+                                CharacterList characterList=new CharacterList(obj.getSlot("challenge").get());
                                 addLog(""+characterList+"\n");
                                 
-                                String 
-
-player=(String)characterList.CharacterIterator().next();
+                                String player=(String)characterList.CharacterIterator().next();
                                 otherCharacterID = characterList.getId(player);
                                 
                                 ChallengeAnswer answer = new ChallengeAnswer();
                                 answer.setWho(ownCharacterID);
                                 answer.setWhom(otherCharacterID);
                                 answer.setAccept(true);
-                                MessageC2SAction m_action = new 
-
-MessageC2SAction(null,answer);
+                                MessageC2SAction m_action = new MessageC2SAction(null,answer);
                                 netMan.addMessage(m_action);
-                                statusLine.setText("Accepted challenge from " + 
-
-otherCharacterID);
-                                addLog("Accepted challenge from " + 
-
-otherCharacterID);
+                                statusLine.setText("Accepted challenge from " + otherCharacterID);
+                                addLog("Accepted challenge from " + otherCharacterID);
                                 playMidi();
                             }
                             else if(obj.hasSlot("ear"))
                             {
                                 if(obj.getSlot("ear").size()==0)
                                 {
-                                    /** TODO: Sure you know a better way of 
-
-telling that to the user. */
-                                    addLog("Waiting for another player to 
-
-join\n");
-                                    statusLine.setText("Waiting for another 
-
-player to join");
-
-                                    JOptionPane.showMessageDialog(this,"There are no players online");
-                           
+                                    /** TODO: Sure you know a better way of telling that to the user. */
+                                    addLog("Waiting for another player to join\n");
+                                    statusLine.setText("Waiting for another player to join");
                                     addLog("get the UPDATED list of players...\n");
-                                    GetCharacterListAction rpaction = new 
-
-GetCharacterListAction();
-                                    netMan.addMessage(new 
-
-MessageC2SAction(null,rpaction));
+                                    GetCharacterListAction rpaction = new GetCharacterListAction();
+                                    netMan.addMessage(new MessageC2SAction(null,rpaction));
                                 }
                                 else
                                 {
-                                    RPObject 
-
-baseObject=(RPObject)obj.getSlot("ear").get();
-                                    CharacterList characterList=new 
-
-CharacterList(baseObject);
+                                    RPObject baseObject=(RPObject)obj.getSlot("ear").get();
+                                    CharacterList characterList=new CharacterList(baseObject);
+                                    System.out.println(characterList.toString());
+                                    Iterator iterator = characterList.CharacterIterator();
                                     
-
-System.out.println(characterList.toString());
-                                    Iterator iterator = 
-
-characterList.CharacterIterator();
-                                    
-                                    addLog("Received character list with 
-
-following chars:\n");
+                                    addLog("Received character list with following chars:\n");
                                     Object[] message = new Object[2];
                                     message[0]="Characters:";
                                     
@@ -246,9 +195,7 @@ following chars:\n");
                                     
                                     while(iterator.hasNext())
                                     {
-                                        String player = 
-
-(String)iterator.next();
+                                        String player = (String)iterator.next();
                                         cb_characters.addItem(player);
                                         addLog(player+"\n");
                                     }
@@ -256,95 +203,43 @@ following chars:\n");
                                     {
                                         // Options
                                         String[] options = {"Challenge"};
-                                        int result = 
-
-JOptionPane.showOptionDialog(
-                                            this,                        
-
-               // the parent that the dialog blocks
-                                            message,                     
-
-               // the dialog message array
-                                            "Choose the character to 
-
-challenge...",     // the title of the dialog window
-                                            JOptionPane.DEFAULT_OPTION,  
-
-               // option type
-                                            
-
-JOptionPane.INFORMATION_MESSAGE,            // message type
-                                            new ImageIcon("wurst.png"),  
-
-               // optional icon, use null to use the default icon
-                                            options,                     
-
-               // options string array, will be made into buttons
-                                            options[0]                   
-
-               // option that should be made into a default button
+                                        int result = JOptionPane.showOptionDialog(
+                                            this,                                       // the parent that the dialog blocks
+                                            message,                                    // the dialog message array
+                                            "Choose the character to challenge...",     // the title of the dialog window
+                                            JOptionPane.DEFAULT_OPTION,                 // option type
+                                            JOptionPane.INFORMATION_MESSAGE,            // message type
+                                            new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+                                            options,                                    // options string array, will be made into buttons
+                                            options[0]                                  // option that should be made into a default button
                                         );
                                         
-                                        String 
-
-player=(String)cb_characters.getSelectedItem();
-                                        if(result!=JOptionPane.CLOSED_OPTION 
-
-&&player!=null && !player.equals(""))
+                                        String player=(String)cb_characters.getSelectedItem();
+                                        if(result!=JOptionPane.CLOSED_OPTION &&player!=null && !player.equals(""))
                                         {
-                                            addLog("Challenge 
-
-player...\n");
-                                            
-
-statusLine.setText("Challenge player...");
-                                            otherCharacterID = 
-
-CharacterList.getId(player);
-                                            
-
-System.out.println(ownCharacterID+" challenged "+otherCharacterID);
-                                            ChallengeAction c_action=new 
-
-ChallengeAction();
-                                            
-
-c_action.setWho(ownCharacterID);
-                                            
-
-c_action.setWhom(otherCharacterID);
-                                            netMan.addMessage(new 
-
-MessageC2SAction(null,c_action));
+                                            addLog("Challenge player...\n");
+                                            statusLine.setText("Challenge player...");
+                                            otherCharacterID = CharacterList.getId(player);
+                                            System.out.println(ownCharacterID+" challenged "+otherCharacterID);
+                                            ChallengeAction c_action=new ChallengeAction();
+                                            c_action.setWho(ownCharacterID);
+                                            c_action.setWhom(otherCharacterID);
+                                            netMan.addMessage(new MessageC2SAction(null,c_action));
                                         }
                                         else
                                         {
-                                            addLog("get the UPDATED list 
-
-of players...\n");
-                                            GetCharacterListAction 
-
-rpaction = new GetCharacterListAction();
-                                            netMan.addMessage(new 
-
-MessageC2SAction(null,rpaction));
+                                            addLog("get the UPDATED list of players...\n");
+                                            GetCharacterListAction rpaction = new GetCharacterListAction();
+                                            netMan.addMessage(new MessageC2SAction(null,rpaction));
                                         }
                                     }
 //                                  else
 //                                  {
-//                                      statusLine.setText("No characters 
-
-received from server...");
+//                                      statusLine.setText("No characters received from server...");
 //                                      sleep(500);
-//                                      addLog("get the UPDATED list of 
-
-players...\n");
-//                                      GetCharacterListAction rpaction = 
-
-new GetCharacterListAction();
-//                                      netMan.addMessage(new 
-
-MessageC2SAction(null,rpaction));
+//                                      addLog("get the UPDATED list of players...\n");
+//                                      GetCharacterListAction rpaction = new GetCharacterListAction();
+//                                      netMan.addMessage(new MessageC2SAction(null,rpaction));
 //                                  }
                                 }
                             }
@@ -363,7 +258,6 @@ MessageC2SAction(null,rpaction));
         }
     }
     
-    
     /**
      * causes the calling thread to sleep the specified amount of <b>seconds</b>
      * @param timeout the amount of seconds to sleep
@@ -378,7 +272,6 @@ MessageC2SAction(null,rpaction));
         {
         }
     }
-    
     
     /**
      * represents the gameboard
@@ -448,7 +341,7 @@ MessageC2SAction(null,rpaction));
         {
             public void mouseClicked(MouseEvent e)
             {
-                if(ownCharacter==null || (ownCharacter!=null && !ownCharacter.hasSlot("hand")))
+                if(otherCharacterID==-1)
                 {
                     addLog("get the list of players...\n");
                     GetCharacterListAction rpaction = new GetCharacterListAction();
@@ -534,9 +427,7 @@ MessageC2SAction(null,rpaction));
                         {
                             if(player==null)
                             {
-                                InputStream is_midi = 
-
-getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
+                                InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
                                 Sequence theSound = MidiSystem.getSequence(is_midi);
                                 player = MidiSystem.getSequencer();
                                 player.open();
