@@ -31,14 +31,14 @@ public class SimpleGame
 {
   
   private NetworkClientManager netMan;
-  private GameDataModel gdm;
+  private SimpleGameDataModel gdm;
   private JMarauroa marauroa;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa)
   {
     netMan = netman;
     this.marauroa = marauroa;
-    gdm = new GameDataModel(3,3);
+    gdm = new SimpleGameDataModel(3,3);
     initComponents();
     addWindowListener(new WindowAdapter()
                       {
@@ -83,19 +83,19 @@ public class SimpleGame
     sg.pack();
     sg.show();
     sleep(2);
-    sg.gdm.setColorAt(0,0,Color.red);
+    sg.gdm.setColorAt(0,0,(byte)1);
     sleep(1);
-    sg.gdm.setColorAt(1,1,Color.green);
+    sg.gdm.setColorAt(1,1,(byte)0);
     sleep(1);
-    sg.gdm.setColorAt(2,2,Color.red);
+    sg.gdm.setColorAt(2,2,(byte)1);
     sleep(1);
-    sg.gdm.setColorAt(2,0,Color.green);
+    sg.gdm.setColorAt(2,0,(byte)0);
     sleep(1);
-    sg.gdm.setColorAt(0,2,Color.red);
+    sg.gdm.setColorAt(0,2,(byte)1);
     sleep(1);
-    sg.gdm.setColorAt(0,1,Color.green);
+    sg.gdm.setColorAt(0,1,(byte)0);
     sleep(1);
-    sg.gdm.setColorAt(1,2,Color.red);
+    sg.gdm.setColorAt(1,2,(byte)1);
     sleep(1);
   }
   
@@ -111,79 +111,18 @@ public class SimpleGame
     }
   }
   
-  private final class GameDataModel
-  {
-    private Color colors[][];
-    private Vector vUpdateListener;
-    private int rows;
-    private int columns;
-    private GameDataModel(int rows, int columns)
-    {
-      this.rows = rows;
-      this.columns = columns;
-      colors = new Color[rows][columns];
-      vUpdateListener = new Vector(1,1);
-    }
-    
-    private void fireUpdate(int row, int column, Color color)
-    {
-      addLog(""+row+","+column+","+color+"\n");
-      for (int i = 0; i < vUpdateListener.size(); i++)
-      {
-        GameUpdateListener ul = (GameUpdateListener)vUpdateListener.elementAt(i);
-        ul.updateReceived(row,column,color);
-      }
-    }
-    
-    private void addGameUpdateListener(GameUpdateListener ul)
-    {
-      if(ul!=null)
-      {
-        vUpdateListener.add(ul);
-      }
-    }
-    
-    public void setColorAt(int row, int column,Color color)
-    {
-      if(!color.equals(colors[row][column]))
-      {
-        colors[row][column]=color;
-        fireUpdate(row,column,color);
-      }
-    }
-    
-    private int getColumnsCount()
-    {
-      return(columns);
-    }
-    private int getRowsCount()
-    {
-      return(rows);
-    }
-    
-    private Color getColorAt(int row, int column)
-    {
-      return(colors[row][column]);
-    }
-    
-  }
-  
-  private interface GameUpdateListener
-  {
-    public void updateReceived(int row, int column, Color color);
-  }
   
   private final class GameDisplay
     extends JPanel
   {
-    private GameDataModel gameDataModel;
+    private SimpleGameDataModel gameDataModel;
     
-    private GameDisplay(GameDataModel gdm)
+    private GameDisplay(SimpleGameDataModel gdm)
     {
       gameDataModel = gdm;
-      gameDataModel.addGameUpdateListener(new GameUpdateListener()
+      gameDataModel.addGameUpdateListener(new SimpleGameDataModel.GameUpdateListener()
                                           {
-            public void updateReceived(int row, int column, Color color)
+            public void updateReceived(int row, int column, byte color)
             {
               repaint();
             }
@@ -213,7 +152,8 @@ public class SimpleGame
         for (int j = 0; j < r; j++)
         {
           y=starty+j*cell_height;
-          Color color = gameDataModel.getColorAt(j,i);
+          Color color = gameDataModel.getColorAt(j,i)==0?Color.red:null;
+          color = gameDataModel.getColorAt(j,i)==1?Color.green:null;
           if(color!=null)
           {
             g.setColor(color);

@@ -12,5 +12,12 @@ import marauroa.game.RPObject;
 public class SimpleRPZone
   extends MarauroaRPZone
 {
+  protected SimpleGameDataModel gameDataModel;
+  
+  public SimpleRPZone()
+  {
+    gameDataModel = new SimpleGameDataModel(3,3);
+  }
+  
 }
 
