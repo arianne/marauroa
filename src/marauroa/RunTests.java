@@ -11,7 +11,7 @@ public class RunTests
     {
     try
       {
-//      System.setOut(new PrintStream(new FileOutputStream("output.txt")));
+      //System.setOut(new PrintStream(new FileOutputStream("output.txt")));
     
       //junit.swingui.TestRunner.run(RunTests.class);
       junit.textui.TestRunner.run(suite());

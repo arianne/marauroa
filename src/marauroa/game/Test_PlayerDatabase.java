@@ -39,12 +39,14 @@ public class Test_PlayerDatabase extends TestCase
       {    
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase(type);
       assertNotNull(playerDatabase);
-      int size=playerDatabase.getPlayerCount();
 
  	  if(playerDatabase.hasPlayer("Test Player"))
  	    {
  	    playerDatabase.removePlayer("Test Player");
  	    }
+
+      int size=playerDatabase.getPlayerCount();
+ 	    
  	  assertFalse(playerDatabase.hasPlayer("Test Player"));
  	    
       playerDatabase.addPlayer("Test Player","Test Password");
