@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.21 2004/04/25 01:19:33 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.23 2004/04/26 15:22:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,55 +16,105 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.game.*;
-import the1001.objects.*;
 
-class createaccount
+public abstract class createaccount
   {
-  public static void main (String[] args)
+  public static class Information
     {
-    System.exit(createaccount(args));
-    }
+    public String param;
+    public String name;
+    public String value;
+    public int min;
+    public int max;
+    
+    
+    public Information(String param, String name)
+      {
+      this.param=param;
+      this.name=name;
+      this.value="";
+      this.max=256;
+      }
 
-  public static int createaccount(String[] args)
+    public Information(String param, String name,int min, int max)
+      {
+      this.param=param;
+      this.name=name;
+      this.value="";
+      this.min=min;
+      this.max=max;
+      }
+    }
+    
+  protected List information;
+    
+  public createaccount()
+    {
+    information= new LinkedList();
+    information.add(new Information("-u","username",4,20));
+    information.add(new Information("-p","password",4,256));
+    information.add(new Information("-e","email"));
+    information.add(new Information("-c","character",4,20));
+    }
+  
+  protected String get(String name) throws Attributes.AttributeNotFoundException
+    {
+    for(Iterator it=information.iterator();it.hasNext();)
+      {
+      Information item=(Information)it.next();
+      
+      if(item.equals(name))
+        {
+        return item.value;
+        }
+      }
+    
+    throw new Attributes.AttributeNotFoundException(name);
+    }
+    
+  public abstract RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception;
+
+  protected int run(String[] args)
     {
     /** TODO: Factorize this method */
     int i=0;
-    PrintWriter out=null;
-    String username=null;
-    String password=null;
-    String email=null;
-    String character=null;
-        
+
     while(i!=args.length)
       {
-      if(args[i].equals("-u"))
+      for(Iterator it=information.iterator();it.hasNext();)
         {
-        username=args[i+1];
+        Information item=(Information)it.next();
+        
+        if(args[i].equals(item))
+          {
+          item.value=args[i+1];
+          }
         }
-      else if(args[i].equals("-p"))
+      
+      if(args[i].equals("-h"))
         {
-        password=args[i+1];
-        }
-      else if(args[i].equals("-e"))
-        {
-        email=args[i+1];
-        }
-      else if(args[i].equals("-c"))
-        {
-        character=args[i+1];
-        }
-      else if(args[i].equals("-h"))
-        {
-        // TODO: Write help
+        System.out.println("createaccount application for Marauroa");
+        for(Iterator it=information.iterator();it.hasNext();)
+          {
+          Information item=(Information)it.next();          
+          System.out.println(item.param+" to use/add "+item.name);
+          }
         }
       ++i;
       }
-    if(username==null) return (1);
-    if(password==null) return (1);
-    if(email==null) return (1);
-    if(character==null) return (1);
+    
+    for(Iterator it=information.iterator();it.hasNext();)
+      {
+      Information item=(Information)it.next();
+      
+      if(item.value.equals(""))
+        {        
+        return 1;
+        }
+      }
     
     Transaction trans=null;
+    PrintWriter out=null;
       
     try
       {
@@ -72,66 +122,47 @@ class createaccount
       String webfolder=conf.get("server_logs_directory");
 
       out=new PrintWriter(new FileOutputStream(webfolder+"/createaccount_log.txt",true));
-      out.println(new Date().toString()+": Trying to create username("+username+"), password("+password+"), character("+character+")");
-      out.flush();
+      out.println(new Date().toString()+": Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
       
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
-
       trans=playerDatabase.getTransaction();
+      
       out.println("Checking for valid string");
-      out.flush();
-      if(playerDatabase.validString(username)==false)
+      for(Iterator it=information.iterator();it.hasNext();)
         {
-        out.println("String not valid: "+username);
-        return (2);
+        Information item=(Information)it.next();
+        
+        if(playerDatabase.validString(item.value))
+          {
+          out.println("String not valid: "+item.name);
+          return 2;
+          }
         }
-      if(playerDatabase.validString(password)==false)
-        {
-        out.println("String not valid: "+password);
-        return (2);
-        }
-      if(playerDatabase.validString(email)==false)
-        {
-        out.println("String not valid: "+email);
-        return (2);
-        }
-      if(playerDatabase.validString(character)==false)
-        {
-        out.println("String not valid: "+character);
-        return (2);
-        }
+
       out.println("Checking string size");
-      if(username.length()>10 || username.length()<4)
+      for(Iterator it=information.iterator();it.hasNext();)
         {
-        out.println("String size not valid: "+username);
-        return (3);
+        Information item=(Information)it.next();
+        if(item.value.length()>item.max || item.value.length()<item.min)
+          {
+          out.println("String size not valid: "+item.name);
+          return 3;
+          }
         }
-      if(password.length()>10 || password.length()<1)
-        {
-        out.println("String size not valid: "+password);
-        return (3);
-        }
-      if(email.length()>50 || email.length()<5)
-        {
-        out.println("String size not valid: "+password);
-        return (3);
-        }
-      if(character.length()>20 || character.length()<4)
-        {
-        out.println("String size not valid: "+character);
-        return (3);
-        }
+
       out.println("Checking if player exists");
-      if(playerDatabase.hasPlayer(trans, username))
+      if(playerDatabase.hasPlayer(trans, get("username")))
         {
         out.println("ERROR: Player exists");
         return (4);
         }
+        
       out.println("Adding player");
-      playerDatabase.addPlayer(trans,username,password,email);
+      playerDatabase.addPlayer(trans,get("username"),get("password"),get("email"));
 
-      RPObject object=new RPObject();
-      playerDatabase.addCharacter(trans, username,character,object);
+      RPObject object=populatePlayerRPObject(playerDatabase);
+      
+      playerDatabase.addCharacter(trans, get("username"),get("character"),object);
       out.println("Correctly created");
       trans.commit();
       }
@@ -158,6 +189,7 @@ class createaccount
         out.close();
         }
       }
+      
     return (0);
     }
   }
