@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.51 2004/06/21 17:11:33 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.52 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,14 +28,17 @@ import marauroa.*;
 public class MessageS2CPerception extends Message
   {
   private byte typePerception;
+    
+  private int timestampPerception;
+  private IRPZone.ID zoneid;
 
   private List addedRPObjects;
   private List modifiedAddedAttribsRPObjects;
   private List modifiedDeletedAttribsRPObjects;
   private List deletedRPObjects;
-    
-  private int timestampPerception;
   private RPObject myRPObject;
+  
+  private static CachedCompressedPerception cache=CachedCompressedPerception.get();
   
   /** Constructor for allowing creation of an empty message */
   public MessageS2CPerception()
@@ -58,6 +61,7 @@ public class MessageS2CPerception extends Message
     type=TYPE_S2C_PERCEPTION;
     
     typePerception=perception.type;
+	zoneid=perception.zoneid;
     addedRPObjects=perception.addedList;
     modifiedAddedAttribsRPObjects=perception.modifiedAddedAttribsList;
     modifiedDeletedAttribsRPObjects=perception.modifiedDeletedAttribsList;
@@ -91,7 +95,12 @@ public class MessageS2CPerception extends Message
     {
     return typePerception;
     }
-  
+   
+  public IRPZone.ID getRPZoneID()
+    {
+    return zoneid;
+    }
+    
   /** This method returns the list of modified objects
    *  @return List<RPObject> of added objects */
   public List getAddedRPObjects()
@@ -129,6 +138,7 @@ public class MessageS2CPerception extends Message
     StringBuffer perception_string=new StringBuffer();
     perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
 
+    perception_string.append("\n  zoneid: "+zoneid+"\n");
     perception_string.append("\n  added: \n");
     it=addedRPObjects.iterator();
     while(it.hasNext())
@@ -164,120 +174,6 @@ public class MessageS2CPerception extends Message
     return perception_string.toString();
     }
   
-  private static byte[] precomputed_StaticPartPerceptionDelta=null;
-  private static byte[] precomputed_StaticPartPerceptionSync=null;
-  private static byte precomputed_StaticPartPerceptionType=Perception.DELTA;
-  private static long precomputed_StaticPartSavedBytesDelta=0;
-  private static long precomputed_StaticPartSavedBytesSync=0;
-  
-  public static void clearPrecomputedPerception()
-    {
-    precomputed_StaticPartPerceptionDelta=null;
-    precomputed_StaticPartPerceptionSync=null;
-    precomputed_StaticPartSavedBytesDelta=0;
-    precomputed_StaticPartSavedBytesSync=0;
-    }
-  
-  private byte[] getPrecomputedStaticPartPerception() throws IOException
-    {
-    if(typePerception==Perception.DELTA && precomputed_StaticPartPerceptionDelta==null)
-      {
-      ByteArrayOutputStream array=new ByteArrayOutputStream();
-      ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
-      OutputSerializer serializer=new OutputSerializer(out_stream);
-      
-      computeStaticPartPerception(serializer);
-      
-      out_stream.close();
-      precomputed_StaticPartPerceptionDelta=array.toByteArray();
-      
-      precomputed_StaticPartSavedBytesDelta=out_stream.getBytesWritten()-precomputed_StaticPartPerceptionDelta.length;
-      }
-    else if(typePerception==Perception.SYNC && precomputed_StaticPartPerceptionSync==null)
-      {
-      ByteArrayOutputStream array=new ByteArrayOutputStream();
-      ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
-      OutputSerializer serializer=new OutputSerializer(out_stream);
-      
-      computeStaticPartPerception(serializer);
-      
-      out_stream.close();
-      precomputed_StaticPartPerceptionSync=array.toByteArray();
-      
-      precomputed_StaticPartSavedBytesSync=out_stream.getBytesWritten()-precomputed_StaticPartPerceptionSync.length;
-      }
-     
-    
-    if(typePerception==Perception.SYNC)
-      {      
-      Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytesSync);
-      return precomputed_StaticPartPerceptionSync;
-      }
-    else
-      {
-      Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytesDelta);
-      return precomputed_StaticPartPerceptionDelta;
-      }    
-    }
-
-  private byte[] getDynamicPartPerception() throws IOException
-    {
-    ByteArrayOutputStream array=new ByteArrayOutputStream();
-    OutputSerializer serializer=new OutputSerializer(array);
-
-    serializer.write((int)timestampPerception);
-    if(myRPObject==null)
-      {
-      serializer.write((byte)0);
-      }
-    else
-      {
-      serializer.write((byte)1);
-      myRPObject.writeObject(serializer,true);
-      }
-      
-    return array.toByteArray();
-    }
-  
-  private void computeStaticPartPerception(OutputSerializer ser) throws IOException
-    {
-    ser.write((byte)typePerception);
-    
-    Iterator it=null;
-    
-    it=addedRPObjects.iterator();
-    ser.write((int)addedRPObjects.size());
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-
-    ser.write((int)modifiedAddedAttribsRPObjects.size());
-    it=modifiedAddedAttribsRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-
-    ser.write((int)modifiedDeletedAttribsRPObjects.size());
-    it=modifiedDeletedAttribsRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-    
-    ser.write((int)deletedRPObjects.size());
-    it=deletedRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-    }
-  
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
@@ -294,6 +190,7 @@ public class MessageS2CPerception extends Message
     InputSerializer ser=new InputSerializer(szlib);
     
     typePerception=ser.readByte();
+    zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(null));
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     modifiedAddedAttribsRPObjects=new LinkedList();
@@ -363,6 +260,153 @@ public class MessageS2CPerception extends Message
     else
       {
       myRPObject=null;
+      }
+    }
+
+  static class CachedCompressedPerception 
+    {
+    static class CacheKey
+     {
+      byte type;
+      IRPZone.ID zoneid;
+     
+      public CacheKey(byte type, IRPZone.ID zoneid)
+        {
+        this.type=type;
+        this.zoneid=zoneid;
+        }
+      
+      public boolean equals(Object obj)
+        {
+        if(obj instanceof CacheKey)
+          {
+          CacheKey a=(CacheKey)obj;
+          if(a.type==type && a.zoneid==zoneid)
+            {
+            return true;
+            }
+          }
+          
+        return false;
+        }
+        
+      public int hashCode()
+        {
+        return (type+1)*zoneid.hashCode();
+        }
+      }
+
+    private Map cachedContent;
+    
+    private CachedCompressedPerception()
+      {
+      cachedContent=new HashMap();
+      }
+      
+    static CachedCompressedPerception instance;
+    static public CachedCompressedPerception get()
+      {
+      if(instance==null)
+        {
+        instance=new CachedCompressedPerception();
+        }
+       
+      return instance;
+      }
+     
+    public void clear()
+      {
+      cachedContent.clear();
+      }
+    
+    public byte[] get(MessageS2CPerception perception) throws IOException
+      {
+      CacheKey key=new CacheKey(perception.typePerception, perception.zoneid);
+      
+      if(!cachedContent.containsKey(key))
+        {
+        ByteArrayOutputStream array=new ByteArrayOutputStream();
+        DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+        OutputSerializer serializer=new OutputSerializer(out_stream);
+        
+        perception.computeStaticPartPerception(serializer);
+        
+        out_stream.close();
+        byte[] content=array.toByteArray();
+        
+        cachedContent.put(key,content);
+        }
+    
+      return (byte[])cachedContent.get(key);
+      } 
+    }
+
+  public static void clearPrecomputedPerception()
+    {
+    cache.clear();
+    }
+  
+  private byte[] getPrecomputedStaticPartPerception() throws IOException
+    {
+    return cache.get(this);
+    }
+
+  private byte[] getDynamicPartPerception() throws IOException
+    {
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    OutputSerializer serializer=new OutputSerializer(array);
+
+    serializer.write((int)timestampPerception);
+    if(myRPObject==null)
+      {
+      serializer.write((byte)0);
+      }
+    else
+      {
+      serializer.write((byte)1);
+      myRPObject.writeObject(serializer,true);
+      }
+      
+    return array.toByteArray();
+    }
+  
+  private void computeStaticPartPerception(OutputSerializer ser) throws IOException
+    {
+    ser.write((byte)typePerception);
+    ser.write(zoneid);
+    
+    Iterator it=null;
+    
+    it=addedRPObjects.iterator();
+    ser.write((int)addedRPObjects.size());
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+
+    ser.write((int)modifiedAddedAttribsRPObjects.size());
+    it=modifiedAddedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+
+    ser.write((int)modifiedDeletedAttribsRPObjects.size());
+    it=modifiedDeletedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+    
+    ser.write((int)deletedRPObjects.size());
+    it=deletedRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
       }
     }
   }

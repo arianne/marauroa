@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.51 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.52 2004/08/29 11:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,6 +116,9 @@ public final class GameServerManager extends Thread
               marauroad.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
               processOutOfSyncEvent((MessageC2SOutOfSync)msg);
               break;
+            case Message.TYPE_C2S_TRANSFER_ACK:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
+              processTransferACK((MessageC2STransferACK)msg);
             default:
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
               break;
@@ -211,7 +214,7 @@ public final class GameServerManager extends Thread
           }
         else
           {
-          marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
+          marauroad.trace("GameServerManager::processLoginEvent","D","Player trying to logout without choosing character");
           }
         playerContainer.removeRuntimePlayer(clientid);
         }
@@ -297,7 +300,7 @@ public final class GameServerManager extends Thread
       if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_LOGIN_COMPLETE)
         {
         /* Error: Player has not completed login yet, or he/she has logout already. */
-        marauroad.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+        marauroad.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not complete login yet");
         return;
         }
       if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
@@ -322,11 +325,6 @@ public final class GameServerManager extends Thread
         MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
         msgChooseCharacterACK.setClientID(clientid);
         netMan.addMessage(msgChooseCharacterACK);
-        
-        /* Send the map to the client */
-        MessageS2CMap msgMap=new MessageS2CMap(msg.getAddress(),rpMan.buildMapObjectsList(new RPObject.ID(object)));
-        msgMap.setClientID(clientid);
-        netMan.addMessage(msgMap);
         }
       else
         {
@@ -502,7 +500,9 @@ public final class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
         return;
         }
-      playerContainer.updateTimestamp(clientid);
+
+      PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
+      entry.timestamp=System.currentTimeMillis();  
       }
     catch(Exception e)
       {
@@ -542,7 +542,8 @@ public final class GameServerManager extends Thread
         }
       
       /** Notify PlayerEntryContainer that this player is out of Sync */  
-      playerContainer.setOutOfSync(clientid,true);
+      PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
+      entry.perception_OutOfSync=true;
       }
     catch(Exception e)
       {
@@ -551,6 +552,61 @@ public final class GameServerManager extends Thread
     finally
       {
       marauroad.trace("GameServerManager::processOutOfSyncEvent","<");
+      }
+    }
+  
+  private void processTransferACK(MessageC2STransferACK msg)
+    {
+    marauroad.trace("GameServerManager::processTransferACK",">");
+    try
+      {
+      int clientid=msg.getClientID();
+      
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
+        marauroad.trace("GameServerManager::processTransferACK","W","Client("+msg.getAddress().toString()+") has not login yet");
+        return;
+        }
+      if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+        {
+        /* Error: Player has not choose a character yey. */
+        marauroad.trace("GameServerManager::processTransferACK","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
+        marauroad.trace("GameServerManager::processTransferACK","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
+        return;
+        }
+      
+      /** Handle Transfer ACK here */  
+      PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
+      Iterator it=msg.getContents().iterator();
+      while(it.hasNext())
+        {
+        TransferContent content=(TransferContent)it.next();
+        if(content.ack==true)        
+          {
+          content=entry.getContent(content.name);          
+          if(content!=null)
+            {
+            MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
+            netMan.addMessage(msgTransfer);
+            }
+          }
+        }
+      entry.clearContent();
+      
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("GameServerManager::processTransferACK","X",e);
+      }
+    finally
+      {
+      marauroad.trace("GameServerManager::processTransferACK","<");
       }
     }
   }

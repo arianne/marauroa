@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.15 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.16 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -594,7 +594,7 @@ public class Test_Messages extends TestCase
 
     int clientid=14324;
     
-    Perception perception=new Perception(Perception.SYNC);
+    Perception perception=new Perception(Perception.SYNC,new IRPZone.ID("default"));
     perception.added(new RPObject(new RPObject.ID(12)));
     perception.added(new RPObject(new RPObject.ID(13)));
     perception.added(new RPObject(new RPObject.ID(14)));

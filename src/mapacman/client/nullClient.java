@@ -199,12 +199,6 @@ public class nullClient extends Thread
           {
           ++recieved;
           }
-        else if(msg instanceof MessageS2CMap)
-          {
-          List mapData=((MessageS2CMap)msg).getMapObjects();
-          map_objects=new ClientMap(mapData);
-          ++recieved;
-          }
         else if(msg instanceof MessageS2CPerception)
           {
           }

@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.5 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.6 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,14 +24,16 @@ public class Perception
   final public static byte SYNC=1;
   
   public byte type;
+  public IRPZone.ID zoneid;
   public List addedList;
   public List modifiedAddedAttribsList;
   public List modifiedDeletedAttribsList;
   public List deletedList;
   
-  public Perception(byte type)
+  public Perception(byte type, IRPZone.ID zoneid)
     {
     this.type=type;
+    this.zoneid=zoneid;
     addedList=new LinkedList();
     modifiedAddedAttribsList=new LinkedList();
     modifiedDeletedAttribsList=new LinkedList();

@@ -104,6 +104,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\OutputSerializer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\PerceptionHandler.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\TransferContent.java" #[EndFile]
 #[BeginFolder]
 LABEL := "Test"
 FILTER := ""
@@ -122,7 +123,6 @@ FILTER := ""
 LABEL := "Types"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CMap.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SPerceptionACK.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SAction.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SChooseCharacter.java" #[EndFile]
@@ -140,6 +140,9 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CServerInfo.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CInvalidMessage.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SOutOfSync.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2STransferACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CTransfer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CTransferREQ.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]
@@ -231,6 +234,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabaseFactory.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerEntryContainer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Statistics.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GenericDatabaseException.java" #[EndFile]
 #[BeginFolder]
 LABEL := "Test"
 FILTER := ""

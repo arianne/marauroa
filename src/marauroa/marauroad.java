@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.102 2004/07/07 10:07:04 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.103 2004/08/29 11:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,16 +21,17 @@ import marauroa.game.*;
 public class marauroad extends Thread
   {
   final private static boolean DEBUG=false;
-  final private static String VERSION="0.41";
+  final private static String VERSION="1.00";
   
-  private static PrintWriter out;
   private static marauroad marauroa;
+
+  private static PrintWriter out;
   private static Date timestamp;
   private static SimpleDateFormat formatter;
+  private static String filename="";
+  
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
-  
-  private static String filename="";
   
   static
     {
@@ -85,9 +86,9 @@ public class marauroad extends Thread
     
   public static void main (String[] args)
     {
-    println("Marauroa - an open source multiplayer online framework for game development -");
+    println("Marauroa - arianne's open source multiplayer online framework for game development -");
     println("Running on version "+VERSION);
-    println("(C) 2003-2004 Miguel Angel Blanch Lardin");
+    println("(C) 1999-2004 Miguel Angel Blanch Lardin");
     println();
     println("This program is free software; you can redistribute it and/or modify");
     println("it under the terms of the GNU General Public License as published by");

@@ -17,6 +17,7 @@ create table if not exists characters
   (
   player_id integer not null,
   charname VARCHAR(32) not null,
+  zone_id VARCHAR(32) not null,
   object_id integer not null,
   
   PRIMARY KEY(charname,player_id)
@@ -49,23 +50,28 @@ create table if not exists statistics
 
 create table if not exists rpobject
   (
-  id integer not null primary key,
+  id integer not null,
+  zone_id varchar(32) not null,
   slot_id integer
+  
+  PRIMARY KEY(id,zone_id)
   )
   TYPE=INNODB;
   
 create table if not exists rpattribute
   (
   object_id integer not null,
+  zone_id varchar(32) not null,
   name varchar(64) not null,
   value varchar(255),
-  primary key(object_id,name)
+  primary key(object_id,zone_id,name)
   )
   TYPE=INNODB;
 
 create table if not exists rpslot
   (
   object_id integer not null,
+  zone_id varchar(32) not null,
   name varchar(64) not null,
   slot_id integer auto_increment not null,
   
@@ -76,8 +82,16 @@ create table if not exists rpslot
 create table if not exists rpzone
   (
   object_id integer not null,
+  zone_id varchar(32) not null,
   
-  primary key(object_id)
+  primary key(object_id,zone_id)
   )
   TYPE=INNODB;
 
+create table if not exists rpworld
+  (
+  zone_id varchar(32) not null,  
+
+  primary key(zone_id)
+  )
+  TYPE=INNODB;

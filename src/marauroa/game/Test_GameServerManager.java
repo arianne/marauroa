@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.20 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.21 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,11 +139,6 @@ public class Test_GameServerManager extends TestCase
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
           assertTrue("Correct character parameters",true);
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CMap)
-          {
-          assertTrue("Correct Map recieved",true);
           ++recieved;
           }
         else if(msg instanceof MessageS2CPerception)

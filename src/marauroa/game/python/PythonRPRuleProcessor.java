@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.10 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
   {
   private GameScript gameScript;
   private PythonRP pythonRP;
+  private RPServerManager rpman; 
 
   public PythonRPRuleProcessor() throws PropertyNotFoundException, FileNotFoundException
     {
@@ -32,10 +33,12 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
 
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
-  public void setContext(IRPZone zone)
+  public void setContext(RPServerManager rpman, IRPZone zone)
     {
     try
       {
+      this.rpman=rpman;
+      
       gameScript=GameScript.getGameScript();
       gameScript.setRPZone(zone);
       pythonRP=gameScript.getGameRules();

@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.16 2004/07/13 20:31:54 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.17 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,10 +58,12 @@ public class MessageFactory
     register(Message.TYPE_S2C_LOGOUT_NACK,MessageS2CLogoutNACK.class);
     register(Message.TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
     register(Message.TYPE_C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
-    register(Message.TYPE_S2C_MAP,MessageS2CMap.class);
     register(Message.TYPE_C2S_OUTOFSYNC,MessageC2SOutOfSync.class);
     register(Message.TYPE_S2C_SERVERINFO,MessageS2CServerInfo.class);
     register(Message.TYPE_S2C_INVALIDMESSAGE,MessageS2CInvalidMessage.class);
+    register(Message.TYPE_S2C_TRANSFER_REQ,MessageS2CTransferREQ.class);
+    register(Message.TYPE_C2S_TRANSFER_ACK,MessageC2STransferACK.class);
+    register(Message.TYPE_S2C_TRANSFER,MessageS2CTransfer.class);
     marauroad.trace("MessageFactory::register","<");
     }
       

@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.27 2004/07/13 20:31:54 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.28 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -83,13 +83,7 @@ public final class NetworkServerManager
     keepRunning=false;
     while(isfinished==false)
       {
-      try
-        {
-        Thread.sleep(1000);
-        }
-      catch(java.lang.InterruptedException e)
-        {
-        }
+      Thread.yield();
       }
       
     socket.close();
@@ -165,8 +159,8 @@ public final class NetworkServerManager
     }
     
   /** This method add a message to be delivered to the client the message is pointed to.
-   *  @param msg the message to ve delivered. */
-  public synchronized void addMessage(Message msg)
+   *  @param msg the message to be delivered. */
+  public void addMessage(Message msg)
     {
     marauroad.trace("NetworkServerManager::addMessage",">");
     writeManager.write(msg);

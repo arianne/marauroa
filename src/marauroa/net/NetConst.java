@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.25 2004/07/07 10:07:21 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.26 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,6 +49,7 @@ public class NetConst
   final static public byte NETWORK_PROTOCOL_VERSION=15;
   
   final static public long PACKET_TIMEOUT_VALUE=5000;
+
   static
     {
     marauroad.trace("NetConst::(static)",">");

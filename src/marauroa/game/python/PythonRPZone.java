@@ -1,4 +1,4 @@
-/* $Id: PythonRPZone.java,v 1.3 2004/06/20 18:44:42 arianne_rpg Exp $ */
+/* $Id: PythonRPZone.java,v 1.4 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,23 +51,5 @@ public class PythonRPZone extends MarauroaRPZone
   public void onFinish() throws Exception
     {
     pythonZone.onFinish();
-    }
-
-  public List buildMapObjectsList(RPObject.ID id)
-    {
-    marauroad.trace("PythonRPRuleProcessor::serializeMap",">");
-    try
-      {
-      return pythonZone.serializeMap(id);
-      }
-    catch(Exception e)
-      {
-      marauroad.thrown("PythonRPRuleProcessor::serializeMap","X",e);
-      return null;
-      }
-    finally
-      {
-      marauroad.trace("PythonRPRuleProcessor::serializeMap","<");
-      }
     }
   }

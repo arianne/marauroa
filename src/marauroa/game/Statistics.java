@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.3 2004/07/13 15:44:37 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.4 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,7 +25,6 @@ public class Statistics
     {
     public long bytesRecv=0;
     public long bytesSend=0;
-    public long bytesSavedByCompression=0;
     
     public long messagesRecv=0;
     public long messagesSend=0;
@@ -43,7 +42,7 @@ public class Statistics
     
     public void print(PrintWriter out, double diff)
       {
-      out.println("  <byte recv=\""+String.valueOf(bytesRecv)+"\" send=\""+String.valueOf(bytesSend)+"\" saved=\""+String.valueOf(bytesSavedByCompression)+"\"/>");
+      out.println("  <byte recv=\""+String.valueOf(bytesRecv)+"\" send=\""+String.valueOf(bytesSend)+"\"/>");
       out.println("  <message recv=\""+String.valueOf(messagesRecv)+"\" send=\""+String.valueOf(messagesSend)+"\" incorrect=\""+String.valueOf(messagesIncorrect)+"\"/>");
       out.println("  <player login=\""+String.valueOf(playersLogin)+"\" failed=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(playersTimeout)+"\"/>");
       out.println("  <online players=\""+String.valueOf(playersOnline)+"\" objects=\""+String.valueOf(objectsNow)+"\"/>");
@@ -54,7 +53,6 @@ public class Statistics
       {
       bytesRecv=var.bytesRecv+bytesRecv;
       bytesSend=var.bytesSend+bytesSend;
-      bytesSavedByCompression=var.bytesSavedByCompression+bytesSavedByCompression;
       messagesRecv=var.messagesRecv+messagesRecv;
       messagesSend=var.messagesSend+messagesSend;
       messagesIncorrect=var.messagesIncorrect+messagesIncorrect;
@@ -112,11 +110,6 @@ public class Statistics
   public void addBytesSend(long bytes)
     {
     nowVar.bytesSend+=bytes;
-    }
-  
-  public void addBytesSaved(long bytes)
-    {
-    nowVar.bytesSavedByCompression+=bytes;
     }
   
   public void addMessageRecv()

@@ -5,6 +5,6 @@ drop table if exists rpobject;
 drop table if exists rpattribute;
 drop table if exists rpslot;
 drop table if exists rpzone;
-
+drop table if exists rpworld
 
 

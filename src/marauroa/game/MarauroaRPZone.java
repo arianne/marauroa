@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.58 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.59 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import marauroa.marauroad;
 
 public class MarauroaRPZone implements IRPZone
   {
+  private ID zoneid;	
   private Map objects;
   private Map modified;
   private Perception perception;
@@ -26,10 +27,16 @@ public class MarauroaRPZone implements IRPZone
 
   public MarauroaRPZone()
     {
+    zoneid=new ID("default");
     rand.setSeed(new Date().getTime());
     objects=new LinkedHashMap();
     modified=new LinkedHashMap();
-    perception=new Perception(Perception.DELTA);
+    perception=new Perception(Perception.DELTA,getID());
+    }
+  
+  public ID getID()
+    {
+    return zoneid;
     }
   
   public void onInit() throws Exception
@@ -173,7 +180,7 @@ public class MarauroaRPZone implements IRPZone
       {
       if(prebuildTotalPerception==null)
         {
-        prebuildTotalPerception=new Perception(Perception.SYNC);
+        prebuildTotalPerception=new Perception(Perception.SYNC,getID());
         prebuildTotalPerception.addedList=new ArrayList(objects.values());
         }
         
@@ -215,11 +222,6 @@ public class MarauroaRPZone implements IRPZone
     prebuildDeltaPerception=null;
     modified.clear();
 
-    perception=new Perception(Perception.DELTA);
+    perception.clear();
     }
-
-  public List buildMapObjectsList(RPObject.ID id)
-    {
-    return new LinkedList();
-    }      
   }

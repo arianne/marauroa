@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.22 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.23 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,13 +18,16 @@ import marauroa.marauroad;
 public class MarauroaRPRuleProcessor implements IRPRuleProcessor
   {
   private IRPZone zone;
+  private RPServerManager rpman;
+  
   public MarauroaRPRuleProcessor()
     {
     }
 
-  public void setContext(IRPZone zone)
+  public void setContext(RPServerManager rpman, IRPZone zone)
     {
     this.zone=zone;
+    this.rpman=rpman;
     }
 
   public void approvedActions(RPObject.ID id, RPActionList actionList)

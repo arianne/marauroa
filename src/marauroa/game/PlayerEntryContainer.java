@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.39 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.40 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.game;
 import java.util.*;
 import java.net.*;
 import marauroa.*;
+import marauroa.net.*;
 
 /** This class contains a list of the Runtime players existing in Marauroa, but it
  *  also links them with their representation in game and in database, so this is
@@ -36,11 +37,46 @@ public class PlayerEntryContainer
     /** The initial address of this player */
     public InetSocketAddress source;
     /** The time when the latest event was done in this player */
-    public Date timestamp;
+    public long timestamp;
+    
+    public boolean isTimedout()
+      {
+      long value=System.currentTimeMillis()-timestamp;
+      if(value>TimeoutConf.GAMESERVER_PLAYER_TIMEOUT)
+        {
+        return true;
+        }
+      else
+        {
+        return false;
+        }
+      }
 
     /** The time when the latest event was done in this player */
-    public Date timestampLastStored;
+    public long timestampLastStored;
     public RPObject database_storedRPObject;
+
+    public boolean shouldStoredUpdate(RPObject object)
+      {
+      boolean result=false;
+      marauroad.trace("RuntimePlayerEntry::shouldStoredUpdate",">");
+      long value=System.currentTimeMillis()-timestampLastStored;
+      if(database_storedRPObject==null)
+        {
+        database_storedRPObject=(RPObject)object.copy();
+        }
+
+      /** If the object is the same it is not stored on database at all */
+      if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS && !database_storedRPObject.equals(object))
+        {
+        timestampLastStored=System.currentTimeMillis();
+        database_storedRPObject=(RPObject)object.copy();
+        result=true;
+        }
+      
+      marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime","<");
+      return result;
+      }        
 
     /** The name of the choosen character */
     public String choosenCharacter;
@@ -49,10 +85,61 @@ public class PlayerEntryContainer
     /** The rp object of the player */
     public RPObject.ID characterid;
     
+
     /** A counter to detect dropped packets or bad order at client side */
     public int perception_counter;
+    
+    public int getPerceptionTimestamp()
+      {
+      return perception_counter++;
+      }
+      
+    /** It is true if client notified us that it got out of sync */
     public boolean perception_OutOfSync;
+    /** It is the lastest version of our RPObject sent, so if it is the same
+     *  we save it.*/
     public RPObject perception_previousRPObject;
+
+    public boolean isPerceptionModifiedRPObject(RPObject perception_actualRPObject)
+      {
+      boolean result=false;
+
+      if(perception_previousRPObject==null || !perception_previousRPObject.equals(perception_actualRPObject))
+        {
+        perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
+        result=true;          
+        }      
+
+      return result;
+      }
+    
+    /** Contains the content that is going to be transfered to client */
+    List contentToTransfer;
+    
+    public void clearContent()
+      {
+      contentToTransfer=null;
+      }
+      
+    public TransferContent getContent(String name)
+      {
+      if(contentToTransfer==null)
+        {
+        return null;
+        }
+      
+      Iterator it=contentToTransfer.iterator();
+      while(it.hasNext())
+        {
+        TransferContent content=(TransferContent)it.next();
+        if(content.name==name)
+          {
+          return content;
+          }
+        }
+      
+      return null;
+      }
     }
   
 
@@ -81,21 +168,31 @@ public class PlayerEntryContainer
 
       return ((Integer)entry.getKey()).intValue();
       }
+    
+    public void remove()
+      {
+      entryIter.remove();
+      }
     }
+    
   /** This method returns an iterator of the players in the container */
   public ClientIDIterator iterator()
     {
     return new ClientIDIterator(listPlayerEntries.entrySet().iterator());
     }
+    
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */
   private HashMap listPlayerEntries;
+  
   /** A object representing the database */
   private IPlayerDatabase playerDatabase;
   private Transaction transaction;  
   
   /** A reader/writers lock for controlling the access */
   private RWLock lock;
+
   private static PlayerEntryContainer playerEntryContainer;
+
   /** Constructor */
   private PlayerEntryContainer()
     {
@@ -156,8 +253,8 @@ public class PlayerEntryContainer
       RuntimePlayerEntry entry=new RuntimePlayerEntry();
 
       entry.state=STATE_NULL;
-      entry.timestamp=new Date();
-      entry.timestampLastStored=new Date();
+      entry.timestamp=System.currentTimeMillis();
+      entry.timestampLastStored=System.currentTimeMillis();
       entry.source=source;
       entry.username=username;
       entry.choosenCharacter=null;
@@ -230,68 +327,7 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::verifyRuntimePlayer","<");
       }
     }
-  
-  /** This method returns a byte that indicate the state of the player from the 3 possible options:
-   *  - STATE_NULL
-   *  - STATE_LOGIN_COMPLETE
-   *  - STATE_GAME_BEGIN
-   *  @param clientid the runtime id of the player
-   *  @throws NoSuchClientIDException if clientid is not found */
-  public byte getRuntimeState(int clientid) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::getRuntimeState",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-
-        return entry.state;
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::getRuntimeState","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::getRuntimeState","<");
-      }
-    }
-  
-  /** This method set the state of the player from the 3 possible options:
-   *  - STATE_NULL
-   *  - STATE_LOGIN_COMPLETE
-   *  - STATE_GAME_BEGIN
-   *  @param clientid the runtime id of the player
-   *  @param newState the new state to which we move.
-   *  @throws NoSuchClientIDException if clientid is not found */
-  public byte changeRuntimeState(int clientid,byte newState) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::changeRuntimeState",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        byte oldState=entry.state;
-
-        entry.state=newState;
-        return oldState;
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::changeRuntimeState","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::changeRuntimeState","<");
-      }
-    }
-  
+    
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.
    *  @param username is the name of the player
@@ -423,7 +459,7 @@ public class PlayerEntryContainer
       }
     }
   
-  /** This method returns true if the database has the player pointed by username
+  /** This method returns true if the playerentryContainer has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
   public int getClientidPlayer(String username)
@@ -443,6 +479,32 @@ public class PlayerEntryContainer
           return playerEntry.clientid;
           }
         }
+      return -1;
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getClientidPlayer","<");
+      }
+    }
+
+  public int getClientidPlayer(RPObject.ID id)
+    {
+    marauroad.trace("PlayerEntryContainer::getClientidPlayer",">");
+    try
+      {
+      Iterator it=listPlayerEntries.entrySet().iterator();
+      
+      while(it.hasNext())
+        {
+        Map.Entry entry=(Map.Entry)it.next();
+        RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
+        
+        if(playerEntry.characterid.equals(id))
+          {
+          return playerEntry.clientid;
+          }
+        }
+        
       return -1;
       }
     finally
@@ -686,6 +748,139 @@ public class PlayerEntryContainer
       }
     }
   
+  private static Random rand=new Random();
+  private int generateClientID(InetSocketAddress source)
+    {
+    int clientid=rand.nextInt();
+
+    while(hasRuntimePlayer(clientid))
+      {
+      clientid=rand.nextInt();
+      }
+    return clientid;
+    }
+  
+  protected int size()
+    {
+    return listPlayerEntries.size();
+    }
+  
+  /** This method returns the lock so that you can control how the resource is used
+   *  @return the RWLock of the object */
+  public RWLock getLock()
+    {
+    return lock;
+    }
+
+  /** This method exposes directly the player info, so you can save valuable time. */
+  public RuntimePlayerEntry get(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::get",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        return (RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::get","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::get","<");
+      }
+    }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+  
+  
+  
+  /** This method returns a byte that indicate the state of the player from the 3 possible options:
+   *  - STATE_NULL
+   *  - STATE_LOGIN_COMPLETE
+   *  - STATE_GAME_BEGIN
+   *  @param clientid the runtime id of the player
+   *  @throws NoSuchClientIDException if clientid is not found */
+  public byte getRuntimeState(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::getRuntimeState",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+
+        return entry.state;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getRuntimeState","<");
+      }
+    }
+  
+  /** This method set the state of the player from the 3 possible options:
+   *  - STATE_NULL
+   *  - STATE_LOGIN_COMPLETE
+   *  - STATE_GAME_BEGIN
+   *  @param clientid the runtime id of the player
+   *  @param newState the new state to which we move.
+   *  @throws NoSuchClientIDException if clientid is not found */
+  public byte changeRuntimeState(int clientid,byte newState) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::changeRuntimeState",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        byte oldState=entry.state;
+
+        entry.state=newState;
+        return oldState;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::changeRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::changeRuntimeState","<");
+      }
+    }
+  
+  
   /** This method returns the RPObject.ID of the object the player whose clientid is clientid owns.
    *  @param clientid the runtime id of the player
    *  @return the RPObject.ID of the object that this player uses.
@@ -715,23 +910,7 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::getRPObjectID","<");
       }
     }
-  private static Random rand=new Random();
-  private int generateClientID(InetSocketAddress source)
-    {
-    int clientid=rand.nextInt();
 
-    while(hasRuntimePlayer(clientid))
-      {
-      clientid=rand.nextInt();
-      }
-    return clientid;
-    }
-  
-  protected int size()
-    {
-    return listPlayerEntries.size();
-    }
-  
   /** This method returns the username of the player with runtime id equals to clientid.
    *  @param clientid the runtime id of the player   *
    *  @throws NoSuchClientIDException if clientid is not found */
@@ -755,206 +934,6 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::getUsername","<");
-      }
-    }
-  
-  /** The method update the timestamp value of clientid
-   *  @param clientid the runtime id of the player   *
-   *  @throws NoSuchClientIDException if clientid is not found */
-  public void updateTimestamp(int clientid) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::updateTimestamp",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-
-        entry.timestamp=new Date();
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::updateTimestamp","<");
-      }
-    }
-    
-  public boolean shouldStoredUpdate(int clientid, RPObject object) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        long value=new Date().getTime()-entry.timestampLastStored.getTime();
-        
-        if(entry.database_storedRPObject==null)
-          {
-          entry.database_storedRPObject=(RPObject)object.copy();
-          }
-
-        if(!entry.database_storedRPObject.equals(object) && value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)
-          {
-          entry.timestampLastStored=new Date();
-          entry.database_storedRPObject=(RPObject)object.copy();
-          return true;
-          }
-        else
-          {
-          return false;
-          }
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime","<");
-      }        
-    }
-    
-  /** The method returns true if the clientid has timed out.
-   *  @param clientid the runtime id of the player   *
-   *  @return true if the player timed out.
-   *  @throws NoSuchClientIDException if clientid is not found */
-  public boolean timedout(int clientid) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::timedout",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        long value=new Date().getTime()-entry.timestamp.getTime();
-
-        if(value>TimeoutConf.GAMESERVER_PLAYER_TIMEOUT)
-          {
-          return true;
-          }
-        else
-          {
-          return false;
-          }
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::timeodut","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::timedout","<");
-      }
-    }
-
-  public boolean isOutOfSync(int clientid) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::isOutOfSync",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        return entry.perception_OutOfSync;
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::isOutOfSync","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::isOutOfSync","<");
-      }
-    }
-
-  public void setOutOfSync(int clientid, boolean status) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::setOutOfSync",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        entry.perception_OutOfSync=status;
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::setOutOfSync","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::setOutOfSync","<");
-      }
-    }
-    
-  public int getPerceptionTimestamp(int clientid) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        int pre=entry.perception_counter;
-        entry.perception_counter++;
-
-        return pre;
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp","<");
-      }
-    }
-
-  public boolean isPerceptionModifiedRPObject(int clientid,RPObject perception_actualRPObject) throws NoSuchClientIDException
-    {
-    marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject",">");
-    try
-      {
-      if(hasRuntimePlayer(clientid))
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        RPObject pre=entry.perception_previousRPObject;
-
-        if(pre!=null && pre.equals(perception_actualRPObject))
-          {
-          return false;
-          }
-        else
-          {
-          entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
-          return true;          
-          }         
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException(clientid);
-        }
-      }
-    finally
-      {
-      marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject","<");
       }
     }
   
@@ -982,12 +961,5 @@ public class PlayerEntryContainer
       {
       marauroad.trace("PlayerEntryContainer::getInetSocketAddress","<");
       }
-    }
-  
-  /** This method returns the lock so that you can control how the resource is used
-   *  @return the RWLock of the object */
-  public RWLock getLock()
-    {
-    return lock;
     }
   }

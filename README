@@ -1,17 +1,16 @@
 -------------------------------------------------------------------------------
-| This program is free software; you can redistribute it and/or modify         
-| it under the terms of the GNU General Public License as published by
-| the Free Software Foundation.
+| This program is free software; you can redistribute it and/or modify it under        
+| the terms of the GNU General Public License as published by the Free Software
+| Foundation.
 | 
-| This program is distributed in the hope that it will be useful,
-| but WITHOUT ANY WARRANTY; without even the implied warranty of
-| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-| doc/GPL.license file for more details.
+| This program is distributed in the hope that it will be useful, but WITHOUT 
+| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+| FOR A PARTICULAR PURPOSE.  See the file LICENSE for more details.
 -------------------------------------------------------------------------------
+
 
 Marauroa
 --------
-
 Marauroa is a Multiplayer Online Engine Server, that you can use to build 
 you own online games using Marauroa as a Content Management system.
 
@@ -20,8 +19,8 @@ with a UDP oriented network protocol, a mySQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable 
 by developers and that is able to run scripts on Python for the game's rules.
  
-Marauroa is based on a philosophy we called Action/Perception, on each turn a 
-perception is send to clients explaining them what they percieve and clients 
+Marauroa is based on a philosophy we call Action/Perception, on each turn a 
+perception is sent to clients explaining them what they percieve and clients 
 can ask server to do any action in their names using actions.
 Marauroa is totally game agnostic and makes very little assumptions about what 
 are you trying to do, allowing a great freedom to create whatever type of game 
@@ -37,66 +36,77 @@ http://arianne.sourceforge.net
 
 Marauroa is a GPL project.
 
-Version
--------
-0.41 version 
+
+Current Version
+---------------
+Version 0.41
 
 
 Status
 ------
 Marauroa is playable.
 
-Version >0.11 contains a very simple game: Tic-tac-toe, implemented 
-using the Marauroa engine. It was removed on 0.35
+Version > 0.20 Contains a simple Gladiators game using the Marauroa engine.
+You need Arianne's Gladiator client in order to be able to play.
 
-Version >0.20 contains a simple Gladiators game using also the Marauroa engine.
-You need arianne's Gladiator client in order to be able to play.
-
-Version >0.33 contains a multiplayer pacman game using the Python rules.
+Version > 0.33 Contains a multiplayer pacman game using the Python rules.
 
 
 Requeriments
 ------------
-Actually to compile Marauroa you need:
+To actually compile Marauroa you will need:
 - Java SDK 1.4 http://java.sun.com
 - JUnit 1.3.8 http://junit.sourceforge.net
 - Ant 1.6 http://ant.apache.org
-
-In order to get it working with MySQL you also need:
-- MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
-
-Optionally you may want to add the next set of libraries to get Python support:
 - Jython 2.1 http://www.jython.org/download.html
 
-And optionally if you want to build the java 3D gladiators client:
+In order to get it working with MySQL you will also need:
+- MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
+
+Optionally if you want to build the java 3D Gladiators client:
 - JOrbis 0.0.12 http://www.jcraft.com/jorbis/
 - Quake 2 MD2 Loader http://www.newdawnsoftware.com/resources/j3d.html
 - Loader3DS http://www.starfireresearch.com/services/java3d/inspector3ds.html
 
+
 Build
 -----
-Build using ant
+First, install Java, JUnit, Ant, and Jython
+  NOTE: Do not install Jython on a directory path that contains spaces.
 
-You need ant properly installed on your system to build Marauroa. Once you have
-ant running, simple move to marauroa directory and run ant. 
+Second, set junit.jar and jython.jar on the classpath.
+  For Example:
+  set classpath=%classpath%;C:\junit3.8.1\junit.jar
+  set classpath=%classpath%;C:\junit3.8.1\junit.jar
 
-cd /foo/bar/marauroa ant -Dlibdir=./dependencies jar
+Third, move to the marauroa directory.
+  cd C:\marauroa (Windows)
+  or
+  cd /foo/bar/marauroa (UNIX)
 
-Where dependencies is a directory that contains all the libraries, you can omit 
-it if you have configured correctly your classpath.
+Fourth, run ant jar.
+  ant jar
+  or
+  ant -Dlibdir=./dependencies jar
+  
+  Where dependencies is a directory that contains all the libraries, you can omit 
+  it if you have correctly configured your classpath. NOTE: ??This may not work
+  on in the current version or possible on Windows??
 
-You will have a marauroa-<version>.jar file in the lib folder. You can generate
-all the documentation by doing ant docs
+  BUILD SUCCESSFUL Total time: 3 seconds
+
+  You will have a marauroa-<version>.jar file in the lib folder. Nice, isn't it? 
+
+Last, run ant docs to generate the API documentation.
+
 
 Running
 -------
-ok, you have compiled Marauroa and now what to do?
+Ok, you have compiled Marauroa. Now what to do?
 
-BUILD SUCCESSFUL Total time: 3 seconds
-
-Nice, isn't it? Well, if you have build a Marauroa server it is because you 
-want to play yourself with the server because either you want to run your own
- game server or because you are a developer wanting to develop your own game. 
+Well, if you have built a Marauroa server it is because you 
+want to play with the server either because you want to run your own
+game server or because you are a developer wanting to develop your own game. 
 If you don't understand the above it is prone that you are looking for 
 http://arianne.sourceforge.net instead.
 
@@ -232,6 +242,7 @@ it works it means that everything else is also working.
 Playing with clients
 
 Read instead the clients pages at http://arianne.sourceforge.net
+
 
 Changelog
 ---------

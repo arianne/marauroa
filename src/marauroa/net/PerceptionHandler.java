@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.16 2004/07/13 20:31:54 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.17 2004/08/29 11:07:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,9 +22,7 @@ import marauroa.*;
  *  to the world. You should always use this class because it is a complex task that
  *  is easy to do in the wrong way. */
 public class PerceptionHandler
-  {
-  
-    
+  {   
   private IPerceptionListener listener;
   private List previousPerceptions;
   private int previousTimestamp;
