@@ -36,6 +36,7 @@ public class Configuration
       }
     }
 
+  /** Constructor */
   private Configuration() throws PropertyFileNotFoundException
     {
     marauroad.trace("Configuration",">");
@@ -56,52 +57,82 @@ public class Configuration
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration","X","Configuration file not found: "+e.getMessage());
-      marauroad.trace("Configuration","<");
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration","X","Error loading Configuration file: "+e.getMessage());
-      marauroad.trace("Configuration","<");
       throw new PropertyFileNotFoundException();
       }
-
-    marauroad.trace("Configuration","<");
+    finally
+      {
+      marauroad.trace("Configuration","<");
+      }
     }
     
+  /** This method returns an instance of Configuration 
+   *  @return A shared instance of Configuration */
   public static Configuration getConfiguration() throws PropertyFileNotFoundException
     {
-    if(configuration==null)
+    marauroad.trace("Configuration::getConfiguration",">");
+    
+    try
       {
-      configuration=new Configuration();
+      if(configuration==null)
+        {
+        configuration=new Configuration();
+        }
+              
+      return configuration;
       }
-      
-    return configuration;
+    finally
+      {
+      marauroad.trace("Configuration::getConfiguration","<");
+      }
     }
     
+  /** This method returns a String with the value of the property.
+   *  @param property the property we want the value
+   *  @throw PropertyNotFound if the property is not found. */
   public String get(String property) throws PropertyNotFoundException
     {
     marauroad.trace("Configuration::get",">");
-    String result=properties.getProperty(property);
-    
-    if(result==null)
+
+    try
       {
-      marauroad.trace("Configuration::get","E","Property ["+property+"] not found");
-      marauroad.trace("Configuration::get","<");
-      throw new PropertyNotFoundException(property);
+      String result=properties.getProperty(property);
+    
+      if(result==null)
+        {
+        marauroad.trace("Configuration::get","X","Property ["+property+"] not found");
+        throw new PropertyNotFoundException(property);
+        }
+
+      marauroad.trace("Configuration::get","D","Property ["+property+"]="+result);
+      return result;
       }
-    marauroad.trace("Configuration::get","D","Property ["+property+"]="+result);
-      
-    marauroad.trace("Configuration::get","<");
-    return result;
+    finally
+      {
+      marauroad.trace("Configuration::get","<");
+      }
     }
     
+  /** This method set a property with the value we pass as parameter
+   *  @param property the property we want to set the value
+   *  @param value the value to set */
   public void set(String property, String value)
     {
     marauroad.trace("Configuration::set",">");
-    marauroad.trace("Configuration::set","D","Property ["+property+"]="+value);
-    properties.put(property,value);
-    marauroad.trace("Configuration::set","<");
+    
+    try
+      {
+      marauroad.trace("Configuration::set","D","Property ["+property+"]="+value);
+      properties.put(property,value);
+      }
+    finally
+      {
+      marauroad.trace("Configuration::set","<");
+      }
     }
   
   public void store() throws PropertyFileNotFoundException
@@ -115,16 +146,16 @@ public class Configuration
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration::store","X","Configuration file not found: "+e.getMessage());
-      marauroad.trace("Configuration::store","<");
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration::store","X","Error loading Configuration file: "+e.getMessage());
-      marauroad.trace("Configuration::store","<");
       throw new PropertyFileNotFoundException();
       }
-
-    marauroad.trace("Configuration::store","<");
+    finally
+      {
+      marauroad.trace("Configuration::store","<");
+      }
     }
   }

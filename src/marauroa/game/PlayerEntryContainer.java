@@ -83,8 +83,8 @@ public class PlayerEntryContainer
       }
     }
     
-  /** This method returns an instance of PlayerDatabase 
-   *  @return A shared instance of PlayerDatabase */
+  /** This method returns an instance of PlayerEntryContainer 
+   *  @return A shared instance of PlayerEntryContainer */
   public static PlayerEntryContainer getContainer()
     {
     if(playerEntryContainer==null)
