@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.34 2004/02/05 23:13:22 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.35 2004/02/06 16:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -162,7 +162,7 @@ public class marauroad extends Thread
     marauroad.trace("marauroad::run",">");
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
-    instance.setTestDatabase();
+    //instance.setTestDatabase();
 
     instance.init();
 
