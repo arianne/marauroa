@@ -1,16 +1,16 @@
-Title  : GameManager explained
-Info   : Description of the GameManager and its purpouse.
-Keyword: GameManager, NetworkManager
-Author : Miguel Angel Blanch Lardin
-Created: 2003/09/26
-status : planning
-
-%% BEGIN %%
+<p>
+<b>Title  :</b> GameManager explained<br>
+<b>Info   :</b> Description of the GameManager and its purpouse.<br>
+<b>Keyword:</b> GameManager, NetworkManager<br>
+<b>Author :</b> Miguel Angel Blanch Lardin<br>
+<b>Created:</b> 2003/09/26<br>
+<b>status :</b> planning<p>
 
 The main idea behind GameManager is to handle all the "business logic", so this
-Manager decides about every reply to each individual message.
+Manager decides about every reply to each individual message.<p>
 
 The logic is something like:
+<pre>
 
 GameManager
   {
@@ -22,12 +22,16 @@ GameManager
     }  
   }
 
-So let's define the reply to each message.
+</pre>
+
+So let's define the reply to each message.<br>
 Before explaining each message processing, let's clarify that the best way of 
 modelling this system is using finite automates, where based on the input we 
-change state and produce an output.
+change state and produce an output.<p>
 
-Process C2S Login ( STATE_BEGIN_LOGIN )
+
+<b>Process C2S Login</b> ( STATE_BEGIN_LOGIN )
+<pre>
   Precondition: The state MUST be NULL
   
   Test if there is room for more players.
@@ -60,9 +64,10 @@ Process C2S Login ( STATE_BEGIN_LOGIN )
     
   Postcondition: The state MUST be NULL or STATE_LOGIN_COMPLETE
     and a PlayerEntry for this player with an unique correct clientid.
-    
+</pre>    
 
-Process C2S ChooseCharacter ( STATE_LOGIN_COMPLETE )
+<b>Process C2S ChooseCharacterz</b> ( STATE_LOGIN_COMPLETE )
+<pre>
   Precondition: The state MUST be STATE_LOGIN_COMPLETE
   
   if exist in database character
@@ -80,9 +85,10 @@ Process C2S ChooseCharacter ( STATE_LOGIN_COMPLETE )
     
   Postcondition: The state MUST be STATE_GAME_BEGIN and the PlayerStructure 
     being completly filled now or state is STATE_LOGIN_COMPLETE
+</pre>    
     
-    
-Process C2S Logout ( STATE_GAME_END )
+<b>Process C2S Logout</b> ( STATE_GAME_END )
+<pre>
   Precondition: The state can be whatever but STATE_LOGIN_BEGIN
   
   if( rpEngine allows player to logout )
@@ -98,6 +104,4 @@ Process C2S Logout ( STATE_GAME_END )
     }
     
   Postcondition: Either is the same that the input state or the state is 
-  
-
-%% END %%
+</pre>  

@@ -1,41 +1,42 @@
-Title  : NetworkManager explained
-Info   : Description of the networkmanager and its purpouse.
-Keyword: NetworkManager, Message, Thread, Socket, UDP
-Author : Miguel Angel Blanch Lardin
-Created: 2003/09/26
-status : planning
-
-
-%% BEGIN %%
+<p>
+<b>Title  :</b> NetworkManager explained<br>
+<b>Info   :</b> Description of the networkmanager and its purpouse.<br>
+<b>Keyword:</b> NetworkManager, Message, Thread, Socket, UDP<br>
+<b>Author :</b> Miguel Angel Blanch Lardin<br>
+<b>Created:</b> 2003/09/26<br>
+<b>status :</b> planning<p>
 
 NetworkManager is our router that send and recieve messages from and to the 
-network.
+network.<p>
 
-The basic idea is that the manager expose and interface that allow:
-- Read a message from the network
-- Send a message to the network
-- Finalize the manager
+The basic idea is that the manager expose and interface that allow:<ul>
+<li>Read a message from the network</li>
+<li>Send a message to the network</li>
+<li>Finalize the manager</li>
+</ul>
 
-The read operation is a blocking one so it we have two options:
-- Polling 
-- Blocking
+The read operation is a blocking one so it we have two options:<ul>
+<li>Polling </li>
+<li>Blocking</li>
+</ul>
 
 We choose blocking because we don't waste CPU time polling the network for 
 messages, so we need to create a Thread to read from the Network, let's call
-it NetworkManagerRead 
+it NetworkManagerRead <p>
 
 Alternatively, we have to write messages to the network, and write is an 
 operation that is non blocking, so we safely can code it as a method of 
-NetworkManager.
+NetworkManager.<p>
 
 NetworkManager must also open a Socket where it will recieve all the message 
 from the network, and where it will write all the message to the network, both 
-write and read use the same socket.
+write and read use the same socket.<p>
 
 With the idea of encapsulating all the information, we create both Read and 
 Write methods as inner classes of NetworkManager, with the only difference that
-Read extends Thread and Write is just a common class.
+Read extends Thread and Write is just a common class.<p>
 
+<pre>
 NetworkManager
   {
   socket
@@ -54,19 +55,18 @@ NetworkManager
     send socket    
     }
   }
+</pre>
 
 As you can see messages are stored on a list when they are recieved, acccess to
-the list is synchronized.
+the list is synchronized.<p>
 
-So getting back to the interface exposed to other objects.
+So getting back to the interface exposed to other objects.<p>
 
 The write method is inmediate, just call write with the message to send making 
 sure that you have correctly filled SourceAddress and ClientID and it will be 
 send to the client, it is important to notice that as the transport is based on 
 UDP there are no guarantees that the message is correctly send, this situation 
-is addresses in the protocol itself.
+is addresses in the protocol itself.<p>
 
 The read method is blocking, when you call the read method it returns a message 
-from the queue or blocks until one arrives if the queue is empty.
-
-%% END %%
+from the queue or blocks until one arrives if the queue is empty.<p>

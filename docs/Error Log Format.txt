@@ -1,0 +1,7 @@
+<p>
+<b>Title  :</b> Error Log format<br>
+<b>Info   :</b> Define how should Error log should looks like.<br>
+<b>Keyword:</b> Error, Exceptions, Logs, output, report<br>
+<b>Author :</b> Miguel Angel Blanch Lardin<br>
+<b>Created:</b> 2003/10/03<br>
+<b>status :</b> planning<p>

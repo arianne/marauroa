@@ -1,0 +1,7 @@
+<p>
+<b>Title  :</b> Database ER model<br>
+<b>Info   :</b> Describe the Database structure and organization.<br>
+<b>Keyword:</b> Database, ER, SQL, XML <br>
+<b>Author :</b> Miguel Angel Blanch Lardin<br>
+<b>Created:</b> 2003/10/03<br>
+<b>status :</b> planning<p>
