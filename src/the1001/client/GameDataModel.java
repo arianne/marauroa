@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.20 2004/04/18 06:47:54 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.21 2004/04/21 18:46:54 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -290,6 +290,11 @@ public final class GameDataModel
       }
     }
     fireListeners();
+  }
+  
+  public Map getAllObjects()
+  {
+    return(mAllObjects);
   }
   
   /**
@@ -713,37 +718,37 @@ public final class GameDataModel
       int winner_id = -1;
       try
       {
-        winner_id = arena.getInt(RPCode.var_winner); 
+        winner_id = arena.getInt(RPCode.var_winner);
       }
       catch(Exception e)
-      {      
+      {
       }
       if(!voted)
       {
         if(getFirstOwnGladiator()!=null)
-	{
-	  int own_glad_id = -2;
-	  try
-	  {
-	    own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
-	  }
-	  catch(Exception e)
-	  {
-	  
-	  }
+  {
+    int own_glad_id = -2;
+    try
+    {
+      own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
+    }
+    catch(Exception e)
+    {
+    
+    }
           if(winner_id==own_glad_id)
-	  {
-	     vote(RPCode.var_voted_up);
-	  }
-	  else
-	  {
-	    vote(Math.random()>0.1?RPCode.var_voted_up:"VOTE_DOWN");
-	  }
-	}
-	else
-	{
-	  vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
-	}
+    {
+       vote(RPCode.var_voted_up);
+    }
+    else
+    {
+      vote(Math.random()>0.1?RPCode.var_voted_up:"VOTE_DOWN");
+    }
+  }
+  else
+  {
+    vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+  }
         voted = true;
       }
       currentFightMode=null;

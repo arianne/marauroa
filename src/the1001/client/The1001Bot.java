@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.25 2004/04/16 09:21:40 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.26 2004/04/21 18:46:57 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,13 +16,14 @@ package the1001.client;
 import marauroa.net.*;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import marauroa.game.Attributes;
 import marauroa.game.RPObject;
@@ -123,107 +124,84 @@ public class The1001Bot
                 synced=full_perception;
                 marauroad.trace("The1001Bot::messageLoop","D",synced?"Synced.":"Unsynced!");
               }
-	      if(full_perception)
-	      {
-	        previous_timestamp=perception.getTimestamp()-1;								
-	      }
+              if(full_perception)
+              {
+                previous_timestamp=perception.getTimestamp()-1;
+              }
               marauroad.trace("The1001Bot::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
-             
+              
               if(synced)
-	      {
+              {
                 if(previous_timestamp+1!=perception.getTimestamp())
                 {
                   System.out.println("We are out of sync. Waiting for sync perception");
                   System.out.println("Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
                   synced=false;
-                /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
+                  /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }
-	      }
-	     
+              }
+              
               if(synced)
               {
-	        previous_timestamp = perception.getTimestamp();
+                Map world_objects = gm.getAllObjects();
                 if(full_perception)
                 {
                   gm.clearAllObjects();
                   //full perception contains all objects???
                 }
-                
-                RPObject my_object = perception.getMyRPObject();
-                if(my_object!=null)
+                try
                 {
-                  gm.setOwnCharacter(my_object);
-                  if(my_object.hasSlot(RPCode.var_myGladiators))
-                  {
-                    for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
-                    {
-                      RPObject my_glad = (RPObject)iter.next();
-                      marauroad.trace("The1001Bot::messageLoop","D","My Gladiator: "+my_glad);
-                      gm.addMyGladiator(my_glad);
-                    }
-                  }
-                }
-		try
-		{
-                if(!full_perception)
-                {
-                  List deleted_objects = perception.getDeletedRPObjects();
-                  for (int i = 0; i < deleted_objects.size(); i++)
-                  {
-                    RPObject obj = (RPObject)deleted_objects.get(i);
-                    gm.deleteSpectator(obj);
-                    gm.deleteFighter(obj);
-                    gm.deleteShopGladiator(obj);
-                  }
+                  previous_timestamp=perception.applyPerception(world_objects,previous_timestamp,null);
                   
-                  List deleted_attrib_objects = perception.getModifiedDeletedRPObjects();
-                  for (Iterator iter=deleted_attrib_objects.iterator();iter.hasNext();)
+                  RPObject my_object = perception.getMyRPObject();
+                  if(my_object!=null)
                   {
-                    RPObject rp_obj_deleted = (RPObject)iter.next();
-                    marauroad.trace("The1001Bot::messageLoop","D","Del attrs:"+rp_obj_deleted);
-                    RPObject gm_object = gm.getObject(rp_obj_deleted.get(RPCode.var_object_id));
-                    if(gm_object!=null)
+                    gm.setOwnCharacter(my_object);
+                    if(my_object.hasSlot(RPCode.var_myGladiators))
                     {
-                      gm_object.applyDifferences(null,rp_obj_deleted);
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Bot::messageLoop","D","deleted attr object without orig_object: " + rp_obj_deleted);
+                      for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
+                      {
+                        RPObject my_glad = (RPObject)iter.next();
+                        marauroad.trace("The1001Bot::messageLoop","D","My Gladiator: "+my_glad);
+                        gm.addMyGladiator(my_glad);
+                      }
                     }
                   }
-                  List added_attrib_objects = perception.getModifiedAddedRPObjects();
-                  for (Iterator iter=added_attrib_objects.iterator();iter.hasNext();)
+                  try
                   {
-                    RPObject rp_obj_added = (RPObject)iter.next();
-                    marauroad.trace("The1001Bot::messageLoop","D","Added attrs:"+rp_obj_added);
-                    RPObject gm_object = gm.getObject(rp_obj_added.get(RPCode.var_object_id));
-                    
-                    if(gm_object!=null)
+                    if(!full_perception)
                     {
-                      gm_object.applyDifferences(rp_obj_added,null);
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Bot::messageLoop","D","added attr object without orig_object: " + rp_obj_added);
+                      List deleted_objects = perception.getDeletedRPObjects();
+                      for (int i = 0; i < deleted_objects.size(); i++)
+                      {
+                        RPObject obj = (RPObject)deleted_objects.get(i);
+                        gm.deleteSpectator(obj);
+                        gm.deleteFighter(obj);
+                        gm.deleteShopGladiator(obj);
+                      }
                     }
                   }
+                  catch(Exception e)
+                  {
+                    e.printStackTrace();
+                  }
+                  List added_objects = perception.getAddedRPObjects();
+                  if(added_objects!=null && added_objects.size()>0)
+                  {
+                    marauroad.trace("The1001Bot::messageLoop","D","List of added objects is not null: " + added_objects);
+                    applyAddedObjects(added_objects);
+                  }
+                  gm.react(doPrint);
+                  if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
+                  {
+                    writeStats(gm.getFirstOwnGladiator());
+                    writeStatsTS=System.currentTimeMillis();
+                  }
                 }
-		}
-		catch(Exception e)
-		{
-		  e.printStackTrace();
-		}
-                List added_objects = perception.getAddedRPObjects();
-                if(added_objects!=null && added_objects.size()>0)
+                catch (MessageS2CPerception.OutOfSyncException e)
                 {
-                  marauroad.trace("The1001Bot::messageLoop","D","List of added objects is not null: " + added_objects);
-                  applyAddedObjects(added_objects);
-                }
-                gm.react(doPrint);
-                if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
-                {
-                  writeStats(gm.getFirstOwnGladiator());
-                  writeStatsTS=System.currentTimeMillis();
+                  e.printStackTrace();
+                  synced=false;
                 }
               }
               else
@@ -362,19 +340,22 @@ public class The1001Bot
   {
     try
     {
-      File stats_dir = new File(".gladiators_stats");
-      if(stats_dir.exists() && stats_dir.isDirectory())
+      if(glad!=null)
       {
-      String glad_name  = glad.get(RPCode.var_name);
-      String glad_karma = glad.get(RPCode.var_karma);
-      String glad_won   = glad.get(RPCode.var_num_victory);
-      String glad_def   = glad.get(RPCode.var_num_defeat);
-      FileWriter fw = new FileWriter(stats_dir.getAbsolutePath()+"/"+glad_name,true);
-      fw.write(System.currentTimeMillis()/1000+":"+glad_karma+":"+glad_won+":"+glad_def+"\n");
-      fw.close();
-      }
-      else
-      {
+        File stats_dir = new File(".gladiators_stats");
+        if(stats_dir.exists() && stats_dir.isDirectory())
+        {
+          String glad_name  = glad.get(RPCode.var_name);
+          String glad_karma = glad.get(RPCode.var_karma);
+          String glad_won   = glad.get(RPCode.var_num_victory);
+          String glad_def   = glad.get(RPCode.var_num_defeat);
+          FileWriter fw = new FileWriter(stats_dir.getAbsolutePath()+"/"+glad_name,true);
+          fw.write(System.currentTimeMillis()/1000+":"+glad_karma+":"+glad_won+":"+glad_def+"\n");
+          fw.close();
+        }
+        else
+        {
+        }
       }
     }
     catch (IOException e){e.printStackTrace();}
@@ -462,18 +443,18 @@ public class The1001Bot
           marauroad.trace("The1001Bot::connectAndChooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_LOGIN_ACK + ", receivied "+message.getType());
           switch(message.getType())
           {
-          case Message.TYPE_S2C_LOGIN_NACK:
-            complete=true;
-            break;
-          case Message.TYPE_S2C_LOGIN_ACK: // 10
-            client_id=message.getClientID();
-            break;
-          case Message.TYPE_S2C_CHARACTERLIST: // 2
-            characters=((MessageS2CCharacterList)message).getCharacters();
-            break;
-          case Message.TYPE_S2C_SERVERINFO: // 7
-            serverInfo=((MessageS2CServerInfo)message).getContents();
-            break;
+            case Message.TYPE_S2C_LOGIN_NACK:
+              complete=true;
+              break;
+            case Message.TYPE_S2C_LOGIN_ACK: // 10
+              client_id=message.getClientID();
+              break;
+            case Message.TYPE_S2C_CHARACTERLIST: // 2
+              characters=((MessageS2CCharacterList)message).getCharacters();
+              break;
+            case Message.TYPE_S2C_SERVERINFO: // 7
+              serverInfo=((MessageS2CServerInfo)message).getContents();
+              break;
           }
           complete = complete || ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
         }
