@@ -1,6 +1,7 @@
 from marauroa.game.python import *
 from marauroa.game import *
 from marauroa.net import *
+from marauroa import *
 
 from java.util import LinkedList
 
@@ -185,7 +186,6 @@ class RealPythonAI(PythonAI):
         self.ghosts.append(ghost)
         
     def compute(self,timelimit):
-        # TODO: Code here the ghost AI
         # Personally I would use the PythonRP directly and move the ghost at will
         # But if you are really in need, add actions to the scheduler so they are
         # done as if you are a simple player.
@@ -235,6 +235,7 @@ class RealPythonAI(PythonAI):
     
 class RealPythonRP(PythonRP):
     def __init__(self,zone):
+        self._i=0;
         self._removed_elements=[]
         self._super_players=[]
         self._online_players=[]
@@ -373,8 +374,11 @@ class RealPythonRP(PythonRP):
     def removeKilledFlag(self):
         for object in self._killedFlagGhosts:
             if object.has("?kill"):
+                marauroad.trace("python::script","D","Removing ?kill attribute")
                 object.remove("?kill")
                 self._zone.modify(object)
+                
+            self._killedFlagGhosts.remove(object)
         
 
     def _ghostCollisions(self, player):
@@ -387,6 +391,7 @@ class RealPythonRP(PythonRP):
                 # TODO: kill the player
                 print "Ghost killed player ",player.get("id") 
                 ghost.add("score",1)
+                marauroad.trace("python::script","D","Putting ?kill attribute")
                 ghost.put("?kill","")
                 if ghost.has("!target"): ghost.remove("!target")
                 self._killedFlagGhosts.append(ghost)
@@ -407,6 +412,14 @@ class RealPythonRP(PythonRP):
                 pass
     
     def nextTurn(self):
+        self._i+=1
+        if self._i==10:
+            self._i=0
+            print "Removed: ",len(self._removed_elements)
+            print "Online: ",len(self._online_players)
+            print "Ghosts: ",len(self._online_ghosts)
+            print "KilledFlagGhost: ",len(self._killedFlagGhosts)
+        
         """ execute actions needed to place this code on the next turn """
         self.removeKilledFlag()
         

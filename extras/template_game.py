@@ -1,47 +1,46 @@
-## TODO: There are extra helper methods that will surely make your life easier.
-## You either wait me to place them here or you take a look to mapacman
-
 from marauroa.game.python import *
+from marauroa.game import *
+from marauroa.net import *
+from marauroa import *
 
-class TemplateGamePythonRP(PythonRP):
+import java.util.*
+
+class TemplateRP(PythonRP):
+  def __init__(self, zone):
+    self._zone=zone
+
+  def execute(self, id, action):
+    return 0
+
+  def nextTurn(self):
+      pass
+
+  def onInit(self, object):
+      return 0
+
+  def onExit(self, objectid):
+      return 0
+
+  def onTimeout(self, objectid):
+      return 0
+
+class TemplateZone(PythonZone):
     def __init__(self, zone):
         self._zone=zone
 
-    def execute(self, id, action):
+    def onInit(self):
         pass
 
-    def nextTurn(self):
-        pass
-
-    def onInit(self, object):
-        pass
-
-    def onExit(self, objectid):
-        pass
-    
-    def onTimeout(self, objectid):
-        pass
-
-class TemplateZonePythonRP(PythonZoneRP):
-    def __init__(self, zone):
-        self._zone=zone
-
-    def onInit():
-        pass
-
-    def onFinish():
+    def onFinish(self):
         pass
 
     def serializeMap(self, objectid):
-        pass
+        return java.util.LinkedList()
 
-class TemplateAIPythonRP(PythonAIRP):
-    def __init__(self, rpManager):
-        self._rpManager=rpManager
+class TemplateAI(PythonAI):
+    def __init__(self, zone, sched):
+        self._zone=zone
+        self._sched=sched
 
-    def onCompute(timelimit):
+    def onCompute(self, timelimit):
         pass
-    
-    
-    
-        
