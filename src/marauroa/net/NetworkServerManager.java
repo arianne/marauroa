@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.33 2004/11/27 10:30:40 root777 Exp $ */
+/* $Id: NetworkServerManager.java,v 1.34 2004/12/01 22:22:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,8 @@ public final class NetworkServerManager
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite[] writeManager;
+  private int last_signature;
+
   private Statistics stats;
   private PacketValidator packetValidator;
   
@@ -257,7 +259,6 @@ public final class NetworkServerManager
   /** A wrapper class for sending messages to clients */
   class NetworkServerManagerWrite extends Thread
     {
-    private int last_signature;
     public NetworkServerManagerWrite()
       {
       last_signature=0;

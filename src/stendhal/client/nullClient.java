@@ -128,7 +128,7 @@ public class nullClient extends Thread
           }
         });
         
-      for(int i=0;i<5;i++)  
+      for(int i=0;i<10;i++)  
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();

@@ -142,10 +142,6 @@
 				<source>true</source>
 			</fileitem>
 			<fileitem>
-				<path>src\marauroa\game\.new.GameServerManager.java</path>
-				<source>true</source>
-			</fileitem>
-			<fileitem>
 				<path>src\marauroa\game\ActionInvalidException.java</path>
 				<source>true</source>
 			</fileitem>
@@ -255,6 +251,10 @@
 			</fileitem>
 			<fileitem>
 				<path>src\marauroa\game\RPAction.java</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>src\marauroa\game\RPActionList.java</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>
