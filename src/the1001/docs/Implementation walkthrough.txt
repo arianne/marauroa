@@ -141,7 +141,7 @@ implemented.
    · Request fight
  
 3.1) TODO: Equip command
-   This command is scheduled for next revision.
+   This command is scheduled for next revision: 0.21
    Goto to 3
 
 3.2) Request fight
@@ -354,4 +354,4 @@ Things that are left away on this analysis
 2) Attributes of Gladiators have been deliveratedly ignored.
    They depend on the doc that Ragnar should follow soon.     
 
-3) What happens when a player logouts or exit in the middle of the combat.
+3) What happens when a player logouts or exit in the middle of the combat?

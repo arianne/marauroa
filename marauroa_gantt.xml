@@ -119,17 +119,23 @@
             <depend id="109" type="2"/>
             <depend id="163" type="2"/>
         </task>
-        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="30" complete="70" priority="1">
+        <task id="107" name="Implement 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="30" complete="100" priority="1">
             <depend id="110" type="2"/>
             <depend id="157" type="3"/>
         </task>
         <task id="109" name="Document 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="12" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
-        <task id="157" name="Test case for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="20/1/2004" duration="10" complete="80" priority="1">
+        <task id="157" name="Test case for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="20/1/2004" duration="10" complete="100" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="163" name="Create client for 1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/12/2003" duration="20" complete="5" priority="1">
+            <depend id="110" type="2"/>
+        </task>
+        <task id="184" name="Port Marauroa to C++: ariannexp" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/1/2004" duration="12" complete="100" priority="1">
+            <depend id="185" type="2"/>
+        </task>
+        <task id="185" name="Create a Blitz 3D client for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="14/1/2004" duration="13" complete="0" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="110" name="Release Marauroa 0.20" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="30/1/2004" duration="3" complete="0" priority="1">
