@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.65 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.66 2004/04/15 12:08:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -428,6 +428,7 @@ public class RPCode
           arena.put(RPCode.var_thumbs_up,0);
           arena.put(RPCode.var_thumbs_down,0);
           }
+          
         zone.modify(arena);      
         }
       }
@@ -727,7 +728,7 @@ public class RPCode
           player.remove(RPCode.var_requested);
           arena.put(RPCode.var_waiting,arena.getInt(RPCode.var_waiting)-1);
           player.put(RPCode.var_fighting,"");
-          arena.getSlot(RPCode.var_gladiators).add(gladiator);
+          arena.getSlot(RPCode.var_gladiators).add((RPObject)gladiator.copy());
           playersFighting.add(player);
           it.remove();
           if(arena.getSlot(RPCode.var_gladiators).size()==GLADIATORS_PER_FIGHT)

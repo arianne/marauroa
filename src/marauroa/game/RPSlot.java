@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.24 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.25 2004/04/15 12:08:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -143,7 +143,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       while(it.hasNext() && !found)
         {
         RPObject data=(RPObject)it.next();
-        if(data.get("id")==object.get("id"))
+        if(data.get("id").equals(object.get("id")))
           {
           it.remove();
           found=true;

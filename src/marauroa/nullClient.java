@@ -74,7 +74,8 @@ class TestClient
         }
       
       boolean cond=true;
-      boolean firsttime=true;
+      boolean outofsync=true;
+      int previous_timestamp=0;
 
         
       while(cond)
@@ -88,51 +89,62 @@ class TestClient
           netMan.addMessage(reply);
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-          if(msgPer.getTypePerception()==1 && firsttime)
+          if(msgPer.getTypePerception()==1 && outofsync)
             {
-            firsttime=false;
+            outofsync=false;
+            previous_timestamp=msgPer.getTimestamp()-1;
             }
           
-          if(firsttime==false)
-            {          
-          System.err.println("Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
-          System.out.println(msgPer.getTypePerception());
+          if(outofsync==false)
+            {
+            if(previous_timestamp+1!=msgPer.getTimestamp())
+              {
+              System.err.println("We are out of sync. Waiting for sync perception");
+              System.err.println("Expected"+previous_timestamp+" but we got "+msgPer.getTimestamp());
+              outofsync=true;
+              }
+            else
+              {
+              previous_timestamp=msgPer.getTimestamp();
+              System.err.println("Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              System.out.println(msgPer.getTypePerception());
           
-          Iterator it;
-          it=msgPer.getDeletedRPObjects().iterator();
-          while(it.hasNext())
-            {
-            RPObject object=(RPObject)it.next();
-            System.out.println("D: "+object);
-            world_objects.remove(object.get("id"));            
+              Iterator it;
+              it=msgPer.getDeletedRPObjects().iterator();
+              while(it.hasNext())
+                {
+                RPObject object=(RPObject)it.next();
+                System.out.println("D: "+object);
+                world_objects.remove(object.get("id"));            
+                }
+              
+              it=msgPer.getModifiedDeletedRPObjects().iterator();
+              while(it.hasNext())
+                {
+                RPObject object=(RPObject)it.next();
+                System.out.println("MD: "+object);
+                RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
+                w_object.applyDifferences(null,object);        
+                }
+    
+              it=msgPer.getModifiedAddedRPObjects().iterator();
+              while(it.hasNext())
+                {
+                RPObject object=(RPObject)it.next();
+                System.out.println("MA: "+object);
+                RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
+                w_object.applyDifferences(object,null);        
+                }
+    
+              it=msgPer.getAddedRPObjects().iterator();
+              while(it.hasNext())
+                {
+                RPObject object=(RPObject)it.next();
+                System.out.println("A: "+object);
+                world_objects.put(object.get("id"),object);            
+                }   
+              }       
             }
-          
-          it=msgPer.getModifiedDeletedRPObjects().iterator();
-          while(it.hasNext())
-            {
-            RPObject object=(RPObject)it.next();
-            System.out.println("MD: "+object);
-            RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
-            w_object.applyDifferences(null,object);        
-            }
-
-          it=msgPer.getModifiedAddedRPObjects().iterator();
-          while(it.hasNext())
-            {
-            RPObject object=(RPObject)it.next();
-            System.out.println("MA: "+object);
-            RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
-            w_object.applyDifferences(object,null);        
-            }
-
-          it=msgPer.getAddedRPObjects().iterator();
-          while(it.hasNext())
-            {
-            RPObject object=(RPObject)it.next();
-            System.out.println("A: "+object);
-            world_objects.put(object.get("id"),object);            
-            }   
-            }       
           }
 
         StringBuffer world=new StringBuffer("World content: \n");

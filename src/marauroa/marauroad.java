@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.64 2004/04/14 22:49:09 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.65 2004/04/15 12:07:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,8 @@ import the1001.objects.*;
  */
 public class marauroad extends Thread
   {
+  final private static boolean DEBUG=true;
+  
   private static PrintWriter out;
   private static marauroad marauroa;
   private static Date timestamp;
@@ -222,13 +224,28 @@ public class marauroad extends Thread
     return false;
     }
 
-// Debug setting
-//  private static String[] allowed={"*"};
-//  private static String[] rejected={};
-
-// Production setting
-  private static String[] allowed={"RPCode","the1001"};
-  private static String[] rejected={"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
+  private static String[] allowed;
+  private static String[] rejected;
+  
+  static
+    {
+    if(DEBUG)
+      {
+      // Debug setting
+      String[] _allowed={"*"};
+      allowed=_allowed;
+      String[] _rejected={};
+      rejected=_rejected;
+      }
+    else
+      {
+      // Production setting
+      String[] _allowed={"RPCode","the1001"};
+      allowed=_allowed;
+      String[] _rejected={"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
+      rejected=_rejected;
+      }      
+    }
 
   public static void trace(String module,String event)
     {

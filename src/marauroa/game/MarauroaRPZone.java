@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.33 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.34 2004/04/15 12:08:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,12 +74,23 @@ public class MarauroaRPZone implements RPZone
     try 
       {
       /** Uncoment to disable Delta-delta: */
-      perception.added(object);
+//      perception.added(object);
+      boolean already_added=false;
+
+      Iterator it=modified.iterator();
+      while(it.hasNext() && !already_added)
+        {
+        RPObject previous=(RPObject)it.next();        
+        if(previous.get("id").equals(object.get("id")))
+          {
+          already_added=true;
+          }
+        }
       
-//      if(!modified.contains(object))
-//        {
-//        modified.add(object);
-//        }
+      if(!already_added)
+        {
+        modified.add(object);
+        }
       
       }
     catch(Exception e)
