@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.17 2003/12/10 22:49:46 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.18 2003/12/12 21:41:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,7 +139,7 @@ public class SimpleGame
                     answer.setWho(ownCharacterID);
                     answer.setWhom(otherCharacterID);
                     answer.setAccept(true);
-                    MessageC2SAction m_action = new MessageC2SAction(null,new ChallengeAnswer());
+                    MessageC2SAction m_action = new MessageC2SAction(null,answer);
                     netMan.addMessage(m_action);
                     addLog("Accepted challenge from " + otherCharacterID);
                   }

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.7 2003/12/12 07:50:41 root777 Exp $ */
+/* $Id: Attributes.java,v 1.8 2003/12/12 21:41:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,13 +129,13 @@ public class Attributes implements marauroa.net.Serializable
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
     Iterator  it=content.entrySet().iterator();
-//	  marauroad.trace("Attributes::writeObject","D","Attributes count: "+content.size());
+//    marauroad.trace("Attributes::writeObject","D","Attributes count: "+content.size());
     out.write((int)content.size());
     
     while(it.hasNext())
       {
       Map.Entry entry=(Map.Entry)it.next();
-//			marauroad.trace("Attributes::writeObject","D","Attribute["+(String)entry.getKey()+","+(String)entry.getValue()+"]");
+//      marauroad.trace("Attributes::writeObject","D","Attribute["+(String)entry.getKey()+","+(String)entry.getValue()+"]");
       out.write((String)entry.getKey());
       out.write((String)entry.getValue());
       }
@@ -144,15 +144,15 @@ public class Attributes implements marauroa.net.Serializable
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
     int size=in.readInt();
-//		marauroad.trace("Attributes::readObject","D","Attributes count: "+size);
+//    marauroad.trace("Attributes::readObject","D","Attributes count: "+size);
     content.clear();
         
     for(int i=0;i<size;++i)
       {
-			String key   = in.readString();
-			String value = in.readString();
+      String key   = in.readString();
+      String value = in.readString();
       content.put(key,value);
-//			marauroad.trace("Attributes::readObject","D","Attribute["+key+","+value+"]");
+//      marauroad.trace("Attributes::readObject","D","Attribute["+key+","+value+"]");
       }
     }
   }

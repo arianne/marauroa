@@ -1,4 +1,4 @@
-/* $Id: RPActionFactory.java,v 1.9 2003/12/12 07:49:44 root777 Exp $ */
+/* $Id: RPActionFactory.java,v 1.10 2003/12/12 21:41:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,7 +63,7 @@ public class RPActionFactory
     {
       int index = is.readInt();
       Class rpActionType=(Class) factoryArray.get(new Integer(index));
-			marauroad.trace("RPActionFactory::getRPAction","D","index is " +index + ", class is "+rpActionType);
+//      marauroad.trace("RPActionFactory::getRPAction","D","index is " +index + ", class is "+rpActionType);
       if(rpActionType!=null)
       {
         RPAction tmp=(RPAction) rpActionType.newInstance();
@@ -96,6 +96,7 @@ public class RPActionFactory
     try
     {
       int index = rp_action.actionType;
+//      marauroad.trace("RPActionFactory::addRPAction","D","index is " +index + ", class is "+rp_action.getClass().getName());
       os.write(index);
       rp_action.writeObject(os);
     }

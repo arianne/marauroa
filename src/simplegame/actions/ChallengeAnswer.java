@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.2 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.3 2003/12/12 21:41:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package simplegame.actions;
 
 import marauroa.game.Attributes;
+import marauroa.marauroad;
 
 public class ChallengeAnswer
   extends ChallengeAction
@@ -31,15 +32,21 @@ public class ChallengeAnswer
   
   public boolean isAccepted()
   {
+//    marauroad.trace("ChallengeAnswer::isAccepted",">");
     boolean ret = false;
     try
     {
-      ret = Boolean.getBoolean(get("accept"));
+      String acc = get("accept");
+//      marauroad.trace("ChallengeAnswer::isAccepted","D","["+acc+"]");
+      ret = Boolean.valueOf(acc).booleanValue();
     }
     catch (Attributes.AttributeNotFoundException e)
     {
+//      marauroad.trace("ChallengeAnswer::isAccepted","D","AttributeNotFoundException");
       ret = false;
     }
+//    marauroad.trace("ChallengeAnswer::isAccepted","D","returning " +ret);
+//    marauroad.trace("ChallengeAnswer::isAccepted","<");
     return(ret);
   }
   
