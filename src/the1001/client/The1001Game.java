@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.1 2004/02/15 19:21:06 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.2 2004/02/15 20:14:51 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,33 +13,23 @@
 
 package the1001.client;
 
+import javax.swing.*;
+import marauroa.net.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.HashMap;
+import java.net.SocketException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import marauroa.JMarauroa;
 import marauroa.game.Attributes;
-import marauroa.game.RPAction;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.marauroad;
-import marauroa.net.Message;
-import marauroa.net.MessageC2SAction;
-import marauroa.net.MessageC2SPerceptionACK;
-import marauroa.net.MessageS2CPerception;
-import marauroa.net.NetworkClientManager;
-import the1001.RPCode;
 
 /**
  *
@@ -51,7 +41,6 @@ extends JFrame implements Runnable
 {
 	private final static long serialVersionUID = 4714;
 	private transient NetworkClientManager netMan;
-	private JMarauroa marauroa;
 	private transient RPObject ownCharacter;
 	private int ownCharacterID;
 	private JLabel statusLine;
@@ -60,11 +49,9 @@ extends JFrame implements Runnable
 	private JButton btnRqFight;
 	
 	
-	public The1001Game(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
+	public The1001Game(NetworkClientManager netman, RPObject.ID characterID)
 	{
 		netMan = netman;
-		
-		this.marauroa = marauroa;
 		ownCharacter=null;
 		this.ownCharacterID=characterID.getObjectID();
 		initComponents();
@@ -122,7 +109,7 @@ extends JFrame implements Runnable
 								String name = obj.get("name");
 								String status = obj.get("status");
 //								gm.setWaiting("waiting".equalsIgnoreCase(status));
-								System.out.println("Arena: " + name + " " + status );
+								marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " " + status );
 								try
 								{
 									RPSlot slot = obj.getSlot("gladiators");
@@ -135,7 +122,7 @@ extends JFrame implements Runnable
 										}
 										else
 										{
-											marauroad.trace("the1001client.messageLoop","D","Ignored wrong object in arena");
+											marauroad.trace("The1001Game::messageLoop","D","Ignored wrong object in arena");
 										}
 									}
 								}
@@ -199,17 +186,10 @@ extends JFrame implements Runnable
 		}
 	}
 	
-	private void addLog(String msg)
-	{
-		if(marauroa!=null)
-		{
-			marauroa.addLog(msg);
-		}
-		else
-		{
-			System.out.print(msg);
-		}
-	}
+//	private static void addLog(String msg)
+//	{
+//		System.out.println(msg);
+//	}
 	
 	/**
 	 * it was the attempt to create a plain swing gladitors client.
@@ -340,6 +320,202 @@ extends JFrame implements Runnable
 			}
 		}
 	}
+	
+	/**
+	 *
+	 */
+	public static void main(String[] args)
+	{
+		showSplash(2000);
+		login();
+	}
+	
+	/**
+	 * Method showSplash
+	 *
+	 * @param    duration         a long
+	 *
+	 */
+	private static void showSplash(long duration)
+	{
+		JWindow window = new JWindow();
+		window.getContentPane().add(new JLabel(new ImageIcon(Resources.getImageUrl("Logo.png"))));
+		window.pack();
+		Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
+		window.setLocation((int)(screen_size.getWidth()/2-window.getWidth()/2),(int)(screen_size.getHeight()/2-window.getHeight()/2));
+		window.show();
+		
+		try
+		{
+			Thread.sleep(duration);
+		}
+		catch (InterruptedException e)
+		{
+		}
+		window.setVisible(false);
+	}
+	
+	private static void connectAndChooseCharacter(String hostname, String user, String pwd)
+  {
+		NetworkClientManager net_man;
+		int client_id = -1;
+		try
+		{
+			net_man=new NetworkClientManager(hostname);
+			MessageC2SLogin msg=new MessageC2SLogin(null,user,pwd);
+			net_man.addMessage(msg);
+			boolean complete=false;
+			int recieved=0;
+			String[] characters=null;
+			String[] serverInfo=null;
+			
+			while(!complete && recieved<20)
+			{
+				Message message=net_man.getMessage();
+				if(message==null) continue;
+				marauroad.trace("The1001Game::connectAndChooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_LOGIN_ACK + ", receivied "+message.getType());
+				switch(message.getType())
+				{
+				case Message.TYPE_S2C_LOGIN_NACK:
+					complete=true;
+					break;
+				case Message.TYPE_S2C_LOGIN_ACK: //10
+					client_id=message.getClientID();
+					++recieved;
+					break;
+				case Message.TYPE_S2C_CHARACTERLIST: //2
+					characters=((MessageS2CCharacterList)message).getCharacters();
+					client_id = message.getClientID();
+					++recieved;
+					break;
+				case Message.TYPE_S2C_SERVERINFO: //7
+					serverInfo=((MessageS2CServerInfo)message).getContents();
+					++recieved;
+					break;
+				}
+				complete = ((serverInfo!=null) && (characters!=null));
+			}
+			marauroad.trace("The1001Game::connectAndChooseCharacter","D","characters: "+characters);
+			if(characters!=null && characters.length>0)
+			{
+				chooseCharacter(net_man, client_id, characters[0]);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"No characters received from server");
+			}
+		}
+		catch(SocketException e)
+		{
+			marauroad.trace("The1001Game::connectAndChooseCharacter","X",e.getMessage());
+		}
+  }
+	
+	private static void chooseCharacter(NetworkClientManager netman, int client_id, String character)
+  {
+		Message msg=new MessageC2SChooseCharacter(null,character);
+		msg.setClientID(client_id);
+		
+		netman.addMessage(msg);
+		
+		Message message=null;
+		boolean complete=false;
+		int recieved=0;
+		while(!complete && recieved<20)
+		{
+			
+			message=netman.getMessage();
+			if(message==null) continue;
+			recieved++;
+			marauroad.trace("The1001Game::chooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_CHOOSECHARACTER_ACK + ", receivied "+message.getType());
+			if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
+			{
+				MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)message;
+				The1001Game game = new The1001Game(netman,msg_ack.getObjectID());
+				game.pack();
+				game.show();
+				new Thread(game,"Game thread...").start();
+				complete = true;
+			}
+		}
+  }
+	
+	private static void login()
+  {
+		// Messages
+		Object[]      message = new Object[6];
+		message[0] = "Server to login:";
+		
+		
+		JComboBox cb_server = new JComboBox();
+		cb_server.addItem("marauroa.ath.cx");
+		cb_server.addItem("127.0.0.1");
+		cb_server.addItem("tribus.dyndns.org");
+		cb_server.addItem("192.168.100.100");
+		cb_server.addItem("localhost");
+		cb_server.setEditable(true);
+		message[1] = cb_server;
+		
+		message[2] = "User:";
+		
+		JComboBox cb_user = new JComboBox();
+		cb_user.addItem("Test Player");
+		cb_user.addItem("Another Test Player");
+		cb_user.setEditable(true);
+		message[3] = cb_user;
+		
+		message[4] = "Password:";
+		
+		JPasswordField pf_pwd = new JPasswordField();
+		pf_pwd.setText("Test Password");
+		message[5] = pf_pwd;
+		
+		
+		// Options
+		String[] options = {"Connect","Cancel",};
+		int result = JOptionPane.showOptionDialog(
+																							null,                             // the parent that the dialog blocks
+																							message,                                    // the dialog message array
+																							"Login to...", // the title of the dialog window
+																							JOptionPane.DEFAULT_OPTION,                 // option type
+																							JOptionPane.INFORMATION_MESSAGE,            // message type
+																							new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+																							options,                                    // options string array, will be made into buttons
+																							options[0]                                  // option that should be made into a default button
+																						 );
+		switch(result)
+		{
+		case 0: // connect
+			{
+				String hostname = null;
+				if(cb_server.getSelectedItem()!=null)
+				{
+					hostname = String.valueOf(cb_server.getSelectedItem());
+				}
+				else
+				{
+					hostname = String.valueOf(cb_server.getEditor().getItem());
+				}
+				String user_name = null;
+				if(cb_user.getSelectedItem()!=null)
+				{
+					user_name = String.valueOf(cb_user.getSelectedItem());
+				}
+				else
+				{
+					user_name = String.valueOf(cb_user.getEditor().getItem());
+				}
+				String pwd  = new String(pf_pwd.getPassword());
+				connectAndChooseCharacter(hostname, user_name,pwd);
+				
+			}
+			break;
+		case 1: // cancel
+			break;
+		default:
+			break;
+		}
+  }
 	
 }
 
