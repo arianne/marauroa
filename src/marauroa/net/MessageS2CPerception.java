@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.40 2004/04/30 17:33:02 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.41 2004/05/01 16:47:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -355,6 +355,12 @@ public class MessageS2CPerception extends Message
       {
       os.write(b);
       bytesWritten++;
+      }
+
+    public void write(byte[] b) throws IOException
+      {
+      os.write(b);
+      bytesWritten+=b.length;
       }
 
     public long getBytesWritten()
