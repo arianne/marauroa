@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.7 2004/01/01 19:52:23 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.8 2004/01/01 22:24:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,7 +100,35 @@ public class Test_RPCode extends TestCase
     marauroad.trace("Test_RPCode::testFightMode",">");
     try
       {
-      fail();
+      zone=new the1001RPZone();
+      rpu=new the1001RPRuleProcessor();
+      rpu.setContext(zone);
+    
+      assertEquals(rpu.getTurn(),0);
+    
+      RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
+      zone.add(player);
+      RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
+      player.getSlot("gladiators").add(gladiator);
+      
+      RPAction.Status status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      assertEquals(status,RPAction.STATUS_FAIL);
+      
+      status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+      
+      RPObject arena=zone.getArena();
+      assertEquals(arena.get("status"),"waiting");
+      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
+      assertEquals(player.get("status"),"onArena");
+      
+      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+      assertEquals(gladiator.get("!mode"),"rock");
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
       }
     finally
       {     
@@ -113,7 +141,57 @@ public class Test_RPCode extends TestCase
     marauroad.trace("Test_RPCode::testResolveFight",">");
     try
       {
-      fail();
+      zone=new the1001RPZone();
+      rpu=new the1001RPRuleProcessor();
+      rpu.setContext(zone);
+    
+      assertEquals(rpu.getTurn(),0);
+    
+      RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
+      zone.add(player);
+      RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
+      player.getSlot("gladiators").add(gladiator);
+      
+      RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+      
+      RPObject arena=zone.getArena();
+      assertEquals(arena.get("status"),"waiting");
+      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
+      assertEquals(player.get("status"),"onArena");
+      
+      RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
+      zone.add(newplayer);
+      RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
+      newplayer.getSlot("gladiators").add(newgladiator);
+
+      status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+
+      assertEquals(arena.get("status"),"fighting");
+      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
+      assertEquals(newplayer.get("status"),"onArena");
+
+      /** We now add another player, but the fight has already begin... */
+      RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()),"a name");
+      zone.add(waitingPlayer);
+      RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
+      waitingPlayer.getSlot("gladiators").add(waitingGladiator);
+
+      status=RPCode.RequestFight(new RPObject.ID(waitingPlayer),new RPObject.ID(waitingGladiator));
+      assertEquals(status,RPAction.STATUS_SUCCESS);
+
+      assertEquals(arena.get("status"),"fighting");
+      assertFalse(arena.getSlot("gladiators").has(new RPObject.ID(waitingGladiator)));
+      assertTrue(arena.has("waiting"));
+      assertFalse(waitingPlayer.get("status").equals("onArena"));
+      assertEquals(waitingPlayer.getInt("requested"),rpu.getTurn());
+      
+      /** Now it is turn to begin the fight */
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
       }
     finally
       {     

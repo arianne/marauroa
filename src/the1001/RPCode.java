@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.12 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.13 2004/01/01 22:24:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,12 +141,6 @@ public class RPCode
         return RPAction.STATUS_FAIL;
         }
 
-      if(!player.get("status").equals("onArena"))
-        {
-        /** Failed because player is not fighting */
-        return RPAction.STATUS_FAIL;
-        }
-      
       if(!arena.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because gladiator is not fighting on the arena*/
