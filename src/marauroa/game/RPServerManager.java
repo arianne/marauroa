@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.106 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.107 2004/07/12 22:09:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -314,27 +314,30 @@ public class RPServerManager extends Thread
               }
             else
               {
-              marauroad.trace("RPServerManager::buildPerceptions","X","NO Perception: Out of sync player ("+playerContainer.getRPObjectID(clientid).toString()+")");
+              marauroad.trace("RPServerManager::buildPerceptions","D","NO Perception: Out of sync player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=null;
               }
             
-            int timestamp=playerContainer.getPerceptionTimestamp(clientid);
-            
-            MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
-            
-            if(perception.type==Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
+            if(perception!=null)
               {
-              messages2cPerception.setMyRPObject(object);
-              }
-            else
-              {
-              messages2cPerception.setMyRPObject(null);
-              }
+              int timestamp=playerContainer.getPerceptionTimestamp(clientid);
               
-            messages2cPerception.setClientID(clientid);
-            messages2cPerception.setPerceptionTimestamp(timestamp);
+              MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
             
-            netMan.addMessage(messages2cPerception);
+              if(perception.type==Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
+                {
+                messages2cPerception.setMyRPObject(object);
+                }
+              else
+                {
+                messages2cPerception.setMyRPObject(null);
+                }
+              
+              messages2cPerception.setClientID(clientid);
+              messages2cPerception.setPerceptionTimestamp(timestamp);
+            
+              netMan.addMessage(messages2cPerception);
+              }
           
             /** We check if we need to update player in the database */
             if(playerContainer.shouldStoredUpdate(clientid,object))
