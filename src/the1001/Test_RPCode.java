@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.17 2004/01/06 23:20:08 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.18 2004/01/06 23:51:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -276,10 +276,10 @@ public class Test_RPCode extends TestCase
 
       status=RPCode.Vote(new RPObject.ID(player),"up");
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertTrue(player.has("vote"));
+      assertTrue(player.has("!vote"));
       status=RPCode.Vote(new RPObject.ID(newplayer),"up");
       assertEquals(status,RPAction.STATUS_SUCCESS);
-      assertTrue(newplayer.has("vote"));
+      assertTrue(newplayer.has("!vote"));
       
       status=RPCode.Vote(new RPObject.ID(player),"up");
       assertEquals(status,RPAction.STATUS_FAIL);
@@ -295,8 +295,8 @@ public class Test_RPCode extends TestCase
       assertTrue(arena.has("thumbs_up"));
       assertTrue(arena.has("thumbs_down"));
       assertTrue(arena.has("fame"));
-      assertTrue(player.has("vote"));
-      assertTrue(newplayer.has("vote"));
+      assertTrue(player.has("!vote"));
+      assertTrue(newplayer.has("!vote"));
 
       RPCode.RequestFame();
       
@@ -306,8 +306,8 @@ public class Test_RPCode extends TestCase
       assertFalse(arena.has("thumbs_up"));
       assertFalse(arena.has("thumbs_down"));
       assertFalse(arena.has("fame"));
-      assertFalse(player.has("vote"));
-      assertFalse(newplayer.has("vote"));
+      assertFalse(player.has("!vote"));
+      assertFalse(newplayer.has("!vote"));
       }
     catch(Exception e)
       {

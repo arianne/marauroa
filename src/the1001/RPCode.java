@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.22 2004/01/06 17:42:05 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.23 2004/01/06 23:51:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -317,7 +317,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(player.has("vote"))
+      if(player.has("!vote"))
         {
         /** Failed because player already voted */
         return RPAction.Fail("Failed because player already voted");
@@ -338,8 +338,8 @@ public class RPCode
         arena.put("thumbs_down",arena.getInt("thumbs_down")+1);
         }
       
-      player.put("vote","");  
-      playersVoted.add(player_id);
+      player.put("!vote","");  
+      playersVoted.add(player);
       
       return RPAction.STATUS_SUCCESS;
       }
@@ -368,7 +368,7 @@ public class RPCode
           int total=up+down;          
           
           int fame_result=fame*up/total;
-          RPObject winner=zone.get(new RPObject.ID(arena.getInt("winner")));
+          RPObject winner=arena.getSlot("gladiators").get(new RPObject.ID(arena.getInt("winner")));
           winner.put("fame",winner.getInt("fame")+fame_result);    
           
           arena.put("status","waiting");
@@ -378,7 +378,7 @@ public class RPCode
           while(it.hasNext())
             {
             RPObject player=(RPObject)it.next();
-            player.remove("vote");
+            player.remove("!vote");
             }
           
           playersVoted.clear();
@@ -397,6 +397,7 @@ public class RPCode
       }
     catch(Exception e)
       {
+      e.printStackTrace();
       marauroad.trace("RPCode::RequestFame","X",e.getMessage());
       }
     finally

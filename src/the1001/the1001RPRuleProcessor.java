@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.15 2004/01/02 00:02:03 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.16 2004/01/06 23:51:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,6 +112,8 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes",">");        
     try
       {
+      List attrToDelete=new LinkedList();
+      
       Iterator it=trackedObjects.iterator();
       while(it.hasNext())
         {
@@ -123,10 +125,18 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
           String attr=(String)attributesit.next();
           if(attr.charAt(0)=='?')
             {
-            object.remove(attr);
+            attrToDelete.add(attr);
             }
           }
         
+        Iterator removeit=attrToDelete.iterator();
+        while(removeit.hasNext())
+          {
+          object.remove((String)removeit.next());
+          }
+        
+        attrToDelete.clear();
+          
         zone.modify(object);
         }
       }
