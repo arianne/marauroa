@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.38 2004/01/08 17:37:16 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.39 2004/01/25 22:29:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -476,9 +476,15 @@ public class RPCode
           {
           marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME completed");
           int up=arena.getInt("thumbs_up");
-          int down=arena.getInt("thumbs_up");
+          int down=arena.getInt("thumbs_down");
           int fame=arena.getInt("fame");
           int total=up+down;          
+          /* If none vote we fake the result to give everything to the winner. */
+          if(total==0)
+            {
+            up=1;
+            total=1;
+            }
           
           int fame_result=fame*up/total;
           RPObject winner=arena.getSlot("gladiators").get(new RPObject.ID(arena.getInt("winner")));
