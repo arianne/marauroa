@@ -12,6 +12,7 @@ public class NetConst
   final static public int UDP_PACKET_SIZE=1500;
   /** Number of the protocol version */
   final static public byte NETWORK_PROTOCOL_VERSION=3;
+  final static public long PACKET_TIMEOUT_VALUE=5000;
   
   static
     {
