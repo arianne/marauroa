@@ -129,9 +129,10 @@ public class marauroad extends Thread
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate server socket");
       System.exit(-1);
       }
-    
-    gameMan.start();
-    marauroad.trace("marauroad::init","<");
+    finally
+      {
+      marauroad.trace("marauroad::init","<");
+      }
     }
     
   public void finish()

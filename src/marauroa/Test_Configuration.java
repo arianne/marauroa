@@ -24,7 +24,6 @@ public class Test_Configuration extends TestCase
       assertEquals(result,"AnotherTestString");
 
       conf.set("test_ATestString", "ATestString");
-      conf.store();
       }
     catch(Configuration.PropertyFileNotFoundException e)
       {

@@ -28,6 +28,8 @@ public class GameServerManager extends Thread
     this.netMan=netMan;
     playerContainer=PlayerEntryContainer.getContainer();    
     rpMan=new RPServerManager(netMan);
+    
+    start();
         
     marauroad.trace("GameServerManager","<");
     }

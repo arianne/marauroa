@@ -43,6 +43,27 @@ public class Test_PlayerEntryContainer extends TestCase
     return playerDatabase;
     }
     
+  private void cleanDatabase()
+    {
+    PlayerDatabase playerDatabase=null;
+    
+    try
+      {
+      playerDatabase=PlayerDatabaseFactory.getDatabase();
+      assertNotNull(playerDatabase);
+
+      playerDatabase.removeCharacter("Test Player", "Test Character");
+      assertFalse(playerDatabase.hasCharacter("Test Player", "Test Character"));
+
+      playerDatabase.removePlayer("Test Player");
+      assertFalse(playerDatabase.hasPlayer("Test Player"));
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+    }
+    
   public void testPlayerEntryContainer()
     {
     createDatabase();
@@ -89,6 +110,10 @@ public class Test_PlayerEntryContainer extends TestCase
     catch(PlayerEntryContainer.NoSuchCharacterException e)
       {
       fail(e.getMessage());
+      }
+    finally
+      {
+	  cleanDatabase();
       }
     }
 

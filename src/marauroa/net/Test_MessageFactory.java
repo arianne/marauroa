@@ -16,7 +16,7 @@ public class Test_MessageFactory extends TestCase
 
   public static Test suite ( ) 
     {
-    return new TestSuite(Test_Messages.class);
+    return new TestSuite(Test_MessageFactory.class);
 	}
 	
   public void testMessageFactoryRandomMessage()

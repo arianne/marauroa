@@ -4,8 +4,9 @@ import java.util.*;
 
 public class RPSlot implements marauroa.net.Serializable
   {
-  String name;
-  List objects;
+  private String name;
+  /** A List<RPObject> of objects */
+  private List objects;
 
   public RPSlot()
     {
@@ -51,8 +52,7 @@ public class RPSlot implements marauroa.net.Serializable
     
   public String toString()
     {
-    /* TODO: Implement it */
-    return "TODO";
+    return "RPSlot named("+name+") with "+size()+" objects";
     }
 
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException

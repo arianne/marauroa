@@ -101,7 +101,7 @@ public class Test_PlayerDatabase extends TestCase
         fail("Player has not been added");
         }
         
-      assertTrue(true);
+      assertFalse(playerDatabase.hasPlayer("Test Player"));
       }
       
     try
