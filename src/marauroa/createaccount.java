@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.31 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.32 2004/11/21 14:24:15 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,10 +64,8 @@ public abstract class createaccount
   
   protected String get(String name) throws AttributeNotFoundException
     {
-    for(Iterator it=information.iterator();it.hasNext();)
+    for(Information item: information)
       {
-      Information item=(Information)it.next();
-      
       if(item.name.equals(name))
         {
         return item.value;
@@ -89,10 +87,8 @@ public abstract class createaccount
 
     while(i!=args.length)
       {
-      for(Iterator it=information.iterator();it.hasNext();)
+      for(Information item: information)
         {
-        Information item=(Information)it.next();
-        
         if(args[i].equals(item.param))
           {
           item.value=args[i+1];
@@ -104,9 +100,8 @@ public abstract class createaccount
       if(args[i].equals("-h"))
         {
         System.out.println("createaccount application for Marauroa");
-        for(Iterator it=information.iterator();it.hasNext();)
+        for(Information item: information)
           {
-          Information item=(Information)it.next();          
           System.out.println(item.param+" to use/add "+item.name);
           }
           
@@ -131,10 +126,8 @@ public abstract class createaccount
       trans=playerDatabase.getTransaction();
       
       out.println("Checking for null/empty string");
-      for(Iterator it=information.iterator();it.hasNext();)
+      for(Information item: information)
         {
-        Information item=(Information)it.next();
-       
         if(item.value.equals(""))
           {        
           out.println("String is empty or null: "+item.name);
@@ -143,10 +136,8 @@ public abstract class createaccount
         }      
 
       out.println("Checking for valid string");
-      for(Iterator it=information.iterator();it.hasNext();)
+      for(Information item: information)
         {
-        Information item=(Information)it.next();
-        
         if(!playerDatabase.validString(item.value))
           {
           out.println("String not valid: "+item.name);
@@ -155,9 +146,8 @@ public abstract class createaccount
         }
 
       out.println("Checking string size");
-      for(Iterator it=information.iterator();it.hasNext();)
+      for(Information item: information)
         {
-        Information item=(Information)it.next();
         if(item.value.length()>item.max || item.value.length()<item.min)
           {
           out.println("String size not valid: "+item.name);
