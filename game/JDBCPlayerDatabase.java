@@ -99,7 +99,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         props.put("jdbc_user",conf.get("jdbc_user"));
         props.put("jdbc_pwd",conf.get("jdbc_pwd"));
 
-        playerDatabase=new JDBCPlayerDatabase(null);
+        playerDatabase=new JDBCPlayerDatabase(props);
         }
       catch(Configuration.PropertyNotFoundException e)
         {
@@ -563,7 +563,10 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     
     try
       {
-      Class.forName((String)props.get("jdbc_class"));
+      System.out.println("[MOOO] jdbc_class="+(String)props.get("jdbc_class"));
+      
+      Class.forName((String)props.get("jdbc_class")).newInstance();
+
       Properties connInfo = new Properties();
       connInfo.put("user", props.get("jdbc_user"));
       connInfo.put("password", props.get("jdbc_pwd"));
@@ -571,11 +574,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
       conn.setAutoCommit(true);
       }
-    catch (ClassNotFoundException e)
-      {
-      e.printStackTrace();
-      }
-    catch (SQLException e)
+    catch (Throwable e)
       {
       e.printStackTrace();
       }

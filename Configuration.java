@@ -77,9 +77,11 @@ public class Configuration
     
     if(result==null)
       {
+      marauroad.trace("Configuration::get","E","Property ["+property+"] not found");
       marauroad.trace("Configuration::get","<");
       throw new PropertyNotFoundException(property);
       }
+    marauroad.trace("Configuration::get","D","Property ["+property+"]="+result);
       
     marauroad.trace("Configuration::get","<");
     return result;
@@ -88,6 +90,7 @@ public class Configuration
   public void set(String property, String value)
     {
     marauroad.trace("Configuration::set",">");
+    marauroad.trace("Configuration::set","D","Property ["+property+"]="+value);
     properties.put(property,value);
     marauroad.trace("Configuration::set","<");
     }
