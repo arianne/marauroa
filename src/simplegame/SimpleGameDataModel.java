@@ -99,5 +99,13 @@ public class SimpleGameDataModel
     return(sb.toString());
   }
   
+  public byte checkWinCondition()
+  {
+    //TODO implement the win conditions check.
+    //it should return the byte value of the winner
+    //or -1 if none won
+    return(-1);
+  }
+  
 }
 

@@ -23,6 +23,13 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("SimpleRPRuleProcessor::<init>","<");
   }
   
+  private RPObject findPlayer(byte color)
+  {
+    //iterate all the objects of RPZone (which contains only of two players here :) )
+    //and find the one player who owns this color
+    return null;
+  }
+  
   public void setContext(RPZone zone)
   {
     marauroad.trace("SimpleRPRuleProcessor::setContext",">");
@@ -54,6 +61,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       else
       {
         String objid = rp_player.get("object_id");
+        rp_player.put("color",String.valueOf(color));
         if(list!=null && list.size()>0)
         {
           RPAction action = list.get(list.size()-1);
@@ -62,12 +70,18 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
           int column = Integer.parseInt(action.get("column"));
           if(zone.gameDataModel.getColorAt(row,column)==-1)
           {
-            zone.gameDataModel.setColorAt(row,column,(byte)1);
+            zone.gameDataModel.setColorAt(row,column,color);
             lastPlayerID = id;
             status = RPAction.STATUS_SUCCESS;
+            marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.gameDataModel.toString());
+            byte winner = zone.gameDataModel.checkWinCondition();
+            if(winner!=-1)
+            {
+              RPObject rp_winner = findPlayer(color);
+              marauroad.trace("SimpleRPRuleProcessor::execute","D","The winner is "+winner);
+            }
             //swap color
             color = color==1?(byte)0:(byte)1;
-            marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.gameDataModel.toString());
           }
           else
           {
