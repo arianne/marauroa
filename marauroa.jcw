@@ -1,19 +1,16 @@
-! ** JCreator Workspace File (C)2000
-! ********** DO NOT EDIT *********
-
-VERSION := "1.00"
-LABEL := "marauroa"
-
-! Start Project Structure
-#[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
-
-! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\README" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\stendhal\\stendhal_game.py" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\PacketValidater.java" #[EndFile]
-
-! Start Breakpoint Structure
-#[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]
-
+<?xml?>
+<workspace>
+	<settings>
+		<label>marauroa</label>
+	</settings>
+	<users>
+		<user>
+			<path>marauroa.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>marauroa.jcp</path>
+		</project>
+	</projects>
+</workspace>

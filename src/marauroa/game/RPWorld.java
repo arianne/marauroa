@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.1 2004/09/21 18:20:39 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.2 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,11 +16,11 @@ import java.util.*;
 
 public class RPWorld 
   {
-  HashMap zones;
+  HashMap<IRPZone.ID,IRPZone> zones;
     
   public RPWorld()
     {
-    zones=new HashMap();
+    zones=new HashMap<IRPZone.ID,IRPZone>();
     }
   
   public void onInit() throws Exception

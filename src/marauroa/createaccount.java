@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.30 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.31 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,11 +50,11 @@ public abstract class createaccount
       }
     }
     
-  protected List information;
+  protected List<Information> information;
   
   public createaccount()
     {
-    information= new LinkedList();
+    information= new LinkedList<Information>();
     
     information.add(new Information("-u","username",4,20));
     information.add(new Information("-p","password",4,256));

@@ -124,7 +124,7 @@ public class nullClient extends Thread
   
   private boolean synced;
   private RPObject myRPObject;
-  private Map world_objects;
+  private Map<RPObject.ID,RPObject> world_objects;
   private ClientMap map_objects;
   private Random rand;
   private NetworkClientManager netMan;
@@ -140,7 +140,7 @@ public class nullClient extends Thread
     synced=false;
     
     myRPObject=null;
-    world_objects=new LinkedHashMap();
+    world_objects=new LinkedHashMap<RPObject.ID,RPObject>();
     map_objects=null;
     rand=new Random();
     netMan=new NetworkClientManager("127.0.0.1");

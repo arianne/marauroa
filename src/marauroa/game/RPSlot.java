@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.32 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.33 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,8 +26,8 @@ import org.w3c.dom.NodeList;
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.net.Serializable, Cloneable
   {
-  private List added;
-  private List deleted;
+  private List<RPObject> added;
+  private List<RPObject> deleted;
   
   public void resetAddedAndDeletedRPObjects()
     {
@@ -78,22 +78,25 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
    
   private String name;
   /** A List<RPObject> of objects */
-  private List objects;
+  private List<RPObject> objects;
   
   public RPSlot()
     {
     name="";
-    objects=new LinkedList();
-    added=new LinkedList();
-    deleted=new LinkedList();
+    initialize();
     }
   
   public RPSlot(String name)
     {
     this.name=name;
-    objects=new LinkedList();
-    added=new LinkedList();
-    deleted=new LinkedList();
+    initialize();
+    }
+  
+  private void initialize()
+    {
+    objects=new LinkedList<RPObject>();
+    added=new LinkedList<RPObject>();
+    deleted=new LinkedList<RPObject>();
     }
   
   /** This method create a copy of the slot */
@@ -358,7 +361,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     objects.clear();
     for(int i=0;i<size;++i)
       {
-      objects.add(in.readObject(new RPObject()));
+      objects.add((RPObject)in.readObject(new RPObject()));
       }
     }
   }

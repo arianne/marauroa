@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.40 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.41 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -182,7 +182,7 @@ public class PlayerEntryContainer
     }
     
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */
-  private HashMap listPlayerEntries;
+  private HashMap<Integer,RuntimePlayerEntry> listPlayerEntries;
   
   /** A object representing the database */
   private IPlayerDatabase playerDatabase;
@@ -199,7 +199,7 @@ public class PlayerEntryContainer
     /* Initialize the random number generator */
     rand.setSeed(new Date().getTime());
     lock=new RWLock();
-    listPlayerEntries=new HashMap();
+    listPlayerEntries=new HashMap<Integer,RuntimePlayerEntry>();
     /* Choose the database type using configuration file */
     try
       {

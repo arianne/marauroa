@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.6 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.7 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,19 +25,19 @@ public class Perception
   
   public byte type;
   public IRPZone.ID zoneid;
-  public List addedList;
-  public List modifiedAddedAttribsList;
-  public List modifiedDeletedAttribsList;
-  public List deletedList;
+  public List<RPObject> addedList;
+  public List<RPObject> modifiedAddedAttribsList;
+  public List<RPObject> modifiedDeletedAttribsList;
+  public List<RPObject> deletedList;
   
   public Perception(byte type, IRPZone.ID zoneid)
     {
     this.type=type;
     this.zoneid=zoneid;
-    addedList=new LinkedList();
-    modifiedAddedAttribsList=new LinkedList();
-    modifiedDeletedAttribsList=new LinkedList();
-    deletedList=new LinkedList();
+    addedList=new LinkedList<RPObject>();
+    modifiedAddedAttribsList=new LinkedList<RPObject>();
+    modifiedDeletedAttribsList=new LinkedList<RPObject>();
+    deletedList=new LinkedList<RPObject>();
     }
   
   /** This method adds an added object to the world */

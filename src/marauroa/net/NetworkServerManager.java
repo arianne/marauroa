@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.29 2004/09/21 19:53:49 root777 Exp $ */
+/* $Id: NetworkServerManager.java,v 1.30 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,7 @@ public final class NetworkServerManager
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
   /** A List of Message objects: List<Message> */
-  private List messages;
+  private List<Message> messages;
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
@@ -57,7 +57,7 @@ public final class NetworkServerManager
       keepRunning=true;
       isfinished=false;
       /* Because we access the list from several places we create a synchronized list. */
-      messages=Collections.synchronizedList(new LinkedList());
+      messages=Collections.synchronizedList(new LinkedList<Message>());
       stats=Statistics.getStatistics();
       readManager=new NetworkServerManagerRead();
       readManager.start();

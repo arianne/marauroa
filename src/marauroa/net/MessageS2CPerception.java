@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.54 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.55 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,10 +32,10 @@ public class MessageS2CPerception extends Message
   private int timestampPerception;
   private IRPZone.ID zoneid;
 
-  private List addedRPObjects;
-  private List modifiedAddedAttribsRPObjects;
-  private List modifiedDeletedAttribsRPObjects;
-  private List deletedRPObjects;
+  private List<RPObject> addedRPObjects;
+  private List<RPObject> modifiedAddedAttribsRPObjects;
+  private List<RPObject> modifiedDeletedAttribsRPObjects;
+  private List<RPObject> deletedRPObjects;
   private RPObject myRPObject;
   
   private static CachedCompressedPerception cache=CachedCompressedPerception.get();
@@ -191,10 +191,10 @@ public class MessageS2CPerception extends Message
     
     typePerception=ser.readByte();
     zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(""));
-    addedRPObjects=new LinkedList();
-    deletedRPObjects=new LinkedList();
-    modifiedAddedAttribsRPObjects=new LinkedList();
-    modifiedDeletedAttribsRPObjects=new LinkedList();
+    addedRPObjects=new LinkedList<RPObject>();
+    deletedRPObjects=new LinkedList<RPObject>();
+    modifiedAddedAttribsRPObjects=new LinkedList<RPObject>();
+    modifiedDeletedAttribsRPObjects=new LinkedList<RPObject>();
     
     int added=ser.readInt();
     
@@ -205,7 +205,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",added + " added objects..");
     for(int i=0;i<added;++i)
       {
-      addedRPObjects.add(ser.readObject(new RPObject()));
+      addedRPObjects.add((RPObject)ser.readObject(new RPObject()));
       }
 
     int modAdded=ser.readInt();
@@ -217,7 +217,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",modAdded + " modified Added objects..");
     for(int i=0;i<modAdded;++i)
       {
-      modifiedAddedAttribsRPObjects.add(ser.readObject(new RPObject()));
+      modifiedAddedAttribsRPObjects.add((RPObject)ser.readObject(new RPObject()));
       }
 
     int modDeleted=ser.readInt();
@@ -229,7 +229,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",modDeleted + " modified Deleted objects..");
     for(int i=0;i<modDeleted;++i)
       {
-      modifiedDeletedAttribsRPObjects.add(ser.readObject(new RPObject()));
+      modifiedDeletedAttribsRPObjects.add((RPObject)ser.readObject(new RPObject()));
       }
 
     int del=ser.readInt();
@@ -241,7 +241,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
-      deletedRPObjects.add(ser.readObject(new RPObject()));
+      deletedRPObjects.add((RPObject)ser.readObject(new RPObject()));
       }
     
     
@@ -296,11 +296,11 @@ public class MessageS2CPerception extends Message
         }
       }
 
-    private Map cachedContent;
+    private Map<CacheKey,byte[]> cachedContent;
     
     private CachedCompressedPerception()
       {
-      cachedContent=new HashMap();
+      cachedContent=new HashMap<CacheKey,byte[]>();
       }
       
     static CachedCompressedPerception instance;

@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.17 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.18 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,21 +62,21 @@ public class MemoryPlayerDatabase implements IPlayerDatabase
     /** The password */
     public String password;
     /** A HashMap<character, RPCharacter> containing characters*/
-    public HashMap characters;
+    public HashMap<String,RPObject> characters;
     /** A List<LoginEvent> containing login events. */
-    public List lastLogins;
+    public List<LoginEvent> lastLogins;
     public PlayerEntry()
       {
-      characters=new HashMap();
-      lastLogins=new LinkedList();
+      characters=new HashMap<String,RPObject>();
+      lastLogins=new LinkedList<LoginEvent>();
       }
     }
   /* A Map<username, PlayerEntry> that stores the player entries */
-  private Map players;
+  private Map<String,PlayerEntry> players;
   /** Constructor */
   private MemoryPlayerDatabase()
     {
-    players=new HashMap();
+    players=new HashMap<String,PlayerEntry>();
     }
   
   /** This method returns an instance of PlayerDatabase
@@ -189,7 +189,9 @@ public class MemoryPlayerDatabase implements IPlayerDatabase
       loginEvent.address=source.getAddress().getHostAddress();
       loginEvent.time=new Date();
       loginEvent.correct=correctLogin;
+      
       player.lastLogins.add(loginEvent);
+      
       if(player.lastLogins.size()>MAX_NUMBER_OF_LOGIN_EVENTS)
         {
         player.lastLogins.remove(0);

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.53 2004/09/15 18:33:01 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.54 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,7 +166,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       marauroad.trace("JDBCPlayerDatabase::getCharacterList","D",query);
 
       ResultSet charactersSet = stmt.executeQuery(query);
-      Vector vector = new Vector();
+      Vector<String> vector = new Vector<String>();
 
       while(charactersSet.next())
         {
@@ -447,7 +447,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","D",query);
 
       ResultSet result = stmt.executeQuery(query);
-      Vector vector = new Vector();
+      Vector<String> vector = new Vector<String>();
       
       while(result.next())
         {
@@ -458,6 +458,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         login_event.correct = result.getInt("result")!=0;
         vector.add(login_event.toString());
         }
+        
       loginEvents = new String[vector.size()];
       loginEvents = (String[])vector.toArray(loginEvents);
       return loginEvents;

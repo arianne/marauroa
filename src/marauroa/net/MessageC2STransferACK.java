@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.1 2004/08/29 11:12:42 arianne_rpg Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.2 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 public class MessageC2STransferACK extends Message
   {
-  private List contents;
+  private List<TransferContent> contents;
   
   /** Constructor for allowing creation of an empty message */
   public MessageC2STransferACK()
@@ -32,7 +32,7 @@ public class MessageC2STransferACK extends Message
     super(source);
     type=TYPE_C2S_TRANSFER_ACK;
     
-    this.contents=new LinkedList();
+    this.contents=new LinkedList<TransferContent>();
     contents.add(content);
     }
   
@@ -66,7 +66,7 @@ public class MessageC2STransferACK extends Message
     super.readObject(in);
     
     int size=in.readInt();
-    contents=new LinkedList();
+    contents=new LinkedList<TransferContent>();
       
     for(int i=0;i<size;i++)
       {

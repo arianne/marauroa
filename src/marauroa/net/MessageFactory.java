@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.17 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.18 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,12 @@ import marauroa.marauroad;
  *  the stream of bytes. */
 public class MessageFactory
   {
-  private static Map factoryArray;
+  private static Map<Integer,Class> factoryArray;
   private static MessageFactory messageFactory;
   
   private MessageFactory()
     {
-    factoryArray=new HashMap();
+    factoryArray=new HashMap<Integer,Class>();
     register();
     }
   

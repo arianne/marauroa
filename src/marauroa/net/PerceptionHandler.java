@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.18 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.19 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import marauroa.*;
 public class PerceptionHandler
   {   
   private IPerceptionListener listener;
-  private List previousPerceptions;
+  private List<Message> previousPerceptions;
   private int previousTimestamp;
   private boolean synced;
   
@@ -32,18 +32,18 @@ public class PerceptionHandler
     {
     this.listener=new DefaultPerceptionListener();
     synced=false;
-    previousPerceptions=new LinkedList();
+    previousPerceptions=new LinkedList<Message>();
     }
 
   public PerceptionHandler(IPerceptionListener listener)
     {
     this.listener=listener;
-    previousPerceptions=new LinkedList();
+    previousPerceptions=new LinkedList<Message>();
     previousTimestamp=-1;
     synced=false;
     }
   
-  public void apply(MessageS2CPerception message, Map world_instance) throws Exception
+  public void apply(MessageS2CPerception message, Map<RPObject.ID,RPObject> world_instance) throws Exception
     {
     listener.onPerceptionBegin(message.getTypePerception(), message.getPerceptionTimestamp());
     
@@ -139,7 +139,7 @@ public class PerceptionHandler
 
   /** This method applys perceptions addedto the Map<RPObject::ID,RPObject> passed as argument.
    *  It clears the map if this is a sync perception */
-  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
+  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map<RPObject.ID,RPObject> world) throws RPObjectNotFoundException
     {
     try
       {
@@ -171,7 +171,7 @@ public class PerceptionHandler
     }
 
   /** This method applys perceptions deleted to the Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
+  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map<RPObject.ID,RPObject> world) throws RPObjectNotFoundException
     {
     try
       {
@@ -196,7 +196,7 @@ public class PerceptionHandler
 
   /** This method applys perceptions modified added and modified deleted to the
    *  Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
+  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map<RPObject.ID,RPObject> world) throws RPObjectNotFoundException
     {
     try
       {
@@ -241,7 +241,7 @@ public class PerceptionHandler
     }
   
   /** This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
+  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map<RPObject.ID,RPObject> world) throws RPObjectNotFoundException
     {
     try
       {

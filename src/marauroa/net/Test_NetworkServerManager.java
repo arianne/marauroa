@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.17 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.18 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,9 +108,9 @@ public class Test_NetworkServerManager extends TestCase
       }
     }
     
-  private List createBigPerception()
+  private List<RPObject> createBigPerception()
     {
-    List list=new LinkedList();
+    List<RPObject> list=new LinkedList<RPObject>();
     
     for(int i=0;i<400;++i)
       {

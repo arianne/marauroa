@@ -1,4 +1,4 @@
-/* $Id: Util.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: Util.java,v 1.5 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -101,7 +101,7 @@ public class Util
     if(md5DigestRef==null || (md=(MessageDigest)md5DigestRef.get())==null)
       {
       md = MessageDigest.getInstance("MD5");
-      md5DigestRef = new WeakReference(md);
+      md5DigestRef = new WeakReference<MessageDigest>(md);
       }
     md = (MessageDigest)md5DigestRef.get();
     md.reset();

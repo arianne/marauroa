@@ -1,4 +1,4 @@
-/* $Id: PacketValidater.java,v 1.2 2004/10/05 17:51:21 arianne_rpg Exp $ */
+/* $Id: PacketValidater.java,v 1.3 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,7 +95,7 @@ public final class PacketValidater
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("select address,mask from banlist");
       banList=null;
-      List ban_list_tmp = new ArrayList();
+      List<InetAddressMask> ban_list_tmp = new ArrayList<InetAddressMask>();
       while(rs.next())
       {
         String address = rs.getString("address");

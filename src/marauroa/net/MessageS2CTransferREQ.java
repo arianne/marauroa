@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.1 2004/08/29 11:12:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.2 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 public class MessageS2CTransferREQ extends Message
   {
-  private List contents;
+  private List<TransferContent> contents;
   
   /** Constructor for allowing creation of an empty message */
   public MessageS2CTransferREQ()
@@ -27,7 +27,7 @@ public class MessageS2CTransferREQ extends Message
     type=TYPE_S2C_TRANSFER_REQ;
     }
   
-  public MessageS2CTransferREQ(InetSocketAddress source,List contents)
+  public MessageS2CTransferREQ(InetSocketAddress source,List<TransferContent> contents)
     {
     super(source);
     type=TYPE_S2C_TRANSFER_REQ;
@@ -65,7 +65,7 @@ public class MessageS2CTransferREQ extends Message
     super.readObject(in);
     
     int size=in.readInt();
-    contents=new LinkedList();
+    contents=new LinkedList<TransferContent>();
       
     for(int i=0;i<size;i++)
       {

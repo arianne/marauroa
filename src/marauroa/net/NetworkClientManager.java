@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.19 2004/07/13 20:31:54 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.20 2004/11/12 15:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,8 +35,8 @@ public class NetworkClientManager
     public Date timestamp;
     }
     
-  private Map pendingPackets;
-  private List processedMessages;
+  private Map<Byte,PacketContainer> pendingPackets;
+  private List<Message> processedMessages;
   
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
@@ -49,8 +49,8 @@ public class NetworkClientManager
     socket.setTrafficClass(0x08|0x10);
       
     msgFactory=MessageFactory.getFactory();
-    pendingPackets=new LinkedHashMap();
-    processedMessages=new LinkedList();
+    pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
+    processedMessages=new LinkedList<Message>();
     }
     
   /** This method notify the thread to finish it execution */

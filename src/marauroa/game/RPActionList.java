@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.10 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: RPActionList.java,v 1.11 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,10 +19,11 @@ import java.util.LinkedList;
 public class RPActionList
   {
   /** A LinkedList<RPAction> that contains actions */
-  private LinkedList actionsList;
+  private LinkedList<RPAction> actionsList;
+  
   public RPActionList()
     {
-    actionsList = new LinkedList();
+    actionsList = new LinkedList<RPAction>();
     }
   
   /** This method adds a new rp action to list

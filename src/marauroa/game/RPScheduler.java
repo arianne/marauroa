@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.18 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.19 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,9 +21,9 @@ import marauroa.*;
 public class RPScheduler
   {
   /** a HashMap<RPObject.ID,RPActionList> of entries for this turn */
-  private HashMap actualTurn;
+  private HashMap<RPObject.ID,RPActionList> actualTurn;
   /** a HashMap<RPObject.ID,RPActionList> of entries for next turn */
-  private HashMap nextTurn;
+  private HashMap<RPObject.ID,RPActionList> nextTurn;
   /** Turn we are executing now */
   private int turn;
   
@@ -31,8 +31,8 @@ public class RPScheduler
   public RPScheduler()
     {
     turn=0;
-    actualTurn=new HashMap();
-    nextTurn=new HashMap();
+    actualTurn=new HashMap<RPObject.ID,RPActionList>();
+    nextTurn=new HashMap<RPObject.ID,RPActionList>();
     }
   
   /** Add an RPAction to the scheduler for the next turn
@@ -142,7 +142,7 @@ public class RPScheduler
     ++turn;
     /* we cross-exchange the two turns and erase the contents of the next turn */
     actualTurn=nextTurn;
-    nextTurn=new HashMap();
+    nextTurn.clear();
     marauroad.trace("RPScheduler::nextTurn","<");
     }
   }

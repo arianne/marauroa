@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.53 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.54 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,8 +103,9 @@ public final class GameServerManager extends Thread
               processOutOfSyncEvent((MessageC2SOutOfSync)msg);
               break;
             case Message.TYPE_C2S_TRANSFER_ACK:
-              marauroad.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
+              marauroad.trace("GameServerManager::run","D","Processing C2S Transfer ACK Message");
               processTransferACK((MessageC2STransferACK)msg);
+              break;
             default:
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
               break;
@@ -150,7 +151,7 @@ public final class GameServerManager extends Thread
       
     public static String[] get()
       {
-      List l_result = new ArrayList();
+      List<String> l_result = new ArrayList<String>();
       
       Enumeration props = config.propertyNames();
       while(props.hasMoreElements())

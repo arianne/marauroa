@@ -38,10 +38,10 @@ public class RPClass implements Serializable
   static private class AttributeDesc implements Serializable
     {
     private static short lastCode=0;
-    private static Map attributeIntegerMap;
+    private static Map<String,Short> attributeIntegerMap;
     static
       {
-      attributeIntegerMap=new HashMap();
+      attributeIntegerMap=new HashMap<String,Short>();
       }      
     
     private static short getValidCode(String name)
@@ -88,21 +88,21 @@ public class RPClass implements Serializable
       }
     }
   
-  private static Map rpClassList;
+  private static Map<String,RPClass> rpClassList;
   
   static
     {
-    rpClassList=new LinkedHashMap();
+    rpClassList=new LinkedHashMap<String,RPClass>();
     }
 
   private String name;
   private RPClass parent;  
-  private Map attributes;  
+  private Map<String,AttributeDesc> attributes;  
   
   public RPClass()
     {    
     parent=null;
-    attributes=new HashMap();
+    attributes=new HashMap<String,AttributeDesc>();
     }
   
   /** This constructor adds the rpclass to the global list of rpclasses. */  
@@ -110,7 +110,7 @@ public class RPClass implements Serializable
     {    
     parent=null;
     name=type;
-    attributes=new HashMap();
+    attributes=new HashMap<String,AttributeDesc>();
 
     add("id",INT);
     add("type",STRING);    

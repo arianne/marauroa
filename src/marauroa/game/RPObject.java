@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.48 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.49 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,8 +19,8 @@ import marauroa.*;
 /** This class implements an Object. Please refer to "Objects Explained" document */
 public class RPObject extends Attributes
   {
-  private List added;
-  private List deleted;
+  private List<RPSlot> added;
+  private List<RPSlot> deleted;
   
   public void resetAddedAndDeleted()
     {
@@ -90,7 +90,7 @@ public class RPObject extends Attributes
     }
   
   /** a List<RPSlot> of slots */
-  private List slots;
+  private List<RPSlot> slots;
   
   /** An iterator for properly acceding all the Slots. */
   public class SlotsIterator
@@ -154,9 +154,9 @@ public class RPObject extends Attributes
   
   private void initialize()
     {
-    slots=new LinkedList();
-    added=new LinkedList();
-    deleted=new LinkedList();
+    slots=new LinkedList<RPSlot>();
+    added=new LinkedList<RPSlot>();
+    deleted=new LinkedList<RPSlot>();
     }
   
   /** Returns an ID object representing the id of this object */
@@ -322,7 +322,9 @@ public class RPObject extends Attributes
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
       }
-    slots=new LinkedList();
+      
+    slots=new LinkedList<RPSlot>();
+    
     for(int i=0;i<size;++i)
       {
       slots.add((RPSlot)in.readObject(new RPSlot()));

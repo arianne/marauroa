@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.111 2004/09/21 18:20:39 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.112 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ public class RPServerManager extends Thread
   private PlayerEntryContainer playerContainer;
   
   /** This list host players that still need to login in */
-  private List incubator;
+  private List<RPObject> incubator;
   
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
@@ -90,7 +90,7 @@ public class RPServerManager extends Thread
       String duration=conf.get("rp_turnDuration");
 
       turnDuration=Long.parseLong(duration);
-      incubator=new LinkedList();
+      incubator=new LinkedList<RPObject>();
       
       start();
       }
@@ -238,8 +238,8 @@ public class RPServerManager extends Thread
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
 
-    List playersToRemove=new LinkedList();
-    List playersToUpdate=new LinkedList();
+    List<Integer> playersToRemove=new LinkedList<Integer>();
+    List<Integer> playersToUpdate=new LinkedList<Integer>();
 	
 	/** We reset the cache at Perceptions */
     MessageS2CPerception.clearPrecomputedPerception();
@@ -411,7 +411,7 @@ public class RPServerManager extends Thread
     return ruleProcessor.onExit(id);
     }
   
-  public void transferContent(RPObject.ID id, List content)
+  public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
     try
       {

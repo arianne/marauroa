@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.43 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.44 2004/11/12 15:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,11 +19,11 @@ import marauroa.*;
 /** This class hosts a list of Attributes stored as pairs String=String */
 public class Attributes implements marauroa.net.Serializable
   {
-  private Map added;
-  private Map deleted;
+  private Map<String,String> added;
+  private Map<String,String> deleted;
   
   /** A Map<String,String> that contains the attributes */
-  private Map content;
+  private Map<String,String> content;
   private RPClass rpClass;
 
   public Object copy()
@@ -59,9 +59,9 @@ public class Attributes implements marauroa.net.Serializable
     {
     rpClass=rpclass;
     
-    content=new HashMap();
-    added=new HashMap();
-    deleted=new HashMap();
+    content=new HashMap<String,String>();
+    added=new HashMap<String,String>();
+    deleted=new HashMap<String,String>();
     }
   
   public void setRPClass(RPClass rpclass)
@@ -255,10 +255,10 @@ public class Attributes implements marauroa.net.Serializable
     return buffer.toString();
     }
 	
-  private static List StringToList(String list)
+  private static List<String> StringToList(String list)
     {
     String[] array=list.substring(1,list.length()-1).split(":");
-    List result=new LinkedList();
+    List<String> result=new LinkedList<String>();
 
     for(int i=0;i<array.length;++i)
       {
