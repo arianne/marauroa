@@ -1,4 +1,4 @@
-/* $Id: PythonRPZone.java,v 1.4 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.1 2004/09/21 18:20:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,39 +17,40 @@ import marauroa.game.*;
 import marauroa.*;
 import java.util.*;
 
-public class PythonRPZone extends MarauroaRPZone
+public class PythonRPWorld extends RPWorld
   {
   private GameScript gameScript;
-  private PythonZone pythonZone;
+  private PythonWorld pythonWorld;
 
-  public PythonRPZone() throws Exception
+  public PythonRPWorld() throws Exception
     {
     super();
 
-    marauroad.trace("PythonRPZone::PythonRPZone",">");
+    marauroad.trace("PythonRPWorld::PythonRPWorld",">");
 
     try
       {
       gameScript=GameScript.getGameScript();
-      gameScript.setRPZone(this);
-      pythonZone=gameScript.getZone();
+      gameScript.setRPWorld(this);
+      pythonWorld=gameScript.getWorld();
       }
     catch(Exception e)
       {
-      marauroad.thrown("PythonRPZone::PythonRPZone","!",e);
+      marauroad.thrown("PythonRPWorld::PythonRPWorld","!",e);
       System.exit(-1);
       }
 
-    marauroad.trace("PythonRPZone::PythonRPZone","<");
+    marauroad.trace("PythonRPWorld::PythonRPWorld","<");
     }
   
   public void onInit() throws Exception
     {
-    pythonZone.onInit();
+    pythonWorld.onInit();
     }
   
   public void onFinish() throws Exception
     {
-    pythonZone.onFinish();
+    pythonWorld.onFinish();
     }
+   
   }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.61 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.62 2004/09/21 18:20:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,12 +18,13 @@ import java.util.*;
 
 public class the1001RPRuleProcessor implements IRPRuleProcessor
   {
-  private the1001RPZone zone;
+  private RPWorld world;
+  
   private List trackedObjects;
   private int turn;
   public the1001RPRuleProcessor()
     {
-    zone=null;
+    world=null;
     turn=0;
     trackedObjects=new LinkedList();
     RPCode.setCallback(this);
@@ -31,14 +32,14 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
   
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
-  public void setContext(RPServerManager rpman, IRPZone zone)
+  public void setContext(RPServerManager rpman, RPWorld world)
     {
-    this.zone=(the1001RPZone)zone;
+    this.world=world;
     }
     
   public the1001RPZone getRPZone()
     {
-    return zone;
+    return null;
     }
     
   /** Pass the whole list of actions so that it can approve or deny the actions in it.
@@ -104,6 +105,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
         }
       
       /** We notify the player about the action result */
+      the1001RPZone zone=(the1001RPZone)world.getRPZone(id);
       RPObject player=zone.get(id);
       player.put("?"+action.get("action_id"), "" /* TODO: Replace status.toString() for a numerical code */ );
       trackObject(player);
@@ -136,6 +138,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
       {
       removeOneTurnAttributes();      
 
+      the1001RPZone zone=(the1001RPZone)world.getRPZone(new IRPZone.ID(""));
       RPObject arena=zone.getArena();
 
       if(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
@@ -192,7 +195,10 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
           
         attrToDelete.clear();
         
-        if(zone.has(new RPObject.ID(object)))
+        RPObject.ID id=new RPObject.ID(object);        
+        the1001RPZone zone=(the1001RPZone)world.getRPZone(id);
+        
+        if(zone.has(id))
           {
           zone.modify(object);
           }
@@ -230,7 +236,12 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
         }
         
       RPCode.AddPlayer(object);
+
+      /** Give valid id to object */
+      the1001RPZone zone=(the1001RPZone)world.getRPZone(object.getID());
+      zone.assignRPObjectID(object);
       zone.add(object);
+      
       return true;
       }
     catch(Exception e)
@@ -252,6 +263,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
       /** TODO: Deny logout to players that are in combat */
       RPCode.RemovePlayer(id);
 
+      the1001RPZone zone=(the1001RPZone)world.getRPZone(id);
       RPObject removed=zone.remove(id);
 
       if(marauroad.loggable("the1001RPRuleProcessor::onExit","D"))

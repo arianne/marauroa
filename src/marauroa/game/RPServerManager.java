@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.110 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.111 2004/09/21 18:20:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,7 +53,7 @@ public class RPServerManager extends Thread
   /** The ruleProcessor that the scheduler will use to execute the actions */
   private IRPRuleProcessor ruleProcessor;
   /** The place where the objects are stored */
-  private IRPZone zone;
+  private RPWorld world;
   private Statistics stats;
   /** The networkServerManager so that we can send perceptions */
   private NetworkServerManager netMan;
@@ -79,13 +79,13 @@ public class RPServerManager extends Thread
       this.netMan=netMan;
       
       Configuration conf=Configuration.getConfiguration();
-      Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
-      zone=(IRPZone)zoneClass.newInstance();      
-      zone.onInit();      
+      Class worldClass=Class.forName(conf.get("rp_RPWorldClass"));
+      world=(RPWorld)worldClass.newInstance();      
+      world.onInit();      
       
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
       ruleProcessor=(IRPRuleProcessor)ruleProcessorClass.newInstance();
-      ruleProcessor.setContext(this,zone);
+      ruleProcessor.setContext(this,world);
       
       String duration=conf.get("rp_turnDuration");
 
@@ -118,7 +118,7 @@ public class RPServerManager extends Thread
     
     try
       {
-      zone.onFinish();
+      world.onFinish();
       }
     catch(Exception e)
       {
@@ -153,6 +153,7 @@ public class RPServerManager extends Thread
     marauroad.trace("RPServerManager::getRPObject",">");
     try
       {
+      IRPZone zone=world.getRPZone(id);
       return zone.get(id);
       }
     finally
@@ -189,6 +190,8 @@ public class RPServerManager extends Thread
   private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry entry)
     {
     Perception perception=null;
+
+    IRPZone zone=world.getRPZone(entry.characterid);
     
     if(deltaPerceptionSend<=SYNC_PERCEPTION_FRECUENCY && entry.perception_OutOfSync)
       {
@@ -268,6 +271,7 @@ public class RPServerManager extends Thread
         if(entry.state==playerContainer.STATE_GAME_BEGIN)
           {
           Perception perception=getPlayerPerception(entry);
+          IRPZone zone=world.getRPZone(entry.characterid);
           RPObject object=zone.get(entry.characterid);
           
           sendPlayerPerception(entry,perception,object);
@@ -316,7 +320,9 @@ public class RPServerManager extends Thread
         
         try
           {
-          RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
+          RPObject.ID id=playerContainer.getRPObjectID(clientid);
+          IRPZone zone=world.getRPZone(id);
+          RPObject object=zone.get(id);
           playerContainer.setRPObject(clientid,object);
           }
         catch(Exception e)
@@ -458,11 +464,11 @@ public class RPServerManager extends Thread
         buildPerceptions();
 
         /** Move zone to the next turn */
-        zone.nextTurn();
+        world.nextTurn();
         }
       playerContainer.getLock().releaseLock();
       
-      stats.setObjectsNow(zone.size());
+      stats.setObjectsNow(world.size());
       }
     
     isfinished=true;

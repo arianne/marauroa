@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.5 2004/07/13 18:16:48 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.6 2004/09/21 18:20:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,9 +35,9 @@ class GameScript
   private static GameScript gameScript=null;
   
   /** Set the RPZone on the script */
-  public void setRPZone(IRPZone zone)
+  public void setRPWorld(RPWorld world)
     {    
-    interpreter.set("gamescript__zone",zone);   
+    interpreter.set("gamescript__world",world);   
     }
 
   /** Set the RPSheduler on the script */
@@ -57,17 +57,17 @@ class GameScript
     return gameScript;
     }
 
-  public PythonZone getZone() throws Exception
+  public PythonWorld getWorld() throws Exception
     {    
-    String pythonZoneClass=conf.get("python_script_zone_class");
-    PyInstance object=(PyInstance)interpreter.eval(pythonZoneClass+"(gamescript__zone)");
-    return (PythonZone)object.__tojava__(PythonZone.class);
+    String pythonZoneClass=conf.get("python_script_world_class");
+    PyInstance object=(PyInstance)interpreter.eval(pythonZoneClass+"(gamescript__world)");
+    return (PythonWorld)object.__tojava__(PythonWorld.class);
     }
     
   public PythonRP getGameRules() throws Exception
     {
     String pythonRPClass=conf.get("python_script_rules_class");
-    PyInstance object=(PyInstance)interpreter.eval(pythonRPClass+"(gamescript__zone)");
+    PyInstance object=(PyInstance)interpreter.eval(pythonRPClass+"(gamescript__world)");
     return (PythonRP)object.__tojava__(PythonRP.class);
     }
   }

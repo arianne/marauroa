@@ -1,4 +1,4 @@
-/* $Id: PythonZone.java,v 1.3 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: PythonWorld.java,v 1.1 2004/09/21 18:20:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,9 +15,9 @@ package marauroa.game.python;
 import java.util.*;
 import marauroa.game.*;
 
-public class PythonZone
+public class PythonWorld
   {
-  public PythonZone() 
+  public PythonWorld() 
     {	
 	}
 

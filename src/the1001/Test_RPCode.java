@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.28 2004/08/29 11:07:43 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.29 2004/09/21 18:20:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,8 +34,12 @@ public class Test_RPCode extends TestCase
     try
       {
       zone=new the1001RPZone();
+
+      RPWorld world=new RPWorld();
+      world.addRPZone(zone);
+
       rpu=new the1001RPRuleProcessor();
-      rpu.setContext(null,zone);
+      rpu.setContext(null,world);
       assertEquals(rpu.getTurn(),0);
     
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
@@ -105,8 +109,11 @@ public class Test_RPCode extends TestCase
     try
       {
       zone=new the1001RPZone();
+      RPWorld world=new RPWorld();
+      world.addRPZone(zone);
+
       rpu=new the1001RPRuleProcessor();
-      rpu.setContext(null,zone);
+      rpu.setContext(null,world);
       assertEquals(rpu.getTurn(),0);
     
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
@@ -149,8 +156,11 @@ public class Test_RPCode extends TestCase
     try
       {
       zone=new the1001RPZone();
+      RPWorld world=new RPWorld();
+      world.addRPZone(zone);
+
       rpu=new the1001RPRuleProcessor();
-      rpu.setContext(null,zone);
+      rpu.setContext(null,world);
       assertEquals(rpu.getTurn(),0);
     
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
@@ -221,8 +231,11 @@ public class Test_RPCode extends TestCase
     try
       {
       zone=new the1001RPZone();
+      RPWorld world=new RPWorld();
+      world.addRPZone(zone);
+
       rpu=new the1001RPRuleProcessor();
-      rpu.setContext(null,zone);
+      rpu.setContext(null,world);
       assertEquals(rpu.getTurn(),0);
     
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
