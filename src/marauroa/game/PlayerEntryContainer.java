@@ -34,25 +34,25 @@ public class PlayerEntryContainer
     
   static public class NoSuchClientIDException extends Exception
     {
-    public NoSuchClientIDException()
+    public NoSuchClientIDException(int clientid)
       {
-      super("Unable to find the requested client id");
+      super("Unable to find the requested client id ["+clientid+"]");
       }
     }
   
   static public class NoSuchCharacterException extends Exception
     {
-    public NoSuchCharacterException()
+    public NoSuchCharacterException(String character)
       {
-      super("Unable to find the requested character");
+      super("Unable to find the requested character ["+character+"]");
       }
     }
   
   static public class NoSuchPlayerException extends Exception
     {
-    public NoSuchPlayerException()
+    public NoSuchPlayerException(String player)
       {
-      super("Unable to find the requested player");
+      super("Unable to find the requested player ["+player+"]");
       }
     }
     
@@ -192,7 +192,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::removeRuntimePlayer","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -253,7 +253,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::getRuntimeState","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -287,7 +287,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::changeRuntimeState","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -334,7 +334,7 @@ public class PlayerEntryContainer
       {
       marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
       marauroad.trace("PlayerEntryContainer::addLoginEvent","!","This should never happens");
-      throw new NoSuchPlayerException();
+      throw new NoSuchPlayerException(username);
       }
     finally
       {
@@ -364,13 +364,13 @@ public class PlayerEntryContainer
           {
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
           marauroad.trace("PlayerEntryContainer::getLoginEvent","!","This should never happens");
-          throw new NoSuchPlayerException();
+          throw new NoSuchPlayerException("- not available -");
           }
         }
       else
         {
         marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -432,13 +432,13 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(unknown)");
-          throw new NoSuchPlayerException();
+          throw new NoSuchPlayerException("- not available -");
           }
         }
       else
         {
         marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }      
       }
     finally
@@ -466,7 +466,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::setChoosenCharacter","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -497,13 +497,13 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
-          throw new NoSuchPlayerException();
+          throw new NoSuchPlayerException("- not available -");
           }
         }
       else
         {
         marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -533,23 +533,23 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::getRPObject","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
-      throw new NoSuchPlayerException();
+      throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Character(unknown)");
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException(character);
       }        
     catch(PlayerDatabase.GenericDatabaseException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObject","X","Generic Database problem: "+e.getMessage());
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException(character);
       }
     finally
       {
@@ -580,23 +580,23 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::setRPObject","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }    
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
-      throw new NoSuchPlayerException();
+      throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Character(unknown)");
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException("- not available -");
       }        
     catch(PlayerDatabase.GenericDatabaseException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException("- not available -");
       }        
     finally
       {
@@ -625,28 +625,28 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Player(unknown)");
-      throw new NoSuchPlayerException();
+      throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such Character(unknown)");
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException("- not available -");
       }        
     catch(Attributes.AttributeNotFoundException e)
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","X","No such attribute(object_id)");
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException("- not available -");
       }        
     catch(PlayerDatabase.GenericDatabaseException e)
       {
       marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
-      throw new NoSuchCharacterException();
+      throw new NoSuchCharacterException("- not available -");
       }        
     finally
       {
@@ -689,7 +689,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::getUsername","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -715,7 +715,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -750,7 +750,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally
@@ -777,7 +777,7 @@ public class PlayerEntryContainer
       else
         {
         marauroad.trace("PlayerEntryContainer::getInetSocketAddress","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
+        throw new NoSuchClientIDException(clientid);
         }
       }
     finally

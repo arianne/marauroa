@@ -35,6 +35,7 @@ Send ChooseCharacter
 
 --onTimer:
 				Send Perception
+Send Perception ACK
 
 --onGameStart:
 Send Map Hash
@@ -197,6 +198,11 @@ The message is composed by:
 
 Read the Delta perception algorithm to understand what it is for.
 
+Message C2S Perception ACK
+--------------------------
+The perception ACK message is sent from client to server in a keep-alive basis.
+We use this message to inform server that the client is still there and listening.
+It has no params.
 
 Message C2S Map Hash
 --------------------

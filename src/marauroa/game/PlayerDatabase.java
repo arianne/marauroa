@@ -7,33 +7,33 @@ public interface PlayerDatabase
   {
   static public class PlayerAlreadyAddedException extends Exception
     {
-    PlayerAlreadyAddedException()
+    PlayerAlreadyAddedException(String player)
       {
-      super("Player already added to the database.");
+      super("Player ["+player+"] already added to the database.");
       }
     }
   
   static public class PlayerNotFoundException extends Exception
     {
-    PlayerNotFoundException()
+    PlayerNotFoundException(String player)
       {
-      super("Player not found on the database");
+      super("Player ["+player+"] not found on the database");
       }
     }
   
   static public class CharacterNotFoundException extends Exception
     {
-    CharacterNotFoundException()
+    CharacterNotFoundException(String character)
       {
-      super("Character not found on the database");
+      super("Character ["+character+"] not found on the database");
       }
     }
 
   static public class CharacterAlreadyAddedException extends Exception
     {
-    CharacterAlreadyAddedException()
+    CharacterAlreadyAddedException(String character)
       {
-      super("Character already added to the database");
+      super("Character ["+character+"] already added to the database");
       }
     }
     

@@ -9,9 +9,14 @@ public class RPSlot implements marauroa.net.Serializable
   {
   public static class RPObjectNotFoundException extends Exception
     {
-    public RPObjectNotFoundException()
+    public RPObjectNotFoundException(RPObject.ID id)
       {
-      super("RP Object not found");
+      super("RP Object ["+id+"] not found");
+      }
+
+    public RPObjectNotFoundException(String id)
+      {
+      super("RP Object ["+id+"] not found");
       }
     }
     
@@ -61,11 +66,12 @@ public class RPSlot implements marauroa.net.Serializable
           }
         }
 
-      throw new RPObjectNotFoundException();
+      throw new RPObjectNotFoundException(id);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      throw new RPObjectNotFoundException();
+      marauroad.trace("RPSlot::add","X",e.getMessage());
+      throw new RPObjectNotFoundException(id);
       }
     }
   
@@ -76,7 +82,7 @@ public class RPSlot implements marauroa.net.Serializable
       return (RPObject)objects.get(0);
       }
       
-    throw new RPObjectNotFoundException();
+    throw new RPObjectNotFoundException("- not available -");
     }
     
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
@@ -95,11 +101,12 @@ public class RPSlot implements marauroa.net.Serializable
           }
         }
 
-      throw new RPObjectNotFoundException();
+      throw new RPObjectNotFoundException(id);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      throw new RPObjectNotFoundException();
+      marauroad.trace("RPSlot::remove","X",e.getMessage());
+      throw new RPObjectNotFoundException(id);
       }
     }
   
@@ -122,7 +129,7 @@ public class RPSlot implements marauroa.net.Serializable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      /* NOTE: This is a serious problem */
+      marauroad.trace("RPSlot::add","X",e.getMessage());
       return false;
       }
     }

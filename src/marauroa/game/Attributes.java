@@ -10,9 +10,17 @@ public class Attributes implements marauroa.net.Serializable
   
   public static class AttributeNotFoundException extends Exception
     {
-    public AttributeNotFoundException()
+    private String attribute;
+    
+    public AttributeNotFoundException(String attrib)
       {
-      super("Attribute not found");
+      super("Attribute ["+attrib+"] not found");
+      attribute=attrib;
+      }
+      
+    public String getAttribute()
+      {
+      return attribute;
       }
     }
     
@@ -58,7 +66,7 @@ public class Attributes implements marauroa.net.Serializable
       }
     else
       {
-      throw new AttributeNotFoundException();
+      throw new AttributeNotFoundException(attribute);
       }
     }
     
@@ -73,7 +81,7 @@ public class Attributes implements marauroa.net.Serializable
       }
     else
       {
-      throw new AttributeNotFoundException();
+      throw new AttributeNotFoundException(attribute);
       }
     }
 

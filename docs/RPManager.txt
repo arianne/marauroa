@@ -32,6 +32,9 @@ The main outline of RPManager could be:
 forever
   {
   Procced through every action in this turn
+  Build Perception
+  Remove timedout players
+  
   Wait for Turn completion.
   Go to Next Turn
   }

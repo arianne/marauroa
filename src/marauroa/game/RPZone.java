@@ -6,17 +6,17 @@ public interface RPZone
   {  
   public static class RPObjectNotFoundException extends Exception
     {
-    public RPObjectNotFoundException()
+    public RPObjectNotFoundException(RPObject.ID id)
       {
-      super("RP Object not found");
+      super("RP Object ["+id+"] not found");
       }
     }
   
   public static class RPObjectInvalidException extends Exception
     {
-    public RPObjectInvalidException()
+    public RPObjectInvalidException(String attribute)
       {
-      super("Object is invalid: It lacks of mandatory attributes");
+      super("Object is invalid: It lacks of mandatory attribute ["+attribute+"]");
       }
     }
     
@@ -53,9 +53,11 @@ public interface RPZone
     }
   
   public void add(RPObject object) throws RPObjectInvalidException;
+  public void modify(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);
+  
   public RPObject create();
   public Iterator iterator();
   public Perception getPerception(RPObject.ID id, byte type);

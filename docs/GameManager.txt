@@ -99,3 +99,11 @@ Process C2S Logout ( STATE_GAME_END )
     }
     
   Postcondition: Either is the same that the input state or the state is 
+
+Process C2S Perception ACK
+  Precondition: The state must be STATE_LOGIN_BEGIN
+  
+  notify that the player recieved the perception.
+  
+  Postcondition: The state is STATE_LOGIN_BEGIN and Timestamp field in 
+  PlayerContainer is updated.

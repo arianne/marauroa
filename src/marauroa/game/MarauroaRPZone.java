@@ -1,6 +1,7 @@
 package marauroa.game;
 
 import java.util.*;
+import marauroa.*;
 
 public class MarauroaRPZone implements RPZone
   {
@@ -31,10 +32,16 @@ public class MarauroaRPZone implements RPZone
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      throw new RPObjectInvalidException();
+      marauroad.trace("MarauroaRPZone::add","X",e.getMessage());
+      throw new RPObjectInvalidException(e.getAttribute());
       }
     }
   
+  public void modify(RPObject.ID id) throws RPObjectNotFoundException
+    {
+    perception.modified(get(id));
+    }
+    
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
     if(objects.containsKey(id))
@@ -48,7 +55,7 @@ public class MarauroaRPZone implements RPZone
       }
     else
       {
-      throw new RPObjectNotFoundException();
+      throw new RPObjectNotFoundException(id);
       }
     }
   
@@ -59,7 +66,7 @@ public class MarauroaRPZone implements RPZone
       return (RPObject)objects.get(id);
       }
     
-    throw new RPObjectNotFoundException();
+    throw new RPObjectNotFoundException(id);
     }
   
   public boolean has(RPObject.ID id)
@@ -88,7 +95,7 @@ public class MarauroaRPZone implements RPZone
     
   public Iterator iterator()
     {
-    return objects.entrySet().iterator();
+    return listObjects.iterator();
     }
 
   public Perception getPerception(RPObject.ID id, byte type)

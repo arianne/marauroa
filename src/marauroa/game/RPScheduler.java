@@ -17,9 +17,9 @@ public class RPScheduler
   
   static class ActionInvalidException extends Exception
     {
-    ActionInvalidException()
+    ActionInvalidException(String attribute)
       {
-      super("Action is invalid: It lacks of mandatory attributes");
+      super("Action is invalid: It lacks of mandatory attribute ["+attribute+"]");
       }
     }
     
@@ -57,7 +57,7 @@ public class RPScheduler
     catch(Attributes.AttributeNotFoundException e)
       {
       marauroad.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
-      throw new ActionInvalidException();
+      throw new ActionInvalidException(e.getAttribute());
       }
     finally
       {    

@@ -36,3 +36,21 @@ The delta perception algorithm:
 	...
 
 An area really related to DPA is RPZone
+
+In order to get the Delta perception algorithm to work correctly you have to
+play with several parameters:
+- RP Turn Duration
+- Relation between TOTAL perception and DELTA perception
+- Know your game :)
+
+Well, as you should know, MPEG adds a full frame each X number of frames, so 
+it can be used as synchronization in case the file get corrupted. The idea is
+that if you fail to continue decompressing data, you can always omit things until 
+the next full frame and then when you synced.
+The idea here is the same, we send a perception on each turn and every X turns 
+we send a full perception so that clients can synchronize, as UDP is not a secure
+transport and you can also have new clients joining.
+
+So the point is to adjust turn duration and relation so that the maximum time a 
+client is out of sync is around 20-30 seconds. Of course, depending of the type 
+of game you may lower or increase this value.

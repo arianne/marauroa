@@ -16,17 +16,17 @@ public class RPObject extends Attributes
   
   public static class NoSlotFoundException extends Exception
     {
-    public NoSlotFoundException()
+    public NoSlotFoundException(String slot)
       {
-      super("Slot not found");
+      super("Slot ["+slot+"] not found");
       }
     }
 
   public static class SlotAlreadyAddedException extends Exception
     {
-    public SlotAlreadyAddedException()
+    public SlotAlreadyAddedException(String slot)
       {
-      super("Slot already added.");
+      super("Slot ["+slot+"] already added.");
       }
     }
   
@@ -171,7 +171,7 @@ public class RPObject extends Attributes
       }
     else
       {
-      throw new SlotAlreadyAddedException();
+      throw new SlotAlreadyAddedException(slot.getName());
       }
     }
   
@@ -187,7 +187,7 @@ public class RPObject extends Attributes
         }
       }
    
-    throw new NoSlotFoundException();
+    throw new NoSlotFoundException(name);
     }
   
   public SlotsIterator slotsIterator()

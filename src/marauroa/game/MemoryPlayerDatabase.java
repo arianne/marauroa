@@ -154,7 +154,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::addLoginEvent","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -189,7 +189,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::getLoginEvent","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -225,7 +225,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::getCharactersList","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -270,7 +270,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::setRPObject","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -278,7 +278,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!player.characters.containsKey(character))
         {
         marauroad.trace("MemoryPlayerDatabase::setRPObject","X","Player("+username+") doesn't contains that character("+character+")");
-        throw new CharacterNotFoundException();
+        throw new CharacterNotFoundException(character);
         }
         
       player.characters.put(character,object);
@@ -307,7 +307,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::getRPObject","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -315,7 +315,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!player.characters.containsKey(character))
         {
         marauroad.trace("MemoryPlayerDatabase::getRPObject","X","Player("+username+") doesn't contains that character("+character+")");
-        throw new CharacterNotFoundException();
+        throw new CharacterNotFoundException(character);
         }
       
       RPObject object=(RPObject)player.characters.get(character);    
@@ -340,7 +340,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::addPlayer","X","Database already contains that username("+username+")");
-        throw new PlayerAlreadyAddedException();
+        throw new PlayerAlreadyAddedException(username);
         }
       
       PlayerEntry player=new PlayerEntry();
@@ -366,7 +366,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::removePlayer","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       players.remove(username);
@@ -391,7 +391,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::hasCharacter","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
@@ -418,14 +418,14 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::addCharacter","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
       if(hasCharacter(username,character))
         {
         marauroad.trace("MemoryPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
-        throw new CharacterAlreadyAddedException();
+        throw new CharacterAlreadyAddedException(character);
         }
       else
         {
@@ -452,13 +452,13 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       if(!players.containsKey(username))
         {
         marauroad.trace("MemoryPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")");
-        throw new PlayerNotFoundException();
+        throw new PlayerNotFoundException(username);
         }
 
       if(!hasCharacter(username,character))
         {
         marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
-        throw new CharacterNotFoundException();
+        throw new CharacterNotFoundException(character);
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);

@@ -149,7 +149,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getCharacterList","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -178,7 +178,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(result.next())
         {
         marauroad.trace("JDBCPlayerDatabase::addPlayer","W","Database already contains that username("+username+")");
-        throw new PlayerAlreadyAddedException();
+        throw new PlayerAlreadyAddedException(username);
         }
       else
         {
@@ -189,7 +189,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addPlayer","X",sqle.getMessage());
-      throw new PlayerAlreadyAddedException();
+      throw new PlayerAlreadyAddedException(username);
       }
     finally
       {
@@ -221,7 +221,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removePlayer","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -250,7 +250,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(!hasCharacter(username,character))
         {
         marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
-        throw new CharacterNotFoundException();
+        throw new CharacterNotFoundException(username);
         }
       
       Statement stmt = connection.createStatement();
@@ -260,7 +260,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -346,7 +346,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -389,7 +389,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -424,7 +424,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -467,7 +467,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(hasCharacter(username,character))
         {
         marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
-        throw new CharacterAlreadyAddedException();
+        throw new CharacterAlreadyAddedException(username);
         }
       else
         {
@@ -481,7 +481,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -553,7 +553,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         if(result.getInt(1)==0)
           {
           marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Database doesn't contains that username("+username+")-character("+character+")");
-          throw new CharacterNotFoundException();
+          throw new CharacterNotFoundException(username);
           }
         }
       
@@ -578,7 +578,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::setRPObject","X",sqle.getMessage());
-      throw new CharacterNotFoundException();
+      throw new CharacterNotFoundException(character);
       }
     catch(PlayerNotFoundException e)
       {
@@ -623,13 +623,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
-        throw new CharacterNotFoundException();
+        throw new CharacterNotFoundException(character);
         }
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X",sqle.getMessage());      
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
       {
@@ -697,7 +697,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     else
       {
-      throw new PlayerNotFoundException();
+      throw new PlayerNotFoundException(username);
       }
       
     return(id);
