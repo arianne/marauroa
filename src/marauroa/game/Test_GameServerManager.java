@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.9 2003/12/08 17:11:31 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.10 2003/12/12 16:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,6 +92,7 @@ public class Test_GameServerManager extends TestCase
 
   public void testMainProcedures()
     {
+    marauroad.trace("Test_GameServerManager::testMainProcedures","?","This test case show how thing should go if everything is fine");
     marauroad.trace("Test_GameServerManager::testMainProcedures",">");
 	createEnviroment();
 	
@@ -187,6 +188,8 @@ public class Test_GameServerManager extends TestCase
 
   public void testMainLoginFailures()
     {
+    marauroad.trace("Test_GameServerManager::testMainLoginFailures","?","This test case shows the two tipical login"+
+      " failures: login with bad username/password or login twice");
     marauroad.trace("Test_GameServerManager::testMainLoginFailures",">");
 	createEnviroment();
 	
@@ -322,6 +325,9 @@ public class Test_GameServerManager extends TestCase
 	
   public void testMainChooseCharacterFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures","?","This test case show the failures on"+
+      " chooseCharacter, for example that a not logged player can't choose character or that if we choose an incorrect"+
+      " character it will also fail");
     marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures",">");
 	createEnviroment();
 	
@@ -461,6 +467,8 @@ public class Test_GameServerManager extends TestCase
 
   public void testMainLogoutFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainLogoutFailures","?","This test case shows that a not logged player"+
+      " can't logout out");
     marauroad.trace("Test_GameServerManager::testMainLogoutFailures",">");
 	createEnviroment();
 	
@@ -499,6 +507,8 @@ public class Test_GameServerManager extends TestCase
 
   public void testMainActionFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainActionFailures","?","This test case try to show that"+
+      " a not logged in player can't command any kind of actions");
     marauroad.trace("Test_GameServerManager::testMainActionFailures",">");
 	createEnviroment();
 	

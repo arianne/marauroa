@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.3 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.4 2003/12/12 16:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,6 +33,7 @@ public class Test_Attributes extends TestCase
 	
   public void testAttributes()
     {
+    marauroad.trace("Test_Attributes::testAttributes","?","This test case tests the normal operations done on a attribute");
     marauroad.trace("Test_Attributes::testAttributes",">");
 
     try
@@ -61,6 +62,7 @@ public class Test_Attributes extends TestCase
 
   public void testAttributesException()
     {
+    marauroad.trace("Test_Attributes::testAttributesException","?","This test case tests that when operated badly Attributes throws exceptions");
     marauroad.trace("Test_Attributes::testAttributesException",">");
 
     try
@@ -84,6 +86,7 @@ public class Test_Attributes extends TestCase
 
   public void testAttributesSerialization()
     {
+    marauroad.trace("Test_Attributes::testAttributesSerialization","?","Thjis test case tests that the serialization of the attribute is fine");
     marauroad.trace("Test_Attributes::testAttributesSerialization",">");
     
     Attributes attr=new Attributes();

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.30 2003/12/08 23:10:02 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.31 2003/12/12 16:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -310,10 +310,6 @@ class RPServerManager extends Thread
       scheduler.visit(ruleProcessor);      
       buildPerceptions();
 
-      scheduler.nextTurn();      
-      ruleProcessor.nextTurn();
-      zone.nextTurn();
-      
       try
         {
         Thread.sleep(turnDuration);
@@ -321,6 +317,10 @@ class RPServerManager extends Thread
       catch(InterruptedException e)
         {
         }
+
+      scheduler.nextTurn();      
+      ruleProcessor.nextTurn();
+      zone.nextTurn();      
       }
       
     isfinished=true;    

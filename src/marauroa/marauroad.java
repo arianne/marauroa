@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.13 2003/12/12 07:51:57 root777 Exp $ */
+/* $Id: marauroad.java,v 1.14 2003/12/12 16:20:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -195,15 +195,16 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event)
     {
-			timestamp.setTime(System.currentTimeMillis());
-			String ts = formatter.format(timestamp);
-      getMarauroa().message(ts+"\t"+event+"\t"+module);
+	timestamp.setTime(System.currentTimeMillis());
+	String ts = formatter.format(timestamp);
+    getMarauroa().message(ts+"\t"+event+"\t"+module);
     }
     
   public static void trace(String module,String event,String text)
     {
-    getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+"\t"+event+"\t"+
-       module+"\t"+text);
+	timestamp.setTime(System.currentTimeMillis());
+	String ts = formatter.format(timestamp);
+    getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
     }
     
   public static void report(String text)

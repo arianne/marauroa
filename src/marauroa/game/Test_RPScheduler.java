@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.9 2003/12/12 16:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,6 +59,7 @@ public class Test_RPScheduler extends TestCase
 	
   public void testRPScheduler()
     {
+    marauroad.trace("Test_RPScheduler::testRPScheduler","?","This test case show how the scheduler operates");
     marauroad.trace("Test_RPScheduler::testRPScheduler",">");
     
     try
@@ -98,6 +99,7 @@ public class Test_RPScheduler extends TestCase
 
   public void testRPSchedulerExceptions()
     {
+    marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions","?","This test case tests that when operated badly RPScheduler throws exceptions");
     marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions",">");
     
     try
