@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.16 2004/04/04 21:50:37 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.17 2004/04/25 09:27:44 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,22 +15,18 @@ package the1001.client;
 
 import javax.swing.*;
 import marauroa.net.*;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.SocketException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import marauroa.game.Attributes;
+import java.util.Map;
 import marauroa.game.RPObject;
-import marauroa.game.RPSlot;
+import marauroa.game.RPZone;
 import marauroa.marauroad;
 import the1001.RPCode;
 
@@ -49,6 +45,8 @@ public class The1001Game
   private transient GameDataModel gm;
   private JTextArea chatTextArea;
   private OggPlayer player;
+  private boolean loggedOut;
+  
   private The1001Game(NetworkClientManager netman)
   {
     netMan = netman;
@@ -137,173 +135,109 @@ public class The1001Game
   
   public void run()
   {
-    int time_out_max_count =10;
+    int time_out_max_count = 20;
     int timeout_count = 0;
-    
     continueGamePlay = true;
+    loggedOut = false;
+    
+    boolean synced = false;
     try
     {
+      int previous_timestamp=0;
       while(continueGamePlay)
       {
         if(netMan!=null)
         {
           Message msg = netMan.getMessage();
           
-          if(msg!=null && msg instanceof MessageS2CPerception)
+          if(msg!=null)
           {
-            timeout_count = 0;
-            
-            MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
-            
-            replyMsg.setClientID(msg.getClientID());
-            netMan.addMessage(replyMsg);
-            
-            MessageS2CPerception perception = (MessageS2CPerception)msg;
-            RPObject my_object = perception.getMyRPObject();
-            
-            if(my_object!=null)
+            if(msg instanceof MessageS2CPerception)
             {
-              gm.setOwnCharacter(my_object);
-              if(my_object.hasSlot(RPCode.var_myGladiators))
+              timeout_count = 0;
+              MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
+              
+              replyMsg.setClientID(msg.getClientID());
+              netMan.addMessage(replyMsg);
+              
+              MessageS2CPerception perception = (MessageS2CPerception)msg;
+              boolean full_perception = perception.getTypePerception()==RPZone.Perception.SYNC;
+              
+              if(!synced)
               {
-                for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
+                synced=full_perception;
+                marauroad.trace("The1001Bot::messageLoop","D",synced?"Synced.":"Unsynced!");
+              }
+              if(full_perception)
+              {
+                previous_timestamp=perception.getTimestamp()-1;
+              }
+              marauroad.trace("The1001Bot::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
+              
+              if(synced)
+              {
+                if(previous_timestamp+1!=perception.getTimestamp())
                 {
-                  gm.addMyGladiator((RPObject)iter.next());
+                  System.out.println("We are out of sync. Waiting for sync perception");
+                  System.out.println("Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
+                  synced=false;
+                  /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }
               }
-            }
-            
-            List modified_objects = perception.getAddedRPObjects();
-            
-            for (int i = 0; i < modified_objects.size(); i++)
-            {
-              RPObject obj = (RPObject)modified_objects.get(i);
               
-              if("arena".equals(obj.get("type")))
+              if(synced)
               {
-                gm.setArena(obj);
-                
-                String name = obj.get("name");
-                String status = obj.get("status");
-                if(RPCode.var_waiting.equals(status))
+                Map world_objects = gm.getAllObjects();
+                if(full_perception)
                 {
-                  player.play("Waiting_Gladiators.ogg");
-                  statusLine.setText("Arena waiting...");
+                  gm.clearAllObjects();
+                  //full perception contains all objects???
                 }
-                else if(RPCode.var_request_fame.equals(status))
-                {
-                  player.play("Request_Fame_JudgingThoseWhoRemain.ogg");
-                  statusLine.setText("Vote!!!");
-                }
-                else if(RPCode.var_fighting.equals(status))
-                {
-                  player.play("Fighting_Gladiators.ogg");
-                  statusLine.setText("Fighting!!!");
-                }
-                marauroad.trace("The1001Game::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
                 try
                 {
-                  RPSlot slot = obj.getSlot(RPCode.var_gladiators);
-                  RPObject[] old_fighters = gm.getFighters();
-                  RPObject[] new_fighters = new RPObject[slot.size()];
-                  int k = 0;
-                  HashSet hs = new HashSet();
-                  
-                  for (Iterator iter = slot.iterator(); iter.hasNext() ; )
+                  previous_timestamp=perception.applyPerception(world_objects,previous_timestamp,null);
+                  RPObject my_object = perception.getMyRPObject();
+                  if(my_object!=null)
                   {
-                    RPObject gladiator = (RPObject)iter.next();
-                    
-                    if("gladiator".equalsIgnoreCase(gladiator.get("type")))
-                    {
-                      new_fighters[k++]=gladiator;
-                      hs.add(gladiator.get(RPCode.var_object_id));
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Game::messageLoop","D","Ignored wrong object in arena");
-                    }
-                  }
-                  for (int x = 0; x < old_fighters.length; x++)
-                  {
-                    if(!hs.contains(old_fighters[x].get(RPCode.var_object_id)))
-                    {
-                      gm.deleteFighter(old_fighters[x]);
-                    }
-                  }
-                  for (int x = 0; x < new_fighters.length; x++)
-                  {
-                    gm.addFighter(new_fighters[x]);
+                    gm.setOwnCharacterID(my_object.get(RPCode.var_object_id));
                   }
                 }
-                catch (RPObject.NoSlotFoundException e)
+                catch (MessageS2CPerception.OutOfSyncException e)
                 {
-                  marauroad.trace("The1001Game::messageLoop","X","Arena has no slot gladiators");
-                }
-              }
-              else if("character".equals(obj.get("type")))
-              {
-                gm.addSpectator(obj);
-                if(obj.has(RPCode.var_text))
-                {
-                  String text = obj.get(RPCode.var_text);
-                  String name = obj.get(RPCode.var_name);
-                  
-                  if(!"".equals(text))
-                  {
-                    addChatMessage(name,text);
-                  }
-                }
-              }
-              else if("shop".equals(obj.get("type")))
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
-                if(obj.hasSlot("gladiators"))
-                {
-                  RPSlot slot = obj.getSlot("gladiators");
-                  Iterator iter = slot.iterator();
-                  
-                  while(iter.hasNext())
-                  {
-                    RPObject shop_object = (RPObject)iter.next();
-                    
-                    if("gladiator".equals(shop_object.get(RPCode.var_type)))
-                    {
-                      gm.addShopGladiator(shop_object);
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Game::messageLoop","D","Uknown object in shop "+shop_object);
-                    }
-                  }
+                  e.printStackTrace();
+                  synced=false;
                 }
               }
               else
               {
-                marauroad.trace("The1001Game::messageLoop","D","Ignored wrong object in perception");
+                marauroad.trace("The1001Bot::messageLoop","D","Waiting for sync...");
               }
             }
-            
-            List deleted_objects = perception.getDeletedRPObjects();
-            
-            for (int i = 0; i < deleted_objects.size(); i++)
+            else if(msg instanceof MessageS2CLogoutACK)
             {
-              RPObject obj = (RPObject)deleted_objects.get(i);
-              
-              gm.deleteSpectator(obj);
-              gm.deleteFighter(obj);
-              gm.deleteMyGladiator(obj);
-              gm.deleteShopGladiator(obj);
+              loggedOut=true;
+              System.out.println("Logged out...");
+              sleep(20);
+              System.exit(-1);
             }
-            repaint();
+            else if(msg instanceof MessageS2CActionACK)
+            {
+              MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
+              marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
+            }
+            else
+            {
+              // something other than
+            }
           }
           else
           {
-            if(++timeout_count>=time_out_max_count)
+            timeout_count++;
+            if(timeout_count>=time_out_max_count)
             {
               System.out.println("TIMEOUT. EXIT.");
-              System.exit(-1);
+              System.exit(1);
             }
-            System.out.println("TIMEOUT. SLEEPING.");
             sleep(1);
           }
         }
@@ -315,11 +249,10 @@ public class The1001Game
     }
     catch(Exception e)
     {
-      marauroad.trace("The1001Game::messageLoop","X",e.getMessage());
+      marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
       e.printStackTrace();
     }
   }
-  
   /**
    * causes the calling thread to sleep the specified amount of <b>seconds</b>
    * @param timeout the amount of seconds to sleep

@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.21 2004/04/21 18:46:54 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.22 2004/04/25 09:27:44 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,16 +41,11 @@ public final class GameDataModel
   public final static String ARENA_MODE_WAITING  = RPCode.var_waiting;
   public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
   public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
-  // private RPObject ownGladiator;
+  
   private long switchStrategyTimeOut; //all 30 mins choose strategy
   private long switchStrategyTS;
   private int strategy;               //0 - smart, 1 - more random, other - completely random
-  private RPObject ownCharacter;
-  private RPObject arena;
-  private Map spectators;
-  private Map fighters;
-  private Map shopGladiators;
-  private Map myGladiators;
+  
   private transient NetworkClientManager netMan;
   private List listeners;
   private ActionListener commandListener;
@@ -61,16 +56,15 @@ public final class GameDataModel
   private boolean voted;
   private Random random=new Random(System.currentTimeMillis());
   private String myName;
+  private String ownCharacterId;
+  private String arenaId;
+  private String shopId;
   private Map mAllObjects;
-  private static Map mGlobalObjects=new HashMap();
+  //  private static Map mGlobalObjects=new HashMap();
   
   public GameDataModel(NetworkClientManager net_man)
   {
     netMan     = net_man;
-    spectators = new LinkedHashMap(8);
-    fighters   = new LinkedHashMap(2);
-    shopGladiators = new LinkedHashMap(4);
-    myGladiators   = new LinkedHashMap(1);
     listeners  = new ArrayList(1);
     commandListener = new ActionHandler();
     lastReqFightTS = System.currentTimeMillis()-REQ_FIGHT_WAIT_TIME/2;
@@ -94,28 +88,31 @@ public final class GameDataModel
   }
   
   /**
-   * Sets Arena
-   *
-   * @param    Arena               a  RPObject
-   */
-  public void setArena(RPObject arena)
-  {
-    this.arena = arena;
-    try
-    {
-      mAllObjects.put(arena.get(RPCode.var_object_id),arena);
-    }
-    catch (Attributes.AttributeNotFoundException e) {}
-  }
-  
-  /**
    * Returns Arena
    *
    * @return    a  RPObject
    */
   public RPObject getArena()
   {
-    return arena;
+    RPObject rp_arena = null;
+    for (Iterator iter = mAllObjects.values().iterator();iter.hasNext();)
+    {
+      RPObject rp_obj = (RPObject)iter.next();
+      
+      try
+      {
+        if(rp_obj.has(RPCode.var_type) && "arena".equals(rp_obj.get(RPCode.var_type)))
+        {
+          rp_arena = rp_obj;
+          break;
+        }
+      }
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        e.printStackTrace(System.out);
+      }
+    }
+    return rp_arena;
   }
   
   /**
@@ -123,16 +120,9 @@ public final class GameDataModel
    *
    * @param    OwnCharacter        a  RPObject
    */
-  public void setOwnCharacter(RPObject ownCharacter)
+  public void setOwnCharacterID(String  ownCharacterId)
   {
-    this.ownCharacter = ownCharacter;
-    try
-    {
-      myName=ownCharacter.get(RPCode.var_name);
-      mAllObjects.put(ownCharacter.get(RPCode.var_object_id),ownCharacter);
-      mGlobalObjects.put(ownCharacter.get(RPCode.var_object_id),ownCharacter);
-    }
-    catch (Attributes.AttributeNotFoundException e) {}
+    this.ownCharacterId = ownCharacterId;
   }
   
   /**
@@ -142,7 +132,20 @@ public final class GameDataModel
    */
   public RPObject getOwnCharacter()
   {
-    return ownCharacter;
+    RPObject rp_own_char = null;
+    if(ownCharacterId!=null)
+    {
+      rp_own_char = getObject(ownCharacterId);
+    }
+    else
+    {
+      System.out.println("ownCharacterID is null...");
+    }
+    if(rp_own_char==null)
+    {
+      System.out.println("ownCharacter is null...");
+    }
+    return rp_own_char;
   }
   
   public ActionListener getActionHandler()
@@ -155,141 +158,13 @@ public final class GameDataModel
     String  status;
     try
     {
-      status = arena==null?"unknown":arena.get(RPCode.var_status);
+      status = getArena()==null?"unknown":getArena().get(RPCode.var_status);
     }
     catch (Attributes.AttributeNotFoundException e)
     {
       status="???";
     }
     return(status);
-  }
-  
-  /**
-   * adds a new spectator to world.
-   * if the spectator is already there then the old instance
-   * will be replaced by a new one
-   **/
-  public void addSpectator(RPObject spectator)
-  {
-    synchronized(spectators)
-    {
-      try
-      {
-        spectators.put(spectator.get(RPCode.var_object_id),spectator);
-        mAllObjects.put(spectator.get(RPCode.var_object_id),spectator);
-        fireListeners();
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::addSpectator","X",e.getMessage());
-      }
-    }
-  }
-  
-  /**
-   * adds a new spectator to world.
-   * if the spectator is already there then the old instance
-   * will be replaced by a new one
-   **/
-  public void addMyGladiator(RPObject gladiator)
-  {
-    synchronized(myGladiators)
-    {
-      try
-      {
-        myGladiators.put(gladiator.get(RPCode.var_object_id),gladiator);
-        mAllObjects.put(gladiator.get(RPCode.var_object_id),gladiator);
-        mGlobalObjects.put(gladiator.get(RPCode.var_object_id),gladiator);
-        fireListeners();
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::addMyGladiator","X",e.getMessage());
-      }
-    }
-  }
-  
-  /**
-   * adds a new spectator to world.
-   * if the spectator is already there then the old instance
-   * will be replaced by a new one
-   **/
-  public void addShopGladiator(RPObject gladiator)
-  {
-    synchronized(gladiator)
-    {
-      try
-      {
-        shopGladiators.put(gladiator.get(RPCode.var_object_id),gladiator);
-        mAllObjects.put(gladiator.get(RPCode.var_object_id),gladiator);
-        fireListeners();
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::addShopGladiator","X",e.getMessage());
-      }
-    }
-  }
-  
-  /**
-   * Method dumpList
-   *
-   * @param    spectators          a  List
-   *
-   */
-  private void dumpList(Collection rpobjects)
-  {
-    for (Iterator iter = rpobjects.iterator(); iter.hasNext();)
-    {
-      marauroad.trace("#","D",""+iter.next());
-    }
-  }
-  
-  /**
-   * deletes the spectator from world, if he was there.
-   **/
-  public void deleteShopGladiator(RPObject gladiator)
-  {
-    synchronized(shopGladiators)
-    {
-      try
-      {
-        if(shopGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
-        {
-          mAllObjects.remove(gladiator.get(RPCode.var_object_id));
-          fireListeners();
-        }
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::deleteShopGladiator","X",e.getMessage());
-      }
-    }
-    fireListeners();
-  }
-  
-  /**
-   * deletes the spectator from world, if he was there.
-   **/
-  public void deleteMyGladiator(RPObject gladiator)
-  {
-    synchronized(myGladiators)
-    {
-      try
-      {
-        if(myGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
-        {
-          mAllObjects.remove(gladiator.get(RPCode.var_object_id));
-          mGlobalObjects.remove(gladiator.get(RPCode.var_object_id));
-          fireListeners();
-        }
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::deleteMyGladiator","X",e.getMessage());
-      }
-    }
-    fireListeners();
   }
   
   public Map getAllObjects()
@@ -302,111 +177,115 @@ public final class GameDataModel
    */
   public void clearAllObjects()
   {
-    spectators.clear();
-    fighters.clear();
-    myGladiators.clear();
-    shopGladiators.clear();
     mAllObjects.clear();
-  }
-  
-  /**
-   * deletes the spectator from world, if he was there.
-   **/
-  public void deleteSpectator(RPObject spectator)
-  {
-    synchronized(spectators)
-    {
-      try
-      {
-        if(spectators.remove(spectator.get(RPCode.var_object_id))!=null)
-        {
-          mAllObjects.remove(spectator.get(RPCode.var_object_id));
-          fireListeners();
-        }
-      }
-      catch (Attributes.AttributeNotFoundException e)
-      {
-        marauroad.trace("The1001Game::deleteSpectator","X",e.getMessage());
-      }
-    }
-    fireListeners();
   }
   
   /**
    * returns all the spectators
    **/
-  public RPObject[] getSpectators()
+  public List getSpectators()
   {
-    synchronized(spectators)
+    List l_spectators = new ArrayList();
+    for (Iterator iter = mAllObjects.values().iterator();iter.hasNext();)
     {
-      RPObject[] spectators_a = new RPObject[spectators.size()];
-      
-      return((RPObject[])spectators.values().toArray(spectators_a));
+      RPObject rp_obj = (RPObject)iter.next();
+      try
+      {
+        if(rp_obj.has(RPCode.var_type) && "character".equals(rp_obj.get(RPCode.var_type)))
+        {
+          l_spectators.add(rp_obj);
+        }
+      }
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        e.printStackTrace(System.out);
+      }
     }
+    return(l_spectators);
   }
   
   /**
    * returns all the gladiator in the shop
    **/
-  public RPObject[] getShopGladiators()
+  public List getShopGladiators()
   {
-    synchronized(shopGladiators)
+    List l_gladiators = new ArrayList();
+    for (Iterator iter = mAllObjects.values().iterator();iter.hasNext();)
     {
-      RPObject[] gladiators_a = new RPObject[shopGladiators.size()];
-      
-      return((RPObject[])shopGladiators.values().toArray(gladiators_a));
-    }
-  }
-  
-  /**
-   * adds a new fighter to arena.
-   * if the fighter is already there then the old instance
-   * will be replaced by a new one
-   **/
-  public void addFighter(RPObject fighter)
-  {
-    synchronized(fighters)
-    {
+      RPObject rp_obj = (RPObject)iter.next();
       try
       {
-        fighters.put(fighter.get(RPCode.var_object_id),fighter);
-        mAllObjects.put(fighter.get(RPCode.var_object_id),fighter);
-        fireListeners();
+        if(rp_obj.has(RPCode.var_type) && "shop".equals(rp_obj.get(RPCode.var_type)))
+        {
+          if(rp_obj.hasSlot(RPCode.var_gladiators))
+          {
+            try
+            {
+              RPSlot glad_slot = rp_obj.getSlot(RPCode.var_gladiators);
+              for(Iterator g_iter = glad_slot.iterator(); g_iter.hasNext();)
+              {
+                RPObject rp_g =  (RPObject)g_iter.next();
+                if(rp_g.has(RPCode.var_type) && "gladiator".equals(RPCode.var_type))
+                {
+                  l_gladiators.add(rp_g);
+                }
+              }
+            }
+            catch (RPObject.NoSlotFoundException e)
+            {
+              e.printStackTrace(System.out);
+            }
+          }
+          break;
+        }
       }
       catch (Attributes.AttributeNotFoundException e)
       {
-        marauroad.trace("The1001Game::addFighter","X",e.getMessage());
+        e.printStackTrace(System.out);
       }
     }
+    return(l_gladiators);
   }
   
-  /**
-   * deletes the fighter from world, if he was there.
-   **/
-  public void deleteFighter(RPObject fighter)
+  public List getFighters()
   {
-    try
+    List l_gladiators = new ArrayList();
+    RPObject rp_arena = getArena();
+    if(rp_arena!=null && rp_arena.hasSlot(RPCode.var_gladiators))
     {
-      if(fighters.remove(fighter.get(RPCode.var_object_id))!=null)
+      try
       {
-        mAllObjects.remove(fighter.get(RPCode.var_object_id));
-        fireListeners();
+        RPSlot glad_slot = rp_arena.getSlot(RPCode.var_gladiators);
+        for(Iterator g_iter = glad_slot.iterator(); g_iter.hasNext();)
+        {
+          RPObject rp_g =  (RPObject)g_iter.next();
+          try
+          {
+            if(rp_g.has(RPCode.var_type) && "gladiator".equals(rp_g.get(RPCode.var_type)))
+            {
+              l_gladiators.add(rp_g);
+            }
+            else
+            {
+              System.out.println("Object ignored because it is not gladiator: "+rp_g);
+            }
+          }
+          catch (Attributes.AttributeNotFoundException e)
+          {
+            e.printStackTrace(System.out);
+          }
+        }
+      }
+      catch (RPObject.NoSlotFoundException e)
+      {
+        e.printStackTrace(System.out);
       }
     }
-    catch (Attributes.AttributeNotFoundException e)
+    else
     {
-      marauroad.trace("The1001Game::deleteFighter","X",e.getMessage());
+      System.out.println("No slot " +RPCode.var_gladiators + " in " + rp_arena );
     }
-  }
-  
-  public RPObject[] getFighters()
-  {
-    synchronized(fighters)
-    {
-      RPObject[] fighters_a = new RPObject[fighters.size()];
-      
-      return((RPObject[])fighters.values().toArray(fighters_a));
-    }
+    return(l_gladiators);
   }
   
   public void requestFight()
@@ -435,13 +314,13 @@ public final class GameDataModel
     }
   }
   
+//
+  //  public static RPObject getGlobalObject(String id)
+  //  {
+  //    return((RPObject)mGlobalObjects.get(id));
+  //  }
   
-  public static RPObject getGlobalObject(String id)
-  {
-    return((RPObject)mGlobalObjects.get(id));
-  }
-  
-  public RPObject getObject(String id)
+  private RPObject getObject(String id)
   {
     return((RPObject)mAllObjects.get(id));
   }
@@ -454,42 +333,56 @@ public final class GameDataModel
   public RPObject getFirstOwnGladiator()
   {
     RPObject gladiator = null;
-    
-    if(myGladiators.size()>0)
+    RPObject own_char = getOwnCharacter();
+    if(own_char!=null)
     {
-      gladiator = (RPObject)myGladiators.values().iterator().next();
+      if(own_char.hasSlot(RPCode.var_myGladiators))
+      {
+        try
+        {
+          RPSlot g_slot = own_char.getSlot(RPCode.var_myGladiators);
+          gladiator = (RPObject)g_slot.iterator().next();
+        }
+        catch (RPObject.NoSlotFoundException e)
+        {
+          e.printStackTrace(System.out);
+        }
+      }
+    }
+    if(gladiator==null)
+    {
+      System.out.println("Own gladiator is null");
     }
     return gladiator;
   }
   
-  public RPObject getFirstGladiatorOf(RPObject rp_char)
-  {
-    RPObject gladiator = null;
-    
-    try
-    {
-      if(mGlobalObjects.size()>0)
-      {
-        RPObject gl_char = (RPObject)mGlobalObjects.get(rp_char.get(RPCode.var_object_id));
-        if(gl_char!=null)
-        {
-          RPSlot slot_glads = gl_char.getSlot(RPCode.var_myGladiators);
-          gladiator = slot_glads.get();
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      e.printStackTrace();
-    }
-    return gladiator;
-  }
+  //  public RPObject getFirstGladiatorOf(RPObject rp_char)
+  //  {
+  //    RPObject gladiator = null;
+//
+  //    try
+  //    {
+  //      if(mGlobalObjects.size()>0)
+  //      {
+  //        RPObject gl_char = (RPObject)mGlobalObjects.get(rp_char.get(RPCode.var_object_id));
+  //        if(gl_char!=null)
+  //        {
+  //          RPSlot slot_glads = gl_char.getSlot(RPCode.var_myGladiators);
+  //          gladiator = slot_glads.get();
+  //        }
+  //      }
+  //    }
+  //    catch(Exception e)
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    return gladiator;
+  //  }
   
   
   public void sendMessage(String msg)
   {
     RPAction action = new RPAction();
-    
     action.put(RPCode.var_type,RPCode.var_chat);
     action.put(RPCode.var_content,msg);
     netMan.addMessage(new MessageC2SAction(null,action));
@@ -507,39 +400,39 @@ public final class GameDataModel
     String strg = myName+"["+strategy+"]:"+lastFightMode+"->"+getFightMode()+"->";
     switch(strategy)
     {
-    case 0:
-      HashSet hs = new HashSet(3);
-      hs.add(RPCode.var_scissor);
-      hs.add(RPCode.var_rock);
-      hs.add(RPCode.var_paper);
-      hs.remove(lastFightMode);
-      hs.remove(getFightMode());
-      lastFightMode = currentFightMode;
-      setFightMode((String)hs.iterator().next());
-      hs = null;
-      break;
-    case 1:
-      int random_value = random.nextInt(2);
-      lastFightMode = currentFightMode;
-      if(RPCode.var_scissor.equals(getFightMode()))
-      {
-        setFightMode(random_value==0?RPCode.var_paper:RPCode.var_rock);
-      }
-      else if(RPCode.var_paper.equals(getFightMode()))
-      {
-        setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_rock);
-      }
-      else
-      {
-        setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_paper);
-      }
-      break;
-    case 2:
-    default:
-      random_value = random.nextInt(3);
-      lastFightMode = currentFightMode;
-      setFightMode(random_value==0?RPCode.var_scissor:(random_value==1?RPCode.var_rock:RPCode.var_paper));
-      break;
+      case 0:
+        HashSet hs = new HashSet(3);
+        hs.add(RPCode.var_scissor);
+        hs.add(RPCode.var_rock);
+        hs.add(RPCode.var_paper);
+        hs.remove(lastFightMode);
+        hs.remove(getFightMode());
+        lastFightMode = currentFightMode;
+        setFightMode((String)hs.iterator().next());
+        hs = null;
+        break;
+      case 1:
+        int random_value = random.nextInt(2);
+        lastFightMode = currentFightMode;
+        if(RPCode.var_scissor.equals(getFightMode()))
+        {
+          setFightMode(random_value==0?RPCode.var_paper:RPCode.var_rock);
+        }
+        else if(RPCode.var_paper.equals(getFightMode()))
+        {
+          setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_rock);
+        }
+        else
+        {
+          setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_paper);
+        }
+        break;
+      case 2:
+      default:
+        random_value = random.nextInt(3);
+        lastFightMode = currentFightMode;
+        setFightMode(random_value==0?RPCode.var_scissor:(random_value==1?RPCode.var_rock:RPCode.var_paper));
+        break;
     }
     System.out.println(strg+getFightMode());
   }
@@ -576,10 +469,6 @@ public final class GameDataModel
         action.put(RPCode.var_type,"fight_mode");
         action.put("fight_mode",mode);
         netMan.addMessage(new MessageC2SAction(null,action));
-        netMan.addMessage(new MessageC2SAction(null,action));
-        netMan.addMessage(new MessageC2SAction(null,action));
-        netMan.addMessage(new MessageC2SAction(null,action));
-        netMan.addMessage(new MessageC2SAction(null,action));
         marauroad.trace("The1001Game::setFightMode","D","Fight mode set.");
       }
       else
@@ -592,7 +481,6 @@ public final class GameDataModel
   public void buyGladiator(String gladiator_id)
   {
     RPAction action = new RPAction();
-    
     action.put(RPCode.var_type,RPCode.var_buyGladiator);
     action.put(RPCode.var_choosen_item,gladiator_id);
     netMan.addMessage(new MessageC2SAction(null,action));
@@ -669,19 +557,18 @@ public final class GameDataModel
     {
       if(getFirstOwnGladiator()==null)
       {
-        RPObject glads_in_shop[] = getShopGladiators();
+        List glads_in_shop = getShopGladiators();
         
-        if(glads_in_shop.length>0)
+        if(glads_in_shop.size()>0)
         {
-          RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
-          
+          RPObject first_avail_glad = (RPObject)glads_in_shop.get(Math.abs(random.nextInt()%glads_in_shop.size()));
           buyGladiator(first_avail_glad.get(RPCode.var_object_id));
         }
       }
     }
     catch (Attributes.AttributeNotFoundException e)
     {
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
     if(RPCode.var_waiting.equals(getStatus())||RPCode.var_request_fame.equals(getStatus()))
     {
@@ -715,55 +602,61 @@ public final class GameDataModel
     }
     if(RPCode.var_request_fame.equals(getStatus()))
     {
+      RPObject rp_arena = getArena();
       int winner_id = -1;
       try
       {
-        winner_id = arena.getInt(RPCode.var_winner);
+        if(rp_arena.has(RPCode.var_winner))
+        {
+          winner_id = getArena().getInt(RPCode.var_winner);
+        }
       }
       catch(Exception e)
       {
+        e.printStackTrace(System.out);
       }
       if(!voted)
       {
         if(getFirstOwnGladiator()!=null)
-  {
-    int own_glad_id = -2;
-    try
-    {
-      own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
-    }
-    catch(Exception e)
-    {
-    
-    }
+        {
+          int own_glad_id = -2;
+          try
+          {
+            own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
+          }
+          catch(Exception e)
+          {
+            e.printStackTrace(System.out);
+          }
           if(winner_id==own_glad_id)
-    {
-       vote(RPCode.var_voted_up);
-    }
-    else
-    {
-      vote(Math.random()>0.1?RPCode.var_voted_up:"VOTE_DOWN");
-    }
-  }
-  else
-  {
-    vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
-  }
+          {
+            vote(RPCode.var_voted_up);
+          }
+          else
+          {
+            vote(Math.random()>0.1?RPCode.var_voted_up:"VOTE_DOWN");
+          }
+        }
+        else
+        {
+          vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+        }
         voted = true;
       }
       currentFightMode=null;
       lastFightMode=null;
     }
-    else if(RPCode.var_fighting.equals(getStatus()) || (ownCharacter!=null && ownCharacter.has(RPCode.var_damage)))
+    else if(RPCode.var_fighting.equals(getStatus()) || (getOwnCharacter()!=null && getOwnCharacter().has(RPCode.var_damage)))
     {
       if(!RPCode.var_fighting.equals(getStatus()))
       {
         System.out.println("BUG!!! Already fighting(damage is there) but the arena is not in fight status!!!");
       }
       voted=false;
-      if(ownCharacter!=null && (ownCharacter.has(RPCode.var_fighting) || ownCharacter.has(RPCode.var_damage)))
+      RPObject own_char = getOwnCharacter();
+      if(own_char!=null && (own_char.has(RPCode.var_fighting) || own_char.has(RPCode.var_damage)))
       {
-        if(!ownCharacter.has(RPCode.var_fighting))
+        if(!own_char.has(RPCode.var_fighting))
         {
           System.out.println("BUG!!! Already fighting(damage is there) but the fighting attributes is not there!!!");
         }
@@ -782,7 +675,7 @@ public final class GameDataModel
           }
           catch(Exception e)
           {
-            e.printStackTrace();
+            e.printStackTrace(System.out);
           }
           if(getFightMode()==null || own_damage>0)
           {
@@ -831,7 +724,7 @@ public final class GameDataModel
   private int countPeople()
   {
     int count = 0;
-    for (Iterator iter = spectators.values().iterator(); iter.hasNext();)
+    for (Iterator iter = getSpectators().iterator(); iter.hasNext();)
     {
       RPObject rp_obj = (RPObject)iter.next();
       try
@@ -848,14 +741,14 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
-        //
+        e.printStackTrace(System.out);
         count++;
       }
     }
     return count;
   }
   
-  public String dumpToString()
+  private String dumpToString()
   {
     int line_length=115;
     String top    = "+"+setStringWidth("-",'-',line_length)+"+\n";
@@ -871,10 +764,11 @@ public final class GameDataModel
     {
       try
       {
-        winner_id = arena.getInt(RPCode.var_winner);
+        winner_id = getArena().getInt(RPCode.var_winner);
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        e.printStackTrace(System.out);
       }
       status="Request fame(";
       try
@@ -887,50 +781,44 @@ public final class GameDataModel
         
         status+=fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting;
       }
-      catch (Attributes.AttributeNotFoundException e) {}
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        e.printStackTrace(System.out);
+      }
     }
     ret+=setStringWidth("|Arena: "+status,' ',line_length+1)+"|\n";
     ret+="|"+setStringWidth(" ",' ',line_length)+"|\n";
     ret+=middle;
     
-    RPObject [] spectators = getSpectators();
+    List spectators = getSpectators();
     
-    if(spectators!=null&&spectators.length>0)
+    if(spectators!=null&&spectators.size()>0)
     {
-      int own_char_id=-1;
-      
-      try
-      {
-        if(getOwnCharacter()!=null)
-        {
-          own_char_id = getOwnCharacter().getInt(RPCode.var_object_id);
-        }
-      }
-      catch (Attributes.AttributeNotFoundException e) {}
       ret+="|"+setStringWidth("Characters ",' ',line_length)+"|\n";
       ret+=middle;
       ret+="|"+setStringWidth(setStringWidth("Name",' ',21)+setStringWidth("Fame",' ',6)+setStringWidth("Karma",' ',6)+setStringWidth("s",' ',3)+setStringWidth("fmode",' ',10)+setStringWidth("freq",' ',10)+setStringWidth("Message",' ',58),' ',line_length)+"|\n";
       ret+=middle;
-      for (int i = 0; i < spectators.length; i++)
+      for (int i = 0; i < spectators.size(); i++)
       {
+        RPObject spectator = (RPObject)spectators.get(i);
         try
         {
-          String name = spectators[i].get(RPCode.var_name);
-          String fame = spectators[i].get(RPCode.var_fame);
+          String name = spectator.get(RPCode.var_name);
+          String fame = spectator.get(RPCode.var_fame);
           String msg  ="";
           
-          if(spectators[i].has(RPCode.var_text))
+          if(spectator.has(RPCode.var_text))
           {
-            msg  = spectators[i].get(RPCode.var_text);
+            msg  = spectator.get(RPCode.var_text);
           }
           
-          int id      = spectators[i].getInt(RPCode.var_object_id);
+          String spec_id = spectator.get(RPCode.var_object_id);
           String fight_mode;
           String wait_to_req_fight;
           String karma;
           String strtg;
           RPObject gladiator = null;
-          if(id==own_char_id)
+          if(ownCharacterId.equals(spec_id))
           {
             gladiator = getFirstOwnGladiator();
             name="*"+name;
@@ -946,7 +834,7 @@ public final class GameDataModel
             wait_to_req_fight ="";
             karma = "";
             strtg="   ";
-            gladiator = getFirstGladiatorOf(spectators[i]);
+            gladiator = null;//getFirstGladiatorOf(spectators[i]);
           }
           karma=(gladiator==null?"":gladiator.get(RPCode.var_karma));
           if(gladiator!=null && winner_id==gladiator.getInt(RPCode.var_karma))
@@ -960,19 +848,21 @@ public final class GameDataModel
           
           ret+="|"+setStringWidth(setStringWidth(name,' ',21)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(strtg,' ',3)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',58),' ',line_length)+"|\n";
         }
-        catch (Attributes.AttributeNotFoundException e) {}
+        catch (Attributes.AttributeNotFoundException e)
+        {
+          e.printStackTrace(System.out);
+        }
       }
       ret+=middle;
       ret+=empty;
     }
     spectators=null;
     
-    RPObject [] fighters = getFighters();
+    List fighters = getFighters();
     
-    if(fighters!=null&&fighters.length>0)
+    if(fighters!=null&&fighters.size()>0)
     {
       int own_glad_id=-1;
-      
       try
       {
         if(getFirstOwnGladiator()!=null)
@@ -980,30 +870,31 @@ public final class GameDataModel
           own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
         }
       }
-      catch (Attributes.AttributeNotFoundException e) {}
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        e.printStackTrace(System.out);
+      }
       ret+="|"+setStringWidth("Gladiators ",' ',line_length)+"|\n";
       ret+=middle;
       ret+="|"+setStringWidth(setStringWidth("Name",' ',25)+setStringWidth("Karma",' ',8)+setStringWidth("Health",' ',8)+setStringWidth("Damage",' ',8)+setStringWidth("Won",' ',5)+setStringWidth("Lost",' ',5)+setStringWidth("W/(W+L)%",' ',10),' ',line_length)+"|\n";
       ret+=middle;
-      for (int i = 0; i < fighters.length; i++)
+      for (int i = 0; i < fighters.size(); i++)
       {
+        RPObject fighter = (RPObject)fighters.get(i);
         try
         {
-          RPObject fighter = (RPObject)mGlobalObjects.get(fighters[i].get(RPCode.var_object_id));
-          if(fighter==null)
-          {
-            fighter=fighters[i];
-          }
           String name   = fighter.get(RPCode.var_name);
           String karma  = fighter.get(RPCode.var_karma);
           String health = fighter.get(RPCode.var_hp);
           String damage ="";
-          
           if(fighter.has(RPCode.var_damage))
           {
             damage = fighter.get(RPCode.var_damage);
           }
-          
+          else
+          {
+            damage = "N/A";
+          }
           int won       = fighter.getInt(RPCode.var_num_victory);
           int lost      = fighter.getInt(RPCode.var_num_defeat);
           double winp   = ((double)won*100)/Math.max(won+lost,1);
@@ -1032,25 +923,29 @@ public final class GameDataModel
         catch (Attributes.AttributeNotFoundException e)
         {
           e.printStackTrace(System.out);
-          System.out.println("object was: "+fighters[i]);
+          System.out.println("object was: "+fighter);
         }
       }
       ret+=middle;
       ret+=empty;
     }
+    else
+    {
+      System.out.println("NO GLadiators!!!");
+    }
     ret+=bottom;
     return(ret);
   }
   
-  public static String setStringWidth(String in, char ch, int length)
+  private static String setStringWidth(String in, char ch, int length)
   {
     String ret = in==null?"":in;
-    
     while(ret.length()<length){ret+=ch;}
     while(ret.length()>length){ret=ret.substring(0,ret.length()-2);}
     ret = ret.replace('\t',' ');
     return(ret);
   }
+  
   private final class ActionHandler
     implements ActionListener
   {

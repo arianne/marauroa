@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.26 2004/04/21 18:46:57 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.27 2004/04/25 09:27:44 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,6 +51,7 @@ public class The1001Bot
   private static Random random=new Random();
   private boolean doPrint;
   private boolean loggedOut;
+  
   private The1001Bot(NetworkClientManager netman,boolean do_print)
   {
     netMan = netman;
@@ -75,16 +76,6 @@ public class The1001Bot
             }
           }
         });
-  }
-  
-  /**
-   * adds a message into reportPane
-   */
-  private void addChatMessage(String name,String msg)
-  {
-    String text = name+":"+msg;
-    
-    System.out.println(text);
   }
   
   public void run()
@@ -144,52 +135,13 @@ public class The1001Bot
               if(synced)
               {
                 Map world_objects = gm.getAllObjects();
-                if(full_perception)
-                {
-                  gm.clearAllObjects();
-                  //full perception contains all objects???
-                }
                 try
                 {
                   previous_timestamp=perception.applyPerception(world_objects,previous_timestamp,null);
-                  
                   RPObject my_object = perception.getMyRPObject();
                   if(my_object!=null)
                   {
-                    gm.setOwnCharacter(my_object);
-                    if(my_object.hasSlot(RPCode.var_myGladiators))
-                    {
-                      for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
-                      {
-                        RPObject my_glad = (RPObject)iter.next();
-                        marauroad.trace("The1001Bot::messageLoop","D","My Gladiator: "+my_glad);
-                        gm.addMyGladiator(my_glad);
-                      }
-                    }
-                  }
-                  try
-                  {
-                    if(!full_perception)
-                    {
-                      List deleted_objects = perception.getDeletedRPObjects();
-                      for (int i = 0; i < deleted_objects.size(); i++)
-                      {
-                        RPObject obj = (RPObject)deleted_objects.get(i);
-                        gm.deleteSpectator(obj);
-                        gm.deleteFighter(obj);
-                        gm.deleteShopGladiator(obj);
-                      }
-                    }
-                  }
-                  catch(Exception e)
-                  {
-                    e.printStackTrace();
-                  }
-                  List added_objects = perception.getAddedRPObjects();
-                  if(added_objects!=null && added_objects.size()>0)
-                  {
-                    marauroad.trace("The1001Bot::messageLoop","D","List of added objects is not null: " + added_objects);
-                    applyAddedObjects(added_objects);
+                    gm.setOwnCharacterID(my_object.get(RPCode.var_object_id));
                   }
                   gm.react(doPrint);
                   if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
@@ -234,7 +186,6 @@ public class The1001Bot
               System.out.println("TIMEOUT. EXIT.");
               System.exit(1);
             }
-            // System.out.println("TIMEOUT. SLEEPING.");
             sleep(1);
           }
         }
@@ -251,90 +202,90 @@ public class The1001Bot
     }
   }
   
-  /**
-   * Method applyAddedObjects
-   *
-   * @param    added_objects       a  List
-   *
-   */
-  private void applyAddedObjects(List added_objects) throws Attributes.AttributeNotFoundException, RPObject.NoSlotFoundException
-  {
-    for (int i = 0; i < added_objects.size(); i++)
-    {
-      RPObject obj = (RPObject)added_objects.get(i);
-      
-      if("arena".equals(obj.get("type")))
-      {
-        gm.setArena(obj);
-        
-        String name = obj.get("name");
-        String status = obj.get("status");
-        
-        if(RPCode.var_waiting.equals(status))
-        {
-          if(System.currentTimeMillis()>startTS+TIME_TO_RUN_BEFORE_LOGOUT)
-          {
-            gm.logout();
-          }
-        }
-        marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
-        try
-        {
-          RPSlot slot = obj.getSlot(RPCode.var_gladiators);
-          for (Iterator iter = slot.iterator(); iter.hasNext() ; )
-          {
-            RPObject gladiator = (RPObject)iter.next();
-            
-            if("gladiator".equalsIgnoreCase(gladiator.get("type")))
-            {
-              gm.addFighter(gladiator);
-              marauroad.trace("The1001Bot::messageLoop","D","Arena Gladiator: "+gladiator);
-            }
-            else
-            {
-              marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena "+gladiator) ;
-            }
-          }
-        }
-        catch (RPObject.NoSlotFoundException e)
-        {
-          marauroad.trace("The1001Bot::messageLoop","X","Arena has no slot gladiators");
-        }
-      }
-      else if("character".equals(obj.get("type")))
-      {
-        marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
-        gm.addSpectator(obj);
-      }
-      else if("shop".equals(obj.get("type")))
-      {
-        marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
-        if(obj.hasSlot("!gladiators"))
-        {
-          RPSlot slot = obj.getSlot("!gladiators");
-          Iterator iter = slot.iterator();
-          
-          while(iter.hasNext())
-          {
-            RPObject shop_object = (RPObject)iter.next();
-            
-            if("gladiator".equals(shop_object.get(RPCode.var_type)))
-            {
-              gm.addShopGladiator(shop_object);
-            }
-            else
-            {
-              marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
-            }
-          }
-        }
-      }
-      else
-      {
-        marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
-      }
-    }
-  }
+  //  /**
+  //   * Method applyAddedObjects
+  //   *
+  //   * @param    added_objects       a  List
+  //   *
+  //   */
+  //  private void applyAddedObjects(List added_objects) throws Attributes.AttributeNotFoundException, RPObject.NoSlotFoundException
+  //  {
+  //    for (int i = 0; i < added_objects.size(); i++)
+  //    {
+  //      RPObject obj = (RPObject)added_objects.get(i);
+//
+  //      if("arena".equals(obj.get("type")))
+  //      {
+  //        gm.setArena(obj);
+//
+  //        String name = obj.get("name");
+  //        String status = obj.get("status");
+//
+  //        if(RPCode.var_waiting.equals(status))
+  //        {
+  //          if(System.currentTimeMillis()>startTS+TIME_TO_RUN_BEFORE_LOGOUT)
+  //          {
+  //            gm.logout();
+  //          }
+  //        }
+  //        marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
+  //        try
+  //        {
+  //          RPSlot slot = obj.getSlot(RPCode.var_gladiators);
+  //          for (Iterator iter = slot.iterator(); iter.hasNext() ; )
+  //          {
+  //            RPObject gladiator = (RPObject)iter.next();
+//
+  //            if("gladiator".equalsIgnoreCase(gladiator.get("type")))
+  //            {
+  //              gm.addFighter(gladiator);
+  //              marauroad.trace("The1001Bot::messageLoop","D","Arena Gladiator: "+gladiator);
+  //            }
+  //            else
+  //            {
+  //              marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena "+gladiator) ;
+  //            }
+  //          }
+  //        }
+  //        catch (RPObject.NoSlotFoundException e)
+  //        {
+  //          marauroad.trace("The1001Bot::messageLoop","X","Arena has no slot gladiators");
+  //        }
+  //      }
+  //      else if("character".equals(obj.get("type")))
+  //      {
+  //        marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
+  //        gm.addSpectator(obj);
+  //      }
+  //      else if("shop".equals(obj.get("type")))
+  //      {
+  //        marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
+  //        if(obj.hasSlot("!gladiators"))
+  //        {
+  //          RPSlot slot = obj.getSlot("!gladiators");
+  //          Iterator iter = slot.iterator();
+//
+  //          while(iter.hasNext())
+  //          {
+  //            RPObject shop_object = (RPObject)iter.next();
+//
+  //            if("gladiator".equals(shop_object.get(RPCode.var_type)))
+  //            {
+  //              gm.addShopGladiator(shop_object);
+  //            }
+  //            else
+  //            {
+  //              marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
+  //            }
+  //          }
+  //        }
+  //      }
+  //      else
+  //      {
+  //        marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
+  //      }
+  //    }
+  //  }
   
   private static void writeStats(RPObject glad)
   {
