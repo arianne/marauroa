@@ -92,7 +92,7 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
-0.32 	Apr 20, 2004
+0.32 	Apr 21, 2004
 - Fix a bug that happens when an object is added and deleted on the same turn from a slot.
 - Added modification of the network protocol to send our RPObject only when changed
 - Fixed a path related problem with create account

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.32 2004/04/21 12:26:26 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.33 2004/04/21 14:38:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -128,17 +128,6 @@ public class MessageS2CPerception extends Message
       " added objects, "+modifiedAddedAttribsRPObjects.size()+" modified Added attributes objects, "+
       modifiedDeletedAttribsRPObjects.size()+" modified Deleted attributes objects and "+
       deletedRPObjects.size()+" deleted objects)";
-    }
-
-  private OutputSerializer zlib_outputStream;
-  
-  public void setPrecomputedOutputStream()
-    {
-    }
-  
-  public static OutputSerializer getPrecomputedOutputStream()
-    {
-    return null;
     }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
