@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.30 2004/11/12 15:39:16 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.31 2004/11/26 20:16:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,14 +26,18 @@ public final class NetworkServerManager
   /** The server socket from where we recieve the packets. */
   private DatagramSocket socket;
   /** While keepRunning is true, we keep recieving messages */
-  private boolean keepRunning;
+  private volatile boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
   /** A List of Message objects: List<Message> */
   private List<Message> messages;
+
+  /** A queue for messages to send: List<Message> */
+  private List<Message> messagesToSend;
+
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
-  private NetworkServerManagerWrite writeManager;
+  private NetworkServerManagerWrite[] writeManager;
   private Statistics stats;
   private PacketValidater packetValidater;
   
@@ -61,8 +65,18 @@ public final class NetworkServerManager
       stats=Statistics.getStatistics();
       readManager=new NetworkServerManagerRead();
       readManager.start();
-      writeManager=new NetworkServerManagerWrite();
-      }
+
+      messagesToSend = new LinkedList<Message>();
+
+      int writer_count = 5;
+      writeManager = new NetworkServerManagerWrite[writer_count];
+      for(int i = 0; i<writeManager.length; i++)
+        {
+        writeManager[i]=new NetworkServerManagerWrite();
+        writeManager[i].setName("NetworkServerManagerWrite_"+(i+1));
+        writeManager[i].start();
+        }     
+      } 
     finally
       {
       marauroad.trace("NetworkServerManager","<");
@@ -78,7 +92,13 @@ public final class NetworkServerManager
       {
       Thread.yield();
       }
-      
+
+    //wait until writer threads are shutted down
+    for(int i = 0; i<writeManager.length; i++)
+      {
+      try{writeManager[i].join();}catch(InterruptedException ie){}
+      }
+
     socket.close();
     marauroad.trace("NetworkServerManager::finish","<");
     }
@@ -156,7 +176,13 @@ public final class NetworkServerManager
   public void addMessage(Message msg)
     {
     marauroad.trace("NetworkServerManager::addMessage",">");
-    writeManager.write(msg);
+    synchronized(messagesToSend)
+    {
+      messagesToSend.add(msg);
+      //wake up waiting Writer-Threads
+      messagesToSend.notifyAll();
+    }
+    //writeManager.write(msg);
     marauroad.trace("NetworkServerManager::addMessage","<");
     }
     
@@ -183,8 +209,11 @@ public final class NetworkServerManager
           marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
           
           /*** Statistics ***/
-          stats.addBytesRecv(packet.getLength());
-          stats.addMessageRecv();
+          synchronized(stats)
+            {  
+            stats.addBytesRecv(packet.getLength());
+            stats.addMessageRecv();
+            }
           
           if(!packetValidater.checkBanned(packet))
             {
@@ -226,12 +255,34 @@ public final class NetworkServerManager
     
 
   /** A wrapper class for sending messages to clients */
-  class NetworkServerManagerWrite
+  class NetworkServerManagerWrite extends Thread
     {
     private int last_signature;
     public NetworkServerManagerWrite()
       {
       last_signature=0;
+      }
+
+    public void run()
+      {
+      marauroad.trace("NetworkServerManagerWrite::run",">");
+      while(keepRunning)
+        {
+        synchronized(messagesToSend)
+          {
+          if(messagesToSend.size()==0)
+            {
+            //sleep max 1 second until some one wake me up...
+            try{messagesToSend.wait(1000);}catch(InterruptedException ie){}
+            }
+          if(messagesToSend.size()>0)
+            {
+              Message msg = messagesToSend.remove(0);
+              write(msg);
+            }
+          } 
+        }
+      marauroad.trace("NetworkServerManagerWrite::run","<");
       }
     
     /** Method that execute the writting */
@@ -251,8 +302,11 @@ public final class NetworkServerManager
           byte[] buffer=out.toByteArray();
   
           /*** Statistics ***/
-          stats.addBytesSend(buffer.length);
-          stats.addMessageSend();
+          synchronized(stats) //we can have many threads now...
+            {
+            stats.addBytesSend(buffer.length);
+            stats.addMessageSend();
+            }
           
           marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
