@@ -1,9 +1,7 @@
 package marauroa.game;
 
 import java.sql.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 import java.util.Vector;
@@ -13,63 +11,36 @@ import marauroa.net.OutputSerializer;
 import marauroa.*;
 
 
-
-/* SQL Tables used for storing information.
- 
-CREATE TABLE player
-  (
-  id BIGINT PRIMARY KEY NOT NULL AUTOINCREMENT,
-  username VARCHAR(30) NOT NULL,
-  password VARCHAR(30) NOT NULL
-  );
- 
-CREATE TABLE characters
-  (
-  player_id BIGINT NOT NULL,
-  charname VARCHAR(30) NOT NULL,
-  contents VARCHAR(4096)
- 
-  PRIMARY KEY(charname)
-  );
- 
-CREATE TABLE loginEvent
-  (
-  player_id BIGINT NOT NULL,
-  address VARCHAR(20),
-  timedate TIMEDATE,
-  result TINYINT
-  );
-*/
-
-/**
- *
+/** This is JDBC interface to the database.
+ *  Actually it is limited to MySQL because we are using the AUTO_INCREMENT keyword.
  */
 public class JDBCPlayerDatabase implements PlayerDatabase
-  {  
-  static class LoginEvent
+  {
+  /** Class to store the login events */
+  private static class LoginEvent
     {
+    /** TCP/IP address of the source of the login message */
     public String address;
+    /** Time and date of the login event */
     public java.util.Date time;
+    /** True if login was correct */
     public boolean correct;
     
+    /** This method returns a String that represent the object 
+     *  @return a string representing the object.*/
     public String toString()
       {
       return "Login "+(correct?"SUCESSFULL":"FAILED")+" at "+time.toString()+" from "+address;
       }
     }  
 
+  /** A connection to the JDBC database */
   private Connection connection;  
   private static PlayerDatabase playerDatabase=null;
 
-  /**
-   *
-   * String url = "jdbc:odbc:mysql-darkstar";
-   * Properties connInfo = new Properties();
-   * connInfo.put("user", "marauroa");
-   * connInfo.put("password", "marauroa");
-   * connInfo.put("charSet", "UTF-8");
-   *
-   */
+  /** Constructor that connect using a set of Properties.
+   *  @param connInfo a Properties set with the options to create the database.
+   *  Refer to JDBC Database HOWTO document. */
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException
     {
     connection=createConnection(connInfo);
@@ -83,13 +54,14 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     reInitDB();
     }
   
+  /** This method returns an instance of PlayerDatabase 
+   *  @return A shared instance of PlayerDatabase */
   public static PlayerDatabase getDatabase() throws NoDatabaseConfException
     {
     marauroad.trace("JDBCPlayerDatabase::getDatabase",">");
-    if(playerDatabase==null)
+    try
       {
-      /* TODO: Define a default configuration file or a default configuration. */
-      try
+      if(playerDatabase==null)
         {
         Configuration conf=Configuration.getConfiguration();
     
@@ -101,25 +73,23 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
         playerDatabase=new JDBCPlayerDatabase(props);
         }
-      catch(Configuration.PropertyNotFoundException e)
-        {
-        marauroad.trace("JDBCPlayerDatabase::getDatabase","E",e.getMessage());
-        marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
-        throw new NoDatabaseConfException();
-        }
-      catch(Configuration.PropertyFileNotFoundException e)
-        {
-        marauroad.trace("JDBCPlayerDatabase::getDatabase","E",e.getMessage());
-        marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
-        throw new NoDatabaseConfException();
-        }
+
+      return playerDatabase;
       }
-      
-    marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
-    return playerDatabase;
+    catch(Throwable e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getDatabase","X",e.getMessage());
+      throw new NoDatabaseConfException();
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
+      }
     }
-
-
+      
+  /** This method returns true if the database has the player pointed by username
+   *  @param username the name of the player we are asking if it exists.
+   *  @return true if player exists or false otherwise. */
   public boolean hasPlayer(String username)
     {
     marauroad.trace("JDBCPlayerDatabase::hasPlayer",">");
@@ -140,21 +110,25 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::hasPlayer","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::hasPlayer","X",sqle.getMessage());
       }
 
     marauroad.trace("JDBCPlayerDatabase::hasPlayer","<");
-
     return has;
     }
   
+  /** This method returns the lis of character that the player pointed by username has.
+   *  @param username the name of the player from which we are requesting the list of characters.
+   *  @return an array of String with the characters
+   *  @throw PlayerNotFoundException if that player does not exists. */
   public String[] getCharactersList(String username) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::getCharacterList",">");
-    String[] characters = null;
     
     try
       {
+      String[] characters = null;
+
       int id=getDatabasePlayerId(username);
         
       Statement stmt = connection.createStatement();
@@ -169,19 +143,22 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           
       characters = new String[vector.size()];
       characters = (String[])vector.toArray(characters);
+      return characters;
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getCharacterList","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::getCharacterList","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::getCharactersList","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::getCharactersList","X","Database doesn't contains that username("+username+")");
       throw e;
-      }     
-
-    marauroad.trace("JDBCPlayerDatabase::getCharacterList","<");
-    return characters;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::getCharacterList","<");
+      }
     }
   
   public void addPlayer(String username, String password) throws PlayerAlreadyAddedException
@@ -195,7 +172,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
-        marauroad.trace("JDBCPlayerDatabase::addPlayer","E","Database already contains that username("+username+")");
+        marauroad.trace("JDBCPlayerDatabase::addPlayer","W","Database already contains that username("+username+")");
         throw new PlayerAlreadyAddedException();
         }
       else
@@ -206,10 +183,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::addPlayer","X",sqle.getMessage());
+      throw new PlayerAlreadyAddedException();
       }
-
-    marauroad.trace("JDBCPlayerDatabase::addPlayer","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addPlayer","<");
+      }
     }
   
   public void removePlayer(String username) throws PlayerNotFoundException
