@@ -543,6 +543,19 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     try
       {
       int id=getDatabasePlayerId(username);
+
+      Statement stmt = connection.createStatement();
+      String query = "select count(*) from characters where charname like '"+character+"'";
+
+      ResultSet result = stmt.executeQuery(query);
+      if(result.next())
+        {
+        if(result.getInt(1)==0)
+          {
+          marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Database doesn't contains that username("+username+")-character("+character+")");
+          throw new CharacterNotFoundException();
+          }
+        }
       
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       OutputSerializer os = new OutputSerializer(baos);
@@ -556,7 +569,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
-      String query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";
+      query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";
       PreparedStatement prep_stmt = connection.prepareStatement(query);
       prep_stmt.setBytes(1,baos.toByteArray());
   
@@ -610,7 +623,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
-        marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Player("+username+") doesn't contains that character("+character+")");
         throw new CharacterNotFoundException();
         }
       }
@@ -622,6 +634,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(PlayerNotFoundException e)
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Database doesn't contains that username("+username+")");
+      throw e;
+      }
+    catch(CharacterNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Player("+username+") doesn't contains that character("+character+")");
       throw e;
       }
     catch (Exception e)

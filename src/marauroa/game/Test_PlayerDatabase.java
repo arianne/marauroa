@@ -276,7 +276,7 @@ public class Test_PlayerDatabase extends TestCase
       assertTrue(true);
       }
     catch(Exception e)
-      {
+      { 
       fail(e.getMessage());
       }
     finally
