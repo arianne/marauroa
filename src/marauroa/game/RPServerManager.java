@@ -2,6 +2,7 @@ package marauroa.game;
 
 import java.util.*;
 import java.io.*;
+import java.net.*;
 
 import marauroa.net.*;
 import marauroa.*;
@@ -146,7 +147,34 @@ public class RPServerManager extends Thread
     
   private void buildPerceptions()
     {
-    Iterator it=playerContainer.iterator();
+    marauroad.trace("RPServerManager::buildPerceptions",">");
+    
+    try
+      {
+      PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
+    
+      while(it.hasNext())
+        {
+        short clientid=it.next();
+        
+        try
+          {
+          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
+            {
+            InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
+            Message messages2cPerception=new MessageS2CPerception();
+            }
+          }
+        catch(Exception e)
+          {
+          marauroad.trace("RPServerManager::buildPerceptions","D",e.getMessage());
+          }
+        }
+      }      
+    finally
+      {
+      marauroad.trace("RPServerManager::buildPerceptions","<");
+      }
     }
   
   public void run()
@@ -157,6 +185,8 @@ public class RPServerManager extends Thread
       {
       scheduler.visit(ruleProcessor);
       scheduler.nextTurn();
+      
+      buildPerceptions();
       
       try
         {
