@@ -1,23 +1,18 @@
 /**
- * JMarauroa.java
+ * JMarauroa2.java
  * derived from JMarauroa
  * dont no if someone like it
- * @author Waldemar Tribus
+ * @author
  */
 
 package marauroa;
 
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import marauroa.net.*;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.net.SocketException;
@@ -28,7 +23,8 @@ import java.util.Date;
 /**
  * Test client for marauroa
  **/
-public class JMarauroa extends JFrame
+public class JMarauroa
+  extends JFrame
 {
   private final static String ACTION_CMD_LOGIN = "login";
   private final static String ACTION_CMD_DISCONNECT = "disconnect";
@@ -36,25 +32,26 @@ public class JMarauroa extends JFrame
   private final static String ACTION_CMD_ABOUT = "about";
   
   
-  //  private JButton actionButton;
-  //  private JButton chooseCharacterButton;
-  //  private JButton connectButton;
-  //  private JButton disconnectButton;
   private JTextArea reportsTextArea;
-  
-  private short clientId;
-  private NetworkClientManager netMan;
+  private JComponent glassPane;
+  private ActionHandler actionHandler;
   
   private SimpleDateFormat formatter;
   private Date logDate;
   
-  private ActionHandler actionHandler;
+  private short clientId;
+  private NetworkClientManager netMan;
+  
+  
+  
   
   
   public JMarauroa()
   {
+    actionHandler = new ActionHandler();
+    actionHandler.start();
     setTitle("Marauroa test client");
-    setIconImage(new ImageIcon("marauroa_ICON.png").getImage());
+    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_ICON.png")).getImage());
     initMenu();
     initComponents();
     clientId=-10;
@@ -64,13 +61,42 @@ public class JMarauroa extends JFrame
                       {
           public void windowOpened(WindowEvent we)
           {
-            login();
+            actionHandler.add(new ActionEvent(this,0,ACTION_CMD_LOGIN));
           }
           public void windowClosing(WindowEvent p0)
           {
             exit();
           }
         });
+    glassPane = new JPanel();
+    glassPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+    glassPane.setOpaque(false);
+    glassPane.addMouseListener(new MouseAdapter(){} );
+    glassPane.addKeyListener(new KeyAdapter()
+                             {
+          public void keyPressed(KeyEvent e)
+          {
+            //            addLog("Key pressed " + e+"\n");
+            if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+            {
+              actionHandler.interruptCurrentAction();
+            }
+          }} );
+    glassPane.addFocusListener(new FocusListener()
+                               {
+          
+          public void focusGained(FocusEvent e)
+          {
+            //            addLog("Focus gained\n");
+          }
+          
+          public void focusLost(FocusEvent e)
+          {
+            //            addLog("Focus lost\n");
+          }
+          
+        });
+    setGlassPane(glassPane);
   }
   
   private void connectAndChooseCharacter(String hostname, String user, String pwd)
@@ -202,10 +228,6 @@ public class JMarauroa extends JFrame
   
   private void initMenu()
   {
-    if(actionHandler==null)
-    {
-      actionHandler = new ActionHandler();
-    }
     JMenuBar menubar = new JMenuBar();
     JMenu mnu_server = new JMenu("Server");
     mnu_server.setMnemonic('S');
@@ -251,7 +273,7 @@ public class JMarauroa extends JFrame
    */
   private void initComponents()
   {
-    JPanel main_panel = new JPanel(new BorderLayout());
+    BackgroundImagePanel main_panel = new BackgroundImagePanel(new BorderLayout());
     reportsTextArea = new JTextArea();
     reportsTextArea.setEditable(false);
     reportsTextArea.setLineWrap(false);
@@ -260,6 +282,16 @@ public class JMarauroa extends JFrame
     main_panel.add(sp,BorderLayout.CENTER);
     main_panel.setPreferredSize(new Dimension(580, 200));
     main_panel.setMinimumSize(new Dimension(580, 200));
+    
+    reportsTextArea.setOpaque(false);
+    sp.getViewport().setOpaque(false);
+    sp.setOpaque(false);
+    sp.setBackground(Color.green);
+    reportsTextArea.setBackground(Color.red);
+    main_panel.setBackGroundImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_FULL.png")).getImage());
+    main_panel.setOpaque(false);
+    main_panel.setBackground(Color.blue);
+    
     setContentPane(main_panel);
   }
   
@@ -297,7 +329,6 @@ public class JMarauroa extends JFrame
    */
   private void addLog(String msg)
   {
-  	System.out.println(msg);
     logDate.setTime(System.currentTimeMillis());
     String line = formatter.format(logDate) + msg;
     reportsTextArea.append(line);
@@ -308,7 +339,6 @@ public class JMarauroa extends JFrame
   {
     ByteArrayOutputStream out= new ByteArrayOutputStream();
     thr.printStackTrace(new PrintStream(out));
-  	System.out.println(out.toString());
     addLog(out.toString());
   }
   
@@ -325,8 +355,8 @@ public class JMarauroa extends JFrame
     
     
     JComboBox cb_server = new JComboBox();
-    cb_server.addItem("127.0.0.1");
     cb_server.addItem("192.168.100.100");
+    cb_server.addItem("127.0.0.1");
     cb_server.addItem("localhost");
     cb_server.setEditable(true);
     message[1] = cb_server;
@@ -401,48 +431,180 @@ public class JMarauroa extends JFrame
   
   private void about()
   {
-    JOptionPane.showMessageDialog(this,"<html><body><font color=\"blue\">Marauroa</font> client version 0.01"
-      +"<p>Marauroa is a multiplayer role playing game <br>"
-      +"and a framework for further development completly based<br>"
-      +"on Java. The goal is to get an Arianne compatible client<br>"
-      +"and server.<br><br>"
-      +"<font color=\"blue\">http://marauroa.sf.net</font></body></html>","About",JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this,"<html><body><font color=\"blue\">Marauroa</font> client version x.y.z</body></html>","About",JOptionPane.INFORMATION_MESSAGE);
   }
   
   
   private final class ActionHandler
-    implements ActionListener
+    extends Thread implements ActionListener
   {
+    
+    private ActionEvent currentEvent;
+    private Object monitor;
+    private boolean end;
+    private JWindow cancelDialog;
+    
+    
+    
+    public ActionHandler()
+    {
+      end = false;
+      monitor = new Object();
+      currentEvent = null;
+    }
+    
+    private void interruptCurrentAction()
+    {
+      //      if(currentEvent!=null)
+      //      {
+      addLog("Interrupt current action...\n");
+      //      }
+    }
+    
+    private void process(ActionEvent e)
+    {
+      if(e!=null)
+      {
+        lockGui();
+        String action_cmd = e.getActionCommand();
+        try
+        {
+          addLog("processing event "+action_cmd+"\n");
+          if(ACTION_CMD_LOGIN.equals(action_cmd))
+          {
+            //login
+            login();
+          }
+          else if(ACTION_CMD_DISCONNECT.equals(action_cmd))
+          {
+            //disconnect
+            disconnect();
+          }
+          else if(ACTION_CMD_EXIT.equals(action_cmd))
+          {
+            //exit
+            exit();
+          }
+          else if(ACTION_CMD_ABOUT.equals(action_cmd))
+          {
+            //about
+            about();
+          }
+          else
+          {
+            addLog("ignored unknown action: " +action_cmd+"\n");
+          }
+          addLog("event "+action_cmd + " procesed\n");
+        }
+        catch(Throwable thr)
+        {
+          addLog("Uncaught exception processing : " + action_cmd + "\n");
+          addLog(thr);
+        }
+        finally
+        {
+          unlockGui();
+        }
+      }
+    }
+    
     
     public void actionPerformed(ActionEvent e)
     {
-      if(ACTION_CMD_LOGIN.equals(e.getActionCommand()))
+      add(e);
+    }
+    
+    
+    public void add(ActionEvent e)
+    {
+      synchronized(monitor)
       {
-        //login
-        login();
+        currentEvent = e;
+        monitor.notifyAll();
       }
-      else if(ACTION_CMD_DISCONNECT.equals(e.getActionCommand()))
+    }
+    
+    public void run()
+    {
+      //      System.out.println("Handler started");
+      while(!end)
       {
-        //disconnect
-        disconnect();
+        ActionEvent ae = get();
+        if(ae!=null)
+        {
+          process(ae);
+        }
       }
-      else if(ACTION_CMD_EXIT.equals(e.getActionCommand()))
+    }
+    
+    private ActionEvent get()
+    {
+      synchronized(monitor)
       {
-        //exit
-        exit();
+        ActionEvent ret_event;
+        if(currentEvent==null)
+        {
+          //wait until event is set
+          try
+          {
+            monitor.wait();
+          }
+          catch (InterruptedException e)
+          {
+            addLog("ActionHandler interrupted!!!");
+          }
+        }
+        ret_event = currentEvent;
+        currentEvent = null;
+        return(ret_event);
       }
-      else if(ACTION_CMD_ABOUT.equals(e.getActionCommand()))
+    }
+    
+    private void unlockGui()
+    {
+      glassPane.setVisible(false);
+    }
+    
+    private void lockGui()
+    {
+      glassPane.setVisible(true);
+      glassPane.requestFocusInWindow();
+    }
+    
+  }
+  
+  
+  private final class BackgroundImagePanel
+    extends JPanel
+  {
+    private Image backGroundImage;
+    
+    public BackgroundImagePanel(LayoutManager lm)
+    {
+      super(lm);
+    }
+    
+    public void setBackGroundImage(Image backGroundImage)
+    {
+      this.backGroundImage = backGroundImage;
+    }
+    
+    public Image getBackGroundImage()
+    {
+      return backGroundImage;
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+      super.paintComponent(g);
+      if(backGroundImage!=null)
       {
-        //about
-        about();
-      }
-      else
-      {
-        addLog("ignored unknown action: " +e);
+        g.drawImage(backGroundImage,0,0,getSize().width-1,getSize().height-1, this);
       }
     }
     
   }
+  
   
 }
 
