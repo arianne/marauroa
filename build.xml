@@ -88,7 +88,7 @@
     <copy todir="marauroa-${version}" file="LICENSE"/>
     <copy todir="marauroa-${version}" file="README"/>
   	
-    <tar destfile="marauroa-${version}.tar.gz" compression="gzip">
+    <tar destfile="marauroa-${version}-src.tar.gz" compression="gzip">
        <tarfileset dir="marauroa-${version}" prefix="marauroa-${version}">
          <exclude name="**/CVS/**"/>
        </tarfileset>
