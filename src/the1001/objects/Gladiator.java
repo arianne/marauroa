@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.1 2003/12/12 17:00:48 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.2 2003/12/12 17:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,22 +13,47 @@
 package the1001;
 
 import marauroa.game.*;
+import java.util.*;
 
 public class Gladiator extends RPObject
   {
-  Gladiator(RPObject.ID id)
+  private static String[] randomNames=
+    {
+    "Rirg",
+    "Rool",
+    "Bark",
+    "Prort",
+    "Bogdush",
+    "Vugor",
+    "Giurk",
+    "Erunak",
+    "Gaol",
+    "Vrodush",
+    "Prashnak",
+    "Vugor",
+    "Priurk",
+    "Pradash",
+    "Gudish",
+    "Biol",
+    "Vidash"
+    };
+  
+  private static Random random=new Random();
+  
+  public Gladiator(RPObject.ID id)
     {
     put("object_id",id.getObjectID());
     put("type","gladiator");
-	put("rp_strengh",0);
-	put("rp_size",0);
-	put("rp_speed",0);
-	put("rp_breath",0);
-	put("rp_health",0);
+    put("name",randomNames[random.nextInt()%randomNames.length]);
+	put("rp_size",5);
+	put("rp_breath",5);
+	put("rp_health",5);
 	put("rp_fame",0);
-	put("_attack",0);
-	put("_defend",0);
-	put("_evasion",0);
+	put("_strengh",5);
+	put("_speed",5);
+	put("_attack",5);
+	put("_defend",5);
+	put("_evasion",5);
 	put("num_victory",0);
 	put("num_defeat",0);    
     }
