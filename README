@@ -141,7 +141,7 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.92 Apr XX, 2005
+0.92 Apr 05, 2005
 - Change nextTurn method for beginTurn and nextTurn
 - Replaced onApprovedActions by onActionAdd for simpler action validation
 
