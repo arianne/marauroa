@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.5 2004/01/30 18:59:26 arianne_rpg Exp $ */
+/* $Id: PlayerDatabase.java,v 1.6 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,56 +15,8 @@ package marauroa.game;
 import java.net.InetSocketAddress;
 
 /** The interface that all the databases marauroa use MUST implement. */
-public interface PlayerDatabase
+public interface PlayerDatabase extends GameDatabaseException
   {
-  static public class PlayerAlreadyAddedException extends Exception
-    {
-    PlayerAlreadyAddedException(String player)
-      {
-      super("Player ["+player+"] already added to the database.");
-      }
-    }
-  
-  static public class PlayerNotFoundException extends Exception
-    {
-    PlayerNotFoundException(String player)
-      {
-      super("Player ["+player+"] not found on the database");
-      }
-    }
-  
-  static public class CharacterNotFoundException extends Exception
-    {
-    CharacterNotFoundException(String character)
-      {
-      super("Character ["+character+"] not found on the database");
-      }
-    }
-
-  static public class CharacterAlreadyAddedException extends Exception
-    {
-    CharacterAlreadyAddedException(String character)
-      {
-      super("Character ["+character+"] already added to the database");
-      }
-    }
-    
-  static public class NoDatabaseConfException extends Exception
-    {
-    NoDatabaseConfException()
-      {
-      super("Database configuration file not found.");
-      }
-    }
-
-  static public class GenericDatabaseException extends Exception
-    {
-    GenericDatabaseException(String msg)
-      {
-      super(msg);
-      }
-    }
-  
   /** Retursn true if the strign is valid and doesn't contains any strange character */
   public boolean validString(String string);
   

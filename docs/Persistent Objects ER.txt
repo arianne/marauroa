@@ -1,0 +1,36 @@
+use marauroa;
+
+drop table rpobject;
+drop table rpattribute;
+drop table rpslot;
+drop table RPObjectInRPSlot;
+
+create table if not exists  RPObject
+  (
+  id integer not null primary key,
+  root_object tinyint not null
+  );
+
+create table if not exists RPAttribute
+  (
+  object_id integer not null,
+  name varchar(64) not null,
+  value varchar(255),
+  
+  primary key(object_id,name)
+  );
+
+create table if not exists  RPSlot
+  (
+  object_id integer not null,
+  name varchar(64) not null,
+  slot_id integer auto_increment not null,
+ 
+  primary key(object_id,slot_id)
+  );
+
+create table if not exists  RPObjectInRPSlot
+  (
+  slot_id integer not null,
+  object_id integer not null    
+  );

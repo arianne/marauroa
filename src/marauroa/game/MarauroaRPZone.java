@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.19 2004/03/04 17:04:39 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.20 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ public class MarauroaRPZone implements RPZone
 {
   private Map objects;
   private Perception perception;
+  private JDBCRPObjectDatabase rpobjectDatabase;
 	
   private static Random rand=new Random();
   
@@ -35,6 +36,16 @@ public class MarauroaRPZone implements RPZone
 		rand.setSeed(new Date().getTime());
 		objects=new LinkedHashMap();
 		perception=new Perception(Perception.DELTA);
+		
+		try
+		  {
+          rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+          }
+        catch(GameDatabaseException.NoDatabaseConfException e)
+          {
+          marauroad.trace("MarauroaRPZone::MarauroaRPZone","!",e.getMessage());
+          System.exit(1);
+          }
 	}
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -95,14 +106,7 @@ public class MarauroaRPZone implements RPZone
   
   public RPObject create()
 	{
-		RPObject.ID id=new RPObject.ID(rand.nextInt());
-		
-		while(has(id) || id.getObjectID()==-1)
-		{
-			id=new RPObject.ID(rand.nextInt());
-		}
-		
-		return new RPObject(id);
+        return new RPObject(rpobjectDatabase.getValidRPObjectID());
 	}
 	
   public Iterator iterator()

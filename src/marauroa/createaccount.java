@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.11 2004/03/12 09:01:30 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.12 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,11 +82,12 @@ class createaccount
     try
       {      
       out=new PrintWriter(new FileOutputStream("C:/Apache Group/Apache2/logs/createaccount_log.txt",true));
-      out.println("Trying to create username("+username+"), password("+password+"), character("+character+"),"
+      out.println(new Date().toString()+": Trying to create username("+username+"), password("+password+"), character("+character+"),"
         +"character_model("+character_model+"), gladiator("+gladiator+"), gladiator_model("+gladiator_model+")");
       out.flush();
       
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
+      JDBCRPObjectDatabase rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
       
       out.println("Checking for valid string");
       out.flush();
@@ -163,10 +164,10 @@ class createaccount
       out.println("Adding player");
       playerDatabase.addPlayer(username,password);
 
-      RPObject object=new Player(new RPObject.ID(-1),character);
+      RPObject object=new Player(rpobjectDatabase.getValidRPObjectID(),character);
       object.put("look",character_model);
       
-      Gladiator gladiator_obj=new Gladiator(new RPObject.ID(-1));
+      Gladiator gladiator_obj=new Gladiator(rpobjectDatabase.getValidRPObjectID());
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);
       

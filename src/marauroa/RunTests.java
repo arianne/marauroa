@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.34 2004/01/30 18:09:50 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.35 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,6 +78,7 @@ public class RunTests
       wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
+      wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
       Date end=new Date();
       
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
@@ -157,7 +158,7 @@ public class RunTests
 
   public static Test suiteNet ( )
     {
-    TestSuite suite= new TestSuite("Network marauroa Tests");
+    TestSuite suite= new TestSuite("Network marauroa Tests");    
 
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerShort.class));
@@ -171,11 +172,20 @@ public class RunTests
     return suite;
     }
 
+  public static Test suiteOneTest ( )
+    {
+    TestSuite suite= new TestSuite("One Test case marauroa Tests");
+//    suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
+
+    return suite;
+    }
+
   public static Test suiteGame ( )
     {
     TestSuite suite= new TestSuite("Game marauroa Tests");
    
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
 
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));

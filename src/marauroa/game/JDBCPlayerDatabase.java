@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.14 2004/03/01 23:01:26 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.15 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,6 +62,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** A connection to the JDBC database */
   private Connection connection;  
   private static PlayerDatabase playerDatabase=null;
+  private static JDBCRPObjectDatabase rpobjectDatabase=null;
 
   /** Constructor that connect using a set of Properties.
    *  @param connInfo a Properties set with the options to create the database.
@@ -100,6 +101,11 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(playerDatabase==null)
         {
         playerDatabase=resetDatabaseConnection();
+        }
+        
+      if(rpobjectDatabase==null)
+        {
+        rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
         }
 
       return playerDatabase;
@@ -547,21 +553,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
 
-      Statement stmt = connection.createStatement();
-      int id=getDatabasePlayerId(username);
-      
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      OutputSerializer os = new OutputSerializer(baos);
-      try
-        {
-        object.writeObject(os,true);
-        }
-      catch (IOException e)
-        {
-        marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Error serializing character: "+e.getMessage());
-        throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
-        }
-        
       if(hasCharacter(username,character))
         {
         marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
@@ -569,17 +560,24 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
-        String query = "insert into characters values("+id+",'"+character+"',?)";
-        PreparedStatement prep_stmt = connection.prepareStatement(query);
-        prep_stmt.setBytes(1,baos.toByteArray());
-  
-        prep_stmt.execute();
+        Statement stmt = connection.createStatement();
+        int id=getDatabasePlayerId(username);
+
+        String query = "insert into characters values("+id+",'"+character+"',"+object.get("object_id")+")";
+        stmt.execute(query);
+        
+        rpobjectDatabase.storeRPObject(object);
         }
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
       isConnectionClosed();
+      throw new PlayerNotFoundException(username);
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Invalid RPObject: Lacks of attribute "+e.getAttribute());
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -664,23 +662,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           }
         }
       
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      OutputSerializer os = new OutputSerializer(baos);
-      try
-        {
-        object.writeObject(os,true);
-        }
-      catch (IOException e)
-        {
-        marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Error serializing character: "+e.getMessage());
-        throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
-        }
-        
-      query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";
-      PreparedStatement prep_stmt = connection.prepareStatement(query);
-      prep_stmt.setBytes(1,baos.toByteArray());
-  
-      prep_stmt.execute();
+      rpobjectDatabase.storeRPObject(object);
       } 
     catch(SQLException sqle)
       {
@@ -722,18 +704,14 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       int id=getDatabasePlayerId(username);
 
       Statement stmt = connection.createStatement();
-      String query = "select contents from characters where player_id="+id+" and charname like '"+character+"'";  
+      String query = "select object_id from characters where player_id="+id+" and charname like '"+character+"'";  
       marauroad.trace("JDBCPlayerDatabase::getRPObject","D",query);
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
-        ByteArrayInputStream bais = new ByteArrayInputStream(result.getBytes(1));
-        InputSerializer is = new InputSerializer(bais);
-
-        RPObject rp_object=new RPObject();
-        rp_object.readObject(is);
-         
-        return rp_object;
+        int object_id=result.getInt(1);
+        
+        return rpobjectDatabase.loadRPObject(new RPObject.ID(object_id));
         }
       else
         {
@@ -889,7 +867,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       Statement stmt = connection.createStatement();      
       String query = "CREATE TABLE IF NOT EXISTS player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
       stmt.addBatch(query);
-      query = "CREATE TABLE IF NOT EXISTS characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(charname))";
+      query = "CREATE TABLE IF NOT EXISTS characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, object_id integer not null, PRIMARY KEY(charname))";
       stmt.addBatch(query);
       query = "CREATE TABLE IF NOT EXISTS loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
       stmt.addBatch(query);

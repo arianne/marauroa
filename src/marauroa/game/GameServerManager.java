@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.32 2004/03/02 19:16:51 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.33 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -327,7 +327,6 @@ public class GameServerManager extends Thread
 	    /* We restore back the character to the world */
 	    RPObject object=playerContainer.getRPObject(clientid,msg.getCharacter());
         rpMan.onInit(object);
-        playerContainer.setRPObject(clientid,object);
         
 	    playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
 

@@ -29,6 +29,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\RWLock.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\db.txt" #[EndFile]
 #[BeginFolder]
 LABEL := "game"
 FILTER := ""
@@ -40,6 +41,8 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameConst.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCRPObjectDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameDatabaseException.java" #[EndFile]
 #[BeginFolder]
 LABEL := "RP section"
 FILTER := ""
@@ -76,6 +79,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_GameServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]

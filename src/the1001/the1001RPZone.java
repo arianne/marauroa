@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.16 2004/03/05 16:27:46 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.17 2004/03/16 00:00:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,8 @@ public class the1001RPZone extends MarauroaRPZone
   
   public the1001RPZone()
 	{
+	    super();
+	
 		marauroad.trace("the1001RPZone::the1001RPZone",">");
 		
 		try
