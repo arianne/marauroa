@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.4 2003/12/10 22:49:46 root777 Exp $ */
+/* $Id: CharacterList.java,v 1.5 2003/12/13 14:19:17 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,18 +25,18 @@ import java.util.Iterator;
 
 
 public class CharacterList
- extends RPObject
+  extends RPObject
 {
   public final static int TYPE_CHARACTER_LIST=4;
   public final static int TYPE_CHARACTER_LIST_ENTRY=5;
   
   private LinkedList charList;
-
+  
   public CharacterList()
   {
     objectType=TYPE_CHARACTER_LIST;
   }
-
+  
   public void writeObject(OutputSerializer out)
     throws IOException
   {
@@ -44,7 +44,7 @@ public class CharacterList
     {
       marauroad.trace("CharacterList.writeObject()","<");
       super.writeObject(out);
-
+      
       if(charList!=null)
       {
         out.write((int)charList.size());
@@ -64,7 +64,7 @@ public class CharacterList
       marauroad.trace("CharacterList.writeObject()",">");
     }
   }//writeObject
-
+  
   public void readObject(InputSerializer in)
     throws IOException, ClassNotFoundException
   {
@@ -79,7 +79,7 @@ public class CharacterList
         charList=new LinkedList();
         for(int i=0;i<size;++i)
         {
-         charList.add(RPObjectFactory.getFactory().getRPObject(in));
+          charList.add(RPObjectFactory.getFactory().getRPObject(in));
         }
       }
     }
@@ -88,7 +88,7 @@ public class CharacterList
       marauroad.trace("CharacterList.readObject()",">");
     }
   }//readObject
-
+  
   public void addCharacter(int char_id, String char_name, String char_status)
   {
     CharEntry entry = new CharEntry();
@@ -101,12 +101,12 @@ public class CharacterList
     }
     charList.add(entry);
   }
-
+  
   public CharEntryIterator iterator()
   {
     return(new CharEntryIterator(charList));
   }
- 
+  
   public class CharEntryIterator
   {
     private Iterator iterator;
@@ -121,20 +121,20 @@ public class CharacterList
         iterator = null;
       }
     }
-
+    
     public boolean hasNext()
     {
       return(iterator!=null && iterator.hasNext());
     }
-
+    
     public CharEntry next()
     {
       return((CharEntry)iterator.next());
     }
   }//CharEntryIterator
-
+  
   public static class CharEntry
-   extends RPObject
+    extends RPObject
   {
     public CharEntry()
     {
@@ -145,35 +145,47 @@ public class CharacterList
     {
       put("name",char_name);
     }
-
+    
     public String getName()
-     throws Attributes.AttributeNotFoundException
+      throws Attributes.AttributeNotFoundException
     {
       return(get("name"));
     }
-     
+    
     public void setId(int char_id)
     {
       put("id",char_id);
     }
-
+    
     public String getId()
-     throws Attributes.AttributeNotFoundException
+      throws Attributes.AttributeNotFoundException
     {
       return(get("id"));
     }
-
+    
     public void setStatus(String char_st)
     {
       put("st",char_st);
     }
-
+    
     public String getStatus()
-     throws Attributes.AttributeNotFoundException
+      throws Attributes.AttributeNotFoundException
     {
       return(get("st"));
     }
-
-
+    
+    public String toString()
+    {
+      String name = "invalid";
+      try
+      {
+        name = getName();
+      }
+      catch (marauroa.game.Attributes.AttributeNotFoundException e)
+      {
+      }
+      return(name);
+    }
+    
   }
 }

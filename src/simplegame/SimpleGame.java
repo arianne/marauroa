@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.18 2003/12/12 21:41:50 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.19 2003/12/13 14:19:17 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.InputStream;
 import java.util.List;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -51,6 +55,7 @@ public class SimpleGame
   private JMarauroa marauroa;
   private int ownCharacterID;
   private int otherCharacterID;
+  private static Sequencer player;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
@@ -142,6 +147,7 @@ public class SimpleGame
                     MessageC2SAction m_action = new MessageC2SAction(null,answer);
                     netMan.addMessage(m_action);
                     addLog("Accepted challenge from " + otherCharacterID);
+                    playMidi();
                   }
                   catch(Exception e2)
                   {
@@ -171,7 +177,7 @@ public class SimpleGame
                         int result = JOptionPane.showOptionDialog(
                           this,                             // the parent that the dialog blocks
                           message,                                    // the dialog message array
-                          "Choose your character...", // the title of the dialog window
+                          "Choose the character to challenge...", // the title of the dialog window
                           JOptionPane.DEFAULT_OPTION,                 // option type
                           JOptionPane.INFORMATION_MESSAGE,            // message type
                           new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
@@ -189,7 +195,7 @@ public class SimpleGame
                         }
                       }
                       addLog(""+clist+"\n");
-                      
+                      playMidi();
                     }
                     catch(Exception e3)
                     {
@@ -206,6 +212,15 @@ public class SimpleGame
       {
         sleep(50);
       }
+    }
+  }
+
+  private void playMidi()
+  {
+    InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
+    if(is_midi!=null)
+    {
+      playMidi(is_midi);
     }
   }
   
@@ -330,6 +345,36 @@ public class SimpleGame
       System.out.print(msg);
     }
   }
+  
+  public static void playMidi(final InputStream midistream)
+  {
+    new Thread(new Runnable()
+               {
+          public void run()
+          {
+            try
+            {
+              Sequence theSound = MidiSystem.getSequence(midistream);
+              if(player==null)
+              {
+                player = MidiSystem.getSequencer();
+                player.open();
+              }
+              else
+              {
+                player.stop();
+              }
+              player.setSequence(theSound);
+              player.start();
+              //player.close();
+            }
+            catch (Exception ex)
+            {
+              ex.printStackTrace();
+            }
+          }},"midi player").start();
+  }
+  
   
 }
 
