@@ -54,7 +54,7 @@ public class JMarauroa extends JFrame
   public JMarauroa()
   {
     setTitle("Marauroa test client");
-    //setIconImage(new ImageIcon("marauroa_ICON.png").getImage());
+    setIconImage(new ImageIcon("marauroa_ICON.png").getImage());
     initMenu();
     initComponents();
     clientId=-10;
@@ -183,7 +183,7 @@ public class JMarauroa extends JFrame
    */
   public static void main(String args[])
   {
-    JMarauroa2 marauroa = new JMarauroa2();
+    JMarauroa marauroa = new JMarauroa();
     marauroa.pack();
     Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
     Dimension own_dimen = marauroa.getSize();
