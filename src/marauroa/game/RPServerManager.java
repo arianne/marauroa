@@ -187,7 +187,7 @@ class RPServerManager extends Thread
           }
         catch(Exception e)
           {
-          marauroad.trace("RPServerManager::buildPerceptions","D",e.getMessage());
+          marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
           }
         }
       }      
