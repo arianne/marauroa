@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.10 2004/03/13 14:32:26 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.11 2004/03/14 12:08:35 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,11 +16,13 @@ package the1001.client;
 import marauroa.net.*;
 
 import java.net.SocketException;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
+import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.marauroad;
@@ -70,7 +72,9 @@ public class The1001Bot
 		int time_out_max_count = 20;
 		int timeout_count = 0;
 		continueGamePlay = true;
-		boolean iamfighting = false;
+		boolean i_am_fighting = false;
+		boolean voted = false;
+		boolean requested_fight = false;
 		try
 		{
 			while(continueGamePlay)
@@ -92,8 +96,8 @@ public class The1001Bot
 						{
 							String name = my_object.get(RPCode.var_name);
 							String fame = my_object.get(RPCode.var_fame);
-							System.out.println("Me Name: " +name);
-							System.out.println("Me Fame: " +fame);
+							System.out.println("Me   Name: " +name);
+							System.out.println("Me   Fame: " +fame);
 							gm.setOwnCharacter(my_object);
 							if(my_object.hasSlot(RPCode.var_myGladiators))
 							{
@@ -137,29 +141,56 @@ public class The1001Bot
 								gm.setStatus(status);
 								if(RPCode.var_waiting.equals(status))
 								{
-									iamfighting = false;
+									if(i_am_fighting)
+									{
+										requested_fight = false;
+										i_am_fighting = false;
+									}									
 									System.out.println("Arena waiting...");
-									if(Math.random()>0.1)
+									if(!requested_fight&&Math.random()>0.1)
 									{
 										gm.requestFight();
 										System.out.println("Requesting fight...");
+										requested_fight = true;
 									}
-									
+									voted = false;
 								}
 								else if(RPCode.var_request_fame.equals(status))
 								{
-									iamfighting = false;
-									System.out.println("Vote!!!");
-									gm.vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+									if(i_am_fighting)
+									{
+										requested_fight = false;
+										i_am_fighting = false;
+									}	
+									try
+									{
+										String timeout      = obj.get(RPCode.var_timeout);
+										String thumbs_up    = obj.get(RPCode.var_thumbs_up);
+										String thumbs_down  = obj.get(RPCode.var_thumbs_down);
+										String waiting      = obj.get(RPCode.var_waiting);
+										String fame         = obj.get(RPCode.var_karma);
+										System.out.println("Request fame("+fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting);
+									}
+									catch (Attributes.AttributeNotFoundException e)
+									{
+										
+									}
+									if(!voted)
+									{
+										gm.vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+										voted = true;
+									}									
 								}
 								else if(RPCode.var_fighting.equals(status))
 								{
 									System.out.println("Fighting!!!");
-									if(Math.random()>0.9 && !iamfighting)
+									if(!i_am_fighting && !requested_fight && Math.random()>0.9 )
 									{
 										gm.requestFight();
 										System.out.println("Requesting fight...");
+										requested_fight = true;
 									}
+									voted = false;
 								}
 								if(Math.random()>0.95)
 								{
@@ -174,6 +205,9 @@ public class The1001Bot
 									RPObject[] new_fighters = new RPObject[slot.size()];
 									int k = 0;
 									HashSet hs = new HashSet();
+									System.out.println("---------------------------------------------------------------");
+									System.out.println(" Name           \tKarma\tHealth\tDamage\tWon\tLost");
+									System.out.println("---------------------------------------------------------------");
 									for (Iterator iter = slot.iterator(); iter.hasNext() ; )
 									{
 										RPObject gladiator = (RPObject)iter.next();
@@ -183,21 +217,33 @@ public class The1001Bot
 											new_fighters[k++]=gladiator;
 											hs.add(gladiator.get(RPCode.var_object_id));
 											name = gladiator.get(RPCode.var_name);
+											while(name.length()<15)
+											{
+												name+=" ";
+											}
+											if(name.length()>15)
+											{
+												name=name.substring(0,15);
+											}
+											RPObject own_gl  = gm.getFirstOwnGladiator();
+											char sign = own_gl.get(RPCode.var_object_id).equals(gladiator.get(RPCode.var_object_id))?'*':' ';
 											String karma = gladiator.get(RPCode.var_karma);
 											String hp = gladiator.get(RPCode.var_hp);
 											String victories = gladiator.get(RPCode.var_num_victory);
 											String defeats = gladiator.get(RPCode.var_num_defeat);
-											System.out.println("G Name     : " +name);
-											System.out.println("G Karma    : " +karma);
-											System.out.println("G Health   : " +hp);
-											System.out.println("G Victories: " +victories);
-											System.out.println("G Defeats  : " +defeats);
+											String dam = " ";
+											if(gladiator.has(RPCode.var_damage))
+											{
+												dam = gladiator.get(RPCode.var_damage);
+											}
+											System.out.println(sign+name+"\t"+karma+"\t"+hp+"\t"+dam+"\t"+victories+"\t"+defeats);
 										}
 										else
 										{
 											marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena");
 										}
 									}
+									System.out.println("---------------------------------------------------------------");
 									for (int x = 0; x < old_fighters.length; x++)
 									{
 										if(!hs.contains(old_fighters[x].get(RPCode.var_object_id)))
@@ -215,23 +261,26 @@ public class The1001Bot
 											String own_gl_id = own_gl.get(RPCode.var_object_id);
 											if(own_gl_id.equals(new_fighters[x].get(RPCode.var_object_id)))
 											{
-												iamfighting = true;
+												i_am_fighting = true;
 												if(new_fighters[x].has(RPCode.var_hp))
 												{
 													int hp     = new_fighters[x].getInt(RPCode.var_hp);
-													System.out.println("Health : "+hp);
-												}
-												if(new_fighters[x].has(RPCode.var_damage))
-												{
-													int damage = new_fighters[x].getInt(RPCode.var_damage);
-													if (damage>0)
+//													System.out.println("Health : "+hp);													
+													if(hp>0)
 													{
-														System.out.println("AUCHH!! damage: "+damage);
+														if(new_fighters[x].has(RPCode.var_damage))
+														{
+															int damage = new_fighters[x].getInt(RPCode.var_damage);
+															if (damage>0)
+															{
+//																System.out.println("AUCHH!! damage: "+damage);
+															}
+														}
+														String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
+														gm.setFightMode(fight_mode);
+														System.out.println("Fight mode set to "+fight_mode);
 													}
 												}
-												String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
-												gm.setFightMode(fight_mode);
-												System.out.println("Fight mode set to "+fight_mode);
 											}
 										}
 									}
