@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.19 2004/01/01 23:45:01 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.20 2004/01/02 00:02:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,8 +95,8 @@ public class RPCode
         arena.put("status","fighting");
         }
         
-      zone.modify(new RPObject.ID(player));      
-      zone.modify(new RPObject.ID(arena));      
+      zone.modify(player);      
+      zone.modify(arena);      
       
       return RPAction.STATUS_SUCCESS;
       }
@@ -197,12 +197,14 @@ public class RPCode
             }
           }
         
-        /** We check for dead players and determine if combat is finished. */
-        for(i=0;i<gladiators.length;++i)
+        /** Check if Combat is completed */
+        if(combatCompleted(gladiators))
           {
-          /* TODO */
+          arena.put("status","request_fame");
           }
-        }      
+  
+        zone.modify(arena);      
+        }
       }
     catch(Exception e)
       {
@@ -213,7 +215,23 @@ public class RPCode
       marauroad.trace("RPCode::ResolveFight","<");
       }
     }      
-  
+    
+  private static boolean combatCompleted(RPObject[] gladiators) throws Exception
+    {
+    int gladiatorsStillFighting=gladiators.length;
+        
+    /** We check for dead players and determine if combat is finished. */
+    for(int i=0;i<gladiators.length;++i)
+      {
+      if(gladiators[i].getInt("hp")<=0)          
+        {
+        --gladiatorsStillFighting;
+        }
+      }
+    
+    return (gladiatorsStillFighting==1)?true:false;
+    }
+    
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
     if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.14 2004/01/01 23:45:01 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.15 2004/01/02 00:02:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,7 +77,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       RPObject player=zone.get(id);
       player.put("?"+action.get("action_id"), status.toString());
       trackObject(player);
-      zone.modify(id);
+      zone.modify(player);
       
       return status;
       }
@@ -127,7 +127,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
             }
           }
         
-        zone.modify(new RPObject.ID(object));
+        zone.modify(object);
         }
       }
     catch(Exception e)

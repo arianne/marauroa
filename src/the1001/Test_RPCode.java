@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.13 2004/01/01 23:45:01 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.14 2004/01/02 00:02:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -189,20 +189,11 @@ public class Test_RPCode extends TestCase
         assertTrue(newgladiator.getInt("?damage")<newgladiator.getInt("attack"));
         }
 
-      /** Now it is turn to begin the fight */
+      /** We make sure that the combat has ends */
       rpu.nextTurn();
       
       assertFalse(gladiator.has("?damage"));
       assertFalse(newgladiator.has("?damage"));
-
-//      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"paper");
-//      assertEquals(status,RPAction.STATUS_SUCCESS);
-//
-//      RPCode.ResolveFight();
-//      
-//      assertFalse(gladiator.has("?damage"));
-//      assertTrue(newgladiator.has("?damage"));
-//      assertTrue(newgladiator.getInt("?damage")<newgladiator.getInt("attack"));
       }
     catch(Exception e)
       {

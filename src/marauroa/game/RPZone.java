@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.12 2003/12/31 12:32:48 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.13 2004/01/02 00:02:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,7 +68,7 @@ public interface RPZone
     }
   
   public void add(RPObject object) throws RPObjectInvalidException;
-  public void modify(RPObject.ID id) throws RPObjectNotFoundException;
+  public void modify(RPObject object) throws RPObjectNotFoundException;
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.12 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.13 2004/01/02 00:02:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,9 +49,9 @@ public class MarauroaRPZone implements RPZone
       }
     }
   
-  public void modify(RPObject.ID id) throws RPObjectNotFoundException
+  public void modify(RPObject object) throws RPObjectNotFoundException
     {
-    perception.modified(get(id));
+    perception.modified(object);
     }
 
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
