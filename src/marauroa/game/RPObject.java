@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.52 2004/11/21 10:52:17 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.53 2004/11/26 21:15:48 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -379,7 +379,7 @@ public class RPObject extends Attributes
       {
       for(String attrib: deleted)
         {
-        if(!attrib.equals("id"))
+        if(!attrib.equals("id") && !attrib.equals("zoneid"))
           {
           remove(attrib);
           }
