@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+| This program is free software; you can redistribute it and/or modify         
+| it under the terms of the GNU General Public License as published by
+| the Free Software Foundation.
+| 
+| This program is distributed in the hope that it will be useful,
+| but WITHOUT ANY WARRANTY; without even the implied warranty of
+| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+| doc/GPL.license file for more details.
+-------------------------------------------------------------------------------
+
+The 1001
+--------
+This is a implementation of the Arianne RP system as explained by Ragnar-GD and
+that should be able to play with Arianne 3D Client.
+
+At first it will be a very simple thing, but each time it will be become richer 
+and richer, up to getting to a real game.
+
