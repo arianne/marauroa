@@ -106,14 +106,6 @@
         </task>
         <task id="129" name="Release Marauroa 0.11" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/12/2003" duration="3" complete="100" priority="1">
             <depend id="145" type="2"/>
-        </task>
-        <task id="130" name="New graphics for simpleGame" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/12/2003" duration="17" complete="0" priority="1">
-            <depend id="145" type="2"/>
-        </task>
-        <task id="143" name="Fix bugs at simpleGame" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/12/2003" duration="8" complete="0" priority="1">
-            <depend id="145" type="2"/>
-        </task>
-        <task id="145" name="Release Marauroa 0.12" color="#ff3333" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="5/1/2004" duration="3" complete="0" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="142" name="Document design for 1001 Game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/12/2003" duration="5" complete="100" priority="1">
@@ -137,7 +129,7 @@
         <task id="184" name="Port Marauroa to C++: ariannexp" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/1/2004" duration="12" complete="100" priority="1">
             <depend id="185" type="2"/>
         </task>
-        <task id="185" name="Create a Blitz 3D client for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="14/1/2004" duration="13" complete="0" priority="1">
+        <task id="185" name="Create a Blitz 3D client for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="14/1/2004" duration="13" complete="45" priority="1">
             <depend id="110" type="2"/>
         </task>
         <task id="110" name="Release Marauroa 0.20" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="30/1/2004" duration="3" complete="0" priority="1">
