@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.22 2003/12/08 12:43:52 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.23 2003/12/08 20:44:08 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,23 +68,25 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       RPObject rp_player = null;
       rp_player = zone.get(id);
       
-      int action_type = Integer.parseInt(action.get("type"));
-      
-      switch(action_type)
+      if(action instanceof MoveAction)
       {
-        case MoveAction.ACTION_MOVE:
-          status = makeMove(id, action);
-          break;
-        case GetCharacterListAction.ACTION_GETCHARLIST:
-          status = getCharacterList(id, action);
-          break;
-        case ChallengeAction.ACTION_CHALLENGE:
-          status = challenge(id, action);
-          break;
-        case ChallengeAnswer.ACTION_CHALLENGE_ANSWER:
-          status = challengeAnswer(id, action);
-          break;
-        default: //unknown type
+        status = makeMove(id, action);
+      }
+      else if(action instanceof GetCharacterListAction)
+      {
+        status = getCharacterList(id, action);
+      }
+      else if(action instanceof ChallengeAction)
+      {
+        status = challenge(id, action);
+      }
+      else if(action instanceof ChallengeAnswer)
+      {
+        status = challengeAnswer(id, action);
+      }
+      else
+      {
+        //unknown type
       }
     }
     catch (Attributes.AttributeNotFoundException e)
@@ -335,7 +337,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     }
     return(challenge_slot);
   }
-
+  
   public void nextTurn()
   {
   }

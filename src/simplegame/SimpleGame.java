@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.15 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.16 2003/12/08 20:44:08 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,6 +141,7 @@ public class SimpleGame
                   }
                   catch(Exception e3)
                   {
+                    e3.printStackTrace();
                   }
                 }
               }

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPZone.java,v 1.12 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: SimpleRPZone.java,v 1.13 2003/12/08 20:44:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,16 @@ package simplegame;
 import java.util.LinkedList;
 import java.util.List;
 import marauroa.game.MarauroaRPZone;
+import marauroa.game.RPActionFactory;
 import marauroa.game.RPObject;
+import marauroa.game.RPObjectFactory;
 import marauroa.game.RPZone;
+import simplegame.actions.ChallengeAction;
+import simplegame.actions.ChallengeAnswer;
+import simplegame.actions.GetCharacterListAction;
+import simplegame.actions.MoveAction;
+import simplegame.objects.CharacterList;
+import simplegame.objects.GameBoard;
 
 public class SimpleRPZone
   extends MarauroaRPZone
@@ -30,6 +38,17 @@ public class SimpleRPZone
   public SimpleRPZone()
   {
     deletedList=new LinkedList();
+    //register our objects
+    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
+    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST_ENTRY,CharacterList.CharEntry.class);
+    RPObjectFactory.getFactory().register(GameBoard.TYPE_GAME_BOARD,GameBoard.class);
+    
+    //register our actions
+    RPActionFactory.getFactory().register(ChallengeAction.ACTION_CHALLENGE,ChallengeAction.class);
+    RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
+    RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
+    RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
+    
   }
   
   public Perception getPerception(RPObject.ID id)
