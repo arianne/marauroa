@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.5 2003/12/08 15:38:54 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.6 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -88,7 +88,7 @@ public class MessageFactory
 	      Message tmp=(Message) messageType.newInstance();
 	
 	 	  ByteArrayInputStream in=new ByteArrayInputStream(data);
-	 	  InputSerializer s=new InputSerializer(in);
+          InputSerializer s=new InputSerializer(in);
 	
 	      tmp.readObject(s);
 	      tmp.setAddress(source);

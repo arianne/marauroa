@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.31 2004/02/16 15:34:58 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.32 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,10 +198,26 @@ public class GameServerManager extends Thread
         /* Error: Player is already logged. */
         marauroad.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
 
-        /* Notify player of the event. */
-        MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.UNKNOWN_REASON);
-        netMan.addMessage(msgLoginNACK);
-        return;
+        /* Notify player of the event: We send him/her a new ACK */
+        int clientid=playerContainer.getClientidPlayer(msg.getUsername());
+        
+        if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
+          {
+          RPObject.ID id=playerContainer.getRPObjectID(clientid);           
+          RPObject object=rpMan.getRPObject(id);
+
+          if(rpMan.onExit(id))
+            {      
+            /* NOTE: Set the Object so that it is stored in Database */
+            playerContainer.setRPObject(clientid,object);  
+            }
+          }
+        else
+          {
+          marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
+          }
+
+        playerContainer.removeRuntimePlayer(clientid);
         }
             
       if(playerContainer.size()==GameConst.MAX_NUMBER_PLAYERS)

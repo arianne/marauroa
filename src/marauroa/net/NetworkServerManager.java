@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.14 2004/02/24 14:08:42 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.15 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,19 +241,10 @@ public class NetworkServerManager
  	    if(keepRunning)
  	      {
  	      ByteArrayOutputStream out=new ByteArrayOutputStream();
-/* NOTE: zlib support added.
- * - Add it to clients so that it can be enabled.
- * - Increment protocol version 
- *
- *         java.util.zip.GZIPOutputStream szlib=new java.util.zip.GZIPOutputStream(out);
- *      
- *         OutputSerializer s=new OutputSerializer(szlib);
- *         s.write(msg);
- *        szlib.finish();
- */
+
           OutputSerializer s=new OutputSerializer(out);     
  	      s.write(msg);
- 	      
+
  	      byte[] buffer=out.toByteArray();
   
           /*** Statistics ***/

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.19 2004/03/01 23:01:29 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.20 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -421,6 +421,36 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::hasPlayer","<");
+      }
+    }    
+
+  /** This method returns true if the database has the player pointed by username
+   *  @param username the name of the player we are asking if it exists.
+   *  @return true if player exists or false otherwise. */
+  public int getClientidPlayer(String username)
+    {
+    marauroad.trace("PlayerEntryContainer::getClientidPlayer",">");
+    
+    try
+      {
+      Iterator it=listPlayerEntries.entrySet().iterator();
+    
+      while(it.hasNext())
+        {
+        Map.Entry entry=(Map.Entry)it.next();
+        RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
+      
+        if(playerEntry.username.equals(username))
+          {
+          return playerEntry.clientid;
+          }      
+        }
+    
+      return -1;
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getClientidPlayer","<");
       }
     }    
 

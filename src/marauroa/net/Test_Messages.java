@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.9 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.10 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -646,7 +646,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CPerception",">");
     int clientid=14324;
     
-    MessageS2CPerception msg=new MessageS2CPerception(null, RPZone.Perception.TOTAL, new LinkedList(), new LinkedList());
+    LinkedList list=new LinkedList();
+    list.add(new RPObject(new RPObject.ID(12)));
+    list.add(new RPObject(new RPObject.ID(13)));
+    list.add(new RPObject(new RPObject.ID(14)));
+    list.add(new RPObject(new RPObject.ID(15)));
+    
+    MessageS2CPerception msg=new MessageS2CPerception(null, RPZone.Perception.TOTAL, list, new LinkedList());
     msg.setClientID(clientid);
     
     out=new ByteArrayOutputStream();
@@ -682,6 +688,7 @@ public class Test_Messages extends TestCase
       fail("Exception happened when serializing data in");
       }
     
+    assertEquals(result.getModifiedRPObjects(),list);
     assertEquals(Message.TYPE_S2C_PERCEPTION,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CPerception","<");

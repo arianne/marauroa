@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.12 2004/01/27 17:03:12 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.13 2004/03/02 19:16:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,11 +12,9 @@
  ***************************************************************************/
 package marauroa.net;
   
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import marauroa.game.RPObject;
 import marauroa.game.RPZone;
 import marauroa.*;
@@ -89,35 +87,46 @@ public class MessageS2CPerception extends Message
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    
-    out.write(typePerception);
-    out.write((int)modifiedRPObjects.size());
+  
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    java.util.zip.DeflaterOutputStream szlib=new java.util.zip.DeflaterOutputStream(array);
+    OutputSerializer ser=new OutputSerializer(szlib);          
+   
+    ser.write(typePerception);
+    ser.write((int)modifiedRPObjects.size());
     
     Iterator it_mod=modifiedRPObjects.iterator();
     while(it_mod.hasNext())
       {
-      out.write((RPObject)it_mod.next());
+      ser.write((RPObject)it_mod.next());
       }
 
-    out.write((int)deletedRPObjects.size());
+    ser.write((int)deletedRPObjects.size());
 
     Iterator it_del=deletedRPObjects.iterator();
     while(it_del.hasNext())
       {
-      out.write((RPObject)it_del.next());
+      ser.write((RPObject)it_del.next());
       }
+    
+    szlib.finish();
+
+    out.write(array.toByteArray());
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
-    marauroad.trace("MessageS2CPerception::readObject()",">");
     super.readObject(in);
     
-    typePerception=in.readByte();
+    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
+    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array);          
+    InputSerializer ser=new InputSerializer(szlib);
+    
+    typePerception=ser.readByte();
     modifiedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     
-    int mod=in.readInt();
+    int mod=ser.readInt();
 
     if(mod>TimeoutConf.MAX_ARRAY_ELEMENTS)
       {
@@ -127,10 +136,10 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
     for(int i=0;i<mod;++i)
       {
-      modifiedRPObjects.add(in.readObject(new RPObject()));
+      modifiedRPObjects.add(ser.readObject(new RPObject()));
       }
 
-    int del=in.readInt();
+    int del=ser.readInt();
 
     if(del>TimeoutConf.MAX_ARRAY_ELEMENTS)
       {
@@ -140,10 +149,8 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
-      deletedRPObjects.add(in.readObject(new RPObject()));
+      deletedRPObjects.add(ser.readObject(new RPObject()));
       }
-    
-    marauroad.trace("MessageS2CPerception::readObject()","<");
     }
     
   };
