@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.6 2004/11/21 12:56:22 root777 Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.7 2004/11/26 19:21:08 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,11 +66,29 @@ public class MessageS2CServerInfo extends Message
     {
     super.writeObject(out);
     out.write(contents);
-    
-    out.write(RPClass.size());    
+    int size = RPClass.size();
+
+    //sort out the default rp class if it is there
     for(Iterator<RPClass> it = RPClass.iterator(); it.hasNext();)
       {
-      out.write(it.next());
+      RPClass rp_class = it.next();
+      if("".equals(rp_class.getName()))
+        {
+        size--;
+        break;
+//        System.out.println("RpClass:<"+rp_class.getName()+">");
+//        System.out.println("--size: "+size);
+        }
+      }
+     
+    out.write(size);    
+    for(Iterator<RPClass> it = RPClass.iterator(); it.hasNext();)
+      {
+      RPClass rp_class = it.next();
+      if(!"".equals(rp_class.getName())) //sort out default class if it is there
+        {
+        out.write(rp_class);
+        }
       }
     }
     
