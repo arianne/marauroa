@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.35 2003/12/20 09:55:35 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.36 2003/12/20 10:43:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -151,7 +151,7 @@ public class SimpleGame
 							else if(obj.hasSlot("challenge"))
 							{
 								/* CASE 2: Player is challenged by another player. We choose the first player. */
-								CharacterList characterList=(CharacterList)obj.getSlot("challenge").get();
+								CharacterList characterList=new CharacterList(obj.getSlot("challenge").get());
 								addLog(""+characterList+"\n");
 								
 								String player=(String)characterList.CharacterIterator().next();

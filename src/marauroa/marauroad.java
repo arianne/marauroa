@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.19 2003/12/15 22:29:27 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.20 2003/12/20 10:43:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import marauroa.game.PlayerDatabase;
 import marauroa.game.PlayerDatabaseFactory;
 import marauroa.game.RPObject;
@@ -219,6 +219,23 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event)
     {
+    boolean found=false;
+    
+    Iterator it=onlyTracesFrom.iterator();
+    while(it.hasNext())
+      {
+      if(module.indexOf((String)it.next())!=-1)
+        {
+        found=true;
+        break;
+        }
+      }
+    
+    if(!found)
+      {
+      return;
+      }
+    
 	timestamp.setTime(System.currentTimeMillis());
 	String ts = formatter.format(timestamp);
     getMarauroa().message(ts+"\t"+event+"\t"+module);
@@ -226,9 +243,34 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event,String text)
     {
-	timestamp.setTime(System.currentTimeMillis());
+    boolean found=false;
+    
+    Iterator it=onlyTracesFrom.iterator();
+    while(it.hasNext())
+      {
+      if(module.indexOf((String)it.next())!=-1)
+        {
+        found=true;
+        break;
+        }
+      }
+    
+    if(!found)
+      {
+      return;
+      }
+   
+    timestamp.setTime(System.currentTimeMillis());
 	String ts = formatter.format(timestamp);
     getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
+    }
+  
+  private static List onlyTracesFrom;
+  
+  static
+    {
+    onlyTracesFrom=new LinkedList();
+    onlyTracesFrom.add("SimpleRPRuleProcessor");
     }
     
   public static void report(String text)
