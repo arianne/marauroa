@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.26 2004/01/07 11:21:50 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.27 2004/01/07 12:44:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -404,6 +404,8 @@ public class RPCode
       }
     }
   
+  /** This method is the one that collect the fame scores from viewers and assign
+   *  it to the winner. */
   public static void RequestFame()
     {
     marauroad.trace("RPCode::RequestFame",">");
@@ -459,6 +461,11 @@ public class RPCode
       {
       marauroad.trace("RPCode::RequestFame","<");
       }
+    }
+  
+  /** This method take care of initializing the arena for the next combat */
+  private static void SetUpNextCombat()
+    {
     }
   }
   
