@@ -1,2 +1,2 @@
-set LOCALCLASSPATH=.\lib\marauroa-0.02.jar 
+set LOCALCLASSPATH=.\lib\marauroa-@version@.jar 
 java -cp "%LOCALCLASSPATH%" marauroa.marauroad
