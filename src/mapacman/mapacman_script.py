@@ -49,10 +49,14 @@ class RealPythonRP(PythonRP):
         element=TimecountElement(ball.getInt("!respawn"),ball)
         self.__removed_elements.append(element)
     
+    def __addBall(self, ball):
+        self.__map.addZoneRPObject(ball.object)
+        self.__removed_elements.remove(ball)
+    
     def __foreachPlayer(self):
         for player in self.__online_players:
             if(canMove(player,self.__map,player.get("dir"))):
-                print "You move in that direction"
+                print 'You move in %s direction' % player.get("dir")
                 pos=move(player,self.__map)
                 if self.__map.hasZoneRPObject(pos):
                     object_in_pos=self.__map.getZoneRPObject(pos)
@@ -81,25 +85,27 @@ class RealPythonRP(PythonRP):
                             # kill the player
                             pass
             else:
-                print "You Can't move in that direction"
+                print 'You CAN\'T move in %s direction' % player.get("dir")
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
-        self.__foreachPlayer()
-        
         for object in self.__removed_elements:
             if object.timeout==0:
-                self.__map.addZoneRPObject(object.object)
+                self.__addBall(object)
             else:
                 object.timeout=object.timeout-1
 
         for object in self.__super_players:
             if object.timeout==0:
                 object.object.remove("super")
+                self.__super_players.remove(object)
             else:
                 object.timeout=object.timeout-1
                 object.put("super",object.timeout)
                 zone.modify(object)
+
+        self.__foreachPlayer()
+        
 
     def getPlayers(self,pos):
         list=[]
@@ -236,10 +242,10 @@ def move(player,map):
     elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
         x=x-1
         player.put("x",x)
-    elif dir=='S' and (y+1)<map.sizex() and map.get(x,y+1)<>'*':
+    elif dir=='S' and (y+1)<map.sizey() and map.get(x,y+1)<>'*':
         y=y+1
         player.put("y",y)
-    elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
+    elif dir=='E' and (x+1)<map.sizex() and map.get(x+1,y)<>'*':
         x=x+1
         player.put("x",x)
         
@@ -254,9 +260,9 @@ def canMove(player,map,dir):
         return 1
     elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
         return 1
-    elif dir=='S' and (y+1)<map.sizex() and map.get(x,y+1)<>'*':
+    elif dir=='S' and (y+1)<map.sizey() and map.get(x,y+1)<>'*':
         return 1
-    elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
+    elif dir=='E' and (x+1)<map.sizex() and map.get(x+1,y)<>'*':
         return 1
     else:
         return 0

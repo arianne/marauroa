@@ -238,6 +238,7 @@ public class nullClient extends Thread
                 }
 
 
+              map_objects.print(System.out,world_objects);
               /** Code here game **/
               int x=myRPObject.getInt("x");
               int y=myRPObject.getInt("y");
@@ -245,56 +246,107 @@ public class nullClient extends Thread
                 
               RPAction turn=new RPAction();
               turn.put("type","turn");
+              turn.put("dir",dir);
+              
+              boolean changed=true;
+              boolean do_crosspaths=false;
 
-              int i=0;
-              if((dir.equals("N") && map_objects.get(x,y-1)=='*')||
-                 (dir.equals("S") && map_objects.get(x,y+1)=='*')||
-                 (dir.equals("W") && map_objects.get(x-1,y)=='*')||
-                 (dir.equals("E") && map_objects.get(x+1,y)=='*'))
+              while(changed)
                 {
-              if(map_objects.get(x,y-1)=='*') i++;
-              if(map_objects.get(x,y+1)=='*') i++;
-              if(map_objects.get(x-1,y)=='*') i++;
-              if(map_objects.get(x+1,y)=='*') i++;
-              
-              System.out.println("Case :"+i);
-              
-              switch(i)
-                {
-                case 1:
-                  if(dir.equals("S")) {turn.put("dir","N");break;}
-                  if(dir.equals("N")) {turn.put("dir","S");break;}
-                  if(dir.equals("E")) {turn.put("dir","W");break;}
-                  if(dir.equals("W")) {turn.put("dir","E");break;}
-                case 2:
-                  String hor_dirs[]={"W","E"};
-                  String ver_dirs[]={"N","S"};
-                  
-                  if((dir.equals("N") && map_objects.get(x,y-1)=='*')||(dir.equals("S") && map_objects.get(x,y+1)=='*'))
+                changed=false;
+                
+                if((turn.get("dir").equals("N") && map_objects.get(x,y-1)=='*'))
+                  {
+                  System.out.println("Collision at N --> Goes W");
+                  turn.put("dir","W");
+                  changed=true;
+                  }
+                else if((turn.get("dir").equals("W") && map_objects.get(x-1,y)=='*'))
+                  {
+                  System.out.println("Collision at W --> Goes S");
+                  turn.put("dir","S");
+                  changed=true;
+                  }
+                else if((turn.get("dir").equals("S") && map_objects.get(x,y+1)=='*'))
+                  {
+                  System.out.println("Collision at S --> Goes E");
+                  turn.put("dir","E");
+                  changed=true;
+                  }
+                else if((turn.get("dir").equals("E") && map_objects.get(x+1,y)=='*'))
+                  {
+                  System.out.println("Collision at E --> Goes N");
+                  turn.put("dir","N");
+                  changed=true;
+                  }
+                
+                if(!changed && !dir.equals(turn.get("dir")) && (                
+                  ("NS".indexOf(dir)!=-1)==("NS".indexOf(turn.get("dir"))!=-1) || 
+                  ("WE".indexOf(dir)!=-1)==("WE".indexOf(turn.get("dir"))!=-1)))
+                  {
+                  System.out.println("Backtracking detected --> Rotating");
+                  String newdir=turn.get("dir");
+                  if(newdir.equals("N"))
                     {
-                    turn.put("dir",hor_dirs[Math.abs(rand.nextInt()%2)]);
-                    break;
+                    turn.put("dir","W");
                     }
-                  if((dir.equals("W") && map_objects.get(x-1,y)=='*')||(dir.equals("E") && map_objects.get(x+1,y)=='*'))
+                  else if(newdir.equals("W"))
                     {
-                    turn.put("dir",ver_dirs[Math.abs(rand.nextInt()%2)]);
-                    break;
+                    turn.put("dir","S");
                     }
-                case 3:
-                  String dirs[]={"N","S","W","E"};
-                  turn.put("dir",dirs[Math.abs(rand.nextInt()%4)]);
-                  break;
+                  else if(newdir.equals("S"))
+                    {
+                    turn.put("dir","E");
+                    }
+                  else if(newdir.equals("E"))
+                    {
+                    turn.put("dir","N");
+                    }                  
+                  }
+                
+                                
+                int i=0;
+                if(map_objects.get(x,y-1)=='*') i++;
+                if(map_objects.get(x,y+1)=='*') i++;
+                if(map_objects.get(x-1,y)=='*') i++;
+                if(map_objects.get(x+1,y)=='*') i++;
+                
+                if(!do_crosspaths && (i==0 || i==1))
+                  {
+                  System.out.println("Crosspaths detected --> Randomizing");
+                  if(dir.equals("N"))
+                    {
+                    String randdir[]={"N","W","W","E","E"};
+                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+                    do_crosspaths=true;
+                    }
+                  else if(dir.equals("S"))
+                    {
+                    String randdir[]={"S","W","E","W","E"};
+                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+                    do_crosspaths=true;
+                    }
+                  else if(dir.equals("W"))
+                    {
+                    String randdir[]={"W","N","S","N","S"};
+                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+                    do_crosspaths=true;
+                    }
+                  else if(dir.equals("E"))
+                    {
+                    String randdir[]={"N","S","N","S","E"};
+                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+                    do_crosspaths=true;
+                    }
+                  }
                 }
 
-              if(turn.size()>1)
+              if(turn.size()>1 && !turn.get("dir").equals(dir))
                 {
                 Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
                 msgTurn.setClientID(clientid);
                 netMan.addMessage(msgTurn);
                 }
-                }
-                
-              map_objects.print(System.out,world_objects);
               }
             }
           }
