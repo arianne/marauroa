@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.4 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.5 2004/05/15 15:06:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,6 +106,8 @@ public class PerceptionHandler
       
     public int onException(Exception e)
       {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
       return 0;
       }      
     }
@@ -214,7 +216,7 @@ public class PerceptionHandler
         RPObject object=(RPObject)it.next();
         if(!listener.onAdded(object))
           {
-          world.put(object.get("id"),object);    
+          world.put(object.getID(),object);    
           }
         }
       }
@@ -238,7 +240,7 @@ public class PerceptionHandler
         RPObject object=(RPObject)it.next();
         if(!listener.onDeleted(object))
           { 
-          world.remove(object.get("id"));    
+          world.remove(object.getID());    
           }
         }
       }
@@ -261,7 +263,7 @@ public class PerceptionHandler
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.get("id"));    
+        RPObject w_object=(RPObject)world.get(object.getID());    
         if(!listener.onModifiedDeleted(w_object,object))
           {
           w_object.applyDifferences(null,object);        
@@ -272,7 +274,7 @@ public class PerceptionHandler
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.get("id"));    
+        RPObject w_object=(RPObject)world.get(object.getID());    
         if(!listener.onModifiedAdded(w_object,object))
           {
           w_object.applyDifferences(object,null);        
@@ -301,14 +303,12 @@ public class PerceptionHandler
         {
         if(!listener.onMyRPObject(true,myObject))
           {
-          RPObject w_object=(RPObject)world.get(myObject.get("id"));    
-          w_object.removeAllHidden();
-          w_object.applyDifferences(myObject,null);        
+          world.put(myObject.getID(),myObject);    
           }        
         }
       else
         {
-        listener.onMyRPObject(false,myObject);
+        listener.onMyRPObject(false,null);
         }
       }
     catch(Exception e)

@@ -19,6 +19,53 @@ public class nullClient extends Thread
     password=p;
     character=c;
     }
+  
+  private void gameLogic(Map world_objects, RPObject.ID myID, NetworkClientManager netMan, Message msg) throws Exception
+    {
+    Random rand=new Random();
+
+    RPObject player=(RPObject)world_objects.get(myID);
+    if(!player.has("fighting") && !player.has("requested"))
+      {
+      System.out.println("Requesting fight");
+      RPAction action=new RPAction();
+      action.put("type","request_fight");
+      action.put("gladiator_id",player.getSlot("!gladiators").get().get("id"));
+      
+      MessageC2SAction mesAct=new MessageC2SAction(msg.getAddress(),action);
+      netMan.addMessage(mesAct);          
+      }
+    else if(player.has("fighting"))
+      {
+      System.out.println("Player is on Arena");
+      RPObject arena=null;
+      Iterator it=world_objects.values().iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(object.get("type").equals("arena"))
+          {
+          arena=object;
+          break;
+          }
+        }          
+      
+      if(arena!=null && arena.get("status").equals("fighting"))
+        {
+        System.out.println("Player changes fight mode");
+        
+        String[] modes={"rock","paper","scissor"};
+        
+        RPAction action=new RPAction();
+        action.put("type","fight_mode");
+        action.put("fight_mode",modes[Math.abs(rand.nextInt()%3)]);
+        action.put("gladiator_id",player.getSlot("!gladiators").get().get("id"));
+        
+        MessageC2SAction mesAct=new MessageC2SAction(msg.getAddress(),action);
+        netMan.addMessage(mesAct);          
+        }
+      }
+    }
    
   public void run()
     {
@@ -58,6 +105,8 @@ public class nullClient extends Thread
           throw new Exception();
           }
         }
+        
+      RPObject.ID myID=null;
 
       Message msgCC=new MessageC2SChooseCharacter(address,character);
 
@@ -70,6 +119,7 @@ public class nullClient extends Thread
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
+          myID=((MessageS2CChooseCharacterACK)msg).getObjectID();
           ++recieved;
           }
         else if(msg instanceof MessageS2CMap)
@@ -96,17 +146,20 @@ public class nullClient extends Thread
       while(cond)
         {
         Message msg=null;
+
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CPerception)
           {
-          System.out.println("foo bar");
           MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
           reply.setClientID(clientid);
           netMan.addMessage(reply);
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+          System.out.println(this.getName()+" -- Recieved perception: "+msgPer.getTypePerception());
           handler.apply(msgPer,world_objects);
-          }
+          
+          gameLogic(world_objects, myID, netMan, msg);
+          }        
 
         StringBuffer world=new StringBuffer("World content: \n");
     
@@ -152,7 +205,7 @@ public class nullClient extends Thread
     {
     try
       {
-      int num=6;
+      int num=28;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("miguel","qwerty","miguel");
@@ -161,6 +214,29 @@ public class nullClient extends Thread
       test[3]=new nullClient("bot_9","nopass","bot_9");
       test[4]=new nullClient("bot_10","nopass","bot_10");
       test[5]=new nullClient("bot_11","nopass","bot_11");
+
+      test[6]=new nullClient("overload_0","overload","overload_0");
+      test[7]=new nullClient("overload_1","overload","overload_1");
+      test[8]=new nullClient("overload_2","overload","overload_2");
+      test[9]=new nullClient("overload_3","overload","overload_3");
+      test[10]=new nullClient("overload_4","overload","overload_4");
+      test[11]=new nullClient("overload_5","overload","overload_5");
+      test[12]=new nullClient("overload_6","overload","overload_6");
+      test[13]=new nullClient("overload_7","overload","overload_7");
+      test[14]=new nullClient("overload_8","overload","overload_8");
+      test[15]=new nullClient("overload_9","overload","overload_9");
+      test[16]=new nullClient("overload_10","overload","overload_10");
+      test[17]=new nullClient("overload_11","overload","overload_11");
+      test[18]=new nullClient("overload_12","overload","overload_12");
+      test[19]=new nullClient("overload_13","overload","overload_13");
+      test[20]=new nullClient("overload_14","overload","overload_14");
+      test[21]=new nullClient("overload_15","overload","overload_15");
+      test[22]=new nullClient("overload_16","overload","overload_16");
+      test[23]=new nullClient("overload_17","overload","overload_17");
+      test[24]=new nullClient("overload_18","overload","overload_18");
+      test[25]=new nullClient("overload_19","overload","overload_19");
+      test[26]=new nullClient("overload_20","overload","overload_20");
+      test[27]=new nullClient("overload_21","overload","overload_21");
       
       for(int i=0;i<num;++i)
         {

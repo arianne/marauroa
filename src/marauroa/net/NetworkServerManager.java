@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.21 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.22 2004/05/15 15:06:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -276,7 +276,11 @@ public final class NetworkServerManager
             socket.send(pkt);
             marauroad.trace("NetworkServerManagerWrite::write","D","Sent packet "+(i+1)+" of "+total);
             }
-          marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
+          
+          if(marauroad.loggable("NetworkServerManagerWrite::write","D"))
+            {
+            marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
+            }
           }
         }
       catch(IOException e)
