@@ -52,6 +52,29 @@ public class Test_GameServerManager extends TestCase
       }
     }
     
+  private void finalizeEnviroment()
+    {
+    gameMan.finish();
+    
+    /* To break the wait on a message */
+    InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
+    netMan.addMessage(new MessageC2SLogout(address));
+    
+    netServerMan.finish();
+
+    try
+      {
+      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("MemoryPlayerDatabase");
+      playerDatabase.removeCharacter("Test Player", "Son Goku");
+      playerDatabase.removePlayer("Test Player");
+      }
+    catch(Exception e)
+      {
+      }
+    
+    assertTrue("Shutdown correctly",true);
+    }    
+
   public void testMainProcedures()
     {
 	createEnviroment();
@@ -134,16 +157,17 @@ public class Test_GameServerManager extends TestCase
       }
     }  
 
-  private void finalizeEnviroment()
+  public void testMainProceduresFailures()
     {
-    gameMan.finish();
-    
-    /* To break the wait on a message */
-    InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
-    netMan.addMessage(new MessageC2SLogout(address));
-    
-    netServerMan.finish();
-    
-    assertTrue("Shutdown correctly",true);
-    }    
+	createEnviroment();
+	
+	try
+	  {
+	  }
+    finally
+      {
+      finalizeEnviroment();
+      }
+    }  
+	
   }
