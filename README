@@ -235,7 +235,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.36 
+0.40 Jun XX, 2004
+
+
+0.36 Jun 04, 2004
 - Database modified to stored hashed passwords
 - Fixed the two turns delay on actions
 - Compressed RPMap message
@@ -243,7 +246,7 @@ Changelog
 - Improved mapacman support
 - Fixed bug that happens when client exits on timeout
 
-0.35
+0.35   May 25, 2004
 - Changed RPMap message
 - Client can try to resync using old perceptions
 - Fixed bugs at mapacman_script.py 
