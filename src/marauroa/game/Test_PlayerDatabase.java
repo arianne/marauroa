@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerDatabase.java,v 1.16 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: Test_PlayerDatabase.java,v 1.17 2004/03/25 22:20:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,13 +144,18 @@ public class Test_PlayerDatabase extends TestCase
       try
         {
         playerDatabase.removePlayer(trans,"Test Player");
+        assertFalse(playerDatabase.hasPlayer(trans,"Test Player"));
         }
-      catch(PlayerDatabase.PlayerNotFoundException epnf)
+      catch(Exception epnf)
         {
         fail("Player has not been added");
         }
-      assertFalse(playerDatabase.hasPlayer(trans,"Test Player"));
       }
+    catch(PlayerDatabase.GenericDatabaseException e)
+      {
+      fail(e.getMessage());      
+      }
+      
     try
       {
       playerDatabase.addCharacter(trans,"A new Test Player", "Test Character", new RPObject());
@@ -185,7 +190,7 @@ public class Test_PlayerDatabase extends TestCase
         {
         playerDatabase.removePlayer(trans,"A new Test Player");
         }
-      catch(PlayerDatabase.PlayerNotFoundException epnf)
+      catch(Exception epnf)
         {
         fail("Player has not been added");
         }
@@ -226,6 +231,11 @@ public class Test_PlayerDatabase extends TestCase
       {
       assertTrue(true);
       }
+    catch(PlayerDatabase.GenericDatabaseException e)
+      {
+      fail(e.getMessage());      
+      }     
+
     try
       {
       playerDatabase.hasCharacter(trans,"A new Test Player", "Test Character");
@@ -289,6 +299,11 @@ public class Test_PlayerDatabase extends TestCase
         {
         fail("Player has not been added");
         }
+      catch(PlayerDatabase.GenericDatabaseException e)
+        {
+        fail(e.getMessage());      
+        }
+      
       }
     try
       {
@@ -327,6 +342,10 @@ public class Test_PlayerDatabase extends TestCase
         {
         fail("Player has not been added");
         }
+      catch(PlayerDatabase.GenericDatabaseException e)
+        {
+        fail(e.getMessage());      
+        }      
       }
     marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions","<");
     }

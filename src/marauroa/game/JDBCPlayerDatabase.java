@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.24 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.26 2004/03/25 22:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,7 +64,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     {
     this.connInfo=connInfo;
     random=new Random();
-    initDB();
+    runDBScript("marauroa_init.sql");
     }
   
   private static PlayerDatabase resetDatabaseConnection() throws Exception
@@ -106,7 +106,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method returns true if the database has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
-  public boolean hasPlayer(Transaction trans, String username)
+  public boolean hasPlayer(Transaction trans, String username) throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::hasPlayer",">");
     try
@@ -136,8 +136,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasPlayer","X",sqle.getMessage());
-      /* TODO: should drop exception */
-      return false;
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
       {
@@ -149,7 +148,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username the name of the player from which we are requesting the list of characters.
    *  @return an array of String with the characters
    *  @throw PlayerNotFoundException if that player does not exists. */
-  public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException
+  public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getCharacterList",">");
     try
@@ -181,7 +180,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getCharacterList","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -198,7 +197,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param password is a string used to verify access.
    *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
-  public void addPlayer(Transaction trans, String username, String password, String email) throws PlayerAlreadyAddedException
+  public void addPlayer(Transaction trans, String username, String password, String email) throws PlayerAlreadyAddedException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addPlayer",">");
     try
@@ -230,7 +229,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addPlayer","X",sqle.getMessage());
-      throw new PlayerAlreadyAddedException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
       {
@@ -241,7 +240,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** This method remove the player with usernae from database.
    *  @param username is the name of the player
    *  @throws PlayerNotFoundException if the player doesn't exist in database. */
-  public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException
+  public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::removePlayer",">");
     try
@@ -265,7 +264,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removePlayer","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -283,7 +282,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player owns.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
-  public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException
+  public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::removeCharacter",">");
     try
@@ -310,7 +309,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -328,7 +327,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param password is the string used to verify access.
    *  @return true if username/password is correct, false otherwise. */
-  public boolean verifyAccount(Transaction trans, String username, String password)
+  public boolean verifyAccount(Transaction trans, String username, String password) throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::verifyAccount",">");
     try
@@ -358,7 +357,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","X",sqle.getMessage());
-      return false;
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
       {
@@ -370,7 +369,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @return an array of String containing the login events.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException
+  public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getLoginEvent",">");
     try
@@ -407,7 +406,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -425,7 +424,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character
    *  @return true if player has the character or false if it hasn't
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public boolean hasCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException
+  public boolean hasCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::hasCharacter",">");
     try
@@ -456,7 +455,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasCharacter","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -474,7 +473,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param source the IP address of the player
    *  @param correctLogin true if the login has been correct.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException
+  public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent",">");
     try
@@ -493,7 +492,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -632,7 +631,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::setRPObject","X",sqle.getMessage());
-      throw new CharacterNotFoundException(character);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -687,7 +686,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X",sqle.getMessage());
-      throw new PlayerNotFoundException(username);
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
@@ -743,7 +742,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::reInitDB",">");
     try
       {
-      return (dropDB() && initDB());
+      return (runDBScript("marauroa_drop.sql") && runDBScript("marauroa_init.sql"));
       }
     catch(GenericDatabaseException e)
       {
@@ -756,62 +755,20 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
-  private boolean dropDB() throws GenericDatabaseException
+  private boolean runDBScript(String file) throws GenericDatabaseException
     {
-    marauroad.trace("JDBCPlayerDatabase::dropDB",">");
+    marauroad.trace("JDBCPlayerDatabase::runDBScript",">");
 
     boolean ret = true;
     JDBCTransaction transaction = (JDBCTransaction)getTransaction();
     Connection con = transaction.getConnection();
+    BufferedReader in=null;
 
     try
       {
       Statement stmt = con.createStatement();
-      String query = "drop table if exists player";
-
-      stmt.addBatch(query);
-      query = "drop table if exists characters";
-      stmt.addBatch(query);
-      query = "drop table if exists loginEvent";
-      stmt.addBatch(query);
-
-      int ret_array[] = stmt.executeBatch();
-      
-      for (int i = 0; i < ret_array.length; i++)
-        {
-        if(ret_array[i]<0)
-          {
-          ret = false;
-          break;
-          }
-        }
-
-      return ret;
-      }
-    catch (SQLException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::dropDB","X",e.getMessage());
-      throw new GenericDatabaseException(e.getMessage());
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::dropDB","<");
-      }
-    }
-  
-  private boolean initDB() throws GenericDatabaseException
-    {
-    marauroad.trace("JDBCPlayerDatabase::initDB",">");
-
-    boolean ret = true;
-    JDBCTransaction transaction = (JDBCTransaction)getTransaction();
-    Connection con = transaction.getConnection();
-
-    try
-      {
-      Statement stmt = con.createStatement();
-      InputStream init_file=getClass().getClassLoader().getResourceAsStream("marauroa_init.sql");
-      BufferedReader in= new BufferedReader(new InputStreamReader(init_file));
+      InputStream init_file=getClass().getClassLoader().getResourceAsStream(file);
+      in= new BufferedReader(new InputStreamReader(init_file));
       
       String line;
       StringBuffer is=new StringBuffer();
@@ -821,7 +778,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         if(line.indexOf(';')!=-1)
           {
           String query=is.toString();
-          marauroad.trace("JDBCPlayerDatabase::initDB","D",query);
+          marauroad.trace("JDBCPlayerDatabase::runDBScript","D",query);
           stmt.addBatch(query);
           is=new StringBuffer();
           }
@@ -842,12 +799,24 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Exception e)
       {
-      marauroad.trace("JDBCPlayerDatabase::initDB","X",e.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::runDBScript","X",e.getMessage());
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
-      marauroad.trace("JDBCPlayerDatabase::initDB","<");
+      try
+        {
+        if(in!=null)
+          {
+          in.close();
+          }
+        }
+      catch(IOException e)
+        {
+        }
+      
+        
+      marauroad.trace("JDBCPlayerDatabase::runDBScript","<");
       }
     }
   
@@ -880,7 +849,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       connInfo.put("charSet", "UTF-8");
 
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-
       conn.setAutoCommit(false);
       return conn;
       }

@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.9 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: PlayerDatabase.java,v 1.10 2004/03/25 22:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,7 +25,7 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @param username is the name of the player
    *  @param password is the string used to verify access.
    *  @return true if username/password is correct, false otherwise. */
-  public boolean verifyAccount(Transaction trans, String username, String password);
+  public boolean verifyAccount(Transaction trans, String username, String password) throws GenericDatabaseException;
   /** This method returns the number of Players that exist on database
    *  @return the number of players that exist on database */
   public int getPlayerCount(Transaction trans) throws GenericDatabaseException;
@@ -34,17 +34,17 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @param source the IP address of the player
    *  @param correctLogin true if the login has been correct.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(Transaction trans, String username,InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException;
+  public void addLoginEvent(Transaction trans, String username,InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException, GenericDatabaseException;
   /** This method returns the list of Login events as a array of Strings
    *  @param username is the name of the player
    *  @return an array of String containing the login events.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException;
+  public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
   /** This method returns the lis of character that the player pointed by username has.
    *  @param username the name of the player from which we are requesting the list of characters.
    *  @return an array of String with the characters
    *  @throw PlayerNotFoundException if that player does not exists. */
-  public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException;
+  public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
   /** This method is the opposite of getRPObject, and store in Database the object for
    *  an existing player and character.
    *  The difference between setRPObject and addCharacter are that setRPObject update it
@@ -71,22 +71,22 @@ public interface PlayerDatabase extends GameDatabaseException
   /** This method returns true if the database has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
-  public boolean hasPlayer(Transaction trans, String username);
+  public boolean hasPlayer(Transaction trans, String username) throws GenericDatabaseException;
   /** This method add the player to database with username and password as identificator.
    *  @param username is the name of the player
    *  @param password is a string used to verify access.
    *  @throws PlayerAlreadyAddedExceptio if the player is already in database */
-  public void addPlayer(Transaction trans, String username, String password,String email) throws PlayerAlreadyAddedException;
+  public void addPlayer(Transaction trans, String username, String password,String email) throws PlayerAlreadyAddedException, GenericDatabaseException;
   /** This method remove the player with usernae from database.
    *  @param username is the name of the player
    *  @throws PlayerNotFoundException if the player doesn't exist in database. */
-  public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException;
+  public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
   /** This method returns true if the player has that character or false if it hasn't
    *  @param username is the name of the player
    *  @param character is the name of the character
    *  @return true if player has the character or false if it hasn't
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
-  public boolean hasCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException;
+  public boolean hasCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, GenericDatabaseException;
   /** This method add a character asociated to a player.
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player wants to add.
@@ -99,7 +99,7 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @param character is the name of the character that the username player owns.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
-  public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException;
+  public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
   /**
    *  This method returns a valid connection
    *  @return a valid Transaction

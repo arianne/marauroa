@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: RPActionList.java,v 1.8 2004/03/25 22:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,7 @@ public class RPActionList
     return(new RPActionIterator(actionsList.iterator()));
     }
   /** An iterator for a RPActionList */
-  public class RPActionIterator implements Iterator
+  public static class RPActionIterator implements Iterator
     {
     private Iterator actionsIter;
     /** Constructor */

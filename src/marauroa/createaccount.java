@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.15 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.16 2004/03/25 22:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,7 +76,7 @@ class createaccount
     if(username==null) return (1);
     if(password==null) return (1);
     if(email==null) return (1);
-    if(password==null) return (1);
+    if(character==null) return (1);
     if(character_model==null) return (1);
     if(gladiator==null) return (1);
     if(gladiator_model==null) return (1);

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.19 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.20 2004/03/25 22:20:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -172,8 +172,9 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
     myRPObject=(RPObject)ser.readObject(myRPObject);
     }
+    
   // just counts the bytes written into underlaying outputstream
-  private final class ByteCounterOutputStream
+  private final static class ByteCounterOutputStream
     extends OutputStream
     {
     OutputStream os;

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.35 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.36 2004/03/25 22:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.*;
 
 /** The GameServerManager is a active entity of the marauroa.game package,
  *  it is in charge of processing all the messages and modify PlayerEntry Container accordingly. */
-public class GameServerManager extends Thread
+public final class GameServerManager extends Thread
   {
   private NetworkServerManager netMan;  
   private RPServerManager rpMan;

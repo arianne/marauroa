@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.16 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.17 2004/03/25 22:20:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.*;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
-public class NetworkServerManager
+public final class NetworkServerManager
   {
   /** The server socket from where we recieve the packets. */
   private DatagramSocket socket;

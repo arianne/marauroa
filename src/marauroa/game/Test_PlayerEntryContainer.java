@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.13 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.14 2004/03/25 22:20:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,16 +117,7 @@ public class Test_PlayerEntryContainer extends TestCase
       container.removeRuntimePlayer(clientid);
       assertEquals(container.size(),0);
       }
-    catch(PlayerEntryContainer.NoSuchClientIDException e)
-      {
-      fail(e.getMessage());
-      }
-    catch(PlayerEntryContainer.NoSuchPlayerException e)
-      {
-      e.printStackTrace();
-      fail(e.getMessage());
-      }
-    catch(PlayerEntryContainer.NoSuchCharacterException e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }
