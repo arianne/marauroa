@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.87 2004/05/16 10:37:41 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.88 2004/05/19 20:56:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import marauroa.game.*;
  */
 public class marauroad extends Thread
   {
-  final private static boolean DEBUG=false;
+  final private static boolean DEBUG=true;
   final private static String VERSION="0.34";
   
   private static PrintWriter out;
@@ -288,7 +288,7 @@ public class marauroad extends Thread
     for(int i=0;i<ste.length;++i)
       {
       sb.append("  "+ste[i].toString()+"\n");
-      }    
+      }
     
     trace(module,"X",exception.getMessage());
     trace(module,"X",sb.toString());

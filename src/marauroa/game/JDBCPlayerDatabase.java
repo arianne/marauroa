@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.39 2004/05/10 15:40:14 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.40 2004/05/19 20:56:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -329,7 +329,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  active,inactive,banned
    *  don't forget to commit the changes.
    * @param username is the name of the player
-   * @param status   the new status of the account 
+   * @param status   the new status of the account
   **/
   public void setAccountStatus(Transaction trans, String username, String status)
     throws GenericDatabaseException
@@ -345,17 +345,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       Statement stmt = connection.createStatement();
       String query = "update player set status='"+status+"' where username like '"+username+"'";
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","D",query);
-      stmt.executeUpdate(query);      
+      stmt.executeUpdate(query);
     }
     catch(SQLException sqle)
     {
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","X",sqle.getMessage());
       throw new GenericDatabaseException(sqle.getMessage());
-    }			    
+    }
     finally
     {
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","<");
-    }    
+    }
   }
   
   /** This method returns true if the username/password match with any of the accounts in
@@ -383,17 +383,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       if(result.next())
         {
-	    String account_status = result.getString(1);
-	    
+        String account_status = result.getString(1);
+        
         if("active".equals(account_status))
-          {	  
+          {
           return true;
           }
-	    else
-	      {
-	      marauroad.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
-	      return false;
-	      }
+        else
+          {
+          marauroad.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
+          return false;
+          }
         }
         
       return false;
@@ -1370,9 +1370,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException e)
       {
-      marauroad.thrown("JDBCPlayerDatabase::addToRPZone","X",e);      
+      marauroad.thrown("JDBCPlayerDatabase::addToRPZone","X",e);
       throw e;
-      }      
+      }
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
@@ -1402,32 +1402,32 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException e)
       {
-      marauroad.thrown("JDBCPlayerDatabase::hasInRPZone","X",e);      
+      marauroad.thrown("JDBCPlayerDatabase::hasInRPZone","X",e);
       throw e;
-      }      
+      }
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
       }
     }
 
-  public void removeFromRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+  public void removeFromRPZone(Transaction trans, RPObject.ID id) throws SQLException, Attributes.AttributeNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::removeFromRPZone",">");
     try
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "delete from rpzone where object_id='"+object.get("id")+"'";
+      String query = "delete from rpzone where object_id='"+id.getObjectID()+"'";
 
       marauroad.trace("JDBCRPObjectDatabase::removeFromRPZone","D",query);
       stmt.execute(query);
       }
     catch(SQLException e)
       {
-      marauroad.thrown("JDBCPlayerDatabase::removeFromRPZone","X",e);      
+      marauroad.thrown("JDBCPlayerDatabase::removeFromRPZone","X",e);
       throw e;
-      }      
+      }
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::removeFromRPZone","<");

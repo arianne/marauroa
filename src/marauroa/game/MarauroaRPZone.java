@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.47 2004/05/10 15:40:14 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.48 2004/05/19 20:56:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,14 +44,7 @@ public class MarauroaRPZone implements RPZone
       rpobjectDatabase=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
       transaction=rpobjectDatabase.getTransaction();
       
-      JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
-      while(it.hasNext())
-        {
-        RPObject.ID id=it.next();
-        RPObject object=rpobjectDatabase.loadRPObject(transaction,id);
-        
-        add(object);        
-        }
+      loadWorld();
       }
     catch(Exception e)
       {
@@ -61,13 +54,25 @@ public class MarauroaRPZone implements RPZone
       }
     }
   
+  protected void loadWorld() throws Exception
+    {
+    JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
+    while(it.hasNext())
+      {
+      RPObject.ID id=it.next();
+      RPObject object=rpobjectDatabase.loadRPObject(transaction,id);
+        
+      add(object);
+      }
+    }
+  
   public void add(RPObject object) throws RPObjectInvalidException
     {
     try
       {
       RPObject.ID id=new RPObject.ID(object);
       
-      object.resetAddedAndDeleted();      
+      object.resetAddedAndDeleted();
 
       objects.put(id,object);
       perception.added(object);
@@ -88,7 +93,7 @@ public class MarauroaRPZone implements RPZone
   
   public void modify(RPObject object) throws RPObjectInvalidException
     {
-    try 
+    try
       {
       /** Uncoment to disable Delta-delta: */
       boolean already_added=false;
@@ -96,7 +101,7 @@ public class MarauroaRPZone implements RPZone
       Iterator it=modified.iterator();
       while(it.hasNext() && !already_added)
         {
-        RPObject previous=(RPObject)it.next();        
+        RPObject previous=(RPObject)it.next();
         if(previous.get("id").equals(object.get("id")))
           {
           already_added=true;
@@ -106,14 +111,14 @@ public class MarauroaRPZone implements RPZone
       if(!already_added)
         {
         modified.add(object);
-        }      
+        }
       }
     catch(Exception e)
       {
       throw new RPObjectInvalidException(e.getMessage());
       }
     }
-	
+    
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
     if(objects.containsKey(id))
@@ -123,7 +128,7 @@ public class MarauroaRPZone implements RPZone
 
       try
         {
-        rpobjectDatabase.removeFromRPZone(transaction,object);
+        rpobjectDatabase.removeFromRPZone(transaction,id);
         transaction.commit();
         }
       catch(Exception e)
@@ -172,7 +177,7 @@ public class MarauroaRPZone implements RPZone
       
     return new RPObject(id);
     }
-	
+    
   public Iterator iterator()
     {
     return objects.values().iterator();
@@ -206,7 +211,7 @@ public class MarauroaRPZone implements RPZone
         while(it.hasNext())
           {
           try
-            {          
+            {
             prebuildDeltaPerception.modified(((RPObject)it.next()));
             }
           catch(Exception e)
@@ -242,7 +247,7 @@ public class MarauroaRPZone implements RPZone
       ((RPObject)it.next()).resetAddedAndDeleted();
       }
     }
-	
+    
   public long size()
     {
     return objects.size();
@@ -251,7 +256,7 @@ public class MarauroaRPZone implements RPZone
   public void print(PrintStream out)
     {
     Iterator it=iterator();
-		
+        
     while(it.hasNext())
       {
       RPObject object=(RPObject)it.next();

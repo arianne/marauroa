@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPZone.java,v 1.2 2004/05/16 10:37:40 arianne_rpg Exp $ */
+/* $Id: mapacmanRPZone.java,v 1.3 2004/05/19 20:56:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,5 +24,25 @@ public class mapacmanRPZone extends MarauroaRPZone
     super();
     marauroad.trace("mapacmanRPZone::mapacmanRPZone",">");
     marauroad.trace("mapacmanRPZone::mapacmanRPZone","<");
+    }
+  
+  protected void loadWorld() throws Exception
+    {
+    JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
+    while(it.hasNext())
+      {
+      RPObject.ID id=it.next();
+      
+      try
+        {
+        rpobjectDatabase.removeFromRPZone(transaction,id);
+        transaction.commit();
+        }
+      catch(Exception e)
+        {
+        transaction.rollback();
+        throw new RPObjectNotFoundException(id);
+        }
+      }
     }
   }

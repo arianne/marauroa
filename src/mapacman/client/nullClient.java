@@ -20,6 +20,31 @@ public class nullClient extends Thread
     public ClientMap(List mapData) throws Exception
       {
       /** TODO: Intepret and apply the mapData */
+      int maxv=Integer.MAX_VALUE, maxh=Integer.MAX_VALUE;
+      Iterator it=mapData.iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(object.getInt("x")>maxh) maxh=object.getInt("x");
+        if(object.getInt("y")>maxv) maxv=object.getInt("y");
+        }
+        
+      content=new char[maxh*maxv];
+      
+      it=mapData.iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(object.get("type").equals("block"))
+          {
+          put(object.getInt("x"),object.getInt("y"),'*');
+          }
+        }
+      }
+      
+    private void put(int x,int y, char value)
+      {
+      content[y*sizex+x]=value;
       }
     
     public char get(int x,int y)
@@ -93,7 +118,7 @@ public class nullClient extends Thread
   private RPObject myRPObject;
   private Map world_objects;
   private ClientMap map_objects;
-  private Random rand;      
+  private Random rand;
   private NetworkClientManager netMan;
   
   public nullClient(String u, String p, String c) throws SocketException
@@ -197,7 +222,7 @@ public class nullClient extends Thread
           return 0;
           }
         
-        public boolean onMyRPObject(boolean changed,RPObject object)          
+        public boolean onMyRPObject(boolean changed,RPObject object)
           {
           if(changed)
             {
@@ -301,8 +326,8 @@ public class nullClient extends Thread
         changed=true;
         }
       
-      if(!changed && !dir.equals(turn.get("dir")) && (                
-        ("NS".indexOf(dir)!=-1)==("NS".indexOf(turn.get("dir"))!=-1) || 
+      if(!changed && !dir.equals(turn.get("dir")) && (
+        ("NS".indexOf(dir)!=-1)==("NS".indexOf(turn.get("dir"))!=-1) ||
         ("WE".indexOf(dir)!=-1)==("WE".indexOf(turn.get("dir"))!=-1)))
         {
         System.out.println("Backtracking detected --> Rotating");
@@ -322,7 +347,7 @@ public class nullClient extends Thread
         else if(newdir.equals("E"))
           {
           turn.put("dir","N");
-          }                  
+          }
         }
         
                         

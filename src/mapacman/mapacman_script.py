@@ -24,7 +24,7 @@ class RealPythonRP(PythonRP):
         self.__map=mapacmanRPMap(self,pacman_mapfile)
         
     def getZone(self):
-        return self.__zone    
+        return self.__zone
 
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants
@@ -322,8 +322,20 @@ class mapacmanRPMap:
         return self.__respawnPoints[self.__last_respawnPoints]
     
     def serializeMap(self):
-        #TODO: Send a list of RPObjects
-        return None
+        def createBlock(pos):
+            object=RPObject()
+            object.put("x",pos[0])
+            object.put("y",pos[1])
+            object.put("type","block")
+            return object
+            
+        list=java.util.LinkedList()
+        for j in grid:
+            for i in grid[j]:
+                if (grid[j])[i]=='*':
+                    list.add(createBlock((i,j)))
+
+        return list
         
 #
 # A few constants to make things more beautiful
