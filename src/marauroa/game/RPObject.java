@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.38 2004/05/07 13:50:33 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.39 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -69,7 +69,7 @@ public class RPObject extends Attributes
         }
       catch(Exception e)
         {
-        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
         }
       }       
     
@@ -89,7 +89,7 @@ public class RPObject extends Attributes
         }
       catch(Exception e)
         {
-        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
         }
       }       
     
@@ -688,7 +688,7 @@ public class RPObject extends Attributes
           }
         catch (RPObject.SlotAlreadyAddedException e)
           {
-          marauroad.trace("RPObject::fromXML","X",e.getMessage());
+          marauroad.thrown("RPObject::fromXML","X",e);
           }
         }
       }

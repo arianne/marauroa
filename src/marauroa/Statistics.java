@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.23 2004/04/19 18:07:09 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.24 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,7 +112,7 @@ public class Statistics
       }
     catch(Exception e)
       {
-      marauroad.trace("Statistics::static","!",e.getMessage());
+      marauroad.thrown("Statistics::static","!",e);
       System.exit(-1);
       }
     }

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.81 2004/05/07 13:50:32 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.83 2004/05/07 17:19:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,7 +64,7 @@ public class marauroad extends Thread
           }
         catch(FileNotFoundException e)
           {
-          marauroad.trace("marauroad::setArguments","X",e.getMessage());
+          marauroad.thrown("marauroad::setArguments","X",e);
           marauroad.trace("marauroad::setArguments","!","ABORT: marauroad can't open log file");
           System.exit(-1);
           }
@@ -130,7 +130,7 @@ public class marauroad extends Thread
             }
           catch(FileNotFoundException e)
             {
-            marauroad.trace("marauroad::run","X",e.getMessage());
+            marauroad.thrown("marauroad::run","X",e);
             marauroad.trace("marauroad::run","!","ABORT: marauroad can't open log file");
             System.exit(-1);
             }
@@ -180,7 +180,7 @@ public class marauroad extends Thread
       }
     catch(java.net.SocketException e)
       {
-      marauroad.trace("marauroad::init","X",e.getMessage());
+      marauroad.thrown("marauroad::init","X",e);
       marauroad.trace("marauroad::init","!","ABORT: marauroad can't allocate server socket");
       System.exit(-1);
       }
@@ -284,13 +284,14 @@ public class marauroad extends Thread
   
   public static void thrown(String module, String event, Throwable exception)
     {
-    StringBuffer sb=new StringBuffer();
+    StringBuffer sb=new StringBuffer("Exception stackTrace:\n");
     StackTraceElement[] ste=exception.getStackTrace();
     for(int i=0;i<ste.length;++i)
       {
-      sb.append(ste[i].toString()+"\n");
+      sb.append("  "+ste[i].toString()+"\n");
       }    
     
+    trace(module,"X",exception.getMessage());
     trace(module,"X",sb.toString());
     }
     

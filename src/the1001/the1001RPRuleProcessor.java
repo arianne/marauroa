@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.51 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.52 2004/05/07 17:16:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -113,8 +113,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      marauroad.trace("the1001RPRuleProcessor::execute","X",e.getMessage());
-      e.printStackTrace(System.out);
+      marauroad.thrown("the1001RPRuleProcessor::execute","X",e);
       return RPAction.STATUS_FAIL;      
       }      
     finally
@@ -154,7 +153,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      marauroad.trace("the1001RPRuleProcessor::nextTurn","X",e.getMessage());
+      marauroad.thrown("the1001RPRuleProcessor::nextTurn","X",e);
       e.printStackTrace(System.out);
       }
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
@@ -201,7 +200,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","X",e.getMessage());
+      marauroad.thrown("the1001RPRuleProcessor::removeOneTurnAttributes","X",e);
       e.printStackTrace(System.out);
       }
     finally
@@ -236,7 +235,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      marauroad.trace("the1001RPRuleProcessor::onInit","X",e.getMessage());
+      marauroad.thrown("the1001RPRuleProcessor::onInit","X",e);
       return false;
       }
     finally
@@ -262,7 +261,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      e.printStackTrace(System.out);
+      marauroad.thrown("the1001RPRuleProcessor::onExit","X",e);
       }
     finally
       {

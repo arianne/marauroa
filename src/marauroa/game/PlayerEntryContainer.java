@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.34 2004/05/06 13:00:05 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.35 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -137,7 +137,7 @@ public class PlayerEntryContainer
       }
     catch(Exception e)
       {
-      marauroad.trace("PlayerEntryContainer","X", e.getMessage());
+      marauroad.thrown("PlayerEntryContainer","X", e);
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
       System.exit(-1);
       }
@@ -332,7 +332,7 @@ public class PlayerEntryContainer
     catch(Exception e)
       {
       transaction=playerDatabase.getTransaction();
-      marauroad.trace("PlayerEntryContainer::getLoginEvent","X",e.getMessage());
+      marauroad.thrown("PlayerEntryContainer::getLoginEvent","X",e);
       throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
       }
     finally
@@ -359,6 +359,7 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       transaction.rollback();
+      marauroad.thrown("PlayerEntryContainer::addLoginEvent","X",e);
       marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player("+username+")");
       throw new NoSuchPlayerException(username);
       }
@@ -366,7 +367,8 @@ public class PlayerEntryContainer
       {
       transaction.rollback();
       transaction=playerDatabase.getTransaction();
-      marauroad.trace("PlayerEntryContainer::addLoginEvent","X",e.getMessage());
+      
+      marauroad.thrown("PlayerEntryContainer::addLoginEvent","X",e);
       throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
       }
     finally
@@ -395,13 +397,14 @@ public class PlayerEntryContainer
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
+          marauroad.thrown("PlayerEntryContainer::getLoginEvent","X",e);
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
           throw new NoSuchPlayerException("- not available -");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          marauroad.trace("PlayerEntryContainer::getLoginEvent","X",e.getMessage());
+          marauroad.thrown("PlayerEntryContainer::getLoginEvent","X",e);
           throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
           }
         }
@@ -495,13 +498,14 @@ public class PlayerEntryContainer
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
+          marauroad.thrown("PlayerEntryContainer::hasCharacter","X",e);
           marauroad.trace("PlayerEntryContainer::hasCharacter","X","No such Player(-not available-)");
           throw new NoSuchPlayerException("- not available -");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          marauroad.trace("PlayerEntryContainer::hasCharacter","X",e.getMessage());
+          marauroad.thrown("PlayerEntryContainer::hasCharacter","X",e);
           throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
           }
         }
@@ -566,13 +570,14 @@ public class PlayerEntryContainer
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
+          marauroad.thrown("PlayerEntryContainer::getCharacterList","X",e);
           marauroad.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
           throw new NoSuchPlayerException("- not available -");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          marauroad.trace("PlayerEntryContainer::getCharacterList","X",e.getMessage());
+          marauroad.thrown("PlayerEntryContainer::getCharacterList","X",e);
           throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
           }
         }
@@ -617,16 +622,18 @@ public class PlayerEntryContainer
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
+      marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
       throw new NoSuchPlayerException("- not available -");
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("PlayerEntryContainer::getRPObject","X",e.getMessage());
+      marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
+      marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::getRPObject","X","No such Character(unknown)");
       throw new NoSuchCharacterException(character);
       }
@@ -634,7 +641,7 @@ public class PlayerEntryContainer
       {
       transaction=playerDatabase.getTransaction();
 
-      marauroad.trace("PlayerEntryContainer::getRPObject","X","Generic Database problem: "+e.getMessage());
+      marauroad.thrown("PlayerEntryContainer::getRPObject","X",e);
       throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
       }
     finally
@@ -675,25 +682,27 @@ public class PlayerEntryContainer
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
       transaction.rollback();
+      marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
       throw new NoSuchPlayerException("- not available -");
       }
     catch(Attributes.AttributeNotFoundException e)
       {
       transaction.rollback();
-      marauroad.trace("PlayerEntryContainer::setRPObject","X",e.getMessage());
+      marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(PlayerDatabase.CharacterNotFoundException e)
       {
       transaction.rollback();
+      marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
       marauroad.trace("PlayerEntryContainer::setRPObject","X","No such Character(unknown)");
       throw new NoSuchCharacterException("- not available -");
       }
     catch(Exception e)
       {
       transaction.rollback();
-      marauroad.trace("PlayerEntryContainer::setRPObject","X","Generic Database problem: "+e.getMessage());
+      marauroad.thrown("PlayerEntryContainer::setRPObject","X",e);
       throw new GameDatabaseException.GenericDatabaseException(e.getMessage());
       }
     finally

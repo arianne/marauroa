@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.12 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.13 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,8 +112,7 @@ public class MessageFactory
             }
           catch(Exception e)
             {
-            marauroad.trace("MessageFactory::getMessage","X",e.getMessage());
-            e.printStackTrace();
+            marauroad.thrown("MessageFactory::getMessage","X",e);
             throw new IOException(e.getMessage());
             }
           }

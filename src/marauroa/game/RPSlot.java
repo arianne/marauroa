@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.28 2004/04/19 07:17:38 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.29 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         }
       catch(Exception e)
         {
-        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
         }
       }       
     
@@ -81,7 +81,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         }
       catch(Exception e)
         {
-        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
         }
       }       
     
@@ -158,7 +158,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("RPSlot::add","X",e.getMessage());
+      marauroad.thrown("RPSlot::add","X",e);
       }
 
     objects.add(object);
@@ -183,7 +183,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("RPSlot::get","X",e.getMessage());
+      marauroad.thrown("RPSlot::get","X",e);
       throw new RPObjectNotFoundException(id);
       }
     }
@@ -236,7 +236,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("RPSlot::remove","X",e.getMessage());
+      marauroad.thrown("RPSlot::remove","X",e);
       throw new RPObjectNotFoundException(id);
       }
     }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.78 2004/05/06 13:00:05 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.79 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -79,7 +79,7 @@ class RPServerManager extends Thread
       }
     catch(Exception e)
       {
-      marauroad.trace("RPServerManager","X",e.getMessage());
+      marauroad.thrown("RPServerManager","X",e);
       marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone and RPRuleProcessor instances");
       System.exit(-1);
       }
@@ -236,7 +236,7 @@ class RPServerManager extends Thread
             }
           catch(Exception e) 
             {
-            marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
+            marauroad.thrown("RPServerManager::buildPerceptions","X",e);
             }
           }
         
@@ -305,7 +305,7 @@ class RPServerManager extends Thread
           }
         catch(Exception e)
           {
-          marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
+          marauroad.thrown("RPServerManager::buildPerceptions","X",e);
           marauroad.trace("RPServerManager::buildPerceptions","X","Removing player("+clientid+") because it caused a Exception while contacting it");
           playersToRemove.add(new Integer(clientid));
           }
@@ -342,14 +342,14 @@ class RPServerManager extends Thread
           }
         catch(Exception e)
           {
+          marauroad.thrown("RPServerManager::notifyUpdatesOnPlayer","X",e);
           marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X","Can't update the player("+clientid+")");
-          marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X",e.getMessage());
           }
         }
       }
     catch(Exception e)
       {
-      marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X",e.getMessage());
+      marauroad.thrown("RPServerManager::notifyUpdatesOnPlayer","X",e);
       }
     finally
       {
@@ -390,8 +390,8 @@ class RPServerManager extends Thread
           }
         catch(Exception e)
           {
+          marauroad.thrown("RPServerManager::notifyTimedoutPlayers","X",e);
           marauroad.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player("+clientid+") that timedout");
-          marauroad.trace("RPServerManager::notifyTimedoutPlayers","X",e.getMessage());
           }
         finally
           {
@@ -402,8 +402,8 @@ class RPServerManager extends Thread
       }
     catch(Exception e)
       {
+      marauroad.thrown("RPServerManager::notifyTimedoutPlayers","X",e);
       marauroad.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player(-not available-) that timedout");
-      marauroad.trace("RPServerManager::notifyTimedoutPlayers","X",e.getMessage());
       }
     finally
       {

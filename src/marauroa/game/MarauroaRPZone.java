@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.41 2004/05/07 13:52:00 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.42 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -179,7 +179,7 @@ public class MarauroaRPZone implements RPZone
             }
           catch(Exception e)
             {
-            marauroad.trace("MarauroaRPZone::getPerception","X",e.getMessage());
+            marauroad.thrown("MarauroaRPZone::getPerception","X",e);
             }
           }
 

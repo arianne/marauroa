@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.6 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,7 +43,7 @@ public class PlayerDatabaseFactory
       }
     catch(Exception e)
       {
-      marauroad.trace("PlayerDatabaseFactory::getDatabase","X",e.getMessage());
+      marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
       throw new PlayerDatabase.NoDatabaseConfException();      
       }
     finally
@@ -75,7 +75,7 @@ public class PlayerDatabaseFactory
       }
     catch(Exception e)
       {
-      marauroad.trace("PlayerDatabaseFactory::getDatabase","X",e.getMessage());
+      marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
       throw new PlayerDatabase.NoDatabaseConfException();      
       }
     finally

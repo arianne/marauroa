@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.68 2004/04/29 15:01:06 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.69 2004/05/07 17:16:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -225,7 +225,7 @@ public class RPCode
       }
     catch(Exception e)
       {
-      marauroad.trace("RPCode::AddPlayer","X",e.getMessage());
+      marauroad.thrown("RPCode::AddPlayer","X",e);
       e.printStackTrace(System.out);
       }
     finally
@@ -294,8 +294,7 @@ public class RPCode
       }
     catch(Exception e)
       {
-      marauroad.trace("RPCode::RemovePlayer","X",e.getMessage());
-      e.printStackTrace(System.out);
+      marauroad.thrown("RPCode::RemovePlayer","X",e);
       return false;
       }
     finally
@@ -435,8 +434,7 @@ public class RPCode
       }
     catch(Exception e)
       {
-      marauroad.trace("RPCode::ResolveFight","X",e.getMessage());
-      e.printStackTrace(System.out);
+      marauroad.thrown("RPCode::ResolveFight","X",e);
       }
     finally
       {
@@ -653,8 +651,7 @@ public class RPCode
       }
     catch(Exception e)
       {
-      marauroad.trace("RPCode::RequestFame","X",e.getMessage());
-      e.printStackTrace(System.out);
+      marauroad.thrown("RPCode::RequestFame","X",e);
       }
     finally
       {

@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.12 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.13 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,6 +68,7 @@ public class RPScheduler
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      marauroad.thrown("RPScheduler::addRPAction","X",e);
       marauroad.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
       throw new ActionInvalidException(e.getAttribute());
       }
@@ -111,14 +112,14 @@ public class RPScheduler
             }
           catch(Exception e)
             {
-            marauroad.trace("RPScheduler::visit","X",e.getMessage());
+            marauroad.thrown("RPScheduler::visit","X",e);
             }
           }
         }
       }
     catch(Exception e)
       {
-      marauroad.trace("RPScheduler::visit","X",e.getMessage());
+      marauroad.thrown("RPScheduler::visit","X",e);
       }
     finally
       {
