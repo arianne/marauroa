@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.46 2004/11/21 09:50:31 root777 Exp $ */
+/* $Id: Attributes.java,v 1.47 2004/11/21 10:52:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -432,9 +432,7 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
     for(String key: attr.deleted.keySet()) 
       {
       ++i;
-      //Map.Entry entry=(Map.Entry)it.next();
-      //put((String)entry.getKey(),(String)entry.getValue());
-      remove(key);
+      put(key,attr.get(key));
       }       
 
     if(i>0)

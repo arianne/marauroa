@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.51 2004/11/20 21:51:01 root777 Exp $ */
+/* $Id: RPObject.java,v 1.52 2004/11/21 10:52:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,7 +125,7 @@ public class RPObject extends Attributes
       {
       try
         {
-        removeSlot(slot.getName());
+        addSlot(new RPSlot(slot.getName()));
         }
       catch(Exception e)
         {
