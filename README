@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.25 version 
+0.30 version 
 
 
 Status
@@ -92,6 +92,11 @@ Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.30	Mar XX, 2004
+- Added persistent objects
+- Added transactional database support
+- Fixed zlib compression problem due to incorrect deserialization
+
 0.25	Mar	06,	2004
 - Added zlib compression
 - Added Buy item and Buy gladiator

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.15 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.16 2004/03/18 15:12:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -513,7 +513,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       int id=getDatabasePlayerId(username);
 
-      String query = "insert into loginEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
+      String query = "insert into loginEvent values("+id+",'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
       PreparedStatement prep_stmt = connection.prepareStatement(query);
       prep_stmt.setTimestamp(1,new Timestamp(System.currentTimeMillis()));
   
