@@ -148,6 +148,7 @@ FILTER := ""
 LABEL := "net"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\PerceptionHandler.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\OutputSerializer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkClientManager.java" #[EndFile]
@@ -209,14 +210,6 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\the1001\\the1001RPZone.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\the1001\\the1001RPRuleProcessor.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\the1001\\RPCode.java" #[EndFile]
-#[BeginFolder]
-LABEL := "client"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModelListenerIF.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
-#[EndFolder]
 #[BeginFolder]
 LABEL := "docs"
 FILTER := ""

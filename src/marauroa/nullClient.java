@@ -99,6 +99,7 @@ public class nullClient extends Thread
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CPerception)
           {
+          System.out.println("foo bar");
           MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
           reply.setClientID(clientid);
           netMan.addMessage(reply);
