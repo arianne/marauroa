@@ -675,7 +675,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   private boolean reInitDB()
     {
-    return (dropDB() & initDB());
+    return (dropDB() && initDB());
     }
   
   private boolean dropDB()
