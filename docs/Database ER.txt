@@ -30,6 +30,39 @@ entity LOGIN_EVENT
   result
   }
   
+entity STATISTICS
+  (
+  PK(timedate)
+  
+  bytes_send
+  bytes_recv
+  
+  players_login
+  players_logout
+  players_timeout
+  players_online
+  )
+
+entity RPOBJECT
+  (
+  PK(id)
+  slot_id
+  )
+  
+entity RPATTRIBUTE
+  (
+  PK(object_id)
+  PK(name)
+  value
+  )
+
+entity RPSLOT
+  (
+  object_id
+  name
+  PK(slot_id)
+  )
+  
 Relations:
 ----------
 
@@ -61,7 +94,7 @@ CREATE TABLE characters
   charname VARCHAR(30) NOT NULL,
   contents VARCHAR(4096)
   
-  PRIMARY KEY(character)
+  PRIMARY KEY(player_id,character)
   );
   
 CREATE TABLE loginEvent
@@ -70,4 +103,43 @@ CREATE TABLE loginEvent
   address VARCHAR(20),
   timedate TIMEDATE,
   result TINYINT
+  );
+
+
+CREATE TABLE statistics
+  (
+  timedate TIMESTAMP,
+  
+  bytes_send INTEGER,
+  bytes_recv INTEGER,
+  
+  players_login INTEGER,
+  players_logout INTEGER,
+  players_timeout INTEGER,
+  players_online INTEGER,
+  
+  PRIMARY KEY(timedate)
+  );
+
+CREATE TABLE rpobject
+  (
+  id INTEGER NOT NULL PRIMARY KEY,
+  slot_id INTEGER
+  );
+  
+CREATE TABLE rpattribute
+  (
+  object_id INTEGER NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  value VARCHAR(255),
+  PRIMARY KEY(object_id,name)
+  );
+
+CREATE TABLE rpslot
+  (
+  object_id INTEGER NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  slot_id INTEGER AUTO_INCREMENT NOT NULL,
+  
+  PRIMARY KEY(slot_id)
   );

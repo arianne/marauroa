@@ -4,10 +4,14 @@ Contents
 --------
 
 1) Basic Introduction
-	a) Basic Design.txt
+	a) What is Arianne.txt
+	b) What is Marauroa.txt
+		Basic description of what is Arianne and Marauroa
+		
+	c) Basic Design.txt
 		Contains basic introduction about the project logic.
 	 
-	b) Error Log Format.txt
+	d) Error Log Format.txt
 		What and how error messages should be.
 
 2) Network related

@@ -2,7 +2,7 @@ Title  : How Perceptions and Actions work
 Info   : Basic introduction about how the action system works
 Keyword: actions, classes, types, XML, attributes, Object, perception.
 Author : Miguel Angel Blanch Lardin
-Created: 2003/11/27
+Created: 2004/04/27
 status : planning
 
 Actions are sent from client to server in order to make their character to do
@@ -19,4 +19,5 @@ with a set of attributes that determine the action return status and the
 attributes. This way of working make a bit harder to RPManager but it simplify
 a lot the creation of new clients.
 
-See Actions reply in Objects document to know exactly what is returned.
+See Actions reply in Objects document to know exactly what is returned, but keep
+in mind that it depens of each particular game.

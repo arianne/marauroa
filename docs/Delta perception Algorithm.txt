@@ -2,7 +2,7 @@ Title  : Delta perception algorithm
 Info   : Introduction to the way perceptions are sent from server to client.
 Keyword: Percetions, delta, modified, deleted.
 Author : Miguel Angel Blanch Lardin
-Created: 2003/11/23
+Created: 2004/04/27
 status : planning
 
 The main idea behind the DPA is not to sent ALL the objects to client, but
@@ -34,6 +34,18 @@ The delta perception algorithm:
 	- Send them to player ( 2 objects )
 	- Next turn 
 	...
+	
+The next step on delta perception algorithm is pretty clear: delta^2
+The idea is to send only what changes of the objects that changed. That why you 
+save even more bandwidth, making perceptions around 20% of the delta perception 
+size.
+
+The delta^2 algorithm is based on four containers:
+- List of added objects
+- List of modified added attributes of objects
+- List of modified deleted attributes of objects
+- List of deleted objects
+
 
 An area really related to DPA is RPZone
 

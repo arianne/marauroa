@@ -5,6 +5,10 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/11/27
 status : planning
 
+NOTE: This documents related to an early specification of Gladiators and is no 
+longer relevant as it refers to specification, but can help you to know how to 
+make the basic steps to define a game.
+
 As you have read in How Perceptions and Actions works, each Object include the 
 attributes that are result of the action execution. So for each action we will
 have:

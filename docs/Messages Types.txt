@@ -25,6 +25,8 @@ Send Login
 			  	  Finish
 
 				Send CharacterList
+				
+				Send Server Info
 
 Send ChooseCharacter
 				If character is correct
@@ -107,6 +109,15 @@ Each character name must be unique at server level, and it is assigned when the
 character is created.
 
 
+Message S2C Server Info
+-----------------------
+The Server Info Message is send from server to client to inform client about what
+server is running, and what the way to post problems are.
+
+The message is composed by:
+- A List of string of the type "attribute=value"
+
+
 Message C2S ChooseCharacter
 ---------------------------
 The ChooseCharacter Message is sent from client to server to tell server what
@@ -156,6 +167,7 @@ client can safely close the connection, but if server sends a Logout NACK
 Message, client should keep playing as disconnecting in that moment will
 let its avatar in the game uncontrolled ( idle ).
 
+
 Message S2C Logout ACK
 ----------------------
 The Logout ACK Message is sent from server to client to notify the 
@@ -169,6 +181,7 @@ The Logout NACK Message is sent from server to client to notify the
 client that the logout has not been accepted because something related to 
 the RP entity, for example, combat on the way.
 It has no params.
+
 
 Message C2S Action
 ------------------
@@ -197,10 +210,16 @@ The message is based on the idea explained in Delta perception document.
 
 The message is composed by:
 - A type that can be DELTA or TOTAL
-- A List of RPObject that contains modified object
+- A timestamp value that will be just one unit bigger than the previous perception
+- A List of RPObject that contains added object
+- A List of RPObject that contains modified added object attributes
+- A List of RPObject that contains modified deleted object attributes
 - A List of RPObject that contains deleted object
+- A RPObject that describe the things the rest of players don't see about OUR own 
+  object.
 
 Read the Delta perception algorithm to understand what it is for.
+
 
 Message C2S Perception ACK
 --------------------------
@@ -208,11 +227,18 @@ The perception ACK message is sent from client to server in a keep-alive basis.
 We use this message to inform server that the client is still there and listening.
 It has no params.
 
+
 Message C2S Map Hash
 --------------------
 (TODO)
 
+
 Message S2C Map
 ---------------
-(TODO)
+The Map message is a message sent from server to client to nofity client 
+about the content of the map where the gameplay will happen.
 
+The message is composed by:
+- A array of Byte contaning all the raw data.
+
+This message is totally game dependend.

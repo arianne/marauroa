@@ -21,6 +21,9 @@ while it is online. RuntimePlayerEntry contains:
 - username
 - choosenCharacter
 - state
+- perception counter
+- perception Previous RPObject
+- timestamp of the Last time it was stored
 
 Let's see what each field is for. 
 Clientid is the field in charge of indexing players in server, see the document
@@ -50,6 +53,15 @@ we change it to game begin. The logout state is trivial :)
 
 The main idea is that some operations are only allowed in one state, so we can 
 control it more easy with the state propierty.
+
+Perception counter is used for having a incremental counter of the perceptions send,
+so that client can see if it gets out of sync.
+
+Perception previous RPObject is the RPObject that was send on the last perception,
+so we can track changes on our RPObject without disturbing the rest of the system.
+
+Timestamp of the Last time it was stored means the timestamp of the moment in which
+the object was stored at Database.
 
 As you can see all we need to operate PlayerDatabase is username and 
 choosenCharacter. So using PlayerEntryContainer we can fully operate it.

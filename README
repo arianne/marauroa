@@ -24,6 +24,23 @@ your experience.
 Marauroa is also a Multiplayer Onlince Engine, that you can use to build 
 you own online games using Marauroa as a Content Management system.
 
+Marauroa is completly written in Java using a multithreaded server architecture
+with a UDP oriented network protocol, a mySQL based persistence engine and a 
+flexible game system based on open systems totally expandible and modifiable 
+by developers and that is able to run scripts on Python for the game's rules.
+ 
+Marauroa is based on a philosophy we called Action/Perception, on each turn a 
+perception is send to clients explaining them what they percieve and clients 
+can ask server to do any action in their names using actions.
+Marauroa is totally game agnostic and makes very little assumptions about what 
+are you trying to do, allowing a great freedom to create whatever type of game 
+you want.
+Bugs are facts of life, they just happen. But Arianne is fully tested using 
+Test Units with JUnit and cppunit, so all modules are tested for most common 
+cases, allowing a better quality software to be deployed. Your cooperation 
+reporting problems is simply invaluable: You are our best developer and we want
+to read from you.
+
 You can find the latest version of Marauroa at: 
 http://marauroa.sourceforge.net
 
@@ -31,7 +48,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.32 version 
+0.33 version 
 
 
 Status
@@ -43,6 +60,8 @@ using the Marauroa engine.
 
 Version >0.20 contains a simple Gladiators game using also the Marauroa engine.
 You need arianne's Gladiator client in order to be able to play.
+
+Version >0.33 contains a multiplayer pacman game using the Python rules.
 
 
 Requirements
@@ -94,6 +113,11 @@ Changelog
 ---------
 0.33 	Apr XX, 2004
 - Static part of the perception, that one that doesn't change depending of the player is precomputed
+- Added Python RP rules system
+- Added mapacman game
+- Added messages timestamps so that it is more reliable on bad UDP connections.
+- Factorized createaccount method, each application has now to modify a very small part of it.
+- Updated documentation about Marauroa
 
 0.32 	Apr 21, 2004
 - Fix a bug that happens when an object is added and deleted on the same turn from a slot.

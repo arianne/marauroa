@@ -2,11 +2,29 @@ Title  : Objects Explained
 Info   : Deep overview of objects, its types and its usage.
 Keyword: Objects, classes, types, XML, attributes.
 Author : Miguel Angel Blanch Lardin
-Created: 2003/10/23
+Created: 2004/04/27
 status : planning
+
 
 Objects are the basic Marauroa data structure, and you should already be
 familiarized with it because you read Actions and Object document.
+
+Marauroa engine only enforce that objects has two attributes:
+- id
+- type
+
+id is an unique identification for the Object and type is the type of the object
+aka class, so that you can share attributes for all the instances of the class.
+
+Also engine give special treatment to two types of attributes:
+- Attributes that begin with ! are completly hidden for all the users but the 
+  owner of the object.
+- Attributes that begin with # are completly hidden for all the users.
+  
+
+NOTE: This documents related to an early specification of Gladiators and is no 
+longer relevant as it refers to specification, but can help you to know how to 
+make the basic steps to define a game.
 
 So let's point the multiple objects that we are going to have in Marauroa 
 and their attributes and slots.

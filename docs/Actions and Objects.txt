@@ -23,9 +23,8 @@ mandatory. If a mandatory attribute is not found, the message is skipped by the
 RPServerManager entity.
 
 Mandatory Actions Attributes:
-- object_id
 - action_id
-- action_type
+- type
 
 The action_id is used to identify the action when the result come in a percetion.
 
@@ -45,7 +44,7 @@ mandatory. If a mandatory attribute is not found, the message is skipped by the
 RPServerManager entity.
 
 Mandatory Object Attributes:
-- object_id
+- id
 
 Optional Object Attributes:
 Read Objects Explained for more details.

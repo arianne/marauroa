@@ -5,6 +5,10 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
 
+NOTE: This documents related to an early specification of Gladiators and is no 
+longer relevant as it refers to specification, but can help you to know how to 
+make the basic steps to define a game.
+
 Arianne Game is based on several actions that are a MUST for the correct 
 development of the game.
 Mainly these actions are:
