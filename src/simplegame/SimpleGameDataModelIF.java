@@ -9,14 +9,13 @@ package simplegame;
 public interface SimpleGameDataModelIF
 {
   public void addGameUpdateListener(GameUpdateListener ul);
-  public void setColorAt(int row, int column,byte color);
-  public int getColumnsCount();
-  public int getRowsCount();
-  public byte getColorAt(int row, int column);
-  public byte checkWinCondition();
+  public void setRPCharacterAt(int row, int column, int characterID);
+  public int getSize();
+  public int getRPCharacterAt(int row, int column);
+  public int getWinner();
   public static interface GameUpdateListener
   {
-    public void updateReceived(int row, int column, byte color);
+    public void updateReceived(int row, int column, int characterID);
   }
 }
 

@@ -12,19 +12,17 @@ import java.util.Vector;
 public class SimpleGameDataModel
   implements SimpleGameDataModelIF
 {
-  private byte gameBoard[][];
+  private int gameBoard[][];
   private Vector vUpdateListener;
-  private int rows;
-  private int columns;
+  private int size;
   
-  public SimpleGameDataModel(int rows, int columns)
+  public SimpleGameDataModel(int size)
   {
-    this.rows = rows;
-    this.columns = columns;
-    gameBoard = new byte[rows][columns];
-    for (int i = 0; i < rows; i++)
+    this.size = size;
+    gameBoard = new int[size][size];
+    for (int i = 0; i < size; i++)
     {
-      for (int j = 0; j < columns; j++)
+      for (int j = 0; j < size; j++)
       {
         gameBoard[i][j]=-1;
       }
@@ -32,12 +30,12 @@ public class SimpleGameDataModel
     vUpdateListener = new Vector(1,1);
   }
   
-  private void fireUpdate(int row, int column, byte color)
+  private void fireUpdate(int row, int column, int id)
   {
     for (int i = 0; i < vUpdateListener.size(); i++)
     {
       GameUpdateListener ul = (GameUpdateListener)vUpdateListener.elementAt(i);
-      ul.updateReceived(row,column,color);
+      ul.updateReceived(row,column,id);
     }
   }
   
@@ -49,26 +47,21 @@ public class SimpleGameDataModel
     }
   }
   
-  public void setColorAt(int row, int column,byte color)
+  public void setRPCharacterAt(int row, int column, int id)
   {
-    if(color!=gameBoard[row][column])
+    if(id!=gameBoard[row][column])
     {
-      gameBoard[row][column]=color;
-      fireUpdate(row,column,color);
+      gameBoard[row][column]=id;
+      fireUpdate(row,column,id);
     }
   }
   
-  public int getColumnsCount()
+  public int getSize()
   {
-    return(columns);
+    return(size);
   }
-  
-  public int getRowsCount()
-  {
-    return(rows);
-  }
-  
-  public byte getColorAt(int row, int column)
+    
+  public int getRPCharacterAt(int row, int column)
   {
     return(gameBoard[row][column]);
   }
@@ -77,9 +70,9 @@ public class SimpleGameDataModel
   public String toString()
   {
     StringBuffer sb = new StringBuffer("\n");
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < size; i++)
     {
-      for (int j = 0; j < columns; j++)
+      for (int j = 0; j < size; j++)
       {
         if(gameBoard[i][j]==-1)
         {
@@ -96,7 +89,7 @@ public class SimpleGameDataModel
     return(sb.toString());
   }
   
-  public byte checkWinCondition()
+  public int getWinner()
   {
     //TODO implement the win conditions check.
     //it should return the byte value of the winner

@@ -20,12 +20,14 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
-import marauroa.game.RPAction;
+import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.net.Message;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageS2CPerception;
 import marauroa.net.NetworkClientManager;
+import simplegame.actions.MoveAction;
+import simplegame.objects.GameBoard;
 
 public class SimpleGame
   extends JFrame implements Runnable
@@ -34,14 +36,15 @@ public class SimpleGame
   private NetworkClientManager netMan;
   private SimpleGameDataModel gdm;
   private JMarauroa marauroa;
-  private RPObject.ID characterID;
+  private RPObject.ID ownCharacterID;
+  private RPObject.ID otherCharacterID;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
     netMan = netman;
     this.marauroa = marauroa;
-    this.characterID=characterID;
-    gdm = new SimpleGameDataModel(3,3);
+    this.ownCharacterID=characterID;
+    gdm = new SimpleGameDataModel(3);
     initComponents();
     addWindowListener(new WindowAdapter()
                       {
@@ -75,19 +78,31 @@ public class SimpleGame
               for (int i = 0; i < modified_objects.size(); i++)
               {
                 RPObject obj = (RPObject)modified_objects.get(i);
+                addLog(obj.toString()+"\n");
                 try
                 {
-                  if("cell".equals(obj.get("type")))
+                  try
                   {
-                    byte color = Byte.parseByte(obj.get("color"));
-//                    int id = Integer.parseInt(obj.get("object_id"));
-                    int row = Integer.parseInt(obj.get("row"));
-                    int column = Integer.parseInt(obj.get("column"));
-                    gdm.setColorAt(row,column,color);
+                    RPObject gb = obj.getSlot("hand").get(0);
+                    gb.get("");
+                    int size = Integer.parseInt(gb.get("size"));
+                    for (int k = 0; k < size; k++)
+                    {
+                      for (int l = 0; l < size; l++)
+                      {
+                        int id = GameBoard.getRPCharacterAt(gb,k,l);
+                        gdm.setRPCharacterAt(k,l,id);
+                      }
+                    }
+                  }
+                  catch (RPObject.NoSlotFoundException e)
+                  {
+                    e.printStackTrace();
                   }
                 }
-                catch (marauroa.game.Attributes.AttributeNotFoundException e)
+                catch (Attributes.AttributeNotFoundException e)
                 {
+                  e.printStackTrace();
                   //e.printStackTrace();
                 }
               }
@@ -108,19 +123,19 @@ public class SimpleGame
     sg.pack();
     sg.show();
     sleep(2);
-    sg.gdm.setColorAt(0,0,(byte)1);
+    sg.gdm.setRPCharacterAt(0,0,1);
     sleep(1);
-    sg.gdm.setColorAt(1,1,(byte)0);
+    sg.gdm.setRPCharacterAt(1,1,0);
     sleep(1);
-    sg.gdm.setColorAt(2,2,(byte)1);
+    sg.gdm.setRPCharacterAt(2,2,1);
     sleep(1);
-    sg.gdm.setColorAt(2,0,(byte)0);
+    sg.gdm.setRPCharacterAt(2,0,0);
     sleep(1);
-    sg.gdm.setColorAt(0,2,(byte)1);
+    sg.gdm.setRPCharacterAt(0,2,1);
     sleep(1);
-    sg.gdm.setColorAt(0,1,(byte)0);
+    sg.gdm.setRPCharacterAt(0,1,0);
     sleep(1);
-    sg.gdm.setColorAt(1,2,(byte)1);
+    sg.gdm.setRPCharacterAt(1,2,1);
     sleep(1);
   }
   
@@ -147,7 +162,7 @@ public class SimpleGame
       gameDataModel = gdm;
       gameDataModel.addGameUpdateListener(new SimpleGameDataModel.GameUpdateListener()
                                           {
-            public void updateReceived(int row, int column, byte color)
+            public void updateReceived(int row, int column, int characterID)
             {
               repaint();
             }
@@ -162,32 +177,36 @@ public class SimpleGame
       super.paintComponent(g);
       int w = getWidth();
       int h = getHeight();
-      int r = gameDataModel.getRowsCount();
-      int c = gameDataModel.getColumnsCount();
-      int cell_width  = w/c;
-      int cell_height = h/r;
+      int board_size = gameDataModel.getSize();
+      int cell_width  = w/board_size;
+      int cell_height = h/board_size;
       int startx = cell_width/8;
       int starty = cell_height/8;
       
       int x = startx;
-      for (int i = 0; i < c; i++)
+      for (int i = 0; i < board_size; i++)
       {
         x=startx+i*cell_width;
         int y = starty;
-        for (int j = 0; j < r; j++)
+        for (int j = 0; j < board_size; j++)
         {
           y=starty+j*cell_height;
           Color color = null;
-          switch(gameDataModel.getColorAt(j,i))
+          if(otherCharacterID!=null)
           {
-            case  0: color = Color.red;  break;
-            case  1: color = Color.green; break;
-            default: color = null;
-          }
-          if(color!=null)
-          {
-            g.setColor(color);
-            g.fillOval(x,y,cell_width*3/4,cell_height*3/4);
+            if(otherCharacterID.getObjectID()==gameDataModel.getRPCharacterAt(j,i))
+            {
+              color = Color.red;
+            }
+            else if(ownCharacterID.getObjectID()==gameDataModel.getRPCharacterAt(j,i))
+            {
+              color = Color.green;
+            }
+            if(color!=null)
+            {
+              g.setColor(color);
+              g.fillOval(x,y,cell_width*3/4,cell_height*3/4);
+            }
           }
         }
       }
@@ -200,23 +219,22 @@ public class SimpleGame
       {
         int w = getWidth();
         int h = getHeight();
-        int r = gameDataModel.getRowsCount();
-        int c = gameDataModel.getColumnsCount();
-        int cell_width  = w/c;
-        int cell_height = h/r;
+        int board_size = gameDataModel.getSize();
+        int cell_width  = w/board_size;
+        int cell_height = h/board_size;
         Point pnt = e.getPoint();
         int column = pnt.x/cell_width + (pnt.x%cell_width>0?1:0)-1;
         int row = pnt.y/cell_height + (pnt.y%cell_height>0?1:0)-1;
         if(netMan!=null)
         {
-          RPAction rpaction = new RPAction();
-          rpaction.put("object_id", ""+characterID.getObjectID());
-          rpaction.put("row",String.valueOf(row));
-          rpaction.put("column",String.valueOf(column));
+          MoveAction rpaction = new MoveAction();
+          rpaction.put("object_id", ""+ownCharacterID.getObjectID());
+          rpaction.setRow(row);
+          rpaction.setColumn(column);
           MessageC2SAction msg = new MessageC2SAction(null,rpaction);
           netMan.addMessage(msg);
         }
-        addLog("Player choosed [" +row +","+column+"]\n");
+        addLog("Player makes move on [" +row +","+column+"]\n");
       }
     }
   }

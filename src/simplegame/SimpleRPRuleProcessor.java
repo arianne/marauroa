@@ -7,7 +7,11 @@
 package simplegame;
 
 import marauroa.game.*;
+
 import marauroa.marauroad;
+import simplegame.actions.ChallengeAction;
+import simplegame.actions.MoveAction;
+import simplegame.objects.GameBoard;
 
 public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
@@ -62,38 +66,18 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     {
       RPObject rp_player = null;
       rp_player = zone.get(id);
-      if(id.equals(lastPlayerID))
+      
+      int action_type = Integer.parseInt(action.get("type"));
+      
+      switch(action_type)
       {
-        //this player already did a move, so ignore
-        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
-      }
-      else
-      {
-        String objid = rp_player.get("object_id");
-        rp_player.put("color",String.valueOf(color));
-        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" sent an action " + action);
-        int row = Integer.parseInt(action.get("row"));
-        int column = Integer.parseInt(action.get("column"));
-        if(zone.getColorAt(row,column)==-1)
-        {
-          zone.setColorAt(row,column,color);
-          lastPlayerID = id;
-          status = RPAction.STATUS_SUCCESS;
-          marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.toString());
-          byte winner = zone.checkWinCondition();
-          if(winner!=-1)
-          {
-            RPObject rp_winner = findPlayer(color);
-            marauroad.trace("SimpleRPRuleProcessor::execute","D","The winner is "+winner);
-          }
-          //swap color
-          color = color==1?(byte)0:(byte)1;
-        }
-        else
-        {
-          //this field is already set
-        }
-        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" - no actions???.");
+        case MoveAction.ACTION_MOVE:
+          status = makeMove(id, action);
+          break;
+        case ChallengeAction.ACTION_CHALLENGE:
+          ;
+          break;
+        default: //unknown type
       }
     }
     catch (Attributes.AttributeNotFoundException e)
@@ -107,6 +91,70 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     finally
     {
       marauroad.trace("SimpleRPRuleProcessor::execute","<");
+    }
+    return status;
+  }
+  
+  private RPAction.Status makeMove(RPObject.ID id, RPAction action)
+    throws NumberFormatException,
+    Attributes.AttributeNotFoundException,
+    RPZone.RPObjectNotFoundException
+  {
+    marauroad.trace("SimpleRPRuleProcessor::makeMove",">");
+    RPAction.Status status = RPAction.STATUS_FAIL;
+    try
+    {
+      RPObject rp_player = zone.get(id);
+      GameBoard gb;
+      try
+      {
+        gb = (GameBoard)rp_player.getSlot("hand").get(0);
+      }
+      catch (RPObject.NoSlotFoundException e)
+      {
+        gb = new GameBoard(3);
+        RPSlot rp_slot = new RPSlot("hand");
+        rp_slot.add(gb);
+        try
+        {
+          rp_player.addSlot(rp_slot);
+        }
+        catch (RPObject.SlotAlreadyAddedException ex)
+        {
+        }
+      }
+      if(id.equals(lastPlayerID))
+      {
+        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
+      }
+      else
+      {
+        int row = Integer.parseInt(action.get("row"));
+        int column = Integer.parseInt(action.get("column"));
+        if(gb.getRPCharacterAt(row,column)==-1)
+        {
+          gb.setRPCharacterAt(row,column,id.getObjectID());
+          lastPlayerID = id;
+          status = RPAction.STATUS_SUCCESS;
+          marauroad.trace("SimpleRPRuleProcessor::makeMove","D",zone.toString());
+//          int winner_id  = gb.getWinner();
+//          if(winner_id!=-1)
+//          {
+//            //TODO
+//            RPObject rp_winner = zone.get(null);
+////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","The winner is "+winner);
+//          }
+        }
+        else
+        {
+          //this field is already set
+        }
+        marauroad.trace("SimpleRPRuleProcessor::makeMove","D","Player "+id +" - no actions???.");
+      }
+    }
+    finally
+    {
+      marauroad.trace("SimpleRPRuleProcessor::makeMove","<");
     }
     return status;
   }
