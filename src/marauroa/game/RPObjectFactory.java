@@ -83,7 +83,7 @@ public class RPObjectFactory
   /**
    * adds the given RPObject into serializer
    **/
-  public void RPObject(OutputSerializer os,RPObject rp_object)
+  public void addRPObject(OutputSerializer os,RPObject rp_object)
     throws IOException
   {
     marauroad.trace("RPObjectFactory::addRPObject",">");
