@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.35 2004/11/21 14:17:31 root777 Exp $ */
+/* $Id: RPSlot.java,v 1.36 2004/11/21 14:19:30 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -233,8 +233,6 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
   /** This method empty the slot */
   public void clear()
     {
-    Iterator it=objects.iterator();
-            
     for(RPObject object: objects)
       {
       try
