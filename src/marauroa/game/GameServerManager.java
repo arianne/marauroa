@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.30 2004/02/16 15:27:35 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.31 2004/02/16 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ public class GameServerManager extends Thread
   private NetworkServerManager netMan;  
   private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
+  private Statistics stats;
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
@@ -42,6 +43,7 @@ public class GameServerManager extends Thread
     this.netMan=netMan;
     playerContainer=PlayerEntryContainer.getContainer();    
     rpMan=new RPServerManager(netMan);
+    stats=Statistics.getStatistics();
     
     start();
         
@@ -131,7 +133,7 @@ public class GameServerManager extends Thread
           playerContainer.getLock().releaseLock();
           }
           
-        Statistics.setOnlinePlayers(playerContainer.size());
+        stats.setOnlinePlayers(playerContainer.size());
         }
       }
     finally
@@ -221,7 +223,7 @@ public class GameServerManager extends Thread
 	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
 	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),true);
    
-        Statistics.addPlayerLogin(msg.getUsername(),clientid);
+        stats.addPlayerLogin(msg.getUsername(),clientid);
           
 	    /* Send player the Login ACK message */
 	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
@@ -244,7 +246,7 @@ public class GameServerManager extends Thread
 	  else
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
-        Statistics.addPlayerInvalidLogin(msg.getUsername());
+        stats.addPlayerInvalidLogin(msg.getUsername());
 
         if(playerContainer.hasPlayer(msg.getUsername()))
           {
@@ -378,7 +380,7 @@ public class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
         }
           
-      Statistics.addPlayerLogout(playerContainer.getUsername(clientid),clientid);
+      stats.addPlayerLogout(playerContainer.getUsername(clientid),clientid);
    
       playerContainer.removeRuntimePlayer(clientid);
 	  
@@ -442,11 +444,11 @@ public class GameServerManager extends Thread
 
       if(action.has("type"))
         {
-        Statistics.addActionsAdded(action.get("type"),clientid);
+        stats.addActionsAdded(action.get("type"),clientid);
         }
       else
         {
-        Statistics.addActionsAdded(action.get("invalid"),clientid);
+        stats.addActionsAdded(action.get("invalid"),clientid);
         }
       
       rpMan.addRPAction(action);
@@ -458,7 +460,7 @@ public class GameServerManager extends Thread
       }
     catch(Exception e)      
       {
-      Statistics.addActionsInvalid();
+      stats.addActionsInvalid();
       marauroad.trace("GameServerManager::processActionEvent","X",e.getMessage());
       }
     finally

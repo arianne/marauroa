@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.9 2004/02/16 15:27:28 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.10 2004/02/16 15:34:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,15 +82,8 @@ public class Statistics
       actionsInvalid=(var.actionsInvalid+actionsInvalid)/2;
       }
     }
-  
-  private static Date startTime;  
-  private static GatheredVariables nowVar;
-  private static PrintWriter eventfile;
-
-  private static Date timestamp;
-  private static SimpleDateFormat formatter;
     
-  static
+  private Statistics()
     {
     timestamp=new Date();
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -107,8 +100,27 @@ public class Statistics
       System.exit(1);      
       }
     }
+  
+  private static Statistics stats;
+    
+  public static Statistics getStatistics()
+    {
+    if(stats==null)
+      {
+      stats=new Statistics();
+      }
 
-  public static void addEvent(String event,int session_id,String text)
+    return stats;
+    }
+    
+  private Date startTime;  
+  private GatheredVariables nowVar;
+  
+  private PrintWriter eventfile;
+  private Date timestamp;
+  private SimpleDateFormat formatter;
+    
+  public void addEvent(String event,int session_id,String text)
     {
     marauroad.trace("Statistics::addEvent",">");
     timestamp.setTime(System.currentTimeMillis());
@@ -119,86 +131,86 @@ public class Statistics
     marauroad.trace("Statistics::addEvent","<");
     }
   
-  public static void addBytesRecv(long bytes)
+  public void addBytesRecv(long bytes)
     {
     nowVar.bytesRecv+=bytes;
     }
   
-  public static void addBytesSend(long bytes)
+  public void addBytesSend(long bytes)
     {
     nowVar.bytesSend+=bytes;
     }
   
-  public static void addMessageRecv()
+  public void addMessageRecv()
     {
     ++nowVar.messagesRecv;
     }
   
-  public static void addMessageSend()
+  public void addMessageSend()
     {
     ++nowVar.messagesSend;
     }
   
-  public static void addMessageIncorrect()
+  public void addMessageIncorrect()
     {
     ++nowVar.messagesIncorrect;
     }
   
-  public static void addPlayerLogin(String username, int id)
+  public void addPlayerLogin(String username, int id)
     {
     addEvent("login OK",id,username);
     ++nowVar.playersLogin;
     }
   
-  public static void addPlayerLogout(String username, int id)
+  public void addPlayerLogout(String username, int id)
     {
     addEvent("logout",id,username);
     ++nowVar.playersLogout;
     }
   
-  public static void addPlayerInvalidLogin(String username)
+  public void addPlayerInvalidLogin(String username)
     {
     addEvent("login FAIL",0,username);
     ++nowVar.playersInvalidLogin;
     }
   
-  public static void setOnlinePlayers(long online)
+  public void setOnlinePlayers(long online)
     {
     nowVar.playersOnline=online;
     }
   
-  public static void addObjectAdded()
+  public void addObjectAdded()
     {
     ++nowVar.objectsAdded;
     }
   
-  public static void addObjectRemoved()
+  public void addObjectRemoved()
     {
     ++nowVar.objectsRemoved;
     }
   
-  public static void setObjectsNow(long now)
+  public void setObjectsNow(long now)
     {
     nowVar.objectsNow=now;
     }
   
-  public static void addActionsAdded(String action, int id)
+  public void addActionsAdded(String action, int id)
     {
     addEvent("action",id,action);
     ++nowVar.actionsAdded;
     }
   
-  public static void addActionsInvalid()
+  public void addActionsInvalid()
     {
     ++nowVar.actionsInvalid;
     }
   
-  public static GatheredVariables getVariables()
+  public GatheredVariables getVariables()
     {
     return(nowVar);
     }
   
-  public static void print()
+  public void print()
     {
     
     try

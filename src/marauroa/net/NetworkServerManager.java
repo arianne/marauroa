@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.12 2004/02/07 20:41:00 root777 Exp $ */
+/* $Id: NetworkServerManager.java,v 1.13 2004/02/16 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ public class NetworkServerManager
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
+  private Statistics stats;
   
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
       to recieve new messages from the network. */
@@ -55,6 +56,8 @@ public class NetworkServerManager
 
 	  /* Because we access the list from several places we create a synchronized list. */
       messages=Collections.synchronizedList(new LinkedList());
+
+      stats=Statistics.getStatistics();
     
       readManager=new NetworkServerManagerRead();
       readManager.start();
@@ -188,8 +191,8 @@ public class NetworkServerManager
           marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
           
           /*** Statistics ***/
-          Statistics.addBytesRecv(packet.getLength());
-          Statistics.addMessageRecv();
+          stats.addBytesRecv(packet.getLength());
+          stats.addMessageRecv();
 
           Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
           marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
@@ -204,7 +207,7 @@ public class NetworkServerManager
           }
         catch(IOException e)
           {
-          Statistics.addMessageIncorrect();
+          stats.addMessageIncorrect();
 
           /* Report the exception */
           marauroad.trace("NetworkServerManagerRead::run","X",e.getMessage());
@@ -245,8 +248,8 @@ public class NetworkServerManager
  	      byte[] buffer=out.toByteArray();
   
           /*** Statistics ***/
-          Statistics.addBytesSend(buffer.length);
-          Statistics.addMessageSend();
+          stats.addBytesSend(buffer.length);
+          stats.addMessageSend();
   
           marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 

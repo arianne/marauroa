@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.45 2004/02/15 11:24:57 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.46 2004/02/16 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,8 @@ class RPServerManager extends Thread
   /** The place where the objects are stored */
   private RPZone zone;
   
+  private Statistics stats;
+  
   /** The networkServerManager so that we can send perceptions */
   private NetworkServerManager netMan;
   /** The PlayerEntryContainer so that we know where to send perceptions */
@@ -56,6 +58,7 @@ class RPServerManager extends Thread
    
     try
       {
+      stats=Statistics.getStatistics();
       keepRunning=true;
       isfinished=false;
       
@@ -154,7 +157,7 @@ class RPServerManager extends Thread
     marauroad.trace("RPServerManager::addRPObject",">");
     try
       {
-      Statistics.addObjectAdded();
+      stats.addObjectAdded();
       
       marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
       zone.add(object);
@@ -199,7 +202,7 @@ class RPServerManager extends Thread
     
     try
       {
-      Statistics.addObjectRemoved();
+      stats.addObjectRemoved();
 
       marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
       return zone.remove(id);
@@ -356,7 +359,7 @@ class RPServerManager extends Thread
       scheduler.nextTurn();      
       ruleProcessor.nextTurn();
       
-      Statistics.setObjectsNow(zone.size());
+      stats.setObjectsNow(zone.size());
       }
       
     isfinished=true;    

@@ -26,13 +26,16 @@ public class JStatistics
   private JLabel lblActions;
   private JLabel lblObjects;
   private JLabel lblPlayers;
-	private JLabel lblMemory;
+  private JLabel lblMemory;  
   private Timer  timer;
+  
+  private Statistics stats;
   
   public JStatistics()
   {
 		super(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+        stats=Statistics.getStatistics();
+        GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth  = 1;
@@ -103,10 +106,10 @@ public class JStatistics
 											{
 					public void actionPerformed(ActionEvent e)
 					{
-						updateStats(Statistics.getVariables());
+						updateStats(stats.getVariables());
 					}
 				});
-		updateStats(Statistics.getVariables());
+		updateStats(stats.getVariables());
   }
   
   public void updateStats(Statistics.GatheredVariables vars)
