@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.7 2004/03/08 21:33:15 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.8 2004/03/09 06:13:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,9 +78,9 @@ public class The1001Bot
         if(netMan!=null)
         {
           Message msg = netMan.getMessage();
-          System.out.println("---------------------------------------------");
           if(msg!=null && msg instanceof MessageS2CPerception)
           {
+            System.out.println("---------------------------------------------");
             timeout_count = 0;
             MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
             replyMsg.setClientID(msg.getClientID());
@@ -301,7 +301,7 @@ public class The1001Bot
               System.out.println("TIMEOUT. EXIT.");
               System.exit(1);
             }
-            System.out.println("TIMEOUT. SLEEPING.");
+//            System.out.println("TIMEOUT. SLEEPING.");
             sleep(1);
           }
         }

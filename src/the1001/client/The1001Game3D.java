@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.10 2004/03/08 21:26:09 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.11 2004/03/09 06:13:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -197,7 +197,7 @@ public class The1001Game3D
     
     tgs = new TransformGroup();
     trs1 = new Transform3D();
-    trs1.setScale(0.05);
+    trs1.setScale(0.03);
     trs2 = new Transform3D();
     v3f = new Vector3f(-0.28f,0.1f,1.5f);
     trs2.set(v3f);
@@ -611,6 +611,7 @@ public class The1001Game3D
         String thumbs_up = "";
         String thumbs_down = "";
         String waiting = "";
+        String fame = "";
         if(rpArena!=null)
         {
           try
@@ -619,13 +620,14 @@ public class The1001Game3D
             thumbs_up    = rpArena.get(RPCode.var_thumbs_up);
             thumbs_down  = rpArena.get(RPCode.var_thumbs_down);
             waiting      = rpArena.get(RPCode.var_waiting);
+            fame         = rpArena.get(RPCode.var_fame);
           }
           catch (Attributes.AttributeNotFoundException e)
           {
             timeout ="no_attr";
           }
         }
-        centerText3D.setString("Request fame: "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Waiting: "+waiting);
+        centerText3D.setString("Request fame("+fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting);
       }
       else if(RPCode.var_fighting.equals(mode))
       {
