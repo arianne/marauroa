@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.21 2003/12/09 14:12:06 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.22 2003/12/09 15:15:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa;
 import junit.framework.*;
+import java.util.*;
 import java.io.*;
 
 /**
@@ -23,22 +24,26 @@ public class RunTests
     {
     try
       {
-      runTest(suiteBase());
-      runTest(suiteNet());
-      runTest(suiteGame());
-      runTest(suiteActive());      
+      String timestamp=Long.toString(new Date().getTime());
+      
+      runTest(suiteBase(),timestamp);
+      runTest(suiteNet(),timestamp);
+      runTest(suiteGame(),timestamp);
+      runTest(suiteActive(),timestamp);      
       }
     catch(Exception e) 
       {
       }
     }
     
-  private static TestResult runTest(Test e) throws FileNotFoundException
+  private static TestResult runTest(Test e,String timestamp) throws FileNotFoundException
     {
     TestSuite testSuite=(TestSuite)e;
+    
+    String filename="output_"+testSuite.getName()+"_"+timestamp+".txt";
 
     System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
-    System.setOut(new PrintStream(new FileOutputStream("output_"+testSuite.getName()+".txt")));
+    System.setOut(new PrintStream(new FileOutputStream(filename)));
     TestResult result=junit.textui.TestRunner.run(e);
     String testResult=(result.wasSuccessful()?"T":"F");
     System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
@@ -82,7 +87,7 @@ public class RunTests
 
   public static Test suiteBase ( )
     {
-    TestSuite suite= new TestSuite("All Base marauroa Tests");
+    TestSuite suite= new TestSuite("Base marauroa Tests");
 
     suite.addTest(new TestSuite(marauroa.Test_RWLock.class));
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
@@ -92,7 +97,7 @@ public class RunTests
 
   public static Test suiteNet ( )
     {
-    TestSuite suite= new TestSuite("All Network marauroa Tests");
+    TestSuite suite= new TestSuite("Network marauroa Tests");
 
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerShort.class));
@@ -108,7 +113,7 @@ public class RunTests
 
   public static Test suiteGame ( )
     {
-    TestSuite suite= new TestSuite("All Game marauroa Tests");
+    TestSuite suite= new TestSuite("Game marauroa Tests");
    
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
@@ -127,7 +132,7 @@ public class RunTests
 
   public static Test suiteActive ( )
     {
-    TestSuite suite= new TestSuite("All Active marauroa Tests");
+    TestSuite suite= new TestSuite("Active marauroa Tests");
 
     suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
