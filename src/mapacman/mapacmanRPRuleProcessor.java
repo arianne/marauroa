@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.4 2004/04/24 12:12:30 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.5 2004/04/24 12:58:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -159,7 +159,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       pacmanRP.onInit(player);
       
       long start=System.currentTimeMillis();
-      for(int j=0;j<1;++j)
+      for(int j=0;j<1000;++j)
         {
         RPAction action=new RPAction();
         action.put("source_id","1");
@@ -167,7 +167,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
         action.put("dir","S");
         
         pacmanRP.execute(new RPObject.ID(action),action);
-        System.out.println(player);
+        //System.out.println(player);
         }
       
       pacmanRP.nextTurn();
