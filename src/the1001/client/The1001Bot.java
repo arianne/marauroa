@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.13 2004/03/19 14:10:31 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.14 2004/03/19 14:18:25 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,6 +77,7 @@ public class The1001Bot
     continueGamePlay = true;
     boolean i_am_fighting = false;
     boolean voted = false;
+	long last_fight = System.currentTimeMillis();
     try
     {
       while(continueGamePlay)
@@ -127,7 +128,7 @@ public class The1001Bot
                 if(RPCode.var_waiting.equals(status))
                 {
                   i_am_fighting = false;
-                  if(Math.random()>0.95)
+                  if(last_fight-System.currentTimeMillis()>3*60*1000)
                   {
                     gm.requestFight();
                   }
@@ -187,6 +188,7 @@ public class The1001Bot
                     {
                       gm.setRandomFightMode();
                       i_am_fighting = true;
+					  last_fight = System.currentTimeMillis();
                     }
                     int hp = own_gl.getInt(RPCode.var_hp);
                     if(hp>0)
@@ -456,6 +458,7 @@ public class The1001Bot
   }
   
 }
+
 
 
 
