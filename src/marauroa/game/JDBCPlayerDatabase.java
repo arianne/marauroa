@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.54 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.55 2004/11/20 21:48:42 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1248,11 +1248,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       stmt.execute(query);
       }
     
-    RPObject.SlotsIterator sit=object.slotsIterator();
-
-    while(sit.hasNext())
+    for(Iterator<RPSlot> sit=object.slotsIterator(); sit.hasNext();)
       {
-      RPSlot slot=(RPSlot) sit.next();
+      RPSlot slot= sit.next();
       
       query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
       marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
