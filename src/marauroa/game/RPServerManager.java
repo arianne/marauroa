@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.54 2004/03/26 17:23:49 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.55 2004/03/27 10:54:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,7 @@ class RPServerManager extends Thread
   private NetworkServerManager netMan;
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
+  
   /** Constructor 
    *  @param netMan the NetworkServerManager so that we can send message */
   public RPServerManager(NetworkServerManager netMan)
@@ -236,7 +237,21 @@ class RPServerManager extends Thread
             messages2cPerception.setMyRPObject(object);
             messages2cPerception.setClientID(clientid);
             netMan.addMessage(messages2cPerception);            
+          
+            /** We check if we need to update player in the database */
+            if(playerContainer.shouldStoredUpdate(clientid))
+              {
+              try
+                {
+                playerContainer.setRPObject(clientid,object);
+                }
+              catch(Exception e)
+                {
+                marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
+                }
+              }
             }
+            
           if(playerContainer.timedout(clientid))
             {
             playersToRemove.add(new Integer(clientid));
