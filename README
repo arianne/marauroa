@@ -12,7 +12,7 @@
 Marauroa
 --------
 
-Marauroa is a implementation using Java of the Arianne, but we are also 
+Marauroa is a implementation, using Java, of Arianne, but we are also 
 extending some of the concepts implemented in Arianne to improve it.
 
 Marauroa wants to be a massive multiplayer role playing game that you can 
@@ -68,7 +68,7 @@ The save and run Ant.
 cd /foo/bar/marauroa
 ant jar
 
-You will have a marauroa-0.02.jar file in the lib folder.
+You will have a marauroa-0.10.jar file in the lib folder.
 
 
 Running
@@ -83,6 +83,62 @@ Please refer to docs/JDBC Database HOWTO.txt
 
 Changelog
 ---------
+0.10	Dic XX, 2003
+- Delta Perception
+- Full RPZone and RuleProcessor
+- Full test cases
+- Multipacket UDP communication protocol
+- Updated documentation
+- Fixed bugs
+   · 851207	Test both MemoryPlayerDatabase and JDBCPlayerDatabase
+   · 852401	Website is not working
+   · 852887	MemoryDatabasePlayer don't throw GenericDatabaseException
+   · 852890	GameServerManager doesn't close properly
+   · 852946	Logout fails if login is incomplete
+   · 852947	JDBCDatabase allow us to setRPObject on a unexisting character
+   · 852951	CharacterNotFound catched on getRPObject
+   · 853333	RunTest test fails if database is empty
+   · 853388	Wrong table name in JDBCPlayerDatabase
+   · 853394	If Test Player exists in Database
+   · 853391	Perception can make test fails
+   · 853285	runtests wont stop
+   · 853426	RPObject putSlot use has instead of hasSlot
+   · 853680	marauroad fails to start if player exists
+   · 854075	Check in RPScheduler value returned by RPRuleProcessor
+   · 852891	build.xml should substitute @version@
+   · 854961	Document how the NEW perception system works
+   · 854951	Send one TOTAL perception between X delta perceptions
+   · 854946	Server keeps sending total perception
+   · 854937	Update documentation about Messages
+   · 854936	There is no method to process C2S Perception ACK
+   · 854878	Perception is sent if players doesnt' logout correctly
+   · 854840	Modify notification for RPZone needed
+   · 854373	Packet size is 1500 and bigger packets silently fails
+   · 854940	Update documentation about Timeouts in PlayerContainer
+   · 851232	Implement the timestamp handling
+   · 851215	Exceptions should have more info
+   · 854870	Update documentation at Sourceforge
+   · 851574	Concurrency problems in PlayerEntryContainer
+   · 855405	Lack of Test case for RWLock
+   · 854854	Lack of Test Case for MarauroaRPZone
+   · 851594	Concurrecy problem too in RPZone
+   · 854856	Lack of Test case in MarauroaRPRuleProcessor
+   · 854789	Lack of Test case for RPObjectFactory
+   · 854788	Lack of Test case for RPActionFactory
+   · 855553	Message bigger than 1500 bytes
+   · 855709	Test both directions in NetworkServerManager
+   · 855589	Client don't handle multipart messages
+   · 855584	Clean hacks done to implement Messages bigger than 1500
+   · 855696	in NetworkClientManager use same code
+   · 855768	Remove lost packets in NetworkClientManager
+   · 855767	Update UDP Packet format document
+   · 855581	Document modifications on Network*Manager
+   · 855688	new Constructors for Messages
+   · 854875	Problems with slots in JMarauroa
+   · 851768	PlayerNotFoundException is usually a hidden problem
+   · 851628	Enforce any rpzone and rpruleprocessor to implement
+
+
 0.02	Nov 30, 2003
 - Added Perception message
 - Added JDBC Database
