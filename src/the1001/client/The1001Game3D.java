@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.4 2004/02/19 20:27:59 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.5 2004/02/19 22:28:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,6 +63,9 @@ public class The1001Game3D
 	//  private int currAnim;
 	private GameDataModel gdm;
 	private Arena arena;
+	
+	private BranchGroup bgCenterText;
+	private Text3D centerText3D;
   
   public The1001Game3D(GameDataModel gdm)
   {
@@ -95,8 +98,7 @@ public class The1001Game3D
 		Transform3D trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		Transform3D trs2 = new Transform3D();
-		Vector3f v3f = new Vector3f(-0.33f,0.22f,1.5f);
-//		Vector3f v3f = new Vector3f(-0.0f,0.0f,1.5f);
+		Vector3f v3f = new Vector3f(-0.34f,0.22f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -108,7 +110,7 @@ public class The1001Game3D
 		trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(-0.33f,0.12f,1.5f);
+		v3f = new Vector3f(-0.34f,0.12f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -120,7 +122,7 @@ public class The1001Game3D
 		trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(-0.33f,0.02f,1.5f);
+		v3f = new Vector3f(-0.34f,0.02f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -132,7 +134,7 @@ public class The1001Game3D
 		trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(+0.33f,0.02f,1.5f);
+		v3f = new Vector3f(+0.34f,-0.18f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -144,7 +146,7 @@ public class The1001Game3D
 		trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(+0.33f,0.22f,1.5f);
+		v3f = new Vector3f(+0.34f,0.22f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
@@ -156,12 +158,49 @@ public class The1001Game3D
 		trs1 = new Transform3D();
 		trs1.setScale(0.03);
 		trs2 = new Transform3D();
-		v3f = new Vector3f(+0.33f,0.12f,1.5f);
+		v3f = new Vector3f(+0.34f,0.12f,1.5f);
 		trs2.set(v3f);
 		trs2.mul(trs1);
 		tgs.setTransform(trs2);
 		tgs.addChild(button_vote_down);
 		root.addChild(tgs);
+		
+		bgCenterText = new BranchGroup();
+		
+		Font3D f3d = new Font3D(new Font("Times New Roman", Font.PLAIN, 1),
+														new FontExtrusion());
+		centerText3D = new Text3D(f3d);
+		centerText3D.setCapability(Text3D.ALLOW_STRING_WRITE);
+		centerText3D.setCapability(Text3D.ALLOW_STRING_READ);
+		Shape3D sh_txt = new Shape3D();
+		Appearance app_txt = new Appearance();
+		Material mm_txt = new Material();
+//		mm_txt.setLightingEnable(true);
+//		mm_txt.setSpecularColor(new Color3f(1.0f,0.0f,0.0f));
+//		mm_txt.setAmbientColor(new Color3f(1.0f,0.0f,0.0f));
+//		mm_txt.setDiffuseColor(new Color3f(0.0f,1.0f,0.0f));
+		mm_txt.setEmissiveColor(new Color3f(1.0f,1.0f,1.0f));
+		app_txt.setMaterial(mm_txt);
+		sh_txt.setGeometry(centerText3D);
+		sh_txt.setAppearance(app_txt);
+		sh_txt.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+		PickTool.setCapabilities(sh_txt, PickTool.INTERSECT_FULL);
+		bgCenterText.addChild(sh_txt);
+		bgCenterText.setPickable(false);
+		
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.05);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(-0.28f,0.1f,1.5f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(bgCenterText);
+		
+		root.addChild(tgs);
+		centerText3D.setString("Request fame: 6");
+		
 		
 		arena = createArene();
 		
@@ -359,7 +398,7 @@ public class The1001Game3D
 			{
 				try
 				{
-					Thread.sleep(80);
+					Thread.sleep(250);
 				}
 				catch (Exception e)
 				{
@@ -454,6 +493,7 @@ public class The1001Game3D
 //			PickTool.setCapabilities(shape, PickTool.INTERSECT_FULL);
 //			shape.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
 			shape.setPickable(false);
+			shape.setCollidable(true);
 			addChild(shape);
 			
 			
@@ -479,6 +519,7 @@ public class The1001Game3D
 				tg2.addChild(cylinder);
 //				cylinder.setCapability(Cylinder.ALLOW_PICKABLE_READ);
 				cylinder.setPickable(false);
+				cylinder.setCollidable(true);
 //				PickTool.setCapabilities(cylinder, PickTool.INTERSECT_FULL);
 				addChild(tg2);
 			}
@@ -491,6 +532,18 @@ public class The1001Game3D
 		public void setArenaMode(String mode)
 		{
 			this.mode = mode;
+			if(RPCode.var_waiting.equals(mode))
+			{
+				centerText3D.setString("Arena waiting...");
+			}
+			else if(RPCode.var_request_fame.equals(mode))
+			{
+				centerText3D.setString("Request fame: ");
+			}
+			else if(RPCode.var_fighting.equals(mode))
+			{
+				centerText3D.setString("");
+			}
 		}
 		
 		public void setSpectators(RPObject[] spectators)
@@ -763,13 +816,36 @@ public class The1001Game3D
 		Appearance appearance = new Appearance();
 		Texture texture = loader.getTexture();
 		appearance.setTexture(texture);
+		
 		TextureAttributes texture_attr = new TextureAttributes();
 		texture_attr.setTextureMode(TextureAttributes.MODULATE);
 		appearance.setTextureAttributes(texture_attr);
 		Shape3D shape = new Shape3D(plane,appearance);
 		shape.setUserData(id);
+		TransparencyAttributes ta = new TransparencyAttributes();
+		ta.setTransparencyMode (TransparencyAttributes.FASTEST);
+		ta.setTransparency (0.8f);
+		appearance.setTransparencyAttributes(ta);
+		
 		PickTool.setCapabilities(shape, PickTool.INTERSECT_FULL);
-		bg.addChild(shape);
+		
+		float width  = texture.getWidth();
+		float height = texture.getHeight();
+		float prop_x  = width/height;
+		float prop_y  = 1.0f;
+		float prop_z  = 1.0f;
+		if(prop_x<1 && prop_x!=0)
+		{
+			prop_y = 1/prop_x;
+			prop_x = 1;
+		}
+		marauroad.trace("The1001Game3D::createButton","D","Button = "+image+", width="+width+", height="+height + ", prop_x="+prop_x);
+		
+		TransformGroup tg = new TransformGroup();
+		Transform3D transform = new Transform3D(new float[]{prop_x,0,0,0,0,prop_y,0,0,0,0,prop_z,0,0,0,0,1});
+		tg.setTransform(transform);
+		tg.addChild(shape);
+		bg.addChild(tg);
 		bg.compile();
 		return(bg);
 	}
@@ -789,39 +865,40 @@ public class The1001Game3D
 		JFrame frame = new JFrame("Arena");
 		The1001Game3D gamedisplay = new The1001Game3D(null);
 		frame.getContentPane().add(gamedisplay);
-		frame.setSize(800,600);
-//		frame.setUndecorated(true);
-//		RPObject [] spectators = new RPObject[2];
-//		RPObject [] fighters   = new RPObject[2];
-//		for (int i = 0; i < spectators.length; i++)
-//		{
-//			RPObject rp = new RPObject();
-//			rp.put("object_id","spec_"+i);
-//			rp.put("name","Spectator_"+i);
-//			spectators[i] = rp;
-//		}
-//		for (int i = 0; i < fighters.length; i++)
-//		{
-//			try
-//			{
-//				RPObject rp = new Gladiator(new RPObject.ID(i));
-//				rp.put("object_id","glad_"+i);
-//				fighters[i] = rp;
-//			}
-//			catch (RPObject.SlotAlreadyAddedException e) {}
-//		}
+		frame.setSize(640,480);
+		frame.setUndecorated(true);
+		RPObject [] spectators = new RPObject[80];
+		RPObject [] fighters   = new RPObject[2];
+		for (int i = 0; i < spectators.length; i++)
+		{
+			RPObject rp = new RPObject();
+			rp.put("object_id","spec_"+i);
+			rp.put("name","Spectator_"+i);
+			spectators[i] = rp;
+		}
+		for (int i = 0; i < fighters.length; i++)
+		{
+			try
+			{
+				RPObject rp = new Gladiator(new RPObject.ID(i));
+				rp.put("object_id","glad_"+i);
+				fighters[i] = rp;
+			}
+			catch (RPObject.SlotAlreadyAddedException e) {}
+		}
 		frame.show();
 		
-//		gamedisplay.arena.setSpectators(spectators);
-//		gamedisplay.arena.setFighters(fighters);
+		gamedisplay.arena.setSpectators(spectators);
+		gamedisplay.arena.setFighters(fighters);
 //
-//		try
-//		{
-//			Thread.sleep(4000);
-//		}
-//		catch (InterruptedException e)
-//		{
-//		}
+		try
+		{
+			Thread.sleep(4000);
+		}
+		catch (InterruptedException e)
+		{
+		}
+//		gamedisplay.centerText3D.setString("Kein Wurst");
 //		RPObject [] lllfighters   = new RPObject[0];
 //		System.out.println("removing fighters.....");
 //		System.out.flush();
