@@ -221,6 +221,13 @@ public class NetworkServerManager
  	      s.write(msg);
  	   
  	      byte[] buffer=out.toByteArray();
+ 	      
+ 	      if(buffer.length>NetConst.UDP_PACKET_SIZE)
+ 	        {
+            marauroad.trace("NetworkServerManagerWrite::write","X","No more room for packet sending");
+ 	        throw new IOException("No more room for packet sending");
+ 	        }
+ 	        
    	      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
  	     
  	      socket.send(pkt);
