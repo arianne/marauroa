@@ -79,22 +79,110 @@ public class GameServerManager extends Thread
       return;
       }
       
-    if(playerDatabase.isCorrect(msg.getUsername(),msg.getPassword()))
+    try  
       {
-      /* Correct: The login is correct */
-      short clientid=playerContainer.addPlayer(msg.getAddress());
-      playerContainer.setState(clientid,PlayerEntryContainer.STATE_LOGIN_COMPLETE);
-      playerDatabase.updateLastLogin(msg.getUsername(),msg.getAddress());
-      
-      /* Send player the Login ACK message */
-      MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
-      netMan.addMessage(msgLoginACK);
-      
-      /* Build player character list and send it to client */
-      }
-    else
+	  if(playerDatabase.isCorrect(msg.getUsername(),msg.getPassword()))
+	    {
+	    /* Correct: The login is correct */
+	    short clientid=playerContainer.addPlayer(msg.getUsername(),msg.getAddress());
+	    playerDatabase.updateLastLogin(msg.getUsername(),msg.getAddress(),true);
+	      
+	    /* Send player the Login ACK message */
+	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
+	    netMan.addMessage(msgLoginACK);
+	      
+	    /* Build player character list and send it to client */
+	    String[] characters=playerDatabase.getCharactersList(msg.getUsername());
+	    MessageS2CCharacterList msgCharacters=new MessageS2CCharacterList(msg.getAddress(),characters);
+	    netMan.addMessage(msgCharacters);
+
+	    playerContainer.setState(clientid,PlayerEntryContainer.STATE_LOGIN_COMPLETE);
+	    }
+	  else
+	    {
+	    /* Error: User supplied wrong username/password */
+	    playerDatabase.updateLastLogin(msg.getUsername(),msg.getAddress(),false);
+
+	    /* Send player the Login NACK message */
+	    MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);
+	    netMan.addMessage(msgLoginNACK);
+	    }
+	  }
+    catch(PlayerEntryContainer.NoSuchClientIDException e)      
       {
-      /* Error: User supplied wrong username/password */
+      marauroad.report(e.getMessage());
       }
     }
+
+  private void processChooseCharacterEvent(MessageC2SChooseCharacter msg)
+    {
+    short clientid=msg.getClientID();
+    
+    try
+      {
+	  if(!playerContainer.containsPlayer(clientid))
+	    {
+	    /* Error: Player didn't login. */
+	    marauroad.report("Client "+clientid+" has not login yet: IGNORE");
+	      
+	    return;
+	    }
+	    
+	  if(playerContainer.getState(clientid)!=playerContainer.STATE_LOGIN_COMPLETE)
+	    {
+	    /* Error: Player has not completed login yet, or he/she has logout already. */
+	    marauroad.report("Client "+clientid+" has not login yet : IGNORE");
+	     
+	    return;
+	    }
+	      
+	  if(playerDatabase.hasCharacter(playerContainer.getUsername(clientid),msg.getCharacter()))
+	    {
+	    /* Correct: Character exist */
+	    MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());
+	    netMan.addMessage(msgChooseCharacterACK);
+	    
+	    playerContainer.setState(clientid,playerContainer.STATE_GAME_BEGIN);
+	    }
+	  else
+	    {
+	    /* Error: There is no such character */
+	    marauroad.report("Client "+clientid+" has choosen a not valid character: NOTIFY");
+	    MessageS2CChooseCharacterNACK msgChooseCharacterNACK=new MessageS2CChooseCharacterNACK(msg.getAddress());
+	    netMan.addMessage(msgChooseCharacterNACK);
+	    
+	    playerContainer.setState(clientid,playerContainer.STATE_LOGIN_COMPLETE);
+	    }
+      }
+    catch(PlayerEntryContainer.NoSuchClientIDException e)      
+      {
+      marauroad.report(e.getMessage());
+      }
+    }
+
+  private void processLogoutEvent(MessageC2SLogout msg)
+    {
+    short clientid=msg.getClientID();
+    
+    try
+      {
+	  if(!playerContainer.containsPlayer(clientid))
+	    {
+	    /* Error: Player didn't login. */
+	    marauroad.report("Client "+clientid+" has not login yet: IGNORE");
+	      
+	    return;
+	    }
+	    
+	  MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
+	  netMan.addMessage(msgLogout);
+	  
+	  playerContainer.removePlayer(clientid);
+      }
+    catch(PlayerEntryContainer.NoSuchClientIDException e)      
+      {
+      marauroad.report(e.getMessage());
+      }
+    }
+      
   }

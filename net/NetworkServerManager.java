@@ -113,8 +113,6 @@ public class NetworkServerManager
     
     public void run()
       {
-      marauroad.report("Start thread "+this.getName());
-
       while(keepRunning)
         {
         byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
@@ -138,8 +136,7 @@ public class NetworkServerManager
           marauroad.report(e.getMessage());
           }
         }
-        
-      marauroad.report("End thread "+this.getName());
+
       isfinished=true;              
       }    
     }        

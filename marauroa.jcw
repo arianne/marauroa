@@ -11,9 +11,18 @@ LABEL := "marauroa"
 #[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\Test_PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\Test_PlayerEntryContainer.java" #[EndFile]
 
 ! Start Breakpoint Structure
 

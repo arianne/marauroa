@@ -76,6 +76,8 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "game"
@@ -85,5 +87,12 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
+#[BeginFolder]
+LABEL := "Test"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\game\\Test_PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\Test_PlayerEntryContainer.java" #[EndFile]
+#[EndFolder]
 #[EndFolder]
 #[EndFolder]

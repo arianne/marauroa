@@ -28,7 +28,7 @@ public class PlayerDatabase
     return false;
     }
   
-  public void updateLastLogin(String username,InetSocketAddress source)
+  public void updateLastLogin(String username,InetSocketAddress source, boolean correctLogin)
     {
     /** @TODO: Implement the database handler */
     }
@@ -37,5 +37,11 @@ public class PlayerDatabase
     {
     /** @TODO: Implement the database handler */
     return null;
+    }
+    
+  public boolean hasCharacter(String username, String character)
+    {
+    /** @TODO: Implement the database handler */
+    return false;
     }
   }

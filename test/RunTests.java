@@ -26,6 +26,9 @@ public class RunTests
 	suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
 	
 	suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
+	
+	suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
+	suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
 
 	return suite;
 	}

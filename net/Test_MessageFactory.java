@@ -21,22 +21,7 @@ public class Test_MessageFactory extends TestCase
   public void testMessageFactory()
     {
     MessageFactory msgFac=MessageFactory.getFactory();
-/*
-    msgFac.register(Message.TYPE_C2S_LOGIN,new MessageC2SLogin());
-    msgFac.register(Message.TYPE_S2C_LOGIN_ACK,new MessageS2CLoginACK());
-    msgFac.register(Message.TYPE_S2C_LOGIN_NACK,new MessageS2CLoginNACK());
-    
-    msgFac.register(Message.TYPE_S2C_CHARACTERLIST,new MessageS2CCharacterList());
-  
-    msgFac.register(Message.TYPE_C2S_CHOOSECHARACTER,new MessageC2SChooseCharacter());
-    msgFac.register(Message.TYPE_S2C_CHOOSECHARACTER_ACK,new MessageS2CChooseCharacterACK());
-    msgFac.register(Message.TYPE_S2C_CHOOSECHARACTER_NACK,new MessageS2CChooseCharacterNACK());
-  
-    msgFac.register(Message.TYPE_C2S_LOGOUT,new MessageC2SLogout());
-    msgFac.register(Message.TYPE_S2C_LOGOUT_ACK,new MessageS2CLogoutACK());
-    msgFac.register(Message.TYPE_S2C_LOGOUT_NACK,new MessageS2CLogoutNACK());
-*/    
-    
+   
     String character="Test character";
     short clientid=14324;
     

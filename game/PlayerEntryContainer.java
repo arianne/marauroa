@@ -14,6 +14,8 @@ public class PlayerEntryContainer
     {
     public byte state;
     public InetSocketAddress source;
+    public String username;
+    public Date timestamp;
     }
     
   public class NoSuchClientIDException extends Throwable
@@ -24,7 +26,7 @@ public class PlayerEntryContainer
       }
     }
   
-  HashMap listPlayerEntries;
+  private HashMap listPlayerEntries;
   
   private static PlayerEntryContainer playerEntryContainer;
   
@@ -54,17 +56,31 @@ public class PlayerEntryContainer
     return listPlayerEntries.size();
     }   
     
-  public short addPlayer(InetSocketAddress source)
+  public short addPlayer(String username, InetSocketAddress source)
     {
     PlayerEntry entry=new PlayerEntry();
     entry.state=STATE_NULL;
+    entry.username=username;
     entry.source=source;
+    entry.timestamp=new Date();
     
     short clientid=generateClientID(source);    
     
     listPlayerEntries.put(new Short(clientid),entry);
     
     return clientid;
+    }
+    
+  public void removePlayer(short clientid) throws NoSuchClientIDException
+    {
+    if(containsPlayer(clientid))
+      {
+      listPlayerEntries.remove(new Short(clientid));
+      }
+    else
+      {
+      throw new NoSuchClientIDException();
+      }
     }
   
   private static short maxClientID=0;
@@ -81,6 +97,7 @@ public class PlayerEntryContainer
       PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
     
       entry.state=newState;
+      entry.timestamp=new Date();
       }
     else
       {
@@ -93,7 +110,7 @@ public class PlayerEntryContainer
     if(containsPlayer(clientid))
       {
       PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
-    
+      entry.timestamp=new Date();    
       return entry.state;
       }
     else
@@ -101,4 +118,53 @@ public class PlayerEntryContainer
       throw new NoSuchClientIDException();
       }
     }
+    
+  public boolean isPlayer(short clientid, InetSocketAddress source)
+    {
+    if(containsPlayer(clientid))
+      {
+      PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
+      entry.timestamp=new Date();    
+      if(source.equals(entry.source))
+        {
+        return true;
+        }
+      else
+        {
+        return false;
+        }
+      }
+    else
+      {
+      return false;
+      }    
+    }
+    
+  public String getUsername(short clientid) throws NoSuchClientIDException
+    {
+    if(containsPlayer(clientid))
+      {
+      PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
+         
+      return entry.username;
+      }
+    else
+      {
+      throw new NoSuchClientIDException();
+      }
+    }
+    
+  public InetSocketAddress getInetSocketAddress(short clientid) throws NoSuchClientIDException
+    {
+    if(containsPlayer(clientid))
+      {
+      PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
+         
+      return entry.source;
+      }
+    else
+      {
+      throw new NoSuchClientIDException();
+      }
+    }  
   }
