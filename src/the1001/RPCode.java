@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.50 2004/02/10 22:22:19 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.51 2004/02/16 15:27:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -461,7 +461,6 @@ public class RPCode
   /** This method returns true if the combat is completed */  
   private static boolean combatCompleted(RPObject[] gladiators) throws Exception
     {
-    /** NOTE: This routine fails if both players die. Is that possible? */
     int gladiatorsStillFighting=gladiators.length;
         
     /** We check for dead players and determine if combat is finished. */
@@ -473,7 +472,7 @@ public class RPCode
         }
       }
     
-    return (gladiatorsStillFighting==1)?true:false;
+    return (gladiatorsStillFighting<=1)?true:false;
     }
   
   /** This method is the combat system itself, and it is an implementation of the 

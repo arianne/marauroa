@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.8 2004/02/15 23:53:15 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.9 2004/02/16 15:27:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa;
 
 import java.util.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 
 public class Statistics
   {
@@ -82,14 +83,40 @@ public class Statistics
       }
     }
   
-  private static Date startTime;
-  
+  private static Date startTime;  
   private static GatheredVariables nowVar;
-  
+  private static PrintWriter eventfile;
+
+  private static Date timestamp;
+  private static SimpleDateFormat formatter;
+    
   static
     {
+    timestamp=new Date();
+    formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
     startTime=new Date();
     nowVar=new GatheredVariables();
+    try
+      {
+      eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt"));
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("Statistics::static","!",e.getMessage());
+      System.exit(1);      
+      }
+    }
+
+  public static void addEvent(String event,int session_id,String text)
+    {
+    marauroad.trace("Statistics::addEvent",">");
+    timestamp.setTime(System.currentTimeMillis());
+    String ts = formatter.format(timestamp);
+    
+    eventfile.println(ts+"\t"+event+"\t"+String.valueOf(session_id)+"\t"+text);
+    eventfile.flush();
+    marauroad.trace("Statistics::addEvent","<");
     }
   
   public static void addBytesRecv(long bytes)
@@ -117,18 +144,21 @@ public class Statistics
     ++nowVar.messagesIncorrect;
     }
   
-  public static void addPlayerLogin()
+  public static void addPlayerLogin(String username, int id)
     {
+    addEvent("login OK",id,username);
     ++nowVar.playersLogin;
     }
   
-  public static void addPlayerLogout()
+  public static void addPlayerLogout(String username, int id)
     {
+    addEvent("logout",id,username);
     ++nowVar.playersLogout;
     }
   
-  public static void addPlayerInvalidLogin()
+  public static void addPlayerInvalidLogin(String username)
     {
+    addEvent("login FAIL",0,username);
     ++nowVar.playersInvalidLogin;
     }
   
@@ -152,8 +182,9 @@ public class Statistics
     nowVar.objectsNow=now;
     }
   
-  public static void addActionsAdded()
+  public static void addActionsAdded(String action, int id)
     {
+    addEvent("action",id,action);
     ++nowVar.actionsAdded;
     }
   

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.29 2004/01/31 20:14:06 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.30 2004/02/16 15:27:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -216,12 +216,13 @@ public class GameServerManager extends Thread
 	  if(playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()))
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","D","Correct username/password");
-        Statistics.addPlayerLogin();
 
 	    /* Correct: The login is correct */
 	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
 	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),true);
-	      
+   
+        Statistics.addPlayerLogin(msg.getUsername(),clientid);
+          
 	    /* Send player the Login ACK message */
 	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
 	    msgLoginACK.setClientID(clientid);
@@ -243,7 +244,7 @@ public class GameServerManager extends Thread
 	  else
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
-        Statistics.addPlayerInvalidLogin();
+        Statistics.addPlayerInvalidLogin(msg.getUsername());
 
         if(playerContainer.hasPlayer(msg.getUsername()))
           {
@@ -377,11 +378,11 @@ public class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
         }
           
-	  playerContainer.removeRuntimePlayer(clientid);
+      Statistics.addPlayerLogout(playerContainer.getUsername(clientid),clientid);
+   
+      playerContainer.removeRuntimePlayer(clientid);
 	  
 	  /* Send Logout ACK message */
-      Statistics.addPlayerLogout();
-   
       MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
       msgLogout.setClientID(clientid);
 	  netMan.addMessage(msgLogout);
@@ -438,9 +439,17 @@ public class GameServerManager extends Thread
 	  /* Enforce source_id and action_id*/
 	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
 	  action.put("source_id",id.getObjectID());
-	  action.put("action_id",action.get("action_id"));
-	  
-	  rpMan.addRPAction(action);
+
+      if(action.has("type"))
+        {
+        Statistics.addActionsAdded(action.get("type"),clientid);
+        }
+      else
+        {
+        Statistics.addActionsAdded(action.get("invalid"),clientid);
+        }
+      
+      rpMan.addRPAction(action);
 
 	  /* Notify client that we recieved the action */
       MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),action.getInt("action_id"));
@@ -449,6 +458,7 @@ public class GameServerManager extends Thread
       }
     catch(Exception e)      
       {
+      Statistics.addActionsInvalid();
       marauroad.trace("GameServerManager::processActionEvent","X",e.getMessage());
       }
     finally

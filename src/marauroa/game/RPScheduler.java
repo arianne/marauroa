@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.10 2004/01/30 18:09:54 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.11 2004/02/16 15:27:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,13 +65,9 @@ public class RPScheduler
         list.add(action);
         nextTurn.put(id,list);
         }
-
-      Statistics.addActionsAdded();
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      Statistics.addActionsInvalid();
-
       marauroad.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
       throw new ActionInvalidException(e.getAttribute());
       }
