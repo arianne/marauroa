@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.33 2003/12/19 11:43:41 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.34 2003/12/19 15:01:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -220,6 +220,7 @@ public class SimpleGame
 											addLog("Challenge player...\n");
 											statusLine.setText("Challenge player...");
 											otherCharacterID = CharacterList.getId(player);
+											System.out.println(ownCharacterID+" challenged "+otherCharacterID);
 											ChallengeAction c_action=new ChallengeAction();
 											c_action.setWho(ownCharacterID);
 											c_action.setWhom(otherCharacterID);
