@@ -71,6 +71,7 @@ public class GameServerManager extends Thread
           case Message.TYPE_C2S_ACTION:
             marauroad.trace("GameServerManager::run","D","Processing C2S Action Message");
             processActionEvent((MessageC2SAction)msg);
+            break;
           default:
             marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
             break;

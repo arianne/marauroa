@@ -155,7 +155,7 @@ public class RPServerManager extends Thread
     
       while(it.hasNext())
         {
-        short clientid=it.next();
+        int clientid=it.next();
         
         try
           {
@@ -185,10 +185,12 @@ public class RPServerManager extends Thread
     
     while(keepRunning)
       {
+      marauroad.trace("RPServerManager::run","D","[iteration - BEGIN -]");      
       scheduler.visit(ruleProcessor);
       scheduler.nextTurn();
       
       buildPerceptions();
+      marauroad.trace("RPServerManager::run","D","[iteration -  END  -]");      
       
       try
         {

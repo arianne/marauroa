@@ -66,7 +66,7 @@ public class Message implements marauroa.net.Serializable
     
   /** Set the clientID so that we can identify the client to which the
       message is target, as only IP is easy to Fake
-      @param clientid a short that reprents the client id. */    
+      @param clientid a int that reprents the client id. */    
   public void setClientID(int clientid)
     {
     this.clientid=clientid;

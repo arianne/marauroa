@@ -76,10 +76,10 @@ public class PlayerEntryContainer
      
     /** This method returs the clientid and move the pointer to the next element
      *  @return an clientid */
-    public short next()
+    public int next()
       {
       Map.Entry entry=(Map.Entry)entryIter.next();
-      return ((Short)entry.getKey()).shortValue();
+      return ((Integer)entry.getKey()).intValue();
       }
     
     public void remove()
@@ -670,15 +670,14 @@ public class PlayerEntryContainer
       }
     }
 
-  private static short maxClientID=0;
   private static Random rand=new Random();
   
   private int generateClientID(InetSocketAddress source)
     {
-    int clientid=(short)rand.nextInt();
+    int clientid=rand.nextInt();
     while(hasRuntimePlayer(clientid))    
       {
-      clientid=(short)rand.nextInt();
+      clientid=rand.nextInt();
       }
       
     return clientid;    

@@ -97,7 +97,7 @@ public class Test_PlayerEntryContainer extends TestCase
     PlayerEntryContainer container=PlayerEntryContainer.getContainer();
     
     assertNotNull(container);
-    short randomClientID=0;
+    int randomClientID=0;
       
     assertEquals(container.size(),0);
      

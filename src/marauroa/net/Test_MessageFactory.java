@@ -24,7 +24,7 @@ public class Test_MessageFactory extends TestCase
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SChooseCharacter msg=new MessageC2SChooseCharacter(null,character);
     msg.setClientID(clientid);
@@ -68,7 +68,7 @@ public class Test_MessageFactory extends TestCase
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SChooseCharacter msg=new MessageC2SChooseCharacter(null,character);
     msg.setClientID(clientid);
@@ -103,7 +103,7 @@ public class Test_MessageFactory extends TestCase
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SChooseCharacter msg=new MessageC2SChooseCharacter(null,character);
     msg.setClientID(clientid);

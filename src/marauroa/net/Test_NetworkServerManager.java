@@ -30,7 +30,7 @@ public class Test_NetworkServerManager extends TestCase
       
     InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
     Message msg=new MessageC2SLogin(address,"Test username","Test password");
-    msg.setClientID((short)1423);
+    msg.setClientID(1423);
     
     netManager.addMessage(msg);
     Message result=netManager.getMessage();

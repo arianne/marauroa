@@ -23,7 +23,7 @@ public class Test_Messages extends TestCase
   public void testMessageC2SChooseCharacter()
     {
     String character="Test character";
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SChooseCharacter msg=new MessageC2SChooseCharacter(null,character);
     msg.setClientID(clientid);
@@ -71,7 +71,7 @@ public class Test_Messages extends TestCase
     {
     String username="Test username";
     String password="Test password";
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SLogin msg=new MessageC2SLogin(null,username,password);
     msg.setClientID(clientid);
@@ -119,7 +119,7 @@ public class Test_Messages extends TestCase
 
   public void testMessageC2SLogout()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageC2SLogout msg=new MessageC2SLogout(null);
     msg.setClientID(clientid);
@@ -163,7 +163,7 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CCharacterList()
     {
-    short clientid=14324;
+    int clientid=14324;
     String[] characters={"Test character","Another Test character"};
     
     MessageS2CCharacterList msg=new MessageS2CCharacterList(null,characters);
@@ -215,7 +215,7 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CChooseCharacterACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CChooseCharacterACK msg=new MessageS2CChooseCharacterACK(null,new RPObject.ID(0));
     msg.setClientID(clientid);
@@ -259,7 +259,7 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CChooseCharacterNACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CChooseCharacterNACK msg=new MessageS2CChooseCharacterNACK(null);
     msg.setClientID(clientid);
@@ -303,7 +303,7 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CLoginACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CLoginACK msg=new MessageS2CLoginACK(null);
     msg.setClientID(clientid);
@@ -348,7 +348,7 @@ public class Test_Messages extends TestCase
   public void testMessageS2CLoginNACK()
     {
     byte reason=MessageS2CLoginNACK.USERNAME_WRONG;
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CLoginNACK msg=new MessageS2CLoginNACK(null,reason);
     msg.setClientID(clientid);
@@ -394,7 +394,7 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CLogoutACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CLogoutACK msg=new MessageS2CLogoutACK(null);
     msg.setClientID(clientid);
@@ -438,7 +438,7 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CLogoutNACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CLogoutNACK msg=new MessageS2CLogoutNACK(null);
     msg.setClientID(clientid);
@@ -482,7 +482,7 @@ public class Test_Messages extends TestCase
     
   public void testMessageC2SAction()
     {
-    short clientid=14324;
+    int clientid=14324;
     marauroa.game.RPAction action=new marauroa.game.RPAction();
     action.put("object_id","156123");
     action.put("zone_id","1");
@@ -532,7 +532,7 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CActionACK()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CActionACK msg=new MessageS2CActionACK(null);
     msg.setClientID(clientid);
@@ -576,7 +576,7 @@ public class Test_Messages extends TestCase
       
   public void testMessageS2CPerception()
     {
-    short clientid=14324;
+    int clientid=14324;
     
     MessageS2CPerception msg=new MessageS2CPerception(null, new LinkedList(), new LinkedList());
     msg.setClientID(clientid);
@@ -620,7 +620,7 @@ public class Test_Messages extends TestCase
     
   public void testSeveralMessageSameStream()
     {
-    short clientid=14324;
+    int clientid=14324;
     String username="Test username";
     String password="Test password";
     
