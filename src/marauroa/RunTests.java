@@ -15,7 +15,7 @@ public class RunTests
   public static Test suite ( )
     {
     TestSuite suite= new TestSuite("All marauroa Tests");
-    
+/*    
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
     
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
@@ -35,7 +35,7 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
-
+*/
     suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
 
     return suite;

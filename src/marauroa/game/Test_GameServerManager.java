@@ -157,12 +157,76 @@ public class Test_GameServerManager extends TestCase
       }
     }  
 
-  public void testMainProceduresFailures()
+  public void testMainLoginFailures()
     {
 	createEnviroment();
 	
 	try
 	  {
+      InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
+      netMan.addMessage(new MessageC2SLogin(address,"Wrong Test Player","Wrong Test Password"));
+      int clientid=-1;
+      
+      int recieved=0;
+      while(recieved!=1)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+        
+        if(msg instanceof MessageS2CLoginNACK)
+          {
+          assertTrue("Correct login failure",true);
+          clientid=msg.getClientID();
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can login. Got "+msg.toString());
+          }        
+        }
+
+      netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+      
+      while(recieved!=3)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+        
+        if(msg instanceof MessageS2CLoginACK)
+          {
+          assertTrue("Correct login parameter",true);
+          clientid=msg.getClientID();
+          ++recieved;
+          }
+        else if(msg instanceof MessageS2CCharacterList)
+          {
+          assertTrue("Recieved character list",true);
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can't login. Got "+msg.toString());
+          }        
+        }
+
+      netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+      
+      while(recieved!=4)
+        {
+        Message msg=null;
+        while(msg==null) msg=netMan.getMessage();
+        
+        if(msg instanceof MessageS2CLoginNACK)
+          {
+          assertTrue("Correct login failure",true);
+          clientid=msg.getClientID();
+          ++recieved;
+          }
+        else
+          {
+          fail("ERROR: Can login. Got "+msg.toString());
+          }        
+        }
 	  }
     finally
       {

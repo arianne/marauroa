@@ -135,7 +135,14 @@ public class GameServerManager extends Thread
 	  else
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
-	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
+        if(playerContainer.hasPlayer(msg.getUsername()))
+          {
+	      playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
+	      }
+	    else
+	      {
+          marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username: Can't add login event.");
+	      }
 
 	    /* Send player the Login NACK message */
 	    MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);
