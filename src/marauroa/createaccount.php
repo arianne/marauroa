@@ -1,4 +1,3 @@
-
 <html>
 <body>
 <?PHP
@@ -18,7 +17,7 @@ if(isset($HTTP_POST_VARS['cmd']))
   else
     {
     /* Create the account. */
-    $cmdline='C:/j2sdk1.4.2_03/bin/java -cp "mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.21.jar" marauroa.createaccount';
+    $cmdline='java -cp "mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.22.jar" marauroa.createaccount';
     $cmdline=$cmdline.' -u "'.$HTTP_POST_VARS['username'].'"';
     $cmdline=$cmdline.' -p "'.$HTTP_POST_VARS['password'].'"';
     $cmdline=$cmdline.' -c "'.$HTTP_POST_VARS['username'].'"';
@@ -28,6 +27,13 @@ if(isset($HTTP_POST_VARS['cmd']))
 
     $output=array();
     exec($cmdline,$output,$return);
+
+    /*
+    for($i=0;$i<count($output);$i++)
+      {
+      echo $output[$i]."<br>";
+      }
+    */
     
     if($return==1)
       {
@@ -72,9 +78,27 @@ if(isset($HTTP_POST_VARS['cmd']))
 $character_models= array("billgates");
 $gladiator_models= array("pknight","orc","yohko");
 
-echo '<b><font color="#0000FF">Marauroa\'s online server</font></b><br>'.
-   	 'Fill all the fields and create an account for yourself on this Marauroa server<br>'.
+$location_server="D:/marauroa/classes/";
+$filename=$location_server."server_up.txt";
+
+echo '<b><font color="#0000FF">Marauroa\'s online server</font></b><br>';
+
+$fp=fopen($filename,"r");
+$contents = fread($fp, filesize($filename));
+fclose($fp);
+
+if(time()>$contents+10)
+  {
+  echo 'Server is <font color="#FF0000"><b>DOWN</b></font><p>';
+  }
+else
+  {
+  echo 'Server is <font color="#00FF00">UP</font><p>';
+  }
+
+echo 'Fill all the fields and create an account for yourself on this Marauroa server<br>'.
    	 'Enjoy!<p>';
+
 
 echo '<form method="POST" action="index.php">'.
 	 '<input type="hidden" name="cmd" value="newaccount"/>'.

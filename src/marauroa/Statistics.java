@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.6 2004/02/15 11:24:56 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.7 2004/02/15 11:40:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -185,7 +185,7 @@ public class Statistics
       out.close();
       
       out=new PrintWriter(new FileOutputStream("server_up.txt"));
-      out.println(actualTime.toString());
+      out.println(actualTime.getTime()/1000);
       out.close();      
       }
     catch(Exception e)
