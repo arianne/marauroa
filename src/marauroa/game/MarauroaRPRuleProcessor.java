@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.9 2003/12/29 11:02:46 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.10 2003/12/29 11:19:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,8 +45,9 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     {
     }
 
-  public boolean onInit(RPObject object)
+  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
+    zone.add(object);
     return true;
     }
     

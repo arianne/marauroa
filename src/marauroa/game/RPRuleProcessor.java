@@ -1,4 +1,4 @@
-/* $Id: RPRuleProcessor.java,v 1.10 2003/12/29 11:02:46 arianne_rpg Exp $ */
+/* $Id: RPRuleProcessor.java,v 1.11 2003/12/29 11:19:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ public interface RPRuleProcessor
   
   /** Callback method called when a new player enters in the game 
    *  @param object the new player that enters in the game. */
-  public boolean onInit(RPObject object);
+  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException;
   /** Callback method called when a new player exits the game 
    *  @param id the new player id that exits the game. */
   public boolean onExit(RPObject.ID id);

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.4 2003/12/29 11:02:47 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.5 2003/12/29 11:19:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,8 +82,9 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
 
-  public boolean onInit(RPObject object)
+  public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
+    zone.add(object);
     return true;
     }
     

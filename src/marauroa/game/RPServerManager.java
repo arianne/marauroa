@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.31 2003/12/12 16:18:24 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.32 2003/12/29 11:19:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -299,6 +299,21 @@ class RPServerManager extends Thread
       {
       marauroad.trace("RPServerManager::removeTimedoutPlayers","<");
       }
+    }
+
+  public boolean onInit(RPObject object)
+    {
+    return true;
+    }
+    
+  public boolean onExit(RPObject.ID id)
+    {
+    return true;
+    }
+
+  public boolean onTimeout(RPObject.ID id)
+    {
+    return true;
     }
   
   public void run()
