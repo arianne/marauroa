@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.88 2004/05/19 20:56:36 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.89 2004/05/22 17:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,8 @@ import marauroa.game.*;
  */
 public class marauroad extends Thread
   {
-  final private static boolean DEBUG=true;
-  final private static String VERSION="0.34";
+  final private static boolean DEBUG=false;
+  final private static String VERSION="0.35";
   
   private static PrintWriter out;
   private static marauroad marauroa;

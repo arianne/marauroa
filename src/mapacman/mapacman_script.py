@@ -331,10 +331,14 @@ class mapacmanRPMap:
             return object
             
         listObjects=LinkedList()
-        for j in self.__grid:
-            for i in (self.__grid[j]):
-                if ((self.__grid[j])[i])=='*':
-                    listObjects.add(createBlock((i,j)))
+        y=0
+        for line in self.__grid:
+            x=0
+            for char in line:
+                if char=='*':
+                    listObjects.add(createBlock((x,y)))
+                x=x+1
+            y=y+1
 
         return listObjects
         
