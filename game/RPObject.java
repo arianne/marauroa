@@ -46,6 +46,11 @@ public class RPObject extends Attributes
     slots=null;
     }
     
+  public void addSlots(RPSlot[] slots)
+    {
+    this.slots=slots;    
+    }
+    
   public RPSlot getSlot(String name) throws NoSlotFoundException
     {
     for(int i=0;i!=slots.length;++i)
