@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.34 2004/04/15 12:08:11 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.35 2004/04/15 15:27:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,8 +90,7 @@ public class MarauroaRPZone implements RPZone
       if(!already_added)
         {
         modified.add(object);
-        }
-      
+        }      
       }
     catch(Exception e)
       {

@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.22 2004/04/15 15:16:36 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.23 2004/04/15 15:27:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,7 +68,6 @@ public interface RPZone
           }
           
         addedList.add(object);
-        object.resetAddedAndDeleted();
         }
       }
       
@@ -100,7 +99,6 @@ public interface RPZone
     public void removed(RPObject object)
       {
       deletedList.add(object);
-      object.resetAddedAndDeleted();
       }
     
     private boolean removedHas(RPObject object)
