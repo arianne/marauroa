@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.14 2003/12/30 07:57:03 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.15 2003/12/30 10:15:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,6 +90,31 @@ public class Attributes implements marauroa.net.Serializable
       throw new AttributeNotFoundException(attribute);
       }
     }
+
+  public int getInt(String attribute) throws AttributeNotFoundException
+    {
+    if(content.containsKey(attribute))
+      {
+      return Integer.parseInt((String)content.get(attribute));
+      }
+    else
+      {
+      throw new AttributeNotFoundException(attribute);
+      }
+    }
+    
+  public List getList(String attribute) throws AttributeNotFoundException
+    {
+    if(content.containsKey(attribute))
+      {
+      return StringToList((String)content.get(attribute));
+      }
+    else
+      {
+      throw new AttributeNotFoundException(attribute);
+      }
+    }
+    
     
   /** This methods remove the attribute from the container
    *  @param attribute the attribute we want to remove
