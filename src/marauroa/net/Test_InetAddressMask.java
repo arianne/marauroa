@@ -1,4 +1,4 @@
-/* $Id: Test_InetAddressMask.java,v 1.1 2004/11/27 10:31:57 root777 Exp $ */
+/* $Id: Test_InetAddressMask.java,v 1.2 2004/11/27 11:03:50 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class Test_InetAddressMask extends TestCase
       assertFalse(address.toString() +" should NOT be matched by "+mask.toString(),mask.matches(address));
    
       mask = new InetAddressMask("127.0.0.1","255.255.0.255");
-      assertTrue(address.toString() +" should be matched by "+mask.toString() ,mask.matches(address));   
+      assertFalse(address.toString() +" should NOT be matched by "+mask.toString() ,mask.matches(address));   
       }
     catch(Exception e)
       {
