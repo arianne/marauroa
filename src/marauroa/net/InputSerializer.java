@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.9 2004/06/15 18:28:51 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.10 2004/06/15 18:39:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,11 +87,11 @@ public class InputSerializer
    @return the byte array serialized
    @throws java.io.IOException if there is an IO error
    @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */
-  public byte[] readShortByteArray() throws IOException, java.lang.ClassNotFoundException
+  public byte[] read255LongByteArray() throws IOException, java.lang.ClassNotFoundException
     {
     int size=readByte();
         
-    if(size>TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS)
+    if(size>255)
       {
       throw new IOException("Ilegal request of an array of "+size+" size");
       }
@@ -177,9 +177,9 @@ public class InputSerializer
     return new String(readByteArray(),"UTF-8");
     }
 
-  public String readShortString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
+  public String read255LongString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
     {
-    return new String(readShortByteArray(),"UTF-8");
+    return new String(read255LongByteArray(),"UTF-8");
     }
     
   /** This method read a String array from the Serializer

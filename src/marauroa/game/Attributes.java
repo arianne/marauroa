@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.32 2004/06/15 18:28:50 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.33 2004/06/15 18:38:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -339,7 +339,7 @@ public class Attributes implements marauroa.net.Serializable
           }
         else if(rpClass.getType(key)==RPClass.SHORT_STRING)
           {
-          out.writeShort((String)entry.getValue());
+          out.write255LongString((String)entry.getValue());
           }
         else if(rpClass.getType(key)==RPClass.INT)
           {
@@ -395,7 +395,7 @@ public class Attributes implements marauroa.net.Serializable
         }
       else if(rpClass.getType(key)==RPClass.SHORT_STRING)
         {
-        content.put(key,in.readShortString());
+        content.put(key,in.read255LongString());
         }
       else if(rpClass.getType(key)==RPClass.INT)
         {

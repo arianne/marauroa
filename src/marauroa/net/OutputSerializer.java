@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.6 2004/06/15 18:28:51 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.7 2004/06/15 18:39:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class OutputSerializer
     out.write(a);
     }
 
-  public void writeShort(byte[] a) throws IOException
+  public void write255LongArray(byte[] a) throws IOException
     {
     if(a.length>Byte.MAX_VALUE)
       {
@@ -95,9 +95,9 @@ public class OutputSerializer
     write(a.getBytes("UTF-8"));
     }
 
-  public void writeShort(String a) throws IOException,UnsupportedEncodingException
+  public void write255LongString(String a) throws IOException,UnsupportedEncodingException
     {
-    writeShort(a.getBytes("UTF-8"));
+    write255LongArray(a.getBytes("UTF-8"));
     }
 
   /** Add the String array to the serializer, using UTF-8 encoding

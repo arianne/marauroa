@@ -106,6 +106,11 @@ public class RPClass implements Serializable
     rpClassList.put(type,this);
     }
   
+  public void setParent(RPClass parent)
+    {
+    this.parent=parent;
+    }
+  
   static RPClass defaultRPClass;
   
   public static RPClass getBaseRPObjectDefault()
