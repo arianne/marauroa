@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.25 2003/12/17 16:21:36 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.26 2003/12/17 17:21:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,7 +112,7 @@ public class SimpleGame
               
               if(obj.hasSlot("hand"))
                 {
-                /** Game already started. Only */
+                /** CASE 1: Game already started. */
                 GameBoard gameBoard=(GameBoard)obj.getSlot("hand").get();
                 
                 int size = gameBoard.getSize();
@@ -143,114 +143,146 @@ public class SimpleGame
                   SimpleGame.this.dispose();
                   }                
                 }
+              else if(obj.hasSlot("challenge"))
+                {
+                /* CASE 2: Player is challenged by another player. We choose the first player. */
+                CharacterList characterList=(CharacterList)obj.getSlot("challenge").get();
+                addLog(""+characterList+"\n");
+                
+                String player=characterList.iterator().next();                                
+                otherCharacterID = characterList.getId(player);
+                
+                ChallengeAnswer answer = new ChallengeAnswer();
+                answer.setWho(ownCharacterID);
+                answer.setWhom(otherCharacterID);
+                answer.setAccept(true);
+                MessageC2SAction m_action = new MessageC2SAction(null,answer);
+                netMan.addMessage(m_action);
+                
+                addLog("Accepted challenge from " + otherCharacterID);
+                playMidi();
+                }
+              else if(obj.hasSlot("ear"))
+                {
+                CharacterList characterList=(CharacterList)obj.getSlot("ear").get();
+                Iterator iterator = characterList.iterator();
+                if(iterator!=null)
+                {
+                  addLog("Received character list with following chars:\n");
+                  Object[]      message = new Object[2];
+                  message[0] = "Characters:";
+                  
+                  JComboBox cb_characters = new JComboBox();
+                  cb_characters.setEditable(false);
+                  message[1] = cb_characters;
+                  
+                  
+                  while(iterator.hasNext())
+                  {
+                    CharacterList.CharEntry  entry = iterator.next();
+                    cb_characters.addItem(entry);
+                    addLog(entry.getId()+"|"+entry.getName()+"|"+entry.getStatus()  +"\n");
+                  }
+                  // Options
+                  String[] options = {"Challenge"};
+                  int result = JOptionPane.showOptionDialog(
+                    this,                             // the parent that the dialog blocks
+                    message,                                    // the dialog message array
+                    "Choose the character to challenge...", // the title of the dialog window
+                    JOptionPane.DEFAULT_OPTION,                 // option type
+                    JOptionPane.INFORMATION_MESSAGE,            // message type
+                    new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+                    options,                                    // options string array, will be made into buttons
+                    options[0]                                  // option that should be made into a default button
+                  );
+                  if(result!=JOptionPane.CLOSED_OPTION)
+                  {
+                    CharacterList.CharEntry  entry = (CharacterList.CharEntry)cb_characters.getSelectedItem();
+                    otherCharacterID = Integer.parseInt(entry.getId());
+                    ChallengeAction c_action = new ChallengeAction();
+                    c_action.setWho(ownCharacterID);
+                    c_action.setWhom(otherCharacterID);
+                    netMan.addMessage(new MessageC2SAction(null,c_action));
+                  }
+                }
+                addLog(""+clist+"\n");
+                playMidi();
+                }
               
-              try //gameboard
-              {
-                GameBoard gb = (GameBoard)obj.getSlot("hand").get();
-                int size = gb.getSize();
-                for (int k = 0; k < size; k++)
-                {
-                  for (int l = 0; l < size; l++)
-                  {
-                    int id = gb.getRPCharacterAt(k,l);
-                    gdm.setRPCharacterAt(k,l,id);
-                  }
-                }
-                int winner_id = gb.getWinnerID();
-                if(winner_id!=-1)
-                {
-                  String msg_1;
-                  if(winner_id==ownCharacterID)
-                  {
-                    msg_1 = "You won.";
-                  }
-                  else
-                  {
-                    msg_1 = "You lost.";
-                  }
-                  JOptionPane.showMessageDialog(marauroa,msg_1,msg_1,JOptionPane.INFORMATION_MESSAGE);
-                  continueGamePlay  = false;
-                  continueMusicPlay = false;
-                  SimpleGame.this.dispose();
-                }
-              }
-              catch (Exception e1)
-              {
-              	/** BUG: OMG, should test that slot doesn't exist with hasSlot */
-                if(otherCharacterID==-1)
-                {
-                  try
-                  {
-                    CharacterList clist = (CharacterList)obj.getSlot("challenge").get();
-                    addLog(""+clist+"\n");
-                    otherCharacterID = Integer.parseInt(clist.iterator().next().getId());
-                    ChallengeAnswer answer = new ChallengeAnswer();
-                    answer.setWho(ownCharacterID);
-                    answer.setWhom(otherCharacterID);
-                    answer.setAccept(true);
-                    MessageC2SAction m_action = new MessageC2SAction(null,answer);
-                    netMan.addMessage(m_action);
-                    addLog("Accepted challenge from " + otherCharacterID);
-                    playMidi();
-                  }
-                  catch(Exception e2)
-                  {
-                    try //charcterlist
-                    {
-                      CharacterList clist = (CharacterList)obj.getSlot("ear").get();
-                      CharacterList.CharEntryIterator iterator = clist.iterator();
-                      if(iterator!=null)
-                      {
-                        addLog("Received character list with following chars:\n");
-                        Object[]      message = new Object[2];
-                        message[0] = "Characters:";
-                        
-                        JComboBox cb_characters = new JComboBox();
-                        cb_characters.setEditable(false);
-                        message[1] = cb_characters;
-                        
-                        
-                        while(iterator.hasNext())
-                        {
-                          CharacterList.CharEntry  entry = iterator.next();
-                          cb_characters.addItem(entry);
-                          addLog(entry.getId()+"|"+entry.getName()+"|"+entry.getStatus()  +"\n");
-                        }
-                        // Options
-                        String[] options = {"Challenge"};
-                        int result = JOptionPane.showOptionDialog(
-                          this,                             // the parent that the dialog blocks
-                          message,                                    // the dialog message array
-                          "Choose the character to challenge...", // the title of the dialog window
-                          JOptionPane.DEFAULT_OPTION,                 // option type
-                          JOptionPane.INFORMATION_MESSAGE,            // message type
-                          new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
-                          options,                                    // options string array, will be made into buttons
-                          options[0]                                  // option that should be made into a default button
-                        );
-                        if(result!=JOptionPane.CLOSED_OPTION)
-                        {
-                          CharacterList.CharEntry  entry = (CharacterList.CharEntry)cb_characters.getSelectedItem();
-                          otherCharacterID = Integer.parseInt(entry.getId());
-                          ChallengeAction c_action = new ChallengeAction();
-                          c_action.setWho(ownCharacterID);
-                          c_action.setWhom(otherCharacterID);
-                          netMan.addMessage(new MessageC2SAction(null,c_action));
-                        }
-                      }
-                      addLog(""+clist+"\n");
-                      playMidi();
-                    }
-                    catch(Exception e3)
-                    {
-                      //                    e3.printStackTrace();
-                    }
-                  }
-                }
+//              	/** BUG: OMG, should test that slot doesn't exist with hasSlot */
+//                if(otherCharacterID==-1)
+//                {
+//                  try
+//                  {
+//                    CharacterList clist = (CharacterList)obj.getSlot("challenge").get();
+//                    addLog(""+clist+"\n");
+//                    otherCharacterID = Integer.parseInt(clist.iterator().next().getId());
+//                    ChallengeAnswer answer = new ChallengeAnswer();
+//                    answer.setWho(ownCharacterID);
+//                    answer.setWhom(otherCharacterID);
+//                    answer.setAccept(true);
+//                    MessageC2SAction m_action = new MessageC2SAction(null,answer);
+//                    netMan.addMessage(m_action);
+//                    addLog("Accepted challenge from " + otherCharacterID);
+//                    playMidi();
+//                  }
+//                  catch(Exception e2)
+//                  {
+//                    try //charcterlist
+//                    {
+//                      CharacterList clist = (CharacterList)obj.getSlot("ear").get();
+//                      CharacterList.CharEntryIterator iterator = clist.iterator();
+//                      if(iterator!=null)
+//                      {
+//                        addLog("Received character list with following chars:\n");
+//                        Object[]      message = new Object[2];
+//                        message[0] = "Characters:";
+//                        
+//                        JComboBox cb_characters = new JComboBox();
+//                        cb_characters.setEditable(false);
+//                        message[1] = cb_characters;
+//                        
+//                        
+//                        while(iterator.hasNext())
+//                        {
+//                          CharacterList.CharEntry  entry = iterator.next();
+//                          cb_characters.addItem(entry);
+//                          addLog(entry.getId()+"|"+entry.getName()+"|"+entry.getStatus()  +"\n");
+//                        }
+//                        // Options
+//                        String[] options = {"Challenge"};
+//                        int result = JOptionPane.showOptionDialog(
+//                          this,                             // the parent that the dialog blocks
+//                          message,                                    // the dialog message array
+//                          "Choose the character to challenge...", // the title of the dialog window
+//                          JOptionPane.DEFAULT_OPTION,                 // option type
+//                          JOptionPane.INFORMATION_MESSAGE,            // message type
+//                          new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+//                          options,                                    // options string array, will be made into buttons
+//                          options[0]                                  // option that should be made into a default button
+//                        );
+//                        if(result!=JOptionPane.CLOSED_OPTION)
+//                        {
+//                          CharacterList.CharEntry  entry = (CharacterList.CharEntry)cb_characters.getSelectedItem();
+//                          otherCharacterID = Integer.parseInt(entry.getId());
+//                          ChallengeAction c_action = new ChallengeAction();
+//                          c_action.setWho(ownCharacterID);
+//                          c_action.setWhom(otherCharacterID);
+//                          netMan.addMessage(new MessageC2SAction(null,c_action));
+//                        }
+//                      }
+//                      addLog(""+clist+"\n");
+//                      playMidi();
+//                    }
+//                    catch(Exception e3)
+//                    {
+//                      //                    e3.printStackTrace();
+//                    }
+//                  }
+//                }
               }
             }
           }
-        }
       }
       else
       {
