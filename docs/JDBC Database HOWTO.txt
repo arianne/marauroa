@@ -11,6 +11,10 @@ source from the Java programming language. It provides cross-DBMS connectivity
 to a wide range of SQL databases, and now, with the new JDBC API, it also 
 provides access to other tabular data sources, such as spreadsheets or flat files.
 
+JDBCPlayerDatabase is anyway not database independient, on the Player table we are
+using AUTOINCREMENT that is an unique keyword of MySQL that is not part of the SQL
+standard.
+
 To configure Marauroa to work with a JDBC source we need to modify the 
 configuration of the JDBC Connection.
 
