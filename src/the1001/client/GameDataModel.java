@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.1 2004/02/15 19:21:06 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.2 2004/02/15 23:23:51 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -136,6 +136,7 @@ public final class GameDataModel
 		{
 			try
 			{
+				marauroad.trace("The1001Game::addSpectator","D","Adding spectator " + spectator);
 				if(spectators.put(spectator.get("object_id"),spectator)==null)
 				{
 					fireListeners();
@@ -207,7 +208,7 @@ public final class GameDataModel
 	{
 		synchronized(fighters)
 		{
-			marauroad.trace("The1001Game::addSpectator","D","Adding spectator " + fighter);
+			marauroad.trace("The1001Game::addFighter","D","Adding fighter " + fighter);
 			try
 			{
 				if(fighters.put(fighter.get("object_id"),fighter)==null)

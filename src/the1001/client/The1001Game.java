@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.2 2004/02/15 20:14:51 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.3 2004/02/15 23:24:13 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 import java.net.SocketException;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.marauroad;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -41,7 +43,7 @@ extends JFrame implements Runnable
 {
 	private final static long serialVersionUID = 4714;
 	private transient NetworkClientManager netMan;
-	private transient RPObject ownCharacter;
+//	private transient RPObject ownCharacter;
 	private int ownCharacterID;
 	private JLabel statusLine;
 	private boolean continueGamePlay;
@@ -52,10 +54,11 @@ extends JFrame implements Runnable
 	public The1001Game(NetworkClientManager netman, RPObject.ID characterID)
 	{
 		netMan = netman;
-		ownCharacter=null;
+//		ownCharacter=null;
 		this.ownCharacterID=characterID.getObjectID();
 		initComponents();
 		setTitle("Gladiators (the1001)");
+		addWindowListener(new MWindowListener());
 	}
 	
 	private void initComponents()
@@ -156,6 +159,10 @@ extends JFrame implements Runnable
 							gm.deleteFighter(obj);
 						}
 						repaint();
+					}
+					else
+					{
+						sleep(1);
 					}
 				}
 				else
@@ -326,7 +333,7 @@ extends JFrame implements Runnable
 	 */
 	public static void main(String[] args)
 	{
-		showSplash(2000);
+		showSplash(1000);
 		login();
 	}
 	
@@ -437,6 +444,11 @@ extends JFrame implements Runnable
 				new Thread(game,"Game thread...").start();
 				complete = true;
 			}
+			else if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
+			{
+				marauroad.trace("The1001Game::chooseCharacter","E","server nacks the character, exiting...");
+				System.exit(-1);
+			}
 		}
   }
 	
@@ -511,11 +523,98 @@ extends JFrame implements Runnable
 			}
 			break;
 		case 1: // cancel
+			marauroad.trace("The1001Game::chooseCharacter","E","User dont want to login, exiting...");
+			System.exit(-1);
 			break;
 		default:
 			break;
 		}
   }
 	
+	private static void disconnect(NetworkClientManager net_man)
+  {
+		if(net_man!=null)
+		{
+			Message msg=new MessageC2SLogout(null);
+			net_man.addMessage(msg);
+			net_man.finish();
+		}
+  }
+	
+	
+	private final class MWindowListener
+	implements WindowListener
+	{
+		
+		/**
+		 * Invoked when a window has been closed as the result
+		 * of calling dispose on the window.
+		 */
+		public void windowClosed(WindowEvent e)
+		{
+		}
+		
+		/**
+		 * Invoked the first time a window is made visible.
+		 */
+		public void windowOpened(WindowEvent e)
+		{
+		}
+		
+		/**
+		 * Invoked when the user attempts to close the window
+		 * from the window's system menu.  If the program does not
+		 * explicitly hide or dispose the window while processing
+		 * this event, the window close operation will be cancelled.
+		 */
+		public void windowClosing(WindowEvent e)
+		{
+			disconnect(netMan);
+			System.exit(-1);
+		}
+		
+		/**
+		 * Invoked when a Window is no longer the active Window. Only a Frame or a
+		 * Dialog can be the active Window. The native windowing system may denote
+		 * the active Window or its children with special decorations, such as a
+		 * highlighted title bar. The active Window is always either the focused
+		 * Window, or the first Frame or Dialog that is an owner of the focused
+		 * Window.
+		 */
+		public void windowDeactivated(WindowEvent e)
+		{
+		}
+		
+		/**
+		 * Invoked when a window is changed from a normal to a
+		 * minimized state. For many platforms, a minimized window
+		 * is displayed as the icon specified in the window's
+		 * iconImage property.
+		 * @see java.awt.Frame#setIconImage
+		 */
+		public void windowIconified(WindowEvent e)
+		{
+		}
+		
+		/**
+		 * Invoked when the Window is set to be the active Window. Only a Frame or
+		 * a Dialog can be the active Window. The native windowing system may
+		 * denote the active Window or its children with special decorations, such
+		 * as a highlighted title bar. The active Window is always either the
+		 * focused Window, or the first Frame or Dialog that is an owner of the
+		 * focused Window.
+		 */
+		public void windowActivated(WindowEvent e)
+		{
+		}
+		
+		/**
+		 * Invoked when a window is changed from a minimized
+		 * to a normal state.
+		 */
+		public void windowDeiconified(WindowEvent e)
+		{
+		}
+	}
 }
 

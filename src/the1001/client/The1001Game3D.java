@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.1 2004/02/15 19:21:06 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.2 2004/02/15 23:24:24 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,15 +23,20 @@ import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.j3d.utils.picking.PickCanvas;
+import com.sun.j3d.utils.picking.PickResult;
+import com.sun.j3d.utils.picking.PickTool;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,17 +94,61 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
   
   private BranchGroup createSceneGraph()
   {
+		BoundingSphere bounds =
+		new BoundingSphere(new Point3d(0.0,0.0,0.0), 100.0);
+		
+		
 		// Create the root of the branch graph
 		BranchGroup root = new BranchGroup();
 		
-		BoundingSphere bounds =
-		new BoundingSphere(new Point3d(0.0,0.0,0.0), 100.0);
+		BranchGroup button_scissor = createButton("scissor_Button.png","scissor_Button.png");
+		TransformGroup tgs = new TransformGroup();
+		Transform3D trs1 = new Transform3D();
+		trs1.setScale(0.1);
+		Transform3D trs2 = new Transform3D();
+		Vector3f v3f = new Vector3f(-0.85f,0.6f,0.0f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_scissor);
+		MouseHandler mh = new MouseHandler(button_scissor,this);
+		mh.setBounds(bounds);
+		root.addChild(mh);
+//		PickTool.setCapabilities(button_scissor, PickTool.INTERSECT_FULL);
+		root.addChild(tgs);
+//		root.addChild(mh);
+		
+		BranchGroup button_paper = createButton("paper_Button.png","paper_Button.png");
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.1);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(-0.85f,0.3f,0.0f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_paper);
+		root.addChild(tgs);
+		
+		BranchGroup button_stone = createButton("stone_Button.png","stone_Button.png");
+		tgs = new TransformGroup();
+		trs1 = new Transform3D();
+		trs1.setScale(0.1);
+		trs2 = new Transform3D();
+		v3f = new Vector3f(-0.85f,0.0f,0.0f);
+		trs2.set(v3f);
+		trs2.mul(trs1);
+		tgs.setTransform(trs2);
+		tgs.addChild(button_stone);
+		root.addChild(tgs);
+		
+		
 		
 		Background background = new Background(createSky());
 		background.setBounds(bounds);
 		root.addChild(background);
 		
-		arena = createArene2();
+		arena = createArene();
 		
 		// Create the TransformGroup node and initialize it to the
 		// identity. Enable the TRANSFORM_WRITE capability so that
@@ -167,6 +216,8 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 		root.addChild(objTrans);
 		
 		
+		
+		
 //		root.addChild(rotator);
 //		root.addChild(arena);
 //		root.addChild(createSky());
@@ -198,94 +249,13 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 		return root;
   }
   
-	private Arena createArene2()
+	private Arena createArene()
 	{
 		Arena arena = new Arena();
 		return(arena);
 	}
 	
-	//  private Arena createArene()
-	//  {
-//		Arena arena = new Arena();
-//		TextureLoader loader = new TextureLoader(Resources.getImageUrl("terrain_texture.png"), this);
-//		Appearance appearance = new Appearance();
-//		Texture texture = loader.getTexture();
-//		appearance.setTexture(texture);
-//		TextureAttributes texture_attr = new TextureAttributes();
-//		texture_attr.setTextureMode(TextureAttributes.MODULATE);
-//		appearance.setTextureAttributes(texture_attr);
-//
-//		Sphere sphere = new Sphere(2.5f,Sphere.GENERATE_NORMALS|Sphere.GENERATE_TEXTURE_COORDS,200,appearance);
-//		Transform3D transform = new Transform3D();
-//		Vector3f v3f = new Vector3f(0,-2.6f,+1.10f);
-//		transform.set(v3f);
-//		TransformGroup tg1 = new TransformGroup();
-//		tg1.setTransform(transform);
-//
-//
-//		loader = new TextureLoader(Resources.getImageUrl("Column_texture.png"), this);
-//		appearance = new Appearance();
-//		texture = loader.getTexture();
-//		appearance.setTexture(texture);
-//		texture_attr = new TextureAttributes();
-//		texture_attr.setTextureMode(TextureAttributes.MODULATE);
-//		appearance.setTextureAttributes(texture_attr);
-//
-//
-//		int dings_count = 8;
-//		double angle_inc = 2*Math.PI/dings_count;
-//		double radius = 3.80f;
-//		for (int i = 0; i < dings_count; i++)
-//		{
-//			Cylinder cylinder = new Cylinder(0.06f,0.58f,Cylinder.GENERATE_NORMALS|Cylinder.GENERATE_TEXTURE_COORDS,appearance);
-//			transform = new Transform3D();
-//			double sin = Math.sin(angle_inc*i);
-//			double cos = Math.cos(angle_inc*i);
-//			v3f = new Vector3f((float)(sin*radius),0.0f,(float)(cos*radius)+1.0f);
-//			transform.set(v3f);
-//			TransformGroup tg2 = new TransformGroup();
-//			tg2.setTransform(transform);
-//			tg2.addChild(cylinder);
-//			arena.addChild(tg2);
-//		}
-//
-//		TransformGroup tg3 = new TransformGroup();
-//		transform = new Transform3D();
-//		transform.setScale(0.1f);
-//		tg3.setTransform(transform);
-//
-//		TransformGroup tg4 = new TransformGroup();
-//		transform = new Transform3D();
-//		v3f = new Vector3f(0.0f,0.0f,15.0f);
-//		transform.set(v3f);
-//		tg4.setTransform(transform);
-//
-//		TransformGroup tg5 = new TransformGroup();
-//		transform = new Transform3D();
-//		v3f = new Vector3f(1.0f,0.0f,15.0f);
-//		transform.set(v3f);
-//		tg5.setTransform(transform);
-//
-//		TransformGroup tg6 = new TransformGroup();
-//		transform = new Transform3D();
-//		transform.rotY(Math.PI);
-//		tg6.setTransform(transform);
-//
-//		tg4.addChild(loadModel("billgates"));
-//		tg6.addChild(loadModel("pknight"));
-//		tg5.addChild(tg6);
-//		tg3.addChild(tg4);
-//		tg3.addChild(tg5);
-//		tg1.addChild(sphere);
-//		arena.addChild(tg1);
-//		arena.addChild(tg3);
-//		//    arena.addChild(tg6);
-//
-//		return(arena);
-	//  }
-  
-  
-  
+	
   private BranchGroup createSky()
   {
 		TextureLoader loader = new TextureLoader(Resources.getImageUrl("SkyDome.jpg"), this);
@@ -294,7 +264,7 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 		TextureAttributes texAttr = new TextureAttributes();
 		texAttr.setTextureMode(TextureAttributes.MODULATE);
 		appear.setTextureAttributes(texAttr);
-		Sphere sphere = new Sphere(5.0f,Primitive.GENERATE_TEXTURE_COORDS | Primitive.GENERATE_NORMALS_INWARD,appear);
+		Sphere sphere = new Sphere(50.0f,Primitive.GENERATE_TEXTURE_COORDS | Primitive.GENERATE_NORMALS_INWARD,appear);
 		BranchGroup bg = new BranchGroup();
 		TransformGroup tg = new TransformGroup();
 		Transform3D transform = new Transform3D();
@@ -469,22 +439,22 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 			QuadArray plane = new QuadArray(4, GeometryArray.COORDINATES
 																			| GeometryArray.TEXTURE_COORDINATE_2);
 			Point3f p = new Point3f();
-			p.set(-10.0f, 0.0f,  10.0f);
+			p.set(-100.0f, 0.0f,  100.0f);
 			plane.setCoordinate(3, p);
-			p.set(-10.0f, 0.0f, -10.0f);
+			p.set(-100.0f, 0.0f, -100.0f);
 			plane.setCoordinate(2, p);
-			p.set( 10.0f, 0.0f, -10.0f);
+			p.set( 100.0f, 0.0f, -100.0f);
 			plane.setCoordinate(1, p);
-			p.set( 10.0f, 0.1f,  10.0f);
+			p.set( 100.0f, 0.1f,  100.0f);
 			plane.setCoordinate(0, p);
 			
-			TexCoord2f tc = new TexCoord2f(0.0f, 10.0f);
+			TexCoord2f tc = new TexCoord2f(0.0f, 100.0f);
 			plane.setTextureCoordinate(0,0,tc);
 			tc = new TexCoord2f(0.0f, 0.0f);
 			plane.setTextureCoordinate(0,1,tc);
-			tc = new TexCoord2f(10.0f, 0.0f);
+			tc = new TexCoord2f(100.0f, 0.0f);
 			plane.setTextureCoordinate(0,2,tc);
-			tc = new TexCoord2f(10.0f, 10.0f);
+			tc = new TexCoord2f(100.0f, 100.0f);
 			plane.setTextureCoordinate(0,3,tc);
 			
 			TextureLoader loader = new TextureLoader(Resources.getImageUrl("terrain_texture.png"), The1001Game3D.this);
@@ -557,7 +527,7 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 						double cos = Math.cos(angle);
 						TransformGroup tg = new TransformGroup();
 						Transform3D t = new Transform3D();
-						Vector3f v3f = new Vector3f((float)(sin*(radius+radius*0.1)),0.20f,(float)(cos*(radius+radius*0.1)));
+						Vector3f v3f = new Vector3f((float)(sin*(radius+radius*0.1)),0.26f,(float)(cos*(radius+radius*0.1)));
 						t.set(v3f);
 						TransformGroup tgt = new TransformGroup();
 						Transform3D tx = new Transform3D();
@@ -626,7 +596,7 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 						double cos   = Math.cos(angle);
 						TransformGroup tg = new TransformGroup();
 						Transform3D t = new Transform3D();
-						Vector3f v3f = new Vector3f((float)(sin*(radius*0.4)),0.20f,(float)(cos*(radius*0.4)));
+						Vector3f v3f = new Vector3f((float)(sin*(radius*0.4)),0.26f,(float)(cos*(radius*0.4)));
 						t.set(v3f);
 						tg.setTransform(t);
 						tg.addChild(node);
@@ -648,7 +618,7 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 						bg.compile();
 						addChild(bg);
 						marauroad.trace("Arena::setFighters","D","new fighter added: " + name + ", look = " +look);
-						mSpectators.put(id,node);
+						mFighters.put(id,node);
 					}
 				}
 				catch (Attributes.AttributeNotFoundException e)
@@ -669,8 +639,8 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 		frame.getContentPane().add(gamedisplay);
 //		frame.setSize(800,600);
 		frame.setUndecorated(true);
-		RPObject [] spectators = new RPObject[3];
-		RPObject [] fighters   = new RPObject[3];
+		RPObject [] spectators = new RPObject[2];
+		RPObject [] fighters   = new RPObject[2];
 		for (int i = 0; i < spectators.length; i++)
 		{
 			RPObject rp = new RPObject();
@@ -718,6 +688,91 @@ extends Canvas3D implements KeyListener, GameDataModelListenerIF
 		frame.show();
 		
   }
+	
+	private BranchGroup createButton(String id, String image)
+	{
+		BranchGroup bg = new BranchGroup();
+		QuadArray plane = new QuadArray(4, GeometryArray.COORDINATES
+																		| GeometryArray.TEXTURE_COORDINATE_2);
+		Point3f p = new Point3f();
+		p.set(-1.0f, 1.0f, 0.0f);
+		plane.setCoordinate(3, p);
+		p.set(1.0f, 1.0f, 0.0f);
+		plane.setCoordinate(2, p);
+		p.set( 1.0f, -1.0f, 0.0f);
+		plane.setCoordinate(1, p);
+		p.set( -1.0f, -1.0f,  0.0f);
+		plane.setCoordinate(0, p);
+		
+		TexCoord2f tc = new TexCoord2f(0.0f, 1.0f);
+		plane.setTextureCoordinate(0,3,tc);
+		tc = new TexCoord2f(1.0f, 1.0f);
+		plane.setTextureCoordinate(0,2,tc);
+		tc = new TexCoord2f(1.0f, 0.0f);
+		plane.setTextureCoordinate(0,1,tc);
+		tc = new TexCoord2f(0.0f, 0.0f);
+		plane.setTextureCoordinate(0,0,tc);
+		
+		TextureLoader loader = new TextureLoader(Resources.getImageUrl(image), The1001Game3D.this);
+		Appearance appearance = new Appearance();
+		Texture texture = loader.getTexture();
+		appearance.setTexture(texture);
+		TextureAttributes texture_attr = new TextureAttributes();
+		texture_attr.setTextureMode(TextureAttributes.MODULATE);
+		appearance.setTextureAttributes(texture_attr);
+		
+		Shape3D shape = new Shape3D(plane,appearance);
+		shape.setCapability(Shape3D.ENABLE_PICK_REPORTING);
+		bg.addChild(shape);
+		bg.compile();
+		return(bg);
+	}
+	
+	
+	public class MouseHandler extends Behavior
+	{
+		private WakeupCondition wCond;
+		private PickCanvas pickCanvas;
+		
+		// Constructor
+		public MouseHandler(BranchGroup bGroup, Canvas3D canvas3D)
+		{
+			//event that runs your processStimulus method
+			wCond = new WakeupOnAWTEvent(MouseEvent.MOUSE_PRESSED);
+			
+			//create and initialize picking object
+			pickCanvas = new PickCanvas(canvas3D, bGroup);
+			pickCanvas.setTolerance(0.1f); //accuracy
+			pickCanvas.setMode(PickCanvas.GEOMETRY_INTERSECT_INFO);
+		}
+		
+		// Initialization
+		public void initialize()
+		{
+			//start waiting for event
+			wakeupOn(wCond);
+		}
+		
+		// Event handling
+		public void processStimulus(Enumeration criteria)
+		{
+			//get event that occured
+			MouseEvent event = (MouseEvent) ((WakeupOnAWTEvent)
+																			 criteria.nextElement()).getAWTEvent()[0];
+			
+			pickCanvas.setShapeLocation(event);
+//			Point3d eyePos = pickCanvas.getStartPosition();
+			
+			//get result of event
+			PickResult pickResult = pickCanvas.pickClosest();
+			
+			//... and picked object
+			Node node = pickResult.getObject();
+			marauroad.trace("MouseHandler::processStimulus","D","Node selected: " + node);
+			//start waiting for next event
+			wakeupOn(wCond);
+		}
+	}
 	
 }
 
