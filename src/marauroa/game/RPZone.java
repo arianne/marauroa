@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.25 2004/05/25 14:11:04 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.26 2004/05/25 22:12:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -115,7 +115,31 @@ public interface RPZone
     
     public void removed(RPObject object)
       {
-      deletedList.add(object);
+      if(!addedHas(object))
+        {
+        try
+          {
+          if(removedHas(object))
+            {
+            Iterator it=deletedList.iterator();
+            while(it.hasNext())
+              {
+              RPObject removed=(RPObject)it.next();
+              if(removed.get("id").equals(object.get("id")))
+                {
+                it.remove();
+                break;
+                }
+              }
+            }
+          }
+        catch(Attributes.AttributeNotFoundException e)
+          {
+          marauroad.thrown("RPZone::Perception::removed","X",e);
+          }
+          
+        deletedList.add(object);
+        }
       }
     
     private boolean removedHas(RPObject object)

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.87 2004/05/24 17:23:09 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.88 2004/05/25 22:12:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -439,6 +439,11 @@ class RPServerManager extends Thread
     while(keepRunning)
       {
       scheduler.visit(ruleProcessor);
+      playerContainer.getLock().requestWriteLock();
+        {
+        buildPerceptions();
+        }
+      playerContainer.getLock().releaseLock();
 
       stop=System.currentTimeMillis();
       try
@@ -454,7 +459,6 @@ class RPServerManager extends Thread
 
       playerContainer.getLock().requestWriteLock();
         {
-        buildPerceptions();
         zone.nextTurn();
         scheduler.nextTurn();
         ruleProcessor.nextTurn();
