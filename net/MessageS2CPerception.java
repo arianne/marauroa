@@ -92,7 +92,7 @@ public class MessageS2CPerception extends Message
   static private boolean register()
     {
     MessageFactory msgFactory=MessageFactory.getFactory();
-    msgFactory.register(TYPE_S2C_PERCEPTION,new MessageS2CPerception());
+    msgFactory.register(TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
     return true;
     }
   };
