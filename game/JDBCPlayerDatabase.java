@@ -41,7 +41,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** Constructor that connect using a set of Properties.
    *  @param connInfo a Properties set with the options to create the database.
    *  Refer to JDBC Database HOWTO document. */
-  private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException
+  private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
     connection=createConnection(connInfo);
     if(connection==null)
@@ -680,7 +680,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     }
 
   
-  private boolean reInitDB()
+  private boolean reInitDB() throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::reInitDB",">");         
     
@@ -688,13 +688,18 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       return (dropDB() && initDB());
       }
+    catch(GenericDatabaseException e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::reInitDB","X",e.getMessage());         
+      throw e;
+      }
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::reInitDB","<");         
       }
     }
   
-  private boolean dropDB()
+  private boolean dropDB() throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::dropDB",">");         
 
@@ -721,8 +726,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch (SQLException e)
       {
-      /* TODO: Should drop exception */
-      return false;
+      marauroad.trace("JDBCPlayerDatabase::dropDB","X",e.getMessage());         
+      throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
@@ -730,40 +735,40 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }      
     }
   
-  private boolean initDB()
+  private boolean initDB() throws GenericDatabaseException
     {
-    boolean ret = false;
+    marauroad.trace("JDBCPlayerDatabase::initDB",">");         
+    
     try
       {
-      Statement stmt = connection.createStatement();
-      
+      Statement stmt = connection.createStatement();      
       String query = "CREATE TABLE IF NOT EXISTS player (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL , username VARCHAR(30) NOT NULL, password VARCHAR(30) NOT NULL )";
       stmt.addBatch(query);
-
       query = "CREATE TABLE IF NOT EXISTS characters (player_id BIGINT NOT NULL, charname VARCHAR(30) NOT NULL, contents BLOB, PRIMARY KEY(charname))";
       stmt.addBatch(query);
-
       query = "CREATE TABLE IF NOT EXISTS loginEvent ( player_id BIGINT NOT NULL,address VARCHAR(20), timedate TIMESTAMP, result TINYINT)";
       stmt.addBatch(query);
 
       int ret_array[] = stmt.executeBatch();
-      ret = true;
       for (int i = 0; i < ret_array.length; i++)
         {
         if(ret_array[i]<0)
           {
-          ret = false;
-          break;
+          return false;
           }
         }
+      
+      return true;
       }
     catch (SQLException e)
       {
-      e.printStackTrace(System.out);
-      ret = false;
+      marauroad.trace("JDBCPlayerDatabase::initDB","X",e.getMessage());         
+      throw new GenericDatabaseException(e.getMessage());
       }
-  
-    return ret;
+    finally 
+      {
+      marauroad.trace("JDBCPlayerDatabase::initDB","<");         
+      }
     }
   }
 
