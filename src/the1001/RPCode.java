@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.47 2004/01/31 20:14:07 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.48 2004/02/09 18:13:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.util.*;
 
 public class RPCode
   {
-  public static byte GLADIATORS_PER_FIGHT=2;  
+  final public static byte GLADIATORS_PER_FIGHT=2;  
   
   final public static String var_object_id="object_id";
   final public static String var_type="type";
@@ -201,6 +201,11 @@ public class RPCode
         {
         player.remove(RPCode.var_hidden_vote);
         }
+
+      if(player.has(RPCode.var_damage))
+        {
+        player.remove(RPCode.var_damage);
+        }
       }
     catch(Exception e)
       {
@@ -258,8 +263,18 @@ public class RPCode
         marauroad.trace("RPCode::RemovePlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
         player.remove(RPCode.var_hidden_vote);
         }
+       
+       
+      Iterator it=player.getSlot("gladiators").iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(object.has(RPCode.var_damage))
+          {
+          object.remove(RPCode.var_damage);
+          }
+        }
       
-      zone.modify(player);
       return true;
       }
     catch(Exception e)
@@ -452,37 +467,39 @@ public class RPCode
         return;
         }
     
-      if(!gladiator1.has(RPCode.var_hidden_combat_mode))
+      if(gladiator1.has(RPCode.var_hidden_combat_mode)==false)
         {
         /** Gladiator1 has not begin to fight. */
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator("+gladiator1.get(var_object_id)+") has not choose fight mode");
         return;
         }
-         
-      if(!gladiator2.has(RPCode.var_hidden_combat_mode))
+      else if(gladiator2.has(RPCode.var_hidden_combat_mode)==false)
         {
         /** Gladiator2 is idle, no combat, just hit */
         int damage=gladiator1.getInt(RPCode.var_attack);
         marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiator("+gladiator2.get(var_object_id)+") has not choose fight mode");
         gladiator2.put(RPCode.var_hp,gladiator2.getInt(RPCode.var_hp)-damage);
-        gladiator2.put(RPCode.var_damage,damage);
+        gladiator2.put(RPCode.var_damage,damage);        
         ruleProcessor.trackObject(gladiator2);
+        return;
         }
-      
-      String mode_g1=gladiator1.get(RPCode.var_hidden_combat_mode);
-      String mode_g2=gladiator2.get(RPCode.var_hidden_combat_mode);
-    
-      if((mode_g1.equals(RPCode.var_rock) && mode_g2.equals(RPCode.var_scissor)) ||
-        (mode_g1.equals(RPCode.var_paper) && mode_g2.equals(RPCode.var_rock))    ||
-        (mode_g1.equals(RPCode.var_scissor) && mode_g2.equals(RPCode.var_paper)) ||
-        (mode_g1.equals(mode_g2)))
+      else
         {
-        int damage=Math.abs(rand.nextInt()%gladiator1.getInt(RPCode.var_attack))+1;
-        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiators has WIN to ("+mode_g1+") vs ("+mode_g2+")");
-        gladiator2.put(RPCode.var_hp,gladiator2.getInt(RPCode.var_hp)-damage);
-        gladiator2.put(RPCode.var_damage,damage);
-        ruleProcessor.trackObject(gladiator2);
-        }  
+        String mode_g1=gladiator1.get(RPCode.var_hidden_combat_mode);
+        String mode_g2=gladiator2.get(RPCode.var_hidden_combat_mode);
+    
+        if((mode_g1.equals(RPCode.var_rock) && mode_g2.equals(RPCode.var_scissor)) ||
+          (mode_g1.equals(RPCode.var_paper) && mode_g2.equals(RPCode.var_rock))    ||
+          (mode_g1.equals(RPCode.var_scissor) && mode_g2.equals(RPCode.var_paper)) ||
+          (mode_g1.equals(mode_g2)))
+          {
+          int damage=Math.abs(rand.nextInt()%gladiator1.getInt(RPCode.var_attack))+1;
+          marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiators has WIN to ("+mode_g1+") vs ("+mode_g2+")");
+          gladiator2.put(RPCode.var_hp,gladiator2.getInt(RPCode.var_hp)-damage);
+          gladiator2.put(RPCode.var_damage,damage);
+          ruleProcessor.trackObject(gladiator2);
+          }  
+        }
       }
     finally
       {

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.4 2004/01/31 11:18:16 root777 Exp $ */
+/* $Id: Statistics.java,v 1.5 2004/02/09 18:13:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,7 @@ public class Statistics
       out.println("Messages RECV (avg secs): "+String.valueOf((int)(messagesRecv/diff)));
       out.println("Messages SEND: "+String.valueOf(messagesSend));
       out.println("Messages SEND (avg secs): "+String.valueOf((int)(messagesSend/diff)));
+      out.println("Messages INCORRECT: "+String.valueOf(messagesIncorrect));
       out.println();
       out.println("Players LOGIN: "+String.valueOf(playersLogin));
       out.println("Players LOGIN INVALID: "+String.valueOf(playersInvalidLogin));
