@@ -1,4 +1,4 @@
-/* $Id: ChallengeAction.java,v 1.4 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: ChallengeAction.java,v 1.5 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,8 +44,14 @@ public class ChallengeAction
     {
       ret = Integer.parseInt(get("who"));
     }
-    catch (NumberFormatException e) {}
-    catch (Attributes.AttributeNotFoundException e) {}
+    catch (NumberFormatException e)
+    {
+      e.printStackTrace();
+    }
+    catch (Attributes.AttributeNotFoundException e)
+    {
+      e.printStackTrace();
+    }
     return(ret);
   }
   
@@ -56,8 +62,14 @@ public class ChallengeAction
     {
       ret = Integer.parseInt(get("whom"));
     }
-    catch (NumberFormatException e) {}
-    catch (Attributes.AttributeNotFoundException e) {}
+    catch (NumberFormatException e)
+    {
+      e.printStackTrace();
+    }
+    catch (Attributes.AttributeNotFoundException e)
+    {
+      e.printStackTrace();
+    }
     return(ret);
   }
   

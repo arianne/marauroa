@@ -1,4 +1,4 @@
-/* $Id: SimpleRPZone.java,v 1.13 2003/12/08 20:44:07 root777 Exp $ */
+/* $Id: SimpleRPZone.java,v 1.14 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import marauroa.game.RPActionFactory;
 import marauroa.game.RPObject;
 import marauroa.game.RPObjectFactory;
 import marauroa.game.RPZone;
+import marauroa.marauroad;
 import simplegame.actions.ChallengeAction;
 import simplegame.actions.ChallengeAnswer;
 import simplegame.actions.GetCharacterListAction;
@@ -37,6 +38,7 @@ public class SimpleRPZone
   
   public SimpleRPZone()
   {
+    marauroad.trace("SimpleRPZone::<init>",">");
     deletedList=new LinkedList();
     //register our objects
     RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
@@ -48,11 +50,20 @@ public class SimpleRPZone
     RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
     RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
     RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
-    
+    marauroad.trace("SimpleRPZone::<init>","<");
   }
   
-  public Perception getPerception(RPObject.ID id)
+  public Perception getPerception(RPObject.ID id, byte type)
   {
+    //    if(type==Perception.DELTA)
+    //    {
+//
+    //    }
+    //    else
+    //    {
+//
+    //    }
+    marauroad.trace("SimpleRPZone::getPerception",">");
     /** Using TOTAL perception per turn */
     RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
     perception.modifiedList = new LinkedList();
@@ -64,7 +75,29 @@ public class SimpleRPZone
     }
     catch (RPObjectNotFoundException e)
     {
+      e.printStackTrace();
     }
+    marauroad.trace("SimpleRPZone::getPerception","<");
+    return perception;
+  }
+  
+  public Perception getPerception(RPObject.ID id)
+  {
+    marauroad.trace("SimpleRPZone::getPerception",">");
+    /** Using TOTAL perception per turn */
+    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
+    perception.modifiedList = new LinkedList();
+    perception.deletedList  = deletedList;
+    try
+    {
+      RPObject player = get(id);
+      perception.modifiedList.add(player);
+    }
+    catch (RPObjectNotFoundException e)
+    {
+      e.printStackTrace();
+    }
+    marauroad.trace("SimpleRPZone::getPerception","<");
     return perception;
   }
 }

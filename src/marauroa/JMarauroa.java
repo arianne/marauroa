@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.9 2003/12/09 15:30:23 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.10 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,7 @@ public class JMarauroa
   private NetworkClientManager netMan;
   private RPObject.ID characterID;
   
-
+  
   public JMarauroa()
   {
     actionHandler = new ActionHandler();
@@ -408,17 +408,19 @@ public class JMarauroa
     
     
     JComboBox cb_server = new JComboBox();
-    cb_server.addItem("127.0.0.1");
     cb_server.addItem("192.168.100.100");
+    cb_server.addItem("127.0.0.1");
     cb_server.addItem("localhost");
     cb_server.setEditable(true);
     message[1] = cb_server;
     
     message[2] = "User:";
     
-    JTextField tf_user = new JTextField();
-    tf_user.setText("Test Player");
-    message[3] = tf_user;
+    JComboBox cb_user = new JComboBox();
+    cb_user.addItem("Test Player");
+    cb_user.addItem("Another Test Player");
+    cb_user.setEditable(true);
+    message[3] = cb_user;
     
     message[4] = "Password:";
     
@@ -452,9 +454,17 @@ public class JMarauroa
           {
             hostname = String.valueOf(cb_server.getEditor().getItem());
           }
-          String user = tf_user.getText();
+          String user_name = null;
+          if(cb_user.getSelectedItem()!=null)
+          {
+            user_name = String.valueOf(cb_user.getSelectedItem());
+          }
+          else
+          {
+            user_name = String.valueOf(cb_user.getEditor().getItem());
+          }
           String pwd  = new String(pf_pwd.getPassword());
-          connectAndChooseCharacter(hostname, user,pwd);
+          connectAndChooseCharacter(hostname, user_name,pwd);
           
         }
         break;

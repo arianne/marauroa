@@ -1,4 +1,4 @@
-/* $Id: GameBoard.java,v 1.4 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: GameBoard.java,v 1.5 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,11 @@ public class GameBoard
   implements SimpleGameDataModelIF
 {
   public final static int TYPE_GAME_BOARD=3;
+  
+  public GameBoard()
+  {
+    this(3);
+  }
   
   public GameBoard(int size)
   {

@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.3 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,21 +28,21 @@ public class OutputSerializer
     this.out=out;
     }
   
-  /** Add the Object to the serializer, if it implements the marauroa.net.Serializable interface 
+  /** Add the Object to the serializer, if it implements the marauroa.net.Serializable interface
    *  @param obj the object to serialize */
-  public void write(marauroa.net.Serializable obj) throws IOException
+    public void write(marauroa.net.Serializable obj) throws IOException
     {
     obj.writeObject(this);
     }
 
-  /** Add the byte to the serializer 
+  /** Add the byte to the serializer
    *  @param a the byte to serialize */
   public void write(byte a) throws IOException
     {
     out.write(a);
     }
   
-  /** Add the byte array to the serializer 
+  /** Add the byte array to the serializer
    *  @param a the byte array to serialize */
   public void write(byte[] a) throws IOException
     {
@@ -50,7 +50,7 @@ public class OutputSerializer
     out.write(a);
     }
 
-  /** Add the short to the serializer 
+  /** Add the short to the serializer
    *  @param a the short to serialize */
   public void write(short a) throws IOException
     {
@@ -62,7 +62,7 @@ public class OutputSerializer
     out.write(tmp);
     }
 
-  /** Add the int to the serializer 
+  /** Add the int to the serializer
    *  @param a the int to serialize */
   public void write(int a) throws IOException
     {
@@ -78,7 +78,7 @@ public class OutputSerializer
     out.write(tmp);
     }
   
-  /** Add the String to the serializer, using UTF-8 encoding 
+  /** Add the String to the serializer, using UTF-8 encoding
    *  @param a the String to serialize */
   public void write(String a) throws IOException,UnsupportedEncodingException
     {

@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.3 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: CharacterList.java,v 1.4 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class CharacterList
     objectType=TYPE_CHARACTER_LIST;
   }
 
-  public void writeObject(OutputSerializer out) 
+  public void writeObject(OutputSerializer out)
     throws IOException
   {
     try
@@ -65,7 +65,7 @@ public class CharacterList
     }
   }//writeObject
 
-  public void readObject(InputSerializer in) 
+  public void readObject(InputSerializer in)
     throws IOException, ClassNotFoundException
   {
     try
@@ -99,7 +99,7 @@ public class CharacterList
     {
       charList = new LinkedList();
     }
-    charList.add(entry);  
+    charList.add(entry);
   }
 
   public CharEntryIterator iterator()
@@ -107,7 +107,7 @@ public class CharacterList
     return(new CharEntryIterator(charList));
   }
  
-  private class CharEntryIterator
+  public class CharEntryIterator
   {
     private Iterator iterator;
     public CharEntryIterator(List list)
@@ -133,7 +133,7 @@ public class CharacterList
     }
   }//CharEntryIterator
 
-  public static class CharEntry 
+  public static class CharEntry
    extends RPObject
   {
     public CharEntry()
@@ -150,7 +150,7 @@ public class CharacterList
      throws Attributes.AttributeNotFoundException
     {
       return(get("name"));
-    } 
+    }
      
     public void setId(int char_id)
     {

@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.16 2003/12/08 20:44:08 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.17 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,14 +21,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
-import marauroa.game.Attributes;
 import marauroa.game.RPActionFactory;
 import marauroa.game.RPObject;
 import marauroa.game.RPObjectFactory;
-import marauroa.game.RPSlot;
 import marauroa.net.Message;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageC2SPerceptionACK;
@@ -127,21 +128,73 @@ public class SimpleGame
               }
               catch (Exception e1)
               {
-                try //charcterlist
-                {
-                  CharacterList clist = (CharacterList)obj.getSlot("ear").get();
-                  addLog(""+clist+"\n");
-                }
-                catch(Exception e2)
+                if(otherCharacterID==-1)
                 {
                   try
                   {
-                    RPObject other_player = obj.getSlot("challenge").get();
-                    addLog(""+other_player+"\n");
+                    CharacterList clist = (CharacterList)obj.getSlot("challenge").get();
+                    addLog(""+clist+"\n");
+                    otherCharacterID = Integer.parseInt(clist.iterator().next().getId());
+                    ChallengeAnswer answer = new ChallengeAnswer();
+                    answer.setWho(ownCharacterID);
+                    answer.setWhom(otherCharacterID);
+                    answer.setAccept(true);
+                    MessageC2SAction m_action = new MessageC2SAction(null,new ChallengeAnswer());
+                    netMan.addMessage(m_action);
+                    addLog("Accepted challenge from " + otherCharacterID);
                   }
-                  catch(Exception e3)
+                  catch(Exception e2)
                   {
-                    e3.printStackTrace();
+                    try //charcterlist
+                    {
+                      CharacterList clist = (CharacterList)obj.getSlot("ear").get();
+                      CharacterList.CharEntryIterator iterator = clist.iterator();
+                      if(iterator!=null)
+                      {
+                        addLog("Received character list with following chars:\n");
+                        Object[]      message = new Object[2];
+                        message[0] = "Characters:";
+                        
+                        JComboBox cb_characters = new JComboBox();
+                        cb_characters.setEditable(false);
+                        message[1] = cb_characters;
+                        
+                        
+                        while(iterator.hasNext())
+                        {
+                          CharacterList.CharEntry  entry = iterator.next();
+                          cb_characters.addItem(entry);
+                          addLog(entry.getId()+"|"+entry.getName()+"|"+entry.getStatus()  +"\n");
+                        }
+                        // Options
+                        String[] options = {"Challenge"};
+                        int result = JOptionPane.showOptionDialog(
+                          this,                             // the parent that the dialog blocks
+                          message,                                    // the dialog message array
+                          "Choose your character...", // the title of the dialog window
+                          JOptionPane.DEFAULT_OPTION,                 // option type
+                          JOptionPane.INFORMATION_MESSAGE,            // message type
+                          new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+                          options,                                    // options string array, will be made into buttons
+                          options[0]                                  // option that should be made into a default button
+                        );
+                        if(result!=JOptionPane.CLOSED_OPTION)
+                        {
+                          CharacterList.CharEntry  entry = (CharacterList.CharEntry)cb_characters.getSelectedItem();
+                          otherCharacterID = Integer.parseInt(entry.getId());
+                          ChallengeAction c_action = new ChallengeAction();
+                          c_action.setWho(ownCharacterID);
+                          c_action.setWhom(otherCharacterID);
+                          netMan.addMessage(new MessageC2SAction(null,c_action));
+                        }
+                      }
+                      addLog(""+clist+"\n");
+                      
+                    }
+                    catch(Exception e3)
+                    {
+                      //                    e3.printStackTrace();
+                    }
                   }
                 }
               }

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.23 2003/12/08 20:44:08 root777 Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.24 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -123,48 +123,57 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       }
       catch (RPObject.NoSlotFoundException e)
       {
-        gb = new GameBoard(3);
-        RPSlot rp_slot = new RPSlot("hand");
-        rp_slot.add(gb);
-        try
-        {
-          rp_player.addSlot(rp_slot);
-        }
-        catch (RPObject.SlotAlreadyAddedException ex)
-        {
-        }
+        e.printStackTrace();
+        //        gb = new GameBoard(3);
+        //        RPSlot rp_slot = new RPSlot("hand");
+        //        rp_slot.add(gb);
+        //        try
+        //        {
+        //          rp_player.addSlot(rp_slot);
+        //        }
+        //        catch (RPObject.SlotAlreadyAddedException ex)
+        //        {
+        //        }
       }
       catch (RPSlot.RPObjectNotFoundException e)
       {
+        e.printStackTrace();
         // TODO: There is no object on the slot. Decide what to do
       }
       
-      if(id.getObjectID()==last_id)
+      if(gb!=null)
       {
-        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
-      }
-      else
-      {
-        int row = Integer.parseInt(action.get("row"));
-        int column = Integer.parseInt(action.get("column"));
-        if(gb.getRPCharacterAt(row,column)==-1)
+        if(id.getObjectID()==last_id)
         {
-          gb.setRPCharacterAt(row,column,id.getObjectID());
-          status = RPAction.STATUS_SUCCESS;
-          marauroad.trace("SimpleRPRuleProcessor::makeMove","D",zone.toString());
-          //          int winner_id  = gb.getWinner();
-          //          if(winner_id!=-1)
-          //          {
-          //            //TODO
-          //            RPObject rp_winner = zone.get(null);
-          ////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","And the winner is "+winner);
-          //          }
+          marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
         }
         else
         {
-          //this field is already set
+          int row = Integer.parseInt(action.get("row"));
+          int column = Integer.parseInt(action.get("column"));
+          if(gb.getRPCharacterAt(row,column)==-1)
+          {
+            gb.setRPCharacterAt(row,column,id.getObjectID());
+            status = RPAction.STATUS_SUCCESS;
+            marauroad.trace("SimpleRPRuleProcessor::makeMove","D",gb.toString());
+            //          int winner_id  = gb.getWinner();
+            //          if(winner_id!=-1)
+            //          {
+            //            //TODO
+            //            RPObject rp_winner = zone.get(null);
+            ////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","And the winner is "+winner);
+            //          }
+          }
+          else
+          {
+            //this field is already set
+          }
+          marauroad.trace("SimpleRPRuleProcessor::makeMove","D","Player "+id +" - no actions???.");
         }
-        marauroad.trace("SimpleRPRuleProcessor::makeMove","D","Player "+id +" - no actions???.");
+      }
+      else
+      {
+        marauroad.trace("SimpleRPRuleProcessor::makeMove","D","Make move - no gameboard assigned???");
       }
     }
     finally
@@ -187,6 +196,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       Iterator iter = zone.iterator();
       if(iter!=null)
       {
+        
         RPSlot playerlist = ensureSlot(rp_player,"ear");
         
         CharacterList clist = new CharacterList();
@@ -209,14 +219,8 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
             clist.addCharacter(oid,object.get("name"),pl_status);
           }
         }
-        try
-        {
-          rp_player.addSlot(playerlist);
-        }
-        catch(RPObject.SlotAlreadyAddedException saae)
-        {
-          saae.printStackTrace(System.out);
-        }
+        playerlist.removeAll();
+        playerlist.add(clist);
       }
     }
     finally
@@ -239,8 +243,12 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       int challenged_id = ((ChallengeAction)action).getWhom();
       RPObject player_challenged = zone.get(new RPObject.ID(challenged_id));
       RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
+      RPSlot slot = ensureSlot(rp_player,"ear");
+      slot.removeAll();
       //it is enough just to send id/name...
-      challenge_slot.add(rp_player);
+      CharacterList clist = new CharacterList();
+      clist.addCharacter(Integer.parseInt(rp_player.get("object_id")),rp_player.get("name"),"wurst");
+      challenge_slot.add(clist);
       status = RPAction.STATUS_SUCCESS;
     }
     finally
@@ -266,37 +274,32 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       {
         RPObject player_challenged = zone.get(new RPObject.ID(oppenent_id));
         RPSlot slot = ensureSlot(player_challenged,"hand");
-        //only if both players has no assigned boards
-        try
-        {
-          slot.get();
-        }
-        catch (RPSlot.RPObjectNotFoundException e)
-        {
-          RPSlot slot2 = ensureSlot(rp_player,"hand");
-          try
-          {
-            slot2.get();
-          }
-          catch (RPSlot.RPObjectNotFoundException e2)
-          {
-            //asign a one..
-            GameBoard gb = new GameBoard(3);
-            slot.add(gb);
-            slot2.add(gb);
-            
-            //clear all other slots if any
-            slot = ensureSlot(rp_player,"ear");
-            slot.removeAll();
-            slot = ensureSlot(player_challenged,"ear");
-            slot.removeAll();
-            slot = ensureSlot(rp_player,"challenge");
-            slot.removeAll();
-            slot = ensureSlot(player_challenged,"challenge");
-            slot.removeAll();
-          }
-        }
+        slot.removeAll();
+        RPSlot slot2 = ensureSlot(rp_player,"hand");
+        slot2.removeAll();
+        
+        //asign a one..
+        GameBoard gb = new GameBoard(3);
+        slot.add(gb);
+        slot2.add(gb);
+        
+        //clear all other slots if any
+        slot = ensureSlot(rp_player,"ear");
+        slot.removeAll();
+        slot = ensureSlot(player_challenged,"ear");
+        slot.removeAll();
+        slot = ensureSlot(rp_player,"challenge");
+        slot.removeAll();
+        slot = ensureSlot(player_challenged,"challenge");
+        slot.removeAll();
+        
+        marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+id +" got the board");
+        marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+oppenent_id +" got the board");
         status = RPAction.STATUS_SUCCESS;
+      }
+      else
+      {
+        marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+id +" NOT ACCEPTED CHALLENGE!!!!!!!!");
       }
     }
     finally
@@ -310,11 +313,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   private RPSlot ensureSlot(RPObject player, String slot_name)
   {
     RPSlot challenge_slot = null;
-    if(player.hasSlot("challenge"))
+    if(player.hasSlot(slot_name))
     {
       try
       {
-        challenge_slot = player.getSlot("challenge");
+        challenge_slot = player.getSlot(slot_name);
       }
       catch (RPObject.NoSlotFoundException e)
       {
@@ -324,7 +327,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     }
     else
     {
-      challenge_slot = new RPSlot("challenge");
+      challenge_slot = new RPSlot(slot_name);
       try
       {
         player.addSlot(challenge_slot);

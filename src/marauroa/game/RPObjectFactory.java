@@ -1,4 +1,4 @@
-/* $Id: RPObjectFactory.java,v 1.8 2003/12/08 12:39:53 arianne_rpg Exp $ */
+/* $Id: RPObjectFactory.java,v 1.9 2003/12/10 22:49:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,6 +78,7 @@ public class RPObjectFactory
     }
     catch(Exception e)
     {
+      e.printStackTrace(System.out);
       marauroad.trace("RPObjectFactory::getRPObject","X",e.getMessage());
       throw new IOException(e.getMessage());
     }
