@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.32 2004/11/26 23:10:12 root777 Exp $ */
+/* $Id: NetworkServerManager.java,v 1.33 2004/11/27 10:30:40 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public final class NetworkServerManager
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite[] writeManager;
   private Statistics stats;
-  private PacketValidater packetValidater;
+  private PacketValidator packetValidator;
   
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
@@ -48,8 +48,8 @@ public final class NetworkServerManager
     marauroad.trace("NetworkServerManager",">");
     try
       {
-      /* init the packet validater (which can now only check if the address is banned)*/
-      packetValidater = new PacketValidater();
+      /* init the packet validator (which can now only check if the address is banned)*/
+      packetValidator = new PacketValidator();
       
       /* Create the socket and set a timeout of 1 second */
       socket=new DatagramSocket(NetConst.marauroa_PORT);
@@ -215,7 +215,7 @@ public final class NetworkServerManager
             stats.addMessageRecv();
             }
           
-          if(!packetValidater.checkBanned(packet))
+          if(!packetValidator.checkBanned(packet))
             {
             try
               {
