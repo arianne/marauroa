@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.26 2004/05/04 16:25:22 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.27 2004/05/17 18:38:24 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,9 +65,9 @@ public final class GameDataModel
   private boolean voted;
   private Random random=new Random(System.currentTimeMillis());
   private String myName;
-  private String ownCharacterId;
-  private String arenaId;
-  private String shopId;
+  private RPObject.ID ownCharacterId;
+  private RPObject.ID arenaId;
+  private RPObject.ID shopId;
   private Map mAllObjects;
   private boolean verbose;
   
@@ -143,7 +143,7 @@ public final class GameDataModel
    *
    * @param    OwnCharacter        a  RPObject
    */
-  public void setOwnCharacterID(String  ownCharacterId)
+  public void setOwnCharacterID(RPObject.ID  ownCharacterId)
   {
     this.ownCharacterId = ownCharacterId;
   }
@@ -365,7 +365,7 @@ public final class GameDataModel
   //    return((RPObject)mGlobalObjects.get(id));
   //  }
   
-  private RPObject getObject(String id)
+  private RPObject getObject(RPObject.ID id)
   {
     return((RPObject)mAllObjects.get(id));
   }
@@ -768,7 +768,7 @@ public final class GameDataModel
       try
       {
         String name = rp_obj.get(RPCode.var_name);
-        if(name.matches("[Bb][Oo][Tt]_.*|root[0-9][0-9][0-9]"))
+        if(name.matches("[Bb][Oo][Tt]_.*|root[0-9][0-9][0-9]|overload_[0-9]*"))
         {
           //          System.out.println("Bot detected: " + name);
         }
@@ -856,13 +856,13 @@ public final class GameDataModel
             msg  = spectator.get(RPCode.var_text);
           }
           
-          String spec_id = spectator.get(RPCode.var_object_id);
+          int spec_id = spectator.getInt(RPCode.var_object_id);
           String fight_mode;
           String wait_to_req_fight;
           String karma;
           String strtg;
           RPObject gladiator = null;
-          if(ownCharacterId.equals(spec_id))
+          if(ownCharacterId.equals(new RPObject.ID(spec_id)))
           {
             gladiator = getFirstOwnGladiator();
             name="*"+name;
@@ -1153,7 +1153,7 @@ public final class GameDataModel
     {
       try
       {
-        setOwnCharacterID(object.get(RPCode.var_object_id));
+        setOwnCharacterID(new RPObject.ID(object.getInt(RPCode.var_object_id)));
       }
       catch (Attributes.AttributeNotFoundException e)
       {
