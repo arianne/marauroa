@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.21 2003/12/21 12:29:59 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.22 2003/12/21 12:49:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,17 +126,7 @@ public class marauroad extends Thread
     
   public static void main (String[] args)
     {
-    marauroad.trace("marauroad::main",">");
-    marauroad.setArguments(args);
-    marauroad.getMarauroa().start();
-    marauroad.trace("marauroad::main","<");
-  }
- 
-  public synchronized void run()
-    {
-    marauroad.trace("marauroad::run",">");
-    boolean finish=false;
-    println("Marauroa server       - An open source MMORPG Server -");
+    println("Marauroa           - An open source MORPG Framework -");
     println("Running on version @version@");
     println("(C) 2003 Miguel Angel Blanch Lardin");
     println();
@@ -153,7 +143,17 @@ public class marauroad extends Thread
     println("You should have received a copy of the GNU General Public License");
     println("along with this program; if not, write to the Free Software");
     println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
-    
+
+    marauroad.trace("marauroad::main",">");
+    marauroad.setArguments(args);
+    marauroad.getMarauroa().start();
+    marauroad.trace("marauroad::main","<");
+  }
+ 
+  public synchronized void run()
+    {
+    marauroad.trace("marauroad::run",">");
+    boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
     instance.setTestDatabase();
 
