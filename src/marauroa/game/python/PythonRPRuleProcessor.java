@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.12 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.13 2004/11/28 20:35:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,14 +46,14 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     catch(Exception e)
       {
       marauroad.thrown("PythonRPRuleProcessor::setContext","!",e);
-      System.exit(-1);
+      //@@@@@ System.exit(-1);
       }
     }
 
   /** Pass the whole list of actions so that it can approve or deny the actions in it.
    *  @param id the id of the object owner of the actions.
    *  @param actionList the list of actions that the player wants to execute. */
-  public void approvedActions(RPObject.ID id, RPActionList actionList)
+  public void approvedActions(RPObject.ID id, List<RPAction> actionList)
     {
     }
 

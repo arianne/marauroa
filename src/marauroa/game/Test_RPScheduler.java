@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.21 2004/11/26 21:20:42 root777 Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.22 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class Test_RPScheduler extends TestCase
       {
       }
       
-    public void approvedActions(RPObject.ID id, RPActionList actionList)
+    public void approvedActions(RPObject.ID id, List<RPAction> actionList)
       {
       }
     
@@ -55,6 +55,7 @@ public class Test_RPScheduler extends TestCase
     
     public void nextTurn()
       {
+      i=0;
       }
 
     public boolean onInit(RPObject object)
@@ -86,7 +87,7 @@ public class Test_RPScheduler extends TestCase
       RPScheduler sched=new RPScheduler();
       RPAction action=new RPAction();
 
-      action.put("source_id","10");
+      action.put("source_id",10);
       action.put("type","testing");
       action.put("zoneid","somewhere");
       sched.addRPAction(action);
@@ -96,11 +97,13 @@ public class Test_RPScheduler extends TestCase
       sched.visit(fake);      
       assertEquals(0,fake.getActionsExecuted());      
       sched.nextTurn();
-      fake=new FakeRuleProcessor();
+      fake.nextTurn();
+
       sched.visit(fake);      
       assertEquals(1,fake.getActionsExecuted());      
       sched.nextTurn();
-      fake=new FakeRuleProcessor();
+      fake.nextTurn();
+
       sched.visit(fake);      
       assertEquals(0,fake.getActionsExecuted());
       }

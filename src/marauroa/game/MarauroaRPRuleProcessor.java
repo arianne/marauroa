@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.25 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.26 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,7 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     this.rpman=rpman;
     }
 
-  public void approvedActions(RPObject.ID id, RPActionList actionList)
+  public void approvedActions(RPObject.ID id, List<RPAction> actionList)
     {
     }
   

@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.20 2004/11/26 21:21:13 root777 Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.21 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,6 +117,8 @@ public class Test_PlayerEntryContainer extends TestCase
       RPObject test=new RPObject();
 
       test.put("id",1);
+      test.put("zoneid","somewhere");
+      
       assertEquals(test,container.getRPObject(clientid,"Test Character"));
       container.removeRuntimePlayer(clientid);
       assertEquals(container.size(),0);

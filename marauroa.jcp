@@ -510,7 +510,7 @@
 				<source>true</source>
 			</fileitem>
 			<fileitem>
-				<path>src\marauroa\net\PacketValidater.java</path>
+				<path>src\marauroa\net\PacketValidator.java</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>
@@ -519,6 +519,10 @@
 			</fileitem>
 			<fileitem>
 				<path>src\marauroa\net\Serializable.java</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>src\marauroa\net\Test_InetAddressMask.java</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>
@@ -531,6 +535,10 @@
 			</fileitem>
 			<fileitem>
 				<path>src\marauroa\net\Test_NetworkServerManager.java</path>
+				<source>true</source>
+			</fileitem>
+			<fileitem>
+				<path>src\marauroa\net\Test_PacketValidator.java</path>
 				<source>true</source>
 			</fileitem>
 			<fileitem>

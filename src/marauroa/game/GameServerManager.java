@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.58 2004/11/25 19:33:38 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.59 2004/11/28 20:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,7 +141,7 @@ public final class GameServerManager extends Thread
         {
         marauroad.trace("GameServerManager::ServerInfo::(static)","!","ABORT: Unable to load Server info");
         marauroad.thrown("GameServerManager::ServerInfo::(static)","X",e);
-        System.exit(-1);
+        //@@@@@ System.exit(-1);
         }
       finally
         {

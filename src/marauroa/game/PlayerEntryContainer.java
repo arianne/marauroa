@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.43 2004/11/25 19:33:45 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.44 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -208,7 +208,7 @@ public class PlayerEntryContainer
       {
       marauroad.thrown("PlayerEntryContainer","X", e);
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
-      System.exit(-1);
+      //@@@@@ System.exit(-1);
       }
     }
   

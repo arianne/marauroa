@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.21 2004/11/21 14:17:31 root777 Exp $ */
+/* $Id: RPScheduler.java,v 1.22 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,9 +21,9 @@ import marauroa.*;
 public class RPScheduler
   {
   /** a HashMap<RPObject.ID,RPActionList> of entries for this turn */
-  private HashMap<RPObject.ID,RPActionList> actualTurn;
+  private HashMap<RPObject.ID,List<RPAction>> actualTurn;
   /** a HashMap<RPObject.ID,RPActionList> of entries for next turn */
-  private HashMap<RPObject.ID,RPActionList> nextTurn;
+  private HashMap<RPObject.ID,List<RPAction>> nextTurn;
   /** Turn we are executing now */
   private int turn;
   
@@ -31,8 +31,8 @@ public class RPScheduler
   public RPScheduler()
     {
     turn=0;
-    actualTurn=new HashMap<RPObject.ID,RPActionList>();
-    nextTurn=new HashMap<RPObject.ID,RPActionList>();
+    actualTurn=new HashMap<RPObject.ID,List<RPAction>>();
+    nextTurn=new HashMap<RPObject.ID,List<RPAction>>();
     }
   
   /** Add an RPAction to the scheduler for the next turn
@@ -48,15 +48,15 @@ public class RPScheduler
       marauroad.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
       if(nextTurn.containsKey(id))
         {
-        RPActionList list=nextTurn.get(id);
+        List<RPAction> list=nextTurn.get(id);
 
         list.add(action);
         }
       else
         {
-        RPActionList list=new RPActionList();
-
+        List<RPAction> list=new LinkedList<RPAction>();
         list.add(action);
+        
         nextTurn.put(id,list);
         }
       }
@@ -92,15 +92,16 @@ public class RPScheduler
     marauroad.trace("RPScheduler::visit",">");
     try
       {
-      for(Map.Entry<RPObject.ID,RPActionList> entry: actualTurn.entrySet())
+      for(Map.Entry<RPObject.ID,List<RPAction>> entry: actualTurn.entrySet())
         {
         RPObject.ID id=entry.getKey();
-        RPActionList list=entry.getValue();
+        List<RPAction> list=entry.getValue();
 
         ruleProcessor.approvedActions(id,list);
       
         for(RPAction action: list)
           {
+          marauroad.trace("RPScheduler::visit","D",action.toString());
           try
             {
             RPAction.Status status=ruleProcessor.execute(id,action);
@@ -134,9 +135,13 @@ public class RPScheduler
     {
     marauroad.trace("RPScheduler::nextTurn",">");
     ++turn;
+    
     /* we cross-exchange the two turns and erase the contents of the next turn */
+    HashMap<RPObject.ID,List<RPAction>> tmp=actualTurn;
     actualTurn=nextTurn;
+    nextTurn=tmp;
     nextTurn.clear();
+    
     marauroad.trace("RPScheduler::nextTurn","<");
     }
   }

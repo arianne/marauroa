@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.7 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.8 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ public interface IRPRuleProcessor
   /** Pass the whole list of actions so that it can approve or deny the actions in it.
    *  @param id the id of the object owner of the actions.
    *  @param actionList the list of actions that the player wants to execute. */
-  public void approvedActions(RPObject.ID id, RPActionList actionList);
+  public void approvedActions(RPObject.ID id, List<RPAction> actionList);
   
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.

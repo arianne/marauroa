@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.117 2004/11/25 19:33:45 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.118 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -99,7 +99,7 @@ public class RPServerManager extends Thread
       {
       marauroad.thrown("RPServerManager","X",e);
       marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances");
-      System.exit(-1);
+      //@@@@@ System.exit(-1);
       }
     finally
       {

@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.1 2004/09/21 18:20:40 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.2 2004/11/28 20:35:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class PythonRPWorld extends RPWorld
     catch(Exception e)
       {
       marauroad.thrown("PythonRPWorld::PythonRPWorld","!",e);
-      System.exit(-1);
+      //@@@@@ System.exit(-1);
       }
 
     marauroad.trace("PythonRPWorld::PythonRPWorld","<");

@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.20 2004/11/26 21:18:37 root777 Exp $ */
+/* $Id: Test_RPObject.java,v 1.21 2004/11/28 20:35:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -518,7 +518,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(4,added.size());
+      assertEquals(5,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -613,7 +613,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(4,added.size());
+      assertEquals(5,added.size());
       assertEquals(1,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -685,7 +685,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(2+1,added.size());
+      assertEquals(4,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -722,7 +722,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(3+1,added.size());
+      assertEquals(5,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -760,7 +760,7 @@ public class Test_RPObject extends TestCase
       player.getDifferences(added,deleted);   
       
       assertEquals(0,added.size());
-      assertEquals(2+1,deleted.size());
+      assertEquals(4,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
@@ -798,8 +798,8 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(4+1,added.size());
-      assertEquals(2+1,deleted.size());
+      assertEquals(6,added.size());
+      assertEquals(4,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  

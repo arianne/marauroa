@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.48 2004/11/27 11:05:07 root777 Exp $ */
+/* $Id: RunTests.java,v 1.49 2004/11/28 20:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,8 +76,7 @@ public class RunTests
       wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();
-//      wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
-
+      
       Date end=new Date();
       
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
@@ -122,6 +121,8 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
     suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_InetAddressMask.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_PacketValidator.class));
 //    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
@@ -160,14 +161,6 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
     suite.addTest(new TestSuite(marauroa.net.Test_InetAddressMask.class));
     suite.addTest(new TestSuite(marauroa.net.Test_PacketValidator.class));
-    return suite;
-    }
-
-  public static Test suiteOneTest ( )
-    {
-    TestSuite suite= new TestSuite("One Test case marauroa Tests");
-
-    suite.addTest(new TestSuite(marauroa.game.Test_RPClass.class));
     return suite;
     }
 
