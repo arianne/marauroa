@@ -1,32 +1,59 @@
 Marauroa
 --------
 
-Marauroa is a Java clone of Arianne.
-You can find the latest version of Marauroa at: http://marauroa.sf.net
+Marauroa is a implementation using Java of the Arianne, but we are also 
+extending some of the concepts implemented in Arianne to improve it.
+
+Marauroa wants to be a massive multiplayer role playing game that you can 
+access through your internet connection. It is a virtual world, and you have
+an unprecedented degree of freedom to shape your own destiny. Social 
+interaction, combat, or just hanging out with friends will all be parts of 
+your experience.
+
+Marauroa is also a Massively Multiplayer Engine, that you can use to build 
+you own online games using Marauroa as a Content Management system.
+
+You can find the latest version of Marauroa at: 
+http://marauroa.sourceforge.net
+
 Marauroa is a GPL project.
 
-status
+Status
 ------
-Actually Marauroa is not playable and it is target to create a server running in Java, and a later time a Java based client will be deployed too.
+Marauroa is NOT playable.
+It is now running a server that implements the FULL protocol and that is
+able to connect to a MySQL database, also features the RP Engine in its 
+first state.
 
+Next version will contains a very simple game: Tic-tac-toe, implemented 
+using the Marauroa engine.
 
 Requirements
 ------------
 Actually to compile Marauroa you need:
-- Java SDK 1.4.2	( http://java.sun.com 		)
-- JUnit 1.3.8		( http://junit.sf.net 		)
-- Ant 1.5.4		( http://ant.apache.org/	)
+- Java SDK 1.4.2	( http://java.sun.com )
+- JUnit 1.3.8		( http://junit.sourceforge.net )
+- Ant 1.5.4			( http://ant.apache.org )
+
+In order to get it working with MySQL you also need:
+- MySQL Connector/J ( http://www.mysql.com/downloads/api-jdbc-stable.html )
+
 
 
 Build
 -----
 You need ant properly installed on your system to build Marauroa.
 Once you have ant running, simple move to marauroa directory and run ant.
+Before running Ant you need to edit build.xml to point to correct Junit.jar file.
+
+  <property name="junitlib" value="../../../classes/junit.jar"/>
+
+The save and run Ant.
 
 cd /foo/bar/marauroa
 ant jar
 
-You will have a marauroa-0.01.jar file in the lib folder.
+You will have a marauroa-0.02.jar file in the lib folder.
 
 
 Running
@@ -34,3 +61,68 @@ Running
 Use the BAT files to run it:
 - marauroad is the server 
 - JMarauroa is the client 
+
+
+Changelog
+---------
+0.02	Nov 30, 2003
+- Added Perception message
+- Added JDBC Database
+- Added RP Code: Hacked and Slashed 
+- Fixed bugs:
+   · 835039	Messages are not arriving correctly to Server
+   · 838103	Client can log twice due to a logical bug
+   · 835222	Player can login twice without error
+   · 838373	PlayerEntryContainer is not safe
+   · 816411	Bug in protocol description
+   · 838592	Attacker can guess clientid using Action Message
+   · 846099	Forgot to set Character
+   · 846094	Logout doesnt' work correctly
+   · 847211	RPObject.ID equals method is wrong
+   · 847201	RPZone is not working correctly	
+   · 846197	Logging out doesn't clean the state correctly
+   · 847187	Ant build is not totally correct
+   · 847420	Logout ACK and NACK description is incorrect
+   · 847599	marauroad should create tables
+   · 847421	GameManager.txt doesn't consider Database
+   · 847863	setIconImage in JMarauroa doesn't work
+   · 847608	Verify on GameManager that messages come from client
+   · 847607	Clientid random number should be initialized correctly
+   · 849274	Message overwritting in NetworkServerManager
+   · 849299	Character name MUST be unique
+   · 849790	Passing null to JDBCPlayerDatabase parm
+   · 849655	JDBCPlayerDatabase is not working correctly.
+   · 849809	Fix SQL Code
+   · 849815	RPObject problem with Slots
+   · 849315	register method of Messages is not called
+   · 851130	setRPObject doesn't throw CharacterNotFoundException
+   · 851117	Adding a existing character does not throw any exception
+   · 850876	Use same char for same things in Traces
+   · 851134	reInit bug	
+   · 851161	initDB, dropDB and reInitDB should also throw exception
+   · 851129	getPlayerCount should throw an exception
+   · 851218	removeCharacter should drop CharacterNotFoundException
+   · 851160	createConnection should throw exception
+   · 851262	fix build.xml on CVS
+   · 851338	How client knows object id of the character?
+   · 851523	RPServerManager neeed to send messages
+   · 851572	There is no way to iterate on PlayerEntrycontainer
+   · 851596	Update MessageS2ChooseCharacterACK to print RPObject.ID
+   · 845807	clientid should be an int
+   · 851230	Enforce RPObject source in actions
+   · 851621	Forgot break in GameServerManager
+   · 851098	Login event is only added on success
+   · 851099	Test expect database to be empty
+   · 849306	RP Scheduler not fair
+- Fixed Traces output
+
+0.01	Nov 22, 2003
+- Initial release
+- Complete Network Protocol
+- Memory Database
+
+
+Legal
+-----
+Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003
+arianne_rpg at users dot sourceforge dot net
