@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.73 2004/04/28 16:52:05 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.74 2004/04/29 14:59:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -314,8 +314,8 @@ class RPServerManager extends Thread
         deltaPerceptionSend=0;
         }
  
-      notifyTimedoutPlayers(playersToRemove);
       notifyUpdatesOnPlayer(playersToUpdate);
+      notifyTimedoutPlayers(playersToRemove);
       }
     finally
       {
@@ -372,12 +372,19 @@ class RPServerManager extends Thread
           stats.addPlayerTimeout(playerContainer.getUsername(clientid),clientid);
           
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
-          RPObject object=getRPObject(id);
-
-          if(ruleProcessor.onTimeout(id))
+          if(id==null)
             {
-            /* NOTE: Set the Object so that it is stored in Database */
-            playerContainer.setRPObject(clientid,object);
+            marauroad.trace("RPServerManager::notifyTimedoutPlayers","W","Can't notify a player("+clientid+") that timedout because it never completed login");
+            }
+          else
+            {
+            RPObject object=getRPObject(id);
+
+            if(ruleProcessor.onTimeout(id))
+              {
+              /* NOTE: Set the Object so that it is stored in Database */
+              playerContainer.setRPObject(clientid,object);
+              }
             }
           }
         catch(Exception e)

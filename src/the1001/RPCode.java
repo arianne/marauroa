@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.67 2004/04/18 15:51:55 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.68 2004/04/29 15:01:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -69,13 +69,13 @@ public class RPCode
   private static Random rand;
   private static List playersFighting;
   private static List playersWaiting;
-  private static List playersVoted;
+  private static Map playersVoted;
   static
     {
     rand=new Random();
     playersFighting=new LinkedList();
     playersWaiting=new LinkedList();
-    playersVoted=new LinkedList();
+    playersVoted=new HashMap();
     }
   public static void setCallback(the1001RPRuleProcessor rpu)
     {
@@ -554,7 +554,7 @@ public class RPCode
         marauroad.trace("RPCode::Vote","D",status.toString());
         return status;
         }
-      if(playersVoted.contains(player))
+      if(playersVoted.containsKey(new RPObject.ID(player)))
         {
         /** Failed because player is exploiting a bug: Logout and Login to vote again */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") is exploiting a bug: Logout and Login to vote again");
@@ -572,9 +572,11 @@ public class RPCode
         marauroad.trace("RPCode::Vote","D","Player("+player_id.toString()+") voted DOWN");
         arena.put(RPCode.var_thumbs_down,arena.getInt(RPCode.var_thumbs_down)+1);
         }
+        
       player.put(RPCode.var_hidden_vote,"");  
-      playersVoted.add(player);
+      playersVoted.put(new RPObject.ID(player),player);
       zone.modify(arena);
+      
       return RPAction.STATUS_SUCCESS;
       }
     finally
@@ -671,7 +673,7 @@ public class RPCode
       Iterator it;
 
       marauroad.trace("RPCode::SetUpNextCombat","D","Clean players votes");
-      it=playersVoted.iterator();
+      it=playersVoted.values().iterator();
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next(); 
