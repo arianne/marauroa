@@ -15,6 +15,10 @@ pacman_mapfile='map_definition.txt'
 success=1
 failed=0
 
+dots_reappear_time=60
+superdots_reappear_time=450
+superdots_effect_time=45
+
 
 _directions=['N','W','S','E']
 
@@ -155,7 +159,7 @@ class RealPythonZone(PythonZone):
         object.put("x",x)
         object.put("y",y)
         object.put("!score",1)
-        object.put("!respawn",60)
+        object.put("!respawn",dots_reappear_time)
         return object;
 
     def createSuperBall(self, x,y):
@@ -163,7 +167,8 @@ class RealPythonZone(PythonZone):
         make it to be able to eat and destroy the ghosts """
         object=self.createBall(x,y)
         object.put("type","superball");
-        object.put("!timeout",15)
+        object.put("!respawn",superdots_reappear_time)
+        object.put("!timeout",superdots_effect_time)
         object.setRPClass(RPClass.getRPClass("superball"))
         return object;
 
@@ -485,6 +490,8 @@ class RealPythonRP(PythonRP):
         pos=self._map.getRandomGhostRespawn()
         object.put("x",pos[0])
         object.put("y",pos[1])
+
+        if object.has("super"): object.remove("super")
         
         self._zone.add(object)
         self._online_ghosts.append(object)
@@ -493,9 +500,18 @@ class RealPythonRP(PythonRP):
     def onExit(self, objectid):
         """ Do what you need to remove this player """
         for x in self._online_players:
-            if x.getInt("id")==objectid.getObjectID():
+            if x.getID()==objectid:
                 self._online_players.remove(x)
                 break
+
+        for x in self._super_players:
+            if x['object'].getID()==objectid:
+                self._super_players.remove(x)
+                break
+
+        for x in self._killedFlagGhosts:
+            if x.getID()==objectid:
+                self._killedFlagGhosts.remove(x)
             
         self._zone.remove(objectid)
         return 1
