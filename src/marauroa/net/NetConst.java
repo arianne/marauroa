@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.21 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.22 2004/05/19 21:04:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,8 +40,9 @@ public class NetConst
    *    - Changed the ordering inside Perception message 
    * 12 - Changed perception to send only what is hidden on myRPObject
    *    - Added Out of Sync Message
-   *    - Improved speed of perception creation */
-  final static public byte NETWORK_PROTOCOL_VERSION=12;
+   *    - Improved speed of perception creation
+   * 13 - Redefined Map message */
+  final static public byte NETWORK_PROTOCOL_VERSION=13;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   static
     {
