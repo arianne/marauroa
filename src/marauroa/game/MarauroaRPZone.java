@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.46 2004/05/10 14:46:07 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.47 2004/05/10 15:40:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,10 +72,15 @@ public class MarauroaRPZone implements RPZone
       objects.put(id,object);
       perception.added(object);
       
-      rpobjectDatabase.addToRPZone(transaction,object);
+      if(!rpobjectDatabase.hasInRPZone(transaction,object))
+        {
+        rpobjectDatabase.addToRPZone(transaction,object);
+        transaction.commit();
+        }
       }
     catch(Exception e)
       {
+      transaction.rollback();
       marauroad.thrown("MarauroaRPZone::add","X",e);
       throw new RPObjectInvalidException("id");
       }
@@ -119,9 +124,11 @@ public class MarauroaRPZone implements RPZone
       try
         {
         rpobjectDatabase.removeFromRPZone(transaction,object);
+        transaction.commit();
         }
       catch(Exception e)
         {
+        transaction.rollback();
         throw new RPObjectNotFoundException(id);
         }
         

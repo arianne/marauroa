@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.38 2004/05/10 13:57:02 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.39 2004/05/10 15:40:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1371,6 +1371,38 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException e)
       {
       marauroad.thrown("JDBCPlayerDatabase::addToRPZone","X",e);      
+      throw e;
+      }      
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
+      }
+    }
+
+  public boolean hasInRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+    {
+    marauroad.trace("JDBCPlayerDatabase::hasInRPZone",">");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "select * from rpzone where object_id='"+object.get("id")+"'";
+
+      marauroad.trace("JDBCRPObjectDatabase::hasInRPZone","D",query);
+      ResultSet result = stmt.executeQuery(query);
+      
+      if(result.next())
+        {
+        if(result.getInt(1)!=0)
+          {
+          return true;
+          }
+        }
+      return false;
+      }
+    catch(SQLException e)
+      {
+      marauroad.thrown("JDBCPlayerDatabase::hasInRPZone","X",e);      
       throw e;
       }      
     finally

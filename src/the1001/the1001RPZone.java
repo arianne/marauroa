@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.23 2004/05/10 14:46:07 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.24 2004/05/10 15:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,6 +92,7 @@ public class the1001RPZone extends MarauroaRPZone
           else
             {
             remove(object.getID());
+            it=iterator();
             }
           }
         
