@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.18 2004/01/07 11:16:24 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.19 2004/01/07 16:26:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,8 +102,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     ++turn;
+    
     removeOneTurnAttributes();      
     RPCode.ResolveFight();
+    RPCode.RequestFame();
+        
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
   

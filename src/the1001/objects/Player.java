@@ -1,4 +1,4 @@
-/* $Id: Player.java,v 1.1 2004/01/01 19:52:23 arianne_rpg Exp $ */
+/* $Id: Player.java,v 1.2 2004/01/07 16:26:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,6 @@ public class Player extends RPObject
     put("object_id",id.getObjectID());
     put("type","player");
     put("name",name);
-    put("status","idle");
     put("fame",0);
     
     addSlot(new RPSlot("gladiators"));

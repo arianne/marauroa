@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.14 2003/12/21 11:59:24 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.15 2004/01/07 16:26:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,7 +169,17 @@ public class RPSlot implements marauroa.net.Serializable
   
   public String toString()
   {
-    return "RPSlot named("+name+") with "+size()+" objects";
+    StringBuffer str=new StringBuffer();
+    str.append("RPSlot named("+name+") with [");
+    Iterator it=iterator();
+    while(it.hasNext())
+    {
+      RPObject object=(RPObject)it.next();
+      str.append(object.toString());
+    }          
+    str.append("]");
+    
+    return str.toString();
   }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
