@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ganttproject.sourceforge.net>
-<project name="" company="" view-date="1/8/2003" view-zoom="4" version="1.9.8">
+<!DOCTYPE project SYSTEM "http://ganttproject.sourceforge.net/dtd/ganttproject.dtd">
+
+<project name="" company="" view-date="1/8/2003" view-zoom="5" version="1.9.9">
     <description>    </description>
 
     <tasks color="#8cb6ce">
@@ -11,24 +12,46 @@
         <task id="1" name="Redact Documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="31" priority="1">
             <depend id="44" type="2"/>
         </task>
-        <task id="3" name="Implement basic server" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="45" priority="1">
-            <task id="4" name="Implement NetworkManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="10" complete="70" priority="1">
-                <depend id="5" type="2"/>
-            </task>
-            <task id="5" name="Implement GameManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="29/9/2003" duration="10" complete="70" priority="1">
-                <depend id="6" type="2"/>
-            </task>
-            <task id="6" name="Implement RPManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="9/10/2003" duration="10" complete="0" priority="1">
-                <depend id="44" type="2"/>
+        <task id="3" name="Implement basic server" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="44" complete="51" priority="1">
+            <task id="4" name="Implement NetworkManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="13" complete="85" priority="1"/>
+            <task id="5" name="Implement GameManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="28/9/2003" duration="28" complete="46" priority="1">
+                <task id="48" name="Implement GameManagerServer" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="28/9/2003" duration="13" complete="80" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="52" name="Implement PlayerEntry" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/9/2003" duration="12" complete="80" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="53" name="Implement PlayerDatabase" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="3/10/2003" duration="11" complete="81" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="6" name="Implement RPManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="5/10/2003" duration="14" complete="10" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="49" name="Implement RPScheduler" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="5/10/2003" duration="11" complete="60" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="50" name="Implement RPZone" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/10/2003" duration="11" complete="50" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="51" name="Implement RPRuleProcessor" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="11/10/2003" duration="12" complete="10" priority="1">
+                    <depend id="55" type="2"/>
+                </task>
+                <task id="55" name="Complete GameManager" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/10/2003" duration="2" complete="0" priority="1">
+                    <depend id="44" type="2"/>
+                    <depend id="54" type="2"/>
+                </task>
             </task>
             <task id="7" name="Write Test Cases" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/9/2003" duration="30" complete="45" priority="1">
+                <depend id="44" type="2"/>
+            </task>
+            <task id="54" name="Document code and design" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/10/2003" duration="7" complete="33" priority="2">
                 <depend id="44" type="2"/>
             </task>
         </task>
         <task id="2" name="Create Website" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/9/2003" duration="45" complete="90" priority="1">
             <depend id="44" type="2"/>
         </task>
-        <task id="44" name="Release Marauroa 0.1" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="20/10/2003" duration="3" complete="0" priority="1"/>
+        <task id="44" name="Release Marauroa 0.1" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="2/11/2003" duration="3" complete="0" priority="2"/>
     </tasks>
 
     <resources>
