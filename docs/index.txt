@@ -17,7 +17,7 @@ Contents
 	b) Messages Types.txt
 		Introduction to all the messages that Marauroa uses.
 	
-	c) Network Manager.txt
+	c) NetworkManager.txt
 		Basic explication of Network active entity.
 		
 3) Game related
@@ -33,7 +33,7 @@ Contents
 	d) PlayerContainer Explained.txt
 		Explains the basic usage and structure of PlayerContainer.
 
-	e) ClientID Generation.txt
+	e) ClientID generation.txt
 		Explains how the clientid are generated
 
 
@@ -41,10 +41,10 @@ Contents
 	a) Actions and Objects.txt
 		Basic introduction to actions and Objects
 		
-	b) Objects Explained.txt
+	b) Object Explained.txt
 		Explains all the details related to Objects
 	
-	b.1) Objects and Slots.txt
+	b.1) Object and Slots.txt
 		Basic introduction to the Slots.
 		
 	c) Actions Explained.txt
@@ -53,7 +53,7 @@ Contents
 	c.1) How Perceptions and Actions work
 		Explains how Marauroa handles actions using perceptions.
 
-	d) RP Manager.txt
+	d) RPManager.txt
 		Basic explication of the RP active entity.
 		
 	e) Delta perception Algorithm.txt
