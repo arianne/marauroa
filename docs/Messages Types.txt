@@ -182,7 +182,11 @@ Message S2C Action ACK
 The Action ACK is sent from server to client to notify that the action has been
 recieved into the server. It doesn't acknoledge that the action is accepted by 
 the RP, it just means that the action arrived the server.
-It has no params.
+It has 1 param:
+- action_id
+
+It is used to identify to which action you refered. As in Marauroa you can command
+several actions per turn.
 
 
 Message S2C Perception
