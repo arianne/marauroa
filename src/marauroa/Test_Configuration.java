@@ -1,4 +1,4 @@
-/* $Id: Test_Configuration.java,v 1.4 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: Test_Configuration.java,v 1.5 2003/12/09 23:09:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,8 @@ public class Test_Configuration extends TestCase
 	
   public void testConfiguration()
     {
+    marauroad.trace("Test_Configuration::testConfiguration","?","This test case try to see if the Configuration class "+
+      "is able to load the file and get the test attribute and set it, and check that the value is the correct");
     marauroad.trace("Test_Configuration::testConfiguration",">");
 
     try

@@ -1,4 +1,4 @@
-/* $Id: Test_RWLock.java,v 1.2 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: Test_RWLock.java,v 1.3 2003/12/09 23:09:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,6 +56,10 @@ public class Test_RWLock extends TestCase
 	
   public void testLock()
     {
+    marauroad.trace("Test_RWLock::testLock","?","This test case try to see if the RW "+
+      "lock is working correctly by changing 5 values on the Data class while the lock "+
+      "is owned, and then the lock is released and Data class will adquiere it in read "+ 
+      "mode and verify that the 5 numbers are the same");      
     marauroad.trace("Test_RWLock::testLock",">");
     
     lock=new RWLock();
