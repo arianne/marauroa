@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.11 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.12 2003/12/10 20:43:18 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,7 +186,7 @@ public class RPSlot implements marauroa.net.Serializable
     while(it.hasNext())
     {
       RPObject entry=(RPObject)it.next();
-      out.write(entry);
+      RPObjectFactory.getFactory().addRPObject(out,entry);
     }
   }
   
