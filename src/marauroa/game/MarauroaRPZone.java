@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.44 2004/05/10 13:57:02 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.45 2004/05/10 14:09:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,15 +67,17 @@ public class MarauroaRPZone implements RPZone
       {
       RPObject.ID id=new RPObject.ID(object);
       
-      object.resetAddedAndDeleted();
+      object.resetAddedAndDeleted();      
 
       objects.put(id,object);
       perception.added(object);
+      
+      rpobjectDatabase.addToRPZone(transaction,object);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(Exception e)
       {
       marauroad.thrown("MarauroaRPZone::add","X",e);
-      throw new RPObjectInvalidException(e.getAttribute());
+      throw new RPObjectInvalidException(e);
       }
     }
   
@@ -84,7 +86,6 @@ public class MarauroaRPZone implements RPZone
     try 
       {
       /** Uncoment to disable Delta-delta: */
-//      perception.added(object);
       boolean already_added=false;
 
       Iterator it=modified.iterator();
@@ -113,8 +114,9 @@ public class MarauroaRPZone implements RPZone
     if(objects.containsKey(id))
       {
       RPObject object=(RPObject)objects.remove(id);
-
       perception.removed(object);
+
+      rpobjectDatabase.removeFromRPZone(transaction,object);
       return object;
       }
     else
