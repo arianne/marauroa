@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.5 2004/07/13 18:16:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,11 +70,4 @@ class GameScript
     PyInstance object=(PyInstance)interpreter.eval(pythonRPClass+"(gamescript__zone)");
     return (PythonRP)object.__tojava__(PythonRP.class);
     }
-    
-  public PythonAI getAI() throws Exception
-    {
-    String pythonAIClass=conf.get("python_script_ai_class");
-    PyInstance object=(PyInstance)interpreter.eval(pythonAIClass+"(gamescript__zone,gamescript__scheduler)");
-    return (PythonAI)object.__tojava__(PythonAI.class);
-    }   
   }

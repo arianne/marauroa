@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.107 2004/07/12 22:09:58 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.108 2004/07/13 18:16:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,6 @@ public class RPServerManager extends Thread
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
   private IRPRuleProcessor ruleProcessor;
-  private IRPAIManager aiMan;
   /** The place where the objects are stored */
   private IRPZone zone;
   private Statistics stats;
@@ -83,10 +82,6 @@ public class RPServerManager extends Thread
       zone=(IRPZone)zoneClass.newInstance();      
       zone.onInit();      
       
-      Class AIManagerClass=Class.forName(conf.get("rp_RPAIClass"));
-      aiMan=(IRPAIManager)AIManagerClass.newInstance();
-      aiMan.setContext(zone,scheduler);
-
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
       ruleProcessor=(IRPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
@@ -506,8 +501,6 @@ public class RPServerManager extends Thread
         scheduler.nextTurn();
         /** Execute them all */
         scheduler.visit(ruleProcessor);
-        /** Execute AI stuff */
-        aiMan.compute(0);
 
         /** Compute game RP rules to move to the next turn */
         ruleProcessor.nextTurn();

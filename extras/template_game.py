@@ -36,11 +36,3 @@ class TemplateZone(PythonZone):
 
     def serializeMap(self, objectid):
         return java.util.LinkedList()
-
-class TemplateAI(PythonAI):
-    def __init__(self, zone, sched):
-        self._zone=zone
-        self._sched=sched
-
-    def onCompute(self, timelimit):
-        pass
