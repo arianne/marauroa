@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.8 2003/12/09 22:57:30 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.9 2003/12/09 23:40:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -215,14 +215,11 @@ public class NetworkServerManager
     {
     private int last_signature;
     private String name;
-    private Random rand;
     
     public NetworkServerManagerWrite()
       {
       last_signature=0;
       name="NetworkServerManagerWrite";
-      rand=new Random();
-      rand.setSeed(new Date().getTime());
       }
     
     /** Method that execute the writting */
@@ -243,7 +240,7 @@ public class NetworkServerManager
  	      marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
 		  int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
-		  byte signature=(byte)rand.nextInt();
+		  ++last_signature;
 		  int remaining=buffer.length;
 		  
 		  for(int i=0;i<total;++i)
@@ -266,7 +263,7 @@ public class NetworkServerManager
 		    byte[] data=new byte[size+3];
 		    data[0]=(byte)total;
 		    data[1]=(byte)i;
-		    data[2]=(byte)++last_signature;
+		    data[2]=(byte)last_signature;
 		    System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
 
    	        DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress()); 	     

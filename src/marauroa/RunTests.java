@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.25 2003/12/09 23:32:58 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.26 2003/12/09 23:41:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,7 +100,7 @@ public class RunTests
     System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
     System.setOut(new PrintStream(new FileOutputStream(filename)));
     TestResult result=junit.textui.TestRunner.run(e);
-    String testResult=(result.wasSuccessful()?"T":"F");
+    String testResult=(result.wasSuccessful()?"Correct":"Failed");
     System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
     return result;
     }
