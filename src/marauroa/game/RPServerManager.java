@@ -33,7 +33,8 @@ public class RPServerManager extends Thread
     
       //the  class for the rule processor should come
       //from Configuration
-      ruleProcessor=(RPRuleProcessor)Class.forName(conf.get("rp_RPRuleProcessorClass")).newInstance();
+      Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
+      ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       }
     catch(Throwable e)
       {
