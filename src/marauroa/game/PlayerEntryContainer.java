@@ -325,32 +325,19 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(int clientid, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
+  public void addLoginEvent(String username, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::addLoginEvent",">");
     
     try
       {
-      if(hasRuntimePlayer(clientid))
-        {
-        try
-          {
-          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-    
-          playerDatabase.addLoginEvent(entry.username,source,correctLogin);
-          }
-        catch(PlayerDatabase.PlayerNotFoundException e)
-          {
-          marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
-          marauroad.trace("PlayerEntryContainer::addLoginEvent","!","This should never happens");
-          throw new NoSuchPlayerException();
-          }
-        }
-      else
-        {
-        marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such RunTimePlayer("+clientid+")");
-        throw new NoSuchClientIDException();
-        }
+      playerDatabase.addLoginEvent(username,source,correctLogin);
+      }
+    catch(PlayerDatabase.PlayerNotFoundException e)
+      {
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","!","This should never happens");
+      throw new NoSuchPlayerException();
       }
     finally
       {

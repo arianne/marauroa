@@ -115,7 +115,7 @@ public class GameServerManager extends Thread
 
 	    /* Correct: The login is correct */
 	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
-	    playerContainer.addLoginEvent(clientid,msg.getAddress(),true);
+	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),true);
 	      
 	    /* Send player the Login ACK message */
 	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
@@ -133,6 +133,7 @@ public class GameServerManager extends Thread
 	  else
 	    {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
+	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
 
 	    /* Send player the Login NACK message */
 	    MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);
