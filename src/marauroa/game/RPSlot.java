@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.31 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.32 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -189,7 +189,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       return (RPObject)objects.get(0);
       }
       
-    throw new RPObjectNotFoundException(new RPObject.ID(-1));
+    throw new RPObjectNotFoundException(RPObject.INVALID_ID);
     }
   
   /** This method removes the object of the slot */

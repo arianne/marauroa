@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.59 2004/08/29 11:07:43 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.60 2004/08/30 19:25:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,14 +65,14 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
         {
         int gladiator_id=action.getInt(RPCode.var_gladiator_id);
 
-        status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
+        status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id,-1));
         }
       else if(action.get(RPCode.var_type).equals("fight_mode"))
         {
         int gladiator_id=action.getInt(RPCode.var_gladiator_id);
         String fight_mode=action.get("fight_mode");
 
-        status=RPCode.FightMode(id, new RPObject.ID(gladiator_id),fight_mode);
+        status=RPCode.FightMode(id, new RPObject.ID(gladiator_id,-1),fight_mode);
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_vote))
         {
@@ -90,13 +90,13 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
         {
         String item_id=action.get(RPCode.var_choosen_item);        
 
-        status=RPCode.BuyItem(id,new RPObject.ID(Integer.parseInt(item_id)));
+        status=RPCode.BuyItem(id,new RPObject.ID(Integer.parseInt(item_id),-1));
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_buyGladiator))
         {
         String item_id=action.get(RPCode.var_choosen_item);        
 
-        status=RPCode.BuyGladiator(id,new RPObject.ID(Integer.parseInt(item_id)));
+        status=RPCode.BuyGladiator(id,new RPObject.ID(Integer.parseInt(item_id),-1));
         }
       else
         {

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.42 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.43 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,6 +74,11 @@ public class Attributes implements marauroa.net.Serializable
     return rpClass;
     }
   
+  public boolean instanceOf(RPClass baseclass)
+    {
+    return rpClass.subclassOf(baseclass.getName());
+    }
+    
   public boolean isEmpty()
     {
     return content.isEmpty();
@@ -190,7 +195,7 @@ public class Attributes implements marauroa.net.Serializable
         }
       else
         {
-        /* This is for Delta-delta feature */
+        /* This is for Delta^2 feature, as if it is empty it fails. */
         deleted.put(attribute,"0");
         }
       
@@ -250,7 +255,7 @@ public class Attributes implements marauroa.net.Serializable
     return buffer.toString();
     }
 	
-  public static List StringToList(String list)
+  private static List StringToList(String list)
     {
     String[] array=list.substring(1,list.length()-1).split(":");
     List result=new LinkedList();
@@ -267,11 +272,6 @@ public class Attributes implements marauroa.net.Serializable
     return content.keySet().iterator();
     }
   
-  public boolean instanceOf(RPClass baseclass)
-    {
-    return rpClass.subclassOf(baseclass.getName());
-    }
-	
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
     writeObject(out,false);
@@ -299,7 +299,6 @@ public class Attributes implements marauroa.net.Serializable
     while(it.hasNext())
       {
       Map.Entry entry=(Map.Entry)it.next();
-      /** NOTE: The attributes that begin with ! are not stored */
       String key=(String)entry.getKey();
 
       if(fulldata==true || (rpClass.getVisibility(key)==RPClass.VISIBLE))
@@ -344,6 +343,7 @@ public class Attributes implements marauroa.net.Serializable
           }
         else if(rpClass.getType(key)==RPClass.FLAG)
           {
+          /* It is empty because it is a flag and so, it is already present. */
           }
         else
           {

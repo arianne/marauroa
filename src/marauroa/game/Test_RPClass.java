@@ -1,4 +1,4 @@
-/* $Id: Test_RPClass.java,v 1.1 2004/06/15 15:55:21 arianne_rpg Exp $ */
+/* $Id: Test_RPClass.java,v 1.2 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public class Test_RPClass extends TestCase
     rpclass.add("hidden_s", RPClass.STRING,RPClass.HIDDEN);
     rpclass.add("hidden_i", RPClass.INT,RPClass.HIDDEN);
     
-    RPObject object=rpclass.getInstance(new RPObject.ID(1));
+    RPObject object=rpclass.getInstance(new RPObject.ID(1,-1));
     
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);

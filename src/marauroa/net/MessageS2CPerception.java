@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.52 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.53 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -190,7 +190,7 @@ public class MessageS2CPerception extends Message
     InputSerializer ser=new InputSerializer(szlib);
     
     typePerception=ser.readByte();
-    zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(null));
+    zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(-1));
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     modifiedAddedAttribsRPObjects=new LinkedList();

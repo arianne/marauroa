@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.52 2004/08/29 11:07:41 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.53 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ public final class GameServerManager extends Thread
   private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
   private Statistics stats;
+  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
@@ -41,21 +42,6 @@ public final class GameServerManager extends Thread
     playerContainer=PlayerEntryContainer.getContainer();
     rpMan=new RPServerManager(netMan);
     stats=Statistics.getStatistics();
-    start();
-    marauroad.trace("GameServerManager","<");
-    }
-
-  /** Constructor that initialize also the RPManager
-   *  @param netMan a NetworkServerManager instance.
-   *  @param rpMan a RPManager instance */
-  public GameServerManager(NetworkServerManager netMan, RPServerManager rpMan)
-    {
-    super("GameServerManager");
-    marauroad.trace("GameServerManager",">");
-    keepRunning=true;
-    this.netMan=netMan;
-    this.rpMan=rpMan;
-    playerContainer=PlayerEntryContainer.getContainer();
     start();
     marauroad.trace("GameServerManager","<");
     }
@@ -322,7 +308,7 @@ public final class GameServerManager extends Thread
         playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_LOADED);
 
         /* Correct: Character exist */
-        MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
+        MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());
         msgChooseCharacterACK.setClientID(clientid);
         netMan.addMessage(msgChooseCharacterACK);
         }
@@ -409,6 +395,7 @@ public final class GameServerManager extends Thread
       marauroad.trace("GameServerManager::processLogoutEvent","<");
       }
     }
+    
   static int lastActionIdGenerated=0;
   private void processActionEvent(MessageC2SAction msg)
     {
@@ -597,8 +584,8 @@ public final class GameServerManager extends Thread
             }
           }
         }
-      entry.clearContent();
-      
+        
+      entry.clearContent();      
       }
     catch(Exception e)
       {

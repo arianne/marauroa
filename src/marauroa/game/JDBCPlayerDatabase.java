@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.48 2004/07/13 20:31:52 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.49 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -733,7 +733,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select object_id from characters where player_id="+id+" and charname like '"+character+"'";
+      String query = "select object_id,zone_id from characters where player_id="+id+" and charname like '"+character+"'";
 
       marauroad.trace("JDBCPlayerDatabase::getRPObject","D",query);
 
@@ -742,8 +742,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       if(result.next())
         {
         int object_id=result.getInt(1);
+        int zone_id=result.getInt(2);
         
-        return loadRPObject(getTransaction(),new RPObject.ID(object_id));
+        return loadRPObject(getTransaction(),new RPObject.ID(object_id,zone_id));
         }
       else
         {
@@ -985,7 +986,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     
     public RPObject.ID next() throws SQLException
       {
-      return new RPObject.ID(set.getInt(1));
+      return new RPObject.ID(set.getInt(1),set.getInt(2));
       }
     }
     
@@ -996,7 +997,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select id from rpobject where slot_id=0";
+      String query = "select id,zone_id from rpobject where slot_id=0";
 
       marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
       
@@ -1311,11 +1312,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       }
 
-    RPObject.ID id=new RPObject.ID(last_idAssigned++);
+    RPObject.ID id=new RPObject.ID(last_idAssigned++,-1);
 
     while(hasRPObject(trans,id))
       {
-      id=new RPObject.ID(last_idAssigned++);
+      id=new RPObject.ID(last_idAssigned++,-1);
       }
 
     return id;

@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.10 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,11 +58,11 @@ public class Test_Attributes extends TestCase
       list.add("World");
       list.add("This is a test");
       attr.put("Attribute",list);
-      value=attr.get("Attribute");
+      List valuelist=attr.getList("Attribute");
       assertNotNull(value);
       
       Iterator it=list.iterator();
-      Iterator it_result=Attributes.StringToList(value).iterator();
+      Iterator it_result=valuelist.iterator();
 
       while(it.hasNext())
         {

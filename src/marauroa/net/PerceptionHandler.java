@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.17 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.18 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,7 +166,7 @@ public class PerceptionHandler
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionAddedRPObjects","X",e.getMessage());
-      throw new RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
 
@@ -190,7 +190,7 @@ public class PerceptionHandler
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionDeletedRPObjects","X",e.getMessage());
-      throw new RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
 
@@ -236,7 +236,7 @@ public class PerceptionHandler
       System.out.println(world);
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
-      throw new RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
   
@@ -262,7 +262,7 @@ public class PerceptionHandler
       {
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyPerceptionMyRPObject","X",e.getMessage());
-      throw new RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
   }

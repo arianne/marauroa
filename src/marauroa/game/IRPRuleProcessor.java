@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.4 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.5 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ public interface IRPRuleProcessor
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
   public void setContext(RPServerManager rpman,IRPZone zone);
-
   /** Pass the whole list of actions so that it can approve or deny the actions in it.
    *  @param id the id of the object owner of the actions.
    *  @param actionList the list of actions that the player wants to execute. */
@@ -32,7 +31,6 @@ public interface IRPRuleProcessor
   public RPAction.Status execute(RPObject.ID id, RPAction action);
   /** Notify it when a new turn happens */
   public void nextTurn();
-
   /** Callback method called when a new player enters in the game
    *  @param object the new player that enters in the game. */
   public boolean onInit(RPObject object) throws RPObjectInvalidException;

@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.15 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.16 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -504,7 +504,7 @@ public class MemoryPlayerDatabase implements IPlayerDatabase
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
     /** FIXME: Hard to code and it is not useful */
-    return new RPObject.ID(new Random().nextInt());
+    return new RPObject.ID(new Random().nextInt(),-1);
     }
   
   /**

@@ -1,4 +1,4 @@
-/* $Id: nullClient.java,v 1.2 2004/08/29 11:07:43 arianne_rpg Exp $ */
+/* $Id: nullClient.java,v 1.3 2004/08/30 19:25:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -133,7 +133,6 @@ public class nullClient extends Thread
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
-          myID=((MessageS2CChooseCharacterACK)msg).getObjectID();
           ++recieved;
           }
         else if(msg instanceof MessageS2CPerception)
@@ -167,6 +166,11 @@ public class nullClient extends Thread
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
           System.out.println(this.getName()+" -- Recieved perception: "+msgPer.getTypePerception());
           handler.apply(msgPer,world_objects);
+          if(msgPer.getMyRPObject()!=null)
+            {
+            myID=msgPer.getMyRPObject().getID();
+            }
+          
           
           gameLogic(world_objects, myID, netMan, msg);
           }        

@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.5 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.6 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,17 +24,18 @@ public interface IRPZone
   /** An unique ID for this zone */
   public static class ID implements marauroa.net.Serializable
     {
-    private String id;
+    private int id;
+    
     /** Constructor
      *  @param oid the object id */
-    public ID(String zid)
+    public ID(int zid)
       {
       id=zid;
       }
 
     /** This method returns the object id
      *  @return the object id. */
-    public String getID()
+    public int getID()
       {
       return id;
       }
@@ -57,7 +58,7 @@ public interface IRPZone
     /** We need it for HashMap */
     public int hashCode()
       {
-      return id.hashCode();
+      return id;
       }
 		
     /** This method returns a String that represent the object
@@ -69,12 +70,12 @@ public interface IRPZone
 
     public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
       {
-      out.write255LongString(id);
+      out.write(id);
       }
 		
     public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
       {
-      id=in.read255LongString();
+      id=in.readInt();
       }
     }
   

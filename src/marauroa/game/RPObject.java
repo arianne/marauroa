@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.46 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.47 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,7 @@ public class RPObject extends Attributes
       }
     }
     
-  public final static ID INVALID_ID=new ID(-1);
+  public final static ID INVALID_ID=new ID(-1,-1);
   
   /** Constructor */
   public RPObject()
@@ -133,6 +133,7 @@ public class RPObject extends Attributes
     super(RPClass.getBaseRPObjectDefault());
     initialize();
     put("id",id.getObjectID());
+    put("zoneid",id.getZoneID());
     }
     
   public RPObject(RPClass rpclass)
@@ -148,6 +149,7 @@ public class RPObject extends Attributes
     super(rpclass);
     initialize();
     put("id",id.getObjectID());
+    put("zoneid",id.getZoneID());
     }
   
   private void initialize()
@@ -582,11 +584,14 @@ public class RPObject extends Attributes
   public static class ID implements marauroa.net.Serializable
     {
     private int id;
+    private int zoneid;
+    
     /** Constructor
      *  @param oid the object id */
-    public ID(int oid)
+    public ID(int oid,int zid)
       {
       id=oid;
+      zoneid=zid;
       }
 		
     /** Constructor
@@ -594,6 +599,7 @@ public class RPObject extends Attributes
     public ID(RPObject attr) throws AttributeNotFoundException
       {
       id=attr.getInt("id");
+      id=attr.getInt("zoneid");
       }
 		
     /** Constructor
@@ -601,15 +607,27 @@ public class RPObject extends Attributes
     public ID(RPAction attr) throws AttributeNotFoundException
       {
       id=attr.getInt("source_id");
+      id=attr.getInt("zoneid");
       }
-		
+
+    public ID(int oid,IRPZone.ID zid)
+      {
+      id=oid;
+      zoneid=zid.getID();
+      }
+        
     /** This method returns the object id
      *  @return the object id. */
     public int getObjectID()
       {
       return id;
       }
-		
+
+    public int getZoneID()
+      {
+      return zoneid;
+      }
+        
     /** This method returns true of both ids are equal.
      *  @param anotherid another id object
      *  @return true if they are equal, or false otherwise. */
@@ -617,11 +635,11 @@ public class RPObject extends Attributes
       {
       if(anotherid!=null)
         {
-        return (id==((RPObject.ID)anotherid).id);
+        return (id==((RPObject.ID)anotherid).id && zoneid==((RPObject.ID)anotherid).zoneid);
         }
       else
         {
-        return(false);
+        return false;
         }
       }
 		
@@ -635,17 +653,19 @@ public class RPObject extends Attributes
      *  @return a string representing the object.*/
     public String toString()
       {
-      return "RPObject.ID [id="+id+"]";
+      return "RPObject.ID [id="+id+" zoneid="+zoneid+"]";
       }
 		
     public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
       {
       out.write(id);
+      out.write(zoneid);
       }
 		
     public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
       {
       id=in.readInt();
+      zoneid=in.readInt();
       }
     }
   }

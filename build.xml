@@ -22,8 +22,14 @@
   <!-- <property name="build.the1001.client" value="true"/> -->
   <property name="build.the1001.server" value="true"/> 
   <property name="build.mapacman"       value="true"/>
+  
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${lib}"/>
+    <delete dir="${docs}"/>
+  </target>
 
-  <target name="init">
+  <target name="init" depends="clean">
     <mkdir dir="${build}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
@@ -127,12 +133,5 @@
 
   <target name="test" depends="jar">
   <!-- Create a JUnit task to run tests -->
-  </target>
-  
-  
-  <target name="clean">
-    <delete dir="${build}"/>
-    <delete dir="${lib}"/>
-    <delete dir="${docs}"/>
   </target>
 </project>

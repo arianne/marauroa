@@ -1,4 +1,4 @@
-/* $Id: IPlayerDatabase.java,v 1.2 2004/08/29 11:07:41 arianne_rpg Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.3 2004/08/30 19:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,25 +20,23 @@ public interface IPlayerDatabase
   {
   /** Retursn true if the strign is valid and doesn't contains any strange character */
   public boolean validString(String string);
+  
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.
    *  @param username is the name of the player
    *  @param password is the string used to verify access.
    *  @return true if username/password is correct, false otherwise. */
   public boolean verifyAccount(Transaction trans, String username, String password) throws GenericDatabaseException;
-
   /** This method sets the account into one of the predefined states:
    *  active,inactive,banned
    *  don't forget to commit the changes.
    * @param username is the name of the player
-   * @param status   the new status of the account
-  **/
+   * @param status   the new status of the account **/
   public void setAccountStatus(Transaction trans, String username, String status)
     throws GenericDatabaseException;
-
   /** This method returns the number of Players that exist on database
    *  @return the number of players that exist on database */
-  public int getPlayerCount(Transaction trans) throws GenericDatabaseException;
+  public int getPlayerCount(Transaction trans) throws GenericDatabaseException;  
   /** This method add a Login event to the player
    *  @param username is the name of the player
    *  @param source the IP address of the player
