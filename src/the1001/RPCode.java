@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.54 2004/02/19 19:45:48 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.55 2004/02/24 14:08:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -644,8 +644,8 @@ public class RPCode
           if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
             {
             RPObject winner=arena.getSlot(RPCode.var_gladiators).get(winner_id);
-            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") assigned to "+winner.get("name"));
-            winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
+            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") assigned to "+winner.get("name"));            
+            winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+(int)Math.log((fame_result>0?fame_result:1)));    
             }
           else
             {
