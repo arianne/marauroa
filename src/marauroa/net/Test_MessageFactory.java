@@ -1,4 +1,4 @@
-/* $Id: Test_MessageFactory.java,v 1.6 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Test_MessageFactory.java,v 1.7 2003/12/09 23:32:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,9 @@ public class Test_MessageFactory extends TestCase
 	
   public void testMessageFactoryRandomMessage()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryRandomMessage","?","This test case try to "+
+      "serialize a random Message, ChooseCharacter in this case, and deserialize it from the stream and "+
+      "then verify that the message is exactly the same one");
     marauroad.trace("Test_MessageFactory::testMessageFactoryRandomMessage",">");
 
     MessageFactory msgFac=MessageFactory.getFactory();
@@ -82,6 +85,8 @@ public class Test_MessageFactory extends TestCase
 
   public void testMessageFactoryFailOnUnregisteredMessage()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnUnregisteredMessage","?","This test case shows that "+
+      "if the message it not registered in the MessageFactory the deserialization of the message will fail");
     marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnUnregisteredMessage",">");
 
     MessageFactory msgFac=MessageFactory.getFactory();
@@ -121,6 +126,8 @@ public class Test_MessageFactory extends TestCase
 
   public void testMessageFactoryFailOnWrongProtocol()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnWrongProtocol","?","This test case shows that "+
+      " deserialization of the message will fail if the protocol version is wrong");
     marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnWrongProtocol",">");
 
     MessageFactory msgFac=MessageFactory.getFactory();

@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.5 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.6 2003/12/09 23:32:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,13 @@ public class NetConst
   static public int marauroa_PORT=3214;
   /** Maximum size in bytes of the UDP packet. */
   final static public int UDP_PACKET_SIZE=1500;
-  /** Number of the protocol version */
-  final static public byte NETWORK_PROTOCOL_VERSION=3;
+  /** Number of the protocol version.
+   *  0 - Initial version
+   *  1 - Added Action message 
+   *  2 - Added Perception message 
+   *  3 - Multipacket udp
+   *  4 - Added server info */
+  final static public byte NETWORK_PROTOCOL_VERSION=4;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   
   static
