@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.38 2004/07/07 10:07:19 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.39 2004/07/11 10:23:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -206,7 +206,7 @@ public class Attributes implements marauroa.net.Serializable
       else
         {
         /* This is for Delta-delta feature */
-        deleted.put(attribute,"");
+        deleted.put(attribute,"0");
         }
       
       content.remove(attribute);

@@ -102,6 +102,7 @@ class RealPythonZone(PythonZone):
         objclass.add("!target",INT,HIDDEN)
         objclass.add("!decision",INT,HIDDEN)
         objclass.add("?kill",FLAG)        
+        objclass.add("?scared",FLAG)        
         
         objclass=RPClass("block")
         objclass.isA("position")
@@ -180,10 +181,11 @@ class RealPythonAI(PythonAI):
      
     def createEnviroment(self):
         pythonZone=getPythonZone()
-        
-        ghost=pythonZone.createGhost('Sticky')
-        self.pythonRP.onInitAIGhost(ghost)
-        self.ghosts.append(ghost)
+
+        for i in range(0,4):
+            ghost=pythonZone.createGhost('Sticky')
+            self.pythonRP.onInitAIGhost(ghost)
+            self.ghosts.append(ghost)
         
     def compute(self,timelimit):
         # Personally I would use the PythonRP directly and move the ghost at will
@@ -370,11 +372,14 @@ class RealPythonRP(PythonRP):
                 player.put("super",timeout)
                 element={'timeout':timeout,'object':player}
                 self._super_players.append(element)
+
+                for ghost in self._online_ghosts:
+                    ghost.put("?scared","")
+                    self._zone.modify(ghost)
     
     def removeKilledFlag(self):
         for object in self._killedFlagGhosts:
             if object.has("?kill"):
-                marauroad.trace("python::script","D","Removing ?kill attribute")
                 object.remove("?kill")
                 self._zone.modify(object)
                 
@@ -391,7 +396,6 @@ class RealPythonRP(PythonRP):
                 # TODO: kill the player
                 print "Ghost killed player ",player.get("id") 
                 ghost.add("score",1)
-                marauroad.trace("python::script","D","Putting ?kill attribute")
                 ghost.put("?kill","")
                 if ghost.has("!target"): ghost.remove("!target")
                 self._killedFlagGhosts.append(ghost)
@@ -438,6 +442,12 @@ class RealPythonRP(PythonRP):
                 object['object'].put("super",object['timeout'])
 
             self._zone.modify(object['object'])
+            
+        if len(self._super_players)==0:
+            for ghost in self._online_ghosts:
+                if ghost.has("?scared"):
+                    ghost.remove("?scared")
+                    self._zone.modify(ghost)
 
         self._foreachPlayer()
         
