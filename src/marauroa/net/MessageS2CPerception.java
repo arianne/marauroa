@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.36 2004/04/26 14:09:47 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.37 2004/04/29 12:25:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,8 +241,8 @@ public class MessageS2CPerception extends Message
     OutputSerializer ser=new OutputSerializer(out_stream);
 
     /** HACK: Join the dinamic part of the perception on a single block */
-    ser.write((int)timestampPerception);    
     out_stream.write(getPrecomputedStaticPartPerception());
+    ser.write((int)timestampPerception);    
     if(myRPObject==null)
       {
       ser.write((byte)0);
@@ -270,7 +270,6 @@ public class MessageS2CPerception extends Message
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
     InputSerializer ser=new InputSerializer(szlib);
     
-    timestampPerception=ser.readInt();
     typePerception=ser.readByte();
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
@@ -325,6 +324,8 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
       
+    timestampPerception=ser.readInt();
+
     marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
     byte modifiedMyRPObject=ser.readByte();
     if(modifiedMyRPObject==1)
