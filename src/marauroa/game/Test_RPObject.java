@@ -33,11 +33,17 @@ public class Test_RPObject extends TestCase
       SonGoku.remove("name");
       assertFalse(SonGoku.has("name"));
       
+      assertFalse(SonGoku.hasSlot("left_hand"));
+      RPSlot slot=new RPSlot("left_hand");
+      SonGoku.addSlot(slot);
+      assertTrue(SonGoku.hasSlot("left_hand"));
+      assertEquals(SonGoku.getSlot("left_hand"),slot);
+      
       RPObject.ID id=new RPObject.ID(SonGoku);
       RPObject.ID id_1=new RPObject.ID(1);
       assertEquals(id,id_1);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }
@@ -49,5 +55,71 @@ public class Test_RPObject extends TestCase
 
   public void testRPObjectException()
     {    
+    marauroad.trace("Test_RPObject::testRPObjectException",">");
+
+    try
+      {
+      RPObject SonGoku=new RPObject();      
+      SonGoku.get("object_id");
+      fail("Object did not throw an exception");
+      }
+    catch(Exception e)
+      {      
+      }
+
+    try
+      {
+      RPObject SonGoku=new RPObject();      
+      SonGoku.addSlot(new RPSlot("left_hand"));
+      assertTrue(SonGoku.hasSlot("left_hand"));
+      SonGoku.addSlot(new RPSlot("left_hand"));
+      fail("Object did not throw an exception");
+      }
+    catch(Exception e)
+      {      
+      }
+
+    try
+      {
+      RPObject SonGoku=new RPObject();      
+      SonGoku.getSlot("left_hand");
+      fail("Object did not throw an exception");
+      }
+    catch(Exception e)
+      {      
+      }
+
+    marauroad.trace("Test_RPObject::testRPObjectException","<");
+    }
+
+  public void testRPObjectSerialization()
+    {    
+    marauroad.trace("Test_RPObject::testRPObjectSerialization",">");
+
+    try
+      {
+      RPObject SonGoku=new RPObject();      
+      SonGoku.put("object_id", Integer.toString(1031));
+      SonGoku.put("name", "Son Goku");
+
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      OutputSerializer os = new OutputSerializer(baos);
+      SonGoku.writeObject(os);
+      
+      ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
+      InputSerializer in=new InputSerializer(bais);
+      
+      RPObject result=(RPObject)in.readObject(new RPObject());
+      
+      assertEquals(result,SonGoku);
+      }
+    catch(Exception e)
+      {      
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
     }
   }

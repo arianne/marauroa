@@ -141,6 +141,7 @@ public class RPObject extends Attributes
   public boolean hasSlot(String name)
     {
     SlotsIterator it=slotsIterator();
+    
     while(it.hasNext())
       {
       RPSlot slot=it.next();
@@ -155,7 +156,7 @@ public class RPObject extends Attributes
   
   public void addSlot(RPSlot slot) throws SlotAlreadyAddedException
     {
-    if(!has(slot.getName()))
+    if(!hasSlot(slot.getName()))
       {
       slots.add(slot);
       }
