@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.2 2005/02/20 17:18:44 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,13 +82,21 @@ public interface IRPZone extends Iterable
   /** This method is called when the server finish to save the content of the zone */
   public void onFinish() throws Exception;
   
-  /** This method adds an object to the Zone */
+  /** This method adds an object to the Zone.
+   *  Object can be modified  after this methods and changes are expected to 
+   *  happen too in zone stored object.*/ 
   public void add(RPObject object) throws RPObjectInvalidException;
-  /** This method tag an object of the Zone as modified */
+  /** This method tag an object of the Zone as modified. 
+   *  Object can be modified  after this methods and changes are expected to 
+   *  happen too in zone stored object.*/ 
   public void modify(RPObject object) throws RPObjectInvalidException;
-  /** This method removed an object of the Zone and return it.*/
+  /** This method removed an object of the Zone and return it.
+   *  Object can be modified but it is not longer inside zone. */
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
-  /** This method returns an object of the Zone */
+  
+  /** This method returns an object of the Zone.
+   *  Object can be modified  after this methods and changes are expected to 
+   *  happen too in zone stored object.*/ 
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   /** This method returns true if the object exists in the Zone */
   public boolean has(RPObject.ID id);

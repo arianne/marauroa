@@ -16,9 +16,9 @@ public class RPClass implements marauroa.common.net.Serializable
   
   /* Type */
   /** a string */
-  final public static byte STRING=1;
+  final public static byte LONG_STRING=1;
   /** a string of up to 255 chars long */
-  final public static byte SHORT_STRING=2;  
+  final public static byte STRING=2;  
   /** an float number of 32 bits */
   final public static byte FLOAT=3;
   /** an integer of 32 bits */

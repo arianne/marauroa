@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.2 2005/01/30 12:24:35 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,14 +37,14 @@ public final class GameServerManager extends Thread
   
   /** Constructor that initialize also the RPManager
    *  @param netMan a NetworkServerManager instance. */
-  public GameServerManager(NetworkServerManager netMan) throws Exception
+  public GameServerManager(NetworkServerManager netMan, RPServerManager rpMan) throws Exception
     {
     super("GameServerManager");
     Logger.trace("GameServerManager",">");
     keepRunning=true;
     this.netMan=netMan;
+    this.rpMan=rpMan;
     playerContainer=PlayerEntryContainer.getContainer();
-    rpMan=new RPServerManager(netMan);
     stats=Statistics.getStatistics();
     start();
     Logger.trace("GameServerManager","<");
@@ -118,6 +118,11 @@ public final class GameServerManager extends Thread
           }
         stats.setOnlinePlayers(playerContainer.size());
         }
+      }
+    catch(Throwable e)
+      {
+      Logger.trace("GameServerManager::run", "!", "Unhandled exception, server will shut down.");
+      Logger.thrown("GameServerManager::run", "!", e);
       }
     finally
       {

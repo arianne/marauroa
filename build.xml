@@ -34,11 +34,18 @@
   </target>
 
   <target name="compile" depends="installation">
+    <condition property="exclude.python" value="**/python/*.*">
+      <not>
+       <available file="${jython}"/>
+      </not>
+    </condition>
+    
     <replaceregexp file="${src}/marauroa/server/marauroad.java"
                    match="final private static String VERSION=&quot;.*&quot;;"
                    replace="final private static String VERSION=&quot;${version}&quot;;"
                    byline="true"/>
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/marauroa/**">
+                   
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python}">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>    

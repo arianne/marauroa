@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.5 2005/03/04 08:05:40 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.6 2005/03/04 23:32:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,6 +33,7 @@ public class marauroad extends Thread
 
   private marauroa.server.net.NetworkServerManager netMan;
   private marauroa.server.game.GameServerManager gameMan;
+  private marauroa.server.game.RPServerManager rpMan;
   
   private static void setArguments(String[] args)
     {
@@ -51,7 +52,7 @@ public class marauroad extends Thread
           {
           Logger.println("ERROR: Can't find configuraciont file: "+args[i+1]);
           Logger.println("Server must abort.");
-          System.exit(0);
+          System.exit(1);
           }
         }
       else if(args[i].equals("-l"))
@@ -165,27 +166,62 @@ public class marauroad extends Thread
     try
       {
       netMan=new marauroa.server.net.NetworkServerManager();
-      gameMan= new marauroa.server.game.GameServerManager(netMan);
-      
-      Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-        public void run()
-          {
-          Logger.trace("marauroad::init","!","User requesting shutdown");
-          finish();
-          Logger.trace("marauroad::init","!","Shutdown completed. See you later");
-          }
-        });
       }
     catch(Exception e)
       {
-      Logger.thrown("marauroad::init","X",e);
+      Logger.trace("marauroad::init","!","Marauroa can't create NetworkServerManager.");
+      Logger.trace("marauroad::init","!","Reasons:");
+      Logger.trace("marauroad::init","!","- You are already running a copy of Marauroa on the same UDP port");
+      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
+      Logger.trace("marauroad::init","!","- You haven't create database");
+      Logger.trace("marauroad::init","!","- You have invalid username and password to connnect to database");
+      Logger.trace("marauroad::init","!","Exception report");
+      Logger.thrown("marauroad::init","!",e);
       System.exit(-1);
       }
-    finally
+      
+    try
       {
-      Logger.trace("marauroad::init","<");
+      rpMan= new marauroa.server.game.RPServerManager(netMan);
       }
+    catch(Exception e)
+      {
+      Logger.trace("marauroad::init","!","Marauroa can't create RPServerManager.");
+      Logger.trace("marauroad::init","!","Reasons:");
+      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
+      Logger.trace("marauroad::init","!","- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.");
+      Logger.trace("marauroad::init","!","- There may be an error in the Game startup method.");
+      Logger.trace("marauroad::init","!","Exception report");
+      Logger.thrown("marauroad::init","!",e);
+      System.exit(-1);
+      }
+
+    try
+      {
+      gameMan= new marauroa.server.game.GameServerManager(netMan,rpMan);
+      }
+    catch(Exception e)
+      {
+      Logger.trace("marauroad::init","!","Marauroa can't create GameServerManager.");
+      Logger.trace("marauroad::init","!","Reasons:");
+      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
+      Logger.trace("marauroad::init","!","- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.");
+      Logger.trace("marauroad::init","!","Exception report");
+      Logger.thrown("marauroad::init","!",e);
+      System.exit(-1);
+      }
+      
+    Runtime.getRuntime().addShutdownHook(new Thread()
+      {
+      public void run()
+        {
+        Logger.trace("marauroad::init","!","User requesting shutdown");
+        finish();
+        Logger.trace("marauroad::init","!","Shutdown completed. See you later");
+        }
+      });
+
+    Logger.trace("marauroad::init","<");
     }
     
   public void finish()

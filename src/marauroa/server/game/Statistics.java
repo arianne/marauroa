@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.2 2005/03/02 22:21:59 root777 Exp $ */
+/* $Id: Statistics.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,8 +20,7 @@ import marauroa.server.*;
 
 /** This class encapsulate everything related to the statistics recollection and
  *  storage. */
-public class Statistics
-  implements StatisticsMBean
+public class Statistics implements StatisticsMBean
   {
   public static class GatheredVariables
     {
