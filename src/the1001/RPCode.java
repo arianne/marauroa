@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.20 2004/01/02 00:02:03 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.21 2004/01/02 00:21:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -200,7 +200,21 @@ public class RPCode
         /** Check if Combat is completed */
         if(combatCompleted(gladiators))
           {
+          int fame=0;
+          
+          for(i=0;i<gladiators.length;++i)
+            {
+            if(gladiators[i].getInt("hp")<=0)
+              {
+              fame+=gladiators[i].getInt("fame");
+              }
+            }
+            
           arena.put("status","request_fame");
+          arena.put("fame",fame);
+          arena.put("timeout",60);
+          arena.put("thumbs_up",0);
+          arena.put("thumbs_down",0);
           }
   
         zone.modify(arena);      
@@ -218,6 +232,7 @@ public class RPCode
     
   private static boolean combatCompleted(RPObject[] gladiators) throws Exception
     {
+    /** NOTE: This routine fails if both players die. Is that possible? */
     int gladiatorsStillFighting=gladiators.length;
         
     /** We check for dead players and determine if combat is finished. */

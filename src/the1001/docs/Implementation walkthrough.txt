@@ -233,9 +233,7 @@ implemented.
 
          foreach gladiator
            {
-           arena[fame]=SUM gladiators[fame]
-           
-           if(gladiator[status]=="onFight")
+           if(gladiator[hp]>0)
              {
              gladiator[status]="onVictory"             
              
@@ -243,7 +241,10 @@ implemented.
              arena[timeout]="60"
              arena[thumb_up]=0
              arena[thumb_down]=0
-             arena[fame]=arena[fame]-gladiator[fame]
+             }
+           else
+             {
+             arena[fame]=SUM gladiators[fame]             
              }
            }
          }       

@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.14 2004/01/02 00:02:03 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.15 2004/01/02 00:21:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -194,6 +194,9 @@ public class Test_RPCode extends TestCase
       
       assertFalse(gladiator.has("?damage"));
       assertFalse(newgladiator.has("?damage"));
+
+      assertEquals(arena.get("status"),"request_fame");
+      assertTrue(arena.has("fame"));      
       }
     catch(Exception e)
       {
