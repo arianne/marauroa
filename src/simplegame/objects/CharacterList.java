@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.8 2003/12/17 17:34:48 arianne_rpg Exp $ */
+/* $Id: CharacterList.java,v 1.9 2003/12/18 18:04:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,11 +32,11 @@ public class CharacterList extends RPObject
   public void addCharacter(int char_id, String char_name, String char_status) throws Attributes.AttributeNotFoundException
     {
     List charList=Attributes.StringToList(get("charList"));
-    charList.add(new String(id+","+char_name+","+char_status));
+    charList.add(new String(char_id+","+char_name+","+char_status));
     put("charList",charList);
     }
     
-  public Iterator iterator()
+  public Iterator iterator() throws AttributeNotFoundException
     {
     List charList=Attributes.StringToList(get("charList"));
     return charList.iterator();

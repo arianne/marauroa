@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.15 2003/12/15 17:58:15 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.16 2003/12/18 18:04:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,8 +29,7 @@ import simplegame.SimpleGame;
 /**
  * Test client for marauroa
  **/
-public class JMarauroa
-  extends JFrame
+public class JMarauroa extends JFrame
 {
   private final static String ACTION_CMD_LOGIN = "login";
   private final static String ACTION_CMD_DISCONNECT = "disconnect";
