@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.33 2004/06/15 18:38:54 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.34 2004/06/15 18:59:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -323,6 +323,7 @@ public class Attributes implements marauroa.net.Serializable
           }
         catch(RPClass.SyntaxException e)
           {
+          System.err.println("SSAQSDASDASDASDASDAEERWQTRW");
           code=-1;        
           }
         

@@ -146,8 +146,6 @@ class RealPythonRP(PythonRP):
         objclass=RPClass("player")
         objclass.isA("position")
         objclass.add("name",SHORT_STRING)
-        objclass.add("x",BYTE)
-        objclass.add("y",BYTE)
         objclass.add("dir",SHORT_STRING)
         objclass.add("score",INT)
         objclass.add("super",BYTE)

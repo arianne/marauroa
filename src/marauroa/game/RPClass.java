@@ -83,7 +83,7 @@ public class RPClass implements Serializable
   
   static
     {
-    rpClassList=new HashMap();
+    rpClassList=new LinkedHashMap();
     }
 
   private String name;
@@ -92,11 +92,13 @@ public class RPClass implements Serializable
   
   public RPClass()
     {    
+    parent=null;
     attributes=new HashMap();
     }
     
   public RPClass(String type)
     {    
+    parent=null;
     name=type;
     attributes=new HashMap();
 
@@ -106,9 +108,14 @@ public class RPClass implements Serializable
     rpClassList.put(type,this);
     }
   
-  public void setParent(RPClass parent)
+  public void isA(RPClass parent)
     {
     this.parent=parent;
+    }
+  
+  public void isA(String parent) throws SyntaxException
+    {
+    this.parent=getRPClass(parent);
     }
   
   static RPClass defaultRPClass;
@@ -183,7 +190,11 @@ public class RPClass implements Serializable
       return desc.code;
       }
     
-    /* TODO: Throw exception */
+    if(parent!=null)
+      {
+      return parent.getCode(name);
+      }
+    
     throw new SyntaxException();  
     }
 
@@ -199,7 +210,11 @@ public class RPClass implements Serializable
         }
       }
     
-    /* TODO: Throw exception */
+    if(parent!=null)
+      {
+      return parent.getName(code);
+      }
+
     throw new SyntaxException();  
     }
   
@@ -211,7 +226,11 @@ public class RPClass implements Serializable
       return desc.type;
       }
     
-    /* TODO: Throw exception */
+    if(parent!=null)
+      {
+      return parent.getType(name);
+      }
+
     throw new SyntaxException();  
     }
 
@@ -223,7 +242,11 @@ public class RPClass implements Serializable
       return desc.visibility;
       }
     
-    /* TODO: Throw exception */
+    if(parent!=null)
+      {
+      return parent.getVisibility(name);
+      }
+
     throw new SyntaxException();  
     }
 
@@ -234,6 +257,11 @@ public class RPClass implements Serializable
       return true;
       }
     
+    if(parent!=null)
+      {
+      return parent.hasAttribute(name);
+      }
+
     return false;
     }
   
@@ -289,6 +317,16 @@ public class RPClass implements Serializable
     out.write((int)attributes.size());
     out.write(name);
     
+    if(parent==null)
+      {
+      out.write((byte)0);      
+      }
+    else
+      {
+      out.write((byte)1);      
+      out.write(parent.name);
+      }
+    
     Iterator it=attributes.values().iterator();
     while(it.hasNext())
       {
@@ -301,6 +339,12 @@ public class RPClass implements Serializable
     {
     int size=in.readInt();
     name=in.readString();
+    
+    byte parentPresent=in.readByte();    
+    if(parentPresent==1)
+      {
+      isA(in.readString());
+      }
     
     for(int i=0;i<size;++i)
       {
