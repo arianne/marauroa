@@ -10,6 +10,9 @@ LABEL := "marauroa"
 ! Start Last Document Structure
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
 #[BeginFile]SOURCE := "\\README" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\stendhal\\stendhal_game.py" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\PacketValidater.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]

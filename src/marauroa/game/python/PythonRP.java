@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.8 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.9 2004/10/05 17:51:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,10 +46,5 @@ public class PythonRP
   public boolean onTimeout(RPObject.ID id)
     {
     return false;
-    }
-  
-  public List buildMapObjectsList()
-    {
-    return null;
     }
   }

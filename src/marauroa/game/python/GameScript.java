@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.6 2004/09/21 18:20:39 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.7 2004/10/05 17:51:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,17 @@ class GameScript
   
   private static GameScript gameScript=null;
   
+  /** Gets an instance of the GameScript */
+  public static GameScript getGameScript() throws Exception
+    {
+    if(gameScript==null)
+      {
+      gameScript=new GameScript();
+      }
+    
+    return gameScript;
+    }
+
   /** Set the RPZone on the script */
   public void setRPWorld(RPWorld world)
     {    
@@ -46,17 +57,6 @@ class GameScript
     interpreter.set("gamescript__scheduler",scheduler);   
     }
     
-  /** Gets an instance of the GameScript */
-  public static GameScript getGameScript() throws Exception
-    {
-    if(gameScript==null)
-      {
-      gameScript=new GameScript();
-      }
-    
-    return gameScript;
-    }
-
   public PythonWorld getWorld() throws Exception
     {    
     String pythonZoneClass=conf.get("python_script_world_class");

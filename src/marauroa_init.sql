@@ -77,8 +77,9 @@ create table if not exists statistics
   
 create table if not exists banlist
   (
-    id integer auto_increment not null,
-    address char(15),
-    mask    char(15),
-    PRIMARY KEY(id)
+  id integer auto_increment not null,
+  address varchar(15),
+  mask    varchar(15),
+
+  PRIMARY KEY(id)
   );

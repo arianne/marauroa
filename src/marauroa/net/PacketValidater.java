@@ -1,4 +1,4 @@
-/* $Id: PacketValidater.java,v 1.1 2004/09/21 19:54:32 root777 Exp $ */
+/* $Id: PacketValidater.java,v 1.2 2004/10/05 17:51:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -156,7 +156,7 @@ public final class PacketValidater
       
       Properties props  = new Properties();
       props.put("user",conf.get("jdbc_user"));
-      props.put("pwd",conf.get("jdbc_pwd"));
+      props.put("password",conf.get("jdbc_pwd"));
       props.put("charSet", "UTF-8");
       
       String jdbc_url   = conf.get("jdbc_url");
