@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.20 2003/12/08 23:46:24 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.21 2003/12/09 14:12:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,21 +23,26 @@ public class RunTests
     {
     try
       {
-//      System.setOut(new PrintStream(new FileOutputStream("output.txt")));
-//      boolean untilFailure=true;
-//      while(untilFailure)
-//        {
-        //junit.swingui.TestRunner.run(RunTests.class);
-        TestResult result=junit.textui.TestRunner.run(suite());
-//        if(!result.wasSuccessful())
-//          {
-//          untilFailure=false;
-//          }
-//        }
+      runTest(suiteBase());
+      runTest(suiteNet());
+      runTest(suiteGame());
+      runTest(suiteActive());      
       }
     catch(Exception e) 
       {
       }
+    }
+    
+  private static TestResult runTest(Test e) throws FileNotFoundException
+    {
+    TestSuite testSuite=(TestSuite)e;
+
+    System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
+    System.setOut(new PrintStream(new FileOutputStream("output_"+testSuite.getName()+".txt")));
+    TestResult result=junit.textui.TestRunner.run(e);
+    String testResult=(result.wasSuccessful()?"T":"F");
+    System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
+    return result;
     }
   
   public static Test suite ( )
@@ -72,6 +77,61 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPServerManager.class));
 
+    return suite;
+    }
+
+  public static Test suiteBase ( )
+    {
+    TestSuite suite= new TestSuite("All Base marauroa Tests");
+
+    suite.addTest(new TestSuite(marauroa.Test_RWLock.class));
+    suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
+    
+    return suite;
+    }
+
+  public static Test suiteNet ( )
+    {
+    TestSuite suite= new TestSuite("All Network marauroa Tests");
+
+    suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_SerializerShort.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_SerializerInt.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_SerializerByteArray.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
+    
+    suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
+
+    return suite;
+    }
+
+  public static Test suiteGame ( )
+    {
+    TestSuite suite= new TestSuite("All Game marauroa Tests");
+   
+    suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
+
+    suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPSlot.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPScheduler.class));
+
+    suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
+
+    return suite;
+    }
+
+  public static Test suiteActive ( )
+    {
+    TestSuite suite= new TestSuite("All Active marauroa Tests");
+
+    suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPServerManager.class));
 
     return suite;
     }
