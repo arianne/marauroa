@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.2 2005/02/19 11:44:34 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.3 2005/02/19 18:50:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,7 +58,7 @@ public class marauroad extends Thread
         {
         Logger.println("Marauroa - an open source multiplayer online framework for game development -");
         Logger.println("Running on version "+VERSION);
-        Logger.println("(C) 2003-2004 Miguel Angel Blanch Lardin");
+        Logger.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
         Logger.println();
         Logger.println("usage: [-c gamefile] [-l]");        
         Logger.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
@@ -75,7 +75,7 @@ public class marauroad extends Thread
     {
     Logger.println("Marauroa - arianne's open source multiplayer online framework for game development -");
     Logger.println("Running on version "+VERSION);
-    Logger.println("(C) 1999-2004 Miguel Angel Blanch Lardin");
+    Logger.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
     Logger.println();
     Logger.println("This program is free software; you can redistribute it and/or modify");
     Logger.println("it under the terms of the GNU General Public License as published by");

@@ -188,9 +188,9 @@ public class generateini
     
     if(gamename.equals("stendhal"))
       {      
-      System.out.println("Setting RPWorld and RPRuleProcessor for Stendhal");
-      System.out.println("Make sure Marauroa can find in CLASSPATH the folder games/stendhal/*");
-      System.out.println("NOTE: Copy games generated in stendhal inside folder that contains marauroa.jar file");
+      System.out.println("NOTE: Setting RPWorld and RPRuleProcessor for Stendhal");
+      System.out.println("NOTE: Make sure Marauroa can find in CLASSPATH the folder games/stendhal/*");
+      System.out.println("NOTE: Copy stendhal's games folder inside folder that contains marauroa.jar file");
 
       rp_RPWorldClass="games.stendhal.server.StendhalRPWorld";
       rp_RPRuleProcessorClass="games.stendhal.server.StendhalRPRuleProcessor";
@@ -253,7 +253,7 @@ public class generateini
       turntime="300";
       }
 
-    System.out.println("Using turn of \""+gamename+"\" milliseconds");
+    System.out.println("Using turn of "+turntime+" milliseconds");
     System.out.println();
 
 
@@ -331,5 +331,6 @@ public class generateini
       e.printStackTrace();
       return;
       }    
+    System.out.println("Generated.");
     }    
   }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.3 2005/02/09 20:22:29 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.4 2005/02/19 18:50:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,26 +26,6 @@ import marauroa.common.game.*;
  *  sent perceptions */
 public class RPServerManager extends Thread
   {
-  /** We send 1 TOTAL perception each SYNC_PERCEPTION_FRECUENCY DELTA perceptions */
-  private static int SYNC_PERCEPTION_FRECUENCY;
-
-  static
-    {
-    Logger.trace("RPServerManager::(static)",">");
-    try
-      {
-      Configuration conf=Configuration.getConfiguration();
-      int value=Integer.parseInt(conf.get("syncPerception_frecuency"));
-
-      SYNC_PERCEPTION_FRECUENCY=value;
-      }
-    catch(Exception e)
-      {
-      SYNC_PERCEPTION_FRECUENCY=30;
-      }
-    Logger.trace("NetConst::(static)","<");
-    }
-  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */

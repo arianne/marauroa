@@ -24,11 +24,6 @@ can ask server to do any action in their names using actions.
 Marauroa is totally game agnostic and makes very little assumptions about what 
 are you trying to do, allowing a great freedom to create whatever type of game 
 you want.
-Bugs are facts of life, they just happen. But Arianne is fully tested using 
-Test Units with JUnit and cppunit, so all modules are tested for most common 
-cases, allowing a better quality software to be deployed. Your cooperation 
-reporting problems is simply invaluable: You are our best developer and we want
-to read from you.
 
 You can find the latest version of Marauroa at: 
 http://arianne.sourceforge.net
@@ -38,26 +33,26 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.90
+Version 0.91
 
 
 Status
 ------
-Marauroa is playable.
+Marauroa is NOT playable.
 
-Version > 0.20 Contains a simple Gladiators game using the Marauroa engine.
-You need Arianne's Gladiator client in order to be able to play.
+Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 
-Version > 0.33 Contains a multiplayer pacman game using the Python rules.
+Version > 0.33 support mapacman: a multiplayer pacman game using the Python rules.
 
-Version > 0.90 Contains a multiplayer Zelda like game using Java and Java2D
+Version > 0.20 support a simple Gladiators game using the Marauroa engine.
+
+You need to grab game package in order to be able to play it.
 
 
 Requeriments
 ------------
 To actually compile Marauroa you will need:
 - Java SDK 1.4 http://java.sun.com
-- JUnit 1.3.8 http://junit.sourceforge.net
 - Ant 1.6 http://ant.apache.org
 
 Optionally:
@@ -66,15 +61,14 @@ Optionally:
 In order to get it working with MySQL you will also need:
 - MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
 
-Optionally if you want to build the java 3D Gladiators client:
-- JOrbis 0.0.12 http://www.jcraft.com/jorbis/
-- Quake 2 MD2 Loader http://www.newdawnsoftware.com/resources/j3d.html
-- Loader3DS http://www.starfireresearch.com/services/java3d/inspector3ds.html
+  NOTE: Unfortunatelly, Marauroa uses some SQL features that make its code 
+  slightly incompatible with other DBMS. Join us and help to port SQL code 
+  to a real standard complaint DBMS.
 
 
 Build
 -----
-First, install Java, JUnit, Ant, and Jython
+First, install Java, Ant, and Jython
   NOTE: Do not install Jython on a directory path that contains spaces.
 
 Second, set junit.jar and jython.jar on the classpath.
@@ -93,8 +87,8 @@ Fourth, run ant jar.
   ant -Dlibdir=./dependencies jar
   
   Where dependencies is a directory that contains all the libraries, you can omit 
-  it if you have correctly configured your classpath. NOTE: ??This may not work
-  on in the current version or possible on Windows??
+  it if you have correctly configured your classpath. 
+  NOTE: This may not work on in the current version or possible on Windows??
 
   BUILD SUCCESSFUL Total time: 3 seconds
 
@@ -113,143 +107,44 @@ game server or because you are a developer wanting to develop your own game.
 If you don't understand the above it is prone that you are looking for 
 http://arianne.sourceforge.net instead.
 
-- Configuration
+-- Configuration
 Once we have build Arianne the next step is to setup the configuration file.
 Each game features a configuration file that will configure the server to run
 that particular game.
 
-# Please don't remove. Needed for test cases.
-test_ATestString=ATestString
+To create a configuration file just use marauroa.server.generateini application
+Answer all the questions and you will have a configuration file generated.
 
-# The database type
-# Options are:
-#   - MemoryPlayerDatabase
-#   - JDCBPlayerDatabase
-marauroa_DATABASE=MemoryPlayerDatabase
-
-# JDBC Database configuration
-jdbc_url=jdbc:mysql://127.0.0.1/marauroa
-jdbc_class=com.mysql.jdbc.Driver
-jdbc_user=marauroa_dbuser
-jdbc_pwd=marauroa_dbpwd
-
-# Network configuration of Marauroa
-marauroa_PORT=3214
-
-# RP Configuration ( This is provisional )
-rp_RPZoneClass=marauroa.game.MarauroaRPZone
-rp_RPRuleProcessorClass=marauroa.game.MarauroaRPRuleProcessor
-rp_turnDuration=60000
-
-# Server related configuration
-# Types of game are:
-#   - marauroa
-#   - simplegame
-#   - the1001
-# Changes should be related to rp_RPZoneClass and rp_RPRuleProcessorClass
-server_typeGame=marauroa
-
-server_name=Marauroa jserver
-server_version=@version@
-server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse
-
-# Place where Statistics and server activity report are generated.
-server_stats_directory=~/public_html
-server_logs_directory=~/.marauroa
-
-Let see each section invidually. 
-
-Database
-
-Our first item is marauroa_DATABASE, this attribute set the type of database 
-that you will use:
-MemoryPlayerDatabase, this type of database is prebuilt in memory and so to 
-modify it you need to recompile server and manually edit sources to add new 
-accounts. Obviously when application is shut down everything modified is 
-discarted.
-JDBCPlayerDatabase, this is mainly a MySQL database. It won't run as-is on 
-other SQL compliant database because it uses MySQL features as special tables
-types to get transactions and auto_increment column types to generate pk.
-
-My recomendation is that you should embrace MySQL and choose JDBCPlayerDatabase.
-
-The next section describe the connection string to the database.
-jdbc_url=jdbc:mysql://127.0.0.1/marauroa
-This attribute explain where the database is running (127.0.0.1)_and that is 
-the name of the database (marauroa).
-jdbc_class=com.mysql.jdbc.Driver 
-the class that describe the driver used for this JDBC connection
-jdbc_user=marauroa_dbuser 
-username of the database account for marauroa
-jdbc_pwd=marauroa_dbpwd 
-password of the database account for marauroa
-
-Remember that to setup the database you need to enter into MySQL as 
-administrator and run: 
-
-  create database marauroa; 
-  grant all on marauroa.* to marauroa_dbuser@<serverip> identified by 'marauroa_dbpwd';
-
-The marauroa_PORT section defines in which TCP/IP port it will run. All the 
-traffic of Marauroa is UDP based.
-
-The next section talks about the Role playing engine configuration:
-rp_RPZoneClass points to the class that contains our game RPZone logic
-rp_RPRuleProcessorClass points to the class that contains our game 
-RPRuleProcessor logic
-rp_turnDuration defines the turn time. The lower the turn time the more 
-bandwidth is prone to be used.
-
-The available games actually now are:
-the1001
-mapacman
-stendhal
-
-It should be set at server_typeGame
-
-The server section contains information that will be sent the clients using the
-Server info message, so whatever that begins with server_ is sent on that 
-message to clients.
-
-Finally you should define where the output of statistics and logs messages 
-should be done:
-server_stats_directory defines the folder where the statistics files are 
-generated, usually a public HTML folder.
-server_logs_directory defines where to store the logs. Please keep this one safe
-
-- Running
+-- Running
 Once you have it configured just run the server by doing
 
-  java -classpath marauroa.jar;mysql-connector-java-3.0.7-stable-bin.jar marauroa.marauroad -c <game.ini> -l
+  java -classpath marauroa.jar;mysql-connector-java-3.0.7-stable-bin.jar marauroa.server.marauroad -c <game.ini> -l
 
 This will make the server to start
-Creating accounts
 
+-- Creating accounts
 Before anything else happens you MUST create accounts for your players. The idea
 is simple enough to you can even wrap it with a webpage much like we did with 
 http://gladiators.game-server.cc
 
 <game>.<game>createaccount -u <user> -p <password> -c <character> -e <email>
 
-For example in mapacman
-mapacman.mapacmancreateaccount -u root -p pazzw0rd -c MaSSive -e root@localhost.com
+For example:
+  · games.stendhal.server.stendhalcreateaccout -u root -p pazzw0rd -c MaSSive -e root@localhost.com
+  · mapacman.mapacmancreateaccount -u root -p pazzw0rd -c MaSSive -e root@localhost.com
 
 Each game has a different number of parameters, check it with the -h parameter.
-Testing
 
-To test that you connection is working use nullClient. It is a simple client 
-that connect to server, choose character and receive perceptions. Just that, if
-it works it means that everything else is also working.
-
-  java -classpath marauroa.jar marauroa.nullClient -u root -p pazzw0rd -c MaSSive
-
-Playing with clients
-
+-- Testing
 Read instead the clients pages at http://arianne.sourceforge.net
 
 
 Changelog
 ---------
+0.91 XXX XX, 2005
+- Added generateini application
+- Simplified README file
+
 0.90 Feb 19, 2005
 - Major code refactoring
 - Added multizones feature
