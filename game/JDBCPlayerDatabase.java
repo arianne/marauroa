@@ -10,7 +10,7 @@ import java.util.Vector;
 import marauroa.net.InputSerializer;
 import marauroa.net.OutputSerializer;
 
-import marauroa.marauroad;
+import marauroa.*;
 
 
 
@@ -72,8 +72,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    */
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException
     {
-    // String db_drv_name = "sun.jdbc.odbc.JdbcOdbcDriverX";
-    // String db_url = "jdbc:odbc:mysql-darkstar";
     connection=createConnection(connInfo);
     if(connection==null)
       {
@@ -87,12 +85,37 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   public static PlayerDatabase getDatabase() throws NoDatabaseConfException
     {
+    marauroad.trace("JDBCPlayerDatabase::getDatabase",">");
     if(playerDatabase==null)
       {
       /* TODO: Define a default configuration file or a default configuration. */
-      playerDatabase=new JDBCPlayerDatabase(null);
+      try
+        {
+        Configuration conf=Configuration.getConfiguration();
+    
+        Properties props = new Properties();        
+        props.put("jdbc_url",conf.get("jdbc_url"));
+        props.put("jdbc_class",conf.get("jdbc_class"));
+        props.put("jdbc_user",conf.get("jdbc_user"));
+        props.put("jdbc_pwd",conf.get("jdbc_pwd"));
+
+        playerDatabase=new JDBCPlayerDatabase(null);
+        }
+      catch(Configuration.PropertyNotFoundException e)
+        {
+        marauroad.trace("JDBCPlayerDatabase::getDatabase","E",e.getMessage());
+        marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
+        throw new NoDatabaseConfException();
+        }
+      catch(Configuration.PropertyFileNotFoundException e)
+        {
+        marauroad.trace("JDBCPlayerDatabase::getDatabase","E",e.getMessage());
+        marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
+        throw new NoDatabaseConfException();
+        }
       }
       
+    marauroad.trace("JDBCPlayerDatabase::getDatabase","<");
     return playerDatabase;
     }
 
@@ -658,13 +681,16 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     return ret;
     }
  
-  public static void main(String argv[])
+/*
+    public static void main(String argv[])
     {
-    Properties props = new Properties();
-    props.put("jdbc_url","jdbc:mysql://127.0.0.1/marauroa");
-    props.put("jdbc_class","com.mysql.jdbc.Driver");
-    props.put("jdbc_user","marauroa_dbuser");
-    props.put("jdbc_pwd","marauroa_dbpwd");
+    Configuration conf=Configuration.getConfiguration();
+    
+    Properties props = new Properties();        
+    props.put("jdbc_url",conf.get("jdbc_url"));
+    props.put("jdbc_class",conf.get("jdbc_class"));
+    props.put("jdbc_user",conf.get("jdbc_user"));
+    props.put("jdbc_pwd",conf.get("jdbc_pwd"));
     
     try
       {
@@ -675,5 +701,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       }
     }
+*/    
   }
 
