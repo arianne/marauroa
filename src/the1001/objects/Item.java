@@ -1,4 +1,4 @@
-/* $Id: Item.java,v 1.1 2003/12/12 18:31:47 arianne_rpg Exp $ */
+/* $Id: Item.java,v 1.2 2003/12/30 17:26:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,8 @@ public class Item extends RPObject
     {
     put("object_id",id.getObjectID());
     put("type",type);
-	put("rp_defend",5);
-	put("rp_attack",5);
+	put("defend",5);
+	put("attack",5);
 	put("price","30");
     }
   }

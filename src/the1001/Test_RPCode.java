@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.1 2003/12/30 17:02:33 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.2 2003/12/30 17:26:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ public class Test_RPCode extends TestCase
     
     zone=new the1001RPZone();
     rpu=new the1001RPRuleProcessor();
+    rpu.setContext(zone);
     
       
     marauroad.trace("Test_RPCode::testRequestFight","<");
