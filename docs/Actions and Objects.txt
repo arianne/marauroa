@@ -35,6 +35,18 @@ Optional Actions Attributes:
 Objects
 -------
 The containers of information of the whole Marauroa server is RPObjects.
+An object is composed of several attributes, a attributed is similar to a 
+variable that has a name and contains a value and also it is composed of Slots,
+a slots is a container or array of containers that the object has to host other
+objects inside it.
+
+There are attributes that are optional and there are attributes that are 
+mandatory. If a mandatory attribute is not found, the message is skipped by the
+RPServerManager entity.
+
+Mandatory Object Attributes:
+- object_id
+- zone_id
 
 
 %% END %%

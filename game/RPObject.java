@@ -39,18 +39,56 @@ public class RPObject extends Attributes
       {      
       }      
     }
+  
+  static class ID
+    {
+    private int id;
+    
+    public ID(int oid)
+      {
+      id=oid;
+      }
+      
+    public ID(Attributes attr) throws Attributes.AttributeNotFoundException
+      {
+      id=new Integer(attr.get("object_id")).intValue();      
+      }
+      
+    public int getObjectID()
+      {
+      return id;
+      }
+     
+    public boolean equals(ID anotherid)
+      {
+      return (id==anotherid.id);
+      }      
+    }
     
   public RPObject()
     {
     super();
     slots=null;
     }
+
+  public boolean hasSlot(String name)
+    {
+    for(int i=0;i!=slots.length;++i)
+      {
+      if(name.equals(slots[i].getName()))
+        {
+        return true;
+        }
+      }
+    
+    return false;
+    }
     
   public void addSlots(RPSlot[] slots)
     {
-    this.slots=slots;    
+    this.slots=slots;
     }
-    
+        
   public RPSlot getSlot(String name) throws NoSlotFoundException
     {
     for(int i=0;i!=slots.length;++i)

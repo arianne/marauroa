@@ -23,6 +23,9 @@ public class Message implements marauroa.net.Serializable
   public final static byte TYPE_C2S_LOGOUT=4;
   public final static byte TYPE_S2C_LOGOUT_ACK=40;
   public final static byte TYPE_S2C_LOGOUT_NACK=41;
+  
+  public final static byte TYPE_C2S_ACTION=5;
+  public final static byte TYPE_S2C_ACTION_ACK=50;
     
   protected byte type;
   protected short clientid;

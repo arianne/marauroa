@@ -10,6 +10,7 @@ import marauroa.marauroad;
 public class GameServerManager extends Thread
   {
   private NetworkServerManager netMan;
+  private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
   private PlayerDatabase playerDatabase;
   private boolean keepRunning;
@@ -20,8 +21,10 @@ public class GameServerManager extends Thread
     
     keepRunning=true;    
     this.netMan=netMan;
-    this.playerContainer=PlayerEntryContainer.getContainer();
-    this.playerDatabase=PlayerDatabase.getDatabase();
+    playerContainer=PlayerEntryContainer.getContainer();
+    playerDatabase=PlayerDatabase.getDatabase();
+    
+    rpMan=new RPServerManager();    
     }
 
   public void finish()
@@ -44,9 +47,13 @@ public class GameServerManager extends Thread
             processLoginEvent((MessageC2SLogin)msg);
             break;
           case Message.TYPE_C2S_CHOOSECHARACTER:
+            processChooseCharacterEvent((MessageC2SChooseCharacter)msg);
             break;
           case Message.TYPE_C2S_LOGOUT:
+            processLogoutEvent((MessageC2SLogout)msg);
             break;
+          case Message.TYPE_C2S_ACTION:
+            processActionEvent((MessageC2SAction)msg);
           default:
             marauroad.report("Not valid messaged recieved");
             break;
@@ -142,11 +149,16 @@ public class GameServerManager extends Thread
 	      
 	  if(playerDatabase.hasCharacter(playerContainer.getUsername(clientid),msg.getCharacter()))
 	    {
+	    /* We restore back the character to the world */
+	    RPObject object=playerDatabase.getCharacter(playerContainer.getUsername(clientid),msg.getCharacter());
+	    rpMan.addRPObject(object);	    
+	    
+	    playerContainer.setState(clientid,playerContainer.STATE_GAME_BEGIN);
+	    playerContainer.setRPObject(clientid,object);
+
 	    /* Correct: Character exist */
 	    MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());
 	    netMan.addMessage(msgChooseCharacterACK);
-	    
-	    playerContainer.setState(clientid,playerContainer.STATE_GAME_BEGIN);
 	    }
 	  else
 	    {
@@ -166,6 +178,18 @@ public class GameServerManager extends Thread
       {
       marauroad.report(e.getMessage());
       }
+    catch(PlayerDatabase.CharacterNotFoundException e)
+      {
+      marauroad.report(e.getMessage());
+      }
+    catch(RPZone.RPObjectInvalidException e)
+      {
+      marauroad.report(e.getMessage());
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.report(e.getMessage());
+	  }      
     }
 
   private void processLogoutEvent(MessageC2SLogout msg)
@@ -192,5 +216,45 @@ public class GameServerManager extends Thread
       marauroad.report(e.getMessage());
       }
     }
+    
+    
+  private void processActionEvent(MessageC2SAction msg)
+    {
+    short clientid=msg.getClientID();
+    
+    try
+      {
+	  if(!playerContainer.containsPlayer(clientid))
+	    {
+	    /* Error: Player didn't login. */
+	    marauroad.report("Client "+clientid+" has not login yet: IGNORE");
+	      
+	    return;
+	    }
+
+	  if(playerContainer.getState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+	    {
+	    /* Error: Player has not choose a character yey. */
+	    marauroad.report("Client "+clientid+" has not choose a character yet : IGNORE");
+	     
+	    return;
+	    }
+	    
+	  /* Notify client that we recieved the action */
+	  MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress());
+	  netMan.addMessage(msgAction);
+	  
+	  /* Send the action to RP Manager */
+	  rpMan.addRPAction(msg.getRPAction());
+      }
+    catch(PlayerEntryContainer.NoSuchClientIDException e)      
+      {
+      marauroad.report(e.getMessage());
+      }
+    catch(RPScheduler.ActionInvalidException e)
+      {
+      marauroad.report(e.getMessage());
+      }
+    } 
       
   }

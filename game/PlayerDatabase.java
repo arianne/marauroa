@@ -10,26 +10,32 @@ public class PlayerDatabase
   private final static byte MAX_NUMBER_OF_LOGINS=5;
   private static PlayerDatabase playerDatabase;
   
-  class LoginEvent
+  static class LoginEvent
     {
     public String address;
     public Date time;
     public boolean correct;
     }  
 
-  class PlayerEntry
+  static class RPCharacter
+    {
+    public String character;
+    public RPObject object;
+    }
+    
+  static class PlayerEntry
     {
     public String password;
-    public List characters;
+    public HashMap characters;
     public List lastLogins;
-    
+ 
     public PlayerEntry()
       {
-      characters=new LinkedList();
+      characters=new HashMap();
       lastLogins=new LinkedList();
       }
     }
-    
+  
   private Map players;
   
   public class PlayerAlreadyAddedException extends Throwable
@@ -45,6 +51,14 @@ public class PlayerDatabase
     PlayerNotFoundException()
       {
       super("Player not found on the database");
+      }
+    }
+  
+  public class CharacterNotFoundException extends Throwable
+    {
+    CharacterNotFoundException()
+      {
+      super("Character not found on the database");
       }
     }
   
@@ -112,13 +126,15 @@ public class PlayerDatabase
     PlayerEntry player=(PlayerEntry)players.get(username);
     String[] characters=new String[player.characters.size()];
     
-    Iterator it=player.characters.iterator();
+    Iterator it=player.characters.entrySet().iterator();
     
     int i=0;
     while(it.hasNext())
       {
-      characters[i]=(String)it.next();
+      Map.Entry entry=(Map.Entry)it.next();
+      characters[i]=(String)entry.getKey();
       }
+      
     return characters;
     }
     
@@ -130,7 +146,24 @@ public class PlayerDatabase
       }
       
     PlayerEntry player=(PlayerEntry)players.get(username);
-    return player.characters.contains(character);
+    return player.characters.containsKey(character);
+    }
+    
+  public RPObject getCharacter(String username,String character) throws PlayerNotFoundException, CharacterNotFoundException
+    {
+    if(!players.containsKey(username))
+      {
+      throw new PlayerNotFoundException();
+      }
+      
+    PlayerEntry player=(PlayerEntry)players.get(username);
+    
+    if(!player.characters.containsKey(character))
+      {
+      throw new CharacterNotFoundException();
+      }
+      
+    return (RPObject)player.characters.get(character);
     }
     
   public void addPlayer(String username, String password) throws PlayerAlreadyAddedException
@@ -145,7 +178,7 @@ public class PlayerDatabase
     
     players.put(username,player);
     }
-    
+  
   public void removePlayer(String username) throws PlayerNotFoundException
     {
     if(!players.containsKey(username))
@@ -156,7 +189,7 @@ public class PlayerDatabase
     players.remove(username);
     }
 
-  public void addCharacter(String username, String character) throws PlayerNotFoundException
+  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException
     {
     if(!players.containsKey(username))
       {
@@ -164,7 +197,7 @@ public class PlayerDatabase
       }
       
     PlayerEntry player=(PlayerEntry)players.get(username);
-    player.characters.add(character);
+    player.characters.put(character,object);
     }
     
   public void removeCharacter(String username, String character) throws PlayerNotFoundException

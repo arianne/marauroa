@@ -16,6 +16,7 @@ public class PlayerEntryContainer
     public InetSocketAddress source;
     public String username;
     public Date timestamp;
+    public RPObject.ID id;
     }
     
   public class NoSuchClientIDException extends Throwable
@@ -167,4 +168,18 @@ public class PlayerEntryContainer
       throw new NoSuchClientIDException();
       }
     }  
+    
+  public void setRPObject(short clientid, RPObject object) throws NoSuchClientIDException, Attributes.AttributeNotFoundException
+    {
+    if(containsPlayer(clientid))
+      {
+      PlayerEntry entry=(PlayerEntry)listPlayerEntries.get(new Short(clientid));
+         
+      entry.id=new RPObject.ID(object);
+      }
+    else
+      {
+      throw new NoSuchClientIDException();
+      }
+    }
   }

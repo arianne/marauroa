@@ -10,37 +10,22 @@ Tasks to do:
   . Perception
   . Map and Map Hash
   
-- Members of classes should start with m_
-- Static members don't need any extra append.
-
 - Add log4j to create a log file with all the relevant events.
 
 - Create a graphical frontend for server and a text one.
   Messages should be reported using a method of it.
   
-- Search info about Monitors for NetworkServerManager.
-
-- Implement methods to explict request termination of the threads.
-
 - Write document for PlayerEntry structure
 - Write document for client id generation
 
-- Document missing reply to events on GameManager
 - Proper output at exceptions.
-
-- On error report place at least:
-  File name and line number of the error.
-  Brief Error description.
-  Complete error description.
-  Resolution taken.
-  
-- Write document about error reporting.
 
 - Create an XML database.
 - Create an iterator for XML database
 
-- Add remove method for players and characters.
-- Add method to get latest logins.
-
 - Replace the PlayerDatabase class by an interface to allow future expansion.
+
+- Implement Test case for Message Factory to test all the messages.
+
+- Make processChooseCharacterEvent to fill the id field of PlayerEntry.
   

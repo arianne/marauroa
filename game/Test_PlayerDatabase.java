@@ -21,7 +21,7 @@ public class Test_PlayerDatabase extends TestCase
       
       playerDatabase.isCorrect("Test Player","Test Password");
 
-      playerDatabase.addCharacter("Test Player", "Test Character");
+      playerDatabase.addCharacter("Test Player", "Test Character",new RPObject());
       assertTrue(playerDatabase.hasCharacter("Test Player", "Test Character"));
 
 	  String[] characters=playerDatabase.getCharactersList("Test Player");      
@@ -62,7 +62,7 @@ public class Test_PlayerDatabase extends TestCase
       
     try
       {
-      playerDatabase.addCharacter("A new Test Player", "Test Character");
+      playerDatabase.addCharacter("A new Test Player", "Test Character", new RPObject());
       assertTrue(playerDatabase.hasCharacter("A new Test Player", "Test Character"));
       fail("Player does not exist");
       }

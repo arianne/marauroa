@@ -478,6 +478,100 @@ public class Test_Messages extends TestCase
     assertEquals(clientid,result.getClientID());
     }
     
+  public void testMessageC2SAction()
+    {
+    short clientid=14324;
+    marauroa.game.RPAction action=new marauroa.game.RPAction();
+    action.put("object_id","156123");
+    action.put("zone_id","1");
+    action.put("action_type","null action");
+    
+    MessageC2SAction msg=new MessageC2SAction(null,action);
+    msg.setClientID(clientid);
+    
+    out=new ByteArrayOutputStream();
+    sout=new OutputSerializer(out);
+    
+    try
+      {
+      sout.write(msg);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data out");
+      }    
+
+    assertEquals(Message.TYPE_C2S_ACTION,msg.getType());
+    assertEquals(clientid,msg.getClientID());
+    assertEquals(action,msg.getRPAction());
+    
+    in=new ByteArrayInputStream(out.toByteArray());
+    sin=new InputSerializer(in);
+    
+    MessageC2SAction result=new MessageC2SAction();
+    
+    try
+      {
+      sin.readObject(result);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    catch(java.lang.ClassNotFoundException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    
+    assertEquals(Message.TYPE_C2S_ACTION,result.getType());
+    assertEquals(clientid,result.getClientID());
+    assertEquals(action,result.getRPAction());
+    }
+
+  public void testMessageS2CActionACK()
+    {
+    short clientid=14324;
+    
+    MessageS2CActionACK msg=new MessageS2CActionACK(null);
+    msg.setClientID(clientid);
+    
+    out=new ByteArrayOutputStream();
+    sout=new OutputSerializer(out);
+    
+    try
+      {
+      sout.write(msg);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data out");
+      }    
+
+    assertEquals(Message.TYPE_S2C_ACTION_ACK,msg.getType());
+    assertEquals(clientid,msg.getClientID());
+    
+    in=new ByteArrayInputStream(out.toByteArray());
+    sin=new InputSerializer(in);
+    
+    MessageS2CActionACK result=new MessageS2CActionACK();
+    
+    try
+      {
+      sin.readObject(result);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    catch(java.lang.ClassNotFoundException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    
+    assertEquals(Message.TYPE_S2C_ACTION_ACK,result.getType());
+    assertEquals(clientid,result.getClientID());
+    }
+      
   public void testSeveralMessageSameStream()
     {
     short clientid=14324;
