@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.5 2003/12/12 18:57:56 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.6 2003/12/17 15:32:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package the1001;
 
 import marauroa.game.*;
 import marauroa.*;
+import the1001.objects.*;
 
 public class the1001RPZone extends MarauroaRPZone
   {

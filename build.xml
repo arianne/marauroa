@@ -8,7 +8,7 @@
   <property name="lib"  value="lib"/>
   
   <!-- Modify to point to your junit.jar file -->
-  <property name="junitlib" value="D:/j2sdk1.4.2/junit/junit3.8.1/junit.jar"/>
+  <property name="junitlib" value="c:/j2sdk1.4.2_03/junit/junit.jar"/>
   <property name="connectorJ" value="D:/j2sdk1.4.2/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
   <property name="classpath" value="classes;${junitlib};${connectorJ}"/>
   
