@@ -8,24 +8,10 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPSlot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkClientManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\NoSlotFoundException.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\InvalidVersionException.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\PerceptionHandler.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPScheduler.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabaseFactory.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameDatabaseException.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\IRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\python\\PythonZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Attributes.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPClass.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]
