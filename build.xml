@@ -1,16 +1,15 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="0.1"/>
+  <property name="version" value="0.01"/>
   <property name="src" value="."/>
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
+  <!-- Modify to point to your junit.jar file -->
   <property name="classpath"  value="classes;D:\j2sdk1.4.2\junit\junit3.8.1\junit.jar"/>
   <property name="jarname" value="marauroa.jar"/>
-  <property name="docs" value="docs"/>
-  <property name="runclass" value="marauroa.marauroad"/>
+  <property name="docs" value="javadocs"/>
 
-
-  <target name="init">
+  <target name="init" depends="clean">
     <mkdir dir="${build}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
@@ -42,17 +41,6 @@
           <include name="**/*.java"/>
       </fileset>
     </javadoc>
-  </target>
-  
-  <target name="run" depends="jar">
-    <java classname="${runclass}">
-      <classpath>
-        <pathelement path="${classpath}"/>
-        <fileset dir="${lib}">
-            <include name="**/*.jar"/>
-        </fileset>
-      </classpath>
-    </java>
   </target>
   
   <target name="clean">
