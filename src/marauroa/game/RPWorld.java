@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.6 2004/11/22 19:52:35 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.7 2004/11/25 17:03:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,8 +56,6 @@ public class RPWorld
     {
     try
       {
-      System.out.println(object);
-      
       if(object.has("zoneid"))
         {
         IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
@@ -65,8 +63,6 @@ public class RPWorld
         zone.add(object);
         
         playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
-
-        System.out.println(object);
         }        
       }
     catch(Exception e)

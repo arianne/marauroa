@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.115 2004/11/22 19:52:35 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.116 2004/11/25 17:03:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -192,12 +192,12 @@ public class RPServerManager extends Thread
 
     IRPZone zone=world.getRPZone(entry.characterid);
     
-    if(deltaPerceptionSend<=SYNC_PERCEPTION_FRECUENCY && entry.perception_OutOfSync)
+    if(deltaPerceptionSend<=SYNC_PERCEPTION_FRECUENCY && !entry.perception_OutOfSync)
       {
       marauroad.trace("RPServerManager::getPlayerPerception","D","Perception DELTA for player ("+entry.characterid.toString()+")");
       perception=zone.getPerception(entry.characterid,Perception.DELTA);
       }
-    else if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY && !entry.perception_OutOfSync)
+    else if(deltaPerceptionSend>SYNC_PERCEPTION_FRECUENCY)
       {
       entry.perception_OutOfSync=false;
       marauroad.trace("RPServerManager::getPlayerPerception","D","Perception SYNC for player ("+entry.characterid.toString()+")");
