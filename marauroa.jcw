@@ -10,6 +10,9 @@ LABEL := "marauroa"
 ! Start Last Document Structure
 #[BeginFile]SOURCE := "\\build.xml" #[EndFile]
 #[BeginFile]SOURCE := "\\classes\\mapacman_script.py" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Util.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa_init.sql" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]
