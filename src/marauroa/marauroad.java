@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.70 2004/04/20 15:11:29 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.71 2004/04/25 01:19:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,7 +75,7 @@ public class marauroad extends Thread
       ++i;
       }
     }
-	
+    
   public static void main (String[] args)
     {
     println("Marauroa           - An open source MORPG Framework -");
@@ -250,7 +250,7 @@ public class marauroad extends Thread
       allowed=_allowed;
       String[] _rejected={"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
       rejected=_rejected;
-      }      
+      }
     }
 
   public static void trace(String module,String event)

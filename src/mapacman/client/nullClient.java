@@ -4,17 +4,109 @@ import java.text.SimpleDateFormat;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import marauroa.Configuration;
 import marauroa.net.*;
 import marauroa.game.*;
 import mapacman.*;
 
-class TestClient extends Thread
+public class nullClient extends Thread
   {
+  static class ClientMap
+    {
+    char[] content;
+    int sizey;
+    int sizex;
+    
+    public ClientMap(byte[] mapData) throws Exception
+      {
+      ByteArrayInputStream bi=new ByteArrayInputStream(mapData);
+      InputSerializer ser=new InputSerializer(bi);
+      
+      sizey=ser.readInt();
+      for(int i=0;i<sizey;++i)
+        {
+        String line=ser.readString();
+        if(i==0)
+          {
+          content=new char[sizey*line.length()];
+          sizex=line.length();
+          }
+          
+        for(int j=0;j<sizex;j++)
+          {
+          content[i*sizex+j]=line.charAt(j);
+          }
+        }
+      }
+    
+    public char get(int x,int y)
+      {
+      return content[y*sizex+x];
+      }
+    
+    public int getSizeX()
+      {
+      return sizex;
+      }
+
+    public int getSizeY()
+      {
+      return sizey;
+      }
+    
+    public void print(PrintStream out, Map objects) throws Exception
+      {
+      for(int i=0;i<sizey;i++)
+        {
+        for(int j=0;j<sizex;j++)
+          {
+          char type=get(j,i);
+          if(type=='.' || type=='0' || type=='+')
+            {
+            boolean printed=false;
+            Iterator it=objects.values().iterator();
+            while(it.hasNext())
+              {
+              RPObject obj=(RPObject)it.next();
+              if(obj.getInt("x")==j && obj.getInt("y")==i)
+                {
+                if(obj.get("type").equals("player"))
+                  {
+                  printed=true;
+                  out.print('C');
+                  }
+                else if(obj.get("type").equals("ball"))
+                  {
+                  printed=true;
+                  out.print('.');
+                  }
+                }
+              }
+            
+            if(!printed && type=='+')
+              {
+              out.print('+');
+              }
+            else if(!printed)
+              {
+              out.print(' ');
+              }
+            }
+          else
+            {
+            out.print(type);
+            }
+          }
+        out.println();
+        }
+      }
+    }
+
   private String username;
   private String password;
   private String character;
   
-  public TestClient(String u, String p, String c)
+  public nullClient(String u, String p, String c)
     {
     username=u;
     password=p;
@@ -25,9 +117,14 @@ class TestClient extends Thread
     {
     try
       {
+      Configuration.setConfigurationFile("mapacman.ini");
       PrintStream out=new PrintStream(new FileOutputStream(getName()+"_testClient.txt"));
       
       Map world_objects=new LinkedHashMap();
+      ClientMap map_objects=null;
+      RPObject myRPObject=null;
+      Random rand=new Random();
+      
       NetworkClientManager netMan=new NetworkClientManager("127.0.0.1");
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
 
@@ -76,6 +173,7 @@ class TestClient extends Thread
         else if(msg instanceof MessageS2CMap)
           {
           byte[] mapData=((MessageS2CMap)msg).getMapData();
+          map_objects=new ClientMap(mapData);
           ++recieved;
           }
         else if(msg instanceof MessageS2CPerception)
@@ -86,6 +184,7 @@ class TestClient extends Thread
           throw new Exception();
           }
         }
+        
       
       boolean cond=true;
       boolean outofsync=true;
@@ -122,7 +221,7 @@ class TestClient extends Thread
               System.out.println("We are out of sync. Waiting for sync perception");
               System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getTimestamp());
               outofsync=true;
-              /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */                
+              /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
               }
             else
               {
@@ -132,21 +231,57 @@ class TestClient extends Thread
               System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
               out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
               
-              previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);          
-              }       
+              previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);
+              if(msgPer.getMyRPObject()!=null)
+                {
+                myRPObject=msgPer.getMyRPObject();
+                }
+
+
+              /** Code here game **/
+              int x=myRPObject.getInt("x");
+              int y=myRPObject.getInt("y");
+              String dir=myRPObject.get("dir");
+                
+              RPAction turn=new RPAction();
+              turn.put("type","turn");
+              if((dir.equals("N") && y>0 &&map_objects.get(x,y-1)=='*') ||
+                   (dir.equals("S") && y<map_objects.getSizeY()-1 && map_objects.get(x,y+1)=='*'))
+                {
+                if(rand.nextInt()%2==0)
+                  {
+                  turn.put("dir","W");
+                  }
+                else
+                    {
+                    turn.put("dir","E");
+                    }
+                  }
+                else if((dir.equals("W") && x>0 &&map_objects.get(x-1,y)=='*') ||
+                   (dir.equals("E") && x<map_objects.getSizeX()-1 && map_objects.get(x+1,y)=='*'))
+                  {
+                  if(rand.nextInt()%2==0)
+                    {
+                    turn.put("dir","N");
+                    }
+                  else
+                    {
+                    turn.put("dir","S");
+                    }
+                  }
+                  
+                if(turn.size()>1)
+                  {
+                  Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
+                  msgTurn.setClientID(clientid);
+                  netMan.addMessage(msgTurn);
+                  }
+                
+                map_objects.print(System.out,world_objects);
+              }
             }
           }
-
-        StringBuffer world=new StringBuffer("World content: \n");
-    
-        Iterator world_it=world_objects.values().iterator();
-        while(world_it.hasNext())
-          {
-          RPObject object=(RPObject)world_it.next();
-          world.append("  "+object.toString()+"\n");
-          }
-        out.println(world.toString());
-        out.flush();
+        
         }
           
       Message msgL=new MessageC2SLogout(address);
@@ -181,15 +316,15 @@ class TestClient extends Thread
     {
     try
       {
-      int num=6;
-      TestClient test[]=new TestClient[num];
+      int num=1;
+      nullClient test[]=new nullClient[num];
       
-      test[0]=new TestClient("miguel","qwerty","miguel");
-      test[1]=new TestClient("prueba","qwerty","prueba");
-      test[2]=new TestClient("bot_8","nopass","bot_8");
-      test[3]=new TestClient("bot_9","nopass","bot_9");
-      test[4]=new TestClient("bot_10","nopass","bot_10");
-      test[5]=new TestClient("bot_11","nopass","bot_11");
+      test[0]=new nullClient("miguel","qwerty","miguel");
+//      test[1]=new TestClient("prueba","qwerty","prueba");
+//      test[2]=new TestClient("bot_8","nopass","bot_8");
+//      test[3]=new TestClient("bot_9","nopass","bot_9");
+//      test[4]=new TestClient("bot_10","nopass","bot_10");
+//      test[5]=new TestClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {

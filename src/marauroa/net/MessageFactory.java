@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.10 2004/04/24 12:12:44 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.11 2004/04/25 01:19:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,7 @@ public class MessageFactory
       {
       return version;
       }
-    }  
+    }
     
   private static Map factoryArray;
   private static MessageFactory messageFactory;
@@ -45,7 +45,7 @@ public class MessageFactory
     register();
     }
   
-  /** This method returns an instance of MessageFactory 
+  /** This method returns an instance of MessageFactory
    *  @return A shared instance of MessageFactory */
   public static MessageFactory getFactory()
     {
@@ -86,9 +86,9 @@ public class MessageFactory
     
   /** Returns a object of the right class from a stream of serialized data.
    @param data the serialized data
-   @param source the source of the message needed to build the object. 
+   @param source the source of the message needed to build the object.
    
-   @throws IOException in case of problems with the message */  
+   @throws IOException in case of problems with the message */
   public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
     {
     marauroad.trace("MessageFactory::getMessage",">");
@@ -98,13 +98,13 @@ public class MessageFactory
         {
         if(factoryArray.containsKey(new Integer(data[1])))
           {
-          try 
+          try
             {
             Class messageType=(Class) factoryArray.get(new Integer(data[1]));
             Message tmp=(Message) messageType.newInstance();
             ByteArrayInputStream in=new ByteArrayInputStream(data);
             InputSerializer s=new InputSerializer(in);
-	
+    
             tmp.readObject(s);
             tmp.setAddress(source);
             marauroad.trace("MessageFactory::getMessage","<");
@@ -124,7 +124,7 @@ public class MessageFactory
           }
         }
       else
-        {      
+        {
         marauroad.trace("MessageFactory::getMessage","X","Message has incorrect protocol version");
         throw new InvalidVersionException(data[0]);
         }

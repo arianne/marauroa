@@ -170,7 +170,6 @@ class mapacmanRPMap:
             self.computeRespawnPoints(i,line)
             line=f.readline()
             i=i+1
-        print self.respawnPoints
     
     def computeRespawnPoints(self,y,line):
         i=line.find('+')
@@ -302,3 +301,4 @@ if __name__=='__main__':
     """ Test case here """
     pass
     
+

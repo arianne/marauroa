@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.21 2004/04/25 01:19:33 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.1 2004/04/25 01:19:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,13 +10,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa;
+package mapacman;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.game.*;
-import the1001.objects.*;
+import marauroa.Configuration;
 
 class createaccount
   {
@@ -68,7 +68,9 @@ class createaccount
       
     try
       {
+      Configuration.setConfigurationFile("mapacman.ini");
       Configuration conf=Configuration.getConfiguration();
+      
       String webfolder=conf.get("server_logs_directory");
 
       out=new PrintWriter(new FileOutputStream(webfolder+"/createaccount_log.txt",true));
@@ -130,7 +132,14 @@ class createaccount
       out.println("Adding player");
       playerDatabase.addPlayer(trans,username,password,email);
 
-      RPObject object=new RPObject();
+      RPObject object=new RPObject(playerDatabase.getValidRPObjectID(trans));
+      object.put("type","player");
+      object.put("name",character);
+      object.put("x",0);
+      object.put("y",0);
+      object.put("dir","N");
+      object.put("score",0);
+      
       playerDatabase.addCharacter(trans, username,character,object);
       out.println("Correctly created");
       trans.commit();
@@ -161,3 +170,4 @@ class createaccount
     return (0);
     }
   }
+
