@@ -118,10 +118,13 @@ public class JMarauroa extends javax.swing.JFrame {
         // Add your handling code here:
         /* TODO: Write here the code to send Logout message */
         Message msg=new MessageC2SLogout(null);
+        msg.setClientID(clientid);
+        netMan.addMessage(msg);
         netMan.finish();
         
         connectButton.setEnabled(true);
         chooseCharacterButton.setEnabled(false);
+        actionButton.setEnabled(false);
         disconnectButton.setEnabled(false);
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
