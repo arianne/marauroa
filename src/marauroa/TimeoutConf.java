@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.9 2004/01/30 18:09:53 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.10 2004/03/04 23:18:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,6 @@ public class TimeoutConf
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */
   final public static int GAMESERVER_PLAYER_TIMEOUT=30000;  
   
-  final public static int MAX_BYTE_ARRAY_ELEMENTS=1024;
+  final public static int MAX_BYTE_ARRAY_ELEMENTS=8*1024;
   final public static int MAX_ARRAY_ELEMENTS=256;
   }

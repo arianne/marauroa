@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.16 2004/03/04 22:27:19 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.17 2004/03/04 23:18:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,7 +104,7 @@ public class MessageS2CPerception extends Message
     java.util.zip.DeflaterOutputStream szlib=new java.util.zip.DeflaterOutputStream(array);
     OutputSerializer ser=new OutputSerializer(szlib);          
    
-    ser.write(typePerception);
+    ser.write((byte)typePerception);
     ser.write((int)modifiedRPObjects.size());
     
     Iterator it_mod=modifiedRPObjects.iterator();
@@ -133,7 +133,7 @@ public class MessageS2CPerception extends Message
     super.readObject(in);
     
     ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
-    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array);          
+    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());          
     InputSerializer ser=new InputSerializer(szlib);
     
     typePerception=ser.readByte();
@@ -166,6 +166,7 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
       
+    marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
     myRPObject=(RPObject)ser.readObject(new RPObject());
     }
     
