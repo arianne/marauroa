@@ -1,4 +1,4 @@
-/* $Id: Test_MessageFactory.java,v 1.7 2003/12/09 23:32:59 arianne_rpg Exp $ */
+/* $Id: Test_MessageFactory.java,v 1.8 2003/12/10 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -168,6 +168,8 @@ public class Test_MessageFactory extends TestCase
 
   public void testMessageFactoryAllMessages()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryAllMessages","?","This test case try to test that "+
+      " all the messages are correctly serialized and deserialized");
     marauroad.trace("Test_MessageFactory::testMessageFactoryAllMessages",">");
 
     MessageFactory msgFac=MessageFactory.getFactory();

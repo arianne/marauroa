@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.5 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.6 2003/12/10 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,8 @@ public class Test_Messages extends TestCase
 	
   public void testMessageC2SChooseCharacter()
     {
+    marauroad.trace("Test_Messages::testMessageC2SChooseCharacter","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SChooseCharacter",">");
     String character="Test character";
     int clientid=14324;
