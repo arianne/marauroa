@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.37 2004/01/08 14:14:47 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.38 2004/01/08 17:37:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -159,6 +159,7 @@ public class RPCode
       if(player.has("fighting"))
         {
         marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
+        
         /** TODO: Player abandon the fight. */        
         playersFighting.remove(player);
         }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.22 2004/01/08 14:14:47 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.23 2004/01/08 17:37:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -195,16 +195,23 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     
   public boolean onExit(RPObject.ID id)
     {
-    /** TODO: Deny logout to players that are in combat */
-    RPCode.RemovePlayer(id);
+    try
+      {
+      /** TODO: Deny logout to players that are in combat */
+      RPCode.RemovePlayer(id);
+
+      zone.remove(id);
+      }
+    catch(Exception e)
+      {
+      e.printStackTrace(System.out);
+      }
     return true;
     }
     
   public boolean onTimeout(RPObject.ID id)
     {
-    /** TODO: Deny logout to players that are in combat */
-    RPCode.RemovePlayer(id);
-    return true;
+    return onExit(id);
     }
   }
     
