@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.17 2004/04/03 19:05:01 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.18 2004/04/04 21:50:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,7 +53,6 @@ public final class GameDataModel
   private transient NetworkClientManager netMan;
   private List listeners;
   private ActionListener commandListener;
-  private String status;
   private String currentFightMode;
   private String lastFightMode;
   private long lastReqFightTS;
@@ -148,13 +147,17 @@ public final class GameDataModel
     return(commandListener);
   }
   
-  public void setStatus(String mode)
-  {
-    this.status = mode;
-  }
-  
   public String getStatus()
   {
+    String  status;
+    try
+    {
+      status = arena==null?"unknown":arena.get(RPCode.var_status);
+    }
+    catch (Attributes.AttributeNotFoundException e)
+    {
+      status="???";
+    }
     return(status);
   }
   
@@ -282,6 +285,18 @@ public final class GameDataModel
       }
     }
     fireListeners();
+  }
+  
+  /**
+   *
+   */
+  public void clearAllObjects()
+  {
+    spectators.clear();
+    fighters.clear();
+    myGladiators.clear();
+    shopGladiators.clear();
+    mAllObjects.clear();
   }
   
   /**
@@ -444,6 +459,7 @@ public final class GameDataModel
   public void setRandomFightMode(int strategy)
   {
     System.out.print(myName+"["+strategy+"]:"+lastFightMode+"->"+getFightMode()+"->");
+    System.out.flush();
     switch(strategy)
     {
     case 1:
@@ -630,8 +646,9 @@ public final class GameDataModel
       {
         arenaWaitingTS=-1;
       }
+      
       if(REQ_FIGHT_WAIT_TIME<(System.currentTimeMillis()-lastReqFightTS)||
-           (spectators!=null && spectators.size()<=2) ||
+           (countPeople()==0) ||
            (arenaWaitingTS>0&& System.currentTimeMillis()-arenaWaitingTS>30*1000)
         )
       {
@@ -656,19 +673,30 @@ public final class GameDataModel
       currentFightMode=null;
       lastFightMode=null;
     }
-    else if(RPCode.var_fighting.equals(getStatus()))
+    else if(RPCode.var_fighting.equals(getStatus()) || ownCharacter.has(RPCode.var_damage))
     {
-      voted=false;
-      if(ownCharacter.has(RPCode.var_fighting))
+      if(!RPCode.var_fighting.equals(getStatus()))
       {
+        System.out.println("BUG!!! Already fighting(damage is there) but the arena is not in fight status!!!");
+      }
+      voted=false;
+      if(ownCharacter.has(RPCode.var_fighting) || ownCharacter.has(RPCode.var_damage))
+      {
+        if(!ownCharacter.has(RPCode.var_fighting))
+        {
+          System.out.println("BUG!!! Already fighting(damage is there) but the fighting attributes is not there!!!");
+        }
         try
         {
           int own_damage = 0;
           try
           {
-            if(getFirstOwnGladiator()!=null&&getFirstOwnGladiator().has(RPCode.var_damage))
+            if(getFirstOwnGladiator()!=null)
             {
-              own_damage = getFirstOwnGladiator().getInt(RPCode.var_damage);
+              if(getFirstOwnGladiator().has(RPCode.var_damage))
+              {
+                own_damage = getFirstOwnGladiator().getInt(RPCode.var_damage);
+              }
             }
           }
           catch(Exception e)
@@ -714,6 +742,38 @@ public final class GameDataModel
     }
   }
   
+  /**
+   * Method countPeople
+   *
+   * @return   an int
+   */
+  private int countPeople()
+  {
+    int count = 0;
+    for (Iterator iter = spectators.values().iterator(); iter.hasNext();)
+    {
+      RPObject rp_obj = (RPObject)iter.next();
+      try
+      {
+        String name = rp_obj.get(RPCode.var_name);
+        if(name.matches("[Bb][Oo][Tt].*|root[0-9][0-9][0-9]"))
+        {
+          //          System.out.println("Bot detected: " + name);
+        }
+        else
+        {
+          count++;
+        }
+      }
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        //
+        count++;
+      }
+    }
+    return count;
+  }
+  
   public String dumpToString()
   {
     String top    = "+"+setStringWidth("-",'-',80)+"+\n";
@@ -722,10 +782,11 @@ public final class GameDataModel
     String bottom = "+"+setStringWidth("-",'-',80)+"+\n";
     // String divider="|"+setStringWidth("-",'-',80)+"|\n";
     String ret = top;
-    String status = getStatus()==null?"":getStatus();
+    String status = getStatus();
     
     if(RPCode.var_request_fame.equals(status))
     {
+      status="Request fame(";
       try
       {
         String timeout      = getArena().get(RPCode.var_timeout);
@@ -734,7 +795,7 @@ public final class GameDataModel
         String waiting      = getArena().get(RPCode.var_waiting);
         String fame         = getArena().get(RPCode.var_karma);
         
-        status="Request fame("+fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting;
+        status+=fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting;
       }
       catch (Attributes.AttributeNotFoundException e) {}
     }

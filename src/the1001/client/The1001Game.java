@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.15 2004/03/26 21:23:09 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.16 2004/04/04 21:50:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -185,8 +185,6 @@ public class The1001Game
                 
                 String name = obj.get("name");
                 String status = obj.get("status");
-                
-                gm.setStatus(status);
                 if(RPCode.var_waiting.equals(status))
                 {
                   player.play("Waiting_Gladiators.ogg");
