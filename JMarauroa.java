@@ -31,7 +31,7 @@ import javax.swing.JTextArea;
 /**
  * Test client for marauroa
  **/
-public class JMarauroa2
+public class JMarauroa
   extends JFrame
 {
   
@@ -49,7 +49,7 @@ public class JMarauroa2
   
   
   
-  public JMarauroa2()
+  public JMarauroa()
   {
     setTitle("Marauroa test client");
     //    setIconImage(new ImageIcon("marauroa.png").getImage());
