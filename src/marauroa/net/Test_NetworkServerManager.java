@@ -30,24 +30,47 @@ public class Test_NetworkServerManager extends TestCase
       fail(e.getMessage());
       return;
       }
-       
-    assertNotNull(netManager);
-    assertNotNull(netClient);
+
+    try 
+      {       
+      assertNotNull(netManager);
+      assertNotNull(netClient);
       
-    Message msg=new MessageC2SLogin(null,"Test username","Test password");
-    msg.setClientID(1423);
+      Message msg=new MessageC2SLogin(null,"Test username","Test password");
+      msg.setClientID(1423);
     
-    netClient.addMessage(msg);
-    Message result=netManager.getMessage();
+      netClient.addMessage(msg);
+      Message result=netManager.getMessage();
+     
+      MessageC2SLogin realResult=(MessageC2SLogin)result;
     
-    MessageC2SLogin realResult=(MessageC2SLogin)result;
-    
-    assertNotNull(result);
-    assertEquals(realResult.getUsername(),"Test username");
-    assertEquals(realResult.getPassword(),"Test password");
-    
-    netManager.finish();
-    
-    marauroad.trace("Test_NetworkServerManager::testNetworkServerManager","<");
+      assertNotNull(result);
+      assertEquals(realResult.getUsername(),"Test username");
+      assertEquals(realResult.getPassword(),"Test password");
+      
+      msg.setAddress(result.getAddress());
+      netManager.addMessage(msg);
+      
+      result=null;
+      int i=0;
+      while(result==null && i<10) 
+        {
+        result=netClient.getMessage();
+        ++i;
+        }
+
+      assertNotNull(result);
+      assertEquals(realResult.getUsername(),"Test username");
+      assertEquals(realResult.getPassword(),"Test password");  
+      }
+    catch(Exception e)
+      {
+      fail();
+      }      
+    finally
+      {
+      netManager.finish();
+      marauroad.trace("Test_NetworkServerManager::testNetworkServerManager","<");
+      }
     }
   }

@@ -19,12 +19,11 @@ public class NetworkClientManager
   static private class PacketContainer
     {
     public byte signature;
-    public byte position;
-    public byte total;
+    public byte remaining;
     public byte[] content;
     }    
-
-  private List pendingPackets;
+  
+  private Map pendingPackets;
 
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
       to recieve new messages from the network. */
@@ -36,7 +35,7 @@ public class NetworkClientManager
     socket.setSoTimeout(100);
        
     msgFactory=MessageFactory.getFactory();
-    pendingPackets=new LinkedList();
+    pendingPackets=new HashMap();
     }
   
   /** This method notify the thread to finish it execution */
@@ -78,13 +77,54 @@ public class NetworkClientManager
         /* A multipart message. We try to read the rest now. 
          * We need to check on the list if the message exist and it exist we add this one. */
         System.out.println("NetworkClientManager: receive multipart message ("+data[0]+")");
-//        PacketContainer container=new PacketContainer();
-//        container.total=data[0];
-//        container.position=data[1];
-//        container.signature=data[2];
-//
-//        container.content=new byte[data.length-3];
-//        System.arraycopy(data,3,container.content,0,data.length-3);      
+        byte total=data[0];
+        byte position=data[1];
+        byte signature=data[2];
+
+        if(!pendingPackets.containsKey(new Byte(signature)))
+          {
+          /** This is the first packet */
+          PacketContainer message=new PacketContainer();
+          message.signature=signature;
+          message.remaining=(byte)(total-1);
+          message.content=new byte[(NetConst.UDP_PACKET_SIZE-3)*total];
+          
+          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
+          pendingPackets.put(new Byte(signature),message);
+          }
+        else
+          {
+          PacketContainer message=(PacketContainer)pendingPackets.get(new Byte(signature));
+          --message.remaining;
+          
+          if(message.remaining<0)
+            {
+            System.out.println("ERROR: We confused the messages");
+            return null;
+            }
+
+          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
+          }
+          
+        Iterator it=pendingPackets.entrySet().iterator();
+        while(it.hasNext())
+          {
+          Map.Entry entry=(Map.Entry)it.next();
+          PacketContainer message=(PacketContainer)entry.getValue();
+          if(message.remaining==0)
+            {
+            Message msg=msgFactory.getMessage(message.content,(InetSocketAddress)packet.getSocketAddress());      
+            System.out.println("NetworkClientManager: receive complete multipart message("+msg.getType()+") from "+msg.getClientID());
+      
+            if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+              {
+              clientid=msg.getClientID();        
+              }
+              
+            pendingPackets.remove(new Byte(message.signature));
+            return msg;
+            }
+          }
 
         return null;
         }
