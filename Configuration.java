@@ -37,6 +37,7 @@ public class Configuration
 
   private Configuration() throws PropertyFileNotFoundException
     {
+    marauroad.trace("Configuration",">");
     try
       {
       properties=new Properties();
@@ -46,13 +47,17 @@ public class Configuration
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration","X","Configuration file not found: "+e.getMessage());
+      marauroad.trace("Configuration","<");
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration","X","Error loading Configuration file: "+e.getMessage());
+      marauroad.trace("Configuration","<");
       throw new PropertyFileNotFoundException();
       }
+
+    marauroad.trace("Configuration","<");
     }    
     
   public static Configuration getConfiguration() throws PropertyFileNotFoundException
@@ -67,23 +72,29 @@ public class Configuration
     
   public String get(String property) throws PropertyNotFoundException
     {
+    marauroad.trace("Configuration::get",">");
     String result=properties.getProperty(property);
     
     if(result==null)
       {
+      marauroad.trace("Configuration::get","<");
       throw new PropertyNotFoundException(property);
       }
       
+    marauroad.trace("Configuration::get","<");
     return result;
     }
     
   public void set(String property, String value)
     {
+    marauroad.trace("Configuration::set",">");
     properties.put(property,value);
+    marauroad.trace("Configuration::set","<");
     }
   
   public void store() throws PropertyFileNotFoundException
     {
+    marauroad.trace("Configuration::store",">");
     try
       {
       String file=getClass().getClassLoader().getResource(configurationFile).getPath();
@@ -92,12 +103,16 @@ public class Configuration
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration::store","X","Configuration file not found: "+e.getMessage());
+      marauroad.trace("Configuration::store","<");
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration::store","X","Error loading Configuration file: "+e.getMessage());
+      marauroad.trace("Configuration::store","<");
       throw new PropertyFileNotFoundException();
       }
+
+    marauroad.trace("Configuration::store","<");
     }
   }
