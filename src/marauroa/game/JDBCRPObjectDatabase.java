@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.8 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.9 2004/03/24 17:14:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,16 +126,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     marauroad.trace("JDBCPlayerDatabase::iterator",">");
     try
       {
-      try
-        {
-        trans=trans==null?getTransaction():trans;
-        }
-      catch (GameDatabaseException.GenericDatabaseException e)
-        {
-        // it is better to declare this method to throw this exception
-        marauroad.trace("JDBCPlayerDatabase::iterator","x",e.getMessage());
-        }
-
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select id from rpobject where slot_id=0";
@@ -162,16 +152,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     marauroad.trace("JDBCPlayerDatabase::hasRPObject",">");
     try
       {
-      try
-        {
-        trans=trans==null?getTransaction():trans;
-        }
-      catch (GameDatabaseException.GenericDatabaseException e)
-        {
-        // it is better to declare this method to throw this exception
-        marauroad.trace("JDBCPlayerDatabase::hasRPObject","x",e.getMessage());
-        }
-
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) from rpobject where id="+id.getObjectID();
@@ -205,16 +185,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     marauroad.trace("JDBCPlayerDatabase::loadRPObject",">");
     try
       {
-      try
-        {
-        trans=trans==null?getTransaction():trans;
-        }
-      catch (GameDatabaseException.GenericDatabaseException e)
-        {
-        marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-        throw new Exception("loadRPObject"+":"+e.getMessage());
-        }
-
       Connection connection = ((JDBCTransaction)trans).getConnection();
 
       if(hasRPObject(trans,id))
@@ -242,16 +212,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   
   private void loadRPObject(Transaction trans, RPObject object,int object_id) throws SQLException, RPObject.SlotAlreadyAddedException
     {
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      throw new SQLException("loadRPObject"+":"+e.getMessage());
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
@@ -294,16 +254,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   public void deleteRPObject(Transaction trans, RPObject.ID id) throws SQLException
     {
     marauroad.trace("JDBCPlayerDatabase::deleteRPObject",">");
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      throw new SQLException("deleteRPObject"+":"+e.getMessage());
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
 
     try
@@ -332,16 +282,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   
   private void deleteRPObject(Transaction trans, int id) throws SQLException
     {
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      throw new SQLException("deleteRPObject"+":"+e.getMessage());
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
@@ -369,16 +309,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   public void storeRPObject(Transaction trans, RPObject object) throws SQLException
     {
     marauroad.trace("JDBCPlayerDatabase::storeRPObject",">");
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      throw new SQLException("storeRPObject"+":"+e.getMessage());
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
 
     try
@@ -428,16 +358,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   
   private void storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, Attributes.AttributeNotFoundException
     {
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      throw new SQLException("storeRPObject"+":"+e.getMessage());
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
@@ -496,16 +416,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   private Random random;
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
-    try
-      {
-      trans=trans==null?getTransaction():trans;
-      }
-    catch (GameDatabaseException.GenericDatabaseException e)
-      {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-      // throw some exception here !!!!!!!!!!!!
-      }
-
     Connection connection = ((JDBCTransaction)trans).getConnection();
     RPObject.ID id=new RPObject.ID(random.nextInt());
 

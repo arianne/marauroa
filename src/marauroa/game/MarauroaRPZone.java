@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.24 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.25 2004/03/24 17:14:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ public class MarauroaRPZone implements RPZone
   private Map objects;
   private Perception perception;
   private JDBCRPObjectDatabase rpobjectDatabase;
+  private Transaction transaction;
   private static Random rand=new Random();
   public MarauroaRPZone()
     {
@@ -38,8 +39,9 @@ public class MarauroaRPZone implements RPZone
     try
       {
       rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+      transaction=rpobjectDatabase.getTransaction();
       }
-    catch(GameDatabaseException.NoDatabaseConfException e)
+    catch(Exception e)
       {
       marauroad.trace("MarauroaRPZone::MarauroaRPZone","!",e.getMessage());
       System.exit(1);
@@ -74,7 +76,8 @@ public class MarauroaRPZone implements RPZone
         // }
         // else
         {
-        marauroad.trace("MarauroaRPZone::modify","X","Unable to use DELTA perception for this object because I was never get. Sending FULL instead");
+        // TODO: This
+        // marauroad.trace("MarauroaRPZone::modify","X","Unable to use DELTA perception for this object because it was never get. Sending FULL instead");
         perception.added(object);
         }
       }
@@ -129,7 +132,7 @@ public class MarauroaRPZone implements RPZone
   
   public RPObject create()
     {
-    return new RPObject(rpobjectDatabase.getValidRPObjectID(null));
+    return new RPObject(rpobjectDatabase.getValidRPObjectID(transaction));
     }
 	
   public Iterator iterator()

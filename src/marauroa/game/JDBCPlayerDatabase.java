@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.22 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.23 2004/03/24 17:14:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -631,7 +631,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           throw new CharacterNotFoundException(username);
           }
         }
-      rpobjectDatabase.storeRPObject(trans,object);
+      rpobjectDatabase.storeRPObject(getTransaction(),object);
       }
     catch(SQLException sqle)
       {
@@ -681,7 +681,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         int object_id=result.getInt(1);
         
-        return rpobjectDatabase.loadRPObject(trans,new RPObject.ID(object_id));
+        return rpobjectDatabase.loadRPObject(getTransaction(),new RPObject.ID(object_id));
         }
       else
         {
@@ -731,7 +731,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       connInfo.put("charSet", "UTF-8");
 
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-
+      
       conn.setAutoCommit(true);
       return conn;
       }

@@ -3,11 +3,19 @@ package marauroa.game;
 
 public class Transaction
   {
-  public void commit() throws Exception
+  static public class TransactionException extends Exception
+    {
+    public TransactionException(String msg)
+      {
+      super(msg);
+      }
+    };
+    
+  public void commit() throws TransactionException
     {
     }
   
-  public void rollback() throws Exception
+  public void rollback() throws TransactionException
     {
     }
   }

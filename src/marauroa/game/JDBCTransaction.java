@@ -5,8 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import marauroa.marauroad;
 
-public class JDBCTransaction
-  extends Transaction
+public class JDBCTransaction extends Transaction
   {
   private Connection connection;
   public JDBCTransaction(Connection connection)
@@ -34,14 +33,28 @@ public class JDBCTransaction
     return connection;
     }
   
-  public void commit() throws Exception
+  public void commit() throws TransactionException
     {
-    connection.commit();
+    try
+      {
+      connection.commit();
+      }
+    catch(SQLException e)
+      {
+      throw new TransactionException(e.getMessage());
+      }
     }
   
-  public void rollback() throws Exception
+  public void rollback() throws TransactionException
     {
-    connection.rollback();
+    try
+      {
+      connection.rollback();
+      }
+    catch(SQLException e)
+      {
+      throw new TransactionException(e.getMessage());
+      }
     }
   
   public boolean isValid()

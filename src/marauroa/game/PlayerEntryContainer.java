@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.22 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.23 2004/03/24 17:14:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,7 +106,8 @@ public class PlayerEntryContainer
   private HashMap listPlayerEntries;
   /** A object representing the database */
   private PlayerDatabase playerDatabase;
-  private Transaction trans;  
+  private Transaction transaction;  
+  
   /** A reader/writers lock for controlling the access */
   private RWLock lock;
   private static PlayerEntryContainer playerEntryContainer;
@@ -121,8 +122,9 @@ public class PlayerEntryContainer
     try
       {
       playerDatabase=PlayerDatabaseFactory.getDatabase();
+      transaction=playerDatabase.getTransaction();
       }
-    catch(PlayerDatabase.NoDatabaseConfException e)
+    catch(Exception e)
       {
       marauroad.trace("PlayerEntryContainer","X", e.getMessage());
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
@@ -311,7 +313,7 @@ public class PlayerEntryContainer
     marauroad.trace("PlayerEntryContainer::verifyAccount",">");
     try
       {
-      return playerDatabase.verifyAccount(null,username,password);
+      return playerDatabase.verifyAccount(transaction,username,password);
       }
     finally
       {
@@ -331,11 +333,11 @@ public class PlayerEntryContainer
     marauroad.trace("PlayerEntryContainer::addLoginEvent",">");
     try
       {
-      playerDatabase.addLoginEvent(null,username,source,correctLogin);
+      playerDatabase.addLoginEvent(transaction,username,source,correctLogin);
       }
     catch(PlayerDatabase.PlayerNotFoundException e)
       {
-      marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player("+username+")");
       throw new NoSuchPlayerException(username);
       }
     finally
@@ -360,7 +362,7 @@ public class PlayerEntryContainer
           {
           RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
 
-          return playerDatabase.getLoginEvent(null,entry.username);
+          return playerDatabase.getLoginEvent(transaction,entry.username);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
@@ -454,7 +456,7 @@ public class PlayerEntryContainer
           {
           RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
 
-          return playerDatabase.hasCharacter(null,entry.username,character);
+          return playerDatabase.hasCharacter(transaction,entry.username,character);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
@@ -519,7 +521,7 @@ public class PlayerEntryContainer
           {
           RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
 
-          return playerDatabase.getCharactersList(null,entry.username);
+          return playerDatabase.getCharactersList(transaction,entry.username);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
@@ -555,7 +557,7 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        RPObject object=playerDatabase.getRPObject(null,entry.username,character);
+        RPObject object=playerDatabase.getRPObject(transaction,entry.username,character);
 
         entry.characterid=new RPObject.ID(object);
         return object;
@@ -611,7 +613,7 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
 
-        playerDatabase.setRPObject(null,entry.username,entry.choosenCharacter,object);
+        playerDatabase.setRPObject(transaction,entry.username,entry.choosenCharacter,object);
         entry.characterid=new RPObject.ID(object);
         }
       else
