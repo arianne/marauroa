@@ -39,7 +39,7 @@ public class MessageC2SAction extends Message
     return action;
     }
     
-  /** This method returns a String that represent the object 
+  /** This method returns a String that represent the object
    *  @return a string representing the object.*/
   public String toString()
     {
@@ -55,7 +55,7 @@ public class MessageC2SAction extends Message
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    action=(RPAction)in.readObject(new RPAction());
+    action=RPActionFactory.getFactory().getRPAction(in);
     
     if(type!=TYPE_C2S_ACTION)
       {

@@ -22,7 +22,7 @@ public class InputSerializer
       @return the object serialized, just for interface coherence
       @throws java.io.IOException if there is an IO error
       @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */
-  public Object readObject(marauroa.net.Serializable obj) throws IOException, java.lang.ClassNotFoundException
+    public Object readObject(marauroa.net.Serializable obj) throws IOException, java.lang.ClassNotFoundException
     {
     obj.readObject(this);
     return obj;

@@ -18,9 +18,16 @@ public class ChallengeAction
     put("type",ACTION_CHALLENGE);
   }
   
+  //Who is challenge
   public void setWho(int charID)
   {
     put("who",charID);
+  }
+  
+  //Who was challenged
+  public void setWhom(int charID)
+  {
+    put("whom",charID);
   }
   
   //  public int getWho()

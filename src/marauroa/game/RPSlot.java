@@ -66,7 +66,7 @@ public class RPSlot implements marauroa.net.Serializable
     catch(Attributes.AttributeNotFoundException e)
       {
       throw new RPObjectNotFoundException();
-      }    
+      }
     }
   
   public RPObject get() throws RPObjectNotFoundException
@@ -77,7 +77,7 @@ public class RPSlot implements marauroa.net.Serializable
       }
       
     throw new RPObjectNotFoundException();
-    } 
+    }
     
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
@@ -100,10 +100,10 @@ public class RPSlot implements marauroa.net.Serializable
     catch(Attributes.AttributeNotFoundException e)
       {
       throw new RPObjectNotFoundException();
-      }    
+      }
     }
   
-  public boolean has(RPObject.ID id) 
+  public boolean has(RPObject.ID id)
     {
     try
       {
@@ -124,7 +124,7 @@ public class RPSlot implements marauroa.net.Serializable
       {
       /* NOTE: This is a serious problem */
       return false;
-      }    
+      }
     }
   
   public int size()
@@ -142,7 +142,7 @@ public class RPSlot implements marauroa.net.Serializable
     RPSlot slot=(RPSlot)object;
     
     return name.equals(slot.name) && objects.equals(slot.objects);
-    }    
+    }
     
   public String toString()
     {
@@ -176,7 +176,7 @@ public class RPSlot implements marauroa.net.Serializable
         
     for(int i=0;i<size;++i)
       {
-      objects.add(in.readObject(new RPObject()));
+      objects.add(RPObjectFactory.getFactory().getRPObject(in));
       }
     }
     finally

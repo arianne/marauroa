@@ -15,7 +15,11 @@ import marauroa.game.RPZone;
 public class SimpleRPZone
   extends MarauroaRPZone
 {
+  //we will never send a list with deleted items
+  //in this game, so create once the empty list
+  //and send it all the time.
   private List deletedList=new LinkedList();
+  
   
   public SimpleRPZone()
   {

@@ -9,6 +9,8 @@ import marauroa.marauroad;
 /** This class implements an Object. Please refer to Objects Explained document */
 public class RPObject extends Attributes
   {
+  /**  object type used by factory to choose a  right class*/
+  protected int objectType;
   /** a List<RPSlot> of slots */
   private List slots;
   
@@ -134,6 +136,7 @@ public class RPObject extends Attributes
     super();
 
     slots=new LinkedList();
+      objectType=0;
     }
 
   public RPObject(ID id)
@@ -213,6 +216,7 @@ public class RPObject extends Attributes
       try
       {
       marauroad.trace("RPObject.writeObject()","<");
+    out.write(objectType);
     super.writeObject(out);
     
     out.write((int)slots.size());

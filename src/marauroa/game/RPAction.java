@@ -7,6 +7,8 @@ public class RPAction extends Attributes
   public final static Status STATUS_FAIL=new Status(Status.FAIL);
   public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
   
+  protected int actionType;
+  
   /** This class represent the status of the action */
   public static class Status
     {
@@ -31,7 +33,7 @@ public class RPAction extends Attributes
       if(val.equalsIgnoreCase("incomplete")) this.val=INCOMPLETE;
       }
     
-    /** This method returns the status of the action 
+    /** This method returns the status of the action
      *  @return the status of the action */
     public byte getStatus()
       {
@@ -46,7 +48,7 @@ public class RPAction extends Attributes
       return val==((Status)status).val;
       }
     
-    /** This method returns a String that represent the object 
+    /** This method returns a String that represent the object
      *  @return a string representing the object.*/
     public String toString()
       {
@@ -61,11 +63,14 @@ public class RPAction extends Attributes
   /** Constructor */
   public RPAction()
     {
-    super();
+    //no need to call super extra, default constructor is called automatically
+    //super();
+      actionType=0;
     }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
+      out.write(actionType);
     super.writeObject(out);
     }
   

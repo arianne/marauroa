@@ -8,8 +8,10 @@ package simplegame;
 
 import marauroa.game.*;
 
+import java.util.Iterator;
 import marauroa.marauroad;
 import simplegame.actions.ChallengeAction;
+import simplegame.actions.GetCharacterListAction;
 import simplegame.actions.MoveAction;
 import simplegame.objects.GameBoard;
 
@@ -21,13 +23,6 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   {
     marauroad.trace("SimpleRPRuleProcessor::<init>",">");
     marauroad.trace("SimpleRPRuleProcessor::<init>","<");
-  }
-  
-  private RPObject findPlayer(byte color)
-  {
-    //iterate all the objects of RPZone (which only contains two players here :) )
-    //and find the one player who owns this color
-    return null;
   }
   
   public void setContext(RPZone zone)
@@ -69,6 +64,9 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       {
         case MoveAction.ACTION_MOVE:
           status = makeMove(id, action);
+          break;
+        case GetCharacterListAction.ACTION_GETCHARLIST:
+          status = getCharacterList(id, action);
           break;
         case ChallengeAction.ACTION_CHALLENGE:
           ;
@@ -123,7 +121,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       }
       catch (RPSlot.RPObjectNotFoundException e)
       {
-      	// TODO: There is no object on the slot. Decide what to do
+        // TODO: There is no object on the slot. Decide what to do
       }
       
       if(id.getObjectID()==last_id)
@@ -139,13 +137,13 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
           gb.setRPCharacterAt(row,column,id.getObjectID());
           status = RPAction.STATUS_SUCCESS;
           marauroad.trace("SimpleRPRuleProcessor::makeMove","D",zone.toString());
-//          int winner_id  = gb.getWinner();
-//          if(winner_id!=-1)
-//          {
-//            //TODO
-//            RPObject rp_winner = zone.get(null);
-////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","And the winner is "+winner);
-//          }
+          //          int winner_id  = gb.getWinner();
+          //          if(winner_id!=-1)
+          //          {
+          //            //TODO
+          //            RPObject rp_winner = zone.get(null);
+          ////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","And the winner is "+winner);
+          //          }
         }
         else
         {
@@ -161,15 +159,36 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     return status;
   }
   
-  //  private class Turn
-  //    extends RPObject
-  //  {
-  //    public Turn()
-  //    {
-  //      this.put("object_id","TurnObject");
-  //    }
-  //  }
-  
+  private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)
+    throws NumberFormatException,
+    Attributes.AttributeNotFoundException,
+    RPZone.RPObjectNotFoundException
+  {
+    marauroad.trace("SimpleRPRuleProcessor::getCharacterList",">");
+    RPAction.Status status = RPAction.STATUS_FAIL;
+    try
+    {
+      RPObject rp_player = zone.get(id);
+      Iterator iter = zone.iterator();
+      if(iter!=null)
+      {
+        RPSlot playerlist = new RPSlot("ear");
+        while(iter.hasNext())
+        {
+          RPObject object = (RPObject)iter.next();
+          int oid = Integer.parseInt(object.get("object_id"));
+          if(oid!=id.getObjectID())
+          {
+          }
+        }
+      }
+    }
+    finally
+    {
+      marauroad.trace("SimpleRPRuleProcessor::getCharacterList",">");
+    }
+    return(status);
+  }
 }
 
 
