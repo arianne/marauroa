@@ -9,7 +9,7 @@
   
   <!-- Modify to point to your junit.jar file -->
   <property name="junitlib" value="c:/j2sdk1.4.2_03/junit/junit.jar"/>
-  <property name="connectorJ" value="D:/j2sdk1.4.2/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
+  <property name="connectorJ" value="c:/j2sdk1.4.2_03/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
   <property name="classpath" value="classes;${junitlib};${connectorJ}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>

@@ -31,17 +31,20 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.11 version 
+0.20 version 
 
 Status
 ------
-Marauroa is NOT playable.
+Marauroa is playable.
 It is now running a server that implements the FULL protocol and that is
 able to connect to a MySQL database, also features the RP Engine in its 
 first state.
 
-Next version will contains a very simple game: Tic-tac-toe, implemented 
+Version 0.11 contains a very simple game: Tic-tac-toe, implemented 
 using the Marauroa engine.
+
+Version 0.20 contains a simple Gladiators game using also the Marauroa engine.
+You need arianne's Gladiator client in order to be able to play.
 
 Requirements
 ------------
@@ -87,9 +90,15 @@ Edit marauroa.ini to use JDBC Database.
 Please refer to docs/JDBC Database HOWTO.txt
 
 Read simpleGame/README about how to play it.
+Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.20	Jan 26, 2004
+- Implemented Gladiators
+- Fixed several problems at server
+- API stabilized
+
 0.11	Dic 21, 2003
 - Maraurorized simpleGame
 - Fixed several logical bugs in simpleGame
