@@ -174,7 +174,7 @@ implemented.
    fighters and there are no still enough fighters for the fight to begin, 
    then add ourselves to the fight, else put us on the waiting queue".
    
-   RuleProcessor.NextTurn
+   RuleProcessor.Request Fight ( cont. )
      {
      if arena[gladiators].size==GLADIATORS_PER_FIGHT
        {

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.8 2003/12/30 09:27:59 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.9 2003/12/30 09:46:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,11 +106,13 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
             object.remove(attr);
             }
           }
+        
+        zone.modify(new RPObject.ID(object));
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(Exception e)
       {
-      marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","!",e.getMessage());
+      marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","X",e.getMessage());
       }
     
     trackedObjects.clear();

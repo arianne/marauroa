@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.3 2003/12/30 09:27:59 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.4 2003/12/30 09:46:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package the1001;
 
 import marauroa.game.*;
 import marauroa.*;
+import java.util.*;
 
 public class RPCode
   {
@@ -34,18 +35,7 @@ public class RPCode
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject arena=zone.getArena();
       RPObject player=zone.get(id);
-/*      
-     if(arena[status] is WAITING && arena[gladiators].size < GLADIATORS_PER_FIGHT)
-       {
-       player[status]="onArena"
-       arena[gladiators].add gladiator
-       }
-     else
-       {
-       player[requestedFight]=turn
-       arena[waitingGladiators]=arena[waitingGladiators]+1;
-       }
-*/  
+
       if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
         {
         player.put("status","onArena");
@@ -57,8 +47,27 @@ public class RPCode
         arena.put("waiting",Integer.parseInt(arena.get("waiting"))+1);
         }
       
-      zone.modify(new RPObject.ID(player));
+      /** We check now if Arena is complete */
+      if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
+        {
+        arena.put("status","fighting");
+        
+        Iterator it=arena.getSlot("gladiators").iterator();
+        while(it.hasNext())
+          {
+          RPObject gladiator=(RPObject)it.next();
+          gladiator.put("status","onFight");
+          
+          zone.modify(new RPObject.ID(gladiator));
+          }        
+        }
+      else
+        {
+        zone.modify(new RPObject.ID(player));
+        }
+      
       zone.modify(new RPObject.ID(arena));
+      
       
       return RPAction.STATUS_SUCCESS;
       }
