@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.16 2003/12/18 18:04:01 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.17 2003/12/19 10:54:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,7 +58,8 @@ public class JMarauroa extends JFrame
 		setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_ICON.png")).getImage());
 		initMenu();
 		initComponents();
-		clientId=-10;
+		clientId=-1;
+        characterID=null;
 		formatter = new SimpleDateFormat("[HH:MM:ss.SSS]  ");
 		logDate = new Date();
 		addWindowListener(new WindowAdapter()
@@ -249,12 +250,12 @@ public class JMarauroa extends JFrame
 		mnu_item_disconnect.setMnemonic('D');
 		mnu_server.add(mnu_item_disconnect);
 		
-		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
-		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
-		mnu_item_letsplay.addActionListener(actionHandler);
-		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
-		mnu_item_letsplay.setMnemonic('P');
-		mnu_server.add(mnu_item_letsplay);
+//		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
+//		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
+//		mnu_item_letsplay.addActionListener(actionHandler);
+//		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
+//		mnu_item_letsplay.setMnemonic('P');
+//		mnu_server.add(mnu_item_letsplay);
 		
 		JMenuItem mnu_item_exit = new JMenuItem("Exit");
 		mnu_item_exit.setAccelerator(KeyStroke.getKeyStroke("control X"));
@@ -329,10 +330,10 @@ public class JMarauroa extends JFrame
 				addLog("Character choosen correctly(id is "+characterID+")\n");
 
 				/** Automagically create a new simplegame event */
-//				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
-//				sg.pack();
-//				sg.show();
-//				new Thread(sg,"Lets play thread...").start();
+				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
+				sg.pack();
+				sg.show();
+				new Thread(sg,"Lets play thread...").start();
 			}
 			
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)

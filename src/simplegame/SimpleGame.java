@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.31 2003/12/18 23:56:55 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.32 2003/12/19 10:54:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,6 +166,10 @@ public class SimpleGame
                   {
                   /** TODO: Sure you know a better way of telling that to the user. */
                   addLog("Waiting for another player to join\n");
+
+                  addLog("get the UPDATED list of players...\n");
+                  GetCharacterListAction rpaction = new GetCharacterListAction();
+                  netMan.addMessage(new MessageC2SAction(null,rpaction));                    
                   }
                 else
                   {                  
@@ -202,17 +206,21 @@ public class SimpleGame
                       options[0]                                  // option that should be made into a default button
                     );
                   
-                  if(result!=JOptionPane.CLOSED_OPTION)
+                  String player=(String)cb_characters.getSelectedItem();
+                  if(result!=JOptionPane.CLOSED_OPTION &&player!=null && !player.equals(""))
+                    {                      
+                    addLog("Challenge player...\n");
+                    otherCharacterID = CharacterList.getId(player);
+                    ChallengeAction c_action=new ChallengeAction();
+                    c_action.setWho(ownCharacterID);
+                    c_action.setWhom(otherCharacterID);
+                    netMan.addMessage(new MessageC2SAction(null,c_action));
+                    }
+                  else
                     {
-                    String player=(String)cb_characters.getSelectedItem();
-                    if(player!=null && !player.equals(""))
-                      {                      
-                      otherCharacterID = CharacterList.getId(player);
-                      ChallengeAction c_action=new ChallengeAction();
-                      c_action.setWho(ownCharacterID);
-                      c_action.setWhom(otherCharacterID);
-                      netMan.addMessage(new MessageC2SAction(null,c_action));
-                      }
+                    addLog("get the UPDATED list of players...\n");
+                    GetCharacterListAction rpaction = new GetCharacterListAction();
+                    netMan.addMessage(new MessageC2SAction(null,rpaction));                    
                     }
                   }
                 }
