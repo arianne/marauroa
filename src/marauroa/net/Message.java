@@ -31,7 +31,7 @@ public class Message implements marauroa.net.Serializable
   public final static byte TYPE_S2C_PERCEPTION=6;
 
   protected byte type;
-  protected short clientid;
+  protected int clientid;
    
   protected InetSocketAddress source;
   
@@ -67,14 +67,14 @@ public class Message implements marauroa.net.Serializable
   /** Set the clientID so that we can identify the client to which the
       message is target, as only IP is easy to Fake
       @param clientid a short that reprents the client id. */    
-  public void setClientID(short clientid)
+  public void setClientID(int clientid)
     {
     this.clientid=clientid;
     }
   
   /** Returns the clientID of the Message.
       @returns the ClientID */
-  public short getClientID()
+  public int getClientID()
     {
     return clientid;
     }
@@ -101,6 +101,6 @@ public class Message implements marauroa.net.Serializable
       }
       
     type=in.readByte();
-    clientid=in.readShort();
+    clientid=in.readInt();
     }  
   };

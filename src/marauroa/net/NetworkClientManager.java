@@ -12,7 +12,7 @@ public class NetworkClientManager
   {
   private DatagramSocket socket;
   private InetSocketAddress address;
-  private short clientid;
+  private int clientid;
   
   private MessageFactory msgFactory;
   

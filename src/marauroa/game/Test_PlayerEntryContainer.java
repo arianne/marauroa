@@ -54,7 +54,7 @@ public class Test_PlayerEntryContainer extends TestCase
       {
       assertEquals(container.size(),0);
       
-      short clientid=container.addRuntimePlayer("Test Player", new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT));
+      int clientid=container.addRuntimePlayer("Test Player", new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT));
       
       assertEquals(container.size(),1);
 

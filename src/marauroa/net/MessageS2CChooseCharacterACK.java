@@ -41,7 +41,7 @@ public class MessageS2CChooseCharacterACK extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Choose Character ACK) from ("+source.toString()+") CONTENTS: ()";
+    return "Message (S2C Choose Character ACK) from ("+source.toString()+") CONTENTS: ("+id.toString()+")";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

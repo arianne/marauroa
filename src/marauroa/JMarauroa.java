@@ -34,7 +34,7 @@ public class JMarauroa
   private SimpleDateFormat formatter;
   private Date logDate;
   
-  private short clientId;
+  private int clientId;
   private NetworkClientManager netMan;
   private RPObject.ID characterID;
   

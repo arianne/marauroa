@@ -18,7 +18,7 @@ public class PlayerEntryContainer
   static public class RuntimePlayerEntry
     {
     /** The runtime clientid */
-    public short clientid;
+    public int clientid;
     /** The state in which this player is */ 
     public byte state;
     /** The initial address of this player */
@@ -135,13 +135,13 @@ public class PlayerEntryContainer
   /** This method returns true if exist a player with that clientid.
    *  @param clientid a player runtime id
    *  @return true if player exist or false otherwise. */
-  public boolean hasRuntimePlayer(short clientid)
+  public boolean hasRuntimePlayer(int clientid)
     {
     marauroad.trace("PlayerEntryContainer::hasRuntimePlayer",">");
 
     try
       {
-      return listPlayerEntries.containsKey(new Short(clientid));
+      return listPlayerEntries.containsKey(new Integer(clientid));
       }
     finally
       {
@@ -153,7 +153,7 @@ public class PlayerEntryContainer
    *  @param username the name of the player
    *  @param source the IP address of the player.
    *  @return the clientid for that runtimeplayer */
-  public short addRuntimePlayer(String username, InetSocketAddress source)
+  public int addRuntimePlayer(String username, InetSocketAddress source)
     {
     marauroad.trace("PlayerEntryContainer::addRuntimePlayer",">");
     
@@ -168,7 +168,7 @@ public class PlayerEntryContainer
     
       entry.clientid=generateClientID(source);
     
-      listPlayerEntries.put(new Short(entry.clientid),entry);
+      listPlayerEntries.put(new Integer(entry.clientid),entry);
       return entry.clientid;
       }
     finally
@@ -180,14 +180,14 @@ public class PlayerEntryContainer
   /** This method remove the entry if it exists.
    *  @param clientid is the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
-  public void removeRuntimePlayer(short clientid) throws NoSuchClientIDException
+  public void removeRuntimePlayer(int clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::removeRuntimePlayer",">");
     try
       {
       if(hasRuntimePlayer(clientid))
         {
-        listPlayerEntries.remove(new Short(clientid));
+        listPlayerEntries.remove(new Integer(clientid));
         }
       else
         {
@@ -205,7 +205,7 @@ public class PlayerEntryContainer
    *  @param clientid the runtime id of the player
    *  @param source the IP address of the player.
    *  @return true if they match or false otherwise */
-  public boolean verifyRuntimePlayer(short clientid, InetSocketAddress source)
+  public boolean verifyRuntimePlayer(int clientid, InetSocketAddress source)
     {
     marauroad.trace("PlayerEntryContainer::verifyRuntimePlayer",">");
     
@@ -213,7 +213,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         entry.timestamp=new Date();    
         if(source.equals(entry.source))
           {
@@ -241,14 +241,14 @@ public class PlayerEntryContainer
    *  - STATE_GAME_BEGIN
    *  @param clientid the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
-  public byte getRuntimeState(short clientid) throws NoSuchClientIDException
+  public byte getRuntimeState(int clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getRuntimeState",">");
     try
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         entry.timestamp=new Date();    
         return entry.state;
         }
@@ -271,7 +271,7 @@ public class PlayerEntryContainer
    *  @param clientid the runtime id of the player
    *  @param newState the new state to which we move.
    *  @throws NoSuchClientIDException if clientid is not found */
-  public byte changeRuntimeState(short clientid,byte newState) throws NoSuchClientIDException
+  public byte changeRuntimeState(int clientid,byte newState) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::changeRuntimeState",">");
     
@@ -279,7 +279,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
      
         byte oldState=entry.state;
         entry.state=newState;
@@ -325,7 +325,7 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public void addLoginEvent(short clientid, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
+  public void addLoginEvent(int clientid, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::addLoginEvent",">");
     
@@ -335,7 +335,7 @@ public class PlayerEntryContainer
         {
         try
           {
-          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
     
           playerDatabase.addLoginEvent(entry.username,source,correctLogin);
           }
@@ -363,7 +363,7 @@ public class PlayerEntryContainer
    *  @return an array of String containing the login events.
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public String[] getLoginEvent(short clientid) throws NoSuchClientIDException, NoSuchPlayerException
+  public String[] getLoginEvent(int clientid) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::getLoginEvent",">");
     
@@ -373,7 +373,7 @@ public class PlayerEntryContainer
         {
         try
           {
-          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));    
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));    
           return playerDatabase.getLoginEvent(entry.username);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
@@ -433,7 +433,7 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public boolean hasCharacter(short clientid,String character) throws NoSuchClientIDException, NoSuchPlayerException
+  public boolean hasCharacter(int clientid,String character) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::hasCharacter",">");
     try
@@ -442,7 +442,7 @@ public class PlayerEntryContainer
         {
         try
           {
-          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));        
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));        
           return playerDatabase.hasCharacter(entry.username,character);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
@@ -468,7 +468,7 @@ public class PlayerEntryContainer
    *  @param character is the name of the character
    *
    *  @throws NoSuchClientIDException if clientid is not found */
-  public void setChoosenCharacter(short clientid,String character) throws NoSuchClientIDException
+  public void setChoosenCharacter(int clientid,String character) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::setChoosenCharacter",">");
     
@@ -476,7 +476,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         entry.choosenCharacter=character;
         }
       else
@@ -497,7 +497,7 @@ public class PlayerEntryContainer
    *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public String[] getCharacterList(short clientid) throws NoSuchClientIDException, NoSuchPlayerException
+  public String[] getCharacterList(int clientid) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::getCharacterList",">");
     
@@ -507,7 +507,7 @@ public class PlayerEntryContainer
         {
         try
           {
-          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
       	  return playerDatabase.getCharactersList(entry.username);
           }
         catch(PlayerDatabase.PlayerNotFoundException e)
@@ -536,14 +536,14 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public RPObject getRPObject(short clientid, String character) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
+  public RPObject getRPObject(int clientid, String character) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::getRPObject",">");
     try
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         return playerDatabase.getRPObject(entry.username,character);
         }
       else
@@ -583,14 +583,14 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public void setRPObject(short clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
+  public void setRPObject(int clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::setRPObject",">");
     try
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         playerDatabase.setRPObject(entry.username,entry.choosenCharacter,object);
         }      
       else
@@ -627,7 +627,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
-  public RPObject.ID getRPObjectID(short clientid) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
+  public RPObject.ID getRPObjectID(int clientid) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
     marauroad.trace("PlayerEntryContainer::getRPObjectID",">");
     
@@ -635,7 +635,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
         return new RPObject.ID(playerDatabase.getRPObject(entry.username,entry.choosenCharacter));
         }
       else
@@ -673,9 +673,9 @@ public class PlayerEntryContainer
   private static short maxClientID=0;
   private static Random rand=new Random();
   
-  private short generateClientID(InetSocketAddress source)
+  private int generateClientID(InetSocketAddress source)
     {
-    short clientid=(short)rand.nextInt();
+    int clientid=(short)rand.nextInt();
     while(hasRuntimePlayer(clientid))    
       {
       clientid=(short)rand.nextInt();
@@ -692,7 +692,7 @@ public class PlayerEntryContainer
   /** This method returns the username of the player with runtime id equals to clientid.
    *  @param clientid the runtime id of the player   *
    *  @throws NoSuchClientIDException if clientid is not found */
-  public String getUsername(short clientid) throws NoSuchClientIDException
+  public String getUsername(int clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getUsername",">");
     
@@ -700,7 +700,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));         
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));         
         return entry.username;
         }
       else
@@ -718,7 +718,7 @@ public class PlayerEntryContainer
   /** The method returns the IP address of the player represented by clientid
    *  @param clientid the runtime id of the player   *
    *  @throws NoSuchClientIDException if clientid is not found */
-  public InetSocketAddress getInetSocketAddress(short clientid) throws NoSuchClientIDException
+  public InetSocketAddress getInetSocketAddress(int clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getInetSocketAddress",">");
     
@@ -726,7 +726,7 @@ public class PlayerEntryContainer
       {
       if(hasRuntimePlayer(clientid))
         {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));         
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));         
         return entry.source;
         }
       else

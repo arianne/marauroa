@@ -113,7 +113,7 @@ public class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processLoginEvent","D","Correct username/password");
 
 	    /* Correct: The login is correct */
-	    short clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
+	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
 	    playerContainer.addLoginEvent(clientid,msg.getAddress(),true);
 	      
 	    /* Send player the Login ACK message */
@@ -154,7 +154,7 @@ public class GameServerManager extends Thread
    
     try
       {
-      short clientid=msg.getClientID();
+      int clientid=msg.getClientID();
       
 	  if(!playerContainer.hasRuntimePlayer(clientid))
 	    {
@@ -223,7 +223,7 @@ public class GameServerManager extends Thread
     
     try
       {
-      short clientid=msg.getClientID();
+      int clientid=msg.getClientID();
       
 	  if(!playerContainer.hasRuntimePlayer(clientid))
 	    {
@@ -270,7 +270,7 @@ public class GameServerManager extends Thread
     
     try
       {
-      short clientid=msg.getClientID();
+      int clientid=msg.getClientID();
       
 	  if(!playerContainer.hasRuntimePlayer(clientid))
 	    {
@@ -292,9 +292,15 @@ public class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processActionEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
 	    return;	    
 	    }
-	    
+	  
 	  /* Send the action to RP Manager */
-	  rpMan.addRPAction(msg.getRPAction());
+	  RPAction action=msg.getRPAction();
+	  
+	  /* Enforce source_id */
+	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
+	  action.put("source_id",id.getObjectID());
+	  
+	  rpMan.addRPAction(action);
 
 	  /* Notify client that we recieved the action */
 	  MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress());

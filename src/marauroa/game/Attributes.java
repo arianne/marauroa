@@ -38,6 +38,14 @@ public class Attributes implements marauroa.net.Serializable
     content.put(attribute,value);
     }
 
+  /** This method set the value of an attribute 
+   *  @param attribute the attribute to be set.
+   *  @param value the value we want to set. */    
+  public void put(String attribute, int value)
+    {
+    content.put(attribute,Integer.toString(value));
+    }
+
   /** This methods return the value of an attribute 
    *  @param attribute the attribute we want to get
    *  @return the value of the attribute
