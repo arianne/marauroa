@@ -49,7 +49,7 @@ public class MessageC2SAction extends Message
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    action.writeObject(out);
+    RPActionFactory.getFactory().addRPAction(out,action);
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException

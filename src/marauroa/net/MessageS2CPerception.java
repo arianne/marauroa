@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import marauroa.game.RPObject;
+import marauroa.game.RPObjectFactory;
 import marauroa.game.RPZone;
 import marauroa.marauroad;
 
@@ -83,7 +84,8 @@ public class MessageS2CPerception extends Message
     Iterator it_mod=modifiedRPObjects.iterator();
     while(it_mod.hasNext())
       {
-      out.write((RPObject)it_mod.next());
+      //out.write((RPObject)it_mod.next());
+        RPObjectFactory.getFactory().addRPObject(out,(RPObject)it_mod.next());
       }
 
     out.write(deletedRPObjects.size());
@@ -91,7 +93,8 @@ public class MessageS2CPerception extends Message
     Iterator it_del=deletedRPObjects.iterator();
     while(it_del.hasNext())
       {
-      out.write((RPObject)it_del.next());
+//      out.write((RPObject)it_del.next());
+        RPObjectFactory.getFactory().addRPObject(out,(RPObject)it_del.next());
       }
     }
     
@@ -108,8 +111,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
     for(int i=0;i<mod;++i)
       {
-      RPObject tmp=new RPObject();
-      tmp.readObject(in);
+      RPObject tmp=RPObjectFactory.getFactory().getRPObject(in);
       modifiedRPObjects.add(tmp);
       }
 
@@ -117,8 +119,7 @@ public class MessageS2CPerception extends Message
     marauroad.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
-      RPObject tmp=new RPObject();
-      tmp.readObject(in);
+      RPObject tmp=RPObjectFactory.getFactory().getRPObject(in);
       deletedRPObjects.add(tmp);
       }
     
