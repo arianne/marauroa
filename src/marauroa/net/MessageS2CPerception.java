@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.33 2004/04/21 14:38:02 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.34 2004/04/21 16:39:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -130,6 +130,66 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.size()+" deleted objects)";
     }
   
+  private static byte[] precomputed_StaticPartPerception;
+  
+  public static void clearPrecomputedPerception()
+    {
+    precomputed_StaticPartPerception=null;    
+    }
+  
+  private byte[] getPrecomputedStaticPartPerception() throws IOException
+    {
+    if(precomputed_StaticPartPerception==null)
+      {
+      ByteArrayOutputStream array=new ByteArrayOutputStream();
+      OutputSerializer serializer=new OutputSerializer(array);
+      computeStaticPartPerception(serializer);    
+      
+      precomputed_StaticPartPerception=array.toByteArray();
+      }
+    
+    return precomputed_StaticPartPerception;
+    }
+  
+  private void computeStaticPartPerception(OutputSerializer ser) throws IOException
+    {
+    ser.write((byte)typePerception);
+    
+    Iterator it=null;
+    
+    it=addedRPObjects.iterator();
+    ser.write((int)addedRPObjects.size());
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+
+    ser.write((int)modifiedAddedAttribsRPObjects.size());
+    it=modifiedAddedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+
+    ser.write((int)modifiedDeletedAttribsRPObjects.size());
+    it=modifiedDeletedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+    
+    ser.write((int)deletedRPObjects.size());
+    it=deletedRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      ser.write(object);
+      }
+    }
+  
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
@@ -179,44 +239,10 @@ public class MessageS2CPerception extends Message
     ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
     OutputSerializer ser=new OutputSerializer(out_stream);
-    
+
+    /** HACK: Join the dinamic part of the perception on a single block */
     ser.write((int)timestamp);    
-    ser.write((byte)typePerception);
-    
-    Iterator it=null;
-    
-    it=addedRPObjects.iterator();
-    ser.write((int)addedRPObjects.size());
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-
-    ser.write((int)modifiedAddedAttribsRPObjects.size());
-    it=modifiedAddedAttribsRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-
-    ser.write((int)modifiedDeletedAttribsRPObjects.size());
-    it=modifiedDeletedAttribsRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-    
-    ser.write((int)deletedRPObjects.size());
-    it=deletedRPObjects.iterator();
-    while(it.hasNext())
-      {
-      RPObject object=(RPObject)it.next();
-      ser.write(object);
-      }
-    
+    out_stream.write(getPrecomputedStaticPartPerception());
     if(myRPObject==null)
       {
       ser.write((byte)0);

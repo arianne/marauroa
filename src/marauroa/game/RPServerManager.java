@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.67 2004/04/21 12:26:18 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.68 2004/04/21 16:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -209,6 +209,7 @@ class RPServerManager extends Thread
 
     List playersToRemove=new LinkedList();
     List playersToUpdate=new LinkedList();
+    MessageS2CPerception.clearPrecomputedPerception();
     
     try
       {
