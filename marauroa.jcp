@@ -25,7 +25,6 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\build.xml" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\RunTests.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\JMarauroa.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Configuration.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\RWLock.java" #[EndFile]
@@ -241,33 +240,6 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModelListenerIF.java" #[EndFile]
-#[EndFolder]
-#[EndFolder]
-#[BeginFolder]
-LABEL := "SimpleGame"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\simplegame\\index.html" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModel.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGame.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModelIF.java" #[EndFile]
-#[BeginFolder]
-LABEL := "objects"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\CharacterList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\GameBoard.java" #[EndFile]
-#[EndFolder]
-#[BeginFolder]
-LABEL := "actions"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\GetCharacterListAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\MoveAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAnswer.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]

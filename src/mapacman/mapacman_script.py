@@ -187,7 +187,7 @@ class RealPythonRP(PythonRP):
         
         self._zone.add(object)
         self._online_players.append(object)
-        return True
+        return 1
 
     def onExit(self, objectid):
         """ Do what you need to remove this player """
@@ -197,7 +197,7 @@ class RealPythonRP(PythonRP):
                 break
             
         self._zone.remove(objectid)
-        return True
+        return 1
 
     def onTimeout(self, objectid):
         return onExit(self,objectid)

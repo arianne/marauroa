@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.89 2004/05/22 17:57:05 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.90 2004/05/24 21:59:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,7 +70,16 @@ public class marauroad extends Thread
         }
       else if(args[i].equals("-h"))
         {
-        // TODO: Write help
+        println("Marauroa - an open source multiplayer online framework for game development -");
+        println("Running on version "+VERSION);
+        println("(C) 2003-2004 Miguel Angel Blanch Lardin");
+        println();
+        println("usage: [-c gamefile] [-l]");        
+        println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+        println("\t    different location to the file.");
+        println("\t-l: to make the server log the output into a file");
+        println("\t-h: print this help message");        
+        System.exit(0);
         }
       ++i;
       }
@@ -78,7 +87,7 @@ public class marauroad extends Thread
     
   public static void main (String[] args)
     {
-    println("Marauroa           - An open source MORPG Framework -");
+    println("Marauroa - an open source multiplayer online framework for game development -");
     println("Running on version "+VERSION);
     println("(C) 2003-2004 Miguel Angel Blanch Lardin");
     println();
@@ -257,7 +266,7 @@ public class marauroad extends Thread
     else
       {
       // Production setting
-      String[] _allowed={"RPServerManager::run","RPCode"};
+      String[] _allowed={"RPServerManager::run","RPCode","GameServer"};
       allowed=_allowed;
       String[] _rejected={};
       rejected=_rejected;
