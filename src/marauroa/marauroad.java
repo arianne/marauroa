@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.95 2004/05/31 22:50:51 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.96 2004/06/04 13:52:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -266,7 +266,7 @@ public class marauroad extends Thread
     else
       {
       // Production setting
-      String[] _allowed={"RPServerManager::run","RPCode"};
+      String[] _allowed={"RPServerManager::run","RPCode","PythonRPRuleProcessor"};
       allowed=_allowed;
       String[] _rejected={};
       rejected=_rejected;

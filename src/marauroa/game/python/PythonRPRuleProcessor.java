@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.6 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.7 2004/06/04 13:52:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,7 +125,20 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
 
   synchronized public boolean onTimeout(RPObject.ID id)
     {
-    return onExit(id);
+    marauroad.trace("PythonRPRuleProcessor::onTimeout",">");
+    try
+      {
+      return pythonRP.onTimeout(id);
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("PythonRPRuleProcessor::onTimeout","X",e);
+      return true;
+      }
+    finally
+      {
+      marauroad.trace("PythonRPRuleProcessor::onTimeout","<");
+      }
     }
 
   synchronized public List buildMapObjectsList(RPObject.ID id)

@@ -39,11 +39,11 @@ def getPythonAI():
     return variable_PythonAI
 
 def setPythonAI(pythonAI):
-	global variable_PythonAI
-	variable_PythonAI=None
-	
-	if variable_PythonAI is None:
-		variable_PythonAI=pythonAI    
+    global variable_PythonAI
+    variable_PythonAI=None
+    
+    if variable_PythonAI is None:
+        variable_PythonAI=pythonAI    
 
 class RealPythonAI(PythonAI):
     def __init__(self, zone, sched):
@@ -58,8 +58,8 @@ class RealPythonAI(PythonAI):
         self.pythonRP=pythonRP
      
     def createEnviroment(self):
-    	ghost=self.pythonRP.createGhost('Sticky')
-    	self.pythonRP.onInitAIGhost(ghost)
+        ghost=self.pythonRP.createGhost('Sticky')
+        self.pythonRP.onInitAIGhost(ghost)
         self.ghosts.append(ghost)
         
     def compute(self,timelimit):
@@ -125,11 +125,27 @@ class RealPythonRP(PythonRP):
             
         return (x,y)
 
-    def canMove(self, player, dir):
+    def canMove(self, player):
+        dir=player.get("dir")
+        if (dir=='E' or dir=='W') and player.has("!vdir"):
+            vdir=player.get("!vdir")
+            if self._canMove(player,vdir):
+                player.put("dir",vdir)
+                player.remove("!vdir")
+
+        if (dir=='N' or dir=='S') and player.has("!hdir"):
+            hdir=player.get("!hdir")
+            if self._canMove(player,hdir):
+                player.put("dir",hdir)
+                player.remove("!hdir")
+        
+        return self._canMove(player,player.get("dir"))
+            
+    def _canMove(self, player, dir):
         """ This methods try to move the player and return the new position """
         x=player.getInt("x")
         y=player.getInt("y")
-    
+  
         if dir=='N' and (y-1)>=0 and self._map.get(x,y-1)<>'*':
             return 1
         elif dir=='W' and (x-1)>=0 and self._map.get(x-1,y)<>'*':
@@ -143,7 +159,17 @@ class RealPythonRP(PythonRP):
     
     def turn(self, player, direction):
         result=failed
-        if _directions.count(direction)==1 and self.canMove(player,direction):
+        directionsH=['E','W']
+        directionsV=['N','S']
+        
+        if _directions.count(direction)==1 and not self._canMove(player,direction):
+            if directionsH.count(direction)==1:
+                player.put("!hdir",direction)
+        
+            if directionsV.count(direction)==1:
+                player.put("!vdir",direction)
+
+        if _directions.count(direction)==1 and self._canMove(player,direction):
             player.put("dir",direction)
             self._zone.modify(player)
             result=success
@@ -202,7 +228,7 @@ class RealPythonRP(PythonRP):
     
     def _foreachPlayer(self):
         for player in self._online_players:
-            if(self.canMove(player,player.get("dir"))):
+            if(self.canMove(player)):
                 print 'You move in %s direction' % player.get("dir")
                 self._movePlayer(player)
                 self._ghostCollisions(player)
@@ -268,7 +294,7 @@ class RealPythonRP(PythonRP):
         return 1
 
     def onTimeout(self, objectid):
-        return onExit(self,objectid)
+        return self.onExit(objectid)
     
     def buildMapObjectsList(self):
         if self._serializedMap is None:
