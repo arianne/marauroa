@@ -16,7 +16,7 @@ create table if not exists characters
   charname VARCHAR(30) not null,
   object_id integer not null, 
   
-  PRIMARY KEY(charname)
+  PRIMARY KEY(charname,player_id)
   );
 
 create table if not exists loginEvent 

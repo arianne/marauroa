@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.17 2004/03/28 18:11:06 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.18 2004/04/15 20:35:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -192,6 +192,8 @@ class createaccount
     catch(Exception e)
       {
       out.println("Failed: "+e.getMessage());
+      e.printStackTrace(out);
+      
       try
         {
         trans.rollback();
