@@ -1,18 +1,9 @@
-package marauroa.net;
+package marauroa;
 
-import marauroa.net.*;
-import java.io.*;
-import java.lang.Byte;
 import junit.framework.*;
 
 public class Test_Configuration extends TestCase
   {
-  private ByteArrayOutputStream out;
-  private ByteArrayInputStream in;
-  
-  private InputSerializer sin;
-  private OutputSerializer sout;
-
   public static Test suite ( ) 
     {
     return new TestSuite(Test_Configuration.class);
@@ -20,5 +11,25 @@ public class Test_Configuration extends TestCase
 	
   public void testConfiguration()
     {
+    try
+      {    
+      Configuration conf=Configuration.getConfiguration();
+
+      String result=conf.get("test_ATestString");
+      assertEquals(result,"ATestString");
+    
+      conf.set("test_ATestString", "AnotherTestString");
+
+      result=conf.get("test_ATestString");
+      assertEquals(result,"AnotherTestString");
+      }
+    catch(Configuration.PropertyFileNotFoundException e)
+      {
+      fail(e.getMessage());
+      }
+    catch(Configuration.PropertyNotFoundException e)
+      {
+      fail(e.getMessage());
+      }
     }
   }

@@ -11,7 +11,7 @@ public class Configuration
   private Properties properties;
   private static Configuration configuration=null;
   
-  static class PropertyNotFoundException extends Throwable
+  public static class PropertyNotFoundException extends Throwable
     {
     PropertyNotFoundException(String property)
       {
@@ -19,7 +19,15 @@ public class Configuration
       }
     }
     
-  private Configuration() 
+  public static class PropertyFileNotFoundException extends Throwable
+    {
+    PropertyFileNotFoundException()
+      {
+      super("Property File ["+configurationFile+"] not found");
+      }
+    }
+
+  private Configuration() throws PropertyFileNotFoundException
     {
     try
       {
@@ -29,16 +37,16 @@ public class Configuration
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration","X","Configuration file not found: "+e.getMessage());
-      System.exit(-1);
+      throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration","X","Error loading Configuration file: "+e.getMessage());
-      System.exit(-1);
+      throw new PropertyFileNotFoundException();
       }
     }    
     
-  public static Configuration getConfiguration()
+  public static Configuration getConfiguration() throws PropertyFileNotFoundException
     {
     if(configuration==null)
       {
