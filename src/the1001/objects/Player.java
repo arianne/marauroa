@@ -1,4 +1,4 @@
-/* $Id: Player.java,v 1.5 2004/01/28 16:35:47 arianne_rpg Exp $ */
+/* $Id: Player.java,v 1.6 2004/02/05 23:13:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ public class Player extends RPObject
   public Player(RPObject.ID id, String name) throws SlotAlreadyAddedException
     {
     put(RPCode.var_object_id,id.getObjectID());
-    put(RPCode.var_type,"player");
+    put(RPCode.var_type,"character");
     put(RPCode.var_name,name);
     put(RPCode.var_look,randomLook[Math.abs(random.nextInt()%randomLook.length)]);
     put(RPCode.var_fame,0);

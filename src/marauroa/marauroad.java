@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.33 2004/02/02 23:01:28 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.34 2004/02/05 23:13:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,8 @@ public class marauroad extends Thread
         {
         try
           {
-          out=new PrintWriter(new FileOutputStream("server_log.txt"));
+          String time=String.valueOf(new Date().getTime());
+          out=new PrintWriter(new FileOutputStream("server_log_"+time+".txt"));
           }
         catch(FileNotFoundException e)
           {
@@ -170,6 +171,22 @@ public class marauroad extends Thread
       try
         {
         Statistics.print();
+        if(new File("server_log.txt").length()>67108864)
+          {
+          try
+            {
+            out.close();
+            String time=String.valueOf(new Date().getTime());
+            out=new PrintWriter(new FileOutputStream("server_log_"+time+".txt"));
+            }
+          catch(FileNotFoundException e)
+            {
+            marauroad.trace("marauroad::run","X",e.getMessage());
+            marauroad.trace("marauroad::run","!","ABORT: marauroad can't open log file");
+            System.exit(-1);
+            }
+          }
+          
         wait(5000);
         }
       catch(InterruptedException e)

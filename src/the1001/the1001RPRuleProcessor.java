@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.29 2004/02/02 23:01:30 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.30 2004/02/05 23:13:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -194,18 +194,20 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       
       RPObject.ID valid_id=new RPObject.ID(zone.create());
       object.put(RPCode.var_object_id,valid_id.getObjectID());
+      
       Iterator it=object.getSlot(RPCode.var_gladiators).iterator();
       while(it.hasNext())
         {
         RPObject slot_object=(RPObject)it.next();
         
         valid_id=new RPObject.ID(zone.create());
-        object.put(RPCode.var_object_id,valid_id.getObjectID());
+        slot_object.put(RPCode.var_object_id,valid_id.getObjectID());
         }
       
       zone.add(object);
       trackObject(object);
   
+      marauroad.trace("the1001RPRuleProcessor::onInit","D",object.toString());     
       RPCode.AddPlayer(object);
 
       return true;

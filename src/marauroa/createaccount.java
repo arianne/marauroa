@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.5 2004/02/02 23:01:28 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.6 2004/02/05 23:13:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -163,19 +163,16 @@ class createaccount
       out.println("Adding player");
       playerDatabase.addPlayer(username,password);
 
-      RPObject object=new RPObject();
-      object.put("object_id","-1");
-      object.put("type","character");
-      object.put("name",character);
+      RPObject object=new Player(new RPObject.ID(-1),character);
       object.put("look",character_model);
       
-      object.addSlot(new RPSlot("gladiators"));
       Gladiator gladiator_obj=new Gladiator(new RPObject.ID(-1));
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);
       
       object.getSlot("gladiators").add(gladiator_obj);
       
+      out.println("Adding character");
       playerDatabase.addCharacter(username,character,object);
       
       out.println("Correctly created");
