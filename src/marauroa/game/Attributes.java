@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.15 2003/12/30 10:15:34 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.16 2004/01/01 11:05:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -200,8 +200,14 @@ public class Attributes implements marauroa.net.Serializable
     while(it.hasNext())
       {
       Map.Entry entry=(Map.Entry)it.next();
-      out.write((String)entry.getKey());
-      out.write((String)entry.getValue());
+      
+      /** NOTE: The attributes that begin with ! are not stored */
+      String key=(String)entry.getKey();
+      if(key.charAt(0)!='!')
+        {
+        out.write(key);
+        out.write((String)entry.getValue());
+        }
       }
     }
     

@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.8 2003/12/30 18:42:40 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.9 2004/01/01 11:05:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,7 +80,8 @@ public class the1001RPZone extends MarauroaRPZone
     
   public RPObject create(RPObject object)
     {
-    /** TODO: Must copy the object and assign a new Object id */
+    /** TODO: Must copy the object and assign a new Object id 
+     *  It is used in the Buy action. */
     return null;
     }    
   }

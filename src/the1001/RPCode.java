@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.8 2003/12/31 13:03:07 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.9 2004/01/01 11:05:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -128,14 +128,15 @@ public class RPCode
         return RPAction.STATUS_FAIL;
         }
       
-      if(!(fight_mode.equals("attack") || fight_mode.equals("defend") || fight_mode.equals("dogde")))
+      /** NOTE: Here is the combat type choosal. */
+      if(!(fight_mode.equals("rock") || fight_mode.equals("paper") || fight_mode.equals("scissor")))
         {
         /** Failed because gladiator is fighting using an unsupported mode. */
         return RPAction.STATUS_FAIL;
         }
       
       RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
-      gladiator.put("fight_mode",fight_mode);
+      gladiator.put("!mode",fight_mode);
       
       return RPAction.STATUS_SUCCESS;
       }
@@ -144,5 +145,20 @@ public class RPCode
       marauroad.trace("RPCode::FightMode","<");
       }
     }
+    
+  public static void ResolveFight() throws Exception
+    {
+    marauroad.trace("RPCode::ResolveFight",">");
+   
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
       
+      }
+    finally
+      {
+      marauroad.trace("RPCode::ResolveFight","<");
+      }
+    }      
   }
