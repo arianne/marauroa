@@ -92,7 +92,7 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
-0.31	Apr 03, 2004
+0.31	Apr 14, 2004
 - Added Delta-delta perception so now only diffs between actual and previous object is send.
 - Change attributes name to save even more bandwidth
 
