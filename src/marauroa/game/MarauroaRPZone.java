@@ -76,6 +76,11 @@ public class MarauroaRPZone implements RPZone
      
     return new RPObject(id);
     }
+    
+  public Iterator iterator()
+    {
+    return listObjects.iterator();
+    }
 
   public Perception getPerception(RPObject.ID id)
     {

@@ -40,5 +40,6 @@ public interface RPZone
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);
   public RPObject create();
+  public Iterator iterator();
   public Perception getPerception(RPObject.ID id);
   }
