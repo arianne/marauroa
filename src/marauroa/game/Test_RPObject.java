@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.8 2004/03/23 15:50:22 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.9 2004/03/23 16:39:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -635,8 +635,6 @@ public class Test_RPObject extends TestCase
     {    
     try
       {
-      for(int i=0;i<100000;++i)
-      {
       RPObject example1=new RPObject();
       example1.put("object_id",10);
       example1.put("type","gladiator");
@@ -698,21 +696,12 @@ public class Test_RPObject extends TestCase
       RPObject deleted=new RPObject();
             
       example2.getDifferencesFrom(example1,added,deleted);
-      
-      System.out.println(example1.toString());
-      System.out.println(added.toString());
-      System.out.println(deleted.toString());
-      System.out.println(example2.toString());
-      
       RPObject build=example1.applyDifferences(added,deleted);      
-
-      System.out.println(build.toString());
 
       assertTrue(example2.equals(build));      
 
       build.getSlot("r_hand").get().put("test_shit","");
       assertFalse(example2.equals(build));   
-      }   
       }
     catch(Exception e)
       {      

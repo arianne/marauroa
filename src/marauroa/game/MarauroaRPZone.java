@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.22 2004/03/22 22:57:42 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.23 2004/03/23 16:39:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,8 @@ import marauroa.marauroad;
 
 public class MarauroaRPZone implements RPZone
   {
+  private Map previous_turn;
+  
   private Map objects;
   private Perception perception;
   private JDBCRPObjectDatabase rpobjectDatabase;
@@ -35,6 +37,8 @@ public class MarauroaRPZone implements RPZone
 	{
 	rand.setSeed(new Date().getTime());
 	objects=new LinkedHashMap();
+    previous_turn=new LinkedHashMap();
+    
 	perception=new Perception(Perception.DELTA);
 		
 	try
@@ -54,7 +58,7 @@ public class MarauroaRPZone implements RPZone
 	  {
 	  RPObject.ID id=new RPObject.ID(object);
 	  objects.put(id,object);
-	  modify(object);
+      perception.added(object);
 	  }
 	catch(Attributes.AttributeNotFoundException e)
 	  {
@@ -63,9 +67,27 @@ public class MarauroaRPZone implements RPZone
 	  }
 	}
   
-  public void modify(RPObject object)
+  public void modify(RPObject object) throws RPObjectInvalidException
 	{
-    perception.added(object);
+	try 
+	  {
+//      if(previous_turn.containsKey(new RPObject.ID(object)))
+//        {
+//	    RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
+//        perception.modified(object,previous);
+//        previous_turn.remove(new RPObject.ID(object));      
+//        }
+//      else
+        {
+        marauroad.trace("MarauroaRPZone::modify","X","Unable to use DELTA perception for this object because I was never get. Sending FULL instead");
+        perception.added(object);
+        }
+      }
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      throw new RPObjectInvalidException(e.getMessage());
+      }
 	}
 	
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
@@ -86,7 +108,14 @@ public class MarauroaRPZone implements RPZone
 	{
 	if(objects.containsKey(id))
 	  {
-	  return (RPObject)objects.get(id);
+      RPObject object=(RPObject)objects.get(id);
+      
+      if(!previous_turn.containsKey(id))
+        {
+        previous_turn.put(id,object.copy());
+        }
+        
+      return object;
 	  }
 	
 	throw new RPObjectNotFoundException(id);
@@ -147,6 +176,7 @@ public class MarauroaRPZone implements RPZone
   
   public void nextTurn()
 	{
+    previous_turn.clear();
 	perception=new Perception(Perception.DELTA);
 	}
   }

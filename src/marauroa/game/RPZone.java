@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.17 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.18 2004/03/23 16:39:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,9 +70,15 @@ public interface RPZone
         }
       }
       
-    public void modified(RPObject original, RPObject modified)
+    public void modified(RPObject modified, RPObject original) throws Exception
       {
-      //TODO: Needs to store in Added and deleted the diffs between the two objects. 
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+      
+      modified.getDifferencesFrom(original,added,deleted);
+      
+      modifiedAddedAttribsList.add(added);
+      modifiedDeletedAttribsList.add(deleted);
       }
     
     public void removed(RPObject object)
@@ -88,12 +94,14 @@ public interface RPZone
     public void clear()
       {
       addedList.clear();
+      modifiedAddedAttribsList.clear();
+      modifiedDeletedAttribsList.clear();
       deletedList.clear();
       }
     }
   
   public void add(RPObject object) throws RPObjectInvalidException;
-  public void modify(RPObject object) throws RPObjectNotFoundException;
+  public void modify(RPObject object) throws RPObjectInvalidException;
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);

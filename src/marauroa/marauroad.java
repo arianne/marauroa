@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.50 2004/03/22 23:00:56 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.51 2004/03/23 16:39:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -232,8 +232,8 @@ public class marauroad extends Thread
     return false;
     }
   
-  private static String[] allowed={"RPCode","the1001"};
-  private static String[] rejected={"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
+  private static String[] allowed={"*","RPCode","the1001"};
+  private static String[] rejected={};//"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
 
   public static void trace(String module,String event)
     {

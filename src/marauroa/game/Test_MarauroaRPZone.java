@@ -1,4 +1,4 @@
-/* $Id: Test_MarauroaRPZone.java,v 1.5 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: Test_MarauroaRPZone.java,v 1.6 2004/03/23 16:39:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,6 +87,7 @@ public class Test_MarauroaRPZone extends TestCase
       assertEquals(perception.size(),0);
       
       zone.nextTurn();
+      zone.get(new RPObject.ID(SonGoku));
       zone.modify(SonGoku);
       
       perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
@@ -107,6 +108,7 @@ public class Test_MarauroaRPZone extends TestCase
       }
     catch(Exception e)
       {
+      e.printStackTrace();
       fail(e.toString());
       }
     finally
