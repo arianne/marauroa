@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.27 2003/12/10 13:43:41 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.28 2003/12/10 13:44:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,8 +67,8 @@ public class RunTests
     
     try
       {
-      while(true)
-      {
+//      while(true)
+//      {
       Killer killer=new Killer(TIMEOUT_KILL_APPLICATION);
       
       Date start=new Date();
@@ -83,8 +83,8 @@ public class RunTests
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
       killer.finish();
       
-      Thread.sleep(2000);
-      }
+//      Thread.sleep(2000);
+//      }
       }
     catch(Exception e) 
       {
