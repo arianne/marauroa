@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.9 2004/01/01 11:05:23 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.10 2004/01/01 11:55:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,12 @@ public class RPCode
   {
   private static byte GLADIATORS_PER_FIGHT=2;
   private static the1001RPRuleProcessor ruleProcessor;
+  private static Random rand;
+  
+  static
+    {
+    rand=new Random();
+    }
   
   public static void setCallback(the1001RPRuleProcessor rpu)
     {
@@ -100,6 +106,25 @@ public class RPCode
       }
     }
 
+  /** This action is used to request a change in the fight style by a player that owns a gladiator.
+   *
+   *  Pseudocode:
+   *
+   *  BEGIN  
+   *    Check that gladiator exists
+   *    gladiator=Get gladiator from Player in Slot "gladiators"
+   *    
+   *    Change style
+   *
+   *  END
+   *
+   *  The idea by now it the Rock, Paper, Scissor game. It is pretty simple, but 
+   *  interactive and can be a good way of handling fights until we can add realtime support.
+   *
+   *  @param player_id the Object id of the player 
+   *  @param gladiator_id the Object id of the gladiator the player choosed to fight.
+   *  @param fight_mode the mode of fighting that the player will have.
+   *  @return the result of executing the action, either success or fail. */
   public static RPAction.Status FightMode(RPObject.ID player_id, RPObject.ID gladiator_id, String fight_mode) throws Exception
     {
     marauroad.trace("RPCode::FightMode",">");
@@ -155,10 +180,52 @@ public class RPCode
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject arena=zone.getArena();
       
+      if(arena.get("status").equals("fighting"))
+        {
+        RPObject[] gladiators=new RPObject[GLADIATORS_PER_FIGHT];
+        int i=0;
+        
+        Iterator it=arena.getSlot("gladiators").iterator();
+        while(it.hasNext())
+          {
+          gladiators[i]=(RPObject)it.next();
+          ++i;
+          }
+          
+        for(i=0;i<gladiators.length;++i)
+          {
+          for(int j=0;j<gladiators.length;++j)
+            {
+            if(i!=j)
+              {
+              computeDamageGladiators(gladiators[i],gladiators[j]);
+              }
+            }
+          }
+        }      
       }
     finally
       {
       marauroad.trace("RPCode::ResolveFight","<");
       }
     }      
+  
+  private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
+    {
+    if((gladiator1.getInt("hp")<=0) || (gladiator1.getInt("hp")<=0))
+      {
+      /** Failed because the gladiator is dead */
+      return;
+      }
+      
+    String mode_g1=gladiator1.get("!mode");
+    String mode_g2=gladiator1.get("!mode");
+    
+    if(mode_g1.equals(mode_g2))
+      {
+      /** Draw: We substract one to each side */
+      }
+    }  
   }
+  
+  
