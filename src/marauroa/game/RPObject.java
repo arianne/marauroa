@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.50 2004/11/20 20:06:46 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.51 2004/11/20 21:51:01 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,102 +21,11 @@ public class RPObject extends Attributes
   {
   private List<RPSlot> added;
   private List<RPSlot> deleted;
-  
-  public void resetAddedAndDeleted()
-    {
-    resetAddedAndDeletedAttributes();
-    
-    resetAddedAndDeletedRPSlot();
-    }
 
-  public void resetAddedAndDeletedRPSlot()
-    {
-    Iterator it=slots.iterator();
-    while(it.hasNext())
-      {
-      RPSlot slot=(RPSlot)it.next();
-      
-      slot.resetAddedAndDeletedRPObjects();
-      Iterator objects=slot.iterator();
-      while(objects.hasNext())
-        {
-        RPObject object=(RPObject)objects.next();
-        object.resetAddedAndDeleted();
-        }
-      }
-
-    added.clear();
-    deleted.clear();
-    }
-
-  public void setAddedRPSlot(RPObject object)
-    {
-    Iterator it=object.added.iterator();
-    
-    while(it.hasNext())
-      {
-      RPSlot slot=(RPSlot)it.next();
-      try
-        {
-        addSlot((RPSlot)slot.copy());
-        }
-      catch(Exception e)
-        {
-        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
-        }
-      }       
-    
-    object.added.clear();
-    }
-
-  public void setDeletedRPSlot(RPObject object)
-    {
-    Iterator it=object.deleted.iterator();
-    
-    while(it.hasNext())
-      {
-      RPSlot slot=new RPSlot(((RPSlot)it.next()).getName());
-      try
-        {
-        addSlot(new RPSlot(slot.getName()));
-        }
-      catch(Exception e)
-        {
-        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
-        }
-      }       
-    
-    object.deleted.clear();
-    }
-  
   /** a List<RPSlot> of slots */
   private List<RPSlot> slots;
   
-  /** An iterator for properly acceding all the Slots. */
-  public class SlotsIterator
-    {
-    Iterator it;
-    /** Constructor */
-    public SlotsIterator()
-      {
-      it=slots.iterator();
-      }
-		
-    /** This method returns true if there are still most elements.
-     *  @return true if there are more elements. */
-    public boolean hasNext()
-      {
-      return it.hasNext();
-      }
-		
-    /** This method returs the RPSlot and move the pointer to the next element
-     *  @return an RPSlot */
-    public RPSlot next() throws NoSuchElementException
-      {
-      return (RPSlot)it.next();
-      }
-    }
-    
+  
   public final static ID INVALID_ID=new ID(-1,"");
   
   /** Constructor */
@@ -171,17 +80,69 @@ public class RPObject extends Attributes
     return super.isEmpty() && slots.isEmpty();
     }
   
+  public void resetAddedAndDeleted()
+    {
+    resetAddedAndDeletedAttributes();
+    
+    resetAddedAndDeletedRPSlot();
+    }
+
+  public void resetAddedAndDeletedRPSlot()
+    {
+    for(RPSlot slot: slots)
+      {
+      slot.resetAddedAndDeletedRPObjects();
+      for(RPObject object: slot)
+        {
+        object.resetAddedAndDeleted();
+        }
+      }
+
+    added.clear();
+    deleted.clear();
+    }
+
+  public void setAddedRPSlot(RPObject object)
+    {
+    for(RPSlot slot: object.added)
+      {
+      try
+        {
+        addSlot((RPSlot)slot.copy());
+        }
+      catch(Exception e)
+        {
+        marauroad.thrown("RPObject::setAddedRPSlot","X",e);
+        }
+      }       
+    
+    object.added.clear();
+    }
+
+  public void setDeletedRPSlot(RPObject object)
+    {
+    for(RPSlot slot: object.deleted)
+      {
+      try
+        {
+        removeSlot(slot.getName());
+        }
+      catch(Exception e)
+        {
+        marauroad.thrown("RPObject::setDeletedRPSlot","X",e);
+        }
+      }       
+    
+    object.deleted.clear();
+    }
+  
   /** This method returns true if the object has that slot
    *  @param name the name of the slot
    *  @return true if slot exists or false otherwise */
   public boolean hasSlot(String name)
     {
-    SlotsIterator it=slotsIterator();
-		
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot slot=it.next();
-
       if(name.equals(slot.getName()))
         {
         return true;
@@ -211,12 +172,9 @@ public class RPObject extends Attributes
     {
     if(hasSlot(name))
       {
-      Iterator it=slots.iterator();
-
-      while(it.hasNext())
+      for(Iterator<RPSlot> it = slots.iterator(); it.hasNext();)
         {
-        RPSlot slot=(RPSlot)it.next();
-
+        RPSlot slot=it.next();
         if(name.equals(slot.getName()))
           {
           deleted.add(slot);
@@ -237,12 +195,8 @@ public class RPObject extends Attributes
    *  @throws NoSlotFoundException if the slot is not found */
   public RPSlot getSlot(String name) throws NoSlotFoundException
     {
-    SlotsIterator it=slotsIterator();
-
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot slot=it.next();
-
       if(name.equals(slot.getName()))
         {
         return slot;
@@ -253,9 +207,9 @@ public class RPObject extends Attributes
 	
   /** Returns a iterator over the slots
    *  @return an iterator over the slots*/
-  public SlotsIterator slotsIterator()
+  public Iterator<RPSlot> slotsIterator()
     {
-    return new SlotsIterator();
+    return slots.iterator();
     }
   
   /** This method returns a String that represent the object
@@ -267,12 +221,8 @@ public class RPObject extends Attributes
     tmp.append(super.toString());
     tmp.append(" and RPSlots ");
 		
-    SlotsIterator it=slotsIterator();
-
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot slot=it.next();
-
       tmp.append("["+slot.toString()+"]");
       }
     return tmp.toString();
@@ -288,23 +238,16 @@ public class RPObject extends Attributes
     super.writeObject(out,fulldata);
 		
     int size=slots.size();
-    SlotsIterator it=slotsIterator();
-
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot entry=it.next();
-
-      if(fulldata==false && entry.getName().charAt(0)=='!')
+      if(fulldata==false && slot.getName().charAt(0)=='!')
         {
         --size;
         }
       }
     out.write(size);
-    it=slotsIterator();
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot slot=(RPSlot)it.next();
-
       if(fulldata==true || slot.getName().charAt(0)!='!')
         {
         slot.writeObject(out,fulldata);
@@ -338,15 +281,10 @@ public class RPObject extends Attributes
       {
       int total=super.size();
     
-      Iterator it=slots.iterator();
-      while(it.hasNext())
+      for(RPSlot slot: slots)
         {
-        RPSlot slot=(RPSlot)it.next();
-        
-        Iterator objects=slot.iterator();
-        while(objects.hasNext())
+        for(RPObject object: slot)
           {
-          RPObject object=(RPObject)objects.next();
           total+=object.size();
           }
         }
@@ -368,11 +306,8 @@ public class RPObject extends Attributes
     
     odeleted.setDeletedRPSlot(this);
     
-    Iterator it=slots.iterator();
-    while(it.hasNext())
+    for(RPSlot slot: slots)
       {
-      RPSlot slot=(RPSlot)it.next();
-      
       RPSlot added_slot=new RPSlot(slot.getName());            
       added_slot.setAddedRPObject(slot);
       
@@ -389,11 +324,8 @@ public class RPObject extends Attributes
         odeleted.addSlot(deleted_slot);
         }
      
-      Iterator objects=slot.iterator();
-      while(objects.hasNext())
+      for(RPObject object: slot)
         {
-        RPObject object=(RPObject)objects.next();
-        
         RPObject object_added=new RPObject();
         RPObject object_deleted=new RPObject();
          
@@ -445,24 +377,16 @@ public class RPObject extends Attributes
     {
     if(deleted!=null)
       {
-      Iterator it=deleted.iterator();
-
-      while(it.hasNext())
+      for(String attrib: deleted)
         {
-        String attrib=(String)it.next();
-
         if(!attrib.equals("id"))
           {
           remove(attrib);
           }
         }
       
-      SlotsIterator sit=deleted.slotsIterator();
-
-      while(sit.hasNext())
+      for(RPSlot slot: deleted.slots)
         {
-        RPSlot slot=(RPSlot)sit.next();
-
         if(slot.size()==0)
           {
           removeSlot(slot.getName());
@@ -470,12 +394,8 @@ public class RPObject extends Attributes
         else
           {
           /** for each of the objects, delete it*/
-          Iterator objects=slot.iterator();
-
-          while(objects.hasNext())
+          for(RPObject object: slot)
             {
-            RPObject object=(RPObject)objects.next();
-
             if(object.size()==1)
               {
               getSlot(slot.getName()).remove(new ID(object));
@@ -492,32 +412,21 @@ public class RPObject extends Attributes
       }
     if(added!=null)
       {
-      Iterator it=added.iterator();
-
-      while(it.hasNext())
+      for(String attrib: added)
         {
-        String attrib=(String)it.next();
         put(attrib,added.get(attrib));
         }
       
-      SlotsIterator sit=added.slotsIterator();
-
-      while(sit.hasNext())
+      for(RPSlot slot: added.slots)
         {
-        RPSlot slot=(RPSlot)sit.next();
-        
         if(!hasSlot(slot.getName()))
           {
           addSlot(new RPSlot(slot.getName()));
           }
 
         /** for each of the objects, add it*/
-        Iterator objects=slot.iterator();
-
-        while(objects.hasNext())
+        for(RPObject object: slot)
           {
-          RPObject object=(RPObject)objects.next();
-
           if(getSlot(slot.getName()).has(new ID(object)))
             {
             getSlot(slot.getName()).get(new ID(object)).applyDifferences(object,null);
@@ -540,11 +449,8 @@ public class RPObject extends Attributes
     object.copy((Attributes)this);
     try
       {
-      Iterator it=slots.iterator();
-
-      while(it.hasNext())
+      for(RPSlot slot: slots)
         {
-        RPSlot slot=(RPSlot)it.next();
         object.addSlot((RPSlot)slot.copy());
         }
       }
