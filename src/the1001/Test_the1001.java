@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.6 2004/01/07 23:59:21 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.7 2004/01/08 01:42:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,15 +102,14 @@ public class Test_the1001 extends TestCase
         {
         ++combatRound;
         
-//        if(combatRound<10 && rand.nextBoolean())
-//          {
-//          int j=rand.nextInt(NUM_PLAYERS);
-////          if(!(players[j].has("requested") || players[j].has("fighting")))
-//            {
-//            marauroad.trace("Test_the1001::testFullGame","D","A gladiator request to fight again");          
-//            RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
-//            }
-//          }
+        if(combatRound<100 && rand.nextBoolean())
+          {
+          int j=rand.nextInt(NUM_PLAYERS);
+
+          marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
+          RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
+          marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
+          }
           
         marauroad.trace("Test_the1001::testFullGame","D","Combat begin: "+combatRound);
 

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.32 2004/01/07 23:29:08 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.33 2004/01/08 01:42:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,12 +82,19 @@ public class RPCode
         /** Failed because player is already fighting */
         return RPAction.Fail("Failed because player is already fighting");
         }
+
+      if(player.has("requested"))
+        {
+        /** Failed because player is already fighting */
+        return RPAction.Fail("Failed because player has already requested to fight");
+        }
       
       RPObject gladiator=player.getSlot("gladiators").get(gladiator_id);
 
       if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
         {
         player.put("fighting","");
+        player.put("choose",gladiator_id.getObjectID());
         arena.getSlot("gladiators").add(gladiator);
         playersFighting.add(player);
         }
@@ -120,7 +127,7 @@ public class RPCode
    *  before the fight happens.
    *  @param player_id the id of the player.
    *  @return true if the player has been removed or false otherwise. */
-  public static boolean RemoveWaitingPlayer(RPObject.ID player_id)
+  public static boolean RemovePlayer(RPObject.ID player_id)
     {
     marauroad.trace("RPCode::RemoveWaitingPlayer",">");
    
@@ -133,11 +140,25 @@ public class RPCode
       if(player.has("requested"))
         {
         arena.put("waiting",arena.getInt("waiting")-1);
-        arena.remove("requested");
-        return true;
+        player.remove("requested");
+        player.remove("choose");
+        
+        playersWaiting.remove(player);
+        }
+       
+      if(player.has("fighting"))
+        {
+        /** TODO: Player abandon the fight. */        
+        playersFighting.remove(player);
+        }
+        
+      if(player.has("!vote"))
+        {
+        player.remove("!vote");
+        playersVoted.remove(player);
         }
       
-      return false;
+      return true;
       }
     catch(Exception e)
       {
@@ -399,6 +420,8 @@ public class RPCode
       player.put("!vote","");  
       playersVoted.add(player);
       
+      zone.modify(arena);
+      
       return RPAction.STATUS_SUCCESS;
       }
     finally
@@ -437,10 +460,13 @@ public class RPCode
           {
           arena.put("timeout",arena.getInt("timeout")-1);
           }
+        
+        zone.modify(arena);
         }
       }
     catch(Exception e)
       {
+      e.printStackTrace();
       marauroad.trace("RPCode::RequestFame","X",e.getMessage());
       }
     finally
@@ -481,38 +507,36 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
+        RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
+        gladiator.put("hp",gladiator.get("!hp"));
+
         player.remove("fighting");
+        player.remove("choose");
         
-        Iterator gladiators=player.getSlot("gladiators").iterator();
-        while(gladiators.hasNext())
-          {
-          RPObject gladiator=(RPObject)gladiators.next();
-          gladiator.put("hp",gladiator.get("!hp"));
-          }
+        zone.modify(player);
         }
       
       playersFighting.clear();
       arena.getSlot("gladiators").clear();
-      arena.put("status","waiting");
-          
+      arena.put("status","waiting");          
       
       /* Choose new fighters if available */ 
       if(arena.getInt("waiting")>0)
         {
         int i=0;
         it=playersWaiting.iterator();
-        
+       
         while(it.hasNext())
           {
           ++i;
+          /** Closely related to RequestFight code. We should avoid duplication */
           RPObject player=(RPObject)it.next();
           RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
           player.remove("requested");
-          player.remove("choose");
+          arena.put("waiting",arena.getInt("waiting")-1);
           
           player.put("fighting","");
           arena.getSlot("gladiators").add(gladiator);
-          arena.put("waiting",arena.getInt("waiting")-1);
           
           playersFighting.add(player);
           it.remove();
