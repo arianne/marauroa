@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<project name="marauroa" default="compile" basedir=".">
+<project name="marauroa" default="compile_new" basedir=".">
   <property name="version" value="0.41"/>
   <property name="src" value="src"/>
   <property name="build" value="build"/>
@@ -20,8 +20,9 @@
   <!-- set hier what should be build -->
   
   <!-- <property name="build.the1001.client" value="true"/> -->
-  <property name="build.the1001.server" value="true"/> 
+  <!-- <property name="build.the1001.server" value="true"/> -->
   <property name="build.mapacman"       value="true"/>
+  <property name="build.stendhal"       value="true"/>
   
   <target name="clean">
     <delete dir="${build}"/>
@@ -78,9 +79,18 @@
     </javac>
   </target>
 
+  <target name="compile_stendhal" depends="compile_marauroa" if="build.stendhal">
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/stendhal/**">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+
   <target 
     name="compile_new" 
-    depends="init,installation,compile_marauroa,compile_the1001_server,compile_the1001_client,compile_mapacman">
+    depends="init,installation,compile_marauroa,compile_the1001_server,compile_the1001_client,compile_mapacman,compile_stendhal">
   </target>
   
   <target name="compile" depends="init,installation">
