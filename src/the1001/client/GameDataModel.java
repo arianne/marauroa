@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.7 2004/03/08 19:15:34 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.8 2004/03/15 20:42:21 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,7 @@ public final class GameDataModel
 	private List listeners;
 	private ActionListener commandListener;
 	private String status;
+	private String currentFightMode;
 	
 	public GameDataModel(NetworkClientManager net_man)
 	{
@@ -417,8 +418,31 @@ public final class GameDataModel
 		marauroad.trace("The1001Game::sendMessage","D","Chat message sent.");
 	}
 	
+	public void setRandomFightMode()
+	{
+		if(RPCode.var_scissor.equals(getFightMode()))
+		{
+			setFightMode(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
+		}
+		else if(RPCode.var_paper.equals(getFightMode()))
+		{
+			setFightMode(Math.random()>0.5?RPCode.var_scissor:RPCode.var_rock);
+		}
+		else
+		{
+			setFightMode(Math.random()>0.5?RPCode.var_scissor:RPCode.var_paper);
+		}
+		System.out.println("Fight mode set to "+getFightMode());
+	}
+	
+	public String getFightMode()
+	{
+		return(currentFightMode);
+	}
+	
 	public void setFightMode(String mode)
 	{
+		currentFightMode = mode;
 		RPObject gladiator = getFirstOwnGladiator();
 		if(gladiator!=null)
 		{

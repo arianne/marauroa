@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.11 2004/03/09 06:13:37 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.12 2004/03/15 20:42:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1165,23 +1165,23 @@ public class The1001Game3D
     frame.setUndecorated(true);
     RPObject [] spectators = new RPObject[8];
     RPObject [] fighters   = new RPObject[2];
-    for (int i = 0; i < spectators.length; i++)
-    {
-      RPObject rp = new RPObject();
-      rp.put("object_id","spec_"+i);
-      rp.put("name","Spectator_"+i);
-      spectators[i] = rp;
-    }
-    for (int i = 0; i < fighters.length; i++)
-    {
-      try
-      {
-        RPObject rp = new Gladiator(new RPObject.ID(i));
-        rp.put("object_id","glad_"+i);
-        fighters[i] = rp;
-      }
-      catch (RPObject.SlotAlreadyAddedException e) {}
-    }
+//    for (int i = 0; i < spectators.length; i++)
+//    {
+//      RPObject rp = new RPObject();
+//      rp.put("object_id","spec_"+i);
+//      rp.put("name","Spectator_"+i);
+//      spectators[i] = rp;
+//    }
+//    for (int i = 0; i < fighters.length; i++)
+//    {
+//      try
+//      {
+//        RPObject rp = new Gladiator(new RPObject.ID(i));
+//        rp.put("object_id","glad_"+i);
+//        fighters[i] = rp;
+//      }
+//      catch (RPObject.SlotAlreadyAddedException e) {}
+//    }
     gamedisplay.arena.setSpectators(spectators);
     gamedisplay.arena.setFighters(fighters);
     frame.show();
