@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.16 2003/12/08 23:10:02 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.17 2004/01/12 19:14:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -753,7 +753,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public boolean timedout(int clientid) throws NoSuchClientIDException
     {
-    marauroad.trace("PlayerEntryContainer::updateTimestamp",">");
+    marauroad.trace("PlayerEntryContainer::timedout",">");
     
     try
       {
@@ -772,13 +772,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
+        marauroad.trace("PlayerEntryContainer::timeodut","X","No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      marauroad.trace("PlayerEntryContainer::updateTimestamp","<");
+      marauroad.trace("PlayerEntryContainer::timedout","<");
       }
     }
      
