@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.6 2003/12/30 07:57:05 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.7 2003/12/30 08:10:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,16 +19,12 @@ import java.util.*;
 public class the1001RPRuleProcessor implements RPRuleProcessor
   {
   private the1001RPZone zone;
-  private List[] trackedObjects;
-  private int turn;
+  private List trackedObjects;
   
   public the1001RPRuleProcessor()
     {
     zone=null;
-    trackedObjects=new List[2];
-    trackedObjects[0]=new LinkedList();
-    trackedObjects[1]=new LinkedList();
-    turn=0;
+    trackedObjects=new LinkedList();
     RPCode.setCallback(this);
     }
 
@@ -36,6 +32,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
    *  @param zone The zone where actions happens. */
   public void setContext(RPZone zone)
     {
+    this.zone=(the1001RPZone)zone;
     }
     
   public the1001RPZone getRPZone()
@@ -74,6 +71,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
+      marauroad.trace("the1001RPRuleProcessor::execute","X",e.getMessage());
       return RPAction.STATUS_FAIL;      
       }      
     finally
@@ -87,7 +85,6 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     removeOneTurnAttributes();      
-    ++turn;
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
   
@@ -96,7 +93,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes",">");        
     try
       {
-      Iterator it=trackedObjects[turn%2].iterator();
+      Iterator it=trackedObjects.iterator();
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
@@ -117,7 +114,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","!",e.getMessage());
       }
     
-    trackedObjects[turn%2].clear();
+    trackedObjects.clear();
       
     marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","<");
     }
@@ -129,7 +126,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       {
       object.put("?joined","");
       zone.add(object);
-      trackedObjects[(turn+1)%2].add(object);
+      trackedObjects.add(object);
   
       return true;
       }
