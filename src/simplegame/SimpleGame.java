@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.29 2003/12/18 18:30:55 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.30 2003/12/18 19:18:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -147,7 +147,7 @@ public class SimpleGame
                 CharacterList characterList=(CharacterList)obj.getSlot("challenge").get();
                 addLog(""+characterList+"\n");
                 
-                String player=(String)characterList.iterator().next();                                
+                String player=(String)characterList.CharacterIterator().next();                                
                 otherCharacterID = characterList.getId(player);
                 
                 ChallengeAnswer answer = new ChallengeAnswer();
@@ -165,12 +165,14 @@ public class SimpleGame
                 if(obj.getSlot("ear").size()==0)
                   {
                   /** TODO: Sure you know a better way of telling that to the user. */
-                  addLog("Waiting for another player to join");
+                  addLog("Waiting for another player to join\n");
                   }
                 else
                   {                  
-                  RPObject characterList=(RPObject)obj.getSlot("ear").get();
-                  Iterator iterator = ((CharacterList)characterList).iterator();
+                  RPObject baseObject=(RPObject)obj.getSlot("ear").get();
+                  CharacterList characterList=new CharacterList(baseObject);
+                  System.out.println(characterList.toString());
+                  Iterator iterator = characterList.CharacterIterator();
 
                   addLog("Received character list with following chars:\n");
                   Object[] message = new Object[2];
