@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.2 2003/12/12 17:00:48 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.1 2003/12/12 17:00:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,15 +14,22 @@ package the1001;
 
 import marauroa.game.*;
 
-public class the1001RPZone extends MarauroaRPZone
+public class Gladiator extends RPObject
   {
-  public the1001RPZone()
+  Gladiator(RPObject.ID id)
     {
-    RPObject HeroesHouse=super.create();
-    HeroesHouse.put("type","shop");
-    HeroesHouse.put("name","Heroes' House");
-    
-    Gladiator gladiator_01;
+    put("object_id",id.getObjectID());
+    put("type","gladiator");
+	put("rp_strengh",0);
+	put("rp_size",0);
+	put("rp_speed",0);
+	put("rp_breath",0);
+	put("rp_health",0);
+	put("rp_fame",0);
+	put("_attack",0);
+	put("_defend",0);
+	put("_evasion",0);
+	put("num_victory",0);
+	put("num_defeat",0);    
     }
   }
-  
