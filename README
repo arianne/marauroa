@@ -9,11 +9,12 @@
 -------------------------------------------------------------------------------
 
 
+
 NOTE: Concurrently I am adding support for Multizones, so please don't use this
 for tests or production as it WON'T work correctly or may even not compile.
-Promise to have it fixed and working in 7 days.
 
 Miguel, 2004/08/24
+
 
 
 Marauroa
