@@ -137,6 +137,13 @@ public class RPSlot implements marauroa.net.Serializable
     return objects.iterator();
     }
     
+  public boolean equals(Object object)
+    {
+    RPSlot slot=(RPSlot)object;
+    
+    return name.equals(slot.name) && objects.equals(slot.objects);
+    }    
+    
   public String toString()
     {
     return "RPSlot named("+name+") with "+size()+" objects";
