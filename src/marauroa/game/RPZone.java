@@ -39,5 +39,6 @@ public interface RPZone
   public void remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);
+  public RPObject create();
   public Perception getPerception(RPObject.ID id);
   }

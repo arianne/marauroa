@@ -7,9 +7,11 @@ public class MarauroaRPZone implements RPZone
   private HashMap objects;
   /** TODO: This is not delta perception */
   private List listObjects;
+  private static Random rand=new Random();
   
   public MarauroaRPZone()
     {
+    rand.setSeed(new Date().getTime());
     objects=new HashMap();
     listObjects=new LinkedList();
     }
@@ -61,6 +63,18 @@ public class MarauroaRPZone implements RPZone
       {
       return false;
       }
+    }
+  
+  public RPObject create()
+    {
+    RPObject.ID id=new RPObject.ID(rand.nextInt());
+    
+    while(has(id))    
+      {
+      id=new RPObject.ID(rand.nextInt());
+      }
+     
+    return new RPObject(id);
     }
 
   public Perception getPerception(RPObject.ID id)

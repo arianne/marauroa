@@ -123,13 +123,22 @@ public class RPObject extends Attributes
       id=in.readInt();
       }
     }
-  
+    
   /** Constructor */
   public RPObject()
     {
     super();
     /* TODO: Not sure it is the best thing... */
     slots=new RPSlot[0];
+    }
+
+  public RPObject(ID id)
+    {
+    super();
+    /* TODO: Not sure it is the best thing... */
+    slots=new RPSlot[0];
+    
+    put("object_id",id.getObjectID());
     }
   
   public boolean hasSlot(String name)
