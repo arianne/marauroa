@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.50 2004/09/04 20:25:00 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.51 2004/09/04 20:39:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -602,13 +602,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         stmt.execute(query);
         }
       }
-    catch(AttributeNotFoundException e)
-      {
-      trans.rollback();
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Invalid RPObject: Lacks of attribute "+e.getAttribute());
-      marauroad.thrown("JDBCPlayerDatabase::addCharacter","X",e);
-      throw new PlayerNotFoundException(username);
-      }
     catch(Exception sqle)
       {
       trans.rollback();
@@ -798,7 +791,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
     if(result.next())
       {
-      id = result.getInt(1);
+      id = result.getInt("id");
       }
     else
       {
@@ -1179,18 +1172,17 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     
     try
       {
-      int object_id=-1;
       if(object.has("#db_id"))
         {
-        object.getInt("#db_id");
-        
+        int object_id=object.getInt("#db_id");
+                
         if(hasRPObject(trans,object_id))
           {
           deleteRPObject(trans,object_id);
           }        
         }
 
-      storeRPObject(trans,object,object_id,0);
+      return storeRPObject(trans,object,0);
       }
     catch(AttributeNotFoundException e)
       {
@@ -1212,11 +1204,22 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
-    String query=null;
 
-    query = "insert into rpobject values("+object_id+","+slot_id+");";
+    String query="insert into rpobject values(NULL,"+slot_id+")";
     marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
     stmt.execute(query);
+
+    /* We get the stored id */
+    query = "select LAST_INSERTED_ID() as inserted_id from rpobject";
+    marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
+    ResultSet result = stmt.executeQuery(query);
+
+    result.next();
+    int object_id=result.getInt("inserted_id");
+    
+    /** We update the object to contain the database reference, so we can know in 
+     *  the future if this object was stored on database. */
+    object.put("#db_id",object_id);    
     
     Iterator it=object.iterator();
 
@@ -1243,11 +1246,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
 
       int object_slot_id;
-      ResultSet result = stmt.executeQuery(query);
+      ResultSet slot_result = stmt.executeQuery(query);
 
-      if(result.next())
+      if(slot_result.next())
         {
-        object_slot_id = result.getInt(1);
+        object_slot_id = slot_result.getInt(1);
         }
       else
         {
@@ -1263,6 +1266,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         storeRPObject(trans,objectInSlot,object_slot_id);
         }
       }
+    
+    return object_id;
     }
 
   public void addStatisticsEvent(Transaction trans, Statistics.GatheredVariables var) throws GenericDatabaseException
@@ -1290,110 +1295,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     finally
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
-      }
-    }
-
-  public RPObjectIterator zoneIterator(Transaction trans)
-    {
-    marauroad.trace("JDBCPlayerDatabase::zoneIterator",">");
-    try
-      {
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-      Statement stmt = connection.createStatement();
-      String query = "select object_id from rpzone";
-
-      marauroad.trace("JDBCRPObjectDatabase::zoneIterator","D",query);
-      
-      ResultSet result = stmt.executeQuery(query);
-
-      return new RPObjectIterator(result);
-      }
-    catch(SQLException e)
-      {
-      marauroad.thrown("JDBCPlayerDatabase::zoneIterator","X",e);
-      return null;
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::zoneIterator","<");
-      }
-    }
-  
-  public void addToRPZone(Transaction trans, RPObject object) throws SQLException, AttributeNotFoundException
-    {
-    marauroad.trace("JDBCPlayerDatabase::addToRPZone",">");
-    try
-      {
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-      Statement stmt = connection.createStatement();
-      String query = "insert into rpzone values('"+object.get("id")+"')";
-
-      marauroad.trace("JDBCRPObjectDatabase::addToRPZone","D",query);
-      stmt.execute(query);
-      }
-    catch(SQLException e)
-      {
-      marauroad.thrown("JDBCPlayerDatabase::addToRPZone","X",e);
-      throw e;
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
-      }
-    }
-
-  public boolean hasInRPZone(Transaction trans, RPObject object) throws SQLException, AttributeNotFoundException
-    {
-    marauroad.trace("JDBCPlayerDatabase::hasInRPZone",">");
-    try
-      {
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-      Statement stmt = connection.createStatement();
-      String query = "select * from rpzone where object_id='"+object.get("id")+"'";
-
-      marauroad.trace("JDBCRPObjectDatabase::hasInRPZone","D",query);
-      ResultSet result = stmt.executeQuery(query);
-      
-      if(result.next())
-        {
-        if(result.getInt(1)!=0)
-          {
-          return true;
-          }
-        }
-      return false;
-      }
-    catch(SQLException e)
-      {
-      marauroad.thrown("JDBCPlayerDatabase::hasInRPZone","X",e);
-      throw e;
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::addToRPZone","<");
-      }
-    }
-
-  public void removeFromRPZone(Transaction trans, RPObject.ID id) throws SQLException, AttributeNotFoundException
-    {
-    marauroad.trace("JDBCPlayerDatabase::removeFromRPZone",">");
-    try
-      {
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-      Statement stmt = connection.createStatement();
-      String query = "delete from rpzone where object_id='"+id.getObjectID()+"'";
-
-      marauroad.trace("JDBCRPObjectDatabase::removeFromRPZone","D",query);
-      stmt.execute(query);
-      }
-    catch(SQLException e)
-      {
-      marauroad.thrown("JDBCPlayerDatabase::removeFromRPZone","X",e);
-      throw e;
-      }
-    finally
-      {
-      marauroad.trace("JDBCPlayerDatabase::removeFromRPZone","<");
       }
     }
   }
