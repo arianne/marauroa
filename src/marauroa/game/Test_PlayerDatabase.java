@@ -15,7 +15,7 @@ public class Test_PlayerDatabase extends TestCase
       {    
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
       assertNotNull(playerDatabase);
-      assertEquals(0,playerDatabase.getPlayerCount());
+      int size=playerDatabase.getPlayerCount();
 
       playerDatabase.addPlayer("Test Player","Test Password");
       assertTrue(playerDatabase.hasPlayer("Test Player"));
@@ -34,7 +34,7 @@ public class Test_PlayerDatabase extends TestCase
 	  playerDatabase.removePlayer("Test Player");
 	  assertFalse(playerDatabase.hasPlayer("Test Player"));
 
-      assertEquals(0,playerDatabase.getPlayerCount());
+      assertEquals(size,playerDatabase.getPlayerCount());
       }
     catch(Exception e)
       {
@@ -50,7 +50,6 @@ public class Test_PlayerDatabase extends TestCase
       {
       playerDatabase=PlayerDatabaseFactory.getDatabase();
       assertNotNull(playerDatabase);
-      assertEquals(0,playerDatabase.getPlayerCount());
       }
     catch(Exception e)
       {

@@ -48,9 +48,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       throw new NoDatabaseConfException();
       }
 
-    /* TODO: Change for initDB() */      
-    /* NOTE: By now tests expect database to be empty. */
-    reInitDB();
+    initDB();
     }
   
   /** This method returns an instance of PlayerDatabase 
