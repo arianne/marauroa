@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.14 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.15 2004/04/15 18:35:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,8 @@ public class NetworkClientManager
     address=new InetSocketAddress(host,NetConst.marauroa_PORT);
     socket=new DatagramSocket();
     socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
+    socket.setTrafficClass(0x08|0x10);
+      
     msgFactory=MessageFactory.getFactory();
     pendingPackets=Collections.synchronizedMap(new HashMap());
     }

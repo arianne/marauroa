@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.13 2004/04/13 16:47:00 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.14 2004/04/15 18:35:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ public class TimeoutConf
   {
   final public static boolean TIMEOUT_ENABLE=true;
   /** This indicate when we stop to wait on the socket. The lower the slower. */
-  final public static int SOCKET_TIMEOUT=1000;
+  final public static int SOCKET_TIMEOUT=100;
   /** This indicate how many time we wait for a message to arrive. The lower the slower. */
   final public static int GAMESERVER_MESSAGE_GET_TIMEOUT=10000;
   /** This indicate when the client remove the incomplete packet from its queue */  

@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.19 2004/04/15 18:19:19 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.20 2004/04/15 18:35:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,7 @@ public final class NetworkServerManager
       socket=new DatagramSocket(NetConst.marauroa_PORT);
       socket.setSoTimeout(1000);
       socket.setTrafficClass(0x08|0x10);
+      socket.setSendBufferSize(1500*16);
       
       msgFactory=MessageFactory.getFactory();
       keepRunning=true;

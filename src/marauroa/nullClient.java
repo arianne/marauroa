@@ -94,6 +94,10 @@ class TestClient
             outofsync=false;
             previous_timestamp=msgPer.getTimestamp()-1;
             }
+          else
+            {
+            System.err.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+            }
           
           if(outofsync==false)
             {
