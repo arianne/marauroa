@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.12 2004/02/16 15:48:30 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.13 2004/02/17 15:18:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,7 +92,7 @@ public class Statistics
     nowVar=new GatheredVariables();
     try
       {
-      eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt"));
+      eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt"),true);
       eventfile.println("#Version: 1.0");
       eventfile.println("#Fields: date time cs-uri");
       }

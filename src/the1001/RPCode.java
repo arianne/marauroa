@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.51 2004/02/16 15:27:35 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.52 2004/02/17 15:18:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -630,7 +630,17 @@ public class RPCode
             }
           
           int fame_result=fame*up/total;
-          RPObject.ID winner_id=new RPObject.ID(arena.getInt(RPCode.var_winner));
+
+          RPObject.ID winner_id;
+          if(arena.has(RPCode.var_winner))
+            {
+            winner_id=new RPObject.ID(arena.getInt(RPCode.var_winner));
+            }
+          else
+            {
+            winner_id=RPObject.INVALID_ID;
+            }
+            
           if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
             {
             RPObject winner=arena.getSlot(RPCode.var_gladiators).get();
