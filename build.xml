@@ -6,10 +6,10 @@
   <property name="lib"  value="lib"/>
   <!-- Modify to point to your junit.jar file -->
   <property name="classpath"  value="classes;D:\j2sdk1.4.2\junit\junit3.8.1\junit.jar"/>
-  <property name="jarname" value="marauroa.jar"/>
+  <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
 
-  <target name="init" depends="clean">
+  <target name="init">
     <mkdir dir="${build}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
