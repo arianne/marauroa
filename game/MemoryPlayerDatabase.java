@@ -90,7 +90,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
   
   /** This method returns the number of Players that exist on database 
    *  @return the number of players that exist on database */
-  public int getPlayerCount()
+  public int getPlayerCount() throws GenericDatabaseException
     {
     marauroad.trace("MemoryPlayerDatabase::getPlayerCount",">");
 
@@ -289,7 +289,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
     }
     
   /** This method retrieves from Database the object for an existing player and character.
-   *.
+   *
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player wants to add.
    *  @return a RPObject that is the RPObject that represent this character in game.

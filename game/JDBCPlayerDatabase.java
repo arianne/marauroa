@@ -640,7 +640,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   /** Create a connection to the JDBC Database or return null
    *  @param props is a Properties set that contains
    *  @return Connection to the database or null if error.*/
-  private Connection createConnection(Properties props)
+  private Connection createConnection(Properties props) throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::createConnection",">");
     
@@ -660,7 +660,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch (Throwable e)
       {
       marauroad.trace("JDBCPlayerDatabase::createConnection","X",e.getMessage());
-      return null;
+      throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
