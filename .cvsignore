@@ -4,3 +4,4 @@ classes
 javadocs
 lib
 *.class
+build
