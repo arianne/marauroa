@@ -11,3 +11,12 @@ while reducing the number of object in the zone.
 
 To have these objects inside, we need our hoster object to have slots to place
 them. One slot can only handle one single object.
+
+For example a avatar can have:
+- left hand
+- right hand
+- backpack
+- left pocket
+- right pocket
+
+and we can store objects on these slots.
