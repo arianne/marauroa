@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.10 2004/01/01 22:51:06 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.11 2004/01/01 22:56:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class Test_RPCode extends TestCase
       status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scisor");
+      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scissor");
       System.out.println(status);
       assertEquals(status,RPAction.STATUS_SUCCESS);
       

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.15 2004/01/01 22:51:06 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.16 2004/01/01 22:56:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -223,7 +223,7 @@ public class RPCode
       }
       
     String mode_g1=gladiator1.get("!mode");
-    String mode_g2=gladiator1.get("!mode");
+    String mode_g2=gladiator2.get("!mode");
     
     if(mode_g1.equals(mode_g2))
       {
