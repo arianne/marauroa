@@ -1,6 +1,7 @@
 package marauroa;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.applet.*;
 
 import marauroa.game.*;
@@ -14,11 +15,23 @@ public class JMarauroa extends javax.swing.JFrame {
     public JMarauroa() {
         initComponents();
         clientid=-10;
+        addWindowListener(new WindowAdapter()
+          {
+          public void windowClosing(WindowEvent p0)
+            {
+            exitForm(p0);
+            }
+          });
     }
 
     
     /** Exit the Application */
     private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
+      if(disconnectButton.isEnabled())
+        {
+        disconnectButton.doClick();
+        // ;-)
+        }
         System.exit(0);
     }//GEN-LAST:event_exitForm
     
