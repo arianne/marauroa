@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.12 2004/02/06 16:02:02 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.13 2004/02/18 12:09:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,6 +76,19 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     initDB();
     }
   
+  private static PlayerDatabase resetDatabaseConnection() throws Exception
+    {
+    Configuration conf=Configuration.getConfiguration();
+    
+    Properties props = new Properties();        
+    props.put("jdbc_url",conf.get("jdbc_url"));
+    props.put("jdbc_class",conf.get("jdbc_class"));
+    props.put("jdbc_user",conf.get("jdbc_user"));
+    props.put("jdbc_pwd",conf.get("jdbc_pwd"));
+
+    return new JDBCPlayerDatabase(props);
+    }
+    
   /** This method returns an instance of PlayerDatabase 
    *  @return A shared instance of PlayerDatabase */
   public static PlayerDatabase getDatabase() throws NoDatabaseConfException
@@ -85,15 +98,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       if(playerDatabase==null)
         {
-        Configuration conf=Configuration.getConfiguration();
-    
-        Properties props = new Properties();        
-        props.put("jdbc_url",conf.get("jdbc_url"));
-        props.put("jdbc_class",conf.get("jdbc_class"));
-        props.put("jdbc_user",conf.get("jdbc_user"));
-        props.put("jdbc_pwd",conf.get("jdbc_pwd"));
-
-        playerDatabase=new JDBCPlayerDatabase(props);
+        playerDatabase=resetDatabaseConnection();
         }
 
       return playerDatabase;
@@ -142,6 +147,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasPlayer","X",sqle.getMessage());
+      isConnectionClosed();
       /* TODO: should drop exception */
       return false;
       }
@@ -188,6 +194,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getCharacterList","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -234,6 +241,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addPlayer","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerAlreadyAddedException(username);
       }
     finally
@@ -271,6 +279,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removePlayer","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -315,6 +324,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -362,6 +372,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","X",sqle.getMessage());
+      isConnectionClosed();
       return false;
       }
     finally
@@ -413,6 +424,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -462,6 +474,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasCharacter","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -502,6 +515,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -564,6 +578,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -600,6 +615,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getPlayerCount","X",sqle.getMessage());
+      isConnectionClosed();
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -668,6 +684,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::setRPObject","X",sqle.getMessage());
+      isConnectionClosed();
       throw new CharacterNotFoundException(character);
       }
     catch(PlayerNotFoundException e)
@@ -725,6 +742,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X",sqle.getMessage());      
+      isConnectionClosed();
       throw new PlayerNotFoundException(username);
       }
     catch(PlayerNotFoundException e)
@@ -894,6 +912,43 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     finally 
       {
       marauroad.trace("JDBCPlayerDatabase::initDB","<");         
+      }
+    }
+
+
+  public boolean isConnectionClosed()
+    {
+    marauroad.trace("JDBCPlayerDatabase::isConnectionClosed",">");
+
+    try
+      {
+      Statement stmt = connection.createStatement();
+      String query = "select count(*) from player";
+      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","D",query);
+        
+      ResultSet result = stmt.executeQuery(query);
+
+      return true;
+      }
+    catch(SQLException sqle)
+      {
+      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","D","CLOSED!: "+sqle.getMessage());
+      
+      try
+        {
+        playerDatabase=resetDatabaseConnection();
+        }
+      catch(Exception e)
+        {
+        marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","!",e.getMessage());
+        System.exit(1);
+        }
+        
+      return true;
+      }
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::isConnectionClosed","<");
       }
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.52 2004/02/17 15:18:09 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.53 2004/02/18 12:09:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -432,7 +432,7 @@ public class RPCode
               }
             else
               {
-              arena.put(RPCode.var_winner,gladiators[i].get(var_object_id));
+              arena.put(RPCode.var_winner,gladiators[i].get(RPCode.var_object_id));
               gladiators[i].put(RPCode.var_num_victory,gladiators[i].getInt(RPCode.var_num_victory)+1);
               }
             }
@@ -643,12 +643,14 @@ public class RPCode
             
           if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
             {
-            RPObject winner=arena.getSlot(RPCode.var_gladiators).get();
+            RPObject winner=arena.getSlot(RPCode.var_gladiators).get(winner_id);
+            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") assigned to "+winner.get("name"));
             winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
             }
           else
             {
             /* Winner was not present... */
+            marauroad.trace("RPCode::RequestFame","D","Fame("+fame_result+") not assigned to because winner wasn't logged in");
             }
         
           SetUpNextCombat();

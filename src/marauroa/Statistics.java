@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.13 2004/02/17 15:18:09 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.14 2004/02/18 12:11:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,13 +40,13 @@ public class Statistics
     public void print(PrintWriter out, double diff)
       {
       out.println("Bytes RECV: "+String.valueOf(bytesRecv));
-      out.println("Bytes RECV (avg secs): "+String.valueOf((int)(bytesRecv/diff)));
+      out.println("Bytes RECV (avg hour): "+String.valueOf((int)(bytesRecv/(diff/3600))));
       out.println("Bytes SEND: "+String.valueOf(bytesSend));
-      out.println("Bytes SEND (avg secs): "+String.valueOf((int)(bytesSend/diff)));
+      out.println("Bytes SEND (avg hour): "+String.valueOf((int)(bytesSend/(diff/3600))));
       out.println("Messages RECV: "+String.valueOf(messagesRecv));
-      out.println("Messages RECV (avg secs): "+String.valueOf((int)(messagesRecv/diff)));
+      out.println("Messages RECV (avg hour): "+String.valueOf((int)(messagesRecv/(diff/3600))));
       out.println("Messages SEND: "+String.valueOf(messagesSend));
-      out.println("Messages SEND (avg secs): "+String.valueOf((int)(messagesSend/diff)));
+      out.println("Messages SEND (avg hour): "+String.valueOf((int)(messagesSend/(diff/3600))));
       out.println("Messages INCORRECT: "+String.valueOf(messagesIncorrect));
       out.println();
       out.println("Players LOGIN: "+String.valueOf(playersLogin));
