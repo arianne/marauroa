@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.Vector;
 
 public class SimpleGameDataModel
+  implements SimpleGameDataModelIF
 {
   private byte gameBoard[][];
   private Vector vUpdateListener;
@@ -72,10 +73,6 @@ public class SimpleGameDataModel
     return(gameBoard[row][column]);
   }
   
-  public static interface GameUpdateListener
-  {
-    public void updateReceived(int row, int column, byte color);
-  }
   
   public String toString()
   {
@@ -108,4 +105,6 @@ public class SimpleGameDataModel
   }
   
 }
+
+
 

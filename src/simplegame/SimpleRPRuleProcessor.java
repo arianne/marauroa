@@ -25,7 +25,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   
   private RPObject findPlayer(byte color)
   {
-    //iterate all the objects of RPZone (which contains only of two players here :) )
+    //iterate all the objects of RPZone (which only contains two players here :) )
     //and find the one player who owns this color
     return null;
   }
@@ -39,20 +39,21 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     }
     catch(ClassCastException cce)
     {
-      marauroad.trace("SimpleRPRuleProcessor::setContext","X","Wrong class for RPZone, exiting.");
+      marauroad.trace("SimpleRPRuleProcessor::setContext","!","Wrong class for RPZone, exiting.");
       System.exit(-1);
     }
     marauroad.trace("SimpleRPRuleProcessor::setContext","<");
   }
   
   public void approvedActions(RPActionList actionList)
-    {
+  {
     while(actionList.size()<2)
-      {
+    {
       actionList.remove(0);
-      }
     }
-
+  }
+  
+  
   public RPAction.Status execute(RPObject.ID id, RPAction action)
   {
     marauroad.trace("SimpleRPRuleProcessor::execute",">");
@@ -73,25 +74,25 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" sent an action " + action);
         int row = Integer.parseInt(action.get("row"));
         int column = Integer.parseInt(action.get("column"));
-        if(zone.gameDataModel.getColorAt(row,column)==-1)
+        if(zone.getColorAt(row,column)==-1)
+        {
+          zone.setColorAt(row,column,color);
+          lastPlayerID = id;
+          status = RPAction.STATUS_SUCCESS;
+          marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.toString());
+          byte winner = zone.checkWinCondition();
+          if(winner!=-1)
           {
-            zone.gameDataModel.setColorAt(row,column,color);
-            lastPlayerID = id;
-            status = RPAction.STATUS_SUCCESS;
-            marauroad.trace("SimpleRPRuleProcessor::execute","D",zone.gameDataModel.toString());
-            byte winner = zone.gameDataModel.checkWinCondition();
-            if(winner!=-1)
-            {
-              RPObject rp_winner = findPlayer(color);
-              marauroad.trace("SimpleRPRuleProcessor::execute","D","The winner is "+winner);
-            }
-            //swap color
-            color = color==1?(byte)0:(byte)1;
+            RPObject rp_winner = findPlayer(color);
+            marauroad.trace("SimpleRPRuleProcessor::execute","D","The winner is "+winner);
           }
-          else
-          {
-            //this field is already set
-          }
+          //swap color
+          color = color==1?(byte)0:(byte)1;
+        }
+        else
+        {
+          //this field is already set
+        }
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" - no actions???.");
       }
     }

@@ -68,7 +68,7 @@ public class SimpleGame
           if(msg instanceof MessageS2CPerception)
           {
             MessageS2CPerception perception = (MessageS2CPerception)msg;
-            //gdm.setColorAt();
+            addLog(""+perception+"\n");
           }
         }
       }
