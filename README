@@ -141,9 +141,13 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.91 XXX XX, 2005
+0.91 Mar 03, 2005
 - Added generateini application
 - Simplified README file
+- Fixed a bug at multizone
+- Fixed a bug to RPWorld that breaks the multizone feature
+- Fixed a bug at NetworkServerManager that blocked the server
+- Fixed a bug at PlayerEntryContainer that happens because of content streaming.
 
 0.90 Feb 19, 2005
 - Major code refactoring
