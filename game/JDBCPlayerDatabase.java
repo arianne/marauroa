@@ -92,7 +92,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   public boolean hasPlayer(String username)
     {
     marauroad.trace("JDBCPlayerDatabase::hasPlayer",">");
-    boolean has=false;
 
     try
       {
@@ -103,17 +102,22 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         if(result.getInt(1)!=0)
           {
-          has=true;
+          return true;
           }
         }
+      
+      return false;
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::hasPlayer","X",sqle.getMessage());
+      /* TODO: should drop exception */
+      return false;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::hasPlayer","<");
-    return has;
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::hasPlayer","<");
+      }
     }
   
   /** This method returns the lis of character that the player pointed by username has.
@@ -237,13 +241,19 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player owns.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
-  public void removeCharacter(String username, String character) throws PlayerNotFoundException
+  public void removeCharacter(String username, String character) throws PlayerNotFoundException, CharacterNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::removeCharacter",">");
     
     try
       {
       int id=getDatabasePlayerId(username);
+      
+      if(!hasCharacter(username,character))
+        {
+        marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
+        throw new CharacterNotFoundException();
+        }
       
       Statement stmt = connection.createStatement();
       String query = "delete from characters where player_id="+id+" and charname like '"+character+"'";
@@ -488,7 +498,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
   
   /** This method returns the number of Players that exist on database 
    *  @return the number of players that exist on database */
-  public int getPlayerCount()
+  public int getPlayerCount() throws GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getPlayerCount",">");
 
@@ -508,7 +518,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::getPlayerCount","X",sqle.getMessage());
-      return -1;
+      throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
       {

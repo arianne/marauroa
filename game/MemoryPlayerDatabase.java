@@ -442,7 +442,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player owns.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
-  public void removeCharacter(String username, String character) throws PlayerNotFoundException
+  public void removeCharacter(String username, String character) throws PlayerNotFoundException, CharacterNotFoundException
     {
     marauroad.trace("MemoryPlayerDatabase::removeCharacter",">");
     
@@ -452,6 +452,12 @@ public class MemoryPlayerDatabase implements PlayerDatabase
         {
         marauroad.trace("MemoryPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")");
         throw new PlayerNotFoundException();
+        }
+
+      if(!hasCharacter(username,character))
+        {
+        marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
+        throw new CharacterNotFoundException();
         }
       
       PlayerEntry player=(PlayerEntry)players.get(username);
