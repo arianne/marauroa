@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.29 2003/12/10 16:51:23 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.30 2003/12/10 16:55:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,16 +72,25 @@ public class RunTests
       Killer killer=new Killer(TIMEOUT_KILL_APPLICATION);
       
       Date start=new Date();
+      boolean wasSuccessful=true;
       String timestamp=Long.toString(new Date().getTime());
       
       System.err.println("Test will long around 93.0 seconds. Please wait!");
-      runTest(suiteBase(),timestamp);
-      runTest(suiteNet(),timestamp);
-      runTest(suiteGame(),timestamp);
-      runTest(suiteActive(),timestamp);      
+      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
       Date end=new Date();
       
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
+      System.err.println("The test ("+timestamp+") has been "+(wasSuccessful?"SUCCESSFULL":"FAILED"));
+      
+      if(!wasSuccessful)
+        {
+        System.err.println("ERROR: RunTests failed, please send the log files ("+timestamp+") to:");
+        System.err.println("http://sourceforge.net/tracker/?func=add&group_id=66537&atid=514826");
+        }
+        
       killer.finish();
       
 //      Thread.sleep(2000);
