@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.30 2004/01/07 16:37:09 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.31 2004/01/07 17:32:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,10 +22,16 @@ public class RPCode
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
+  private static List playersFighting;
+  private static List playersWaiting;
+  private static List playersVoted;
   
   static
     {
     rand=new Random();
+    playersFighting=new LinkedList();
+    playersWaiting=new LinkedList();
+    playersVoted=new LinkedList();
     }
   
   public static void setCallback(the1001RPRuleProcessor rpu)
@@ -83,11 +89,14 @@ public class RPCode
         {
         player.put("fighting","");
         arena.getSlot("gladiators").add(gladiator);
+        playersFighting.add(player);
         }
       else
         {
         player.put("requested",ruleProcessor.getTurn());
+        player.put("choose",gladiator_id.getObjectID());
         arena.put("waiting",arena.getInt("waiting")+1);
+        playersWaiting.add(player);
         }
       
       /** We check now if Arena is complete */
@@ -341,13 +350,6 @@ public class RPCode
       ruleProcessor.trackObject(gladiator2);
       }  
     }
-  
-  private static List playersVoted;
-  
-  static
-    {
-    playersVoted=new LinkedList();
-    }
     
   /** This action is used to vote for a gladiator once the fight is over.
    *
@@ -428,25 +430,7 @@ public class RPCode
           int fame_result=fame*up/total;
           RPObject winner=arena.getSlot("gladiators").get(new RPObject.ID(arena.getInt("winner")));
           winner.put("fame",winner.getInt("fame")+fame_result);    
-          
-          arena.put("status","waiting");
-          arena.getSlot("gladiators").clear();
-          
-          Iterator it=playersVoted.iterator();
-          while(it.hasNext())
-            {
-            RPObject player=(RPObject)it.next();
-            player.remove("!vote");
-            }
-          
-          playersVoted.clear();
-
-          arena.remove("thumbs_up");
-          arena.remove("thumbs_down");
-          arena.remove("fame");
-          arena.remove("timeout");
-          arena.remove("winner");
-          
+        
           SetUpNextCombat();
           }
         else
@@ -473,7 +457,63 @@ public class RPCode
     
     try
       {
-      Iterator it=zone.iterator();
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+
+      Iterator it;
+
+      it=playersVoted.iterator();
+      while(it.hasNext())
+        {
+        RPObject player=(RPObject)it.next();
+        player.remove("!vote");
+        }
+          
+      playersVoted.clear();
+
+      arena.remove("thumbs_up");
+      arena.remove("thumbs_down");
+      arena.remove("fame");
+      arena.remove("timeout");
+      arena.remove("winner");
+      
+      /* Restore fighthing players */
+      it=playersFighting.iterator();
+      while(it.hasNext())
+        {
+        RPObject player=(RPObject)it.next();
+        player.remove("fighting");
+        
+        Iterator gladiators=player.getSlot("gladiators").iterator();
+        while(gladiators.hasNext())
+          {
+          RPObject gladiator=(RPObject)gladiators.next();
+          gladiator.put("hp",gladiator.get("!hp"));
+          }
+        }
+      
+      playersFighting.clear();
+      arena.getSlot("gladiators").clear();
+      arena.put("status","waiting");
+          
+      
+      /* Choose new fighters if available */ 
+      if(arena.getInt("waiting")>0)
+        {
+        it=playersWaiting.iterator();
+        
+        while(it.hasNext())
+          {
+          RPObject player=(RPObject)it.next();
+          RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
+          player.remove("requested");
+          player.remove("choose");
+          
+          player.put("fighting","");
+          arena.getSlot("gladiators").add(gladiator);
+          arena.put("waiting",arena.getInt("waiting")-1);
+          }        
+        } 
       }
     finally
       {
