@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.1 2004/03/04 22:36:33 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.2 2004/03/07 18:33:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -200,10 +200,17 @@ public class The1001Bot
 								int id = obj.getInt("object_id");
 								if(ownCharacterID==id)
 								{
-									RPSlot glad_slot   = obj.getSlot("gladiators");
-									RPObject gladiator = glad_slot.get();
-									gm.setOwnGladiator(gladiator);
-									gm.setOwnCharacter(obj);
+								    if(obj.hasSlot("!gladiators"))
+								      {
+									  RPSlot glad_slot   = obj.getSlot("!gladiators");
+									  RPObject gladiator = glad_slot.get();
+									  gm.setOwnGladiator(gladiator);
+									  gm.setOwnCharacter(obj);
+									  }
+									else
+									  {
+                                      marauroad.trace("The1001Bot::messageLoop","D","Our own player has not !gladiators slot");
+                                      }
 								}
 								if(obj.has(RPCode.var_text))
 								{
