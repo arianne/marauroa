@@ -377,7 +377,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
     }
   
-  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException
+  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addCharacter",">");
 
@@ -394,8 +394,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       catch (IOException e)
         {
-        /* TODO: need to drop an exception */
         marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Error serializing character: "+e.getMessage());
+        throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
       String query = "insert into characters values("+id+",'"+character+"',?)";
@@ -442,7 +442,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     return(ret);
     }
   
-  public void setRPObject(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException
+  public void setRPObject(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::setRPObject",">");
 
@@ -458,8 +458,8 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       catch (IOException e)
         {
-        /* TODO: Need to drop an exception */
         marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Error serializing character: "+e.getMessage());
+        throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
       String query = "update characters set contents=? where player_id="+id+" and charname like '"+character+"'";

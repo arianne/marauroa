@@ -164,7 +164,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
     return characters;
     }
     
-  public void setRPObject(String username,String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException
+  public void setRPObject(String username,String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("MemoryPlayerDatabase::setRPObject",">");
     if(!players.containsKey(username))
@@ -253,7 +253,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
     return has;
     }
     
-  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException
+  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("MemoryPlayerDatabase::addCharacter",">");
     if(!players.containsKey(username))
