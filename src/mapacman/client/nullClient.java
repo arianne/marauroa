@@ -106,11 +106,26 @@ public class nullClient extends Thread
   private String password;
   private String character;
   
-  public nullClient(String u, String p, String c)
+  private boolean synced;
+  private RPObject myRPObject;
+  private Map world_objects;
+  private ClientMap map_objects;
+  private Random rand;      
+  private NetworkClientManager netMan;
+  
+  public nullClient(String u, String p, String c) throws SocketException
     {
     username=u;
     password=p;
     character=c;
+    
+    synced=false;
+    
+    myRPObject=null;
+    world_objects=new LinkedHashMap();
+    map_objects=null;
+    rand=new Random();
+    netMan=new NetworkClientManager("127.0.0.1");
     }
    
   public void run()
@@ -120,12 +135,6 @@ public class nullClient extends Thread
       Configuration.setConfigurationFile("mapacman.ini");
       PrintStream out=new PrintStream(new FileOutputStream(getName()+"_testClient.txt"));
       
-      Map world_objects=new LinkedHashMap();
-      ClientMap map_objects=null;
-      RPObject myRPObject=null;
-      Random rand=new Random();
-      
-      NetworkClientManager netMan=new NetworkClientManager("127.0.0.1");
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
 
       netMan.addMessage(new MessageC2SLogin(address,username,password));
@@ -187,11 +196,35 @@ public class nullClient extends Thread
         
       
       boolean cond=true;
-      boolean outofsync=true;
-      int previous_timestamp=0;
 
       Date timestamp=new Date();
       SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+      
+      PerceptionHandler handler=new PerceptionHandler(new PerceptionHandler.DefaultPerceptionListener()
+        {
+        public int onSynced()
+          {
+          synced=true;
+          return 0;
+          }
+        
+        public int onUnsynced()
+          {
+          synced=false;
+          return 0;
+          }
+        
+        public boolean onMyRPObject(boolean changed,RPObject object)          
+          {
+          if(changed)
+            {
+            myRPObject=object;
+            }
+            
+          return false;
+          }
+        });
+        
         
       while(cond)
         {
@@ -204,150 +237,12 @@ public class nullClient extends Thread
           netMan.addMessage(reply);
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-          if(msgPer.getTypePerception()==1 && outofsync)
-            {
-            outofsync=false;
-            previous_timestamp=msgPer.getPerceptionTimestamp()-1;
-            }
-          else if(outofsync==true)
-            {
-            System.out.println("|"+Long.toString(System.currentTimeMillis())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-            }
+          handler.apply(msgPer,world_objects);
           
-          if(outofsync==false)
+          if(synced)
             {
-            if(previous_timestamp+1!=msgPer.getPerceptionTimestamp())
-              {
-              System.out.println("We are out of sync. Waiting for sync perception");
-              System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getPerceptionTimestamp());
-              outofsync=true;
-              /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
-              }
-            else
-              {
-              timestamp.setTime(System.currentTimeMillis());
-              String ts = formatter.format(timestamp);
-
-              System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-              out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-              
-              previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);
-              if(msgPer.getMyRPObject()!=null)
-                {
-                myRPObject=msgPer.getMyRPObject();
-                }
-
-
-              map_objects.print(System.out,world_objects);
-              /** Code here game **/
-              int x=myRPObject.getInt("x");
-              int y=myRPObject.getInt("y");
-              String dir=myRPObject.get("dir");
-                
-              RPAction turn=new RPAction();
-              turn.put("type","turn");
-              turn.put("dir",dir);
-              
-              boolean changed=true;
-              boolean do_crosspaths=false;
-
-              while(changed)
-                {
-                changed=false;
-                
-                if((turn.get("dir").equals("N") && map_objects.get(x,y-1)=='*'))
-                  {
-                  System.out.println("Collision at N --> Goes W");
-                  turn.put("dir","W");
-                  changed=true;
-                  }
-                else if((turn.get("dir").equals("W") && map_objects.get(x-1,y)=='*'))
-                  {
-                  System.out.println("Collision at W --> Goes S");
-                  turn.put("dir","S");
-                  changed=true;
-                  }
-                else if((turn.get("dir").equals("S") && map_objects.get(x,y+1)=='*'))
-                  {
-                  System.out.println("Collision at S --> Goes E");
-                  turn.put("dir","E");
-                  changed=true;
-                  }
-                else if((turn.get("dir").equals("E") && map_objects.get(x+1,y)=='*'))
-                  {
-                  System.out.println("Collision at E --> Goes N");
-                  turn.put("dir","N");
-                  changed=true;
-                  }
-                
-                if(!changed && !dir.equals(turn.get("dir")) && (                
-                  ("NS".indexOf(dir)!=-1)==("NS".indexOf(turn.get("dir"))!=-1) || 
-                  ("WE".indexOf(dir)!=-1)==("WE".indexOf(turn.get("dir"))!=-1)))
-                  {
-                  System.out.println("Backtracking detected --> Rotating");
-                  String newdir=turn.get("dir");
-                  if(newdir.equals("N"))
-                    {
-                    turn.put("dir","W");
-                    }
-                  else if(newdir.equals("W"))
-                    {
-                    turn.put("dir","S");
-                    }
-                  else if(newdir.equals("S"))
-                    {
-                    turn.put("dir","E");
-                    }
-                  else if(newdir.equals("E"))
-                    {
-                    turn.put("dir","N");
-                    }                  
-                  }
-                
-                                
-                int i=0;
-                if(map_objects.get(x,y-1)=='*') i++;
-                if(map_objects.get(x,y+1)=='*') i++;
-                if(map_objects.get(x-1,y)=='*') i++;
-                if(map_objects.get(x+1,y)=='*') i++;
-                
-                if(!do_crosspaths && (i==0 || i==1))
-                  {
-                  System.out.println("Crosspaths detected --> Randomizing");
-                  if(dir.equals("N"))
-                    {
-                    String randdir[]={"N","W","W","E","E"};
-                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
-                    do_crosspaths=true;
-                    }
-                  else if(dir.equals("S"))
-                    {
-                    String randdir[]={"S","W","E","W","E"};
-                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
-                    do_crosspaths=true;
-                    }
-                  else if(dir.equals("W"))
-                    {
-                    String randdir[]={"W","N","S","N","S"};
-                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
-                    do_crosspaths=true;
-                    }
-                  else if(dir.equals("E"))
-                    {
-                    String randdir[]={"N","S","N","S","E"};
-                    turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
-                    do_crosspaths=true;
-                    }
-                  }
-                }
-
-              if(turn.size()>1 && !turn.get("dir").equals(dir))
-                {
-                Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
-                msgTurn.setClientID(clientid);
-                netMan.addMessage(msgTurn);
-                }
-              }
+            map_objects.print(System.out,world_objects);
+            gameLogic(myRPObject,map_objects);
             }
           }
         }
@@ -379,6 +274,117 @@ public class nullClient extends Thread
       e.printStackTrace();
       }
     }
+  
+  private void gameLogic(RPObject myRPObject, ClientMap map_objects) throws Attributes.AttributeNotFoundException
+    {
+    /** Code here game **/
+    int x=myRPObject.getInt("x");
+    int y=myRPObject.getInt("y");
+    String dir=myRPObject.get("dir");
+       
+    RPAction turn=new RPAction();
+    turn.put("type","turn");
+    turn.put("dir",dir);
+      
+    boolean changed=true;
+    boolean do_crosspaths=false;
+
+    while(changed)
+      {
+      changed=false;
+      
+      if((turn.get("dir").equals("N") && map_objects.get(x,y-1)=='*'))
+        {
+        System.out.println("Collision at N --> Goes W");
+        turn.put("dir","W");
+        changed=true;
+        }
+      else if((turn.get("dir").equals("W") && map_objects.get(x-1,y)=='*'))
+        {
+        System.out.println("Collision at W --> Goes S");
+        turn.put("dir","S");
+        changed=true;
+        }
+      else if((turn.get("dir").equals("S") && map_objects.get(x,y+1)=='*'))
+        {
+        System.out.println("Collision at S --> Goes E");
+        turn.put("dir","E");
+        changed=true;
+        }
+      else if((turn.get("dir").equals("E") && map_objects.get(x+1,y)=='*'))
+        {
+        System.out.println("Collision at E --> Goes N");
+        turn.put("dir","N");
+        changed=true;
+        }
+      
+      if(!changed && !dir.equals(turn.get("dir")) && (                
+        ("NS".indexOf(dir)!=-1)==("NS".indexOf(turn.get("dir"))!=-1) || 
+        ("WE".indexOf(dir)!=-1)==("WE".indexOf(turn.get("dir"))!=-1)))
+        {
+        System.out.println("Backtracking detected --> Rotating");
+        String newdir=turn.get("dir");
+        if(newdir.equals("N"))
+          {
+          turn.put("dir","W");
+          }
+        else if(newdir.equals("W"))
+          {
+          turn.put("dir","S");
+          }
+        else if(newdir.equals("S"))
+          {
+          turn.put("dir","E");
+          }
+        else if(newdir.equals("E"))
+          {
+          turn.put("dir","N");
+          }                  
+        }
+        
+                        
+        int i=0;
+        if(map_objects.get(x,y-1)=='*') i++;
+        if(map_objects.get(x,y+1)=='*') i++;
+        if(map_objects.get(x-1,y)=='*') i++;
+        if(map_objects.get(x+1,y)=='*') i++;
+        
+        if(!do_crosspaths && (i==0 || i==1))
+          {
+          System.out.println("Crosspaths detected --> Randomizing");
+          if(dir.equals("N"))
+            {
+            String randdir[]={"N","W","W","E","E"};
+            turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+            do_crosspaths=true;
+            }
+          else if(dir.equals("S"))
+            {
+            String randdir[]={"S","W","E","W","E"};
+            turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+            do_crosspaths=true;
+            }
+          else if(dir.equals("W"))
+            {
+            String randdir[]={"W","N","S","N","S"};
+            turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+            do_crosspaths=true;
+            }
+          else if(dir.equals("E"))
+            {
+            String randdir[]={"N","S","N","S","E"};
+            turn.put("dir",randdir[Math.abs(rand.nextInt()%randdir.length)]);
+            do_crosspaths=true;
+            }
+          }
+        }
+
+    if(turn.size()>1 && !turn.get("dir").equals(dir))
+      {
+      Message msgTurn=new MessageC2SAction(null,turn);
+      netMan.addMessage(msgTurn);
+      }
+    }
     
   public static void main (String[] args)
     {
@@ -405,5 +411,4 @@ public class nullClient extends Thread
       }
     }
   }
-    
-    
+  
