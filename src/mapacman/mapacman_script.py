@@ -86,6 +86,8 @@ class mapacmanRPMap:
         line=f.readline()
         i=0
         while line<>'':
+        	for char in line
+        		print "Character: "+char
             self.grid.append(line[:-1])
             self.computeRespawnPoints(i,line)
             line=f.readline()
