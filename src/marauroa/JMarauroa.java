@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.18 2003/12/22 09:45:33 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.19 2004/02/07 20:40:59 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,13 +24,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import marauroa.game.RPObject;
 import simplegame.SimpleGame;
+import the1001client.The1001Game;
 
 
 /**
  * Test client for marauroa
  **/
-public class JMarauroa extends JFrame
+public class JMarauroa extends JFrame implements WindowListener
 {
+	private final static   long serialVersionUID = 4711;
   private final static String ACTION_CMD_LOGIN = "login";
   private final static String ACTION_CMD_DISCONNECT = "disconnect";
   private final static String ACTION_CMD_EXIT = "exit";
@@ -40,26 +42,25 @@ public class JMarauroa extends JFrame
   
   private JTextArea reportsTextArea;
   private JComponent glassPane;
-  private ActionHandler actionHandler;
+  private transient ActionHandler actionHandler;
   
   private SimpleDateFormat formatter;
   private Date logDate;
   
   private int clientId;
-  private NetworkClientManager netMan;
-  private RPObject.ID characterID;
+  private transient NetworkClientManager netMan;
+  private transient RPObject.ID characterID;
   
   
   public JMarauroa()
   {
 		actionHandler = new ActionHandler();
-		actionHandler.start();
 		setTitle("Marauroa test client");
 		setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/marauroa_ICON.png")).getImage());
 		initMenu();
 		initComponents();
 		clientId=-1;
-        characterID=null;
+		characterID=null;
 		formatter = new SimpleDateFormat("[HH:MM:ss.SSS]  ");
 		logDate = new Date();
 		addWindowListener(new WindowAdapter()
@@ -81,9 +82,9 @@ public class JMarauroa extends JFrame
 														 {
 					public void keyPressed(KeyEvent e)
 					{
-						if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
-						{
-						}
+//						if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+//						{
+//						}
 					}} );
 		glassPane.addFocusListener(new FocusListener()
 															 {
@@ -131,33 +132,33 @@ public class JMarauroa extends JFrame
 			
 			switch(message.getType())
 			{
-				case Message.TYPE_S2C_LOGIN_NACK:
-					addLog("Login reject because "+((MessageS2CLoginNACK)message).getResolution()+"\n");
-					complete=true;
-					break;
-				case Message.TYPE_S2C_LOGIN_ACK:
-					addLog("Login successful\n");
-					clientId=message.getClientID();
-					addLog("Recieved clientid: "+clientId+"\n");
-					++recieved;
-					break;
-				case Message.TYPE_S2C_CHARACTERLIST:
-					characters=((MessageS2CCharacterList)message).getCharacters();
-					for(int i=0;i<characters.length;++i)
-					{
-						addLog("- "+characters[i]+"\n");
-					}
-					
-					++recieved;
-					break;
-				case Message.TYPE_S2C_SERVERINFO:
-					serverInfo=((MessageS2CServerInfo)message).getContents();
-					for(int i=0;i<serverInfo.length;++i)
-					{
-						addLog("- "+serverInfo[i]+"\n");
-					}
-					++recieved;
-					break;
+			case Message.TYPE_S2C_LOGIN_NACK:
+				addLog("Login reject because "+((MessageS2CLoginNACK)message).getResolution()+"\n");
+				complete=true;
+				break;
+			case Message.TYPE_S2C_LOGIN_ACK:
+				addLog("Login successful\n");
+				clientId=message.getClientID();
+				addLog("Recieved clientid: "+clientId+"\n");
+				++recieved;
+				break;
+			case Message.TYPE_S2C_CHARACTERLIST:
+				characters=((MessageS2CCharacterList)message).getCharacters();
+				for(int i=0;i<characters.length;++i)
+				{
+					addLog("- "+characters[i]+"\n");
+				}
+				
+				++recieved;
+				break;
+			case Message.TYPE_S2C_SERVERINFO:
+				serverInfo=((MessageS2CServerInfo)message).getContents();
+				for(int i=0;i<serverInfo.length;++i)
+				{
+					addLog("- "+serverInfo[i]+"\n");
+				}
+				++recieved;
+				break;
 			}
 		}
 		
@@ -177,27 +178,27 @@ public class JMarauroa extends JFrame
 			// Options
 			String[] options = {"Choose"};
 			int result = JOptionPane.showOptionDialog(
-				this,                             // the parent that the dialog blocks
-				message,                                    // the dialog message array
-				"Choose your character...", // the title of the dialog window
-				JOptionPane.DEFAULT_OPTION,                 // option type
-				JOptionPane.INFORMATION_MESSAGE,            // message type
-				new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
-				options,                                    // options string array, will be made into buttons
-				options[0]                                  // option that should be made into a default button
-			);
+																								this,                             // the parent that the dialog blocks
+																								message,                                    // the dialog message array
+																								"Choose your character...", // the title of the dialog window
+																								JOptionPane.DEFAULT_OPTION,                 // option type
+																								JOptionPane.INFORMATION_MESSAGE,            // message type
+																								new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+																								options,                                    // options string array, will be made into buttons
+																								options[0]                                  // option that should be made into a default button
+																							 );
 			switch(result)
 			{
-				case 0: // choose character
-					{
-						String character = String.valueOf(cb_characters.getSelectedItem());
-						chooseCharacter(character);
-					}
-					break;
-				case 1: // cancel
-					break;
-				default:
-					break;
+			case 0: // choose character
+				{
+					String character = String.valueOf(cb_characters.getSelectedItem());
+					chooseCharacter(character);
+				}
+				break;
+			case 1: // cancel
+				break;
+			default:
+				break;
 			}
 			
 		}
@@ -249,13 +250,13 @@ public class JMarauroa extends JFrame
 		mnu_item_disconnect.setActionCommand(ACTION_CMD_DISCONNECT);
 		mnu_item_disconnect.setMnemonic('D');
 		mnu_server.add(mnu_item_disconnect);
-		
-		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
-		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
-		mnu_item_letsplay.addActionListener(actionHandler);
-		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
-		mnu_item_letsplay.setMnemonic('P');
-		mnu_server.add(mnu_item_letsplay);
+//
+//		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
+//		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
+//		mnu_item_letsplay.addActionListener(actionHandler);
+//		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
+//		mnu_item_letsplay.setMnemonic('P');
+//		mnu_server.add(mnu_item_letsplay);
 		
 		JMenuItem mnu_item_exit = new JMenuItem("Exit");
 		mnu_item_exit.setAccelerator(KeyStroke.getKeyStroke("control X"));
@@ -326,14 +327,14 @@ public class JMarauroa extends JFrame
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
 			{
 				MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)msgReply;
-				characterID = msg_ack.getObjectID();				
+				characterID = msg_ack.getObjectID();
 				addLog("Character choosen correctly(id is "+characterID+")\n");
-
+				
 				/** Automagically create a new simplegame event */
-				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
-				sg.pack();
-				sg.show();
-				new Thread(sg,"Lets play thread...").start();
+				The1001Game game = new The1001Game(netMan,JMarauroa.this,characterID);
+				game.pack();
+				game.show();
+				new Thread(game,"Game thread...").start();
 			}
 			
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
@@ -373,6 +374,8 @@ public class JMarauroa extends JFrame
 		
 		JComboBox cb_server = new JComboBox();
 		cb_server.addItem("127.0.0.1");
+		cb_server.addItem("marauroa.ath.cx");
+		cb_server.addItem("tribus.dyndns.org");
 		cb_server.addItem("192.168.100.100");
 		cb_server.addItem("localhost");
 		cb_server.setEditable(true);
@@ -396,46 +399,46 @@ public class JMarauroa extends JFrame
 		// Options
 		String[] options = {"Connect","Cancel",};
 		int result = JOptionPane.showOptionDialog(
-			this,                             // the parent that the dialog blocks
-			message,                                    // the dialog message array
-			"Login to...", // the title of the dialog window
-			JOptionPane.DEFAULT_OPTION,                 // option type
-			JOptionPane.INFORMATION_MESSAGE,            // message type
-			new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
-			options,                                    // options string array, will be made into buttons
-			options[0]                                  // option that should be made into a default button
-		);
+																							this,                             // the parent that the dialog blocks
+																							message,                                    // the dialog message array
+																							"Login to...", // the title of the dialog window
+																							JOptionPane.DEFAULT_OPTION,                 // option type
+																							JOptionPane.INFORMATION_MESSAGE,            // message type
+																							new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+																							options,                                    // options string array, will be made into buttons
+																							options[0]                                  // option that should be made into a default button
+																						 );
 		switch(result)
 		{
-			case 0: // connect
+		case 0: // connect
+			{
+				String hostname = null;
+				if(cb_server.getSelectedItem()!=null)
 				{
-					String hostname = null;
-					if(cb_server.getSelectedItem()!=null)
-					{
-						hostname = String.valueOf(cb_server.getSelectedItem());
-					}
-					else
-					{
-						hostname = String.valueOf(cb_server.getEditor().getItem());
-					}
-					String user_name = null;
-					if(cb_user.getSelectedItem()!=null)
-					{
-						user_name = String.valueOf(cb_user.getSelectedItem());
-					}
-					else
-					{
-						user_name = String.valueOf(cb_user.getEditor().getItem());
-					}
-					String pwd  = new String(pf_pwd.getPassword());
-					connectAndChooseCharacter(hostname, user_name,pwd);
-					
+					hostname = String.valueOf(cb_server.getSelectedItem());
 				}
-				break;
-			case 1: // cancel
-				break;
-			default:
-				break;
+				else
+				{
+					hostname = String.valueOf(cb_server.getEditor().getItem());
+				}
+				String user_name = null;
+				if(cb_user.getSelectedItem()!=null)
+				{
+					user_name = String.valueOf(cb_user.getSelectedItem());
+				}
+				else
+				{
+					user_name = String.valueOf(cb_user.getEditor().getItem());
+				}
+				String pwd  = new String(pf_pwd.getPassword());
+				connectAndChooseCharacter(hostname, user_name,pwd);
+				
+			}
+			break;
+		case 1: // cancel
+			break;
+		default:
+			break;
 		}
   }
   
@@ -463,12 +466,11 @@ public class JMarauroa extends JFrame
   
   
   private final class ActionHandler
-		extends Thread implements ActionListener
+	extends Thread implements ActionListener
   {
 		private ActionEvent currentEvent;
 		private Object monitor;
 		private boolean end;
-		private JWindow cancelDialog;
 		
 		
 		
@@ -606,8 +608,9 @@ public class JMarauroa extends JFrame
   
   
   private final class BackgroundImagePanel
-		extends JPanel
+	extends JPanel
   {
+		private final static long serialVersionUID = 4722;
 		private Image backGroundImage;
 		
 		public BackgroundImagePanel(LayoutManager lm)
@@ -636,6 +639,83 @@ public class JMarauroa extends JFrame
 		
   }
   
+	
+	//Window Listener methods
+	/**
+	 * Invoked the first time a window is made visible.
+	 */
+	public void windowOpened(WindowEvent e)
+	{
+		actionHandler.start();
+	}
+	
+	/**
+	 * Invoked when a window has been closed as the result
+	 * of calling dispose on the window.
+	 */
+	public void windowClosed(WindowEvent e)
+	{
+		// TODO
+	}
+	
+	/**
+	 * Invoked when a window is changed from a normal to a
+	 * minimized state. For many platforms, a minimized window
+	 * is displayed as the icon specified in the window's
+	 * iconImage property.
+	 * @see java.awt.Frame#setIconImage
+	 */
+	public void windowIconified(WindowEvent e)
+	{
+		// TODO
+	}
+	
+	/**
+	 * Invoked when a window is changed from a minimized
+	 * to a normal state.
+	 */
+	public void windowDeiconified(WindowEvent e)
+	{
+		// TODO
+	}
+	
+	/**
+	 * Invoked when the Window is set to be the active Window. Only a Frame or
+	 * a Dialog can be the active Window. The native windowing system may
+	 * denote the active Window or its children with special decorations, such
+	 * as a highlighted title bar. The active Window is always either the
+	 * focused Window, or the first Frame or Dialog that is an owner of the
+	 * focused Window.
+	 */
+	public void windowActivated(WindowEvent e)
+	{
+		// TODO
+	}
+	
+	/**
+	 * Invoked when a Window is no longer the active Window. Only a Frame or a
+	 * Dialog can be the active Window. The native windowing system may denote
+	 * the active Window or its children with special decorations, such as a
+	 * highlighted title bar. The active Window is always either the focused
+	 * Window, or the first Frame or Dialog that is an owner of the focused
+	 * Window.
+	 */
+	public void windowDeactivated(WindowEvent e)
+	{
+		// TODO
+	}
+	
+	/**
+	 * Invoked when the user attempts to close the window
+	 * from the window's system menu.  If the program does not
+	 * explicitly hide or dispose the window while processing
+	 * this event, the window close operation will be cancelled.
+	 */
+	public void windowClosing(WindowEvent e)
+	{
+		// TODO
+	}
+	
   
 }
 
