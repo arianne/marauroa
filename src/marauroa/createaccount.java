@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.13 2004/03/22 22:57:42 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.14 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.game.*;
-
 import the1001.objects.*;
 
 class createaccount
@@ -30,7 +29,6 @@ class createaccount
     {
     int i=0;
     PrintWriter out=null;
-    
     String username=null;
     String password=null;
     String character=null;
@@ -68,10 +66,8 @@ class createaccount
         {
         // TODO: Write help
         }
-        
       ++i;
       }
-    
     if(username==null) return (1);
     if(password==null) return (1);
     if(character==null) return (1);
@@ -90,8 +86,8 @@ class createaccount
       
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       JDBCRPObjectDatabase rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+
       trans=playerDatabase.getTransaction();
-      
       out.println("Checking for valid string");
       out.flush();
       if(playerDatabase.validString(username)==false) 
@@ -124,7 +120,6 @@ class createaccount
         out.println("String not valid: "+gladiator_model);
         return (2);
         }
-
       out.println("Checking string size");
       if(username.length()>10 || username.length()<4) 
         {
@@ -156,31 +151,27 @@ class createaccount
         out.println("String size not valid: "+gladiator_model);
         return (3);
         }
-        
       out.println("Checking if player exists");
       if(playerDatabase.hasPlayer(trans, username))
         {
         out.println("ERROR: Player exists");
         return (4);
         }
-
       out.println("Adding player");
       playerDatabase.addPlayer(trans, username,password);
 
       RPObject object=new Player(rpobjectDatabase.getValidRPObjectID(trans),character);
+
       object.put("look",character_model);
       
       Gladiator gladiator_obj=new Gladiator(rpobjectDatabase.getValidRPObjectID(trans));
+
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);
-      
       object.getSlot("!gladiators").add(gladiator_obj);
-      
       out.println("Adding character");
       playerDatabase.addCharacter(trans, username,character,object);
-      
       out.println("Correctly created");
-      
       trans.commit();
       }
     catch(Exception e)
@@ -194,7 +185,6 @@ class createaccount
         {
         out.println("Failed Rollback: "+ae.getMessage());
         }
-        
       return (5);
       }    
     finally
@@ -205,7 +195,6 @@ class createaccount
         out.close();
         }
       }
-    
     return (0);
     }
   }

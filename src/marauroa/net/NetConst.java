@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.8 2004/03/02 19:16:51 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.9 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,13 +32,13 @@ public class NetConst
    *  6 - Added zlib support to Perception message */
   final static public byte NETWORK_PROTOCOL_VERSION=6;
   final static public long PACKET_TIMEOUT_VALUE=5000;
-  
   static
     {
     marauroad.trace("NetConst::(static)",">");
     try
       {
       Configuration conf=Configuration.getConfiguration();
+
       marauroa_PORT=Integer.parseInt(conf.get("marauroa_PORT"));
       }
     catch(Exception e)
@@ -46,7 +46,6 @@ public class NetConst
       marauroad.trace("NetConst::(static)","X","Using default: "+e.getMessage());
       marauroa_PORT=3214;
       }
-
     marauroad.trace("NetConst::(static)","<");
     }
   }

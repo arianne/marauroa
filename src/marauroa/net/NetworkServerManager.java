@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.15 2004/03/02 19:16:51 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.16 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 import java.math.*;
-
 import marauroa.*;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
@@ -29,17 +28,14 @@ public class NetworkServerManager
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
-  
   /** A List of Message objects: List<Message> */
   private List messages;
-  
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
   private Statistics stats;
-  
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
-      to recieve new messages from the network. */
+   to recieve new messages from the network. */
   public NetworkServerManager() throws SocketException
     {
     marauroad.trace("NetworkServerManager",">");
@@ -48,20 +44,14 @@ public class NetworkServerManager
       /* Create the socket and set a timeout of 1 second */
       socket=new DatagramSocket(NetConst.marauroa_PORT);
       socket.setSoTimeout(1000);
-       
       msgFactory=MessageFactory.getFactory();
-    
       keepRunning=true;
       isfinished=false;
-
-	  /* Because we access the list from several places we create a synchronized list. */
+      /* Because we access the list from several places we create a synchronized list. */
       messages=Collections.synchronizedList(new LinkedList());
-
       stats=Statistics.getStatistics();
-    
       readManager=new NetworkServerManagerRead();
       readManager.start();
-    
       writeManager=new NetworkServerManagerWrite();
       }
     finally
@@ -75,7 +65,6 @@ public class NetworkServerManager
     {
     marauroad.trace("NetworkServerManager::finish",">");
     keepRunning=false;
-    
     while(isfinished==false)
       {
       try
@@ -86,7 +75,6 @@ public class NetworkServerManager
         {
         }
       }
-    
     socket.close();
     marauroad.trace("NetworkServerManager::finish","<");
     }
@@ -115,7 +103,6 @@ public class NetworkServerManager
           {
           }
         }
-    
       if(messages.size()==0)
         {
         marauroad.trace("NetworkServerManager::getMessage","D","Message not available.");
@@ -150,7 +137,6 @@ public class NetworkServerManager
           {
           }
         }
-      
       return (Message)messages.remove(0);
       }
     finally
@@ -167,7 +153,6 @@ public class NetworkServerManager
     writeManager.write(msg);
     marauroad.trace("NetworkServerManager::addMessage","<");
     }
-  
   /** The active thread in charge of recieving messages from the network. */
   class NetworkServerManagerRead extends Thread
     {
@@ -189,14 +174,13 @@ public class NetworkServerManager
           {
           socket.receive(packet);
           marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
-          
           /*** Statistics ***/
           stats.addBytesRecv(packet.getLength());
           stats.addMessageRecv();
 
           Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
+
           marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
-         
           messages.add(msg);
           newMessageArrived();
           }
@@ -208,23 +192,21 @@ public class NetworkServerManager
         catch(IOException e)
           {
           stats.addMessageIncorrect();
-
           /* Report the exception */
           marauroad.trace("NetworkServerManagerRead::run","X",e.getMessage());
           }
         }
-
       isfinished=true;
       marauroad.trace("NetworkServerManagerRead::run","<");
       }
     }
     
+
   /** A wrapper class for sending messages to clients */
   class NetworkServerManagerWrite
     {
     private int last_signature;
     private String name;
-    
     public NetworkServerManagerWrite()
       {
       last_signature=0;
@@ -232,71 +214,72 @@ public class NetworkServerManager
       }
     
     /** Method that execute the writting */
- 	public void write(Message msg)
- 	  {
+    public void write(Message msg)
+      {
       marauroad.trace("NetworkServerManagerWrite::write",">");
- 	  try
- 	    {
- 	    /* TODO: Looks like hardcoded, write it in a better way */
- 	    if(keepRunning)
- 	      {
- 	      ByteArrayOutputStream out=new ByteArrayOutputStream();
-
+      try
+        {
+        /* TODO: Looks like hardcoded, write it in a better way */
+        if(keepRunning)
+          {
+          ByteArrayOutputStream out=new ByteArrayOutputStream();
           OutputSerializer s=new OutputSerializer(out);     
- 	      s.write(msg);
 
- 	      byte[] buffer=out.toByteArray();
+          s.write(msg);
+
+          byte[] buffer=out.toByteArray();
   
           /*** Statistics ***/
           stats.addBytesSend(buffer.length);
           stats.addMessageSend();
-  
           marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
-		  int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
-		  ++last_signature;
-		  int remaining=buffer.length;
-		  
-		  for(int i=0;i<total;++i)
-		    {
-		    int size=0;
-		    if((NetConst.UDP_PACKET_SIZE-3)>remaining)
-		      {
-		      size=remaining;
-		      }
-		    else
-		      {
-		      size=NetConst.UDP_PACKET_SIZE-3;
-  		      }
-  		      
-  		    remaining-=size;
-  		    
-  		    marauroad.trace("NetworkServerManagerWrite::write","D","Packet size: "+size);
-  		    marauroad.trace("NetworkServerManagerWrite::write","D","Bytes remaining: "+remaining);
-		      
-		    byte[] data=new byte[size+3];
-		    data[0]=(byte)total;
-		    data[1]=(byte)i;
-		    data[2]=(byte)last_signature;
-		    System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
+          int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
 
-   	        DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress());
+          ++last_signature;
+
+          int remaining=buffer.length;
+		  
+          for(int i=0;i<total;++i)
+            {
+            int size=0;
+
+            if((NetConst.UDP_PACKET_SIZE-3)>remaining)
+              {
+              size=remaining;
+              }
+            else
+              {
+              size=NetConst.UDP_PACKET_SIZE-3;
+              }
+            remaining-=size;
+            marauroad.trace("NetworkServerManagerWrite::write","D","Packet size: "+size);
+            marauroad.trace("NetworkServerManagerWrite::write","D","Bytes remaining: "+remaining);
+		      
+            byte[] data=new byte[size+3];
+
+            data[0]=(byte)total;
+            data[1]=(byte)i;
+            data[2]=(byte)last_signature;
+            System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
+
+            DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress());
+
             socket.send(pkt);
             marauroad.trace("NetworkServerManagerWrite::write","D","Sent packet "+(i+1)+" of "+total);
-		    }
-		    
+            }
           marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
- 	      }
- 	    }
- 	  catch(IOException e)
- 	    {
+          }
+        }
+      catch(IOException e)
+        {
         /* Report the exception */
         marauroad.trace("NetworkServerManagerWrite::write","X",e.getMessage());
- 	    }
- 	  finally
- 	    {
+        }
+      finally
+        {
         marauroad.trace("NetworkServerManagerWrite::write","<");
         }
- 	  }
+      }
     }
   }

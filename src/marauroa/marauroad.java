@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.51 2004/03/23 16:39:31 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.52 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.game.*;
-
 import the1001.objects.*;
 
 /**
@@ -29,17 +28,14 @@ public class marauroad extends Thread
   private static marauroad marauroa;
   private static Date timestamp;
   private static SimpleDateFormat formatter;
-	
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
-  
   static
     {
     out=null;
-	timestamp=new Date();
-	formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-	}
-	
+    timestamp=new Date();
+    formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    }
   private static void setArguments(String[] args)
     {
     int i=0;
@@ -55,6 +51,7 @@ public class marauroad extends Thread
         try
           {
           String time=String.valueOf(new Date().getTime());
+
           new File("logs").mkdir();
           out=new PrintWriter(new FileOutputStream("logs/"+"server_log_"+time+".txt"));
           }
@@ -69,7 +66,6 @@ public class marauroad extends Thread
         {
         // TODO: Write help
         }
-        
       ++i;
       }
     }
@@ -93,7 +89,6 @@ public class marauroad extends Thread
     println("You should have received a copy of the GNU General Public License");
     println("along with this program; if not, write to the Free Software");
     println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
-
     marauroad.trace("marauroad::main",">");
     marauroad.setArguments(args);
     marauroad.getMarauroa().start();
@@ -103,12 +98,13 @@ public class marauroad extends Thread
   public synchronized void run()
     {
     marauroad.trace("marauroad::run",">");
+
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
+
     /** TODO: Set database for MemoryDatabase, nice option would be to load it from a file */
 
     instance.init();
-
     while(!finish)
       {
       try
@@ -119,7 +115,9 @@ public class marauroad extends Thread
           try
             {
             out.close();
+
             String time=String.valueOf(new Date().getTime());
+
             out=new PrintWriter(new FileOutputStream("server_log_"+time+".txt"));
             }
           catch(FileNotFoundException e)
@@ -129,7 +127,6 @@ public class marauroad extends Thread
             System.exit(-1);
             }
           }
-          
         wait(5000);
         }
       catch(InterruptedException e)
@@ -137,7 +134,6 @@ public class marauroad extends Thread
         finish=true;
         }
       }
-      
     instance.finish();
     marauroad.trace("marauroad::run","<");
     }
@@ -153,7 +149,6 @@ public class marauroad extends Thread
       {
       marauroa=new marauroad();
       }
-      
     return marauroa;
     }
   
@@ -192,7 +187,6 @@ public class marauroad extends Thread
       out.println(text);
       out.flush();
       }
-      
     System.out.println(text);
     }
   
@@ -215,26 +209,21 @@ public class marauroad extends Thread
         return false;
         }
       }
-      
     for(int i=0;i<allowed.length;++i)
       {
       if(word.indexOf(allowed[i])!=-1)
         {
         return true;
         }
-      
       if(allowed[i].equals("*"))
         {
         return true;
         }
       }
-    
     return false;
     }
-  
   private static String[] allowed={"*","RPCode","the1001"};
-  private static String[] rejected={};//"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
-
+  private static String[] rejected={};// "the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
   public static void trace(String module,String event)
     {
     trace(module,event,"");
@@ -245,7 +234,9 @@ public class marauroad extends Thread
     if(filter(module) || event.equals("X") || event.equals("!"))
       {
       timestamp.setTime(System.currentTimeMillis());
-	  String ts = formatter.format(timestamp);
+
+      String ts = formatter.format(timestamp);
+
       getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
       }
     }

@@ -1,4 +1,4 @@
-/* $Id: Test_SerializerShort.java,v 1.2 2003/12/08 01:08:31 arianne_rpg Exp $ */
+/* $Id: Test_SerializerShort.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,12 @@ public class Test_SerializerShort extends Test_Serializer
   public static Test suite ( ) 
     {
     return new TestSuite(Test_SerializerShort.class);
-	}
+    }
 	
   public void testShort()
     {
     Short[] data=
-      {
+        {
       new Short((short)Short.MIN_VALUE),
       new Short((short)-50),
       new Short((short)0),

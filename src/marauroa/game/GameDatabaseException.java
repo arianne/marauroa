@@ -1,4 +1,4 @@
-/* $Id: GameDatabaseException.java,v 1.1 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: GameDatabaseException.java,v 1.2 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ public interface GameDatabaseException
       }
     }
   
+
   static public class PlayerNotFoundException extends Exception
     {
     PlayerNotFoundException(String player)
@@ -30,6 +31,7 @@ public interface GameDatabaseException
       }
     }
   
+
   static public class CharacterNotFoundException extends Exception
     {
     CharacterNotFoundException(String character)
@@ -37,6 +39,7 @@ public interface GameDatabaseException
       super("Character ["+character+"] not found on the database");
       }
     }
+
 
   static public class CharacterAlreadyAddedException extends Exception
     {
@@ -46,6 +49,7 @@ public interface GameDatabaseException
       }
     }
     
+
   static public class NoDatabaseConfException extends Exception
     {
     NoDatabaseConfException()
@@ -54,6 +58,7 @@ public interface GameDatabaseException
       }
     }
 
+
   static public class GenericDatabaseException extends Exception
     {
     GenericDatabaseException(String msg)
@@ -61,5 +66,4 @@ public interface GameDatabaseException
       super(msg);
       }
     }
-  
   }

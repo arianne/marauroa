@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.6 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPActionList.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,13 +21,12 @@ public class RPActionList
   {
   /** A LinkedList<RPAction> that contains actions */
   private LinkedList actionsList;
-  
   public RPActionList()
     {
     actionsList = new LinkedList();
     }
   
-  /**This method adds a new rp action to list
+  /** This method adds a new rp action to list
    * @param rp_action - RPAction to add into list
    * @return actions that was just added
    **/
@@ -71,12 +70,10 @@ public class RPActionList
     {
     return(new RPActionIterator(actionsList.iterator()));
     }
-  
   /** An iterator for a RPActionList */
   public class RPActionIterator implements Iterator
     {
     private Iterator actionsIter;
-    
     /** Constructor */
     private RPActionIterator(Iterator iter)
       {
@@ -102,4 +99,3 @@ public class RPActionList
       }
     }
   }
-

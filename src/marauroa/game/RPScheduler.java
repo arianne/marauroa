@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.11 2004/02/16 15:27:35 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.12 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,6 @@ public class RPScheduler
   private HashMap nextTurn;
   /** Turn we are executing now */
   private int turn;
-  
   static class ActionInvalidException extends Exception
     {
     ActionInvalidException(String attribute)
@@ -34,7 +33,6 @@ public class RPScheduler
       super("Action is invalid: It lacks of mandatory attribute ["+attribute+"]");
       }
     }
-    
   /** Constructor */
   public RPScheduler()
     {
@@ -52,16 +50,18 @@ public class RPScheduler
     try
       {
       RPObject.ID id=new RPObject.ID(action);
+
       marauroad.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
-      
       if(nextTurn.containsKey(id))
         {
         RPActionList list=(RPActionList)nextTurn.get(id);
+
         list.add(action);
         }
       else
         {
         RPActionList list=new RPActionList();
+
         list.add(action);
         nextTurn.put(id,list);
         }
@@ -82,7 +82,6 @@ public class RPScheduler
   public void visit(RPRuleProcessor ruleProcessor)
     {
     marauroad.trace("RPScheduler::visit",">");
-    
     try
       {
       Iterator it=actualTurn.entrySet().iterator();
@@ -90,13 +89,13 @@ public class RPScheduler
       while(it.hasNext())
         {
         Map.Entry val=(Map.Entry)it.next();
-      
         RPObject.ID id=(RPObject.ID)val.getKey();
         RPActionList list=(RPActionList)val.getValue();
 
         ruleProcessor.approvedActions(id,list);
       
         Iterator action_it=list.iterator();
+
         while(action_it.hasNext())
           {
           try
@@ -131,12 +130,10 @@ public class RPScheduler
   public synchronized void nextTurn()
     {
     marauroad.trace("RPScheduler::nextTurn",">");
-    
     ++turn;
     actualTurn.clear();
     actualTurn=nextTurn;
     nextTurn=new HashMap();
-    
     marauroad.trace("RPScheduler::nextTurn","<");
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.3 2003/12/10 22:49:46 root777 Exp $ */
+/* $Id: OutputSerializer.java,v 1.4 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,9 +20,8 @@ import java.io.*;
 public class OutputSerializer
   {
   OutputStream out;
-  
   /** Constructor that pass the OutputStream to the serializer
-      @param in the InputStream */
+   @param in the InputStream */
   public OutputSerializer(OutputStream out)
     {
     this.out=out;
@@ -30,7 +29,7 @@ public class OutputSerializer
   
   /** Add the Object to the serializer, if it implements the marauroa.net.Serializable interface
    *  @param obj the object to serialize */
-    public void write(marauroa.net.Serializable obj) throws IOException
+  public void write(marauroa.net.Serializable obj) throws IOException
     {
     obj.writeObject(this);
     }
@@ -92,5 +91,7 @@ public class OutputSerializer
     write(a.length);
     for(int i=0;i<a.length;i++) write(a[i]);
     }
-  };
+  }
 
+
+;

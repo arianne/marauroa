@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.50 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.51 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.game;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-
 import marauroa.net.*;
 import marauroa.*;
 
@@ -25,58 +24,51 @@ class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
   private final static int TOTAL_PERCEPTION_RELATION=15;
-  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
   /** The time elapsed between 2 turns. */
   private long turnDuration;
-  
   /** The scheduler needed to organize actions */
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
   private RPRuleProcessor ruleProcessor;
   /** The place where the objects are stored */
   private RPZone zone;
-  
   private Statistics stats;
-  
   /** The networkServerManager so that we can send perceptions */
   private NetworkServerManager netMan;
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
-  
-  
   /** Constructor 
    *  @param netMan the NetworkServerManager so that we can send message */
   public RPServerManager(NetworkServerManager netMan)
     {
     super("RPServerManager");
-    
     marauroad.trace("RPServerManager",">");
-   
     try
       {
       stats=Statistics.getStatistics();
       keepRunning=true;
       isfinished=false;
-      
       scheduler=new RPScheduler();
       playerContainer=PlayerEntryContainer.getContainer();    
       this.netMan=netMan;
       
       Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
+
       zone=(RPZone)zoneClass.newInstance();
       
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
+
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
       
       String duration =conf.get("rp_turnDuration");
+
       turnDuration = Long.parseLong(duration);
-      
       start();
       }
     catch(Exception e)
@@ -96,21 +88,17 @@ class RPServerManager extends Thread
   public RPServerManager(NetworkServerManager netMan, RPZone zone, RPRuleProcessor ruleProcessor, long turnDuration)
     {
     super("RPServerManager");
-    
     marauroad.trace("RPServerManager",">");
-   
     try
       {
       keepRunning=true;
       isfinished=false;
-      
       scheduler=new RPScheduler();
       playerContainer=PlayerEntryContainer.getContainer();    
       this.netMan=netMan;
       this.zone=zone;
       this.ruleProcessor=ruleProcessor;
       this.turnDuration=turnDuration;
-      
       start();
       }
     finally
@@ -123,7 +111,6 @@ class RPServerManager extends Thread
     {
     marauroad.trace("RPServerManager::finish",">");
     keepRunning=false;
-
     while(isfinished==false)
       {
       try
@@ -134,7 +121,6 @@ class RPServerManager extends Thread
         {
         }
       }
-
     marauroad.trace("RPServerManager::finish","<");
     }
   
@@ -158,7 +144,6 @@ class RPServerManager extends Thread
     try
       {
       stats.addObjectAdded();
-      
       marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
       zone.add(object);
       }
@@ -171,7 +156,6 @@ class RPServerManager extends Thread
   public RPObject getRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::getRPObject",">");
-    
     try
       {
       return zone.get(id);
@@ -185,7 +169,6 @@ class RPServerManager extends Thread
   public boolean hasRPObject(RPObject.ID id)
     {
     marauroad.trace("RPServerManager::hasRPObject",">");
-    
     try
       {
       return zone.has(id);
@@ -199,11 +182,9 @@ class RPServerManager extends Thread
   public RPObject removeRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::removeRPObject",">");
-    
     try
       {
       stats.addObjectRemoved();
-
       marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
       return zone.remove(id);
       }
@@ -212,19 +193,18 @@ class RPServerManager extends Thread
       marauroad.trace("RPServerManager::removeRPObject","<");
       }
     }
-
   private int deltaPerceptionSend=0;
-  
   private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
+
     List playersToRemove=new LinkedList();
     
     try
       {
       playerContainer.getLock().requestWriteLock();
-
       ++deltaPerceptionSend;
+
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
       
       while(it.hasNext())
@@ -237,6 +217,7 @@ class RPServerManager extends Thread
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
             RPZone.Perception perception;
+
             if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
@@ -249,11 +230,11 @@ class RPServerManager extends Thread
               }
             
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception.type, perception.addedList, perception.deletedList);
+
             messages2cPerception.setMyRPObject(zone.get(playerContainer.getRPObjectID(clientid)));
             messages2cPerception.setClientID(clientid);
             netMan.addMessage(messages2cPerception);            
             }
-            
           if(playerContainer.timedout(clientid))
             {
             playersToRemove.add(new Integer(clientid));
@@ -264,18 +245,16 @@ class RPServerManager extends Thread
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
           }
         }
-      
       if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
         {
         deltaPerceptionSend=0;
         }
-
-// NOTE: If we use the Read/Write lock, it can happen a race condition between 
-// unlock and lock that may result in a bad operation.
-//
-//      playerContainer.getLock().releaseLock();
-//      /* Removing the players is a write operation */
-//      playerContainer.getLock().requestWriteLock();
+      // NOTE: If we use the Read/Write lock, it can happen a race condition between 
+      // unlock and lock that may result in a bad operation.
+      //
+      // playerContainer.getLock().releaseLock();
+      // /* Removing the players is a write operation */
+      // playerContainer.getLock().requestWriteLock();
 
       notifyTimedoutPlayers(playersToRemove);
       }      
@@ -289,10 +268,10 @@ class RPServerManager extends Thread
   private void notifyTimedoutPlayers(List playersToNotify)    
     {
     marauroad.trace("RPServerManager::notifyTimedoutPlayers",">");
-
     try
       {
       Iterator it_notified=playersToNotify.iterator();
+
       while(it_notified.hasNext())
         {
         int clientid=((Integer)it_notified.next()).intValue();
@@ -301,12 +280,13 @@ class RPServerManager extends Thread
           {
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
           RPObject object=getRPObject(id);
+
           if(ruleProcessor.onTimeout(id))
             {
             /* NOTE: Set the Object so that it is stored in Database */
             playerContainer.setRPObject(clientid,object);  
             }      
-    	  }
+          }
         catch(Exception e)
           {
           marauroad.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player("+clientid+") that timedout");
@@ -341,12 +321,10 @@ class RPServerManager extends Thread
   public void run()
     {
     marauroad.trace("RPServerManager::run",">");
-    
     while(keepRunning)
       {
       scheduler.visit(ruleProcessor);      
       buildPerceptions();
-      
       try
         {
         Thread.sleep(turnDuration);
@@ -354,16 +332,12 @@ class RPServerManager extends Thread
       catch(InterruptedException e)
         {
         }
-
       zone.nextTurn();      
       scheduler.nextTurn();      
       ruleProcessor.nextTurn();
-      
       stats.setObjectsNow(zone.size());
       }
-      
     isfinished=true;    
     marauroad.trace("RPServerManager::run","<");
     }
   }
-

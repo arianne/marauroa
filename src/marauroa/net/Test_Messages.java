@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.10 2004/03/02 19:16:51 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.11 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,29 +24,26 @@ public class Test_Messages extends TestCase
   {
   private ByteArrayOutputStream out;
   private ByteArrayInputStream in;
-  
   private InputSerializer sin;
   private OutputSerializer sout;
-
   public static Test suite ( ) 
     {
     return new TestSuite(Test_Messages.class);
-	}
+    }
 	
   public void testMessageC2SChooseCharacter()
     {
     marauroad.trace("Test_Messages::testMessageC2SChooseCharacter","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SChooseCharacter",">");
+
     String character="Test character";
     int clientid=14324;
-    
     MessageC2SChooseCharacter msg=new MessageC2SChooseCharacter(null,character);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -55,11 +52,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,msg.getType());
     assertEquals(clientid,msg.getClientID());
     assertEquals(character,msg.getCharacter());
-
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -77,7 +72,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(character,result.getCharacter());
@@ -89,16 +83,15 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageC2SLogin","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SLogin",">");
+
     String username="Test username";
     String password="Test password";
     int clientid=14324;
-    
     MessageC2SLogin msg=new MessageC2SLogin(null,username,password);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -107,12 +100,10 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_C2S_LOGIN,msg.getType());
     assertEquals(clientid,msg.getClientID());
     assertEquals(username,msg.getUsername());
     assertEquals(password,msg.getPassword());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -130,7 +121,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_C2S_LOGIN,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(username,result.getUsername());
@@ -143,14 +133,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageC2SLogout","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SLogout",">");
+
     int clientid=14324;
-    
     MessageC2SLogout msg=new MessageC2SLogout(null);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -159,10 +148,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_C2S_LOGOUT,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -180,7 +167,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_C2S_LOGOUT,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageC2SLogout","<");
@@ -191,15 +177,14 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CCharacterList","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CCharacterList",">");
+
     int clientid=14324;
     String[] characters={"Test character","Another Test character"};
-    
     MessageS2CCharacterList msg=new MessageS2CCharacterList(null,characters);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -208,11 +193,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_CHARACTERLIST,msg.getType());
     assertEquals(clientid,msg.getClientID());
     assertEquals(characters,msg.getCharacters());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -230,11 +213,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_CHARACTERLIST,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(characters.length,result.getCharacters().length);
-    
     for(int i=0;i<characters.length;++i)
       {
       assertEquals(characters[i],result.getCharacters()[i]);
@@ -247,14 +228,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK",">");
+
     int clientid=14324;
-    
     MessageS2CChooseCharacterACK msg=new MessageS2CChooseCharacterACK(null,new RPObject.ID(0));
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -263,10 +243,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_ACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -284,7 +262,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK","<");
@@ -295,14 +272,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK",">");
+
     int clientid=14324;
-    
     MessageS2CChooseCharacterNACK msg=new MessageS2CChooseCharacterNACK(null);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -311,10 +287,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_NACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -332,7 +306,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_NACK,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK","<");
@@ -343,14 +316,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CLoginACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLoginACK",">");
+
     int clientid=14324;
-    
     MessageS2CLoginACK msg=new MessageS2CLoginACK(null);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -359,10 +331,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_LOGIN_ACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -380,10 +350,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_LOGIN_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
-    
     marauroad.trace("Test_Messages::testMessageS2CLoginACK","<");
     }
    
@@ -392,15 +360,14 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CLoginNACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLoginNACK",">");
+
     byte reason=MessageS2CLoginNACK.USERNAME_WRONG;
     int clientid=14324;
-    
     MessageS2CLoginNACK msg=new MessageS2CLoginNACK(null,reason);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -409,11 +376,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_LOGIN_NACK,msg.getType());
     assertEquals(reason,msg.getResolutionCode());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -431,11 +396,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_LOGIN_NACK,result.getType());
     assertEquals(reason,msg.getResolutionCode());
     assertEquals(clientid,result.getClientID());
-    
     marauroad.trace("Test_Messages::testMessageS2CLoginNACK","<");
     }
 
@@ -444,14 +407,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CLogoutACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLogoutACK",">");
+
     int clientid=14324;
-    
     MessageS2CLogoutACK msg=new MessageS2CLogoutACK(null);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -460,10 +422,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_LOGOUT_ACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -481,7 +441,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_LOGOUT_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CLogoutACK","<");
@@ -492,14 +451,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CLogoutNACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLogoutNACK",">");
+
     int clientid=14324;
-    
     MessageS2CLogoutNACK msg=new MessageS2CLogoutNACK(null);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -508,10 +466,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_LOGOUT_NACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -529,7 +485,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_LOGOUT_NACK,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CLogoutNACK","<");
@@ -540,18 +495,19 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageC2SAction","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SAction",">");
+
     int clientid=14324;
     marauroa.game.RPAction action=new marauroa.game.RPAction();
+
     action.put("object_id","156123");
     action.put("zone_id","1");
     action.put("action_type","null action");
     
     MessageC2SAction msg=new MessageC2SAction(null,action);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -560,11 +516,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_C2S_ACTION,msg.getType());
     assertEquals(clientid,msg.getClientID());
     assertEquals(action,msg.getRPAction());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -582,11 +536,9 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_C2S_ACTION,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(action,result.getRPAction());
-
     marauroad.trace("Test_Messages::testMessageC2SAction","<");
     }
 
@@ -595,14 +547,13 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CActionACK","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CActionACK",">");
+
     int clientid=14324;
-    
     MessageS2CActionACK msg=new MessageS2CActionACK(null,123416);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -611,10 +562,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_ACTION_ACK,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -632,10 +581,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_ACTION_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
-
     marauroad.trace("Test_Messages::testMessageS2CActionACK","<");
     }
       
@@ -644,20 +591,20 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CPerception","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CPerception",">");
+
     int clientid=14324;
-    
     LinkedList list=new LinkedList();
+
     list.add(new RPObject(new RPObject.ID(12)));
     list.add(new RPObject(new RPObject.ID(13)));
     list.add(new RPObject(new RPObject.ID(14)));
     list.add(new RPObject(new RPObject.ID(15)));
     
     MessageS2CPerception msg=new MessageS2CPerception(null, RPZone.Perception.TOTAL, list, new LinkedList());
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -666,10 +613,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_PERCEPTION,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -687,7 +632,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(result.getModifiedRPObjects(),list);
     assertEquals(Message.TYPE_S2C_PERCEPTION,result.getType());
     assertEquals(clientid,result.getClientID());
@@ -699,15 +643,14 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CServerInfo","?","This test case try to "+
       "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CServerInfo",">");
+
     int clientid=14324;
     String[] contents={"hi","world"};
-    
     MessageS2CServerInfo msg=new MessageS2CServerInfo(null,contents);
+
     msg.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msg);
@@ -716,10 +659,8 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_S2C_SERVERINFO,msg.getType());
     assertEquals(clientid,msg.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -737,7 +678,6 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(Message.TYPE_S2C_SERVERINFO,result.getType());
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CServerInfo","<");
@@ -748,10 +688,10 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testSeveralMessageSameStream","?", "This test case try to serialize"+
       " several messages into the same stream and then deserialize them");
     marauroad.trace("Test_Messages::testSeveralMessageSameStream",">");
+
     int clientid=14324;
     String username="Test username";
     String password="Test password";
-    
     MessageC2SLogin msgLogin=new MessageC2SLogin(null,username,password);
     MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(null);
     MessageC2SLogout msgLogout= new MessageC2SLogout(null);
@@ -761,10 +701,8 @@ public class Test_Messages extends TestCase
     msgLoginACK.setClientID(clientid);
     msgLogout.setClientID(clientid);
     msgLogoutNACK.setClientID(clientid);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(msgLogin);
@@ -776,17 +714,14 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data out");
       }    
-
     assertEquals(Message.TYPE_C2S_LOGIN,msgLogin.getType());
     assertEquals(Message.TYPE_S2C_LOGIN_ACK,msgLoginACK.getType());
     assertEquals(Message.TYPE_C2S_LOGOUT,msgLogout.getType());
     assertEquals(Message.TYPE_S2C_LOGOUT_NACK,msgLogoutNACK.getType());
-    
     assertEquals(clientid,msgLogin.getClientID());
     assertEquals(clientid,msgLoginACK.getClientID());
     assertEquals(clientid,msgLogout.getClientID());
     assertEquals(clientid,msgLogoutNACK.getClientID());
-    
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
@@ -810,17 +745,14 @@ public class Test_Messages extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-
     assertEquals(Message.TYPE_C2S_LOGIN,resultLogin.getType());
     assertEquals(Message.TYPE_S2C_LOGIN_ACK,resultLoginACK.getType());
     assertEquals(Message.TYPE_C2S_LOGOUT,resultLogout.getType());
     assertEquals(Message.TYPE_S2C_LOGOUT_NACK,resultLogoutNACK.getType());
-    
     assertEquals(clientid,resultLogin.getClientID());
     assertEquals(clientid,resultLoginACK.getClientID());
     assertEquals(clientid,resultLogout.getClientID());
     assertEquals(clientid,resultLogoutNACK.getClientID());
-
     marauroad.trace("Test_Messages::testSeveralMessageSameStream","<");
     }  
   }

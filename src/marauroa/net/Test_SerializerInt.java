@@ -1,4 +1,4 @@
-/* $Id: Test_SerializerInt.java,v 1.2 2003/12/08 01:08:31 arianne_rpg Exp $ */
+/* $Id: Test_SerializerInt.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,12 @@ public class Test_SerializerInt extends Test_Serializer
   public static Test suite ( ) 
     {
     return new TestSuite(Test_SerializerInt.class);
-	}
+    }
 	
   public void testInt()
     {
     Integer[] data=
-      {
+        {
       new Integer((int)Integer.MIN_VALUE),
       new Integer((int)-50),
       new Integer((int)0),

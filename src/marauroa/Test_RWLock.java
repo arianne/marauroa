@@ -1,4 +1,4 @@
-/* $Id: Test_RWLock.java,v 1.3 2003/12/09 23:09:34 arianne_rpg Exp $ */
+/* $Id: Test_RWLock.java,v 1.4 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,6 @@ import junit.framework.*;
 public class Test_RWLock extends TestCase
   {
   private RWLock lock;
-  
   private class Data extends Thread
     {
     private boolean keepRunning;
@@ -25,7 +24,6 @@ public class Test_RWLock extends TestCase
     public int data_2;
     public int data_3;
     public int data_4;
-    
     public Data()
       {
       data_1=data_2=data_3=data_4=0;
@@ -48,11 +46,10 @@ public class Test_RWLock extends TestCase
         }        
       }
     }
-  
   public static Test suite ( ) 
     {
     return new TestSuite(Test_RWLock.class);
-	}
+    }
 	
   public void testLock()
     {
@@ -61,10 +58,9 @@ public class Test_RWLock extends TestCase
       "is owned, and then the lock is released and Data class will adquiere it in read "+ 
       "mode and verify that the 5 numbers are the same");      
     marauroad.trace("Test_RWLock::testLock",">");
-    
     lock=new RWLock();
+
     Data data=new Data();
-    
     int i=1000;
     
     while(i!=0)
@@ -77,12 +73,8 @@ public class Test_RWLock extends TestCase
       ++data.data_4;
       lock.releaseLock();
       }
-      
     data.finish();
-    
     assertTrue(data.data_1==1000);
-      
     marauroad.trace("Test_RWLock::testLock","<");
     }
   }
-

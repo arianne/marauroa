@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.1 2003/12/08 15:38:54 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.2 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,10 @@ import java.io.*;
 public class MessageS2CServerInfo extends Message
   {
   private String[] contents;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageS2CServerInfo()
     {
     super(null);
-    
     type=TYPE_S2C_SERVERINFO;
     }
 
@@ -39,7 +37,6 @@ public class MessageS2CServerInfo extends Message
   public MessageS2CServerInfo(InetSocketAddress source,String[] contents)
     {    
     super(source);
-    
     type=TYPE_S2C_SERVERINFO;
     this.contents=contents;
     }  
@@ -56,11 +53,11 @@ public class MessageS2CServerInfo extends Message
   public String toString()
     {
     StringBuffer text=new StringBuffer(" ");
+
     for(int i=0;i<contents.length;++i)
       {
       text.append("["+contents[i]+"],");
       }
-      
     return "Message (S2C Server Info) from ("+source.toString()+") CONTENTS: ("+text.substring(0,text.length()-1)+")";
     }
       
@@ -74,11 +71,12 @@ public class MessageS2CServerInfo extends Message
     {
     super.readObject(in);
     contents=in.readStringArray();
-    
     if(type!=TYPE_S2C_SERVERINFO)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
-  };
+  }
 
+
+;

@@ -1,4 +1,4 @@
-/* $Id: Test_SerializerByte.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Test_SerializerByte.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,12 @@ public class Test_SerializerByte extends Test_Serializer
   public static Test suite ( ) 
     {
     return new TestSuite(Test_SerializerByte.class);
-	}
+    }
 	
   public void testByte()
     {
     Byte[] data=
-      {
+        {
       new Byte((byte)Byte.MIN_VALUE),
       new Byte((byte)-50),
       new Byte((byte)0),

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.34 2004/03/19 17:47:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.35 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.game;
 
 import java.util.*;
 import java.io.*;
-
 import marauroa.net.*;
 import marauroa.*;
 
@@ -26,27 +25,22 @@ public class GameServerManager extends Thread
   private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
   private Statistics stats;
-  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
-  
   /** Constructor that initialize also the RPManager 
    *  @param netMan a NetworkServerManager instance. */
   public GameServerManager(NetworkServerManager netMan)
     {
     super("GameServerManager");
     marauroad.trace("GameServerManager",">");    
-    
     keepRunning=true;    
     this.netMan=netMan;
     playerContainer=PlayerEntryContainer.getContainer();    
     rpMan=new RPServerManager(netMan);
     stats=Statistics.getStatistics();
-    
     start();
-        
     marauroad.trace("GameServerManager","<");
     }
 
@@ -57,24 +51,19 @@ public class GameServerManager extends Thread
     {
     super("GameServerManager");
     marauroad.trace("GameServerManager",">");    
-    
     keepRunning=true;    
     this.netMan=netMan;
     this.rpMan=rpMan;
     playerContainer=PlayerEntryContainer.getContainer();    
-    
     start();
-        
     marauroad.trace("GameServerManager","<");
     }
 
   public void finish()
     {
     marauroad.trace("GameServerManager::finish",">");
-    
     rpMan.finish();
     keepRunning=false;
-
     while(isfinished==false)
       {
       try
@@ -85,14 +74,12 @@ public class GameServerManager extends Thread
         {
         }
       }
-    
     marauroad.trace("GameServerManager::finish","<");
     }
     
   public void run()
     {
     marauroad.trace("GameServerManager::run",">");
-
     try
       {
       while(keepRunning)
@@ -102,7 +89,6 @@ public class GameServerManager extends Thread
         if(msg!=null)
           {
           playerContainer.getLock().requestWriteLock();
-              
           switch(msg.getType()) 
             {
             case Message.TYPE_C2S_LOGIN:
@@ -129,10 +115,8 @@ public class GameServerManager extends Thread
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
               break;
             }
-            
           playerContainer.getLock().releaseLock();
           }
-          
         stats.setOnlinePlayers(playerContainer.size());
         }
       }
@@ -142,39 +126,35 @@ public class GameServerManager extends Thread
       marauroad.trace("GameServerManager::run","<");
       }
     }
-  
   private static class ServerInfo
     {
     static private String typeGame;
     static private String name;
     static private String version;
     static private String contact;
-    
     static
       {
       marauroad.trace("GameServerManager::ServerInfo::(static)",">");
-      
       try
         {
-	    Configuration conf=Configuration.getConfiguration();
+        Configuration conf=Configuration.getConfiguration();
 	    
-	    typeGame=conf.get("server_typeGame");
-	    name=conf.get("server_name");
-	    version=conf.get("server_version");
-	    contact=conf.get("server_contact");
-	    }
-	  catch(Exception e)
-	    {
+        typeGame=conf.get("server_typeGame");
+        name=conf.get("server_name");
+        version=conf.get("server_version");
+        contact=conf.get("server_contact");
+        }
+      catch(Exception e)
+        {
         marauroad.trace("GameServerManager::ServerInfo::(static)","X",e.getMessage());
         marauroad.trace("GameServerManager::ServerInfo::(static)","!","ABORT: Unable to load Server info");
         System.exit(-1);
-	    }    
-	  finally
-	    {
+        }    
+      finally
+        {
         marauroad.trace("GameServerManager::ServerInfo::(static)","<");
-	    }
+        }
       }
-    
     public static String[] get()
       {
       String[] result=new String[4];
@@ -183,11 +163,9 @@ public class GameServerManager extends Thread
       result[1]=name;
       result[2]=version;
       result[3]=contact;      
-      
       return result;
       }
     }  
-    
   private void processLoginEvent(MessageC2SLogin msg)
     {
     marauroad.trace("GameServerManager::processLoginEvent",">");
@@ -216,10 +194,8 @@ public class GameServerManager extends Thread
           {
           marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
           }
-
         playerContainer.removeRuntimePlayer(clientid);
         }
-            
       if(playerContainer.size()==GameConst.MAX_NUMBER_PLAYERS)
         {
         /* Error: Too many clients logged on the server. */
@@ -227,57 +203,59 @@ public class GameServerManager extends Thread
       
         /* Notify player of the event. */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.SERVER_IS_FULL);
+
         netMan.addMessage(msgLoginNACK);
         return;
         }
-      
-	  if(playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()))
-	    {
+      if(playerContainer.verifyAccount(msg.getUsername(),msg.getPassword()))
+        {
         marauroad.trace("GameServerManager::processLoginEvent","D","Correct username/password");
 
-	    /* Correct: The login is correct */
-	    int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
-	    playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),true);
-   
+        /* Correct: The login is correct */
+        int clientid=playerContainer.addRuntimePlayer(msg.getUsername(),msg.getAddress());
+
+        playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),true);
         stats.addPlayerLogin(msg.getUsername(),clientid);
           
-	    /* Send player the Login ACK message */
-	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
-	    msgLoginACK.setClientID(clientid);
-	    netMan.addMessage(msgLoginACK);
+        /* Send player the Login ACK message */
+        MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
 
-		/* Send player the ServerInfo */
-	    MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
-	    msgServerInfo.setClientID(clientid);
-	    netMan.addMessage(msgServerInfo);
+        msgLoginACK.setClientID(clientid);
+        netMan.addMessage(msgLoginACK);
+
+        /* Send player the ServerInfo */
+        MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
+
+        msgServerInfo.setClientID(clientid);
+        netMan.addMessage(msgServerInfo);
 	      
-	    /* Build player character list and send it to client */
-	    String[] characters=playerContainer.getCharacterList(clientid);
-	    MessageS2CCharacterList msgCharacters=new MessageS2CCharacterList(msg.getAddress(),characters);
-	    msgCharacters.setClientID(clientid);
-	    netMan.addMessage(msgCharacters);
+        /* Build player character list and send it to client */
+        String[] characters=playerContainer.getCharacterList(clientid);
+        MessageS2CCharacterList msgCharacters=new MessageS2CCharacterList(msg.getAddress(),characters);
 
-	    playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.STATE_LOGIN_COMPLETE);
-	    }
-	  else
-	    {
+        msgCharacters.setClientID(clientid);
+        netMan.addMessage(msgCharacters);
+        playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.STATE_LOGIN_COMPLETE);
+        }
+      else
+        {
         marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
         stats.addPlayerInvalidLogin(msg.getUsername());
-
         if(playerContainer.hasPlayer(msg.getUsername()))
           {
-	      playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
-	      }
-	    else
-	      {
+          playerContainer.addLoginEvent(msg.getUsername(),msg.getAddress(),false);
+          }
+        else
+          {
           marauroad.trace("GameServerManager::processLoginEvent","W","Incorrect username: Can't add login event.");
-	      }
+          }
 
-	    /* Send player the Login NACK message */
-	    MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);
-	    netMan.addMessage(msgLoginNACK);
-	    }
-	  }
+        /* Send player the Login NACK message */
+        MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.USERNAME_WRONG);
+
+        netMan.addMessage(msgLoginNACK);
+        }
+      }
     catch(Exception e)      
       {
       marauroad.trace("GameServerManager::processLoginEvent","X",e.getMessage());
@@ -291,61 +269,57 @@ public class GameServerManager extends Thread
   private void processChooseCharacterEvent(MessageC2SChooseCharacter msg)
     {
     marauroad.trace("GameServerManager::processChooseCharacterEvent",">");
-   
     try
       {
       int clientid=msg.getClientID();
       
-	  if(!playerContainer.hasRuntimePlayer(clientid))
-	    {
-	    /* Error: Player didn't login. */
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
         marauroad.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
-	    return;
-	    }
-	    
-	  if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_LOGIN_COMPLETE)
-	    {
-	    /* Error: Player has not completed login yet, or he/she has logout already. */
+        return;
+        }
+      if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_LOGIN_COMPLETE)
+        {
+        /* Error: Player has not completed login yet, or he/she has logout already. */
         marauroad.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
-	    return;
-	    }
-	    
-	  if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-	    {
-	    /* Error: Player has not correct IP<->clientid relation */
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
         marauroad.trace("GameServerManager::processChooseCharacterEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-	    return;	    
-	    }
-	      
-	  if(playerContainer.hasCharacter(clientid,msg.getCharacter()))
-	    {
+        return;	    
+        }
+      if(playerContainer.hasCharacter(clientid,msg.getCharacter()))
+        {
         marauroad.trace("GameServerManager::processChooseCharacterEvent","D","Client("+msg.getAddress().toString()+") has character("+msg.getCharacter()+")");
-        
         /* We set the character in the runtime info */
         playerContainer.setChoosenCharacter(clientid,msg.getCharacter());
 
-	    /* We restore back the character to the world */
-	    RPObject object=playerContainer.getRPObject(clientid,msg.getCharacter());
+        /* We restore back the character to the world */
+        RPObject object=playerContainer.getRPObject(clientid,msg.getCharacter());
+
         rpMan.onInit(object);
-        
-	    playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
+        playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
 
-	    /* Correct: Character exist */
-	    MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
-	    msgChooseCharacterACK.setClientID(clientid);
-	    netMan.addMessage(msgChooseCharacterACK);
-	    }
-	  else
-	    {
+        /* Correct: Character exist */
+        MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
+
+        msgChooseCharacterACK.setClientID(clientid);
+        netMan.addMessage(msgChooseCharacterACK);
+        }
+      else
+        {
         marauroad.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") hasn't character("+msg.getCharacter()+")");
+        playerContainer.changeRuntimeState(clientid,playerContainer.STATE_LOGIN_COMPLETE);
 
-	    playerContainer.changeRuntimeState(clientid,playerContainer.STATE_LOGIN_COMPLETE);
+        /* Error: There is no such character */
+        MessageS2CChooseCharacterNACK msgChooseCharacterNACK=new MessageS2CChooseCharacterNACK(msg.getAddress());
 
-	    /* Error: There is no such character */
-	    MessageS2CChooseCharacterNACK msgChooseCharacterNACK=new MessageS2CChooseCharacterNACK(msg.getAddress());
-	    msgChooseCharacterNACK.setClientID(clientid);
-	    netMan.addMessage(msgChooseCharacterNACK);
-	    }
+        msgChooseCharacterNACK.setClientID(clientid);
+        netMan.addMessage(msgChooseCharacterNACK);
+        }
       }
     catch(Exception e)      
       {
@@ -360,28 +334,25 @@ public class GameServerManager extends Thread
   private void processLogoutEvent(MessageC2SLogout msg)
     {
     marauroad.trace("GameServerManager::processLogoutEvent",">");
-    
     try
       {
       int clientid=msg.getClientID();
       
-	  if(!playerContainer.hasRuntimePlayer(clientid))
-	    {
-	    /* Error: Player didn't login. */
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
         marauroad.trace("GameServerManager::processLogoutEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
-	    return;
-	    }
-	    
-	  if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-	    {
-	    /* Error: Player has not correct IP<->clientid relation */
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
         marauroad.trace("GameServerManager::processLogoutEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-	    return;	    
-	    }
-	  
-	  if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
-	    {
-	    RPObject.ID id=playerContainer.getRPObjectID(clientid);	          
+        return;	    
+        }
+      if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.STATE_GAME_BEGIN)
+        {
+        RPObject.ID id=playerContainer.getRPObjectID(clientid);	          
         RPObject object=rpMan.getRPObject(id);
 
         if(rpMan.onExit(id))
@@ -394,15 +365,14 @@ public class GameServerManager extends Thread
         {
         marauroad.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
         }
-          
       stats.addPlayerLogout(playerContainer.getUsername(clientid),clientid);
-   
       playerContainer.removeRuntimePlayer(clientid);
 	  
-	  /* Send Logout ACK message */
+      /* Send Logout ACK message */
       MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
+
       msgLogout.setClientID(clientid);
-	  netMan.addMessage(msgLogout);
+      netMan.addMessage(msgLogout);
       }
     catch(Exception e)      
       {
@@ -413,50 +383,45 @@ public class GameServerManager extends Thread
       marauroad.trace("GameServerManager::processLogoutEvent","<");
       }
     }
-    
   static int lastActionIdGenerated=0;
-    
   private void processActionEvent(MessageC2SAction msg)
     {
     marauroad.trace("GameServerManager::processActionEvent",">");
-    
     try
       {
       int clientid=msg.getClientID();
       
-	  if(!playerContainer.hasRuntimePlayer(clientid))
-	    {
-	    /* Error: Player didn't login. */
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
         marauroad.trace("GameServerManager::processActionEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
-	    return;
-	    }
-	      
-	  if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
-	    {
-	    /* Error: Player has not choose a character yey. */
+        return;
+        }
+      if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+        {
+        /* Error: Player has not choose a character yey. */
         marauroad.trace("GameServerManager::processActionEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-	    return;
-	    }
-
-	  if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-	    {
-	    /* Error: Player has not correct IP<->clientid relation */
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
         marauroad.trace("GameServerManager::processActionEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-	    return;	    
-	    }
+        return;	    
+        }
 	  
-	  /* Send the action to RP Manager */
-	  RPAction action=msg.getRPAction();
+      /* Send the action to RP Manager */
+      RPAction action=msg.getRPAction();
 	  
-	  if(!action.has("action_id"))
-	    {
+      if(!action.has("action_id"))
+        {
         action.put("action_id",++lastActionIdGenerated);
-	    }
+        }
 	  
-	  /* Enforce source_id and action_id*/
-	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
-	  action.put("source_id",id.getObjectID());
+      /* Enforce source_id and action_id*/
+      RPObject.ID id=playerContainer.getRPObjectID(clientid);
 
+      action.put("source_id",id.getObjectID());
       if(action.has("type"))
         {
         stats.addActionsAdded(action.get("type"),clientid,action.toString());
@@ -465,13 +430,13 @@ public class GameServerManager extends Thread
         {
         stats.addActionsAdded(action.get("invalid"),clientid);
         }
-      
       rpMan.addRPAction(action);
 
-	  /* Notify client that we recieved the action */
+      /* Notify client that we recieved the action */
       MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),action.getInt("action_id"));
+
       msgAction.setClientID(clientid);
-	  netMan.addMessage(msgAction);	  
+      netMan.addMessage(msgAction);	  
       }
     catch(Exception e)      
       {
@@ -487,33 +452,29 @@ public class GameServerManager extends Thread
   private void processPerceptionACKEvent(MessageC2SPerceptionACK msg)
     {
     marauroad.trace("GameServerManager::processPerceptionACKEvent",">");
-    
     try
       {
       int clientid=msg.getClientID();
       
-	  if(!playerContainer.hasRuntimePlayer(clientid))
-	    {
-	    /* Error: Player didn't login. */
+      if(!playerContainer.hasRuntimePlayer(clientid))
+        {
+        /* Error: Player didn't login. */
         marauroad.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
-	    return;
-	    }
-	      
-	  if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
-	    {
-	    /* Error: Player has not choose a character yey. */
+        return;
+        }
+      if(playerContainer.getRuntimeState(clientid)!=playerContainer.STATE_GAME_BEGIN)
+        {
+        /* Error: Player has not choose a character yey. */
         marauroad.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-	    return;
-	    }
-
-	  if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-	    {
-	    /* Error: Player has not correct IP<->clientid relation */
+        return;
+        }
+      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+        {
+        /* Error: Player has not correct IP<->clientid relation */
         marauroad.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-	    return;	    
-	    }
-
-	  playerContainer.updateTimestamp(clientid);
+        return;	    
+        }
+      playerContainer.updateTimestamp(clientid);
       }
     catch(Exception e)      
       {

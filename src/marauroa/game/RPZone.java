@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.18 2004/03/23 16:39:38 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.19 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,7 @@ public interface RPZone
       }
     }
   
+
   public static class RPObjectInvalidException extends Exception
     {
     public RPObjectInvalidException(String attribute)
@@ -37,17 +38,16 @@ public interface RPZone
       }
     }
     
+
   public static class Perception
     {
     final public static byte DELTA=0;
     final public static byte TOTAL=1;
-        
     public byte type;
     public List addedList;
     public List modifiedAddedAttribsList;
     public List modifiedDeletedAttribsList;
     public List deletedList;
-    
     public Perception(byte type)
       {
       this.type=type;
@@ -65,7 +65,6 @@ public interface RPZone
           {
           addedList.remove(object);
           }
-        
         addedList.add(object);
         }
       }
@@ -76,7 +75,6 @@ public interface RPZone
       RPObject deleted=new RPObject();
       
       modified.getDifferencesFrom(original,added,deleted);
-      
       modifiedAddedAttribsList.add(added);
       modifiedDeletedAttribsList.add(deleted);
       }
@@ -99,13 +97,11 @@ public interface RPZone
       deletedList.clear();
       }
     }
-  
   public void add(RPObject object) throws RPObjectInvalidException;
   public void modify(RPObject object) throws RPObjectInvalidException;
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);
-  
   public RPObject create();
   public Iterator iterator();
   public long size();

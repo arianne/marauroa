@@ -1,4 +1,4 @@
-/* $Id: Test_RPAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: Test_RPAction.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,32 +21,28 @@ public class Test_RPAction extends TestCase
   {
   private ByteArrayOutputStream out;
   private ByteArrayInputStream in;
-  
   private InputSerializer sin;
   private OutputSerializer sout;
-
- 
   public static Test suite ( ) 
     {
     return new TestSuite(Test_RPAction.class);
-	}
+    }
 	
   public void testAttributes()
     {
     marauroad.trace("Test_RPAction::testAttributes",">");
-
     try
       {
       RPAction attr=new RPAction();
+
       assertNotNull(attr);
-    
       attr.put("Attribute","value");
     
       String value=null;
+
       value=attr.get("Attribute");
       assertNotNull(value);
       assertEquals("value",value);
-    
       assertTrue(attr.has("Attribute"));
       }
     catch(Attributes.AttributeNotFoundException e)
@@ -62,13 +58,14 @@ public class Test_RPAction extends TestCase
   public void testAttributesException()
     {
     marauroad.trace("Test_RPAction::testAttributesException",">");
-
     try
       {
       RPAction attr=new RPAction();
+
       assertNotNull(attr);
     
       String value=null;
+
       value=attr.get("Attribute");
       fail("Exception not throwed");
       }
@@ -87,16 +84,14 @@ public class Test_RPAction extends TestCase
     marauroad.trace("Test_RPAction::testAttributesSerialization",">");
 
     RPAction attr=new RPAction();
+
     assertNotNull(attr);
-  
     attr.put("Attribute","value");
     attr.put("Name","A random name");
     attr.put("Location","nowhere");
     attr.put("Test number",Integer.toString(5));
-
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(attr);
@@ -110,7 +105,6 @@ public class Test_RPAction extends TestCase
   
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
-    
     try
       {
       sin.readObject(result);
@@ -123,21 +117,19 @@ public class Test_RPAction extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(attr,result);
     marauroad.trace("Test_RPAction::testAttributesSerialization","<");
     }
-
 
   public void testAttributesStatus()
     {
     marauroad.trace("Test_RPAction::testAttributesStatus",">");
 
     RPAction.Status status=new RPAction.Status(RPAction.STATUS_FAIL.getStatus());
+
     assertTrue(status.equals(RPAction.STATUS_FAIL));
     assertFalse(status.equals(RPAction.STATUS_INCOMPLETE));
     assertFalse(status.equals(RPAction.STATUS_SUCCESS));
-    
     marauroad.trace("Test_RPAction::testAttributesStatus","<");
     }
   }

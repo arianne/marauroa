@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,10 @@ import java.io.*;
 public class MessageC2SChooseCharacter extends Message
   {
   private String character;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageC2SChooseCharacter()
     {
     super(null);
-    
     type=TYPE_C2S_CHOOSECHARACTER;
     }  
     
@@ -41,13 +39,12 @@ public class MessageC2SChooseCharacter extends Message
   public MessageC2SChooseCharacter(InetSocketAddress source,String character)
     {
     super(source);
-    
     type=TYPE_C2S_CHOOSECHARACTER;
     this.character=character;
     }  
   
   /** This methods returns the name of the chosen character 
-      @return the character name*/
+   @return the character name*/
   public String getCharacter()
     {
     return character;    
@@ -70,10 +67,12 @@ public class MessageC2SChooseCharacter extends Message
     {
     super.readObject(in);
     character=in.readString();
-    
     if(type!=TYPE_C2S_CHOOSECHARACTER)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
-  };
+  }
+
+
+;

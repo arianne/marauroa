@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.13 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.14 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,6 @@ import marauroa.marauroad;
 public class MarauroaRPRuleProcessor implements RPRuleProcessor
   {
   private RPZone zone;
-  
   public MarauroaRPRuleProcessor()
     {
     }
@@ -37,7 +36,6 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("RPRuleProcessor::execute",">");
     /* NOTE: Implement action procession code */
     marauroad.trace("RPRuleProcessor::execute","<");
-    
     return new RPAction.Status(RPAction.Status.FAIL);
     }
 

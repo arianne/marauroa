@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.37 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.38 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,6 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   private the1001RPZone zone;
   private List trackedObjects;
   private int turn;
-  
   public the1001RPRuleProcessor()
     {
     zone=null;
@@ -57,6 +56,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {
     marauroad.trace("the1001RPRuleProcessor::execute",">");
+
     RPAction.Status status=RPAction.STATUS_FAIL;
     
     try
@@ -64,32 +64,38 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       if(action.get(RPCode.var_type).equals("request_fight"))
         {
         int gladiator_id=action.getInt(RPCode.var_gladiator_id);
+
         status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
         }
       else if(action.get(RPCode.var_type).equals("fight_mode"))
         {
         int gladiator_id=action.getInt(RPCode.var_gladiator_id);
         String fight_mode=action.get("fight_mode");
+
         status=RPCode.FightMode(id, new RPObject.ID(gladiator_id),fight_mode);
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_vote))
         {
         String vote=action.get(RPCode.var_vote);
+
         status=RPCode.Vote(id, vote);
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_chat))
         {
         String text=action.get(RPCode.var_content);
+
         status=RPCode.Chat(id,text);
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_buyItem))
         {
         String item_id=action.get(RPCode.var_choosen_item);        
+
         status=RPCode.BuyItem(id,new RPObject.ID(Integer.parseInt(item_id)));
         }
       else if(action.get(RPCode.var_type).equals(RPCode.var_buyGladiator))
         {
         String item_id=action.get(RPCode.var_choosen_item);        
+
         status=RPCode.BuyGladiator(id,new RPObject.ID(Integer.parseInt(item_id)));
         }
       else
@@ -99,10 +105,10 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       
       /** We notify the player about the action result */
       RPObject player=zone.get(id);
+
       player.put("?"+action.get("action_id"), status.toString());
       trackObject(player);
       zone.modify(player);
-      
       return status;
       }
     catch(Exception e)
@@ -127,12 +133,12 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     ++turn;
-    
     try
       {
       removeOneTurnAttributes();      
 
       RPObject arena=zone.getArena();
+
       if(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
         {
         RPCode.ResolveFight();
@@ -147,7 +153,6 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       marauroad.trace("the1001RPRuleProcessor::nextTurn","X",e.getMessage());
       e.printStackTrace(System.out);
       }
-        
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
   
@@ -157,8 +162,8 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     try
       {
       List attrToDelete=new LinkedList();
-      
       Iterator it=trackedObjects.iterator();
+
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
@@ -167,6 +172,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         while(attributesit.hasNext())
           {
           String attr=(String)attributesit.next();
+
           if(attr.charAt(0)=='?')
             {
             attrToDelete.add(attr);
@@ -174,13 +180,12 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
           }
         
         Iterator removeit=attrToDelete.iterator();
+
         while(removeit.hasNext())
           {
           object.remove((String)removeit.next());
           }
-        
         attrToDelete.clear();
-          
         zone.modify(object);
         }
       }
@@ -189,9 +194,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","X",e.getMessage());
       e.printStackTrace(System.out);
       }
-    
     trackedObjects.clear();
-      
     marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","<");
     }
     
@@ -206,21 +209,18 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     try
       {
       object.put("?joined","");
-      
-/*
-      Iterator it=object.getSlot(RPCode.var_myGladiators).iterator();
-      while(it.hasNext())
-        {
-        RPObject slot_object=(RPObject)it.next();        
-        }
-*/        
+      /*
+       Iterator it=object.getSlot(RPCode.var_myGladiators).iterator();
+       while(it.hasNext())
+       {
+       RPObject slot_object=(RPObject)it.next();        
+       }
+       */        
       
       zone.add(object);
       trackObject(object);
-  
       marauroad.trace("the1001RPRuleProcessor::onInit","D",object.toString());     
       RPCode.AddPlayer(object);
-
       return true;
       }
     catch(Exception e)
@@ -239,10 +239,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     try
       {
       marauroad.trace("the1001RPRuleProcessor::onExit",">");
-      
       /** TODO: Deny logout to players that are in combat */
       RPCode.RemovePlayer(id);
+
       RPObject removed=zone.remove(id);
+
       marauroad.trace("the1001RPRuleProcessor::onExit","D",removed.toString());     
       }
     catch(Exception e)
@@ -260,6 +261,5 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     {
     return onExit(id);
     }
-  }
-    
-  
+  }  
+

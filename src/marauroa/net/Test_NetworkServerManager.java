@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.8 2004/01/01 12:56:54 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.9 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,14 +25,14 @@ public class Test_NetworkServerManager extends TestCase
   public static Test suite() 
     {
     return new TestSuite(Test_NetworkServerManager.class);
-	}
+    }
 
   public void testNetworkServerManager()
     {
     marauroad.trace("Test_NetworkServerManager::testNetworkServerManager",">");
 
     NetworkServerManager netManager=null;
-	NetworkClientManager netClient=null;
+    NetworkClientManager netClient=null;
 	
     try
       {
@@ -44,18 +44,17 @@ public class Test_NetworkServerManager extends TestCase
       fail(e.getMessage());
       return;
       }
-
     try 
       {       
       assertNotNull(netManager);
       assertNotNull(netClient);
       
       Message msg=new MessageC2SLogin(null,"Test username","Test password");
+
       msg.setClientID(1423);
-    
       netClient.addMessage(msg);
+
       Message result=netManager.getMessage();
-     
       MessageC2SLogin realResult=(MessageC2SLogin)result;
     
       assertNotNull(result);
@@ -66,23 +65,23 @@ public class Test_NetworkServerManager extends TestCase
       
       msg.setAddress(clientAddress);
       netManager.addMessage(msg);
-      
       result=null;
+
       int i=0;
+
       while(result==null && i<10) 
         {
         result=netClient.getMessage();
         ++i;
         }
-
       assertNotNull(result);
       assertEquals(realResult.getUsername(),"Test username");
       assertEquals(realResult.getPassword(),"Test password");  
       
       List modifiedObjects=createBigPerception();
+
       msg=new MessageS2CPerception(clientAddress, RPZone.Perception.TOTAL, modifiedObjects,new LinkedList());
       netManager.addMessage(msg);
-      
       result=null;
       i=0;
       while(result==null && i<10) 
@@ -90,9 +89,10 @@ public class Test_NetworkServerManager extends TestCase
         result=netClient.getMessage();
         ++i;
         }
-
       assertNotNull(result);
+
       MessageS2CPerception perception=(MessageS2CPerception)result;
+
       assertEquals(perception.getModifiedRPObjects(), modifiedObjects);
       }
     catch(Exception e)
@@ -114,14 +114,13 @@ public class Test_NetworkServerManager extends TestCase
     for(int i=0;i<40;++i)
       {
       RPObject object=new RPObject();
+
       object.put("object_id",i);
       object.put("name","A good name");
       object.put("extra","more extra attributes so that it takes several bytes");
       object.put("more","You know... this is big");
-      
       list.add(object);
       }
-    
     return list;
     }
   }

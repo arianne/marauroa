@@ -1,4 +1,4 @@
-/* $Id: SimpleGameDataModelIF.java,v 1.4 2003/12/13 19:27:22 root777 Exp $ */
+/* $Id: SimpleGameDataModelIF.java,v 1.5 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,15 +13,14 @@
 package simplegame;
 
 public interface SimpleGameDataModelIF
-{
+  {
   public void addGameUpdateListener(GameUpdateListener ul);
   public void setRPCharacterAt(int row, int column, int characterID);
   public int getSize();
   public int getRPCharacterAt(int row, int column);
   public int getWinnerID();
   public static interface GameUpdateListener
-  {
+    {
     public void updateReceived(int row, int column, int characterID);
+    }
   }
-}
-

@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.12 2004/02/06 16:02:02 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.13 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,6 @@ public class RPAction extends Attributes
   public final static Status STATUS_SUCCESS=new Status(Status.SUCCESS);
   public final static Status STATUS_FAIL=new Status(Status.FAIL);
   public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
-  
   public static Status Success()
     {
     return new Status(Status.SUCCESS);
@@ -28,7 +27,6 @@ public class RPAction extends Attributes
     {
     return new Status(Status.FAIL,message);
     }
-      
   /** This class represent the status of the action */
   public static class Status
     {
@@ -37,7 +35,6 @@ public class RPAction extends Attributes
     public final static byte INCOMPLETE=2;
     private byte val;
     private String reason;
-    
     /** Constructor
      *  @param val the status of the action */
     public Status(byte val)
@@ -76,11 +73,9 @@ public class RPAction extends Attributes
       if(val==0) return "success";
       if(val==1) return "fail: "+reason;
       if(val==2) return "incomplete";
-      
       return "-incoherent status-";
       }
     }
-  
   /** Constructor */
   public RPAction()
     {

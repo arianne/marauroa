@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.7 2004/03/04 23:18:51 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.8 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.net;
 import java.net.InetSocketAddress;
 import java.io.*;
 import java.util.*;
-
 import marauroa.marauroad;
 
 /** MessageFactory is the class that is in charge of building the messages from
@@ -25,7 +24,6 @@ public class MessageFactory
   {  
   private static Map factoryArray;
   private static MessageFactory messageFactory;
-  
   private MessageFactory()
     {
     factoryArray= new HashMap();
@@ -40,7 +38,6 @@ public class MessageFactory
       {
       messageFactory=new MessageFactory();
       }
-      
     return messageFactory;
     }
     
@@ -71,52 +68,53 @@ public class MessageFactory
     }
     
   /** Returns a object of the right class from a stream of serialized data.
-      @param data the serialized data
-      @param source the source of the message needed to build the object. 
-      
-      @throws IOException in case of problems with the message */  
+   @param data the serialized data
+   @param source the source of the message needed to build the object. 
+   
+   @throws IOException in case of problems with the message */  
   public Message getMessage(byte[] data, InetSocketAddress source) throws IOException
     {
     marauroad.trace("MessageFactory::getMessage",">");
     try
       {
-	  if(data[0]==NetConst.NETWORK_PROTOCOL_VERSION)
-	    {
-	    if(factoryArray.containsKey(new Integer(data[1])))
-	      {
-	      Class messageType=(Class) factoryArray.get(new Integer(data[1]));
-	      Message tmp=(Message) messageType.newInstance();
-	
-	 	  ByteArrayInputStream in=new ByteArrayInputStream(data);
+      if(data[0]==NetConst.NETWORK_PROTOCOL_VERSION)
+        {
+        if(factoryArray.containsKey(new Integer(data[1])))
+          {
+          Class messageType=(Class) factoryArray.get(new Integer(data[1]));
+          Message tmp=(Message) messageType.newInstance();
+          ByteArrayInputStream in=new ByteArrayInputStream(data);
           InputSerializer s=new InputSerializer(in);
 	
-	      tmp.readObject(s);
-	      tmp.setAddress(source);
-	
-	      marauroad.trace("MessageFactory::getMessage","<");
-	      return tmp;
-	      }
-	    else
-	      {
-	      marauroad.trace("MessageFactory::getMessage","X","Message type ["+data[1]+"] is not registered in the MessageFactory");
-	      throw new IOException("Message type ["+data[1]+"] is not registered in the MessageFactory");
-	      }
-	    }
+          tmp.readObject(s);
+          tmp.setAddress(source);
+          marauroad.trace("MessageFactory::getMessage","<");
+          return tmp;
+          }
+        else
+          {
+          marauroad.trace("MessageFactory::getMessage","X","Message type ["+data[1]+"] is not registered in the MessageFactory");
+          throw new IOException("Message type ["+data[1]+"] is not registered in the MessageFactory");
+          }
+        }
       else
-	    {      
-	    marauroad.trace("MessageFactory::getMessage","X","Message has incorrect protocol version");
-	    throw new IOException("Message has incorrect protocol version: "+data[0]+" ( expected "+NetConst.NETWORK_PROTOCOL_VERSION+")");
+        {      
+        marauroad.trace("MessageFactory::getMessage","X","Message has incorrect protocol version");
+        throw new IOException("Message has incorrect protocol version: "+data[0]+" ( expected "+NetConst.NETWORK_PROTOCOL_VERSION+")");
         }
       }
-	catch(Exception e)
-	  {
+    catch(Exception e)
+      {
       marauroad.trace("MessageFactory::getMessage","X",e.getMessage());
       e.printStackTrace();
       throw new IOException(e.getMessage());
-	  }
-	finally
-	  {
+      }
+    finally
+      {
       marauroad.trace("MessageFactory::getMessage","<");
-	  }
-	}
-  };
+      }
+    }
+  }
+
+
+;

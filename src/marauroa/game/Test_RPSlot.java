@@ -1,4 +1,4 @@
-/* $Id: Test_RPSlot.java,v 1.2 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_RPSlot.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,21 +18,20 @@ import marauroa.net.*;
 import marauroa.*;
 import java.io.*;
 
-
 public class Test_RPSlot extends TestCase
   {
   public static Test suite ( ) 
     {
     return new TestSuite(Test_RPSlot.class);
-	}
+    }
 	
   public void testRPSlot()
     {
     marauroad.trace("Test_RPSlot::testRPSlot",">");
-    
     try
       {
       RPObject SonGoku=new RPObject();
+
       SonGoku.put("object_id","1");
       SonGoku.put("name","Son Goku");
 
@@ -40,12 +39,10 @@ public class Test_RPSlot extends TestCase
     
       slot.setName("left_hand");
       assertEquals(slot.getName(),"left_hand");
-    
       assertFalse(slot.has(new RPObject.ID(SonGoku)));
       slot.add(SonGoku);
       assertTrue(slot.has(new RPObject.ID(SonGoku)));
       assertEquals(1,slot.size());
-      
       assertEquals(slot.get(),SonGoku);
       assertEquals(slot.get(new RPObject.ID(SonGoku)),SonGoku);
       }
@@ -62,10 +59,10 @@ public class Test_RPSlot extends TestCase
   public void testRPSlotException()
     {
     marauroad.trace("Test_RPSlot::testRPSlotException",">");
-    
     try
       {
       RPSlot slot=new RPSlot();
+
       slot.get();
       fail("Should have thrown exception");
       }
@@ -73,10 +70,10 @@ public class Test_RPSlot extends TestCase
       {
       assertTrue(true);
       }
-
     try
       {
       RPSlot slot=new RPSlot();
+
       slot.remove(new RPObject.ID(10123));
       fail("Should have thrown exception");
       }
@@ -84,14 +81,12 @@ public class Test_RPSlot extends TestCase
       {
       assertTrue(true);
       }
-    
     marauroad.trace("Test_RPSlot::testRPSlotException","<");
     }
 
   public void testRPSlotSerialization()
     {
     marauroad.trace("Test_RPSlot::testRPSlotSerialization",">");
-    
     try
       {
       RPSlot slot=new RPSlot();
@@ -101,11 +96,11 @@ public class Test_RPSlot extends TestCase
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       OutputSerializer os = new OutputSerializer(baos);
+
       slot.writeObject(os);
       
       ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
       InputSerializer in=new InputSerializer(bais);
-      
       RPSlot result=(RPSlot)in.readObject(new RPSlot());
       
       assertEquals(result,slot);
@@ -113,10 +108,10 @@ public class Test_RPSlot extends TestCase
     catch(Exception e)
       {
       }
-
     try
       {
       RPObject SonGoku=new RPObject();
+
       SonGoku.put("object_id","1");
       SonGoku.put("name","Son Goku");
 
@@ -128,11 +123,11 @@ public class Test_RPSlot extends TestCase
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       OutputSerializer os = new OutputSerializer(baos);
+
       slot.writeObject(os);
       
       ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
       InputSerializer in=new InputSerializer(bais);
-      
       RPSlot result=(RPSlot)in.readObject(new RPSlot());
       
       assertEquals(result,slot);
@@ -140,7 +135,6 @@ public class Test_RPSlot extends TestCase
     catch(Exception e)
       {
       }
-
     marauroad.trace("Test_RPSlot::testRPSlotSerialization","<");    
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.13 2004/03/04 13:42:37 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.14 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import java.util.*;
 public class Gladiator extends RPObject
   {
   private static String[] randomNames=
-    {
+      {
     "Rirg",
     "Rool",
     "Bark",
@@ -38,16 +38,13 @@ public class Gladiator extends RPObject
     "Biol",
     "Vidash"
     };
-
   private static String[] randomLook=
-    {
+      {
     "pknight",
     "yohko",
     "orc"    
     };
-  
   private static Random random=new Random();
-  
   public Gladiator(RPObject.ID id) throws SlotAlreadyAddedException
     {
     put(RPCode.var_object_id,id.getObjectID());
@@ -57,11 +54,10 @@ public class Gladiator extends RPObject
     put(RPCode.var_initial_hp,100);
     put(RPCode.var_hp,100);
     put(RPCode.var_attack,5);
-	put(RPCode.var_karma,100);
-	put(RPCode.var_num_victory,0);
-	put(RPCode.var_num_defeat,0);    
-	
-	this.addSlot(new RPSlot(RPCode.var_l_hand));
-	this.addSlot(new RPSlot(RPCode.var_r_hand));
+    put(RPCode.var_karma,100);
+    put(RPCode.var_num_victory,0);
+    put(RPCode.var_num_defeat,0);    
+    this.addSlot(new RPSlot(RPCode.var_l_hand));
+    this.addSlot(new RPSlot(RPCode.var_r_hand));
     }
   }

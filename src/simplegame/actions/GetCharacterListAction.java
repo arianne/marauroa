@@ -1,4 +1,4 @@
-/* $Id: GetCharacterListAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: GetCharacterListAction.java,v 1.5 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,11 +16,10 @@ import marauroa.game.RPAction;
 
 public class GetCharacterListAction
   extends RPAction
-{
+  {
   public final static int ACTION_GETCHARLIST=3;
   public GetCharacterListAction()
-  {
+    {
     put("type",ACTION_GETCHARLIST);
+    }
   }
-}
-

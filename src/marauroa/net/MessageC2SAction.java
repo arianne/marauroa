@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.5 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.6 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,10 @@ import marauroa.game.*;
 public class MessageC2SAction extends Message
   {
   private RPAction action;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageC2SAction()
     {
     super(null);
-    
     type=TYPE_C2S_ACTION;
     }
 
@@ -39,7 +37,6 @@ public class MessageC2SAction extends Message
   public MessageC2SAction(InetSocketAddress source,RPAction action)
     {
     super(source);
-    
     type=TYPE_C2S_ACTION;
     this.action=action;
     }
@@ -68,13 +65,12 @@ public class MessageC2SAction extends Message
     {
     super.readObject(in);
     action=(RPAction)in.readObject(new RPAction());
-    
     if(type!=TYPE_C2S_ACTION)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }
-  };
+  }
 
 
-  
+;

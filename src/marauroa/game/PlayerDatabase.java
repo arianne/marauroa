@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.7 2004/03/22 18:12:59 root777 Exp $ */
+/* $Id: PlayerDatabase.java,v 1.8 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,10 +17,9 @@ import java.sql.Connection;
 
 /** The interface that all the databases marauroa use MUST implement. */
 public interface PlayerDatabase extends GameDatabaseException
-{
+  {
   /** Retursn true if the strign is valid and doesn't contains any strange character */
   public boolean validString(String string);
-  
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.
    *  @param username is the name of the player
@@ -30,7 +29,6 @@ public interface PlayerDatabase extends GameDatabaseException
   /** This method returns the number of Players that exist on database
    *  @return the number of players that exist on database */
   public int getPlayerCount(Transaction trans) throws GenericDatabaseException;
-  
   /** This method add a Login event to the player
    *  @param username is the name of the player
    *  @param source the IP address of the player
@@ -42,13 +40,11 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @return an array of String containing the login events.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
   public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException;
-  
   /** This method returns the lis of character that the player pointed by username has.
    *  @param username the name of the player from which we are requesting the list of characters.
    *  @return an array of String with the characters
    *  @throw PlayerNotFoundException if that player does not exists. */
   public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException;
-  
   /** This method is the opposite of getRPObject, and store in Database the object for
    *  an existing player and character.
    *  The difference between setRPObject and addCharacter are that setRPObject update it
@@ -72,7 +68,6 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @throws CharacterNotFoundException  if the player-character doesn't exist in database.
    *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public RPObject getRPObject(Transaction trans, String username,String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
-  
   /** This method returns true if the database has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
@@ -86,7 +81,6 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @param username is the name of the player
    *  @throws PlayerNotFoundException if the player doesn't exist in database. */
   public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException;
-  
   /** This method returns true if the player has that character or false if it hasn't
    *  @param username is the name of the player
    *  @param character is the name of the character
@@ -106,12 +100,10 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
   public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException;
-  
   /**
    *  This method returns a valid connection
    *  @return a valid Transaction
    *  @throws GenericDatabaseException if connection to DB cannot be established
    */
   public Transaction getTransaction() throws GenericDatabaseException;
-}
-
+  }

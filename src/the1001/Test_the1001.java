@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.12 2004/03/05 16:27:46 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.13 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,6 @@ public class Test_the1001 extends TestCase
   private final static int NUM_PLAYERS=10;
   private the1001RPRuleProcessor rpu;
   private the1001RPZone zone;
-  
   public static Test suite ( ) 
     {
     return new TestSuite(Test_the1001.class);
@@ -32,6 +31,7 @@ public class Test_the1001 extends TestCase
   private RPObject[] createPlayers(int num) throws Exception
     {
     RPObject[] objects=new RPObject[num];
+
     for(int i=0;i<objects.length;++i)
       {
       objects[i]=new Player(new RPObject.ID(zone.create()),"a name");
@@ -39,9 +39,9 @@ public class Test_the1001 extends TestCase
 
       /** NOTE: The rest of the test expect one gladiator per player */
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
+
       objects[i].getSlot(RPCode.var_myGladiators).add(gladiator);
       }
-    
     return objects;
     }
   
@@ -49,31 +49,28 @@ public class Test_the1001 extends TestCase
     {
     marauroad.trace("Test_the1001::testFullGame","?","This test documents how the game should procced on normal conditions");
     marauroad.trace("Test_the1001::testFullGame",">");
-    
     try
       {
       Random rand=new Random();
+
       zone=new the1001RPZone();
       rpu=new the1001RPRuleProcessor();
       rpu.setContext(zone);
-
       assertEquals(rpu.getTurn(),0);
 
       RPObject arena=zone.getArena();    
       RPObject[] players=createPlayers(NUM_PLAYERS);
 
       assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
-      
       for(int i=0;i<players.length;++i)
         {
         RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get()));
+
         assertEquals(status,RPAction.STATUS_SUCCESS);
-        
         if(rand.nextBoolean())
           {
           rpu.nextTurn();
           }
-          
         if(i==0)
           {
           assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
@@ -98,13 +95,14 @@ public class Test_the1001 extends TestCase
         }
       
       int combatRound=0;
+
       while(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
         {
         ++combatRound;
-        
         if(combatRound>3 && combatRound<100)
           {
           RPAction.Status status=RPAction.STATUS_FAIL;
+
           while(status.equals(RPAction.STATUS_FAIL))
             {
             int j=rand.nextInt(NUM_PLAYERS);
@@ -113,7 +111,6 @@ public class Test_the1001 extends TestCase
             status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot(RPCode.var_myGladiators).get()));
             marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
             }
-
           status=RPAction.STATUS_FAIL;
           while(status.equals(RPAction.STATUS_FAIL))
             {
@@ -124,9 +121,7 @@ public class Test_the1001 extends TestCase
             marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
             }
           }
-          
         marauroad.trace("Test_the1001::testFullGame","D","Combat begin: "+combatRound);
-
         while(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
           {
           for(int i=0;i<players.length;++i)
@@ -135,65 +130,52 @@ public class Test_the1001 extends TestCase
               {
               String[] options={RPCode.var_rock,RPCode.var_paper,RPCode.var_scissor};                      
               RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get()),options[rand.nextInt(3)]);
+
               assertEquals(status,RPAction.STATUS_SUCCESS);
               }
             }
-    
           rpu.nextTurn();
           }
-    
         rpu.nextTurn();
-          
         zone.print(System.out);
-    
         for(int i=0;i<players.length;++i)
           {
           assertFalse(players[i].has(RPCode.var_damage));
           }
-    
         assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
         assertTrue(arena.has(RPCode.var_karma));      
-        
         assertEquals(arena.getInt(RPCode.var_thumbs_up),0);
         assertEquals(arena.getInt(RPCode.var_thumbs_down),0);
-          
         for(int i=0;i<players.length;++i)
           {
           String[] options={RPCode.var_voted_up,"down"};
           RPAction.Status status=RPCode.Vote(new RPObject.ID(players[i]),RPCode.var_voted_up);
+
           assertEquals(status,RPAction.STATUS_SUCCESS);
-          
           if(rand.nextBoolean())
             {
             rpu.nextTurn();
             }
           }
-            
         while(arena.getInt(RPCode.var_timeout)>0)
           {
           rpu.nextTurn();
           }            
-    
         assertTrue(arena.has(RPCode.var_timeout));
         assertTrue(arena.has(RPCode.var_thumbs_up));
         assertTrue(arena.has(RPCode.var_thumbs_down));
         assertTrue(arena.has(RPCode.var_karma));
-    
         rpu.nextTurn();
-    
         assertFalse(arena.has(RPCode.var_timeout));
         assertFalse(arena.has(RPCode.var_thumbs_up));
         assertFalse(arena.has(RPCode.var_thumbs_down));
         assertFalse(arena.has(RPCode.var_fame));
-    
         for(int i=0;i<players.length;++i)
           {
           assertFalse(players[i].has(RPCode.var_hidden_vote));
           }
-
         marauroad.trace("Test_the1001::testFullGame","D","Combat end: "+combatRound);
         }
-      
       System.out.println("Turns done: "+rpu.getTurn());
       }
     catch(Exception e)
@@ -207,5 +189,3 @@ public class Test_the1001 extends TestCase
       }
     }
   }
-    
-    

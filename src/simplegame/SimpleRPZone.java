@@ -1,4 +1,4 @@
-/* $Id: SimpleRPZone.java,v 1.18 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: SimpleRPZone.java,v 1.19 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,39 +24,38 @@ import org.w3c.dom.Document;
 
 public class SimpleRPZone
   extends MarauroaRPZone
-{
-  //we will never send a list with deleted items
-  //in this game, so create once the empty list
-  //and send it all the time.
-  private List deletedList;
-  
-  
-  public SimpleRPZone()
   {
-		marauroad.trace("SimpleRPZone::<init>",">");
-		deletedList=new LinkedList();
-		marauroad.trace("SimpleRPZone::<init>","<");
-  }
+  // we will never send a list with deleted items
+  // in this game, so create once the empty list
+  // and send it all the time.
+  private List deletedList;
+  public SimpleRPZone()
+    {
+    marauroad.trace("SimpleRPZone::<init>",">");
+    deletedList=new LinkedList();
+    marauroad.trace("SimpleRPZone::<init>","<");
+    }
   
   public Perception getPerception(RPObject.ID id, byte type)
-  {
-		marauroad.trace("SimpleRPZone::getPerception",">");
-		/** Using TOTAL perception per turn */
-		RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
-		perception.addedList = new LinkedList();
-		perception.deletedList  = deletedList;
-		try
-		{
-			RPObject player = get(id);
-			perception.addedList.add(player);
-		}
-		catch (RPObjectNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		marauroad.trace("SimpleRPZone::getPerception","<");
-		return perception;
-  }
-	
-}
+    {
+    marauroad.trace("SimpleRPZone::getPerception",">");
 
+    /** Using TOTAL perception per turn */
+    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
+
+    perception.addedList = new LinkedList();
+    perception.deletedList  = deletedList;
+    try
+      {
+      RPObject player = get(id);
+
+      perception.addedList.add(player);
+      }
+    catch (RPObjectNotFoundException e)
+      {
+      e.printStackTrace();
+      }
+    marauroad.trace("SimpleRPZone::getPerception","<");
+    return perception;
+    }
+  }

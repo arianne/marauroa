@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.2 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: RWLock.java,v 1.3 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,79 +23,71 @@ public class RWLock
   {
   private int givenLocks;
   private int waitingWriters;
-		
   private Object mutex;
-
   public RWLock()
-	{
-	mutex = new Object();
-	givenLocks = 0;
-	waitingWriters = 0;
-	}
+    {
+    mutex = new Object();
+    givenLocks = 0;
+    waitingWriters = 0;
+    }
 
   public void requestReadLock()
-	{
-  	synchronized(mutex)
-  	  {
-  	  try
-	 	{
-	 	while((givenLocks == -1) || (waitingWriters != 0))
-		  {
-  		  mutex.wait();
-		  }
-		}
-	  catch(java.lang.InterruptedException e)
-	 	{
-		System.out.println(e);
-		}
-			
-	  givenLocks++;
-  	  }
-	}
+    {
+    synchronized(mutex)
+      {
+      try
+        {
+        while((givenLocks == -1) || (waitingWriters != 0))
+          {
+          mutex.wait();
+          }
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        System.out.println(e);
+        }
+      givenLocks++;
+      }
+    }
 	
   public void requestWriteLock()
     {
     synchronized(mutex)
       {
-	  waitingWriters++;
-	  try
-	    {
-	    while(givenLocks != 0)
-		  {
-		  mutex.wait();
-		  }
-	    }
-	  catch(java.lang.InterruptedException e)
-	    {
-	    System.out.println(e);
-	    }
-		
-	  waitingWriters--;
-	  givenLocks = -1;
-	  }
+      waitingWriters++;
+      try
+        {
+        while(givenLocks != 0)
+          {
+          mutex.wait();
+          }
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        System.out.println(e);
+        }
+      waitingWriters--;
+      givenLocks = -1;
+      }
     }
 	
-	
   public void releaseLock()
-	{	
- 	synchronized(mutex)
-	  {
-  	  if(givenLocks == 0)
-  	    {
-  	    return;
-  	    }
-			
+    {	
+    synchronized(mutex)
+      {
+      if(givenLocks == 0)
+        {
+        return;
+        }
       if(givenLocks == -1)
         {
-		givenLocks = 0;
-		}
+        givenLocks = 0;
+        }
       else
         {
-		givenLocks--;
-		}
-			
-  	  mutex.notifyAll(); 
-	  }
-	}
+        givenLocks--;
+        }
+      mutex.notifyAll(); 
+      }
+    }
   }
-

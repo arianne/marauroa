@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutACK.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CLogoutACK.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,6 @@ public class MessageS2CLogoutACK extends Message
   public MessageS2CLogoutACK()
     {
     super(null);
-    
     type=TYPE_S2C_LOGOUT_ACK;
     }
 
@@ -33,7 +32,6 @@ public class MessageS2CLogoutACK extends Message
   public MessageS2CLogoutACK(InetSocketAddress source)
     {
     super(source);
-    
     type=TYPE_S2C_LOGOUT_ACK;
     }  
 
@@ -52,13 +50,13 @@ public class MessageS2CLogoutACK extends Message
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    
     if(type!=TYPE_S2C_LOGOUT_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
-  };
+  }
 
 
-  
+;  
+

@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.11 2003/12/29 11:19:14 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.12 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,12 +22,10 @@ public class Test_RPScheduler extends TestCase
   public static Test suite ( ) 
     {
     return new TestSuite(Test_RPScheduler.class);
-	}
-	
+    }
   private static class FakeRuleProcessor implements RPRuleProcessor
     {
     int i;
-    
     public FakeRuleProcessor()
       {
       i=0;
@@ -71,32 +69,28 @@ public class Test_RPScheduler extends TestCase
       return true;
       }
     }
-	
   public void testRPScheduler()
     {
     marauroad.trace("Test_RPScheduler::testRPScheduler","?","This test case show how the scheduler operates");
     marauroad.trace("Test_RPScheduler::testRPScheduler",">");
-    
     try
       {
       RPScheduler sched=new RPScheduler();
-    
       RPAction action=new RPAction();
+
       action.put("source_id","10");
       action.put("type","testing");
-    
       sched.addRPAction(action);
       
       FakeRuleProcessor fake=new FakeRuleProcessor();
+
       sched.visit(fake);      
       assertEquals(0,fake.getActionsExecuted());      
       sched.nextTurn();
-      
       fake=new FakeRuleProcessor();
       sched.visit(fake);      
       assertEquals(1,fake.getActionsExecuted());      
       sched.nextTurn();
-      
       fake=new FakeRuleProcessor();
       sched.visit(fake);      
       assertEquals(0,fake.getActionsExecuted());
@@ -116,14 +110,12 @@ public class Test_RPScheduler extends TestCase
     {
     marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions","?","This test case tests that when operated badly RPScheduler throws exceptions");
     marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions",">");
-    
     try
       {
       RPScheduler sched=new RPScheduler();
-    
       RPAction action=new RPAction();
+
       action.put("type","testing");
-    
       sched.addRPAction(action);
       fail("Should drop exception");
       }
@@ -135,7 +127,7 @@ public class Test_RPScheduler extends TestCase
       {
       fail(e.getMessage());
       }
-  finally
+    finally
       {
       marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions","<");
       }

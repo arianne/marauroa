@@ -1,4 +1,4 @@
-/* $Id: Test_RPServerManager.java,v 1.4 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_RPServerManager.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,11 +24,11 @@ public class Test_RPServerManager extends TestCase
   public static Test suite ( ) 
     {
     return new TestSuite(Test_RPServerManager.class);
-	}
+    }
 	
   public void testRPServerManager()  
-	{
-	/** It is really, really, really hard to verify RPServerManager, as all the 
-	 *  behaviour is hidden by GameManager and Scheduler */
+    {
+    /** It is really, really, really hard to verify RPServerManager, as all the 
+     *  behaviour is hidden by GameManager and Scheduler */
     }
   }

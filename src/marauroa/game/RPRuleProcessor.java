@@ -1,4 +1,4 @@
-/* $Id: RPRuleProcessor.java,v 1.13 2003/12/29 11:46:01 arianne_rpg Exp $ */
+/* $Id: RPRuleProcessor.java,v 1.14 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,6 @@ public interface RPRuleProcessor
   public RPAction.Status execute(RPObject.ID id, RPAction action);
   /** Notify it when a new turn happens */
   public void nextTurn();
-  
   /** Callback method called when a new player enters in the game 
    *  @param object the new player that enters in the game. */
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException;

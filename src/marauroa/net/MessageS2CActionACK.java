@@ -1,4 +1,4 @@
-/* $Id: MessageS2CActionACK.java,v 1.4 2004/03/22 13:18:46 arianne_rpg Exp $ */
+/* $Id: MessageS2CActionACK.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,10 @@ import java.io.*;
 public class MessageS2CActionACK extends Message
   {
   private int actionId;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageS2CActionACK()
     {
     super(null);
-    
     type=TYPE_S2C_ACTION_ACK;
     }
 
@@ -36,7 +34,6 @@ public class MessageS2CActionACK extends Message
     {
     super(source);
     this.actionId=actionId;
-    
     type=TYPE_S2C_ACTION_ACK;
     }  
   
@@ -62,11 +59,12 @@ public class MessageS2CActionACK extends Message
     {
     super.readObject(in);    
     actionId=in.readInt();
-    
     if(type!=TYPE_S2C_ACTION_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
-  };
+  }
 
+
+;

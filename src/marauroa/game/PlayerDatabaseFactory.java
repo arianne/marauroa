@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.4 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,6 @@ public class PlayerDatabaseFactory
     try
       {
       Configuration conf=Configuration.getConfiguration();
-    
       String database_type=conf.get("marauroa_DATABASE");
     
       if(database_type.equals("MemoryPlayerDatabase"))
@@ -34,13 +33,11 @@ public class PlayerDatabaseFactory
         marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen MemoryPlayerDatabase");
         return MemoryPlayerDatabase.getDatabase();
         }
-    
       if(database_type.equals("JDBCPlayerDatabase"))
         {
         marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen JDBCPlayerDatabase");
         return JDBCPlayerDatabase.getDatabase();
         }
-
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
       throw new PlayerDatabase.NoDatabaseConfException();
       }
@@ -68,13 +65,11 @@ public class PlayerDatabaseFactory
         marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen MemoryPlayerDatabase");
         return MemoryPlayerDatabase.getDatabase();
         }
-    
       if(database_type.equals("JDBCPlayerDatabase"))
         {
         marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen JDBCPlayerDatabase");
         return JDBCPlayerDatabase.getDatabase();
         }
-
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
       throw new PlayerDatabase.NoDatabaseConfException();
       }

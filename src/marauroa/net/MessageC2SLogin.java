@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLogin.java,v 1.2 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageC2SLogin.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,12 +23,10 @@ public class MessageC2SLogin extends Message
   {
   private String username;
   private String password;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageC2SLogin()
     {
     super(null);
-    
     type=TYPE_C2S_LOGIN;
     }
 
@@ -41,7 +39,6 @@ public class MessageC2SLogin extends Message
   public MessageC2SLogin(InetSocketAddress source,String username, String password)
     {
     super(source);
-    
     type=TYPE_C2S_LOGIN;
     this.username=username;
     this.password=password;
@@ -80,13 +77,13 @@ public class MessageC2SLogin extends Message
     super.readObject(in);
     username=in.readString();
     password=in.readString();
-    
     if(type!=TYPE_C2S_LOGIN)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
-  };
+  }
 
 
-  
+;  
+

@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.6 2003/12/15 16:38:08 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.7 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,15 +20,12 @@ import java.io.*;
 public class Configuration
   {
   private static String configurationFile="marauroa.ini";
-  
   private Properties properties;
   private static Configuration configuration=null;
-  
   public static void setConfigurationFile(String conf)
     {
     configurationFile=conf;
     }  
-  
   public static class PropertyNotFoundException extends Exception
     {
     PropertyNotFoundException(String property)
@@ -37,6 +34,7 @@ public class Configuration
       }
     }
     
+
   public static class PropertyFileNotFoundException extends Exception
     {
     private String message;
@@ -44,6 +42,7 @@ public class Configuration
       {
       super();
       String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+
       message="Property File ["+file+"] not found";
       }
     
@@ -52,7 +51,6 @@ public class Configuration
       return message;
       }
     }
-
   /** Constructor */
   private Configuration() throws PropertyFileNotFoundException
     {
@@ -60,7 +58,9 @@ public class Configuration
     try
       {
       properties=new Properties();
+
       InputStream is = getClass().getClassLoader().getResourceAsStream(configurationFile);
+
       if(is!=null)
         {
         properties.load(is);
@@ -92,14 +92,12 @@ public class Configuration
   public static Configuration getConfiguration() throws PropertyFileNotFoundException
     {
     marauroad.trace("Configuration::getConfiguration",">");
-    
     try
       {
       if(configuration==null)
         {
         configuration=new Configuration();
         }
-              
       return configuration;
       }
     finally
@@ -114,7 +112,6 @@ public class Configuration
   public String get(String property) throws PropertyNotFoundException
     {
     marauroad.trace("Configuration::get",">");
-
     try
       {
       String result=properties.getProperty(property);
@@ -124,7 +121,6 @@ public class Configuration
         marauroad.trace("Configuration::get","X","Property ["+property+"] not found");
         throw new PropertyNotFoundException(property);
         }
-
       marauroad.trace("Configuration::get","D","Property ["+property+"]="+result);
       return result;
       }
@@ -140,7 +136,6 @@ public class Configuration
   public void set(String property, String value)
     {
     marauroad.trace("Configuration::set",">");
-    
     try
       {
       marauroad.trace("Configuration::set","D","Property ["+property+"]="+value);
@@ -158,6 +153,7 @@ public class Configuration
     try
       {
       String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+
       properties.store(new FileOutputStream(file),"Marauroa Configuration file");
       }
     catch(FileNotFoundException e)

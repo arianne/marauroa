@@ -1,4 +1,4 @@
-/* $Id: Test_SerializerByteArray.java,v 1.4 2003/12/10 16:14:29 arianne_rpg Exp $ */
+/* $Id: Test_SerializerByteArray.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,14 +22,12 @@ public class Test_SerializerByteArray extends TestCase
   {
   private ByteArrayOutputStream out;
   private ByteArrayInputStream in;
-  
   private InputSerializer sin;
   private OutputSerializer sout;
-
   public static Test suite ( ) 
     {
     return new TestSuite(Test_SerializerByteArray.class);
-	}
+    }
 	
   public void testByteArray()
     {
@@ -37,11 +35,10 @@ public class Test_SerializerByteArray extends TestCase
     marauroad.trace("Test_SerializerByteArray::testByteArray",">");
 
     byte[] data=new byte[256];
+
     for(int i=0;i<data.length;i++) data[i]=(byte)(java.lang.Math.random()*256-127);
-    
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(data);
@@ -55,7 +52,6 @@ public class Test_SerializerByteArray extends TestCase
     
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
-    
     try
       {
       result=sin.readByteArray();
@@ -68,14 +64,11 @@ public class Test_SerializerByteArray extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(data.length,result.length);
-    
     for(int i=0;i<data.length;i++)
       {
       assertTrue(data[i]==result[i]);    
       }
-
     marauroad.trace("Test_SerializerByteArray::testByteArray","<");
-	}  
+    }  
   }

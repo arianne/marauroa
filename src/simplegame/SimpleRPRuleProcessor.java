@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.35 2004/01/01 19:43:54 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.36 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package simplegame;
 
 import marauroa.game.*;
-
 import java.util.Iterator;
 import marauroa.marauroad;
 import simplegame.actions.ChallengeAction;
@@ -35,354 +34,367 @@ import simplegame.objects.GameBoard;
 
 
 public class SimpleRPRuleProcessor implements RPRuleProcessor
-{
-  private SimpleRPZone zone;
-  
-  public SimpleRPRuleProcessor()
   {
+  private SimpleRPZone zone;
+  public SimpleRPRuleProcessor()
+    {
     marauroad.trace("SimpleRPRuleProcessor::<init>",">");
     marauroad.trace("SimpleRPRuleProcessor::<init>","<");
-  }
+    }
   
   public void setContext(RPZone zone)
-  {
+    {
     marauroad.trace("SimpleRPRuleProcessor::setContext",">");
     try
-    {
+      {
       this.zone = (SimpleRPZone)zone;
-    }
+      }
     catch(ClassCastException cce)
-    {
+      {
       marauroad.trace("SimpleRPRuleProcessor::setContext","!","Wrong class for RPZone, exiting.");
       System.exit(-1);
-    }
+      }
     marauroad.trace("SimpleRPRuleProcessor::setContext","<");
-  }
+    }
   
   public void approvedActions(RPObject.ID id, RPActionList actionList)
-  {
-    while(actionList.size()>1)
     {
+    while(actionList.size()>1)
+      {
       actionList.remove(0);
+      }
     }
-  }
-  
   
   public RPAction.Status execute(RPObject.ID id, RPAction action)
-  {
+    {
     marauroad.trace("SimpleRPRuleProcessor::execute",">");
+
     RPAction.Status status = RPAction.STATUS_FAIL;
+
     try
-    {
+      {
       RPObject rp_player = null;
+
       rp_player = zone.get(id);
-      
       if(action.getInt("type")==MoveAction.ACTION_MOVE)
-      {
+        {
         status = makeMove(id, action);
-      }
+        }
       else if(action.getInt("type")==GetCharacterListAction.ACTION_GETCHARLIST)
-      {
+        {
         status = getCharacterList(id, action);
-      }
+        }
       else if(action.getInt("type")==ChallengeAnswer.ACTION_CHALLENGE_ANSWER)
-      {
+        {
         status = challengeAnswer(id, action);
-      }
+        }
       else if(action.getInt("type")==ChallengeAction.ACTION_CHALLENGE)
-      {
+        {
         status = challenge(id, action);
-      }
+        }
       else
-      {
-        //unknown type
+        {
+        // unknown type
+        }
       }
-    }
     catch (Attributes.AttributeNotFoundException e)
-    {
+      {
       e.printStackTrace();
-    }
+      }
     catch (RPZone.RPObjectNotFoundException e)
-    {
+      {
       e.printStackTrace();
-    }
+      }
     finally
-    {
+      {
       marauroad.trace("SimpleRPRuleProcessor::execute","<");
-    }
+      }
     return status;
-  }
-  
+    }
   
   public void nextTurn()
-  {
-  }
+    {
+    }
 
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
-  {
+    {
     zone.add(object);
     return true;
-  }
+    }
     
   public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
-  {
+    {
     zone.remove(id);
     return true;
-  }
+    }
     
   public boolean onTimeout(RPObject.ID id) throws RPZone.RPObjectNotFoundException
-  {
+    {
     zone.remove(id);
     return true;
-  }
+    }
       
   private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)
     throws NumberFormatException,
-    Attributes.AttributeNotFoundException,
-    RPZone.RPObjectNotFoundException
-  {
+      Attributes.AttributeNotFoundException,
+      RPZone.RPObjectNotFoundException
+    {
     marauroad.trace("SimpleRPRuleProcessor::getCharacterList",">");
+
     RPAction.Status status = RPAction.STATUS_FAIL;
+
     try
-    {
-    RPObject rp_player = zone.get(id);
-    RPSlot ear = ensureSlot(rp_player,"ear");        
-    CharacterList clist = new CharacterList();
-    
-    Iterator iter = zone.iterator();
-    while(iter.hasNext())
       {
-      RPObject object = (RPObject)iter.next();
-      int oid = object.getInt("object_id");
-      if(oid!=id.getObjectID())
+      RPObject rp_player = zone.get(id);
+      RPSlot ear = ensureSlot(rp_player,"ear");        
+      CharacterList clist = new CharacterList();
+      Iterator iter = zone.iterator();
+
+      while(iter.hasNext())
         {
-        String name = object.get("name");
-        String pl_status = "idle";
-            
-        try
+        RPObject object = (RPObject)iter.next();
+        int oid = object.getInt("object_id");
+
+        if(oid!=id.getObjectID())
           {
-          if(object.hasSlot("hand") && object.getSlot("hand").size()>0)            
+          String name = object.get("name");
+          String pl_status = "idle";
+            
+          try
             {
-            pl_status="busy";              
+            if(object.hasSlot("hand") && object.getSlot("hand").size()>0)            
+              {
+              pl_status="busy";              
+              }
             }
+          catch(RPObject.NoSlotFoundException e)
+            {
+            /** Bad thing */
+            }
+          clist.addCharacter(oid,object.get("name"),pl_status);
           }
-        catch(RPObject.NoSlotFoundException e)
-          {
-          /** Bad thing */
-          }
-            
-        clist.addCharacter(oid,object.get("name"),pl_status);
         }
+      ear.clear();
+      ear.add(clist);
+      status = RPAction.STATUS_SUCCESS;
       }
-    
-    ear.clear();
-    ear.add(clist);
-    status = RPAction.STATUS_SUCCESS;
-    }
     finally
-    {
-    marauroad.trace("SimpleRPRuleProcessor::getCharacterList","<");
-    }
+      {
+      marauroad.trace("SimpleRPRuleProcessor::getCharacterList","<");
+      }
     return(status);
-  }
+    }
   
   private RPAction.Status challenge(RPObject.ID id, RPAction action)
     throws NumberFormatException,
-    Attributes.AttributeNotFoundException,
-    RPZone.RPObjectNotFoundException
-  {
-    marauroad.trace("SimpleRPRuleProcessor::challenge",">");
-    RPAction.Status status = RPAction.STATUS_FAIL;
-    try
+      Attributes.AttributeNotFoundException,
+      RPZone.RPObjectNotFoundException
     {
+    marauroad.trace("SimpleRPRuleProcessor::challenge",">");
+
+    RPAction.Status status = RPAction.STATUS_FAIL;
+
+    try
+      {
       marauroad.trace("SimpleRPRuleProcessor::challenge","D","Action: " +action);
+
       RPObject rp_player = zone.get(id);
       ChallengeAction challengeAction=new ChallengeAction(action);
       int challenged_id = challengeAction.getWhom();
       RPObject player_challenged = zone.get(new RPObject.ID(challenged_id));
-     
       RPSlot slot = ensureSlot(rp_player,"ear");
+
       slot.clear();
       
-      //it is enough just to send id/name...
+      // it is enough just to send id/name...
       CharacterList clist = new CharacterList();
+
       clist.addCharacter(rp_player.getInt("object_id"),rp_player.get("name"),"wurst");
+
       RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
+
       challenge_slot.add(clist);
       status = RPAction.STATUS_SUCCESS;
-    }
+      }
     catch(Exception e)
-    {
-       e.printStackTrace(); 
-    }
+      {
+      e.printStackTrace(); 
+      }
     finally
-    {
+      {
       marauroad.trace("SimpleRPRuleProcessor::challenge","<");
-    }
+      }
     return(status);
-  }
+    }
   
   private RPAction.Status challengeAnswer(RPObject.ID id, RPAction action)
     throws NumberFormatException,
-    Attributes.AttributeNotFoundException,
-    RPZone.RPObjectNotFoundException
-  {
-    marauroad.trace("SimpleRPRuleProcessor::challengeAnswer",">");
-    RPAction.Status status = RPAction.STATUS_FAIL;
-    try
+      Attributes.AttributeNotFoundException,
+      RPZone.RPObjectNotFoundException
     {
+    marauroad.trace("SimpleRPRuleProcessor::challengeAnswer",">");
+
+    RPAction.Status status = RPAction.STATUS_FAIL;
+
+    try
+      {
       RPObject rp_player = zone.get(id);
       ChallengeAnswer challengerAnswer=new ChallengeAnswer(action);
       int oppenent_id = challengerAnswer.getWhom();
       boolean accepted = challengerAnswer.isAccepted();
+
       if(accepted)
-      {
+        {
         RPObject player_challenged = zone.get(new RPObject.ID(oppenent_id));
+
         emptyAllSlots(rp_player);
         emptyAllSlots(player_challenged);
+
         RPSlot slot = ensureSlot(player_challenged,"hand");
         RPSlot slot2 = ensureSlot(rp_player,"hand");
-        
-        //asign a one..
+        // asign a one..
         GameBoard gb = new GameBoard(3);
+
         slot.add(gb);
         slot2.add(gb);
-        
         marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+id +" got the board");
         marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+oppenent_id +" got the board");
         status = RPAction.STATUS_SUCCESS;
-      }
+        }
       else
-      {
+        {
         marauroad.trace("SimpleRPRuleProcessor::challengeAnswer","D","Player "+id +" NOT ACCEPTED CHALLENGE!!!!!!!!");
+        }
       }
-    }
     finally
-    {
+      {
       marauroad.trace("SimpleRPRuleProcessor::challengeAnswer",">");
-    }
+      }
     return(status);
-  }
-  
+    }
   
   private RPAction.Status makeMove(RPObject.ID id, RPAction action)
     throws NumberFormatException,
-    Attributes.AttributeNotFoundException,
-    RPZone.RPObjectNotFoundException
-  {
-    marauroad.trace("SimpleRPRuleProcessor::makeMove",">");
-    RPAction.Status status = RPAction.STATUS_FAIL;
-    try
+      Attributes.AttributeNotFoundException,
+      RPZone.RPObjectNotFoundException
     {
+    marauroad.trace("SimpleRPRuleProcessor::makeMove",">");
+
+    RPAction.Status status = RPAction.STATUS_FAIL;
+
+    try
+      {
       RPObject rp_player = zone.get(id);
       GameBoard gb=null;
       int last_id = -1;
+
       try
-      {
+        {
         gb = (GameBoard)rp_player.getSlot("hand").get();
         last_id = gb.getLastPlayerID();
-      }
-      catch (RPObject.NoSlotFoundException e)
-      {
-        e.printStackTrace();
-      }
-      catch (RPSlot.RPObjectNotFoundException e)
-      {
-        e.printStackTrace();
-      }
-      
-      if(gb!=null)
-      {
-        if(id.getObjectID()==last_id)
-        {
-          marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
         }
-        else
+      catch (RPObject.NoSlotFoundException e)
         {
+        e.printStackTrace();
+        }
+      catch (RPSlot.RPObjectNotFoundException e)
+        {
+        e.printStackTrace();
+        }
+      if(gb!=null)
+        {
+        if(id.getObjectID()==last_id)
+          {
+          marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
+          }
+        else
+          {
           int row = action.getInt("row");
           int column = action.getInt("column");
+
           if(gb.getRPCharacterAt(row,column)==-1)
-          {
+            {
             gb.setRPCharacterAt(row,column,id.getObjectID());
             status = RPAction.STATUS_SUCCESS;
             marauroad.trace("SimpleRPRuleProcessor::makeMove","D",gb.toString());
+
             int charid_of_winner = gb.checkWinCondition();
+
             if(charid_of_winner!=-1)
-            {
-              //somebody has won, it must be the current player but who knows :)
-              marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+charid_of_winner +" has won.");
-            }
-            else
-            {
-              //check if there are free moves...
-              boolean has_free_moves = gb.hasFreeMoves();
-              if(!has_free_moves)
               {
+              // somebody has won, it must be the current player but who knows :)
+              marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+charid_of_winner +" has won.");
+              }
+            else
+              {
+              // check if there are free moves...
+              boolean has_free_moves = gb.hasFreeMoves();
+
+              if(!has_free_moves)
+                {
                 marauroad.trace("SimpleRPRuleProcessor::execute","D","Nobody has won, remis");
+                }
               }
             }
-          }
           else
-          {
-            //this field is already set
+            {
+            // this field is already set
+            }
           }
         }
-      }
       else
-      {
+        {
         marauroad.trace("SimpleRPRuleProcessor::makeMove","D","Make move - no gameboard assigned???");
+        }
       }
-    }
     finally
-    {
+      {
       marauroad.trace("SimpleRPRuleProcessor::makeMove","<");
-    }
+      }
     return status;
-  }
+    }
   
   private void  emptyAllSlots(RPObject rp_player)
-  {
+    {
     RPSlot slot = ensureSlot(rp_player,"ear");
+
     slot.clear();
     slot = ensureSlot(rp_player,"challenge");
     slot.clear();
     slot = ensureSlot(rp_player,"hand");
     slot.clear();
-  }
+    }
   
   private RPSlot ensureSlot(RPObject player, String slot_name)
-  {
-    RPSlot challenge_slot = null;
-    if(player.hasSlot(slot_name))
     {
-      try
+    RPSlot challenge_slot = null;
+
+    if(player.hasSlot(slot_name))
       {
+      try
+        {
         challenge_slot = player.getSlot(slot_name);
         challenge_slot.clear();
-      }
+        }
       catch (RPObject.NoSlotFoundException e)
-      {
-        //cant be because i've checked it.
-        //something is really then
+        {
+        // cant be because i've checked it.
+        // something is really then
+        }
       }
-    }
     else
-    {
+      {
       challenge_slot = new RPSlot(slot_name);
       try
-      {
+        {
         player.addSlot(challenge_slot);
-      }
+        }
       catch (RPObject.SlotAlreadyAddedException e)
-      {
-        //cant be because i've checked it.
-        //something is really wrong then
+        {
+        // cant be because i've checked it.
+        // something is really wrong then
+        }
       }
-    }
     return(challenge_slot);
+    }
   }
-  
-  
-}
-
-

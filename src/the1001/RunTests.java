@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.8 2004/01/08 01:42:57 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.9 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,6 @@ public class RunTests
       
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
       System.err.println("The test ("+timestamp+") has been "+(wasSuccessful?"SUCCESSFULL":"FAILED"));
-      
       if(!wasSuccessful)
         {
         System.err.println("ERROR: the1001 RunTests failed, please send the log files ("+timestamp+") to:");
@@ -50,13 +49,14 @@ public class RunTests
   private static TestResult runTest(Test e,String timestamp) throws FileNotFoundException
     {
     TestSuite testSuite=(TestSuite)e;
-    
     String filename="output_"+testSuite.getName()+"_"+timestamp+".txt";
 
     System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
     System.setOut(new PrintStream(new FileOutputStream(filename)));
+
     TestResult result=junit.textui.TestRunner.run(e);
     String testResult=(result.wasSuccessful()?"Correct":"Failed");
+
     System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
     return result;
     }
@@ -67,8 +67,7 @@ public class RunTests
 
     suite.addTest(new TestSuite(the1001.Test_RPCode.class));
     suite.addTest(new TestSuite(the1001.Test_the1001.class));
-
     return suite;
     }
-  }
-  
+  }  
+

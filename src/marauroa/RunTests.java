@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.38 2004/03/23 16:39:31 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.39 2004/03/24 15:25:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,6 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa;
+
 import junit.framework.*;
 import java.util.*;
 import java.io.*;
@@ -24,7 +25,6 @@ public class RunTests
     {
     private long timeout;
     private boolean finishRequest;
-    
     public Killer(long timeout)
       {
       this.timeout=timeout;
@@ -45,7 +45,6 @@ public class RunTests
       catch(Exception e)
         {
         }
-      
       if(timeout<=0)
         {
         System.err.println("ERROR: RunTests killed, please send the log files to:");
@@ -59,7 +58,6 @@ public class RunTests
       finishRequest=true;
       }
     }
-    
   public static void main (String[] args)
     {
     /** NOTE: On my machine it took 93000 milliseconds. */
@@ -68,28 +66,26 @@ public class RunTests
     try
       {
       Killer killer=new Killer(TIMEOUT_KILL_APPLICATION);
-      
       Date start=new Date();
       boolean wasSuccessful=true;
       String timestamp=Long.toString(new Date().getTime());
       
       System.err.println("Test will last around 93.0 seconds. Please wait!");
-//      wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
-//      wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
-//      wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
-//      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
+      // wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
+      // wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
+      // wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
+      // wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
       wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
+
       Date end=new Date();
       
       System.err.println("Total time: "+(end.getTime()-start.getTime()));
       System.err.println("The test ("+timestamp+") has been "+(wasSuccessful?"SUCCESSFULL":"FAILED"));
-      
       if(!wasSuccessful)
         {
         System.err.println("ERROR: RunTests failed, please send the log files ("+timestamp+") to:");
         System.err.println("http://sourceforge.net/tracker/?func=add&group_id=66537&atid=514826");
         }
-        
       killer.finish();
       }
     catch(Exception e) 
@@ -100,13 +96,14 @@ public class RunTests
   private static TestResult runTest(Test e,String timestamp) throws FileNotFoundException
     {
     TestSuite testSuite=(TestSuite)e;
-    
     String filename="output_"+testSuite.getName()+"_"+timestamp+".txt";
 
     System.err.println("TestResult::runTest\t>\t"+testSuite.getName());
     System.setOut(new PrintStream(new FileOutputStream(filename)));
+
     TestResult result=junit.textui.TestRunner.run(e);
     String testResult=(result.wasSuccessful()?"Correct":"Failed");
+
     System.err.println("TestResult::runTest\t<\t"+testSuite.getName()+"("+testResult+")");
     return result;
     }
@@ -117,32 +114,25 @@ public class RunTests
 
     suite.addTest(new TestSuite(marauroa.Test_RWLock.class));
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
-    
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerShort.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerInt.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByteArray.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
-    
     suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
-   
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
-
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPSlot.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPScheduler.class));
-
     suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
-
     suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPServerManager.class));
-
     return suite;
     }
 
@@ -152,7 +142,6 @@ public class RunTests
 
     suite.addTest(new TestSuite(marauroa.Test_RWLock.class));
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
-    
     return suite;
     }
 
@@ -165,18 +154,16 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerInt.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByteArray.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
-    
     suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
-
     return suite;
     }
 
   public static Test suiteOneTest ( )
     {
     TestSuite suite= new TestSuite("One Test case marauroa Tests");
-    suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
 
+    suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
     return suite;
     }
 
@@ -187,16 +174,13 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
     suite.addTest(new TestSuite(marauroa.game.Test_PlayerEntryContainer.class));
-
     suite.addTest(new TestSuite(marauroa.game.Test_Attributes.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPSlot.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPScheduler.class));
-
     suite.addTest(new TestSuite(marauroa.game.Test_MarauroaRPZone.class));
-
     return suite;
     }
 
@@ -207,8 +191,7 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));
     suite.addTest(new TestSuite(marauroa.game.Test_RPServerManager.class));
-
     return suite;
     }
-  }
-  
+  }  
+

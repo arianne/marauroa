@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.6 2003/12/30 10:24:35 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,35 +22,30 @@ public class Test_Attributes extends TestCase
   {
   private ByteArrayOutputStream out;
   private ByteArrayInputStream in;
-  
   private InputSerializer sin;
   private OutputSerializer sout;
-
- 
   public static Test suite ( ) 
     {
     return new TestSuite(Test_Attributes.class);
-	}
+    }
 	
   public void testAttributes()
     {
     marauroad.trace("Test_Attributes::testAttributes","?","This test case tests the normal operations done on a attribute");
     marauroad.trace("Test_Attributes::testAttributes",">");
-
     try
       {
       Attributes attr=new Attributes();
+
       assertNotNull(attr);
-    
       attr.put("Attribute","value");
     
       String value=null;
+
       value=attr.get("Attribute");
       assertNotNull(value);
       assertEquals("value",value);
-    
       assertTrue(attr.has("Attribute"));
-      
       attr.put("Attribute",1);
       value=attr.get("Attribute");
       assertNotNull(value);
@@ -58,16 +53,17 @@ public class Test_Attributes extends TestCase
       assertEquals(1,attr.getInt("Attribute"));      
 
       List list=new LinkedList();
+
       list.add("Hi");
       list.add("World");
       list.add("This is a test");
-      
       attr.put("Attribute",list);
       value=attr.get("Attribute");
       assertNotNull(value);
       
       Iterator it=list.iterator();
       Iterator it_result=Attributes.StringToList(value).iterator();
+
       while(it.hasNext())
         {
         assertEquals(it.next(),it_result.next());
@@ -87,13 +83,14 @@ public class Test_Attributes extends TestCase
     {
     marauroad.trace("Test_Attributes::testAttributesException","?","This test case tests that when operated badly Attributes throws exceptions");
     marauroad.trace("Test_Attributes::testAttributesException",">");
-
     try
       {
       Attributes attr=new Attributes();
+
       assertNotNull(attr);
     
       String value=null;
+
       value=attr.get("Attribute");
       fail("Exception not throwed");
       }
@@ -113,16 +110,14 @@ public class Test_Attributes extends TestCase
     marauroad.trace("Test_Attributes::testAttributesSerialization",">");
     
     Attributes attr=new Attributes();
+
     assertNotNull(attr);
-  
     attr.put("Attribute","value");
     attr.put("Name","A random name");
     attr.put("Location","nowhere");
     attr.put("Test number",Integer.toString(5));
-
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
-    
     try
       {
       sout.write(attr);
@@ -136,7 +131,6 @@ public class Test_Attributes extends TestCase
   
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
-    
     try
       {
       sin.readObject(result);
@@ -149,9 +143,7 @@ public class Test_Attributes extends TestCase
       {
       fail("Exception happened when serializing data in");
       }
-    
     assertEquals(attr,result);
-    
     marauroad.trace("Test_Attributes::testAttributesSerialization","<");
     }
   }

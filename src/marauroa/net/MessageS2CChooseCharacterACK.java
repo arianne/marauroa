@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.5 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.6 2004/03/24 15:25:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.net;
   
 import java.net.InetSocketAddress;
 import java.io.*;
-
 import marauroa.game.*;
   
 /** This message indicate the client that the server has accepted its ChooseCharacter Message
@@ -23,12 +22,10 @@ import marauroa.game.*;
 public class MessageS2CChooseCharacterACK extends Message
   {
   private RPObject.ID id;
-  
   /** Constructor for allowing creation of an empty message */
   public MessageS2CChooseCharacterACK()
     {
     super(null);
-    
     type=TYPE_S2C_CHOOSECHARACTER_ACK;
     }
 
@@ -38,7 +35,6 @@ public class MessageS2CChooseCharacterACK extends Message
     {
     super(source);
     this.id=id;
-    
     type=TYPE_S2C_CHOOSECHARACTER_ACK;
     }
    
@@ -67,13 +63,12 @@ public class MessageS2CChooseCharacterACK extends Message
     super.readObject(in);
     id=new RPObject.ID(-1);
     id.readObject(in);
-    
     if(type!=TYPE_S2C_CHOOSECHARACTER_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }
-  };
+  }
 
 
-  
+;

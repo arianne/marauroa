@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.7 2003/12/21 11:59:24 arianne_rpg Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.8 2004/03/24 15:25:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,47 +17,46 @@ import marauroa.marauroad;
 import java.util.*;
 
 public class ChallengeAnswer extends ChallengeAction
-{
-  public final static int ACTION_CHALLENGE_ANSWER=4;
-  
-  public ChallengeAnswer()
   {
+  public final static int ACTION_CHALLENGE_ANSWER=4;
+  public ChallengeAnswer()
+    {
     put("type",ACTION_CHALLENGE_ANSWER);
     put("start","");
-  }
+    }
 
   public ChallengeAnswer(RPAction action) throws Attributes.AttributeNotFoundException
-  {
+    {
     Iterator it=action.iterator();
+
     while(it.hasNext())
       {
       String attr=(String)it.next();
+
       put(attr,action.get(attr));
       }
-
     put("type",ACTION_CHALLENGE_ANSWER);
-  }
+    }
 
   public void setAccept(boolean accepted)
-  {
+    {
     put("accept",Boolean.toString(accepted));
-  }
+    }
   
   public boolean isAccepted()
-  {
+    {
     boolean ret = false;
-    try
-    {
-      String acc = get("accept");
-      ret = Boolean.valueOf(acc).booleanValue();
-    }
-    catch (Attributes.AttributeNotFoundException e)
-    {
-      ret = false;
-    }
-    return(ret);
-  }
-  
-  
-}
 
+    try
+      {
+      String acc = get("accept");
+
+      ret = Boolean.valueOf(acc).booleanValue();
+      }
+    catch (Attributes.AttributeNotFoundException e)
+      {
+      ret = false;
+      }
+    return(ret);
+    }
+  }
