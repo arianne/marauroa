@@ -61,7 +61,15 @@ public class RPObject extends Attributes
     
     public boolean equals(Object anotherid)
     {
+      if(anotherid!=null)
+      {
       return (id==((RPObject.ID)anotherid).id);
+      }
+      else
+      {
+        return(false);
+      }
+        
     }
     
     public int hashCode()
