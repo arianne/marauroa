@@ -5,8 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/09/26
 status : planning
 
-%% BEGIN %%
-
 The main idea behind GameManager is to handle all the "business logic", so this
 Manager decides about every reply to each individual message.
 
@@ -101,6 +99,3 @@ Process C2S Logout ( STATE_GAME_END )
     }
     
   Postcondition: Either is the same that the input state or the state is 
-  
-
-%% END %%

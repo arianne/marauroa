@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/07
 status : planning
 
-%% BEGIN %%
 The format of the output should at least include:
 - Date and time
 - Location of the error
@@ -63,4 +62,3 @@ To apply this to traces we have get a short name for each message or event type.
 Traces must contain the entry and exit events always, so we can really trace what
 the application is exactly doing. Even when we exit the procedure using an exception.
 
-%% END %%

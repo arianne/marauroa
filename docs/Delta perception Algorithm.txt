@@ -5,8 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/11/23
 status : planning
 
-%% BEGIN %%
-
 The main idea behind the DPA is not to sent ALL the objects to client, but
 only those that has been modified.
 
@@ -38,5 +36,3 @@ The delta perception algorithm:
 	...
 
 An area really related to DPA is RPZone
-
-%% END %%

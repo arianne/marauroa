@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
 
-%% BEGIN %%
 Each client MUST have a session id to avoid another player to impersonate it.
 sessionid must be a short or int to make harder for an attacker to guess it.
 
@@ -14,5 +13,3 @@ unique condition that two different players MUST have two different clientids.
 
 Now, clientid is a short ( 16 bits ) integer, and soon we shold update it to a
 int ( 32 bits integer ).
-
-%% END %%

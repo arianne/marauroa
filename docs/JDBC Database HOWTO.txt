@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
 
-%% BEGIN %%
 JDBC technology is an API that lets you access virtually any tabular data 
 source from the Java programming language. It provides cross-DBMS connectivity
 to a wide range of SQL databases, and now, with the new JDBC API, it also 
@@ -52,5 +51,3 @@ So in case of MySQL just open MySQL and write:
 	
 The rest of code is handled by the server itself, that will create the tables if they 
 don't exits.	
-    
-%% END %%

@@ -4,6 +4,3 @@ Keyword: Objects, classes, types, XML, attributes.
 Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
-
-%% BEGIN %%
-%% END %%

@@ -1,0 +1,7 @@
+Title  : Zones and Worlds 
+Info   : Deep overview of the Zone concept and how it is integrated with Worlds.
+Keyword: zone, object, world, perception.
+Author : Miguel Angel Blanch Lardin
+Created: 2003/11/28
+status : planning
+

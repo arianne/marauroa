@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
 
-%% BEGIN %%
 PlayerContainer is the data structure that contains all the needed info from
 players to keep the game running.
 
@@ -49,5 +48,3 @@ control it more easy with the state propierty.
 
 As you can see all we need to operate PlayerDatabase is username and 
 choosenCharacter. So using PlayerEntryContainer we can fully operate it.
-
-%% END %%

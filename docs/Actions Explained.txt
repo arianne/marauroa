@@ -5,8 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
 
-%% BEGIN %%
-
 Arianne Game is based on several actions that are a MUST for the correct 
 development of the game.
 Mainly these actions are:
@@ -130,5 +128,3 @@ the action is executed.
 
 Actions reply are placed inside Objects and sent to clients as perceptions, so 
 please refer to the Action reply in Objects document.
-
-%% END %%

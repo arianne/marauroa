@@ -5,8 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/11/23
 status : planning
 
-%% BEGIN %%
-
 The goal of RP Manager is to handle the whole RP game.
 This means mainly:
 - run RPActions from clients
@@ -47,5 +45,3 @@ All the complexity of Action management should be handle here.
 RuleProcessor is a wrapper class for hide actions code.
 All the actions code MUST be here, this class also acts as a Action code loader,
 as some actions are not part of Marauroa, but scripts.
-
-%% END %%

@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/07
 status : planning
 
-%% BEGIN %%
 The whole Marauroa system is managed by two main entities:
 - RPAction
 - RPObject
@@ -47,6 +46,3 @@ Mandatory Object Attributes:
 
 Optional Object Attributes:
 Read Objects Explained for more details.
-
-
-%% END %%

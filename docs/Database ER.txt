@@ -5,7 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/10/07
 status : planning
 
-%% BEGIN %%
 The database ER schema is:
 
 Entities:
@@ -72,5 +71,3 @@ CREATE TABLE loginEvent
   timedate TIMEDATE,
   result TINYINT
   );
-
-%% END %%

@@ -6,9 +6,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/09/11
 status : planning
 
-
-%% BEGIN %%
-
 To communicate client and server marauroa uses a stream of UDP packets.
 Message system belongs to marauroa.net package, so refer to code.
 
@@ -205,4 +202,3 @@ Message S2C Map
 ---------------
 (TODO)
 
-%% END %%

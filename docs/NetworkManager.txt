@@ -5,9 +5,6 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/09/26
 status : planning
 
-
-%% BEGIN %%
-
 NetworkManager is our router that send and recieve messages from and to the 
 network.
 
@@ -68,5 +65,3 @@ is addresses in the protocol itself.
 
 The read method is blocking, when you call the read method it returns a message 
 from the queue or blocks until one arrives if the queue is empty.
-
-%% END %%
