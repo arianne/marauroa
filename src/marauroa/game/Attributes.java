@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.13 2003/12/29 11:33:03 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.14 2003/12/30 07:57:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import marauroa.marauroad;
 /** This class host a list of Attributes stored as a pair String=String */
 public class Attributes implements marauroa.net.Serializable
   {
-  /* A Map<String,String> that contains the attributes */
+  /** A Map<String,String> that contains the attributes */
   private Map content;
   
   public static class AttributeNotFoundException extends Exception

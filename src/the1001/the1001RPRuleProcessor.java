@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.5 2003/12/29 11:19:14 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.6 2003/12/30 07:57:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,14 +14,21 @@ package the1001;
 
 import marauroa.game.*;
 import marauroa.*;
+import java.util.*;
 
 public class the1001RPRuleProcessor implements RPRuleProcessor
   {
-  the1001RPZone zone;
+  private the1001RPZone zone;
+  private List[] trackedObjects;
+  private int turn;
   
   public the1001RPRuleProcessor()
     {
     zone=null;
+    trackedObjects=new List[2];
+    trackedObjects[0]=new LinkedList();
+    trackedObjects[1]=new LinkedList();
+    turn=0;
     RPCode.setCallback(this);
     }
 
@@ -78,14 +85,58 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   /** Notify it when a new turn happens */
   public void nextTurn()
     {
-    marauroad.trace("the1001RPRuleProcessor::nextTurn",">");
+    marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
+    removeOneTurnAttributes();      
+    ++turn;
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
+    }
+  
+  private void removeOneTurnAttributes()
+    {
+    marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes",">");        
+    try
+      {
+      Iterator it=trackedObjects[turn%2].iterator();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        Iterator attributesit=object.iterator();
+      
+        while(attributesit.hasNext())
+          {
+          String attr=(String)attributesit.next();
+          if(attr.charAt(0)=='?')
+            {
+            object.remove(attr);
+            }
+          }
+        }
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","!",e.getMessage());
+      }
+    
+    trackedObjects[turn%2].clear();
+      
+    marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","<");
     }
 
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
-    zone.add(object);
-    return true;
+    marauroad.trace("the1001RPRuleProcessor::onInit",">");
+    try
+      {
+      object.put("?joined","");
+      zone.add(object);
+      trackedObjects[(turn+1)%2].add(object);
+  
+      return true;
+      }
+    finally
+      {
+      marauroad.trace("the1001RPRuleProcessor::onInit","<");
+      }
     }
     
   public boolean onExit(RPObject.ID id)
