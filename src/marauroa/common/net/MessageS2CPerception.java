@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.4 2005/02/20 17:18:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.5 2005/03/02 15:54:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -167,6 +167,11 @@ public class MessageS2CPerception extends Message
   
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
+    if(Logger.loggable("MessageS2CPerception::writeObject","D"))
+      {
+      Logger.trace("MessageS2CPerception::writeObject","D",this.toString());
+      }
+      
     super.writeObject(out);
     out.write(getPrecomputedStaticPartPerception());
     out.write(getDynamicPartPerception());      

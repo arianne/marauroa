@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.2 2005/02/17 22:55:07 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.3 2005/03/02 15:54:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -132,8 +132,9 @@ public class RPWorld
       
       IRPZone newzone=getRPZone(newzoneid);
       IRPZone oldzone=getRPZone(oldzoneid);
-    
+      
       oldzone.remove(object.getID());
+            
       object.put("zoneid",newzoneid.getID());
       add(object);    
       }

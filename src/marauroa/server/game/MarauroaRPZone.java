@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.2 2005/03/02 15:54:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -101,7 +101,8 @@ public class MarauroaRPZone implements IRPZone
     if(objects.containsKey(id))
       {
       RPObject object=(RPObject)objects.remove(id);
-      perception.removed(object);
+      /** TODO: NOTE: BUG: HACK: Define a consistent semantic */
+      perception.removed((RPObject)object.copy());
 
       return object;
       }
