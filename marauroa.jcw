@@ -8,8 +8,8 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\Statistics.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\JStatistics.java" #[EndFile]
 #[BeginFile]SOURCE := "C:\\Apache Group\\Apache2\\htdocs\\createaccount.php" #[EndFile]
 
 ! Start Breakpoint Structure

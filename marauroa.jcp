@@ -28,6 +28,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\src\\marauroa\\Test_RWLock.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\TimeoutConf.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Statistics.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\JStatistics.java" #[EndFile]
 #[BeginFolder]
 LABEL := "mods"
 FILTER := ""

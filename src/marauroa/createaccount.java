@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.3 2004/01/30 20:34:38 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.4 2004/01/31 18:34:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package the1001;
+package marauroa;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,7 +21,7 @@ import the1001.objects.*;
 
 class createaccount
   {
-  public static int main (String[] args)
+  public static void main (String[] args)
     {
     int i=0;
     PrintWriter out=null;
@@ -35,7 +35,6 @@ class createaccount
         
     while(i!=args.length)
       {
-      System.out.println(args[i]);
       if(args[i].equals("-u"))
         {
         username=args[i+1];
@@ -68,18 +67,19 @@ class createaccount
       ++i;
       }
     
-    if(username==null) return 1;
-    if(password==null) return 1;
-    if(character==null) return 1;
-    if(character_model==null) return 1;
-    if(gladiator==null) return 1;
-    if(gladiator_model==null) return 1;
+    if(username==null) System.exit(1);
+    if(password==null) System.exit(1);
+    if(character==null) System.exit(1);
+    if(character_model==null) System.exit(1);
+    if(gladiator==null) System.exit(1);
+    if(gladiator_model==null) System.exit(1);
       
     try
       {      
-      out=new PrintWriter(new FileOutputStream("createaccount_log.txt"));
+      out=new PrintWriter(new FileOutputStream("C:/Apache Group/Apache2/htdocs/createaccount_log.txt",true));
       out.println("Trying to create username("+username+"), password("+password+"), character("+character+"),"
         +"character_model("+character_model+"), gladiator("+gladiator+"), gladiator_model("+gladiator_model+")");
+      out.flush();
       
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       
@@ -87,71 +87,71 @@ class createaccount
       if(playerDatabase.validString(username)==false) 
         {
         out.println("String not valid: "+username);
-        return 2;
+        System.exit(2);
         }
       if(playerDatabase.validString(password)==false)
         {
         out.println("String not valid: "+password);
-        return 2;
+        System.exit(2);
         }
       if(playerDatabase.validString(character)==false)
         {
         out.println("String not valid: "+character);
-        return 2;
+        System.exit(2);
         }
       if(playerDatabase.validString(character_model)==false)       
         {
         out.println("String not valid: "+character_model);
-        return 2;
+        System.exit(2);
         }
       if(playerDatabase.validString(gladiator)==false)
         {
         out.println("String not valid: "+gladiator);
-        return 2;
+        System.exit(2);
         }
       if(playerDatabase.validString(gladiator_model)==false)       
         {
         out.println("String not valid: "+gladiator_model);
-        return 2;
+        System.exit(2);
         }
 
       out.println("Checking string size");
       if(username.length()>10) 
         {
         out.println("String size not valid: "+username);
-        return 3;
+        System.exit(3);
         }
       if(password.length()>10) 
         {
         out.println("String size not valid: "+password);
-        return 3;
+        System.exit(3);
         }
       if(character.length()>20) 
         {
         out.println("String size not valid: "+character);
-        return 3;
+        System.exit(3);
         }
       if(character_model.length()>10) 
         {
         out.println("String size not valid: "+character_model);
-        return 3;
+        System.exit(3);
         }
       if(gladiator.length()>20) 
         {
         out.println("String size not valid: "+gladiator);
-        return 3;
+        System.exit(3);
         }
       if(gladiator_model.length()>10) 
         {
         out.println("String size not valid: "+gladiator_model);
-        return 3;
+        System.exit(3);
         }
         
       out.println("Checking if player exists");
       if(playerDatabase.hasPlayer(username))
         {
         out.println("ERROR: Player exists");
-        return 4;
+        System.exit(4);
         }
 
       out.println("Adding player");
@@ -173,19 +173,21 @@ class createaccount
       playerDatabase.addCharacter(username,character,object);
       
       out.println("Correctly created");
-      return 0;
       }
     catch(Exception e)
       {
       out.println("Failed: "+e.getMessage());
-      return 5;
+      System.exit(5);
       }    
     finally
       {
       if(out!=null)
         {
+        out.flush();
         out.close();
         }
       }
+    
+    System.exit(0);
     }
   }
