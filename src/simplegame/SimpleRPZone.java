@@ -50,6 +50,14 @@ public class SimpleRPZone
       cell.put("object_id",String.valueOf(id.getObjectID()));
       cell.put("type","cell");
       cell.put("color",String.valueOf(color));
+      try
+      {
+        add(cell);
+      }
+      catch (marauroa.game.RPZone.RPObjectInvalidException ex)
+      {
+        ex.printStackTrace();
+      }
     }
   }
   
