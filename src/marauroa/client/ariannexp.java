@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.2 2005/02/09 20:22:27 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.3 2005/02/17 15:15:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,12 +27,17 @@ public abstract class ariannexp
   
   public ariannexp()
     {
+    Logger.initialize("base/","client_log");
+    Logger.trace("ariannexp::ariannexp",">");
     messages=new LinkedList<Message>();
+    Logger.trace("ariannexp::ariannexp","<");
     }
   
   public void connect(String host, int port) throws java.net.SocketException
     {    
+    Logger.trace("ariannexp::connect",">");
     netMan=new NetworkClientManager(host,port);
+    Logger.trace("ariannexp::connect","<");
     }
   
   private Message getMessage() throws InvalidVersionException
@@ -44,6 +49,7 @@ public abstract class ariannexp
   
   public boolean login(String username, String password)
     {
+    Logger.trace("ariannexp::login",">");
     try
       {
       netMan.addMessage(new MessageC2SLogin(netMan.getAddress(),username,password));
@@ -54,23 +60,27 @@ public abstract class ariannexp
         Message msg=getMessage();
         if(msg instanceof MessageS2CLoginACK)
           {
+          Logger.trace("ariannexp::login","D","Login correct");
           clientid=msg.getClientID();
           ++recieved;
           }
         else if(msg instanceof MessageS2CCharacterList)
           {
+          Logger.trace("ariannexp::login","D","Recieved Character list");
           String[] characters=((MessageS2CCharacterList)msg).getCharacters();
           onAvailableCharacters(characters);
           ++recieved;
           }
         else if(msg instanceof MessageS2CServerInfo)
           {
+          Logger.trace("ariannexp::login","D","Recieved Server info");
           String[] info=((MessageS2CServerInfo)msg).getContents();
           onServerInfo(info);
           ++recieved;
           }
         else if(msg instanceof MessageS2CLoginNACK)
           {
+          Logger.trace("ariannexp::login","D","Login failed");
           return false;
           }
         else
@@ -86,10 +96,15 @@ public abstract class ariannexp
       onError(1,"Invalid client version to connect to this server.");
       return false;
       }
+    finally
+      {
+      Logger.trace("ariannexp::login","<");
+      }
     }
   
   public boolean chooseCharacter(String character)
     {
+    Logger.trace("ariannexp::chooseCharacter",">");
     try
       {
       Message msgCC=new MessageC2SChooseCharacter(netMan.getAddress(),character);
@@ -104,10 +119,12 @@ public abstract class ariannexp
         Message msg=getMessage();
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
+          Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
           return true;
           }
         else if(msg instanceof MessageS2CChooseCharacterNACK)
           {
+          Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
           return false;
           }
         else
@@ -120,8 +137,13 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
+      Logger.thrown("ariannexp::chooseCharacter","X",e);
       onError(1,"Invalid client version to connect to this server.");
       return false;
+      }
+    finally
+      {
+      Logger.trace("ariannexp::chooseCharacter","<");
       }
     }
   
@@ -132,6 +154,7 @@ public abstract class ariannexp
   
   public void send(RPAction action, boolean block)
     {
+    Logger.trace("ariannexp::send",">");
     try
       {
       MessageC2SAction msgAction=new MessageC2SAction(netMan.getAddress(),action);
@@ -157,12 +180,19 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
+      Logger.thrown("ariannexp::send","X",e);
       onError(1,"Invalid client version to connect to this server.");
+      }
+    finally
+      {
+      Logger.trace("ariannexp::send","<");
       }
     }
   
   public boolean logout()
     {
+    Logger.trace("ariannexp::logout",">");
+    
     try
       {
       Message msgL=new MessageC2SLogout(netMan.getAddress());
@@ -176,10 +206,12 @@ public abstract class ariannexp
         Message msg=getMessage();
         if(msg instanceof MessageS2CLogoutACK)
           {
+          Logger.trace("ariannexp::logout","D","Logout ACK");
           return true;
           }
         else if(msg instanceof MessageS2CLogoutNACK)
           {
+          Logger.trace("ariannexp::logout","D","Logout NACK");
           return false;
           }
         else
@@ -192,13 +224,20 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
+      Logger.thrown("ariannexp::logout","X",e);
       onError(1,"Invalid client version to connect to this server.");
       return false;
+      }
+    finally
+      {
+      Logger.trace("ariannexp::logout","<");
       }
     }
   
   public void loop(int delta)
     {
+    Logger.trace("ariannexp::loop",">");
+    
     try
       {
       Message newmsg=netMan.getMessage();
@@ -211,6 +250,7 @@ public abstract class ariannexp
         {
         if(msg instanceof MessageS2CPerception)
           {
+          Logger.trace("ariannexp::loop","D","Processing Message Perception");
           MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
           reply.setClientID(clientid);
           netMan.addMessage(reply);
@@ -220,6 +260,7 @@ public abstract class ariannexp
           }
         else if(msg instanceof MessageS2CTransferREQ)        
           {
+          Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
           List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
 
           items=onTransferREQ(items);
@@ -230,6 +271,7 @@ public abstract class ariannexp
           }
         else if(msg instanceof MessageS2CTransfer)        
           {
+          Logger.trace("ariannexp::loop","D","Processing Content Transfer");
           List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
           onTransfer(items);
           }
@@ -239,7 +281,12 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {      
+      Logger.thrown("ariannexp::loop","X",e);
       onError(1,"Invalid client version to connect to this server.");
+      }
+    finally
+      {
+      Logger.trace("ariannexp::loop","<");
       }
     }
 

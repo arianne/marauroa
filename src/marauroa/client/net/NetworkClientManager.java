@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.3 2005/02/09 20:22:28 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.4 2005/02/17 15:16:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,6 +44,7 @@ public class NetworkClientManager
    to recieve new messages from the network. */
   public NetworkClientManager(String host, int port) throws SocketException
     {
+    Logger.trace("NetworkClientManager::NetworkClientManager",">");
     clientid=0;
     address=new InetSocketAddress(host,port);
     socket=new DatagramSocket();
@@ -53,6 +54,7 @@ public class NetworkClientManager
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
     processedMessages=new LinkedList<Message>();
+    Logger.trace("NetworkClientManager::NetworkClientManager","<");
     }
     
   public InetSocketAddress getAddress()
@@ -63,7 +65,9 @@ public class NetworkClientManager
   /** This method notify the thread to finish it execution */
   public void finish()
     {
+    Logger.trace("NetworkClientManager::finish",">");
     socket.close();
+    Logger.trace("NetworkClientManager::finish","<");
     }
     
   private Message getOldestProcessedMessage()
@@ -163,6 +167,7 @@ public class NetworkClientManager
    *  @return a Message*/
   public Message getMessage() throws InvalidVersionException
     {
+    Logger.trace("NetworkClientManager::getMessage",">");
     try
       {
       if(processedMessages.size()>0)
@@ -174,15 +179,13 @@ public class NetworkClientManager
       }
     catch(InvalidVersionException e)
       {
-      e.printStackTrace();
-      Logger.trace("NetworkClientManager::getMessage","X",e.getMessage());
+      Logger.thrown("NetworkClientManager::getMessage","X",e);
       throw e;
       }
     catch(Exception e)
       {
       /* Report the exception */
-      e.printStackTrace();
-      Logger.trace("NetworkClientManager::getMessage","X",e.getMessage());
+      Logger.thrown("NetworkClientManager::getMessage","X",e);
       }
         
     try
@@ -208,10 +211,13 @@ public class NetworkClientManager
     catch(IOException e)
       {
       /* Report the exception */
-      e.printStackTrace();
-      Logger.trace("NetworkClientManager::getMessage","X",e.getMessage());
+      Logger.thrown("NetworkClientManager::getMessage","X",e);
       }
-        
+    finally
+      {
+      Logger.trace("NetworkClientManager::getMessage","<");
+      }
+
     return null;
     }
     
@@ -219,6 +225,7 @@ public class NetworkClientManager
    *  @param msg the message to ve delivered. */
   public synchronized void addMessage(Message msg)
     {
+    Logger.trace("NetworkClientManager::addMessage",">");
     try
       {
       /* We enforce the remote endpoint */
@@ -240,6 +247,10 @@ public class NetworkClientManager
       {
       /* Report the exception */
       Logger.thrown("NetworkClientManager::addMessage","X",e);
+      }
+    finally
+      {
+      Logger.trace("NetworkClientManager::addMessage","<");
       }
     }
   }
