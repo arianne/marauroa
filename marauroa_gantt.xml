@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ganttproject.sourceforge.net>
 
-<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/2/2004" view-zoom="5" version="1.9.10">
+<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/4/2004" view-zoom="5" version="1.9.9">
     <description>
         Marauroa a an online development project aimed at create a open source multiplayer online framework.
     </description>
@@ -162,9 +162,7 @@
         <task id="255" name="Release Marauroa 0.24" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="21/2/2004" duration="6" complete="0" priority="1">
             <depend id="164" type="2"/>
         </task>
-        <task id="159" name="Add Equip and Buy actions" color="#8cb6ce" shape="0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0" meeting="false" start="6/2/2004" duration="12" complete="80" priority="1">
-            <depend id="164" type="2"/>
-        </task>
+        <task id="159" name="Add Equip and Buy actions" color="#ff3366" shape="0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0" meeting="false" start="6/2/2004" duration="12" complete="80" priority="1"/>
         <task id="179" name="Develop AI Bot for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="6/2/2004" duration="23" complete="100" priority="1">
             <depend id="164" type="2"/>
         </task>
@@ -187,7 +185,7 @@
             <depend id="314" type="2"/>
             <depend id="315" type="2"/>
         </task>
-        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0" meeting="false" start="16/3/2004" duration="24" complete="60" priority="1">
+        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="16/3/2004" duration="24" complete="100" priority="1">
             <depend id="314" type="2"/>
         </task>
         <task id="314" name="Release Marauroa 0.31" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="9/4/2004" duration="3" complete="0" priority="1">
@@ -199,7 +197,7 @@
         <task id="315" name="Write Test cases for Delta-delta" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/3/2004" duration="5" complete="100" priority="1">
             <depend id="335" type="2"/>
         </task>
-        <task id="335" name="Release Marauroa 0.32" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="12/4/2004" duration="3" complete="0" priority="1">
+        <task id="335" name="Release Marauroa 0.32" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="12/4/2004" duration="3" complete="100" priority="1">
             <depend id="160" type="2"/>
             <depend id="337" type="2"/>
             <depend id="353" type="2"/>
@@ -229,69 +227,95 @@
             <depend id="357" type="2"/>
             <depend id="367" type="2"/>
         </task>
-        <task id="357" name="Write HOWTO create a game with Marauroa" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="6/5/2004" duration="12" complete="0" priority="1">
+        <task id="357" name="Write HOWTO create a game with Marauroa" color="#ff3366" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="6/5/2004" duration="12" complete="56" priority="1">
             <depend id="337" type="2"/>
         </task>
-        <task id="358" name="Write Java Client for mapacman" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/5/2004" duration="9" complete="33" priority="1"/>
-        <task id="359" name="Implement a portable graphical client for mapacman" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/5/2004" duration="14" complete="2" priority="1"/>
         <task id="337" name="Release Marauroa 0.33" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="18/5/2004" duration="3" complete="0" priority="1">
             <depend id="361" type="2"/>
+            <depend id="415" type="2"/>
+            <depend id="417" type="2"/>
+            <depend id="416" type="2"/>
+        </task>
+        <task id="363" name="Prepare Arianne PR document" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="20/4/2004" duration="10" complete="100" priority="1">
+            <depend id="415" type="2"/>
+        </task>
+        <task id="360" name="Generify createaccount application" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/4/2004" duration="4" complete="100" priority="1">
+            <depend id="415" type="2"/>
+        </task>
+        <task id="362" name="Complete to transactional database backend" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/4/2004" duration="9" complete="100" priority="1">
+            <depend id="415" type="2"/>
+        </task>
+        <task id="416" name="Caching of static Perception Part" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="21/5/2004" duration="9" complete="100" priority="1">
+            <depend id="415" type="2"/>
+        </task>
+        <task id="417" name="Add out of Sync message" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="21/5/2004" duration="2" complete="100" priority="1">
+            <depend id="415" type="2"/>
+        </task>
+        <task id="415" name="Release Marauroa 0.34" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="30/5/2004" duration="3" complete="0" priority="1">
+            <depend id="368" type="2"/>
+            <depend id="418" type="2"/>
+        </task>
+        <task id="358" name="Write Java Client for mapacman" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/5/2004" duration="9" complete="33" priority="1">
             <depend id="368" type="2"/>
         </task>
-        <task id="363" name="Prepare Arianne PR document" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="20/4/2004" duration="10" complete="0" priority="1"/>
-        <task id="360" name="Generify createaccount application" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/4/2004" duration="4" complete="0" priority="1">
-            <depend id="368" type="2"/>
-        </task>
-        <task id="362" name="Complete to transactional database backend" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/4/2004" duration="3" complete="0" priority="1">
+        <task id="359" name="Implement a portable graphical client for mapacman" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/5/2004" duration="14" complete="20" priority="1">
             <depend id="368" type="2"/>
         </task>
         <task id="361" name="Create new website for mapacman at http:&#47;&#47;mapacman.game-server.cc" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="21/5/2004" duration="9" complete="0" priority="1">
             <depend id="368" type="2"/>
         </task>
-        <task id="368" name="Release Marauroa 0.40" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="30/5/2004" duration="0" complete="0" priority="1">
+        <task id="418" name="Per Player synchronization" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/6/2004" duration="15" complete="0" priority="1">
+            <depend id="368" type="2"/>
+        </task>
+        <task id="368" name="Release Marauroa 0.40" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="17/6/2004" duration="0" complete="0" priority="1">
             <depend id="162" type="2"/>
             <depend id="364" type="2"/>
             <depend id="366" type="2"/>
             <depend id="367" type="2"/>
             <depend id="400" type="2"/>
+            <depend id="419" type="2"/>
         </task>
-        <task id="162" name="Rewrite 1001 using Python" color="#ababd7" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/5/2004" duration="15" complete="0" priority="1">
+        <task id="419" name="Add class of RPObjects: RPClass" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="17" complete="0" priority="1">
             <depend id="400" type="2"/>
         </task>
-        <task id="367" name="Import mapacman tech to the1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/5/2004" duration="10" complete="0" priority="1">
+        <task id="162" name="Rewrite 1001 using Python" color="#ababd7" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="15" complete="0" priority="1">
             <depend id="400" type="2"/>
         </task>
-        <task id="366" name="Allow some modules to be turn off: Stats and Logs" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/5/2004" duration="4" complete="0" priority="1">
+        <task id="367" name="Import mapacman tech to the1001" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="10" complete="0" priority="1">
             <depend id="400" type="2"/>
         </task>
-        <task id="364" name="Integrate webserver in Marauroa" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="30/5/2004" duration="9" complete="0" priority="1">
+        <task id="366" name="Allow some modules to be turn off: Stats and Logs" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="4" complete="0" priority="1">
+            <depend id="400" type="2"/>
+        </task>
+        <task id="364" name="Integrate webserver in Marauroa" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="9" complete="0" priority="1">
             <depend id="365" type="2"/>
             <depend id="400" type="2"/>
         </task>
-        <task id="365" name="Allow runtime configuration of server" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="8/6/2004" duration="5" complete="0" priority="1">
+        <task id="365" name="Allow runtime configuration of server" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="26/6/2004" duration="5" complete="0" priority="1">
             <depend id="400" type="2"/>
         </task>
-        <task id="400" name="Release Marauroa 0.41" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="14/6/2004" duration="3" complete="0" priority="1">
+        <task id="400" name="Release Marauroa 0.41" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="4/7/2004" duration="3" complete="0" priority="1">
             <depend id="256" type="2"/>
             <depend id="258" type="2"/>
             <depend id="260" type="2"/>
             <depend id="369" type="2"/>
         </task>
-        <task id="369" name="Major code refactor and clean-up" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="12" complete="0" priority="1"/>
-        <task id="256" name="Enlarge World" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="20" complete="0" priority="1">
+        <task id="369" name="Major code refactor and clean-up" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/7/2004" duration="12" complete="0" priority="1"/>
+        <task id="256" name="Enlarge World" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/7/2004" duration="20" complete="0" priority="1">
             <depend id="260" type="2"/>
         </task>
-        <task id="258" name="Add Move action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="17/6/2004" duration="8" complete="0" priority="1">
+        <task id="258" name="Add Move action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/7/2004" duration="8" complete="0" priority="1">
             <depend id="259" type="2"/>
             <depend id="260" type="2"/>
         </task>
-        <task id="259" name="Add Enter and Leave action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="25/6/2004" duration="10" complete="0" priority="1">
+        <task id="259" name="Add Enter and Leave action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="15/7/2004" duration="10" complete="0" priority="1">
             <depend id="260" type="2"/>
         </task>
-        <task id="260" name="Release Marauroa 1.00" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="7/7/2004" duration="3" complete="0" priority="1"/>
+        <task id="260" name="Release Marauroa 1.00" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="27/7/2004" duration="3" complete="0" priority="1"/>
     </tasks>
 
     <resources>
+        <resource id="1" name="Miguel Angel Blanch Lardin" function="2" contacts="" phone="" />
     </resources>
 
     <allocations>
