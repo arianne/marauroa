@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.5 2005/03/12 17:23:14 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.6 2005/04/06 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,7 +84,10 @@ public class NetworkClientManager
         smallestTimestamp=msg.getMessageTimestamp();
         }
       }
-       
+    
+    Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",processedMessages.size()+" message available");
+    Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",choosenMsg.toString());
+    
     processedMessages.remove(choosenMsg);      
     return choosenMsg;
     }
@@ -110,6 +113,7 @@ public class NetworkClientManager
         Message msg=msgFactory.getMessage(message.content,message.address);
 
         Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
+        Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
         if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
           {
           clientid=msg.getClientID();

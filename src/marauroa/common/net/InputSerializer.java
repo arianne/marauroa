@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.2 2005/02/18 23:19:30 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.3 2005/04/06 15:34:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,31 @@ public class InputSerializer
     {
     int size=readByte();
         
-    if(size>255)
+    if(size>Byte.MAX_VALUE)
+      {
+      throw new IOException("Ilegal request of an array of "+size+" size");
+      }
+        
+    byte[] buffer=new byte[size];
+    int bytes_read_total = 0;
+    int bytes_read = 0;
+
+    while((bytes_read_total<size)&&(bytes_read=in.read(buffer,bytes_read_total,size-bytes_read_total))!=-1)
+      {
+      bytes_read_total+=bytes_read; 
+      }
+    if(bytes_read_total!=size)
+      {
+      throw new IOException("Declared array size=" +size+" is not equal to actually read bytes count("+bytes_read_total+")!");
+      }
+    return buffer;
+    }
+    
+  public byte[] read65536LongByteArray() throws IOException, java.lang.ClassNotFoundException
+    {
+    int size=readShort();
+        
+    if(size>Short.MAX_VALUE)
       {
       throw new IOException("Ilegal request of an array of "+size+" size");
       }
@@ -217,6 +241,11 @@ public class InputSerializer
   public String read255LongString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
     {
     return new String(read255LongByteArray(),"UTF-8");
+    }
+
+  public String read65536LongString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
+    {
+    return new String(read65536LongByteArray(),"UTF-8");
     }
     
   /** This method read a String array from the Serializer

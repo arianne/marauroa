@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.4 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.5 2005/04/06 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -325,9 +325,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           out.write(key);
           }
 
-        if(rpClass.getType(key)==RPClass.LONG_STRING)
+        if(rpClass.getType(key)==RPClass.VERY_LONG_STRING)
           {
           out.write(entry.getValue());
+          }
+        else if(rpClass.getType(key)==RPClass.LONG_STRING)
+          {
+          out.write65536LongString(entry.getValue());
           }
         else if(rpClass.getType(key)==RPClass.STRING)
           {
@@ -386,9 +390,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
         key=rpClass.getName(code);      
         }
         
-      if(rpClass.getType(key)==RPClass.LONG_STRING)
+      if(rpClass.getType(key)==RPClass.VERY_LONG_STRING)
         {
         content.put(key,in.readString());
+        }
+      else if(rpClass.getType(key)==RPClass.LONG_STRING)
+        {
+        content.put(key,in.read65536LongString());
         }
       else if(rpClass.getType(key)==RPClass.STRING)
         {

@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.5 2005/03/07 19:36:31 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.6 2005/04/06 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,11 +21,13 @@ import marauroa.common.game.*;
 
 public abstract class ariannexp
   {
-  public final static long TIMEOUT=4000;
+  public final static long TIMEOUT=10000;
   private NetworkClientManager netMan;
   private int clientid;
   private List<Message> messages;
   
+  /** Constructor.
+   *  @param logging ariannexp will write to a file if this is true. */
   public ariannexp(boolean logging)
     {
     if(logging)
@@ -42,6 +44,10 @@ public abstract class ariannexp
     Logger.trace("ariannexp::ariannexp","<");
     }
   
+  /** Call this method to connect to server.
+   *  This method just configure the connection, it doesn't send anything 
+   *  @param host server host name
+   *  @param port server port number  */
   public void connect(String host, int port) throws java.net.SocketException
     {    
     Logger.trace("ariannexp::connect",">");
@@ -57,14 +63,20 @@ public abstract class ariannexp
     while(msg==null)
       {
       msg=netMan.getMessage();    
-      if(System.currentTimeMillis()-delta>TIMEOUT)
+      
+      if(msg==null && System.currentTimeMillis()-delta>TIMEOUT)
         {
         throw new ariannexpTimeoutException();
         }
       }
+      
     return msg;     
     }
   
+  /** Login to server using the given username and password.
+   *  @param username Player username
+   *  @param password Player password
+   *  @return true if login is successful. */
   public boolean login(String username, String password) throws ariannexpTimeoutException
     {
     Logger.trace("ariannexp::login",">");
@@ -72,10 +84,19 @@ public abstract class ariannexp
       {
       netMan.addMessage(new MessageC2SLogin(netMan.getAddress(),username,password));
       int recieved=0;
-
+      
       while(recieved!=3)
         {
-        Message msg=getMessage();
+        Message msg;
+        if(messages.size()>0)
+          {
+          msg=messages.remove(0);
+          }
+        else
+          {
+          msg=getMessage();
+          }        
+        
         if(msg instanceof MessageS2CLoginACK)
           {
           Logger.trace("ariannexp::login","D","Login correct");
@@ -120,6 +141,9 @@ public abstract class ariannexp
       }
     }
   
+  /** After login allows you to choose a character to play
+   *  @param character name of the character we want to play with.
+   *  @return true if choosing character is successful. */
   public boolean chooseCharacter(String character) throws ariannexpTimeoutException
     {
     Logger.trace("ariannexp::chooseCharacter",">");
@@ -165,6 +189,7 @@ public abstract class ariannexp
       }
     }
   
+  /** Sends a RPAction to server */
   public void send(RPAction action)
     {
     try
@@ -177,6 +202,7 @@ public abstract class ariannexp
       }
     }
   
+  /** Sends a RPAction to server and blocks until server confirms it. */
   public void send(RPAction action, boolean block) throws ariannexpTimeoutException
     {
     /** TODO: Useless we need to return something or disable blocking */
@@ -215,6 +241,8 @@ public abstract class ariannexp
       }
     }
   
+  /** Request logout of server
+   *  @return true if we have successfully logout. */
   public boolean logout()
     {
     Logger.trace("ariannexp::logout",">");
@@ -265,6 +293,7 @@ public abstract class ariannexp
       }
     }
   
+  /** Call this method to get and apply messages */
   public void loop(int delta)
     {
     Logger.trace("ariannexp::loop",">");
@@ -321,11 +350,17 @@ public abstract class ariannexp
       }
     }
 
+  /** It is called when a perception arrives so you can choose how to apply the perception */
   abstract protected void onPerception(MessageS2CPerception message);
+  /** It is called on a transfer request so you can choose what items to approve or reject */
   abstract protected List<TransferContent> onTransferREQ(List<TransferContent> items);
+  /** It is called when we get a transfer of content */
   abstract protected void onTransfer(List<TransferContent> items);
+  /** It is called when we get the list of characters */
   abstract protected void onAvailableCharacters(String[] characters);  
+  /** It is called when we get the list of server information strings */
   abstract protected void onServerInfo(String[] info);
+  /** It is called on error conditions so you can improve the handling of the error */
   abstract protected void onError(int code, String reason);
   }
 

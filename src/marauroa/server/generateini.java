@@ -324,6 +324,8 @@ public class generateini
       output.println();
       output.println("server_stats_directory="+statistics_path);
       output.println("server_logs_directory="+logs_path);
+      output.println("server_logs_allowed=");
+      output.println("server_logs_rejected=");
       output.close();
       }
     catch(FileNotFoundException e)

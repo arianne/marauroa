@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.92
+Version 0.93
 
 
 Status
@@ -141,6 +141,12 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.93 Apr XX, 2005
+- Added VERY_LONG_STRING data type
+- PacketValidator will now correctly create the missing SQL tables.
+- Logger allowed and rejected are now set at configuration file
+- Fixed a problem at ariannexp related to ignoring some packets in some conditions.
+
 0.92 Apr 05, 2005
 - Change nextTurn method for beginTurn and nextTurn
 - Replaced onApprovedActions by onActionAdd for simpler action validation

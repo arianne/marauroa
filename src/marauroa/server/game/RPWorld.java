@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.5 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.6 2005/04/06 15:34:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,14 +26,16 @@ public class RPWorld implements Iterable<IRPZone>
     zones=new HashMap<IRPZone.ID,IRPZone>();
     }
   
+  /** This method is called when RPWorld is created */
   public void onInit() throws Exception
     {
     }
   
+  /** This method is called when server is going to shutdown. */
   public void onFinish() throws Exception
     {
     }
-  
+    
   public void setPlayerContainer(PlayerEntryContainer playerContainer)
     {
     this.playerContainer=playerContainer;
@@ -166,6 +168,7 @@ public class RPWorld implements Iterable<IRPZone>
       {
       zone.nextTurn();
       }
+      
     Logger.trace("RPWorld::nextTurn","<");
     }
   

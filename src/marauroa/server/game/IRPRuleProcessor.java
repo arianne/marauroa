@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.4 2005/04/06 15:34:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,12 @@ public interface IRPRuleProcessor
    *  @param zone The zone where actions happens. */
   public void setContext(RPServerManager rpman,RPWorld world);
   
+  /** This method is called *before* adding an action by RPScheduler so you can 
+   *  choose not to allow the action to be added by returning false */
   public boolean onActionAdd(RPAction action, List<RPAction> actionList);
+  /** This method is called *before* adding an incomplete action, an action that 
+   *  has been added before but has not been completed, by RPScheduler so you can 
+   *  choose not to allow the action to be added by returning false */
   public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList);
   
   /** Execute an action in the name of a player.
@@ -33,10 +38,9 @@ public interface IRPRuleProcessor
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action);
   
-  /** Notify it when a new turn happens.
-   *  At all effects endTurn replaces the old nextTurn.
-   *  Having two methods simplify the RP development. */      
+  /** Notify it when a begin of actual turn happens. */
   public void beginTurn();
+  /** Notify it when a end of actual turn happens. */
   public void endTurn();
   
   /** Callback method called when a new player enters in the game

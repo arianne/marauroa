@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.2 2005/03/12 17:23:14 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.3 2005/04/06 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,20 +22,25 @@ public interface IPerceptionListener
 	/** onAdded is called when an object is added to the world for first time.
 	 *  Return true to stop further processing. */
 	public boolean onAdded(RPObject object);
+	
 	/** onModifiedAdded is called when an object is modified by adding or changing
 	 *  one of its attributes. Return true to stop further processing.
 	 *  Note that the method is called *before* modifing the object. */
 	public boolean onModifiedAdded(RPObject object, RPObject changes);
+	
 	/** onModifiedDeleted is called each time the object has one of its attributes
 	 *  removed. Return true to stop further processing.
-     *  Note that the method is called *before* modifing the object. */
-    public boolean onModifiedDeleted(RPObject object, RPObject changes);
+   *  Note that the method is called *before* modifing the object. */
+  public boolean onModifiedDeleted(RPObject object, RPObject changes);
+  
 	/** onDeleted is called when an object is removed of the world
 	 *  Return true to stop further processing. */
 	public boolean onDeleted(RPObject object);
+	
 	/** onMyRPObject is called when our rpobject avatar is processed.
 	 *  Return true to stop further processing. */
 	public boolean onMyRPObject(boolean changed,RPObject object);
+	
 	/** onClear is called when the whole world is going to be cleared.
 	 *  It happens on sync perceptions
 	 *  Return true to stop further processing. */
@@ -52,6 +57,7 @@ public interface IPerceptionListener
 	public int onPerceptionBegin(byte type, int timestamp);
 	/** onPerceptionBegin is called when the perception has been applied */
 	public int onPerceptionEnd(byte type, int timestamp);
+	
 	/** onException is called when an exception happens */
 	public int onException(Exception e, MessageS2CPerception perception) throws Exception;
 	}

@@ -16,19 +16,21 @@ public class RPClass implements marauroa.common.net.Serializable
   
   /* Type */
   /** a string */
-  final public static byte LONG_STRING=1;
+  final public static byte VERY_LONG_STRING=1;
   /** a string of up to 255 chars long */
-  final public static byte STRING=2;  
+  final public static byte LONG_STRING=2;  
+  /** a string of up to 255 chars long */
+  final public static byte STRING=3;  
   /** an float number of 32 bits */
-  final public static byte FLOAT=3;
+  final public static byte FLOAT=4;
   /** an integer of 32 bits */
-  final public static byte INT=4;
+  final public static byte INT=5;
   /** an integer of 16 bits */
-  final public static byte SHORT=5;
+  final public static byte SHORT=6;
   /** an integer of 8 bits */
-  final public static byte BYTE=6;  
+  final public static byte BYTE=7;  
   /** an boolean attribute that either is present or not. */
-  final public static byte FLAG=7;
+  final public static byte FLAG=8;
 
   static public class SyntaxException extends java.io.IOException
     {

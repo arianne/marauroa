@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.9 2005/04/05 17:24:57 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.10 2005/04/06 15:34:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 public class Logger
   {
-  private static String[] allowed={"TrainingDummy","Stendhal","RPServerManager","GameServerManager"};
+  private static String[] allowed={};
   private static String[] rejected={};
   
   private static Logger logger;

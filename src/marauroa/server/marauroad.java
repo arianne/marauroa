@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.10 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.11 2005/04/06 15:34:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,6 +77,41 @@ public class marauroad extends Thread
       }
     }
     
+  private static void setAllowedAndRejected(Configuration conf)
+    {
+    try
+      {
+      boolean setAllowed=true;
+      
+      String[] allow=conf.get("server_logs_allowed").split("\\;");
+      for(String i: allow)
+        {
+        if(i.equals("")) setAllowed=false;
+        }
+        
+      if(setAllowed) Logger.setAllowed(allow);
+      }
+    catch(Exception e)
+      {
+      }
+
+    try
+      {
+      boolean setRejected=true;
+      
+      String[] rejected=conf.get("server_logs_rejected").split("\\;");
+      for(String i: rejected)
+        {
+        if(i.equals("")) setRejected=false;
+        }
+        
+      if(setRejected) Logger.setRejected(rejected);
+      }
+    catch(Exception e)
+      {
+      }
+    }
+    
   public static void main (String[] args)
     {
     Logger.println("Marauroa - arianne's open source multiplayer online framework for game development -");
@@ -98,9 +133,18 @@ public class marauroad extends Thread
     Logger.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
     
     Logger.trace("marauroad::main",">");
-    marauroad.setArguments(args);
-    marauroad.getMarauroa().start();
-    Logger.trace("marauroad::main","<");
+    try
+      {
+      marauroad.setArguments(args);
+      marauroad.setAllowedAndRejected(Configuration.getConfiguration());
+      marauroad.getMarauroa().start();
+      }
+    catch(FileNotFoundException e)
+      {
+      Logger.thrown("marauroad::main","X",e);
+      }
+      
+    Logger.trace("marauroad::main","<");    
     }
  
   public synchronized void run()
