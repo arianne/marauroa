@@ -50,3 +50,8 @@ Contents
 	d) RP Manager.txt
 		Basic explication of the RP active entity.
 		
+	e) Delta perception Algorithm.txt
+		Basic explication of the algorithm to send client server's data.
+		
+	f) Zones and Worlds.txt
+		Basic introduction about how world is structured.

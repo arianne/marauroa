@@ -2,8 +2,50 @@ Title  : RP Manager
 Info   : Introduction to the RP Manager and its collaborator classes.
 Keyword: RP, RP Manager, Scheduler, RuleProcessor
 Author : Miguel Angel Blanch Lardin
-Created: 2003/10/23
+Created: 2003/11/23
 status : planning
 
 %% BEGIN %%
+
+The goal of RP Manager is to handle the whole RP game.
+This means mainly:
+- run RPActions from clients
+- manage RPWorld
+- control triggers for events
+- control AI
+
+As you see this is a HUGE class that is complex.
+So the idea is to split this behaviour into smaller subclasses.
+
+RPManager provides a simple interface to the GameManager for using it:
+- addRPAction
+- addRPObject
+- removeRPObject
+- hasRPObject
+
+addRPAction simply enqueue an action for that player to be executed on the
+next turn.
+
+addRPObject, removeRPObject and hasRPObject is a interface to manage RPWorld.
+
+
+The main outline of RPManager could be:
+
+forever
+  {
+  Procced through every action in this turn
+  Wait for Turn completion.
+  Go to Next Turn
+  }
+
+As this part of Marauroa is subject still to development, there are still not 
+many details.
+
+RPScheduler is the class that handle actions to be enqueued for each player.
+All the complexity of Action management should be handle here.
+
+RuleProcessor is a wrapper class for hide actions code.
+All the actions code MUST be here, this class also acts as a Action code loader,
+as some actions are not part of Marauroa, but scripts.
+
 %% END %%

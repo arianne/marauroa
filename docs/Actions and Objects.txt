@@ -25,7 +25,6 @@ RPServerManager entity.
 
 Mandatory Actions Attributes:
 - object_id
-- zone_id
 - action_type
 
 Optional Actions Attributes:
@@ -45,7 +44,6 @@ RPServerManager entity.
 
 Mandatory Object Attributes:
 - object_id
-- zone_id
 
 Optional Object Attributes:
 Read Objects Explained for more details.
