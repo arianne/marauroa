@@ -9,13 +9,21 @@ public class MessageS2CCharacterList extends Message
   {
   private String[] characters;
   
+  /** Constructor for allowing creation of an empty message */
+  public MessageS2CCharacterList()
+    {
+    super(null);
+    
+    type=TYPE_S2C_CHARACTERLIST;
+    }
+
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
    *  @param characters the list of characters of the player
    *  @see marauroa.net.MessageS2CCharacters
    */
-  MessageS2CCharacterList(InetSocketAddress source,String[] characters)
+  public MessageS2CCharacterList(InetSocketAddress source,String[] characters)
     {
     super(source);
     

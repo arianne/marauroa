@@ -8,21 +8,8 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SLogout.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CLoginACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CChooseCharacterNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CLogoutACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CLogoutNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Message.java" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CLoginNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SLogin.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CCharacterList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SChooseCharacter.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CChooseCharacterACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\NetConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\NetworkServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageFactory.java" #[EndFile]
 
 ! Start Breakpoint Structure
 

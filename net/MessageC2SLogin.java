@@ -12,13 +12,21 @@ public class MessageC2SLogin extends Message
   private String username;
   private String password;
   
+  /** Constructor for allowing creation of an empty message */
+  public MessageC2SLogin()
+    {
+    super(null);
+    
+    type=TYPE_C2S_LOGIN;
+    }
+
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
    *  @param username the username of the user that wants to login
    *  @param password the plain password of the user that wants to login
    */
-  MessageC2SLogin(InetSocketAddress source,String username, String password)
+  public MessageC2SLogin(InetSocketAddress source,String username, String password)
     {
     super(source);
     

@@ -7,11 +7,19 @@ import java.io.*;
  *  finish the session. */
 public class MessageC2SLogout extends Message
   { 
+  /** Constructor for allowing creation of an empty message */
+  public MessageC2SLogout()
+    {
+    super(null);
+    
+    type=TYPE_C2S_LOGOUT;
+    }
+    
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
    */
-   MessageC2SLogout(InetSocketAddress source)
+  public MessageC2SLogout(InetSocketAddress source)
     {
     super(source);
     

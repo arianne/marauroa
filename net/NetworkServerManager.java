@@ -9,14 +9,18 @@ public class NetworkServerManager
   {
   private DatagramSocket socket;
   private boolean keepRunning;
+  private MessageFactory msgFactory;
+  private List messages;
   
   NetworkServerManager() throws SocketException
     {    
     socket=new DatagramSocket(NetConst.marauroa_PORT);
+    msgFactory=MessageFactory.getFactory();
     keepRunning=true;
+    messages=Collections.synchronizedList(new LinkedList());
     }    
   
-  class NetworkServerManagerRead  extends Thread
+  class NetworkServerManagerRead extends Thread
     {
     NetworkServerManagerRead()
       {
@@ -33,12 +37,15 @@ public class NetworkServerManager
         try
           {
           socket.receive(packet);          
+
+          Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
+          
+          messages.add(msg);
           }
         catch(IOException e)
           {
+          /* Report the problem */
           }
-      
-        //Message msg=MessageFactory.getClass(packet.getData(),packet.getSocketAddress()); 
         }
       }    
     }        
@@ -60,6 +67,8 @@ public class NetworkServerManager
  	  
  	    byte[] buffer=out.toByteArray();
  	    DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,message.getAddress());
+ 	    
+ 	    socket.send(pkt);
  	    }
  	  catch(IOException e)
  	    { 	 

@@ -8,9 +8,17 @@ import java.io.*;
  */
 public class MessageS2CChooseCharacterNACK extends Message
   {
+  /** Constructor for allowing creation of an empty message */
+  public MessageS2CChooseCharacterNACK()
+    {
+    super(null);
+    
+    type=TYPE_S2C_CHOOSECHARACTER_NACK;
+    }
+
   /** Constructor with a TCP/IP source/destination of the message 
    *  @param source The TCP/IP address associated to this message */
-  MessageS2CChooseCharacterNACK(InetSocketAddress source)
+  public MessageS2CChooseCharacterNACK(InetSocketAddress source)
     {
     super(source);
     

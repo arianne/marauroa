@@ -5,7 +5,7 @@ import java.io.*;
 /** ImputSerializer is used to serialize classes that implement the Serializable 
  *  interface into a InputStream.
  */
-public class InputSerializer
+class InputSerializer
   {
   private InputStream in;
   

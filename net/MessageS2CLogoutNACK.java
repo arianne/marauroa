@@ -8,9 +8,17 @@ import java.io.*;
  */
 public class MessageS2CLogoutNACK extends Message
   {
+  /** Constructor for allowing creation of an empty message */
+  public MessageS2CLogoutNACK()
+    {
+    super(null);
+    
+    type=TYPE_S2C_LOGOUT_NACK;
+    }
+
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
-  MessageS2CLogoutNACK(InetSocketAddress source)
+  public MessageS2CLogoutNACK(InetSocketAddress source)
     {
     super(source);
     

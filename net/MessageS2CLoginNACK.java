@@ -8,9 +8,9 @@ import java.io.*;
  */
 public class MessageS2CLoginNACK extends Message
   {
-  public static short UNKNOWN_REASON=0;
-  public static short USERNAME_WRONG=1;
-  public static short SERVER_IS_FULL=2;  
+  public static byte UNKNOWN_REASON=0;
+  public static byte USERNAME_WRONG=1;
+  public static byte SERVER_IS_FULL=2;  
   
   static private String[] text=
     {
@@ -21,10 +21,18 @@ public class MessageS2CLoginNACK extends Message
     
   private byte reason;  
   
+  /** Constructor for allowing creation of an empty message */
+  public MessageS2CLoginNACK()
+    {
+    super(null);
+    
+    type=TYPE_S2C_LOGIN_NACK;
+    }
+
   /** Constructor with a TCP/IP source/destination of the message 
    *  @param source The TCP/IP address associated to this message
    *  @param resolution the reason to deny the login */
-  MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
+  public MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
     {
     super(source);
     
@@ -33,7 +41,12 @@ public class MessageS2CLoginNACK extends Message
     reason=resolution;
     }  
   
-  String getResolution()
+  public byte getResolutionCode()
+    {
+    return reason;
+    }
+  
+  public String getResolution()
     {
     return text[reason];    
     }

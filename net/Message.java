@@ -25,7 +25,6 @@ public class Message implements marauroa.net.Serializable
   public static byte TYPE_S2C_LOGOUT_NACK=41;
     
   protected byte type;
-  protected byte flags;
   protected short clientid;
    
   protected InetSocketAddress source;
@@ -35,6 +34,7 @@ public class Message implements marauroa.net.Serializable
    */
   public Message(InetSocketAddress source)
     {
+    this.type=TYPE_INVALID;
     this.source=source;
     }
 
@@ -45,6 +45,13 @@ public class Message implements marauroa.net.Serializable
     return source;
     }
 
+  /** Returns the type of the message
+   *  @return the type of the message  */
+  public byte getType()
+    {
+    return type;
+    }
+    
   /** Set the clientID so that we can identify the client to which the
       message is target, as only IP is easy to Fake
       @param clientid a short that reprents the client id. */    
@@ -65,9 +72,9 @@ public class Message implements marauroa.net.Serializable
    */
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
-    out.write(clientid);
+    out.write(NetConst.NETWORK_PROTOCOL_VERSION);
     out.write(type);
-    out.write(flags);
+    out.write(clientid);
     }
     
   /** Serialize the object from an ObjectInput 
@@ -76,8 +83,12 @@ public class Message implements marauroa.net.Serializable
    */
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
-    clientid=in.readShort();
+    if(in.readByte()!=NetConst.NETWORK_PROTOCOL_VERSION)
+      {
+      throw new IOException();
+      }
+      
     type=in.readByte();
-    flags=in.readByte();
+    clientid=in.readShort();
     }  
   };

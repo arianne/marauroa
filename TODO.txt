@@ -1,0 +1,23 @@
+Tasks to do:
+------------
+- Make Message classes to check their state after serializing them, and so 
+  throwing an exception if they are not correct.
+  
+- Document in a better way all the methods.
+
+- Implement missing Messages types:
+  . Action and ActionACK
+  . Perception
+  . Map and Map Hash
+  
+- Members of classes should start with m_
+- Static members don't need any extra append.
+
+- Add log4j to create a log file with all the relevant events.
+
+- Make Messages to register themselves with MessageFactory at start-up
+
+- MessageFactory should throw exceptions instead of returning null messages.
+
+- Create a graphical frontend for server and a text one.
+  Messages should be reported using a method of it.

@@ -11,6 +11,14 @@ public class MessageC2SChooseCharacter extends Message
   {
   private String character;
   
+  /** Constructor for allowing creation of an empty message */
+  public MessageC2SChooseCharacter()
+    {
+    super(null);
+    
+    type=TYPE_C2S_CHOOSECHARACTER;
+    }  
+    
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
@@ -18,7 +26,7 @@ public class MessageC2SChooseCharacter extends Message
    *  of the returned by the marauroa.net.MessageS2CCharacters
    *  @see marauroa.net.MessageS2CCharacters
    */
-  MessageC2SChooseCharacter(InetSocketAddress source,String character)
+  public MessageC2SChooseCharacter(InetSocketAddress source,String character)
     {
     super(source);
     
