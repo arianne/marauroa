@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.29 2004/01/07 14:54:18 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.30 2004/01/07 16:37:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -473,6 +473,7 @@ public class RPCode
     
     try
       {
+      Iterator it=zone.iterator();
       }
     finally
       {
