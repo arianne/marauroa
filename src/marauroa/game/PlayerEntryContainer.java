@@ -197,98 +197,161 @@ public class PlayerEntryContainer
       }
     }
     
-
+  /** This method returns a byte that indicate the state of the player from the 3 possible options:
+   *  - STATE_NULL
+   *  - STATE_LOGIN_COMPLETE
+   *  - STATE_GAME_BEGIN
+   *  @param clientid the runtime id of the player
+   *  @throws NoSuchClientIDException if clientid is not found */
   public byte getRuntimeState(short clientid) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::getRuntimeState",">");
-    if(hasRuntimePlayer(clientid))
+    try
       {
-      RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
-      entry.timestamp=new Date();    
-      marauroad.trace("PlayerEntryContainer::getRuntimeState","<");
-      return entry.state;
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+        entry.timestamp=new Date();    
+        return entry.state;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
       }
-    else
+    finally
       {
-      marauroad.trace("PlayerEntryContainer::getRuntimeState","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getRuntimeState","<");
       }
     }
     
+  /** This method set the state of the player from the 3 possible options:
+   *  - STATE_NULL
+   *  - STATE_LOGIN_COMPLETE
+   *  - STATE_GAME_BEGIN
+   *  @param clientid the runtime id of the player
+   *  @param newState the new state to which we move.
+   *  @throws NoSuchClientIDException if clientid is not found */
   public byte changeRuntimeState(short clientid,byte newState) throws NoSuchClientIDException
     {
     marauroad.trace("PlayerEntryContainer::changeRuntimeState",">");
-    if(hasRuntimePlayer(clientid))
-      {
-      RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
     
-      byte oldState=entry.state;
-      entry.state=newState;
-      entry.timestamp=new Date();
-      
-      marauroad.trace("PlayerEntryContainer::changeRuntimeState","<");
-      return oldState;
-      }
-    else
+    try
       {
-      marauroad.trace("PlayerEntryContainer::changeRuntimeState","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+     
+        byte oldState=entry.state;
+        entry.state=newState;
+        entry.timestamp=new Date();
+      
+        return oldState;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::changeRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::changeRuntimeState","<");
       }
     }
     
+  /** This method returns true if the username/password match with any of the accounts in 
+   *  database or false if none of them match.
+   *  @param username is the name of the player
+   *  @param password is the string used to verify access.
+   *  @return true if username/password is correct, false otherwise. */
   public boolean verifyAccount(String username, String password)
     {
-    return playerDatabase.verifyAccount(username,password);
+    marauroad.trace("PlayerEntryContainer::verifyAccount",">");
+    
+    try
+      {
+      return playerDatabase.verifyAccount(username,password);
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::verifyAccount","<");
+      }
     }
     
+  /** This method add a Login event to the player
+   *  @param clientid the runtime id of the player
+   *  @param source the IP address of the player
+   *  @param correctLogin true if the login has been correct.
+   *
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public void addLoginEvent(short clientid, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::addLoginEvent",">");
-    if(hasRuntimePlayer(clientid))
-      {
-      try
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
     
-        playerDatabase.addLoginEvent(entry.username,source,correctLogin);
-        }
-      catch(PlayerDatabase.PlayerNotFoundException e)
-        {
-        marauroad.trace("PlayerEntryContainer::addLoginEvent","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
-        }
-      }
-    else
+    try
       {
-      marauroad.trace("PlayerEntryContainer::addLoginEvent","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      if(hasRuntimePlayer(clientid))
+        {
+        try
+          {
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
+    
+          playerDatabase.addLoginEvent(entry.username,source,correctLogin);
+          }
+        catch(PlayerDatabase.PlayerNotFoundException e)
+          {
+          marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
+          throw new NoSuchPlayerException();
+          }
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
       }
-      
-    marauroad.trace("PlayerEntryContainer::addLoginEvent","<");
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::addLoginEvent","<");
+      }
     }
     
+  /** This method returns the list of Login events as a array of Strings
+   *  @param clientid the runtime id of the player
+   *  @return an array of String containing the login events.
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public String[] getLoginEvent(short clientid) throws NoSuchClientIDException, NoSuchPlayerException
     {
     marauroad.trace("PlayerEntryContainer::getLoginEvent",">");
-    if(hasRuntimePlayer(clientid))
-      {
-      try
-        {
-        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));
     
-        marauroad.trace("PlayerEntryContainer::getLoginEvent","<");
-        return playerDatabase.getLoginEvent(entry.username);
-        }
-      catch(PlayerDatabase.PlayerNotFoundException e)
+    try
+      {
+      if(hasRuntimePlayer(clientid))
         {
-        marauroad.trace("PlayerEntryContainer::getLoginEvent","E","No such Player(unknown)");
-        throw new NoSuchPlayerException();
+        try
+          {
+          RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Short(clientid));    
+          return playerDatabase.getLoginEvent(entry.username);
+          }
+        catch(PlayerDatabase.PlayerNotFoundException e)
+          {
+          marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
+          throw new NoSuchPlayerException();
+          }
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
         }
       }
-    else
+    finally
       {
-      marauroad.trace("PlayerEntryContainer::getLoginEvent","E","No such RunTimePlayer("+clientid+")");
-      throw new NoSuchClientIDException();
+      marauroad.trace("PlayerEntryContainer::getLoginEvent","<");
       }
     }
   
