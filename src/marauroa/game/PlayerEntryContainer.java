@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.27 2004/03/31 12:25:36 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.28 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,9 @@ public class PlayerEntryContainer
     public String username;
     /** The rp object of the player */
     public RPObject.ID characterid;
+    
+    /** A counter to detect dropped packets or bad order at client side */
+    public int perception_counter;
     }
   
 
@@ -181,6 +184,8 @@ public class PlayerEntryContainer
       entry.username=username;
       entry.choosenCharacter=null;
       entry.clientid=generateClientID(source);
+      entry.perception_counter=0;
+      
       listPlayerEntries.put(new Integer(entry.clientid),entry);
       return entry.clientid;
       }
@@ -852,6 +857,31 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::timedout","<");
+      }
+    }
+    
+  public int getPerceptionTimestamp(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        int pre=entry.perception_counter;
+        entry.perception_counter++;
+
+        return pre;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp","<");
       }
     }
   

@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.15 2004/04/12 09:26:59 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.16 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -226,6 +226,25 @@ public class Test_RPObject extends TestCase
   private void deleteRPObjectAttributes(RPObject object) throws Exception
     {
     object.remove("fame");
+    }
+
+  private void changeInSlotRPObjectAttributes(RPObject object) throws Exception
+    {
+    RPObject gladiator=object.getSlot("!gladiators").get();
+    gladiator.put("name","This is a test");
+    }
+
+  private void addInSlotRPObjectAttributes(RPObject object) throws Exception
+    {
+    RPObject gladiator=object.getSlot("!gladiators").get();
+    gladiator.put("Fooo","This is a test");
+    gladiator.put("bar","12312");
+    }
+
+  private void deleteInSlotRPObjectAttributes(RPObject object) throws Exception
+    {
+    RPObject gladiator=object.getSlot("!gladiators").get();
+    gladiator.remove("karma");
     }
 
   private void addRPObjectSlot(RPObject object) throws Exception
@@ -540,4 +559,180 @@ public class Test_RPObject extends TestCase
       fail("Failed to serialize object");
       }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public void testRPObjectDifferences_InSlotChangedAttributes()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      changeInSlotRPObjectAttributes(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(2+1,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_InSlotAddedAttributes()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addInSlotRPObjectAttributes(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(3+1,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_InSlotDeletedAttributes()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      deleteInSlotRPObjectAttributes(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(0,added.size());
+      assertEquals(2+1,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_InSlotEverythingAttributes()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addInSlotRPObjectAttributes(player);
+      changeInSlotRPObjectAttributes(player);
+      deleteInSlotRPObjectAttributes(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(4+1,added.size());
+      assertEquals(2+1,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
   }

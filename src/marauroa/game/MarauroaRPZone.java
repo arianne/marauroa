@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.30 2004/04/04 22:17:17 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.31 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,9 +73,9 @@ public class MarauroaRPZone implements RPZone
     {
     try 
       {
-      perception.added(object);
-      //modified.add(object);
-      //perception.modified(object);
+      /** Uncoment to disable Delta-delta: 
+       *  perception.added(object); */
+      modified.add(object);
       }
     catch(Exception e)
       {
@@ -174,7 +174,7 @@ public class MarauroaRPZone implements RPZone
       {
       if(prebuildTotalPerception==null)
         {
-        prebuildTotalPerception=new Perception(Perception.TOTAL);
+        prebuildTotalPerception=new Perception(Perception.SYNC);
         prebuildTotalPerception.addedList=new ArrayList(objects.values());
         
         Iterator it=prebuildTotalPerception.addedList.iterator();

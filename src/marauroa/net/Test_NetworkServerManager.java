@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.11 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.12 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,7 +78,7 @@ public class Test_NetworkServerManager extends TestCase
       assertEquals(realResult.getUsername(),"Test username");
       assertEquals(realResult.getPassword(),"Test password");  
       
-      RPZone.Perception perception=new RPZone.Perception (RPZone.Perception.TOTAL);
+      RPZone.Perception perception=new RPZone.Perception (RPZone.Perception.SYNC);
       perception.addedList=createBigPerception();
 
       msg=new MessageS2CPerception(clientAddress, perception);

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.58 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.59 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import marauroa.*;
 class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
-  private final static int TOTAL_PERCEPTION_RELATION=20;
+  private final static int TOTAL_PERCEPTION_RELATION=30;
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
@@ -222,7 +222,7 @@ class RPServerManager extends Thread
             if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION /*|| object.has("?joined")*/)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
-              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.SYNC);
               }
             else
               {
@@ -230,10 +230,14 @@ class RPServerManager extends Thread
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
               }
             
+            int timestamp=playerContainer.getPerceptionTimestamp(clientid);
+            
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
 
             messages2cPerception.setMyRPObject(object);
             messages2cPerception.setClientID(clientid);
+            messages2cPerception.setTimestamp(timestamp);
+            
             netMan.addMessage(messages2cPerception);            
           
             /** We check if we need to update player in the database */

@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.23 2004/04/04 21:50:37 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.24 2004/04/12 19:03:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -111,7 +111,7 @@ public class The1001Bot
               netMan.addMessage(replyMsg);
               
               MessageS2CPerception perception = (MessageS2CPerception)msg;
-              boolean full_perception = perception.getTypePerception()==RPZone.Perception.TOTAL;
+              boolean full_perception = perception.getTypePerception()==RPZone.Perception.SYNC;
               
               if(!synced)
               {

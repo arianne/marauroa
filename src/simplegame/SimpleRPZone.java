@@ -1,4 +1,4 @@
-/* $Id: SimpleRPZone.java,v 1.19 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: SimpleRPZone.java,v 1.20 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class SimpleRPZone
     marauroad.trace("SimpleRPZone::getPerception",">");
 
     /** Using TOTAL perception per turn */
-    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
+    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.SYNC);
 
     perception.addedList = new LinkedList();
     perception.deletedList  = deletedList;

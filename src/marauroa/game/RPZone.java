@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.20 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.21 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,7 @@ public interface RPZone
   public static class Perception
     {
     final public static byte DELTA=0;
-    final public static byte TOTAL=1;
+    final public static byte SYNC=1;
     
     public byte type;
     public List addedList;

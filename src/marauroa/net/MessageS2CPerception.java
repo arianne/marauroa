@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.25 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.26 2004/04/12 19:03:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ import marauroa.*;
  */
 public class MessageS2CPerception extends Message
   {
+  private int timestamp;
   private byte typePerception;
 
   private List addedRPObjects;
@@ -74,6 +75,17 @@ public class MessageS2CPerception extends Message
     {
     return myRPObject;
     }
+  
+  public void setTimestamp(int timestamp)
+    {
+    this.timestamp=timestamp;
+    }
+  
+  public int getTimestamp()
+    {
+    return timestamp;
+    }
+  
   
   public byte getTypePerception()
     {
@@ -129,6 +141,7 @@ public class MessageS2CPerception extends Message
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
     OutputSerializer ser=new OutputSerializer(out_stream);
     
+    ser.write((int)timestamp);    
     ser.write((byte)typePerception);
     
     Iterator it=null;
@@ -193,6 +206,7 @@ public class MessageS2CPerception extends Message
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
     InputSerializer ser=new InputSerializer(szlib);
     
+    timestamp=ser.readInt();
     typePerception=ser.readByte();
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
