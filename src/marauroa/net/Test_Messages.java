@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.6 2003/12/10 15:45:55 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.7 2003/12/10 16:09:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -86,6 +86,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageC2SLogin()
     {
+    marauroad.trace("Test_Messages::testMessageC2SLogin","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SLogin",">");
     String username="Test username";
     String password="Test password";
@@ -138,6 +140,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageC2SLogout()
     {
+    marauroad.trace("Test_Messages::testMessageC2SLogout","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SLogout",">");
     int clientid=14324;
     
@@ -184,6 +188,8 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CCharacterList()
     {
+    marauroad.trace("Test_Messages::testMessageS2CCharacterList","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CCharacterList",">");
     int clientid=14324;
     String[] characters={"Test character","Another Test character"};
@@ -238,6 +244,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CChooseCharacterACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK",">");
     int clientid=14324;
     
@@ -284,6 +292,8 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CChooseCharacterNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK",">");
     int clientid=14324;
     
@@ -330,6 +340,8 @@ public class Test_Messages extends TestCase
   
   public void testMessageS2CLoginACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLoginACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLoginACK",">");
     int clientid=14324;
     
@@ -377,6 +389,8 @@ public class Test_Messages extends TestCase
    
   public void testMessageS2CLoginNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLoginNACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLoginNACK",">");
     byte reason=MessageS2CLoginNACK.USERNAME_WRONG;
     int clientid=14324;
@@ -427,6 +441,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CLogoutACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLogoutACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLogoutACK",">");
     int clientid=14324;
     
@@ -473,6 +489,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CLogoutNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLogoutNACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CLogoutNACK",">");
     int clientid=14324;
     
@@ -519,6 +537,8 @@ public class Test_Messages extends TestCase
     
   public void testMessageC2SAction()
     {
+    marauroad.trace("Test_Messages::testMessageC2SAction","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageC2SAction",">");
     int clientid=14324;
     marauroa.game.RPAction action=new marauroa.game.RPAction();
@@ -572,6 +592,8 @@ public class Test_Messages extends TestCase
 
   public void testMessageS2CActionACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CActionACK","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CActionACK",">");
     int clientid=14324;
     
@@ -619,6 +641,8 @@ public class Test_Messages extends TestCase
       
   public void testMessageS2CPerception()
     {
+    marauroad.trace("Test_Messages::testMessageS2CPerception","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
     marauroad.trace("Test_Messages::testMessageS2CPerception",">");
     int clientid=14324;
     
@@ -662,9 +686,60 @@ public class Test_Messages extends TestCase
     assertEquals(clientid,result.getClientID());
     marauroad.trace("Test_Messages::testMessageS2CPerception","<");
     }
+
+  public void testMessageS2CServerInfo()
+    {
+    marauroad.trace("Test_Messages::testMessageS2CServerInfo","?","This test case try to "+
+      "serialize the message and deserialize it and then check it is equal");
+    marauroad.trace("Test_Messages::testMessageS2CServerInfo",">");
+    int clientid=14324;
+    String[] contents={"hi","world"};
+    
+    MessageS2CServerInfo msg=new MessageS2CServerInfo(null,contents);
+    msg.setClientID(clientid);
+    
+    out=new ByteArrayOutputStream();
+    sout=new OutputSerializer(out);
+    
+    try
+      {
+      sout.write(msg);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data out");
+      }    
+
+    assertEquals(Message.TYPE_S2C_SERVERINFO,msg.getType());
+    assertEquals(clientid,msg.getClientID());
+    
+    in=new ByteArrayInputStream(out.toByteArray());
+    sin=new InputSerializer(in);
+    
+    MessageS2CServerInfo result=new MessageS2CServerInfo();
+    
+    try
+      {
+      sin.readObject(result);
+      }
+    catch(IOException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    catch(java.lang.ClassNotFoundException e)
+      {
+      fail("Exception happened when serializing data in");
+      }
+    
+    assertEquals(Message.TYPE_S2C_SERVERINFO,result.getType());
+    assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CServerInfo","<");
+    }
     
   public void testSeveralMessageSameStream()
     {
+    marauroad.trace("Test_Messages::testSeveralMessageSameStream","?", "This test case try to serialize"+
+      " several messages into the same stream and then deserialize them");
     marauroad.trace("Test_Messages::testSeveralMessageSameStream",">");
     int clientid=14324;
     String username="Test username";
