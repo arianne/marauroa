@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.9 2003/12/10 16:23:18 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.10 2004/03/02 15:55:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,9 @@ public class Test_PlayerEntryContainer extends TestCase
       
       playerDatabase.verifyAccount("Test Player","Test Password");
 
-      playerDatabase.addCharacter("Test Player", "Test Character",new RPObject());
+      RPObject test=new RPObject();
+      test.put("object_id",1);
+      playerDatabase.addCharacter("Test Player", "Test Character",test);
       assertTrue(playerDatabase.hasCharacter("Test Player", "Test Character"));
       }
     catch(Exception e)
@@ -111,7 +113,10 @@ public class Test_PlayerEntryContainer extends TestCase
       assertEquals("Test Character",container.getCharacterList(clientid)[0]);
       assertTrue(container.hasCharacter(clientid,"Test Character"));
       
-      assertEquals(new RPObject(),container.getRPObject(clientid,"Test Character"));
+      RPObject test=new RPObject();
+      test.put("object_id",1);
+      
+      assertEquals(test,container.getRPObject(clientid,"Test Character"));
       
       container.removeRuntimePlayer(clientid);
       
@@ -123,6 +128,7 @@ public class Test_PlayerEntryContainer extends TestCase
       }
     catch(PlayerEntryContainer.NoSuchPlayerException e)
       {
+      e.printStackTrace();
       fail(e.getMessage());
       }
     catch(PlayerEntryContainer.NoSuchCharacterException e)
