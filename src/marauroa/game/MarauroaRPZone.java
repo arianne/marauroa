@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.42 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.43 2004/05/09 10:10:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -138,7 +138,13 @@ public class MarauroaRPZone implements RPZone
   
   public RPObject create()
     {
-    return new RPObject(rpobjectDatabase.getValidRPObjectID(transaction));
+    RPObject.ID id=rpobjectDatabase.getValidRPObjectID(transaction);
+    while(has(id))
+      {
+      id=rpobjectDatabase.getValidRPObjectID(transaction);
+      }
+      
+    return new RPObject(id);
     }
 	
   public Iterator iterator()
