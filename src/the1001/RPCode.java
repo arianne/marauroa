@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.5 2003/12/30 10:26:42 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.6 2003/12/30 18:17:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ public class RPCode
     ruleProcessor=rpu;
     }
   
-  public static RPAction.Status RequestFight(RPObject.ID id, String gladiator_id) throws Exception
+  public static RPAction.Status RequestFight(RPObject.ID player_id, RPObject.ID gladiator_id) throws Exception
     {
     marauroad.trace("RPCode::RequestFight",">");
     
@@ -34,16 +34,23 @@ public class RPCode
       {
       the1001RPZone zone=ruleProcessor.getRPZone();     
       RPObject arena=zone.getArena();
-      RPObject player=zone.get(id);
+      RPObject player=zone.get(player_id);
+      if(!player.getSlot("gladiators").has(gladiator_id))
+        {
+        /** Failed because player does not own that object */
+        return RPAction.STATUS_FAIL;
+        }
+      
+      RPObject gladiator=player.getSlot("gladiators").get(gladiator_id);
 
       if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
         {
         player.put("status","onArena");
-        arena.getSlot("gladiators").add(player);
+        arena.getSlot("gladiators").add(gladiator);
         }
       else
         {
-        player.put("requested",/** TODO: Put turn here */0);
+        player.put("requested",ruleProcessor.getTurn());
         arena.put("waiting",arena.getInt("waiting")+1);
         }
       
@@ -55,19 +62,13 @@ public class RPCode
         Iterator it=arena.getSlot("gladiators").iterator();
         while(it.hasNext())
           {
-          RPObject gladiator=(RPObject)it.next();
-          gladiator.put("status","onFight");
-          
-          zone.modify(new RPObject.ID(gladiator));
+          RPObject fighter=(RPObject)it.next();
+          fighter.put("status","onFight");
           }        
         }
-      else
-        {
-        zone.modify(new RPObject.ID(player));
-        }
-      
-      zone.modify(new RPObject.ID(arena));
-      
+        
+      zone.modify(new RPObject.ID(player));      
+      zone.modify(new RPObject.ID(arena));      
       
       return RPAction.STATUS_SUCCESS;
       }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.10 2003/12/30 17:02:33 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.11 2003/12/30 18:17:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,12 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
   {
   private the1001RPZone zone;
   private List trackedObjects;
+  private int turn;
   
   public the1001RPRuleProcessor()
     {
     zone=null;
+    turn=0;
     trackedObjects=new LinkedList();
     RPCode.setCallback(this);
     }
@@ -60,8 +62,8 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       {
       if(action.get("type")=="request_fight")
         {
-        String gladiator_id=action.get("gladiator_id");
-        return RPCode.RequestFight(id, gladiator_id);
+        int gladiator_id=action.getInt("gladiator_id");
+        return RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
         }
       else
         {
@@ -78,11 +80,17 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       marauroad.trace("the1001RPRuleProcessor::execute","<");
       }
     }
+  
+  public int getTurn()
+    {
+    return turn;
+    }
     
   /** Notify it when a new turn happens */
   public void nextTurn()
     {
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
+    ++turn;
     removeOneTurnAttributes();      
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
