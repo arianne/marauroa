@@ -225,31 +225,28 @@ public class NetworkServerManager
  	      s.write(msg);
  	   
  	      byte[] buffer=out.toByteArray();
- 	      
-// 	      if(buffer.length>NetConst.UDP_PACKET_SIZE)
-// 	        {
-//          marauroad.trace("NetworkServerManagerWrite::write","X","No more room for packet sending");
-// 	        throw new IOException("No more room for packet sending");
-// 	        }
-// 	        
-//   	  DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
-// 	     
-// 	      socket.send(pkt);
-//        marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
+ 	      marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
 		  int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
 		  byte signature=(byte)rand.nextInt();
+		  int remaining=buffer.length;
+		  
 		  for(int i=0;i<total;++i)
 		    {
 		    int size=0;
-		    if(((NetConst.UDP_PACKET_SIZE-3)*i)-buffer.length<0)
+		    if((NetConst.UDP_PACKET_SIZE-3)>remaining)
 		      {
-		      size=buffer.length;
+		      size=remaining;
 		      }
 		    else
 		      {
-		      size=NetConst.UDP_PACKET_SIZE;
+		      size=NetConst.UDP_PACKET_SIZE-3;
   		      }
+  		      
+  		    remaining-=size;
+  		      
+  		    marauroad.trace("NetworkServerManagerWrite::write","D","Packet size: "+size);
+  		    marauroad.trace("NetworkServerManagerWrite::write","D","Bytes remaining: "+remaining);
 		      
 		    byte[] data=new byte[size+3];
 		    data[0]=(byte)total;

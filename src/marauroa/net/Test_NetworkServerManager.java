@@ -5,6 +5,8 @@ import marauroa.*;
 import java.io.*;
 import java.net.*;
 import junit.framework.*;
+import marauroa.game.*;
+import java.util.*;
 
 public class Test_NetworkServerManager extends TestCase
   {
@@ -48,7 +50,9 @@ public class Test_NetworkServerManager extends TestCase
       assertEquals(realResult.getUsername(),"Test username");
       assertEquals(realResult.getPassword(),"Test password");
       
-      msg.setAddress(result.getAddress());
+      InetSocketAddress clientAddress=result.getAddress();
+      
+      msg.setAddress(clientAddress);
       netManager.addMessage(msg);
       
       result=null;
@@ -62,9 +66,26 @@ public class Test_NetworkServerManager extends TestCase
       assertNotNull(result);
       assertEquals(realResult.getUsername(),"Test username");
       assertEquals(realResult.getPassword(),"Test password");  
+      
+      List modifiedObjects=createBigPerception();
+      msg=new MessageS2CPerception(clientAddress,modifiedObjects,new LinkedList());
+      netManager.addMessage(msg);
+      
+      result=null;
+      i=0;
+      while(result==null && i<10) 
+        {
+        result=netClient.getMessage();
+        ++i;
+        }
+
+      assertNotNull(result);
+      MessageS2CPerception perception=(MessageS2CPerception)result;
+      assertEquals(perception.getModifiedRPObjects(), modifiedObjects);
       }
     catch(Exception e)
       {
+      System.out.println(e);
       fail();
       }      
     finally
@@ -72,5 +93,23 @@ public class Test_NetworkServerManager extends TestCase
       netManager.finish();
       marauroad.trace("Test_NetworkServerManager::testNetworkServerManager","<");
       }
+    }
+    
+  private List createBigPerception()
+    {
+    List list=new LinkedList();
+    
+    for(int i=0;i<40;++i)
+      {
+      RPObject object=new RPObject();
+      object.put("object_id",i);
+      object.put("name","A good name");
+      object.put("extra","more extra attributes so that it takes several bytes");
+      object.put("more","You know... this is big");
+      
+      list.add(object);
+      }
+    
+    return list;
     }
   }

@@ -21,6 +21,7 @@ public class NetworkClientManager
     public byte signature;
     public byte remaining;
     public byte[] content;
+    public InetSocketAddress address;
     }    
   
   private Map pendingPackets;
@@ -33,7 +34,7 @@ public class NetworkClientManager
     address=new InetSocketAddress(host,NetConst.marauroa_PORT);
     socket=new DatagramSocket();
     socket.setSoTimeout(100);
-       
+    
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new HashMap();
     }
@@ -48,38 +49,55 @@ public class NetworkClientManager
    *  @return a Message*/
   public Message getMessage()
     {
+    try
+      {          
+      Iterator it=pendingPackets.entrySet().iterator();
+      while(it.hasNext())
+        {
+        Map.Entry entry=(Map.Entry)it.next();
+        PacketContainer message=(PacketContainer)entry.getValue();
+        if(message.remaining==0)
+          {
+          Message msg=msgFactory.getMessage(message.content,message.address);      
+          System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
+      
+          if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+            {
+            clientid=msg.getClientID();        
+            }
+              
+          pendingPackets.remove(new Byte(message.signature));
+          return msg;
+          }
+        }
+      }
+    catch(IOException e)
+      {
+      /* Report the exception */
+      marauroad.report(e.getMessage());
+      return null;
+      }
+
     byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
     DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
+    int i=0;
     
     try
       {
-      socket.receive(packet);          
-      byte[] data=packet.getData();
-      
-      /* We look the two first byte to see if it is a full message or not */
-      if(data[0]==1)
+      /** We want to avoid this to block the whole client recieving messages */
+      while(i<5)
         {
-        byte[] messageData=new byte[data.length-3];
-        System.arraycopy(data,3,messageData,0,data.length-3);
+        ++i;
         
-        Message msg=msgFactory.getMessage(messageData,(InetSocketAddress)packet.getSocketAddress());      
-        System.out.println("NetworkClientManager: receive message("+msg.getType()+") from "+msg.getClientID());
+        socket.receive(packet);          
+        byte[] data=packet.getData();
       
-        if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
-          {
-          clientid=msg.getClientID();        
-          }
-
-        return msg;
-        }
-      else
-        {
         /* A multipart message. We try to read the rest now. 
          * We need to check on the list if the message exist and it exist we add this one. */
-        System.out.println("NetworkClientManager: receive multipart message ("+data[0]+")");
         byte total=data[0];
         byte position=data[1];
         byte signature=data[2];
+        System.out.println("NetworkClientManager: receive multipart message("+signature+"): "+position+1+" of "+total);
 
         if(!pendingPackets.containsKey(new Byte(signature)))
           {
@@ -87,6 +105,7 @@ public class NetworkClientManager
           PacketContainer message=new PacketContainer();
           message.signature=signature;
           message.remaining=(byte)(total-1);
+          message.address=(InetSocketAddress)packet.getSocketAddress();
           message.content=new byte[(NetConst.UDP_PACKET_SIZE-3)*total];
           
           System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
@@ -105,35 +124,14 @@ public class NetworkClientManager
 
           System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
           }
-          
-        Iterator it=pendingPackets.entrySet().iterator();
-        while(it.hasNext())
-          {
-          Map.Entry entry=(Map.Entry)it.next();
-          PacketContainer message=(PacketContainer)entry.getValue();
-          if(message.remaining==0)
-            {
-            Message msg=msgFactory.getMessage(message.content,(InetSocketAddress)packet.getSocketAddress());      
-            System.out.println("NetworkClientManager: receive complete multipart message("+msg.getType()+") from "+msg.getClientID());
-      
-            if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
-              {
-              clientid=msg.getClientID();        
-              }
-              
-            pendingPackets.remove(new Byte(message.signature));
-            return msg;
-            }
-          }
-
-        return null;
         }
+        
+      return null;        
       }
     catch(java.net.SocketTimeoutException e)
       {
-      /* We need the thread to check from time to time if user has requested
-       * an exit */
-      return null;
+      /* We need the thread to check from time to time if user has requested an exit */
+      return null;        
       }
     catch(IOException e)
       {
@@ -141,7 +139,7 @@ public class NetworkClientManager
       marauroad.report(e.getMessage());
       return null;
       }
-     }
+    }
     
   /** This method add a message to be delivered to the client the message is pointed to.
    *  @param msg the message to ve delivered. */
