@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.73 2004/04/27 22:42:47 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.74 2004/04/29 14:32:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,6 +166,16 @@ public class marauroad extends Thread
       {
       netMan=new marauroa.net.NetworkServerManager();
       gameMan= new marauroa.game.GameServerManager(netMan);
+      
+      Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+        public void run()
+          {
+          marauroad.trace("marauroad::init","!","User requesting shutdown");
+          finish();
+          marauroad.trace("marauroad::init","!","Shutdown completed. See you later");
+          }
+        });
       }
     catch(java.net.SocketException e)
       {
