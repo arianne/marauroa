@@ -11,7 +11,7 @@ import mapacman.*;
 
 public class nullClient extends Thread
   {
-  static class ClientMap
+  class ClientMap
     {
     char[] content;
     int sizey;
@@ -432,15 +432,14 @@ public class nullClient extends Thread
         }
 
       System.out.println("Non parameter operation");
-      int num=1;
+      int num=5;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("prueba","qwerty","prueba");
-//      test[1]=new TestClient("prueba","qwerty","prueba");
-//      test[2]=new TestClient("bot_8","nopass","bot_8");
-//      test[3]=new TestClient("bot_9","nopass","bot_9");
-//      test[4]=new TestClient("bot_10","nopass","bot_10");
-//      test[5]=new TestClient("bot_11","nopass","bot_11");
+      test[1]=new nullClient("bot_0","nopass","bot_0");
+      test[2]=new nullClient("bot_1","nopass","bot_1");
+      test[3]=new nullClient("bot_2","nopass","bot_2");
+      test[4]=new nullClient("bot_3","nopass","bot_3");
       
       for(int i=0;i<num;++i)
         {
