@@ -18,7 +18,7 @@ failed=0
 _directions=['N','W','S','E']
 
 def randomDirection():
-    return _directions[int((random.random()/32768)*4)]
+    return _directions[random.randint(0,3)]
 
 #
 # PythonRP Interface for Java classes
@@ -67,6 +67,17 @@ class RealPythonAI(PythonAI):
         # Personally I would use the PythonRP directly and move the ghost at will
         # But if you are really in need, add actions to the scheduler so they are
         # done as if you are a simple player.
+        for ghost in self.ghosts:
+            print ghost.toString()
+            if self.pythonRP.canMove(ghost)==0:
+                print "Can't move: Changing direction"
+                dir=randomDirection()
+                ghost.put("dir",dir)
+            else:            
+                self.pythonRP.move(ghost)
+                self.pythonRP._zone.modify(ghost)
+                
+                
         return 1
     
 class RealPythonRP(PythonRP):
@@ -325,6 +336,7 @@ class RealPythonRP(PythonRP):
         object.put("x",0)
         object.put("y",0)
         object.put("dir",randomDirection())
+        object.put("score",0)
         return object;
 
     def createBall(self, x,y):

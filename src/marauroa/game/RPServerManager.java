@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.97 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.98 2004/06/05 00:35:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -458,12 +458,11 @@ public class RPServerManager extends Thread
       scheduler.visit(ruleProcessor);
       playerContainer.getLock().requestWriteLock();
         {
-        buildPerceptions();
-
-        stop=System.currentTimeMillis();
- 
+        stop=System.currentTimeMillis(); 
         delay=turnDuration-(stop-start);
         aiMan.compute(delay<0?0:delay);
+
+        buildPerceptions();
         }
       playerContainer.getLock().releaseLock();
             
