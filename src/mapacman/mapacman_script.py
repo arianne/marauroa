@@ -1,7 +1,6 @@
+from marauroa.game.python import *
 from marauroa.game import *
 from marauroa.net import *
-from marauroa import marauroad
-from mapacman import *
 
 from java.util import LinkedList
 
@@ -188,7 +187,7 @@ class RealPythonRP(PythonRP):
         
         self._zone.add(object)
         self._online_players.append(object)
-        return 1
+        return True
 
     def onExit(self, objectid):
         """ Do what you need to remove this player """
@@ -198,7 +197,7 @@ class RealPythonRP(PythonRP):
                 break
             
         self._zone.remove(objectid)
-        return 1
+        return True
 
     def onTimeout(self, objectid):
         return onExit(self,objectid)
