@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.8 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ public class PlayerDatabaseFactory
   {
   /** This method returns an instance of PlayerDatabase choosen using the Configuration file.
    *  @return A shared instance of PlayerDatabase */
-  public static IPlayerDatabase getDatabase() throws IPlayerDatabase.NoDatabaseConfException
+  public static IPlayerDatabase getDatabase() throws NoDatabaseConfException
     {
     marauroad.trace("PlayerDatabaseFactory::getDatabase",">");
     try
@@ -33,7 +33,7 @@ public class PlayerDatabaseFactory
     catch(Exception e)
       {
       marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new IPlayerDatabase.NoDatabaseConfException();      
+      throw new NoDatabaseConfException();      
       }
     finally
       {     
@@ -44,7 +44,7 @@ public class PlayerDatabaseFactory
   /** This method returns an instance of PlayerDatabase choosen using the param.
    *  @param type A String containing the type of database
    *  @return A shared instance of PlayerDatabase */
-  public static IPlayerDatabase getDatabase(String database_type) throws IPlayerDatabase.NoDatabaseConfException
+  public static IPlayerDatabase getDatabase(String database_type) throws NoDatabaseConfException
     {
     marauroad.trace("PlayerDatabaseFactory::getDatabase",">");
     try
@@ -60,12 +60,12 @@ public class PlayerDatabaseFactory
         return JDBCPlayerDatabase.getDatabase();
         }
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
-      throw new IPlayerDatabase.NoDatabaseConfException();
+      throw new NoDatabaseConfException();
       }
     catch(Exception e)
       {
       marauroad.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new IPlayerDatabase.NoDatabaseConfException();      
+      throw new NoDatabaseConfException();      
       }
     finally
       {     

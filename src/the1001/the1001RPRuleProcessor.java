@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.57 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.58 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -215,7 +215,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
     trackedObjects.add(object);
     }
 
-  synchronized public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
+  synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
     marauroad.trace("the1001RPRuleProcessor::onInit",">");
     try

@@ -1,0 +1,25 @@
+Title  : Classes of Objects Explained
+Info   : Deep overview of objects, its types and its usage.
+Keyword: Objects, classes, types, XML, attributes.
+Author : Miguel Angel Blanch Lardin
+Created: 2004/07/13
+status : planning
+
+
+Classes of Objects are the basic way of structuring Marauroa data structures.
+
+A class defines types of the attributes and its visibility and gives it an
+internal code that is used to speed up searchs and save bandwidth.
+You can base a class on another, this feature is known as heritance.
+
+The data types available are:
+- Strings
+- Short strings ( up to 255 bytes )
+- Integers ( 4 bytes )
+- Shorts ( 2 bytes )
+- Byte ( 1 byte )
+- Flag ( it is a binary attribute )
+
+Attributes can also be visible if clients see them when they change, or 
+invisible if clients can't see them.
+

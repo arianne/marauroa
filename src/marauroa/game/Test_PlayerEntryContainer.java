@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.17 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.18 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -149,7 +149,7 @@ public class Test_PlayerEntryContainer extends TestCase
       container.getUsername(randomClientID);
       fail("Exception did not happened");
       }
-    catch(PlayerEntryContainer.NoSuchClientIDException e)
+    catch(NoSuchClientIDException e)
       {
       assertTrue(true);
       }
@@ -159,7 +159,7 @@ public class Test_PlayerEntryContainer extends TestCase
       container.getRuntimeState(randomClientID);
       fail("Exception did not happened");
       }
-    catch(PlayerEntryContainer.NoSuchClientIDException e)
+    catch(NoSuchClientIDException e)
       {
       assertTrue(true);
       }
@@ -169,7 +169,7 @@ public class Test_PlayerEntryContainer extends TestCase
       container.removeRuntimePlayer(randomClientID);
       fail("Exception did not happened");
       }
-    catch(PlayerEntryContainer.NoSuchClientIDException e)
+    catch(NoSuchClientIDException e)
       {
       assertTrue(true);
       }
@@ -179,7 +179,7 @@ public class Test_PlayerEntryContainer extends TestCase
       container.changeRuntimeState(randomClientID,PlayerEntryContainer.STATE_NULL);
       fail("Exception did not happened");
       }
-    catch(PlayerEntryContainer.NoSuchClientIDException e)
+    catch(NoSuchClientIDException e)
       {
       assertTrue(true);
       }

@@ -1,4 +1,4 @@
-/* $Id: Test_RPZone.java,v 1.9 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: Test_RPZone.java,v 1.10 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,15 +55,15 @@ public class Test_RPZone extends TestCase
       zone.remove(id);
       assertFalse(zone.has(id));
       }
-    catch(IRPZone.RPObjectInvalidException e)
+    catch(RPObjectInvalidException e)
       {
       fail("RPObject is not valid");
       }
-    catch(IRPZone.RPObjectNotFoundException e)
+    catch(RPObjectNotFoundException e)
       {
       fail("RPObject doesn't exist");
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       fail("Can't find the attribute we are looking for");
       }

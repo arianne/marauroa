@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.15 2004/07/07 10:07:21 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.16 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,21 +21,6 @@ import marauroa.marauroad;
  *  the stream of bytes. */
 public class MessageFactory
   {
-  public static class InvalidVersionException extends Exception
-    {
-    private int version;
-    public InvalidVersionException(int version)
-      {
-      super();
-      this.version=version;
-      }
-    
-    public int getVersion()
-      {
-      return version;
-      }
-    }
-    
   private static Map factoryArray;
   private static MessageFactory messageFactory;
   

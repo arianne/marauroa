@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.14 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.15 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -511,7 +511,7 @@ public class MemoryPlayerDatabase implements IPlayerDatabase
    *  @return always returns null
    *  @exception GenericDatabaseException never thrown
    */
-  public Transaction getTransaction() throws GameDatabaseException.GenericDatabaseException
+  public Transaction getTransaction() throws GenericDatabaseException
     {
     // the memory player database does not need transactions.
     return new Transaction();

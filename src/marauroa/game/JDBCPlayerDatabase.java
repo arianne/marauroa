@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.47 2004/06/08 18:28:25 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.48 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -601,7 +601,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         storeRPObject(trans,object);
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       trans.rollback();
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Invalid RPObject: Lacks of attribute "+e.getAttribute());
@@ -892,7 +892,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
   
   private JDBCTransaction transaction;
   
-  public Transaction getTransaction() throws GameDatabaseException.GenericDatabaseException
+  public Transaction getTransaction() throws GenericDatabaseException
     {
     if(transaction==null || !transaction.isValid())
       {
@@ -1097,7 +1097,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  private void loadRPObject(Transaction trans, RPObject object,int object_id) throws SQLException, RPObject.SlotAlreadyAddedException
+  private void loadRPObject(Transaction trans, RPObject object,int object_id) throws SQLException, SlotAlreadyAddedException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
@@ -1205,7 +1205,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         
       storeRPObject(trans,object,0);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       marauroad.thrown("JDBCPlayerDatabase::storeRPObject","X",e);
       throw new SQLException(e.getMessage());
@@ -1221,7 +1221,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  private void storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, Attributes.AttributeNotFoundException
+  private void storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, AttributeNotFoundException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
@@ -1376,7 +1376,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  public void addToRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+  public void addToRPZone(Transaction trans, RPObject object) throws SQLException, AttributeNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::addToRPZone",">");
     try
@@ -1399,7 +1399,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
 
-  public boolean hasInRPZone(Transaction trans, RPObject object) throws SQLException, Attributes.AttributeNotFoundException
+  public boolean hasInRPZone(Transaction trans, RPObject object) throws SQLException, AttributeNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::hasInRPZone",">");
     try
@@ -1431,7 +1431,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
 
-  public void removeFromRPZone(Transaction trans, RPObject.ID id) throws SQLException, Attributes.AttributeNotFoundException
+  public void removeFromRPZone(Transaction trans, RPObject.ID id) throws SQLException, AttributeNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::removeFromRPZone",">");
     try

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.21 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.22 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,17 +40,17 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     {
     }
 
-  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
+  public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
     return false;
     }
     
-  public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
+  public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException
     {
     return false;
     }
     
-  public boolean onTimeout(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
+  public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException
     {
     return false;
     }

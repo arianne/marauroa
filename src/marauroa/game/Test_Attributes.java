@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.8 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -69,7 +69,7 @@ public class Test_Attributes extends TestCase
         assertEquals(it.next(),it_result.next());
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       fail(e.getMessage());
       }
@@ -94,7 +94,7 @@ public class Test_Attributes extends TestCase
       value=attr.get("Attribute");
       fail("Exception not throwed");
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       assertTrue(true);
       }

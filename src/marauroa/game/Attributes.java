@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.41 2004/07/11 22:36:31 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.42 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,21 +26,6 @@ public class Attributes implements marauroa.net.Serializable
   private Map content;
   private RPClass rpClass;
 
-  public static class AttributeNotFoundException extends Exception
-    {
-    private String attribute;
-    public AttributeNotFoundException(String attrib)
-      {
-      super("Attribute ["+attrib+"] not found");
-      attribute=attrib;
-      }
-		
-    public String getAttribute()
-      {
-      return attribute;
-      }
-    }
-    
   public Object copy()
     {
     Attributes attr=new Attributes(this.rpClass);
@@ -426,7 +411,7 @@ public class Attributes implements marauroa.net.Serializable
     deleted.clear();
     }
 
-  public void setAddedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException, RPClass.SyntaxException
+  public void setAddedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
     Iterator it=attr.added.entrySet().iterator();
@@ -447,7 +432,7 @@ public class Attributes implements marauroa.net.Serializable
     attr.added.clear();
     }
 
-  public void setDeletedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException, RPClass.SyntaxException
+  public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
     Iterator it=attr.deleted.entrySet().iterator();

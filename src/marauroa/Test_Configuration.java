@@ -1,4 +1,4 @@
-/* $Id: Test_Configuration.java,v 1.7 2004/07/07 10:07:04 arianne_rpg Exp $ */
+/* $Id: Test_Configuration.java,v 1.8 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa;
 
 import junit.framework.*;
+import java.io.*;
 
 public class Test_Configuration extends TestCase
   {
@@ -38,11 +39,11 @@ public class Test_Configuration extends TestCase
       assertEquals(result,"AnotherTestString");
       conf.set("test_ATestString", "ATestString");
       }
-    catch(Configuration.PropertyFileNotFoundException e)
+    catch(FileNotFoundException e)
       {
       fail(e.getMessage());
       }
-    catch(Configuration.PropertyNotFoundException e)
+    catch(PropertyNotFoundException e)
       {
       fail(e.getMessage());
       }

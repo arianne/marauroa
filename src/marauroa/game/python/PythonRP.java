@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.7 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.8 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class PythonRP
     {
     }
 
-  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
+  public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
     return false;
     }

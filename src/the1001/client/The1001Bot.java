@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.38 2004/06/21 17:11:34 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.39 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,7 +141,7 @@ public class The1001Bot
 	  }
 	}
       }
-      catch (MessageFactory.InvalidVersionException e)
+      catch (InvalidVersionException e)
       {
         marauroad.trace("The1001Bot.messageLoop","X","Invalid protocol version");
         System.exit(-1);
@@ -258,7 +258,7 @@ public class The1001Bot
         System.exit(-1);
       }
     }
-    catch(MessageFactory.InvalidVersionException e)
+    catch(InvalidVersionException e)
     {
       marauroad.trace("The1001Bot::messageLoop","X","Not able to connect to server because you are using an outdated client");
       System.exit(-1);
@@ -286,7 +286,7 @@ public class The1001Bot
       {
         message=netman.getMessage();
       }
-      catch(MessageFactory.InvalidVersionException e)
+      catch(InvalidVersionException e)
       {
         marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
       }

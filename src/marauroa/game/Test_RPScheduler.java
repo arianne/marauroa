@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.16 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.17 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -125,7 +125,7 @@ public class Test_RPScheduler extends TestCase
       sched.addRPAction(action);
       fail("Should drop exception");
       }
-    catch(RPScheduler.ActionInvalidException e)
+    catch(ActionInvalidException e)
       {      
       assertTrue(true);
       }

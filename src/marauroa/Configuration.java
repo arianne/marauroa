@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.13 2004/07/07 10:07:04 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.14 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,32 +32,7 @@ public class Configuration
     configurationFile=conf;
     }  
   
-  /** This exception is thrown when a propierty of the file is not found */  
-  public static class PropertyNotFoundException extends Exception
-    {
-    PropertyNotFoundException(String property)
-      {
-      super("Property ["+property+"] not found");
-      }
-    }
-
-  /** This exception is thrown when the file is not found */  
-  public static class PropertyFileNotFoundException extends Exception
-    {
-    private String message;
-    PropertyFileNotFoundException()
-      {
-      super();
-      message="Property File ["+configurationFile+"] not found";
-      }
-    
-    public String getMessage()
-      {
-      return message;
-      }
-    }
-    
-  private Configuration() throws PropertyFileNotFoundException
+  private Configuration() throws FileNotFoundException
     {
     marauroad.trace("Configuration",">");
     try
@@ -71,13 +46,13 @@ public class Configuration
       {
       marauroad.trace("Configuration","X","Configuration file not found: "+configurationFile);
       marauroad.thrown("Configuration","X",e);
-      throw new PropertyFileNotFoundException();
+      throw e;
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration","X","Error loading Configuration file");
       marauroad.thrown("Configuration","X",e);
-      throw new PropertyFileNotFoundException();
+      throw new FileNotFoundException(configurationFile);
       }
     finally
       {
@@ -87,7 +62,7 @@ public class Configuration
     
   /** This method returns an instance of Configuration 
    *  @return a shared instance of Configuration */
-  public static Configuration getConfiguration() throws PropertyFileNotFoundException
+  public static Configuration getConfiguration() throws FileNotFoundException
     {
     marauroad.trace("Configuration::getConfiguration",">");
     try

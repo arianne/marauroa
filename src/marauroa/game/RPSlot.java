@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.30 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.31 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,20 +26,6 @@ import org.w3c.dom.NodeList;
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.net.Serializable, Cloneable
   {
-  public static class RPObjectNotFoundException extends Exception
-    {
-    public RPObjectNotFoundException(RPObject.ID id)
-      {
-      super("RP Object ["+id+"] not found");
-      }
-		
-    public RPObjectNotFoundException(String id)
-      {
-      super("RP Object ["+id+"] not found");
-      }
-    }
-
-
   private List added;
   private List deleted;
   
@@ -164,7 +150,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
   
       objects.add(object);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       marauroad.thrown("RPSlot::add","X",e);
       }
@@ -188,7 +174,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         }
       throw new RPObjectNotFoundException(id);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       marauroad.thrown("RPSlot::get","X",e);
       throw new RPObjectNotFoundException(id);
@@ -202,7 +188,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       {
       return (RPObject)objects.get(0);
       }
-    throw new RPObjectNotFoundException("- not available -");
+      
+    throw new RPObjectNotFoundException(new RPObject.ID(-1));
     }
   
   /** This method removes the object of the slot */
@@ -243,7 +230,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         }
       throw new RPObjectNotFoundException(id);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       marauroad.thrown("RPSlot::remove","X",e);
       throw new RPObjectNotFoundException(id);
@@ -262,7 +249,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         {
         deleted.add(new RPObject(new RPObject.ID(object)));
         }
-      catch(Attributes.AttributeNotFoundException e)
+      catch(AttributeNotFoundException e)
         {
         }
       }
@@ -288,7 +275,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         }
       return false;
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       return false;
       }

@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.8 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,14 +22,6 @@ package marauroa.game;
  */
 public class Transaction
   {  
-  static public class TransactionException extends Exception
-    {
-    public TransactionException(String msg)
-      {
-      super(msg);
-      }
-    }
-   
   /** commits the changes made to backstore.
    * @exception TransactionException if the underlaying backstore throws an Exception   */
   public void commit() throws TransactionException

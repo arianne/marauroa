@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.15 2004/07/12 11:54:02 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.16 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,118 +23,7 @@ import marauroa.*;
  *  is easy to do in the wrong way. */
 public class PerceptionHandler
   {
-  /** The IPerceptionListener interface provides methods that are called while 
-   *  applying the perception */    
-  public interface IPerceptionListener
-    {
-    /** onAdded is called when an object is added to the world for first time.
-     *  Return true to stop further processing. */
-    public boolean onAdded(RPObject object);
-    /** onModifiedAdded is called when an object is modified by adding or changing 
-     *  one of its attributes. Return true to stop further processing. */
-    public boolean onModifiedAdded(RPObject object, RPObject changes);
-    /** onModifiedDeleted is called each time the object has one of its attributes
-     *  removed. Return true to stop further processing. */
-
-    public boolean onModifiedDeleted(RPObject object, RPObject changes);
-    /** onDeleted is called when an object is removed of the world
-     *  Return true to stop further processing. */
-    public boolean onDeleted(RPObject object);    
-    /** onMyRPObject is called when our rpobject avatar is processed.
-     *  Return true to stop further processing. */
-    public boolean onMyRPObject(boolean changed,RPObject object);    
-    /** onClear is called when the whole world is going to be cleared. 
-     *  It happens on sync perceptions
-     *  Return true to stop further processing. */
-    public boolean onClear();
-   
-    /** onTimeout is called when the client has timeout, that is, when it is 50 turns far from server*/
-    public int onTimeout();
-    /** onSynced is called when the client recover sync */
-    public int onSynced();
-    /** onUnsynced is called when the client lose sync */
-    public int onUnsynced();
-    
-    /** onPerceptionBegin is called when the perception is going to be applied */
-    public int onPerceptionBegin(byte type, int timestamp);
-    /** onPerceptionBegin is called when the perception has been applied */
-    public int onPerceptionEnd(byte type, int timestamp);
-    /** onException is called when an exception happens */
-    public int onException(Exception e, MessageS2CPerception perception) throws Exception;
-    }
   
-  static public class DefaultPerceptionListener implements IPerceptionListener
-    {
-    public DefaultPerceptionListener()
-      {
-      }
-      
-    public boolean onAdded(RPObject object)
-      {
-      return false;
-      }
-      
-    public boolean onModifiedAdded(RPObject object, RPObject changes)
-      {
-      return false;
-      }
-      
-    public boolean onModifiedDeleted(RPObject object, RPObject changes)
-      {
-      return false;
-      }
-      
-    public boolean onDeleted(RPObject object)
-      {
-      return false;
-      }
-      
-    public boolean onMyRPObject(boolean changed,RPObject object)
-      {
-      return false;
-      }
-      
-    public boolean onClear()
-      {
-      return false;
-      }
-      
-
-    public int onTimeout()
-      {
-      return 0;
-      }
-      
-    public int onSynced()
-      {
-      return 0;
-      }
-      
-    public int onUnsynced()
-      {
-      return 0;
-      }
-     
-    
-    public int onPerceptionBegin(byte type, int timestamp)
-      {
-      return 0;
-      }
- 
-    public int onPerceptionEnd(byte type, int timestamp)
-      {
-      return 0;
-      }
-      
-    public int onException(Exception e, MessageS2CPerception perception) throws Exception
-      {
-      System.out.println(e.getMessage());
-      System.out.println(perception);
-      e.printStackTrace();
-      
-      throw e;      
-      }      
-    }
     
   private IPerceptionListener listener;
   private List previousPerceptions;
@@ -207,7 +96,7 @@ public class PerceptionHandler
       while(it.hasNext())
         {
         MessageS2CPerception previousmessage=(MessageS2CPerception ) it.next();
-        if(previousTimestamp+1==previousmessage.getPerceptionTimestamp())         
+        if(previousTimestamp+1==previousmessage.getPerceptionTimestamp())
           {
           try
             {
@@ -244,7 +133,7 @@ public class PerceptionHandler
     if(message.getPerceptionTimestamp()-previousTimestamp>50)
       {
       listener.onTimeout();
-      }  
+      }
 
     listener.onPerceptionEnd(message.getTypePerception(), message.getPerceptionTimestamp());
     }
@@ -252,7 +141,7 @@ public class PerceptionHandler
 
   /** This method applys perceptions addedto the Map<RPObject::ID,RPObject> passed as argument.
    *  It clears the map if this is a sync perception */
-  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
+  private void applyPerceptionAddedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
     {
     try
       {
@@ -272,19 +161,19 @@ public class PerceptionHandler
         RPObject object=(RPObject)it.next();
         if(!listener.onAdded(object))
           {
-          world.put(object.getID(),object);    
+          world.put(object.getID(),object);
           }
         }
       }
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionAddedRPObjects","X",e.getMessage());
-      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
 
   /** This method applys perceptions deleted to the Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
+  private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
     {
     try
       {
@@ -295,21 +184,21 @@ public class PerceptionHandler
         {
         RPObject object=(RPObject)it.next();
         if(!listener.onDeleted(object))
-          { 
-          world.remove(object.getID());    
+          {
+          world.remove(object.getID());
           }
         }
       }
     catch(Exception e)
       {
       marauroad.trace("MessageS2CPerception::applyPerceptionDeletedRPObjects","X",e.getMessage());
-      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
 
   /** This method applys perceptions modified added and modified deleted to the
    *  Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
+  private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
     {
     try
       {
@@ -319,10 +208,10 @@ public class PerceptionHandler
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.getID());    
+        RPObject w_object=(RPObject)world.get(object.getID());
         if(!listener.onModifiedDeleted(w_object,object))
           {
-          w_object.applyDifferences(null,object);        
+          w_object.applyDifferences(null,object);
           }
         }
      
@@ -330,14 +219,14 @@ public class PerceptionHandler
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        RPObject w_object=(RPObject)world.get(object.getID());    
+        RPObject w_object=(RPObject)world.get(object.getID());
         if(!listener.onModifiedAdded(w_object,object))
           {
-          w_object.applyDifferences(object,null);        
+          w_object.applyDifferences(object,null);
           }
         }
       }
-    catch(IRPZone.RPObjectNotFoundException e)
+    catch(RPObjectNotFoundException e)
       {
       System.out.println(world);
       e.printStackTrace();
@@ -349,12 +238,12 @@ public class PerceptionHandler
       System.out.println(world);
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
-      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(new RPObject.ID(-1));
       }
     }
   
   /** This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject> passed as argument. */
-  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
+  private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws RPObjectNotFoundException
     {
     try
       {
@@ -363,8 +252,8 @@ public class PerceptionHandler
         {
         if(!listener.onMyRPObject(true,myObject))
           {
-          world.put(myObject.getID(),myObject);    
-          }        
+          world.put(myObject.getID(),myObject);
+          }
         }
       else
         {
@@ -375,7 +264,7 @@ public class PerceptionHandler
       {
       e.printStackTrace();
       marauroad.trace("MessageS2CPerception::applyPerceptionMyRPObject","X",e.getMessage());
-      throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
+      throw new RPObjectNotFoundException(new RPObject.ID(-1));
       }
-    }      
+    }
   }

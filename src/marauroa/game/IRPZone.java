@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.3 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.4 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,23 +21,6 @@ import marauroa.*;
 /** Interface for managing the objects in a RPZone. */
 public interface IRPZone
   {
-  public static class RPObjectNotFoundException extends Exception
-    {
-    public RPObjectNotFoundException(RPObject.ID id)
-      {
-      super("RP Object ["+id+"] not found");
-      }
-    }
-  
-
-  public static class RPObjectInvalidException extends Exception
-    {
-    public RPObjectInvalidException(String attribute)
-      {
-      super("Object is invalid: It lacks of mandatory attribute ["+attribute+"]");
-      }
-    }
-
   /** This method is called when the zone is created to popullate it */
   public void onInit() throws Exception;
   /** This method is called when the server finish to save the content of the zone */

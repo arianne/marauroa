@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.26 2004/07/07 10:07:22 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.27 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -208,7 +208,7 @@ public final class NetworkServerManager
               messages.add(msg);
               newMessageArrived();
               }
-            catch(MessageFactory.InvalidVersionException e)
+            catch(InvalidVersionException e)
               {
               MessageS2CInvalidMessage msg=new MessageS2CInvalidMessage((InetSocketAddress)packet.getSocketAddress(),"Invalid client version: Update client");
               addMessage(msg);

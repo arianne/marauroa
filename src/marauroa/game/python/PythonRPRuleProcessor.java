@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.8 2004/06/20 18:44:42 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.9 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,7 +25,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
   private GameScript gameScript;
   private PythonRP pythonRP;
 
-  public PythonRPRuleProcessor() throws Configuration.PropertyNotFoundException, Configuration.PropertyFileNotFoundException
+  public PythonRPRuleProcessor() throws PropertyNotFoundException, FileNotFoundException
     {
     }
 
@@ -92,7 +92,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     marauroad.trace("PythonRPRuleProcessor::nextTurn","<");
     }
 
-  synchronized public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
+  synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
     marauroad.trace("PythonRPRuleProcessor::onInit",">");
     try

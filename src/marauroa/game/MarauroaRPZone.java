@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.57 2004/07/11 22:36:31 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.58 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,7 +51,7 @@ public class MarauroaRPZone implements IRPZone
     
       perception.added(object);
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       throw new RPObjectInvalidException(e.getMessage());
       }

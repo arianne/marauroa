@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.108 2004/07/13 18:16:48 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.109 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -158,7 +158,7 @@ public class RPServerManager extends Thread
     }
   
   /** Adds an action for the next turn */
-  public void addRPAction(RPAction action) throws RPScheduler.ActionInvalidException
+  public void addRPAction(RPAction action) throws ActionInvalidException
     {
     marauroad.trace("RPServerManager::addRPAction",">");
     try
@@ -177,7 +177,7 @@ public class RPServerManager extends Thread
     }
   
   /** Adds an object to the rpzone */  
-  public void addRPObject(RPObject object) throws IRPZone.RPObjectInvalidException
+  public void addRPObject(RPObject object) throws RPObjectInvalidException
     {
     marauroad.trace("RPServerManager::addRPObject",">");
     try
@@ -196,7 +196,7 @@ public class RPServerManager extends Thread
     }
   
   /** Returns an object of the world */
-  public RPObject getRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
+  public RPObject getRPObject(RPObject.ID id) throws RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::getRPObject",">");
     try
@@ -224,7 +224,7 @@ public class RPServerManager extends Thread
     }
   
   /** Returns an object that is removed of the world */
-  public RPObject removeRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
+  public RPObject removeRPObject(RPObject.ID id) throws RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::removeRPObject",">");
     try
@@ -455,14 +455,14 @@ public class RPServerManager extends Thread
     }
 
   /** This method is called when a player is added to the game */
-  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
+  public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
     incubator.add(object);
     return true;
     }
     
   /** This method is called when a player leave to the game */
-  public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
+  public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException
     {
     // TODO: Remove from incubator 
     scheduler.clearRPActions(id);

@@ -215,7 +215,7 @@ public class nullClient extends Thread
         }
         
       
-      PerceptionHandler handler=new PerceptionHandler(new PerceptionHandler.DefaultPerceptionListener()
+      PerceptionHandler handler=new PerceptionHandler(new DefaultPerceptionListener()
         {
         public int onSynced()
           {
@@ -323,7 +323,7 @@ public class nullClient extends Thread
       }
     }
   
-  private void gameLogic(RPObject myRPObject, ClientMap map_objects) throws Attributes.AttributeNotFoundException
+  private void gameLogic(RPObject myRPObject, ClientMap map_objects) throws AttributeNotFoundException
     {
     /** Code here game **/
     int x=myRPObject.getInt("x");

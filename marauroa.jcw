@@ -8,6 +8,10 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\python\\GameScript.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\client\\nullClient.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPScheduler.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]

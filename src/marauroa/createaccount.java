@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.29 2004/07/07 10:07:04 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.30 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,7 @@ public abstract class createaccount
     information.add(new Information("-c","character",4,20));
     }
   
-  protected String get(String name) throws Attributes.AttributeNotFoundException
+  protected String get(String name) throws AttributeNotFoundException
     {
     for(Iterator it=information.iterator();it.hasNext();)
       {
@@ -74,7 +74,7 @@ public abstract class createaccount
         }
       }
     
-    throw new Attributes.AttributeNotFoundException(name);
+    throw new AttributeNotFoundException(name);
     }
 
   /** Implement this method on the subclass in order to create an object that will be 

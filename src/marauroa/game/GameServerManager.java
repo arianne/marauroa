@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.50 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.51 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -173,7 +173,7 @@ public final class GameServerManager extends Thread
 	        {
 	        l_result.add(config.get(prop_name));
 	        }
-	      catch(marauroa.Configuration.PropertyNotFoundException pnfe)
+	      catch(PropertyNotFoundException pnfe)
 	        {
 	        //cant be. only in multithreaded emvironment possible
 	        marauroad.trace("GameServerManager::ServerInfo::get","!","Property "+prop_name+" is not set???");

@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.16 2004/05/01 10:22:08 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.17 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -610,7 +610,7 @@ public class The1001Game3D
         {
           this.ownGladiatorID=gladiator.get(RPCode.var_object_id);
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("Arena::setOwnGladiator","X","gladiator without id! "+gladiator);
         }
@@ -642,7 +642,7 @@ public class The1001Game3D
           {
             timeout      = rpArena.get(RPCode.var_timeout);
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             timeout ="?";
           }
@@ -650,7 +650,7 @@ public class The1001Game3D
           {
             thumbs_up    = rpArena.get(RPCode.var_thumbs_up);
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             thumbs_up ="?";
           }
@@ -658,7 +658,7 @@ public class The1001Game3D
           {
             thumbs_down  = rpArena.get(RPCode.var_thumbs_down);
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             thumbs_down ="?";
           }
@@ -666,7 +666,7 @@ public class The1001Game3D
           {
             waiting      = rpArena.get(RPCode.var_waiting);
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             waiting ="?";
           }
@@ -674,7 +674,7 @@ public class The1001Game3D
           {
             fame         = rpArena.get(RPCode.var_karma);
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             fame ="?";
           }
@@ -702,7 +702,7 @@ public class The1001Game3D
           hs.add(((RPObject)spectators.get(i)).get(RPCode.var_object_id));
         }
       }
-      catch (Attributes.AttributeNotFoundException e) {}
+      catch (AttributeNotFoundException e) {}
       
       List al_removed = new ArrayList();
       
@@ -772,7 +772,7 @@ public class The1001Game3D
             }
           }
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("Arena::setSpectators","X",e.getMessage());
         }
@@ -790,7 +790,7 @@ public class The1001Game3D
           hs.add(((RPObject)fighters.get(i)).get(RPCode.var_object_id));
         }
       }
-      catch (Attributes.AttributeNotFoundException e) {}
+      catch (AttributeNotFoundException e) {}
       
       List al_removed = new ArrayList();
       
@@ -863,7 +863,7 @@ public class The1001Game3D
               }
               ((Text3D)mab.healthLabel.getUserData()).setString(""+hp);
             }
-            catch (Attributes.AttributeNotFoundException e)
+            catch (AttributeNotFoundException e)
             {
             }
             if(ownGladiatorID!=null)
@@ -907,7 +907,7 @@ public class The1001Game3D
                 model.setAnimation("salute");
               }
             }
-            catch (Attributes.AttributeNotFoundException e) {}
+            catch (AttributeNotFoundException e) {}
             marauroad.trace("Arena::setFighters","D","Heal points:"+hp);
           }
           else if(GameDataModel.ARENA_MODE_WAITING.equals(mode))
@@ -920,7 +920,7 @@ public class The1001Game3D
             marauroad.trace("Arena::setFighters","D","Arena is in unknown mode ["+mode+"]");
           }
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("Arena::setFighters","X",e.getMessage());
         }

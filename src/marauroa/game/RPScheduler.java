@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.17 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.18 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,14 +27,6 @@ public class RPScheduler
   /** Turn we are executing now */
   private int turn;
   
-  static class ActionInvalidException extends Exception
-    {
-    ActionInvalidException(String attribute)
-      {
-      super("Action is invalid: It lacks of mandatory attribute ["+attribute+"]");
-      }
-    }
-    
   /** Constructor */
   public RPScheduler()
     {
@@ -68,7 +60,7 @@ public class RPScheduler
         nextTurn.put(id,list);
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       marauroad.thrown("RPScheduler::addRPAction","X",e);
       marauroad.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");

@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.28 2004/06/22 11:47:43 arianne_rpg Exp $ */
+/* $Id: GameDataModel.java,v 1.29 2004/07/13 20:31:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import marauroa.game.Attributes;
-import marauroa.game.RPAction;
-import marauroa.game.RPObject;
-import marauroa.game.RPSlot;
+import marauroa.game.*;
 import marauroa.marauroad;
 import marauroa.net.*;
 import the1001.RPCode;
@@ -32,7 +29,7 @@ import the1001.RPCode;
  *@author Waldemar Tribus
  */
 public final class GameDataModel
-  implements PerceptionHandler.IPerceptionListener
+  implements IPerceptionListener
 {
   public final static String CMD_SCISSOR   = "SCISSOR";
   public final static String CMD_STONE     = "STONE";
@@ -125,7 +122,7 @@ public final class GameDataModel
           break;
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::getArena","X",e.getMessage());
         e.printStackTrace(System.out);
@@ -171,7 +168,7 @@ public final class GameDataModel
     {
       status = getArena()==null?"unknown":getArena().get(RPCode.var_status);
     }
-    catch (Attributes.AttributeNotFoundException e)
+    catch (AttributeNotFoundException e)
     {
       status="???";
     }
@@ -207,7 +204,7 @@ public final class GameDataModel
           l_spectators.add(rp_obj);
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::getSpectators","X",e.getMessage());
         e.printStackTrace(System.out);
@@ -243,7 +240,7 @@ public final class GameDataModel
                 }
               }
             }
-            catch (RPObject.NoSlotFoundException e)
+            catch (NoSlotFoundException e)
             {
               marauroad.trace("GameDataModel::getShopGladiators","X",e.getMessage());
               e.printStackTrace(System.out);
@@ -252,7 +249,7 @@ public final class GameDataModel
           break;
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::getShopGladiators","X",e.getMessage());
         e.printStackTrace(System.out);
@@ -284,14 +281,14 @@ public final class GameDataModel
               marauroad.trace("GameDataModel::getFighters","D","Object ignored because it is not gladiator: "+rp_g);
             }
           }
-          catch (Attributes.AttributeNotFoundException e)
+          catch (AttributeNotFoundException e)
           {
             marauroad.trace("GameDataModel::getFighters","X",e.getMessage());
             e.printStackTrace(System.out);
           }
         }
       }
-      catch (RPObject.NoSlotFoundException e)
+      catch (NoSlotFoundException e)
       {
         marauroad.trace("GameDataModel::getFighters","X",e.getMessage());
         e.printStackTrace(System.out);
@@ -315,7 +312,7 @@ public final class GameDataModel
       {
         gl_id = gladiator.getInt(RPCode.var_object_id);
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("The1001Game::requestFight","X","Gladiator has no or invalid object id.");
       }
@@ -347,7 +344,7 @@ public final class GameDataModel
         {
           id = getInt("action_id");
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
         }
       }
@@ -384,7 +381,7 @@ public final class GameDataModel
           RPSlot g_slot = own_char.getSlot(RPCode.var_myGladiators);
           gladiator = (RPObject)g_slot.iterator().next();
         }
-        catch (RPObject.NoSlotFoundException e)
+        catch (NoSlotFoundException e)
         {
           marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
           e.printStackTrace(System.out);
@@ -476,7 +473,7 @@ public final class GameDataModel
         {
           gl_id = gladiator.getInt(RPCode.var_object_id);
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("The1001Game::setFightMode","X","Gladiator has no or invalid object id.");
         }
@@ -517,7 +514,7 @@ public final class GameDataModel
       {
         gl_id = gladiator.getInt(RPCode.var_object_id);
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("The1001Game::vote","X","Gladiator has no or invalid object id.");
       }
@@ -584,7 +581,7 @@ public final class GameDataModel
         }
       }
     }
-    catch (Attributes.AttributeNotFoundException e)
+    catch (AttributeNotFoundException e)
     {
       marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
       e.printStackTrace(System.out);
@@ -773,7 +770,7 @@ public final class GameDataModel
           count++;
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
         e.printStackTrace(System.out);
@@ -805,7 +802,7 @@ public final class GameDataModel
           winner_id = getArena().getInt(RPCode.var_winner);
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
       }
       status="Request fame(";
@@ -819,7 +816,7 @@ public final class GameDataModel
         
         status+=fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting;
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
         e.printStackTrace(System.out);
@@ -888,7 +885,7 @@ public final class GameDataModel
           
           ret+="|"+setStringWidth(setStringWidth(name,' ',21)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(strtg,' ',3)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',58),' ',line_length)+"|\n";
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
           e.printStackTrace(System.out);
@@ -911,7 +908,7 @@ public final class GameDataModel
           own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
         }
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
         e.printStackTrace(System.out);
@@ -962,7 +959,7 @@ public final class GameDataModel
           }
           ret+="|"+setStringWidth(setStringWidth(name,' ',25)+setStringWidth(karma,' ',8)+setStringWidth(health,' ',8)+setStringWidth(damage,' ',8)+setStringWidth(""+won,' ',5)+setStringWidth(""+lost,' ',5)+setStringWidth(""+i_winp,' ',10),' ',line_length)+"|\n";
         }
-        catch (Attributes.AttributeNotFoundException e)
+        catch (AttributeNotFoundException e)
         {
           marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
           e.printStackTrace(System.out);
@@ -1068,7 +1065,7 @@ public final class GameDataModel
       }
     }
     catch (IOException e){e.printStackTrace();}
-    catch (Attributes.AttributeNotFoundException e){e.printStackTrace();}
+    catch (AttributeNotFoundException e){e.printStackTrace();}
     finally{}
   }
   
@@ -1151,7 +1148,7 @@ public final class GameDataModel
       {
         setOwnCharacterID(new RPObject.ID(object.getInt(RPCode.var_object_id)));
       }
-      catch (Attributes.AttributeNotFoundException e)
+      catch (AttributeNotFoundException e)
       {
         marauroad.trace("GameDataModel.onMyRPObject","E","Invalid my object given.");
       }

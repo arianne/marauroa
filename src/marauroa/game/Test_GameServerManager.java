@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.19 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.20 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -292,7 +292,7 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
-    catch(MessageFactory.InvalidVersionException e)
+    catch(InvalidVersionException e)
       {
       fail();
       }
@@ -434,7 +434,7 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
-    catch(MessageFactory.InvalidVersionException e)
+    catch(InvalidVersionException e)
       {
       fail();
       }
@@ -475,7 +475,7 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
-    catch(MessageFactory.InvalidVersionException e)
+    catch(InvalidVersionException e)
       {
       fail();
       }
@@ -516,7 +516,7 @@ public class Test_GameServerManager extends TestCase
           }
         }
       }
-    catch(MessageFactory.InvalidVersionException e)
+    catch(InvalidVersionException e)
       {
       fail();
       }

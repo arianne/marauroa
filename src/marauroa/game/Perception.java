@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.5 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -91,7 +91,7 @@ public class Perception
             }
           }
         }
-      catch(Attributes.AttributeNotFoundException e)
+      catch(AttributeNotFoundException e)
         {
         marauroad.thrown("RPZone::Perception::removed","X",e);
         }        
@@ -132,7 +132,7 @@ public class Perception
           }
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       }
     
@@ -154,7 +154,7 @@ public class Perception
           }
         }
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       }
     

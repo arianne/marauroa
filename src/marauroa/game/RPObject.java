@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.45 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.46 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,24 +92,6 @@ public class RPObject extends Attributes
   /** a List<RPSlot> of slots */
   private List slots;
   
-  public static class NoSlotFoundException extends Exception
-    {
-    public NoSlotFoundException(String slot)
-      {
-      super("Slot ["+slot+"] not found");
-      }
-    }
-	
-
-  public static class SlotAlreadyAddedException extends Exception
-    {
-    public SlotAlreadyAddedException(String slot)
-      {
-      super("Slot ["+slot+"] already added.");
-      }
-    }
-  
-
   /** An iterator for properly acceding all the Slots. */
   public class SlotsIterator
     {
@@ -176,7 +158,7 @@ public class RPObject extends Attributes
     }
   
   /** Returns an ID object representing the id of this object */
-  public RPObject.ID getID() throws Attributes.AttributeNotFoundException
+  public RPObject.ID getID() throws AttributeNotFoundException
     {
     return new ID(this);
     }
@@ -609,14 +591,14 @@ public class RPObject extends Attributes
 		
     /** Constructor
      *  @param attr an RPObject containing object_id attribute */
-    public ID(RPObject attr) throws Attributes.AttributeNotFoundException
+    public ID(RPObject attr) throws AttributeNotFoundException
       {
       id=attr.getInt("id");
       }
 		
     /** Constructor
      *  @param attr an RPAction containing source_id attribute */
-    public ID(RPAction attr) throws Attributes.AttributeNotFoundException
+    public ID(RPAction attr) throws AttributeNotFoundException
       {
       id=attr.getInt("source_id");
       }

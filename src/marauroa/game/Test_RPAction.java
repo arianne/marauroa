@@ -1,4 +1,4 @@
-/* $Id: Test_RPAction.java,v 1.5 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_RPAction.java,v 1.6 2004/07/13 20:31:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,7 @@ public class Test_RPAction extends TestCase
       assertEquals("value",value);
       assertTrue(attr.has("Attribute"));
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       fail(e.getMessage());
       }
@@ -69,7 +69,7 @@ public class Test_RPAction extends TestCase
       value=attr.get("Attribute");
       fail("Exception not throwed");
       }
-    catch(Attributes.AttributeNotFoundException e)
+    catch(AttributeNotFoundException e)
       {
       assertTrue(true);
       }

@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.2 2004/06/20 18:44:42 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.3 2004/07/13 20:31:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,12 +33,12 @@ public interface IRPRuleProcessor
   public void nextTurn();
   /** Callback method called when a new player enters in the game
    *  @param object the new player that enters in the game. */
-  public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException;
+  public boolean onInit(RPObject object) throws RPObjectInvalidException;
   /** Callback method called when a new player exits the game
    *  @param id the new player id that exits the game.
    *  @return true to update the player on database. */
-  public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException;
+  public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException;
   /** Callback method called when a new player time out
    *  @param id the new player id that timeouts. */
-  public boolean onTimeout(RPObject.ID id) throws IRPZone.RPObjectNotFoundException;
+  public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException;
   }
