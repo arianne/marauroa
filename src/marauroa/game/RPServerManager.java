@@ -180,7 +180,7 @@ class RPServerManager extends Thread
           if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
-            RPZone.Perception perception=zone.getPerception(playerContainer.getRPObjectID(clientid));
+            RPZone.Perception perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
             Message messages2cPerception=new MessageS2CPerception(source, perception.modifiedList, perception.deletedList);
             netMan.addMessage(messages2cPerception);
             }

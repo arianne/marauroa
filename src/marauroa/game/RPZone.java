@@ -41,5 +41,5 @@ public interface RPZone
   public boolean has(RPObject.ID id);
   public RPObject create();
   public Iterator iterator();
-  public Perception getPerception(RPObject.ID id);
+  public Perception getPerception(RPObject.ID id, byte type);
   }

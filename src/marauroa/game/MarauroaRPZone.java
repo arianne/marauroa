@@ -82,7 +82,7 @@ public class MarauroaRPZone implements RPZone
     return listObjects.iterator();
     }
 
-  public Perception getPerception(RPObject.ID id)
+  public Perception getPerception(RPObject.ID id, byte type)
     {
     /** Using TOTAL perception per turn */
     RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
