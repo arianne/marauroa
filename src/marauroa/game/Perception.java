@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.2 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.3 2004/06/24 10:40:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,29 +36,8 @@ public class Perception
   
   public void added(RPObject object)
     {
-    if(!removedHas(object))
+    if(!addedHas(object))
       {
-      try
-        {
-        if(addedHas(object))
-          {
-          Iterator it=addedList.iterator();
-          while(it.hasNext())
-            {
-            RPObject added=(RPObject)it.next();
-            if(added.get("id").equals(object.get("id")))
-              {
-              it.remove();
-              break;
-              }
-            }
-          }
-        }
-      catch(Attributes.AttributeNotFoundException e)
-        {
-        marauroad.thrown("RPZone::Perception::added","X",e);
-        }
-        
       addedList.add(object);
       }
     }
@@ -89,29 +68,30 @@ public class Perception
   
   public void removed(RPObject object)
     {
-    if(!addedHas(object))
+    if(addedHas(object))
       {
       try
         {
-        if(removedHas(object))
+        Iterator it=addedList.iterator();
+        while(it.hasNext())
           {
-          Iterator it=deletedList.iterator();
-          while(it.hasNext())
+          RPObject added=(RPObject)it.next();
+          if(added.get("id").equals(object.get("id")))
             {
-            RPObject removed=(RPObject)it.next();
-            if(removed.get("id").equals(object.get("id")))
-              {
-              it.remove();
-              break;
-              }
+            it.remove();
+            /* NOTE: If object was added and now remove we simply don't mention the object at all */
+            return;
             }
           }
         }
       catch(Attributes.AttributeNotFoundException e)
         {
         marauroad.thrown("RPZone::Perception::removed","X",e);
-        }
-        
+        }        
+      }
+
+    if(!removedHas(object))
+      {
       deletedList.add(object);
       }
     }

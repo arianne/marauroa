@@ -86,6 +86,11 @@ public class nullClient extends Thread
                   printed=true;
                   out.print('C');
                   }
+                if(obj.get("type").equals("ghost"))
+                  {
+                  printed=true;
+                  out.print('G');
+                  }
                 else if(obj.get("type").equals("ball"))
                   {
                   printed=true;
@@ -143,6 +148,8 @@ public class nullClient extends Thread
    
   public void run()
     {
+    while(true)
+      {
     try
       {
       Configuration.setConfigurationFile("mapacman.ini");
@@ -173,7 +180,7 @@ public class nullClient extends Thread
           {
           ++recieved;
           }
-        else
+        else if(msg instanceof MessageS2CLoginNACK)
           {
           throw new Exception(msg.toString());
           }
@@ -208,11 +215,6 @@ public class nullClient extends Thread
         }
         
       
-      boolean cond=true;
-
-      Date timestamp=new Date();
-      SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-      
       PerceptionHandler handler=new PerceptionHandler(new PerceptionHandler.DefaultPerceptionListener()
         {
         public int onSynced()
@@ -238,6 +240,10 @@ public class nullClient extends Thread
           }
         });
         
+
+      boolean cond=true;
+      long ticks=System.currentTimeMillis();
+      long exit_time=((rand.nextInt()%100+600)*1000);
         
       while(cond)
         {
@@ -259,6 +265,11 @@ public class nullClient extends Thread
             gameLogic(myRPObject,map_objects);
             System.out.println("<");
             }
+          }
+        
+        if(System.currentTimeMillis()-ticks>exit_time)
+          {
+          cond=false;
           }
         }
           
@@ -287,6 +298,8 @@ public class nullClient extends Thread
     catch(Exception e)
       {
       e.printStackTrace();
+      System.exit(0);
+      }
       }
     }
   
@@ -458,6 +471,7 @@ public class nullClient extends Thread
     catch(Exception e)
       {
       e.printStackTrace();
+      System.exit(1);
       }
     }
   }
