@@ -67,8 +67,42 @@ class RealPythonAI(PythonAI):
         # Personally I would use the PythonRP directly and move the ghost at will
         # But if you are really in need, add actions to the scheduler so they are
         # done as if you are a simple player.
+        if len(self.pythonRP._online_players)==0:
+            return 1
+            
         for ghost in self.ghosts:
             print ghost.toString()
+
+            ghost.add("!decision",-1)
+            
+            target=None
+            if not ghost.has("!target"):
+                players=self.pythonRP._online_players
+                target=players[random.randint(0,len(players)-1)]
+                print target.toString()
+                ghost.put("!target",target.get("id"))
+            else:
+                try:
+                    target=self.pythonRP._zone.get(RPObject.ID(ghost.getInt("!target")))
+                except:
+                    ghost.remove("!target")
+            
+            if target is not None and ghost.getInt("!decision")<=0:
+                ghost.put("!decision",5)
+                difx=target.getInt("x")-ghost.getInt("x")
+                dify=target.getInt("y")-ghost.getInt("y")
+                print difx, " <-> ", dify
+                
+                if difx>0:
+                    ghost.put("!hdir","E")
+                elif difx<0:
+                    ghost.put("!hdir","W")
+                    
+                if dify>0:
+                    ghost.put("!vdir","S")
+                elif dify<0:
+                    ghost.put("!vdir","N")
+                
             if self.pythonRP.canMove(ghost)==0:
                 print "Can't move: Changing direction"
                 dir=randomDirection()
@@ -76,7 +110,7 @@ class RealPythonAI(PythonAI):
             else:            
                 self.pythonRP.move(ghost)
                 self.pythonRP._zone.modify(ghost)
-        
+
         for player in self.pythonRP._online_players:
             self.pythonRP._ghostCollisions(player)
                 
@@ -242,6 +276,7 @@ class RealPythonRP(PythonRP):
                 print "Ghost killed player ",player.get("id") 
                 ghost.add("score",1)
                 ghost.put("?kill","")
+                if ghost.has("!target"): ghost.remove("!target")
                 self._killedFlagGhosts.append(ghost)
                 self._zone.modify(ghost)
                 
@@ -350,6 +385,7 @@ class RealPythonRP(PythonRP):
         object.put("y",0)
         object.put("dir",randomDirection())
         object.put("score",0)
+        object.put("!decision",10)
         return object;
 
     def createBall(self, x,y):
