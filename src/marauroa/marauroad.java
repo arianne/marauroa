@@ -31,14 +31,14 @@ public class marauroad extends Thread
       RPObject MrBean=new RPObject();
       MrBean.put("object_id","2");
       MrBean.put("name","Mr Bean");
-      playerDatabase.addCharacter("Test Player", "MrBean",MrBean);
+      playerDatabase.addCharacter("Another Test Player", "MrBean",MrBean);
       
       RPObject DrCoreDump=new RPObject();
       DrCoreDump.put("object_id","3");
       DrCoreDump.put("name","Dr CoreDump");
-      playerDatabase.addCharacter("Another Test Player", "Dr CoreDump",DrCoreDump);
+      playerDatabase.addCharacter("Test Player", "Dr CoreDump",DrCoreDump);
       }
-    catch(Exception e) 
+    catch(Exception e)
       {
       marauroad.trace("marauroad::setTestDatabase","X",e.getMessage());
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
@@ -50,12 +50,12 @@ public class marauroad extends Thread
       }
     }
     
-  public static void main (String[] args) 
+  public static void main (String[] args)
     {
     marauroad.trace("marauroad::main",">");
     marauroad.getMarauroa().start();
     marauroad.trace("marauroad::main","<");
-	}
+  }
  
   public synchronized void run()
     {
@@ -86,9 +86,9 @@ public class marauroad extends Thread
 
     while(!finish)
       {
-      try 
+      try
         {
-        wait();       
+        wait();
         }
       catch(InterruptedException e)
         {
@@ -116,7 +116,7 @@ public class marauroad extends Thread
     }
   
   public void init()
-    {    
+    {
     marauroad.trace("marauroad::init",">");
     try
       {
@@ -130,7 +130,7 @@ public class marauroad extends Thread
       System.exit(-1);
       }
     
-    gameMan.start();    
+    gameMan.start();
     marauroad.trace("marauroad::init","<");
     }
     
@@ -141,12 +141,12 @@ public class marauroad extends Thread
     gameMan.finish();
     marauroad.trace("marauroad::finish","<");
     }
-	
+  
   private void message(String text)
     {
     System.out.println(text);
     }
-	
+  
   public static void println(String text)
     {
     getMarauroa().message(text);
@@ -160,17 +160,17 @@ public class marauroad extends Thread
   public static void trace(String module,String event)
     {
     getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+"\t"+event+"\t"+
-       module);        
+       module);
     }
     
   public static void trace(String module,String event,String text)
     {
     getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+"\t"+event+"\t"+
-       module+"\t"+text);        
+       module+"\t"+text);
     }
     
   public static void report(String text)
     {
     getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+": "+text);
-    }  
+    }
   }
