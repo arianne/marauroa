@@ -1,0 +1,31 @@
+-------------------------------------------------------------------------------
+| This program is free software; you can redistribute it and/or modify         
+| it under the terms of the GNU General Public License as published by
+| the Free Software Foundation.
+| 
+| This program is distributed in the hope that it will be useful,
+| but WITHOUT ANY WARRANTY; without even the implied warranty of
+| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+| doc/GPL.license file for more details.
+-------------------------------------------------------------------------------
+
+
+Steps to make 1001 Arianne 100% compatible
+------------------------------------------
+
+We want to make 1001 Arianne compatible.
+So the first steps are to implement Arianne objects and actions.
+At this moment Arianne seems to have:
+-
+-
+-
+
+Once we have been able to mimic objects and actions, our next step
+is to accomplish the correct generation of Action->Perceptions that
+Arianne uses, but also to fix and correct Arianne to use the correct
+ones.
+
+Now we need to add support for Quest much in the way that Arianne does
+using Lua.
+
+At this point marauroa-1001 should be 100% compatible with Arianne.
