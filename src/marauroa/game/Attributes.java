@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.16 2004/01/01 11:05:22 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.17 2004/01/08 23:09:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -218,8 +218,8 @@ public class Attributes implements marauroa.net.Serializable
         
     for(int i=0;i<size;++i)
       {
-      String key   = in.readString();
-      String value = in.readString();
+      String key=in.readString();
+      String value=in.readString();
       content.put(key,value);
       }
     }
