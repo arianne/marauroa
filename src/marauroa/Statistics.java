@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.7 2004/02/15 11:40:12 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.8 2004/02/15 23:53:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -172,7 +172,10 @@ public class Statistics
     
     try
       {
-      PrintWriter out=new PrintWriter(new FileOutputStream("server_stats.txt"));
+      Configuration conf=Configuration.getConfiguration();
+      String webfolder=conf.get("server_webdirectory");
+        
+      PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.txt"));
       
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
@@ -184,7 +187,7 @@ public class Statistics
       out.println("-- Statistics ------");      
       out.close();
       
-      out=new PrintWriter(new FileOutputStream("server_up.txt"));
+      out=new PrintWriter(new FileOutputStream(webfolder+"server_up.txt"));
       out.println(actualTime.getTime()/1000);
       out.close();      
       }

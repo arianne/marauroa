@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.38 2004/02/10 13:30:00 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.39 2004/02/15 23:53:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,7 @@ public class marauroad extends Thread
           {
           String time=String.valueOf(new Date().getTime());
           new File("logs").mkdir();
-          out=new PrintWriter(new FileOutputStream("logs/server_log_"+time+".txt"));
+          out=new PrintWriter(new FileOutputStream("logs/"+"server_log_"+time+".txt"));
           }
         catch(FileNotFoundException e)
           {
