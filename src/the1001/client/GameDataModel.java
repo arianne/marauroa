@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.16 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: GameDataModel.java,v 1.17 2004/04/03 19:05:01 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,6 +100,11 @@ public final class GameDataModel
   public void setArena(RPObject arena)
   {
     this.arena = arena;
+    try
+    {
+      mAllObjects.put(arena.get(RPCode.var_object_id),arena);
+    }
+    catch (Attributes.AttributeNotFoundException e) {}
   }
   
   /**
@@ -244,9 +249,9 @@ public final class GameDataModel
       {
         if(shopGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
         {
+          mAllObjects.remove(gladiator.get(RPCode.var_object_id));
           fireListeners();
         }
-        mAllObjects.remove(gladiator.get(RPCode.var_object_id));
       }
       catch (Attributes.AttributeNotFoundException e)
       {
@@ -267,9 +272,9 @@ public final class GameDataModel
       {
         if(myGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
         {
+          mAllObjects.remove(gladiator.get(RPCode.var_object_id));
           fireListeners();
         }
-        mAllObjects.remove(gladiator.get(RPCode.var_object_id));
       }
       catch (Attributes.AttributeNotFoundException e)
       {
@@ -290,9 +295,9 @@ public final class GameDataModel
       {
         if(spectators.remove(spectator.get(RPCode.var_object_id))!=null)
         {
+          mAllObjects.remove(spectator.get(RPCode.var_object_id));
           fireListeners();
         }
-        mAllObjects.remove(spectator.get(RPCode.var_object_id));
       }
       catch (Attributes.AttributeNotFoundException e)
       {
@@ -340,6 +345,7 @@ public final class GameDataModel
       try
       {
         fighters.put(fighter.get(RPCode.var_object_id),fighter);
+        mAllObjects.put(fighter.get(RPCode.var_object_id),fighter);
         fireListeners();
       }
       catch (Attributes.AttributeNotFoundException e)
@@ -358,6 +364,7 @@ public final class GameDataModel
     {
       if(fighters.remove(fighter.get(RPCode.var_object_id))!=null)
       {
+        mAllObjects.remove(fighter.get(RPCode.var_object_id));
         fireListeners();
       }
     }
