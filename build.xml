@@ -24,11 +24,25 @@
 
   <target name="init">
     <mkdir dir="${build}" />
+    <mkdir dir="${images}" />
+    <mkdir dir="${sounds}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
   </target>
 
   <target name="installation" depends="init">
+    <copy todir="${images}">
+      <fileset dir="images">
+        <include name="**/*.*"/>
+	    <exclude name="CVS"/>
+      </fileset>
+    </copy>
+    <copy todir="${sounds}">
+      <fileset dir="sounds">
+        <include name="**/*.*"/>
+	    <exclude name="CVS"/>
+      </fileset>
+    </copy>
     <copy todir="${build}" file="${src}/marauroa_init.sql"/>
     <copy todir="${build}" file="${src}/marauroa_drop.sql"/>
   </target>
