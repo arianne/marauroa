@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.44 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.45 2004/11/20 21:47:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,7 @@ import java.util.*;
 import marauroa.*;
 
 /** This class hosts a list of Attributes stored as pairs String=String */
-public class Attributes implements marauroa.net.Serializable
+public class Attributes implements marauroa.net.Serializable, Iterable<String>
   {
   private Map<String,String> added;
   private Map<String,String> deleted;
@@ -267,7 +267,7 @@ public class Attributes implements marauroa.net.Serializable
     return result;
     }
 	
-  public Iterator iterator()
+  public Iterator<String> iterator()
     {
     return content.keySet().iterator();
     }
