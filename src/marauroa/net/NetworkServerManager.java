@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.31 2004/11/26 20:16:27 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.32 2004/11/26 23:10:12 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -268,6 +268,7 @@ public final class NetworkServerManager
       marauroad.trace("NetworkServerManagerWrite::run",">");
       while(keepRunning)
         {
+        Message msg = null;
         synchronized(messagesToSend)
           {
           if(messagesToSend.size()==0)
@@ -277,10 +278,13 @@ public final class NetworkServerManager
             }
           if(messagesToSend.size()>0)
             {
-              Message msg = messagesToSend.remove(0);
-              write(msg);
+            msg = messagesToSend.remove(0);
             }
-          } 
+          }
+          if(msg!=null)
+            {
+            write(msg);
+            }
         }
       marauroad.trace("NetworkServerManagerWrite::run","<");
       }
