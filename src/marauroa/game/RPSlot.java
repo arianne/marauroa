@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.26 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.27 2004/04/18 15:51:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -140,7 +140,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       {
       Iterator it=objects.iterator();
       boolean found=false;
-      while(it.hasNext() && !found)
+      
+      while(!found && it.hasNext())
         {
         RPObject data=(RPObject)it.next();
         if(data.get("id").equals(object.get("id")))
@@ -157,6 +158,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      marauroad.trace("RPSlot::add","X",e.getMessage());
       }
 
     objects.add(object);
@@ -181,7 +183,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("RPSlot::add","X",e.getMessage());
+      marauroad.trace("RPSlot::get","X",e.getMessage());
       throw new RPObjectNotFoundException(id);
       }
     }
@@ -207,7 +209,24 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
 
         if(id.equals(new RPObject.ID(object)))
           {
-          deleted.add(new RPObject(new RPObject.ID(object)));
+          /* HACK: This is a hack to avoid a problem that happens when on the 
+           *  same turn an object is added and deleted, causing the client to confuse. */
+          boolean found_in_added_list=false;
+          Iterator added_it=added.iterator();
+          while(!found_in_added_list && added_it.hasNext())
+            {
+            RPObject added_object=(RPObject)added_it.next();
+            if(id.equals(new RPObject.ID(added_object)))
+              {
+              added_it.remove();
+              }
+            }
+
+          if(!found_in_added_list)
+            {
+            deleted.add(new RPObject(new RPObject.ID(object)));
+            }
+            
           it.remove();
           return object;
           }
@@ -216,6 +235,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      marauroad.trace("RPSlot::remove","X",e.getMessage());
       throw new RPObjectNotFoundException(id);
       }
     }

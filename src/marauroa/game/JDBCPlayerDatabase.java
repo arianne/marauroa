@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.29 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.30 2004/04/18 15:51:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -993,6 +993,25 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         RPObject object=new RPObject();
         
         loadRPObject(trans,object,id.getObjectID());
+
+        List attribToRemove=new LinkedList();
+        Iterator it=object.iterator();
+
+        while(it.hasNext())
+          {
+          String attrib=(String)it.next();
+
+          if(attrib.charAt(0)=='?')
+            {
+            attribToRemove.add(attrib);
+            }
+          }
+        it=attribToRemove.iterator();
+        while(it.hasNext())
+          {
+          object.remove((String)it.next());
+          }
+
         return object;
         }
       else
@@ -1115,24 +1134,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(hasRPObject(trans,new RPObject.ID(object)))
         {
         deleteRPObject(trans,new RPObject.ID(object));
-        }
-      
-      List attribToRemove=new LinkedList();
-      Iterator it=object.iterator();
-
-      while(it.hasNext())
-        {
-        String attrib=(String)it.next();
-
-        if(attrib.charAt(0)=='?')
-          {
-          attribToRemove.add(attrib);
-          }
-        }
-      it=attribToRemove.iterator();
-      while(it.hasNext())
-        {
-        object.remove((String)it.next());
         }
         
       storeRPObject(trans,object,0);

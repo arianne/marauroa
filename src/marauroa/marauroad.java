@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.68 2004/04/17 10:02:48 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.69 2004/04/18 15:51:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,9 @@ public class marauroad extends Thread
   private static SimpleDateFormat formatter;
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
+  
+  private static String filename;
+  
   static
     {
     out=null;
@@ -55,6 +58,7 @@ public class marauroad extends Thread
 
           new File("logs").mkdir();
           out=new PrintWriter(new FileOutputStream("logs/"+"server_log_"+time+".txt"));
+          filename="logs/"+"server_log_"+time+".txt";
           }
         catch(FileNotFoundException e)
           {
@@ -111,7 +115,7 @@ public class marauroad extends Thread
       try
         {
         Statistics.getStatistics().print();
-        if(new File("server_log.txt").length()>67108864)
+        if(new File(filename).length()>67108864)
           {
           try
             {
@@ -119,7 +123,8 @@ public class marauroad extends Thread
 
             String time=String.valueOf(new Date().getTime());
 
-            out=new PrintWriter(new FileOutputStream("server_log_"+time+".txt"));
+            out=new PrintWriter(new FileOutputStream("logs/"+"server_log_"+time+".txt"));
+            filename="logs/"+"server_log_"+time+".txt";
             }
           catch(FileNotFoundException e)
             {
@@ -240,7 +245,7 @@ public class marauroad extends Thread
     else
       {
       // Production setting
-      String[] _allowed={"RPCode","the1001","RPServerManager::run","NetworkServerManagerWrite::write"};
+      String[] _allowed={"RPCode","the1001","RPServerManager::run"};
       allowed=_allowed;
       String[] _rejected={"the1001RPRuleProcessor::nextTurn","the1001RPRuleProcessor::removeOneTurnAttributes","the1001RPRuleProcessor::execute"};
       rejected=_rejected;

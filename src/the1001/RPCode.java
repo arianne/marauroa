@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.66 2004/04/15 12:08:12 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.67 2004/04/18 15:51:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ public class RPCode
   final public static String var_scissor="scissor";
   final public static String var_hidden_combat_mode="!mode";
   final public static String var_request_fame="request_fame";
+  final public static String var_setting_next_combat="next_combat";
   final public static String var_timeout="timeout";
   final public static String var_thumbs_up="thumbs_up";
   final public static String var_thumbs_down="thumbs_down";
@@ -262,11 +263,11 @@ public class RPCode
         player.remove(RPCode.var_fighting);
 
         int gladiator_id=player.getInt(RPCode.var_choose);          
+        player.remove(RPCode.var_choose);
 
         arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(gladiator_id));
         marauroad.trace("RPCode::RemovePlayer","D","Gladiator("+gladiator_id+") removed from Arena");
-        player.remove(RPCode.var_choose);
-        playersFighting.remove(player);
+        zone.modify(arena);
         }
       if(player.has(RPCode.var_hidden_vote))
         {
@@ -697,7 +698,7 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        RPObject gladiator=arena.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+        RPObject gladiator=arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(player.getInt(RPCode.var_choose)));
         
         /** HACK: We need to update the gladiator on player */
         player.getSlot(RPCode.var_myGladiators).add(gladiator);
@@ -709,9 +710,25 @@ public class RPCode
         }
 
       marauroad.trace("RPCode::SetUpNextCombat","D","Setup Arena to waiting status");
-      arena.getSlot(RPCode.var_gladiators).clear();
+      //arena.getSlot(RPCode.var_gladiators).clear();
       playersFighting.clear();
-      
+
+      arena.put(RPCode.var_status,RPCode.var_setting_next_combat);          
+      }
+    finally
+      {
+      marauroad.trace("RPCode::SetUpNextCombat","<");
+      }
+    }
+    
+  public static void SetUpGladiatorsNextCombat() throws Exception
+    {
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+      Iterator it;
+
       arena.put(RPCode.var_status,RPCode.var_waiting);          
       /* Choose new fighters if available */ 
       if(arena.getInt(RPCode.var_waiting)>0)
@@ -730,6 +747,10 @@ public class RPCode
           player.put(RPCode.var_fighting,"");
           arena.getSlot(RPCode.var_gladiators).add((RPObject)gladiator.copy());
           playersFighting.add(player);
+          
+          zone.modify(player);
+          
+          /* TODO: Can I remove? */
           it.remove();
           if(arena.getSlot(RPCode.var_gladiators).size()==GLADIATORS_PER_FIGHT)
             {
@@ -739,10 +760,11 @@ public class RPCode
             }
           }        
         }
+       
+      zone.modify(arena);  
       }
     finally
       {
-      marauroad.trace("RPCode::SetUpNextCombat","<");
       }
     }
 

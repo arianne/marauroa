@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.45 2004/04/16 10:26:59 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.46 2004/04/18 15:51:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -146,6 +146,10 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       else if(arena.get(RPCode.var_status).equals(RPCode.var_request_fame))
         {
         RPCode.RequestFame();
+        }
+      else if(arena.get(RPCode.var_status).equals(RPCode.var_setting_next_combat))
+        {
+        RPCode.SetUpGladiatorsNextCombat();
         }
       }
     catch(Exception e)

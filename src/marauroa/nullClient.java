@@ -1,5 +1,6 @@
 package marauroa;
 
+import java.text.SimpleDateFormat;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -84,6 +85,8 @@ class TestClient extends Thread
       boolean outofsync=true;
       int previous_timestamp=0;
 
+      Date timestamp=new Date();
+      SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         
       while(cond)
         {
@@ -117,9 +120,12 @@ class TestClient extends Thread
               }
             else
               {
+              timestamp.setTime(System.currentTimeMillis());
+              String ts = formatter.format(timestamp);
+
               previous_timestamp=msgPer.getTimestamp();
-              System.out.println("Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
-              out.println(msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
           
               Iterator it;
               it=msgPer.getDeletedRPObjects().iterator();
@@ -209,14 +215,15 @@ class TestClient extends Thread
     {
     try
       {
-      int num=5;
+      int num=6;
       TestClient test[]=new TestClient[num];
       
       test[0]=new TestClient("miguel","qwerty","miguel");
       test[1]=new TestClient("prueba","qwerty","prueba");
-      test[2]=new TestClient("bot_1","nopass","bot_1");
-      test[3]=new TestClient("bot_2","nopass","bot_2");
-      test[4]=new TestClient("bot_3","nopass","bot_3");
+      test[2]=new TestClient("bot_8","nopass","bot_8");
+      test[3]=new TestClient("bot_9","nopass","bot_9");
+      test[4]=new TestClient("bot_10","nopass","bot_10");
+      test[5]=new TestClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {
