@@ -44,7 +44,7 @@ public class Configuration
       InputStream is = getClass().getClassLoader().getResourceAsStream(configurationFile);
       if(is!=null)
         {
-        properties.load(getClass().getClassLoader().getResourceAsStream(configurationFile));
+        properties.load(is);
         }
       else
         {
