@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.66 2004/04/20 15:11:43 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.67 2004/04/21 12:26:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -243,7 +243,7 @@ class RPServerManager extends Thread
             
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
             
-            if(playerContainer.isPerceptionModifiedRPObject(clientid,object))
+            if(perception.type==RPZone.Perception.SYNC || playerContainer.isPerceptionModifiedRPObject(clientid,object))
               {
               messages2cPerception.setMyRPObject(object);
               }
