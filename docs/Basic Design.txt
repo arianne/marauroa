@@ -1,0 +1,106 @@
+Title  : Basic design
+Info   : Description of the basic design that Marauroa follows
+Keyword: basic, design, pseudo code, UML, specification
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/23
+status : planning
+
+%% BEGIN %%
+
+Marauroa is a client/server application with an UDP transport.
+
+Marauroa server is called marauroad, and it is build using threads.
+So marauroad has the next set of threads:
+- 1 thread to recieve data from clients
+- 1 thread to handle the data into server actions
+- 1 thread to handle RPG itself.
+
+Usually to note the active behaviour thread classes has inside the word Manager.
+So marauroad has:
+- NetworkManager
+- GameManager
+- RPManager
+
+NetworkManager is the active thread that handle message that come from clients 
+and convert them from a stream of bytes to a real Message object.
+See the Messages Types document to understand what each message is for.
+
+The main idea behind NetworkManager is:
+
+forever
+  {
+  Read stream from network
+  Convert to a Message
+  store in our queue
+  }
+  
+One level ( conceptually ) over NetworkManager it is GameManager, this is the 
+part of the server that handle everything so that we can make the server work.
+It is main task is to process messages from clients and modify state on the 
+server to reflect the reply to that actions, mainly related to:
+- Login
+- Logout
+- ChooseCharacter
+- Actions
+
+See GameManager for a deeper idea about what it does exactly.
+The hardest part of this Manager is to consider all the special cases and all 
+the exceptions that can happen.
+
+The main idea, if we skip exception, of GameManager is:
+
+forever
+  {
+  Wait for message to be available
+  
+  if(Message is Login)
+    {
+    check player.
+    ask for character.
+    }
+  
+  if(Message is Choose Character)
+    {
+    check character 
+    add to game
+    }
+    
+  if(Message is Action)
+    {
+    add action to game
+    } 
+    
+  if(Message is Logout)
+    {
+    remove from game
+    }
+  }
+  
+And finally RPManager, it is the active thread that keep executing actions.
+Marauroa is, as you know, turn based, so actions when recieved are enqueued for
+the next turn, and when turn is reached all the actions pending on that turn are
+executed.
+
+The idea on RPManager is to split complexity as much as possible, so we have 2
+entities to help it: Scheduler and RuleManager.
+
+forever
+  {
+  foreach action scheduled for this turn
+    {
+    run action in RuleManager
+    }
+    
+  wait until turn is completed
+  next turn
+  }
+
+Scheduler handle the actions as they are sent by the GameManager and RuleManager 
+is a class that encapsulate all the implementation related to rules, to hide 
+implementation.
+
+Marauroa client is called JMarauroa ( we need another name ).
+On this moment JMarauroa is in development, and the concepts are not so well 
+established as in the server side, and that is why we will skip it by now.
+
+%% END %% 

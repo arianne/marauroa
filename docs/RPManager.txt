@@ -1,0 +1,9 @@
+Title  : RP Manager
+Info   : Introduction to the RP Manager and its collaborator classes.
+Keyword: RP, RP Manager, Scheduler, RuleProcessor
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/23
+status : planning
+
+%% BEGIN %%
+%% END %%

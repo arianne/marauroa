@@ -1,0 +1,9 @@
+Title  : PlayerContainer Explained
+Info   : Description of the dplayer container and its utility.
+Keyword: Database, player container, players, structure
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/23
+status : planning
+
+%% BEGIN %%
+%% END %%

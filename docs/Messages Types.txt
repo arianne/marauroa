@@ -167,20 +167,30 @@ client that the character has not been choosen, and so it requiere from client
 that it send again a ChooseCharacter Message.
 It has no params.
 
+Message C2S Action
+------------------
+The Action message is sent from client to server to notify server about
+the willing of executing an action.
+
+The message is simply composed by a single action.
+
+
+Message S2C Action ACK
+----------------------
+The Action ACK is sent from server to client to notify that the action has been
+recieved into the server. It doesn't acknoledge that the action is accepted by 
+the RP, it just means that the action arrived the server.
+It has no params.
+
+
+
+Message S2C Perception
+----------------------
 
 Message C2S Map Hash
 --------------------
 
 Message S2C Map
 ---------------
-
-Message S2C Perception
-----------------------
-
-Message C2S Action
-------------------
-
-Message S2C Action ACK
-----------------------
 
 %% END %%

@@ -58,8 +58,8 @@ CREATE TABLE player
   
 CREATE TABLE characters
   (
-  id BIGINT NOT NULL,
-  character VARCHAR(30) NOT NULL,
+  player_id BIGINT NOT NULL,
+  charname VARCHAR(30) NOT NULL,
   contents VARCHAR(4096)
   
   PRIMARY KEY(id,character)
@@ -67,7 +67,7 @@ CREATE TABLE characters
   
 CREATE TABLE loginEvent
   (
-  id BIGINT NOT NULL,
+  player_id BIGINT NOT NULL,
   address VARCHAR(20),
   timedate TIMEDATE,
   result TINYINT

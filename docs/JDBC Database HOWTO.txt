@@ -1,0 +1,9 @@
+Title  : JDBC Database HOWTO
+Info   : How to configure and use a JDBC Database with Marauroa.
+Keyword: Database, ER, SQL, JDBC, Howto
+Author : Miguel Angel Blanch Lardin
+Created: 2003/10/23
+status : planning
+
+%% BEGIN %%
+%% END %%

@@ -1,30 +1,49 @@
 This is the documentation index for Marauroa
 
-Please if you add a new entry respect the format.
-Dates are YYYY/MM/DD
-status possible states are:
-- planning 
-- implemented
-
-The planning state means that it is still in a request for comments (RFC) 
-status. While when it has implemented status we consider it fixed until 
-next iteration.
-
-
 Contents
 --------
 
-Messages Types.txt
-  Author : Miguel Angel Blanch Lardin
-  Created: 2003/08/26
-  status : planning
+1) Basic Introduction
+	a) Basic Design.txt
+		Contains basic introduction about the project logic.
+	 
+	b) Error Log Format.txt
+		What and how error messages should be.
 
-UDP Packet Format.txt
-  Author : Miguel Angel Blanch Lardin
-  Created: 2003/09/02
-  status : planning
+2) Network related
+	a) UDP Packet Format.txt
+		Basic explication about how the Marauroa packet is organized.
+	
+	b) Messages Types.txt
+		Introduction to all the messages that Marauroa uses.
+	
+	c) Network Manager.txt
+		Basic explication of Network active entity.
+		
+3) Game related
+	a) Database ER.txt
+		Explain the structure of the database.		
+	
+	b) JDBC Database HOWTO
+		Explain how to configure the database and how to make Marauroa work with it.
+	
+	c) Game Manager.txt
+		Basic explication of Game active entity.
+		
+	d) PlayerContainer Explained.txt
+		Explains the basic usage and structure of PlayerContainer.
 
-NetworkManager.txt
-  Author : Miguel Angel Blanch Lardin
-  Created: 2003/09/26
-  status : planning
+
+4) RP related
+	a) Actions and Objects.txt
+		Basic introduction to actions and Objects
+		
+	b) Objects Explained.txt
+		Explains all the details related to Objects
+		
+	c) Actions Explained.txt
+		Explains all the details related to Actions
+
+	d) RP Manager.txt
+		Basic explication of the RP active entity.
+		
