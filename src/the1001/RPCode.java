@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.44 2004/01/27 23:42:12 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.45 2004/01/28 16:35:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,6 +55,7 @@ public class RPCode
   final public static String var_gladiator_id="gladiator_id";  
   final public static String var_vote="vote";  
   final public static String var_combat_mode="mode";  
+  final public static String var_look="look";  
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
@@ -165,6 +166,48 @@ public class RPCode
     finally
       {
       marauroad.trace("RPCode::RequestFight","<");
+      }
+    }
+
+  public static void AddPlayer(RPObject player)
+    {
+    marauroad.trace("RPCode::AddPlayer",">");
+   
+    try
+      {
+      if(player.has(RPCode.var_fighting))
+        {
+        player.remove(RPCode.var_fighting);
+        }
+
+      if(player.has(RPCode.var_choose))
+        {
+        player.remove(RPCode.var_choose);
+        }
+
+      if(player.has(RPCode.var_requested))
+        {
+        player.remove(RPCode.var_requested);
+        }
+
+      if(player.has(RPCode.var_hidden_combat_mode))
+        {
+        player.remove(RPCode.var_hidden_combat_mode);
+        }
+
+      if(player.has(RPCode.var_hidden_vote))
+        {
+        player.remove(RPCode.var_hidden_vote);
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPCode::AddPlayer","X",e.getMessage());
+      e.printStackTrace(System.out);
+      }
+    finally
+      {
+      marauroad.trace("RPCode::AddPlayer","<");
       }
     }
   

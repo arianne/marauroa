@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.11 2004/01/27 17:03:12 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.12 2004/01/28 16:35:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,13 @@ public class Gladiator extends RPObject
     "Biol",
     "Vidash"
     };
+
+  private static String[] randomLook=
+    {
+    "pknight",
+    "yohko",
+    "orc"    
+    };
   
   private static Random random=new Random();
   
@@ -46,6 +53,7 @@ public class Gladiator extends RPObject
     put(RPCode.var_object_id,id.getObjectID());
     put(RPCode.var_type,"gladiator");
     put(RPCode.var_name,randomNames[Math.abs(random.nextInt()%randomNames.length)]);
+    put(RPCode.var_look,randomLook[Math.abs(random.nextInt()%randomLook.length)]);
     put(RPCode.var_initial_hp,100);
     put(RPCode.var_hp,100);
     put(RPCode.var_attack,5);
