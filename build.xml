@@ -6,7 +6,7 @@
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
   
-  <property name="connectorJ_jar" value="mysql-connector-java-3.0.15-ga-bin.jar"/>
+  <property name="connectorJ_jar" value="mysql-connector.jar"/>
   <property name="jython_jar" value="jython.jar"/>
   
   <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
