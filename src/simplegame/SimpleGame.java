@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.28 2003/12/18 18:04:01 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.29 2003/12/18 18:30:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -162,46 +162,53 @@ public class SimpleGame
                 }
               else if(obj.hasSlot("ear"))
                 {
-                RPObject characterList=(RPObject)obj.getSlot("ear").get();
-                Iterator iterator = ((CharacterList)characterList).iterator();
-
-                addLog("Received character list with following chars:\n");
-                Object[] message = new Object[2];
-                message[0]="Characters:";
-                  
-                JComboBox cb_characters = new JComboBox();
-                cb_characters.setEditable(false);
-                message[1] = cb_characters;
-                                  
-                while(iterator.hasNext())
+                if(obj.getSlot("ear").size()==0)
                   {
-                  String player = (String)iterator.next();
-                  cb_characters.addItem(player);
-                  addLog(player+"\n");
+                  /** TODO: Sure you know a better way of telling that to the user. */
+                  addLog("Waiting for another player to join");
                   }
-                
-                // Options
-                String[] options = {"Challenge"};
-                int result = JOptionPane.showOptionDialog(
-                    this,                                       // the parent that the dialog blocks
-                    message,                                    // the dialog message array
-                    "Choose the character to challenge...",     // the title of the dialog window
-                    JOptionPane.DEFAULT_OPTION,                 // option type
-                    JOptionPane.INFORMATION_MESSAGE,            // message type
-                    new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
-                    options,                                    // options string array, will be made into buttons
-                    options[0]                                  // option that should be made into a default button
-                  );
+                else
+                  {                  
+                  RPObject characterList=(RPObject)obj.getSlot("ear").get();
+                  Iterator iterator = ((CharacterList)characterList).iterator();
+
+                  addLog("Received character list with following chars:\n");
+                  Object[] message = new Object[2];
+                  message[0]="Characters:";
                   
-                /** TODO: Or challenged a null player */
-                if(result!=JOptionPane.CLOSED_OPTION)
-                  {
-                  String player=(String)cb_characters.getSelectedItem();
-                  otherCharacterID = CharacterList.getId(player);
-                  ChallengeAction c_action=new ChallengeAction();
-                  c_action.setWho(ownCharacterID);
-                  c_action.setWhom(otherCharacterID);
-                  netMan.addMessage(new MessageC2SAction(null,c_action));
+                  JComboBox cb_characters = new JComboBox();
+                  cb_characters.setEditable(false);
+                  message[1] = cb_characters;
+                                  
+                  while(iterator.hasNext())
+                    {
+                    String player = (String)iterator.next();
+                    cb_characters.addItem(player);
+                    addLog(player+"\n");
+                    }
+                
+                  // Options
+                  String[] options = {"Challenge"};
+                  int result = JOptionPane.showOptionDialog(
+                      this,                                       // the parent that the dialog blocks
+                      message,                                    // the dialog message array
+                      "Choose the character to challenge...",     // the title of the dialog window
+                      JOptionPane.DEFAULT_OPTION,                 // option type
+                      JOptionPane.INFORMATION_MESSAGE,            // message type
+                      new ImageIcon("wurst.png"),                 // optional icon, use null to use the default icon
+                      options,                                    // options string array, will be made into buttons
+                      options[0]                                  // option that should be made into a default button
+                    );
+                  
+                  if(result!=JOptionPane.CLOSED_OPTION)
+                    {
+                    String player=(String)cb_characters.getSelectedItem();
+                    otherCharacterID = CharacterList.getId(player);
+                    ChallengeAction c_action=new ChallengeAction();
+                    c_action.setWho(ownCharacterID);
+                    c_action.setWhom(otherCharacterID);
+                    netMan.addMessage(new MessageC2SAction(null,c_action));
+                    }
                   }
                 }
               }
