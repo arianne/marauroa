@@ -12,18 +12,45 @@ create table if not exists player
   )
   TYPE=INNODB;
 
-
 create table if not exists characters
   (
   player_id integer not null,
   charname varchar(32) not null,
-  zone_id integer not null,
   object_id integer not null,
   
   PRIMARY KEY(charname,player_id)
   )
   TYPE=INNODB;
+
+create table if not exists rpobject
+  (
+  object_id integer auto_increment not null,
+  slot_id integer,
   
+  PRIMARY KEY(object_id)
+  )
+  TYPE=INNODB;
+  
+create table if not exists rpattribute
+  (
+  object_id integer not null,
+  name varchar(64) not null,
+  value varchar(255),
+  
+  primary key(object_id,zone_id,name)
+  )
+  TYPE=INNODB;
+
+create table if not exists rpslot
+  (
+  object_id integer not null,
+  name varchar(64) not null,
+  slot_id integer auto_increment not null,
+  
+  primary key(slot_id)
+  )
+  TYPE=INNODB;
+
 
 create table if not exists loginEvent
   (
@@ -47,53 +74,3 @@ create table if not exists statistics
   
   PRIMARY KEY(timedate)
   );
-
-create table if not exists rpobject
-  (
-  id integer not null,
-  zone_id integer not null,
-  slot_id integer,
-  
-  PRIMARY KEY(id,zone_id)
-  )
-  TYPE=INNODB;
-  
-create table if not exists rpattribute
-  (
-  object_id integer not null,
-  zone_id integer not null,
-  name varchar(64) not null,
-  value varchar(255),
-  
-  primary key(object_id,zone_id,name)
-  )
-  TYPE=INNODB;
-
-create table if not exists rpslot
-  (
-  object_id integer not null,
-  zone_id integer not null,
-  name varchar(64) not null,
-  slot_id integer auto_increment not null,
-  
-  primary key(slot_id)
-  )
-  TYPE=INNODB;
-
-create table if not exists rpzone
-  (
-  object_id integer not null,
-  zone_id integer not null,
-  
-  primary key(object_id,zone_id)
-  )
-  TYPE=INNODB;
-
-create table if not exists rpworld
-  (
-  name varchar(32) not null,  
-  zone_id integer not null,
-
-  primary key(name)
-  )
-  TYPE=INNODB;

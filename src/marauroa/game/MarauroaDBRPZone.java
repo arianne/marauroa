@@ -1,4 +1,4 @@
-/* $Id: MarauroaDBRPZone.java,v 1.1 2004/07/07 10:12:01 arianne_rpg Exp $ */
+/* $Id: MarauroaDBRPZone.java,v 1.2 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,7 @@ public class MarauroaDBRPZone extends MarauroaRPZone
     JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
     while(it.hasNext())
       {
-      RPObject.ID id=it.next();
+      int id=it.next();
       RPObject object=rpobjectDatabase.loadRPObject(transaction,id);
         
       add(object);
@@ -60,13 +60,6 @@ public class MarauroaDBRPZone extends MarauroaRPZone
   public void onFinish() throws Exception
     {
     super.onFinish();
-
-    JDBCPlayerDatabase.RPObjectIterator it=rpobjectDatabase.zoneIterator(transaction);
-    while(it.hasNext())
-      {
-      RPObject.ID id=it.next();
-      rpobjectDatabase.storeRPObject(transaction,get(id));
-      }
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -109,12 +102,7 @@ public class MarauroaDBRPZone extends MarauroaRPZone
  
   public RPObject create()
     {
-    RPObject.ID id=rpobjectDatabase.getValidRPObjectID(transaction);
-    while(has(id))
-      {
-      id=rpobjectDatabase.getValidRPObjectID(transaction);
-      }
-      
-    return new RPObject(id);
+    /** TODO: Return valid id */
+    return new RPObject(new RPObject.ID(-1,zoneid));
     }
   }

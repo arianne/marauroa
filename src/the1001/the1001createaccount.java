@@ -1,4 +1,4 @@
-/* $Id: the1001createaccount.java,v 1.5 2004/06/03 13:04:45 arianne_rpg Exp $ */
+/* $Id: the1001createaccount.java,v 1.6 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,10 +42,10 @@ public class the1001createaccount extends marauroa.createaccount
     {
     Transaction trans=playerDatabase.getTransaction();
 
-    RPObject object=new Player(((JDBCPlayerDatabase)playerDatabase).getValidRPObjectID(trans),get("character"));
+    RPObject object=new Player(RPObject.INVALID_ID,get("character"));
     object.put("look",get("character_model"));      
     
-    Gladiator gladiator_obj=new Gladiator(((JDBCPlayerDatabase)playerDatabase).getValidRPObjectID(trans));
+    Gladiator gladiator_obj=new Gladiator(RPObject.INVALID_ID);
     gladiator_obj.put("name",get("gladiator"));
     gladiator_obj.put("look",get("gladiator_model"));
     

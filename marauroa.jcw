@@ -8,17 +8,13 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Perception.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPActionList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPClass.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObject.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPSlot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPObject.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPSlot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaDBRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmancreateaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\the1001createaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPZone.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa_init.sql" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]

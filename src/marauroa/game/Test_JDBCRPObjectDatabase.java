@@ -1,4 +1,4 @@
-/* $Id: Test_JDBCRPObjectDatabase.java,v 1.8 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: Test_JDBCRPObjectDatabase.java,v 1.9 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,9 +70,9 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       t1=new Date().getTime();
       for(int i=0;i<total;++i)
         {
-        assertFalse(database.hasRPObject(trans,new RPObject.ID(i,-1)));
+        assertFalse(database.hasRPObject(trans,i));
         database.storeRPObject(trans,createObject(i));
-        assertTrue(database.hasRPObject(trans,new RPObject.ID(i,-1)));
+        assertTrue(database.hasRPObject(trans,i));
         }
       t2=new Date().getTime();
       
@@ -86,15 +86,15 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       t3=new Date().getTime();
       for(int i=0;i<total;++i)
         {
-        RPObject result=database.loadRPObject(trans,new RPObject.ID(i,-1));
+        RPObject result=database.loadRPObject(trans,i);
 
         assertEquals(createObject(i), result);
         }
       t4=new Date().getTime();
       for(int i=0;i<total;++i)
         {
-        database.deleteRPObject(trans,new RPObject.ID(i,-1));
-        assertFalse(database.hasRPObject(trans,new RPObject.ID(i,-1)));
+        database.deleteRPObject(trans,i);
+        assertFalse(database.hasRPObject(trans,i));
         }
       t5=new Date().getTime();
       marauroad.trace("Test_JDBCRPObjectDatabase::testStoreRPObject","D","Store TIME: "+(t2-t1));
@@ -125,7 +125,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       item.put("example","shield");
       example.getSlot("l_hand").add(item);
       database.storeRPObject(trans,example);
-      assertFalse(database.hasRPObject(trans,new RPObject.ID(1,-1)));
+      assertFalse(database.hasRPObject(trans,1));
       }
     catch(Exception e)
       {

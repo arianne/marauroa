@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.49 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.50 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,7 +63,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
     this.connInfo=connInfo;
-    random=new Random();
     runDBScript("marauroa_init.sql");
     }
   
@@ -118,7 +117,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from  player where username like '"+username+"'";
+      String query = "select count(*) as amount from  player where username like '"+username+"'";
 
       marauroad.trace("JDBCPlayerDatabase::hasPlayer","D",query);
 
@@ -126,7 +125,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        if(result.getInt(1)!=0)
+        if(result.getInt("amount")!=0)
           {
           return true;
           }
@@ -268,6 +267,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "delete from player where id="+id;
+      
+      /* BUG: Remove the RPObject too */
 
       stmt.execute(query);
       query = "delete from characters where player_id="+id;
@@ -314,6 +315,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
         throw new CharacterNotFoundException(username);
         }
+      
+      /** BUG: Remove the RPObject too */
 
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
@@ -344,32 +347,32 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
    * @param username is the name of the player
    * @param status   the new status of the account
   **/
-  public void setAccountStatus(Transaction trans, String username, String status)
-    throws GenericDatabaseException
-  {
-    try
+  public void setAccountStatus(Transaction trans, String username, String status) throws GenericDatabaseException
     {
+    try
+      {
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus",">");
       if(!validString(username) || !validString(status))
-      {
+        {
         throw new SQLException("Trying to use invalid username '"+username+"' or status '"+status+"'.");
-      }
+        }
+
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "update player set status='"+status+"' where username like '"+username+"'";
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","D",query);
       stmt.executeUpdate(query);
-    }
+      }
     catch(SQLException sqle)
-    {
+      {
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","X",sqle.getMessage());
       throw new GenericDatabaseException(sqle.getMessage());
-    }
+      }
     finally
-    {
+      {
       marauroad.trace("JDBCPlayerDatabase::setAccountStatus","<");
+      }
     }
-  }
   
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.
@@ -388,18 +391,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-
       password = Util.getMd5Hash(password);
-
-      String query = "select status from player where username like '"+username+"' and password like '"+password+"'";
-      
+      String query = "select status from player where username like '"+username+"' and password like '"+password+"'";      
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","D",query);
-
       ResultSet result = stmt.executeQuery(query);
 
       if(result.next())
         {
-        String account_status = result.getString(1);
+        String account_status = result.getString("status");
         
         if("active".equals(account_status))
           {
@@ -498,7 +497,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
+      String query = "select count(*) as amount from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
       
       marauroad.trace("JDBCPlayerDatabase::hasCharacter","D",query);
 
@@ -506,7 +505,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        if(result.getInt(1)!=0)
+        if(result.getInt("amount")!=0)
           {
           return true;
           }
@@ -585,6 +584,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
+        
       if(hasCharacter(trans,username,character))
         {
         marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
@@ -594,11 +594,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         Connection connection = ((JDBCTransaction)trans).getConnection();
         Statement stmt = connection.createStatement();
+        
         int id=getDatabasePlayerId(trans,username);
-        String query = "insert into characters values("+id+",'"+character+"',"+object.get("id")+")";
-
+        int object_id=storeRPObject(trans,object);
+        
+        String query = "insert into characters values("+id+",'"+character+"',"+object_id+")";
         stmt.execute(query);
-        storeRPObject(trans,object);
         }
       }
     catch(AttributeNotFoundException e)
@@ -629,7 +630,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from  player";
+      String query = "select count(*) as amount from player";
       
       marauroad.trace("JDBCPlayerDatabase::getPlayerCount","D",query);
 
@@ -637,7 +638,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        return result.getInt(1);
+        return result.getInt("amount");
         }
       return 0;
       }
@@ -733,7 +734,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select object_id,zone_id from characters where player_id="+id+" and charname like '"+character+"'";
+      String query = "select object_id from characters where player_id="+id+" and charname like '"+character+"'";
 
       marauroad.trace("JDBCPlayerDatabase::getRPObject","D",query);
 
@@ -741,10 +742,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        int object_id=result.getInt(1);
-        int zone_id=result.getInt(2);
-        
-        return loadRPObject(getTransaction(),new RPObject.ID(object_id,zone_id));
+        int object_id=result.getInt("object_id");        
+        return loadRPObject(getTransaction(),object_id);
         }
       else
         {
@@ -884,8 +883,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       catch(IOException e)
         {
-        }
-      
+        }      
         
       marauroad.trace("JDBCPlayerDatabase::runDBScript","<");
       }
@@ -984,9 +982,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       }
     
-    public RPObject.ID next() throws SQLException
+    public int next() throws SQLException
       {
-      return new RPObject.ID(set.getInt(1),set.getInt(2));
+      return set.getInt("object_id");
       }
     }
     
@@ -997,12 +995,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select id,zone_id from rpobject where slot_id=0";
+      String query = "select object_id from rpobject where slot_id=0";
 
-      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
-      
+      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);      
       ResultSet result = stmt.executeQuery(query);
-
       return new RPObjectIterator(result);
       }
     catch(SQLException e)
@@ -1015,15 +1011,15 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       marauroad.trace("JDBCPlayerDatabase::iterator","<");
       }
     }
-  
-  public boolean hasRPObject(Transaction trans, RPObject.ID id)
+
+  public boolean hasRPObject(Transaction trans, int id)
     {
     marauroad.trace("JDBCPlayerDatabase::hasRPObject",">");
     try
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from rpobject where id="+id.getObjectID();
+      String query = "select count(*) as amount from rpobject where object_id="+id;
 
       marauroad.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
       
@@ -1031,11 +1027,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       
       if(result.next())
         {
-        if(result.getInt(1)!=0)
+        if(result.getInt("amount")!=0)
           {
           return true;
           }
         }
+        
       return false;
       }
     catch(SQLException e)
@@ -1049,7 +1046,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  public RPObject loadRPObject(Transaction trans, RPObject.ID id) throws Exception
+  
+  public RPObject loadRPObject(Transaction trans, int id) throws Exception
     {
     marauroad.trace("JDBCPlayerDatabase::loadRPObject",">");
     try
@@ -1060,31 +1058,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         RPObject object=new RPObject();
         
-        loadRPObject(trans,object,id.getObjectID());
-
-        List attribToRemove=new LinkedList();
-        Iterator it=object.iterator();
-
-        while(it.hasNext())
-          {
-          String attrib=(String)it.next();
-
-          if(attrib.charAt(0)=='?')
-            {
-            attribToRemove.add(attrib);
-            }
-          }
-        it=attribToRemove.iterator();
-        while(it.hasNext())
-          {
-          object.remove((String)it.next());
-          }
+        loadRPObject(trans,object,id);
 
         return object;
         }
       else
         {
-        throw new SQLException("RPObject not found: "+id.toString());
+        throw new SQLException("RPObject not found: "+id);
         }
       }
     catch(Exception e)
@@ -1102,44 +1082,44 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
-    String query=null;
-    
-    query = "select name,value from rpattribute where object_id="+object_id+";";
+    String query="select name,value from rpattribute where object_id="+object_id+";";
     marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
     
     ResultSet result = stmt.executeQuery(query);
 
     while(result.next())
       {
-      object.put(UnescapeString(result.getString(1)),UnescapeString(result.getString(2)));
+      String name=UnescapeString(result.getString("name"));
+      String value=UnescapeString(result.getString("value"));
+      object.put(name, value);
       }
+      
     query = "select name,slot_id from rpslot where object_id="+object_id+";";
     marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
     result = stmt.executeQuery(query);
     while(result.next())
       {
-      RPSlot slot=new RPSlot(UnescapeString(result.getString(1)));
+      RPSlot slot=new RPSlot(UnescapeString(result.getString("name")));
 
       object.addSlot(slot);
       
-      int slot_id=result.getInt(2);
+      int slot_id=result.getInt("slot_id");
       
-      query = "select id from rpobject where slot_id="+slot_id+";";
+      query = "select object_id from rpobject where slot_id="+slot_id+";";
       marauroad.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
-
       ResultSet resultSlot = connection.createStatement().executeQuery(query);
       
       while(resultSlot.next())
         {
         RPObject slotObject=new RPObject();
 
-        loadRPObject(trans,slotObject,resultSlot.getInt(1));
+        loadRPObject(trans,slotObject,resultSlot.getInt("object_id"));
         slot.add(slotObject);
         }
       }
     }
   
-  public void deleteRPObject(Transaction trans, RPObject.ID id) throws SQLException
+  public void deleteRPObject(Transaction trans, int id) throws SQLException
     {
     marauroad.trace("JDBCPlayerDatabase::deleteRPObject",">");
     Connection connection = ((JDBCTransaction)trans).getConnection();
@@ -1148,11 +1128,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       if(hasRPObject(trans,id))
         {
-        deleteRPObject(trans,id.getObjectID());
+        deleteRPObject(trans,id);
         }
       else
         {
-        throw new SQLException("RPObject not found: "+id.toString());
+        throw new SQLException("RPObject not found: "+id);
         }
       }
     catch(SQLException e)
@@ -1166,9 +1146,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  private void deleteRPObject(Transaction trans, int id) throws SQLException
+  private void deleteRPObject(Connection connection, int id) throws SQLException
     {
-    Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
     
@@ -1179,32 +1158,39 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
     while(result.next())
       {
-      deleteRPObject(trans,result.getInt(1));
+      deleteRPObject(connection,result.getInt(1));
       }
+      
     query = "delete from rpslot where object_id="+id+";";
     marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     query = "delete from rpattribute where object_id="+id+";";
     marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
     stmt.execute(query);
-    query = "delete from rpobject where id="+id+";";
+    query = "delete from rpobject where object_id="+id+";";
     marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     }
   
-  public void storeRPObject(Transaction trans, RPObject object) throws SQLException
+  public int storeRPObject(Transaction trans, RPObject object) throws SQLException
     {
     marauroad.trace("JDBCPlayerDatabase::storeRPObject",">");
     Connection connection = ((JDBCTransaction)trans).getConnection();
-
+    
     try
       {
-      if(hasRPObject(trans,new RPObject.ID(object)))
+      int object_id=-1;
+      if(object.has("#db_id"))
         {
-        deleteRPObject(trans,new RPObject.ID(object));
-        }
+        object.getInt("#db_id");
         
-      storeRPObject(trans,object,0);
+        if(hasRPObject(trans,object_id))
+          {
+          deleteRPObject(trans,object_id);
+          }        
+        }
+
+      storeRPObject(trans,object,object_id,0);
       }
     catch(AttributeNotFoundException e)
       {
@@ -1222,12 +1208,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     }
   
-  private void storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, AttributeNotFoundException
+  private int storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, AttributeNotFoundException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
-    String object_id=object.get("id");
 
     query = "insert into rpobject values("+object_id+","+slot_id+");";
     marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
@@ -1279,49 +1264,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       }
     }
-
-  private Random random;
-
-  final private static int INITIAL_STORED_RPOBJECT_ID=100000;
-  
-  private static int last_idAssigned=INITIAL_STORED_RPOBJECT_ID;
-  
-  public RPObject.ID getValidRPObjectID(Transaction trans)
-    {
-    if(last_idAssigned==INITIAL_STORED_RPOBJECT_ID)
-      {
-      try
-        {
-        Connection connection = ((JDBCTransaction)trans).getConnection();
-        Statement stmt=connection.createStatement();
-      
-        String query = "select max(id) from rpobject";
-        marauroad.trace("JDBCPlayerDatabase::getValidRPObjectID","D",query);
-
-        ResultSet result = stmt.executeQuery(query);
-
-        if(result.next())
-          {
-          last_idAssigned=result.getInt(1);
-          if(last_idAssigned<INITIAL_STORED_RPOBJECT_ID) last_idAssigned=INITIAL_STORED_RPOBJECT_ID;
-          }
-        }
-      catch(Exception e)
-        {
-        marauroad.thrown("JDBCRPObjectDatabase::getValidRPObjectID","X",e);
-        }
-      }
-
-    RPObject.ID id=new RPObject.ID(last_idAssigned++,-1);
-
-    while(hasRPObject(trans,id))
-      {
-      id=new RPObject.ID(last_idAssigned++,-1);
-      }
-
-    return id;
-    }
-
 
   public void addStatisticsEvent(Transaction trans, Statistics.GatheredVariables var) throws GenericDatabaseException
     {

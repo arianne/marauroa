@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.60 2004/08/30 19:25:54 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.61 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import marauroa.marauroad;
 
 public class MarauroaRPZone implements IRPZone
   {
-  private ID zoneid;	
+  protected ID zoneid;	
   private Map objects;
   private Map modified;
   private Perception perception;

@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.18 2004/07/13 20:31:53 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.19 2004/09/04 20:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class Test_PlayerEntryContainer extends TestCase
       
       RPObject test=new RPObject();
 
-      test.put("id",playerDatabase.getValidRPObjectID(trans).getObjectID());
+      test.put("id",1);
       playerDatabase.addCharacter(trans,"Test Player", "Test Character",test);
       assertTrue(playerDatabase.hasCharacter(trans,"Test Player", "Test Character"));
         }
