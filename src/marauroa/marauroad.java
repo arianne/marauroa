@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.83 2004/05/07 17:19:13 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.82 2004/05/07 17:16:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -284,11 +284,11 @@ public class marauroad extends Thread
   
   public static void thrown(String module, String event, Throwable exception)
     {
-    StringBuffer sb=new StringBuffer("Exception stackTrace:\n");
+    StringBuffer sb=new StringBuffer();
     StackTraceElement[] ste=exception.getStackTrace();
     for(int i=0;i<ste.length;++i)
       {
-      sb.append("  "+ste[i].toString()+"\n");
+      sb.append(ste[i].toString()+"\n");
       }    
     
     trace(module,"X",exception.getMessage());
