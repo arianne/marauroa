@@ -63,9 +63,7 @@ public class RPAction extends Attributes
   /** Constructor */
   public RPAction()
     {
-    //no need to call super extra, default constructor is called automatically
-    //super();
-      actionType=0;
+    actionType=0;
     }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException

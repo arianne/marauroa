@@ -121,28 +121,6 @@ public class SimpleGame
     }
   }
   
-  public static void main(String argv[])
-  {
-    SimpleGame sg = new SimpleGame(null,null,null);
-    sg.pack();
-    sg.show();
-    sleep(2);
-    sg.gdm.setRPCharacterAt(0,0,1);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(1,1,0);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(2,2,1);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(2,0,0);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(0,2,1);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(0,1,0);
-    sleep(1);
-    sg.gdm.setRPCharacterAt(1,2,1);
-    sleep(1);
-  }
-  
   
   private static void sleep(long timeout)
   {

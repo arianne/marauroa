@@ -18,11 +18,12 @@ public class SimpleRPZone
   //we will never send a list with deleted items
   //in this game, so create once the empty list
   //and send it all the time.
-  private List deletedList=new LinkedList();
+  private List deletedList;
   
   
   public SimpleRPZone()
   {
+  deletedList=new LinkedList();
   }
   
   public Perception getPerception(RPObject.ID id)
