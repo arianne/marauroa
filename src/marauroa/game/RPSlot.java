@@ -1,6 +1,9 @@
 package marauroa.game;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import marauroa.marauroad;
 
 public class RPSlot implements marauroa.net.Serializable
   {
@@ -32,7 +35,7 @@ public class RPSlot implements marauroa.net.Serializable
   
   public void add(RPObject object)
     {
-    objects.add(object);      
+    objects.add(object);
     }
   
   public RPObject get(int index)
@@ -42,13 +45,13 @@ public class RPSlot implements marauroa.net.Serializable
   
   public int size()
     {
-    return objects.size();      
+    return objects.size();
     }
   
   public Iterator iterator()
     {
     return objects.iterator();
-    } 
+    }
     
   public String toString()
     {
@@ -66,17 +69,28 @@ public class RPSlot implements marauroa.net.Serializable
       {
       RPObject entry=(RPObject)it.next();
       out.write(entry);
-      }    
+      }
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
+      try
+      {
+      marauroad.trace("RPSlot.readObject()",">");
+      name = in.readString();
+        marauroad.trace("RPSlot.readObject()","D"," Slot name: " +name);
     int size=in.readInt();
+      marauroad.trace("RPSlot.readObject()","D",size+" objects found");
     objects.clear();
         
     for(int i=0;i<size;++i)
       {
       objects.add(in.readObject(new RPObject()));
-      }    
+      }
+    }
+    finally
+    {
+      marauroad.trace("RPSlot.readObject()","<");
+    }
     }
   }
