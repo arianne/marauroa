@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.56 2004/07/07 10:07:20 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.57 2004/07/11 22:36:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,7 +63,7 @@ public class MarauroaRPZone implements IRPZone
       {
       RPObject.ID id=new RPObject.ID(object);
 
-      if(!modified.containsKey(id))
+      if(!modified.containsKey(id) && has(id))
         {
         modified.put(id,object);
         }

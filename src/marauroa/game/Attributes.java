@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.40 2004/07/11 16:53:17 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.41 2004/07/11 22:36:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -434,13 +434,9 @@ public class Attributes implements marauroa.net.Serializable
     int i=0;
     while(it.hasNext())
       {
+      ++i;
       Map.Entry entry=(Map.Entry)it.next();
-      
-      if(rpClass.getVisibility((String)entry.getKey())==RPClass.VISIBLE)
-        {
-        ++i;
-        put((String)entry.getKey(),(String)entry.getValue());
-        }
+      put((String)entry.getKey(),(String)entry.getValue());
       } 
             
     if(i>0)
@@ -459,13 +455,9 @@ public class Attributes implements marauroa.net.Serializable
     int i=0;
     while(it.hasNext())
       {
+      ++i;
       Map.Entry entry=(Map.Entry)it.next();
-      
-      if(rpClass.getVisibility((String)entry.getKey())==RPClass.VISIBLE)
-        {
-        ++i;
-        put((String)entry.getKey(),(String)entry.getValue());
-        }
+      put((String)entry.getKey(),(String)entry.getValue());
       }       
 
     if(i>0)
