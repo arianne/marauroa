@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.6 2004/05/20 12:34:52 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.7 2004/05/26 17:30:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,6 +127,7 @@ public class PerceptionHandler
   public PerceptionHandler(IPerceptionListener listener)
     {
     this.listener=listener;
+    previousPerceptions=new LinkedList();
     previousTimestamp=-1;
     synced=false;
     }

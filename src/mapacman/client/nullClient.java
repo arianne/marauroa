@@ -20,7 +20,7 @@ public class nullClient extends Thread
     public ClientMap(List mapData) throws Exception
       {
       /** TODO: Intepret and apply the mapData */
-      int maxv=Integer.MAX_VALUE, maxh=Integer.MAX_VALUE;
+      int maxv=0, maxh=0;
       Iterator it=mapData.iterator();
       while(it.hasNext())
         {
@@ -29,7 +29,9 @@ public class nullClient extends Thread
         if(object.getInt("y")>maxv) maxv=object.getInt("y");
         }
         
-      content=new char[maxh*maxv];
+      content=new char[(maxh+1)*(maxv+1)];
+      sizex=maxh+1;
+      sizey=maxv+1;
       
       it=mapData.iterator();
       while(it.hasNext())
@@ -69,7 +71,7 @@ public class nullClient extends Thread
         for(int j=0;j<sizex;j++)
           {
           char type=get(j,i);
-          if(type=='.' || type=='0' || type=='+')
+          if(type!='*')
             {
             boolean printed=false;
             Iterator it=objects.values().iterator();
@@ -170,7 +172,7 @@ public class nullClient extends Thread
           }
         else
           {
-          throw new Exception();
+          throw new Exception(msg.toString());
           }
         }
 
@@ -250,7 +252,9 @@ public class nullClient extends Thread
           if(synced)
             {
             map_objects.print(System.out,world_objects);
+            System.out.println(">");
             gameLogic(myRPObject,map_objects);
+            System.out.println("<");
             }
           }
         }
@@ -401,7 +405,7 @@ public class nullClient extends Thread
       int num=1;
       nullClient test[]=new nullClient[num];
       
-      test[0]=new nullClient("miguel","qwerty","miguel");
+      test[0]=new nullClient("prueba","qwerty","prueba");
 //      test[1]=new TestClient("prueba","qwerty","prueba");
 //      test[2]=new TestClient("bot_8","nopass","bot_8");
 //      test[3]=new TestClient("bot_9","nopass","bot_9");
