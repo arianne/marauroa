@@ -2,6 +2,9 @@ package marauroa.game;
 
 public class RPAction extends Attributes
 {
+  public final static Status STATUS_SUCCESS=new Status(Status.SUCCESS);
+  public final static Status STATUS_FAIL=new Status(Status.FAIL);
+  public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
   public static class Status
   {
     public final static byte SUCCESS=0;
