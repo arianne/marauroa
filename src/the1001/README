@@ -99,7 +99,7 @@ RPAction		Fight
 				AwardFame
 				Talk
 				Buy
-				Sell
+				ModifyEquiment
 				Retire
 				Train
 				
@@ -114,6 +114,7 @@ Also the player will have a name to represent him/her.
 
 Attributes
 	name
+	fame
 Slots
 	gladiators
 	backpack
@@ -237,4 +238,16 @@ It is used to talk, you as player, not the gladiator.
 Attributes
 	text
 	
-You can see it on the reply of 
+You can see it on the reply as a attribute in your player named "text"
+
+
+Buy
+This action is issue to buy a new item or gladiator with the fame your player has
+available. If you buy a gladiator it will be placed at the gladiator slot of your
+player and whatever other thing at the backpack container.
+
+Attributes
+	shop_item
+	
+
+This actions decrease your player fame.	
