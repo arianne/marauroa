@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.49 2004/03/16 00:07:00 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.50 2004/03/22 23:00:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,68 +74,6 @@ public class marauroad extends Thread
       }
     }
 	
-  private void setTestDatabase()
-    {
-    marauroad.trace("marauroad::setTestDatabase",">");
-    
-    try
-      {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
-      
-      if(playerDatabase.getPlayerCount()>0)
-        {
-        return;
-        }        
-      
-      if(playerDatabase.hasPlayer("Test Player"))
-        {
-        playerDatabase.removePlayer("Test Player");
-        }
-
-      if(playerDatabase.hasPlayer("Another Test Player"))
-        {
-        playerDatabase.removePlayer("Another Test Player");
-        }
-
-      playerDatabase.addPlayer("Test Player","Test Password");
-      playerDatabase.addPlayer("Another Test Player","Test Password");
-
-      RPObject SonGoku=new RPObject();
-      SonGoku.put("object_id","1");
-      SonGoku.put("name","Son Goku");
-      SonGoku.put("type","character");
-      SonGoku.addSlot(new RPSlot("!gladiators"));
-      SonGoku.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(4)));
-      playerDatabase.addCharacter("Test Player", "Son Goku",SonGoku);
-
-      RPObject MrBean=new RPObject();
-      MrBean.put("object_id","2");
-      MrBean.put("name","Mr Bean");
-      MrBean.put("type","character");
-      MrBean.addSlot(new RPSlot("!gladiators"));
-      MrBean.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(5)));
-      playerDatabase.addCharacter("Another Test Player", "MrBean",MrBean);
-      
-      RPObject DrCoreDump=new RPObject();
-      DrCoreDump.put("object_id","3");
-      DrCoreDump.put("name","Dr CoreDump");
-      DrCoreDump.put("type","character");
-      DrCoreDump.addSlot(new RPSlot("!gladiators"));
-      DrCoreDump.getSlot("!gladiators").add(new Gladiator(new RPObject.ID(6)));
-      playerDatabase.addCharacter("Test Player", "Dr CoreDump",DrCoreDump);
-      }
-    catch(Exception e)
-      {
-      marauroad.trace("marauroad::setTestDatabase","X",e.getMessage());
-      marauroad.trace("marauroad::setTestDatabase","!","ABORT: marauroad can't allocate database");
-      System.exit(-1);
-      }
-    finally
-      {
-      marauroad.trace("marauroad::setTestDatabase","<");
-      }
-    }
-    
   public static void main (String[] args)
     {
     println("Marauroa           - An open source MORPG Framework -");
@@ -167,7 +105,7 @@ public class marauroad extends Thread
     marauroad.trace("marauroad::run",">");
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
-    instance.setTestDatabase();
+    /** TODO: Set database for MemoryDatabase, nice option would be to load it from a file */
 
     instance.init();
 

@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.12 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.13 2004/03/22 22:57:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,6 +78,8 @@ class createaccount
     if(character_model==null) return (1);
     if(gladiator==null) return (1);
     if(gladiator_model==null) return (1);
+    
+    Transaction trans=null;
       
     try
       {      
@@ -88,6 +90,7 @@ class createaccount
       
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       JDBCRPObjectDatabase rpobjectDatabase=JDBCRPObjectDatabase.getDatabase();
+      trans=playerDatabase.getTransaction();
       
       out.println("Checking for valid string");
       out.flush();
@@ -155,32 +158,43 @@ class createaccount
         }
         
       out.println("Checking if player exists");
-      if(playerDatabase.hasPlayer(username))
+      if(playerDatabase.hasPlayer(trans, username))
         {
         out.println("ERROR: Player exists");
         return (4);
         }
 
       out.println("Adding player");
-      playerDatabase.addPlayer(username,password);
+      playerDatabase.addPlayer(trans, username,password);
 
-      RPObject object=new Player(rpobjectDatabase.getValidRPObjectID(),character);
+      RPObject object=new Player(rpobjectDatabase.getValidRPObjectID(trans),character);
       object.put("look",character_model);
       
-      Gladiator gladiator_obj=new Gladiator(rpobjectDatabase.getValidRPObjectID());
+      Gladiator gladiator_obj=new Gladiator(rpobjectDatabase.getValidRPObjectID(trans));
       gladiator_obj.put("name",gladiator);
       gladiator_obj.put("look",gladiator_model);
       
       object.getSlot("!gladiators").add(gladiator_obj);
       
       out.println("Adding character");
-      playerDatabase.addCharacter(username,character,object);
+      playerDatabase.addCharacter(trans, username,character,object);
       
       out.println("Correctly created");
+      
+      trans.commit();
       }
     catch(Exception e)
       {
       out.println("Failed: "+e.getMessage());
+      try
+        {
+        trans.rollback();
+        }
+      catch(Exception ae)
+        {
+        out.println("Failed Rollback: "+ae.getMessage());
+        }
+        
       return (5);
       }    
     finally
