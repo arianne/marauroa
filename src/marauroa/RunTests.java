@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.23 2003/12/09 22:47:05 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.24 2003/12/09 22:57:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,7 +100,7 @@ public class RunTests
     return result;
     }
   
-  public static Test suite ( )
+  public static Test suite()
     {
     TestSuite suite= new TestSuite("All marauroa Tests");
 
