@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.2 2005/01/30 12:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -194,7 +194,7 @@ public class PlayerEntryContainer
   private static PlayerEntryContainer playerEntryContainer;
 
   /** Constructor */
-  private PlayerEntryContainer()
+  private PlayerEntryContainer() throws Exception
     {
     /* Initialize the random number generator */
     rand.setSeed(new Date().getTime());
@@ -210,13 +210,13 @@ public class PlayerEntryContainer
       {
       Logger.thrown("PlayerEntryContainer","X", e);
       Logger.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
-      //@@@@@ System.exit(-1);
+      throw e;
       }
     }
   
   /** This method returns an instance of PlayerEntryContainer
    *  @return A shared instance of PlayerEntryContainer */
-  public static PlayerEntryContainer getContainer()
+  public static PlayerEntryContainer getContainer() throws Exception
     {
     if(playerEntryContainer==null)
       {

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.2 2005/01/30 12:24:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -69,7 +69,7 @@ public class RPServerManager extends Thread
   
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
-  public RPServerManager(NetworkServerManager netMan)
+  public RPServerManager(NetworkServerManager netMan) throws Exception
     {
     super("RPServerManager");
     Logger.trace("RPServerManager",">");
@@ -103,7 +103,7 @@ public class RPServerManager extends Thread
       {
       Logger.thrown("RPServerManager","X",e);
       Logger.trace("RPServerManager","!","ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances");
-      //@@@@@ System.exit(-1);
+      throw e;
       }
     finally
       {

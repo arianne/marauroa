@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.1 2005/01/23 21:00:41 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.2 2005/01/30 12:24:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,7 +66,99 @@ public class NetworkClientManager
     socket.close();
     }
     
-  // TODO: Refactor this method. It doesn't smell nice 
+  private Message getOldestProcessedMessage()
+    {
+    Message choosenMsg=((Message)processedMessages.get(0));
+    int smallestTimestamp=choosenMsg.getMessageTimestamp();
+
+    for(Message msg: processedMessages)
+      {
+      if(msg.getMessageTimestamp()<smallestTimestamp)
+        {
+        choosenMsg=msg;
+        smallestTimestamp=msg.getMessageTimestamp();
+        }
+      }
+       
+    processedMessages.remove(choosenMsg);      
+    return choosenMsg;
+    }
+  
+  private void processPendingPackets() throws IOException, InvalidVersionException
+    {
+    for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
+      {
+      PacketContainer message=it.next();
+
+      if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
+        {
+        Logger.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
+        it.remove();
+        continue;
+        }
+
+      if(message.remaining==0)
+        {
+        // delete the message from queue to prevent loop if it is a bad message
+        it.remove();
+
+        Message msg=msgFactory.getMessage(message.content,message.address);
+
+        Logger.trace("NetworkClientManager::getMessage","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
+        if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
+          {
+          clientid=msg.getClientID();
+          }
+            
+        processedMessages.add(msg);
+        // NOTE: Break??? Why not run all the array...
+        break;
+        }
+      }
+    }
+  
+  final private int PACKET_SIGNATURE_SIZE=3;
+  final private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
+
+  private void storePacket(InetSocketAddress address, byte[] data)
+    {
+    /* A multipart message. We try to read the rest now.
+     * We need to check on the list if the message exist and it exist we add this one. */
+    byte total=data[0];
+    byte position=data[1];
+    byte signature=data[2];
+
+    Logger.trace("NetworkClientManager::getMessage","D","receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
+    if(!pendingPackets.containsKey(new Byte(signature)))
+      {
+      /** This is the first packet */
+      PacketContainer message=new PacketContainer();
+
+      message.signature=signature;
+      message.remaining=(byte)(total-1);
+      message.address=address;
+      message.content=new byte[CONTENT_PACKET_SIZE*total];
+      message.timestamp=new Date();
+      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-3);
+      
+      pendingPackets.put(new Byte(signature),message);
+      }
+    else
+      {
+      PacketContainer message=(PacketContainer)pendingPackets.get(new Byte(signature));
+
+      --message.remaining;
+      if(message.remaining<0)
+        {
+        Logger.trace("NetworkClientManager::getMessage","D","ERROR: We confused the messages("+message.signature+")");
+        }
+      else
+        {
+        System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
+        }
+      }
+    }
+    
   /** This method returns a message if it is available or null
    *  @return a Message*/
   public Message getMessage() throws InvalidVersionException
@@ -75,50 +167,10 @@ public class NetworkClientManager
       {
       if(processedMessages.size()>0)
         {
-        Message choosenMsg=((Message)processedMessages.get(0));
-        int smallestTimestamp=choosenMsg.getMessageTimestamp();
-
-        for(Message msg: processedMessages)
-          {
-          if(msg.getMessageTimestamp()<smallestTimestamp)
-            {
-            choosenMsg=msg;
-            smallestTimestamp=msg.getMessageTimestamp();
-            }
-          }
-        
-        processedMessages.remove(choosenMsg);      
-        return choosenMsg;
+        return getOldestProcessedMessage();
         }
-        
-      for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
-        {
-        PacketContainer message=it.next();
-
-        if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
-          {
-          Logger.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
-          it.remove();
-          continue;
-          }
-
-        if(message.remaining==0)
-          {
-          // delete the message from queue to prevent loop if it is a bad message
-          it.remove();
-
-          Message msg=msgFactory.getMessage(message.content,message.address);
-
-          Logger.trace("NetworkClientManager::getMessage","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
-          if(msg.getType()==Message.TYPE_S2C_LOGIN_ACK)
-            {
-            clientid=msg.getClientID();
-            }
-            
-          processedMessages.add(msg);
-          break;
-          }
-        }
+      
+      processPendingPackets();
       }
     catch(InvalidVersionException e)
       {
@@ -131,16 +183,14 @@ public class NetworkClientManager
       /* Report the exception */
       e.printStackTrace();
       Logger.trace("NetworkClientManager::getMessage","X",e.getMessage());
-      // delete the bad message from queue
-      return null;
       }
-        
-    byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
-    DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
-    int i=0;
         
     try
       {
+      byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
+      DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
+      int i=0;
+        
       /** We want to avoid this to block the whole client recieving messages */
       while(i<TimeoutConf.CLIENT_NETWORK_NUM_READ)
         {
@@ -148,54 +198,21 @@ public class NetworkClientManager
         socket.receive(packet);
 
         byte[] data=packet.getData();
-        /* A multipart message. We try to read the rest now.
-         * We need to check on the list if the message exist and it exist we add this one. */
-        /* TODO: Looks like hardcoded, write it in a better way */
-        byte total=data[0];
-        byte position=data[1];
-        byte signature=data[2];
-
-        Logger.trace("NetworkClientManager::getMessage","D","receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
-        if(!pendingPackets.containsKey(new Byte(signature)))
-          {
-          /** This is the first packet */
-          PacketContainer message=new PacketContainer();
-
-          message.signature=signature;
-          message.remaining=(byte)(total-1);
-          message.address=(InetSocketAddress)packet.getSocketAddress();
-          message.content=new byte[(NetConst.UDP_PACKET_SIZE-3)*total];
-          message.timestamp=new Date();
-          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
-          pendingPackets.put(new Byte(signature),message);
-          }
-        else
-          {
-          PacketContainer message=(PacketContainer)pendingPackets.get(new Byte(signature));
-
-          --message.remaining;
-          if(message.remaining<0)
-            {
-            Logger.trace("NetworkClientManager::getMessage","D","ERROR: We confused the messages("+message.signature+")");
-            return null;
-            }
-          System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
-          }
+        storePacket((InetSocketAddress)packet.getSocketAddress(),data);
         }
-      return null;
       }
     catch(java.net.SocketTimeoutException e)
       {
       /* We need the thread to check from time to time if user has requested an exit */
-      return null;
       }
     catch(IOException e)
       {
       /* Report the exception */
       e.printStackTrace();
       Logger.trace("NetworkClientManager::getMessage","X",e.getMessage());
-      return null;
       }
+        
+    return null;
     }
     
   /** This method add a message to be delivered to the client the message is pointed to.
