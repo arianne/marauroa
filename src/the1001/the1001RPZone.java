@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.14 2004/03/02 15:49:08 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.15 2004/03/03 22:40:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import marauroa.marauroad;
 import marauroa.game.*;
 import org.w3c.dom.*;
 import java.util.*;
+import the1001.objects.*;
 
 public class the1001RPZone extends MarauroaRPZone
 {
@@ -28,24 +29,24 @@ public class the1001RPZone extends MarauroaRPZone
 		
 		try
 		{
-			//      heroesHouse=super.create();
-			//      heroesHouse.put(RPCode.var_type,"shop");
-			//      heroesHouse.put(RPCode.var_name,"Heroes' House");
-			//
-			//      RPSlot gladiators=new RPSlot(RPCode.var_gladiators);
-			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-			//      gladiators.add(new Gladiator(new RPObject.ID(super.create())));
-			//      heroesHouse.addSlot(gladiators);
-			//
-			//      RPSlot items=new RPSlot(RPCode.var_items);
-			//      items.add(new Item(new RPObject.ID(super.create()),"sword"));
-			//      items.add(new Item(new RPObject.ID(super.create()),"shield"));
-			//      heroesHouse.addSlot(items);
-			//      /* Add to zone */
-			//      add(heroesHouse);
+			heroesHouse=super.create();
+			heroesHouse.put(RPCode.var_type,"shop");
+			heroesHouse.put(RPCode.var_name,"Heroes' House");
+
+			RPSlot gladiators=new RPSlot(RPCode.var_gladiators);
+			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
+			heroesHouse.addSlot(gladiators);
+
+			RPSlot items=new RPSlot(RPCode.var_items);
+			items.add(new Item(new RPObject.ID(super.create()),"sword"));
+			items.add(new Item(new RPObject.ID(super.create()),"shield"));
+			heroesHouse.addSlot(items);
+			/* Add to zone */
+			add(heroesHouse);
 			
 			arena=super.create();
 			arena.put(RPCode.var_type,"arena");

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.16 2004/03/01 23:01:15 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.17 2004/03/03 22:40:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,8 +55,8 @@ public class Statistics
       out.println("Players TIMEDOUT: "+String.valueOf(playersLogin-playersLogout-playersOnline));
       out.println("Players ONLINE: "+String.valueOf(playersOnline));
       out.println();
-      out.println("Objects ADDED: "+String.valueOf(objectsAdded));
-      out.println("Objects REMOVED: "+String.valueOf(objectsRemoved));
+//      out.println("Objects ADDED: "+String.valueOf(objectsAdded));
+//      out.println("Objects REMOVED: "+String.valueOf(objectsRemoved));
       out.println("Objects ONLINE: "+String.valueOf(objectsNow));
       out.println("Actions ADDED: "+String.valueOf(actionsAdded));
       out.println("Actions INVALID: "+String.valueOf(actionsInvalid));
