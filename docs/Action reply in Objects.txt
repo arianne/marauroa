@@ -5,3 +5,26 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/11/27
 status : planning
 
+As you have read in How Perceptions and Actions works, each Object include the 
+attributes that are result of the action execution. So for each action we will
+have:
+
+Action Talk
+The attributes added to the object are:
+- action_talk_text
+
+The action_talk_text contains the text the character has been asked to say.
+This action is always one turn only, and can never fail.
+
+
+Action Move
+The attributes added to the object are:
+- action_move_destination
+- action_move_speed
+- action_move_status
+
+The action_move_destination is the place where the object wants to go when the 
+action ends, and it is as before a Position denoted by <x,y>, action_move_speed
+is the assigned speed for the character by the RP. The action_move_status denotes
+if the action is complete, incompleted or failed.
+
