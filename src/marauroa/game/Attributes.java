@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.37 2004/07/04 22:51:22 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.38 2004/07/07 10:07:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,10 +15,6 @@ package marauroa.game;
 import java.io.IOException;
 import java.util.*;
 import marauroa.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /** This class hosts a list of Attributes stored as pairs String=String */
 public class Attributes implements marauroa.net.Serializable
@@ -423,44 +419,7 @@ public class Attributes implements marauroa.net.Serializable
         }
       }
     }
-	
-  public void toXML(Element attributes)
-    {
-    if(attributes!=null)
-      {
-      Document xml_doc = attributes.getOwnerDocument();
-      Iterator it = content.entrySet().iterator();
-
-      while(it.hasNext())
-        {
-        Map.Entry entry   = (Map.Entry)it.next();
-        String key        = (String)entry.getKey();
-        String value      = (String)entry.getValue();
-        Element attribute = xml_doc.createElement("attribute");
-
-        attribute.setAttribute("key",key);
-        attribute.setAttribute("value",value);
-        attributes.appendChild(attribute);
-        }
-      }
-    }
-	
-  public void fromXML(Element attributes)
-    {
-    if(attributes!=null)
-      {
-      NodeList nl = attributes.getElementsByTagName("attribute");
-      int count = nl.getLength();
-
-      for (int i = 0; i < count; i++)
-        {
-        Element attr_elem = (Element)nl.item(i);
-
-        put(attr_elem.getAttribute("key"),attr_elem.getAttribute("value"));
-        }
-      }
-    }
-  
+ 
   public void resetAddedAndDeletedAttributes()
     {
     added.clear();

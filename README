@@ -39,7 +39,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.40 version 
+0.41 version 
 
 
 Status
@@ -235,6 +235,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.41 Jul XX, 2004
+- Cleaned code
+- Added javadocs comments
+
 0.40 Jul 05, 2004
 - Added score to ghost to count players killed
 - Changed the calling order in RPAImanager

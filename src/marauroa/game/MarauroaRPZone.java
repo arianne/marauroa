@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.55 2004/06/23 12:34:07 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.56 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.marauroad;
 public class MarauroaRPZone implements IRPZone
   {
   private Map objects;
-  private List modified;
+  private Map modified;
   private Perception perception;
 
   private static Random rand=new Random();
@@ -28,7 +28,7 @@ public class MarauroaRPZone implements IRPZone
     {
     rand.setSeed(new Date().getTime());
     objects=new LinkedHashMap();
-    modified=new LinkedList();
+    modified=new LinkedHashMap();
     perception=new Perception(Perception.DELTA);
     }
   
@@ -61,21 +61,11 @@ public class MarauroaRPZone implements IRPZone
     {
     try
       {
-      boolean already_added=false;
+      RPObject.ID id=new RPObject.ID(object);
 
-      Iterator it=modified.iterator();
-      while(it.hasNext() && !already_added)
+      if(!modified.containsKey(id))
         {
-        RPObject previous=(RPObject)it.next();
-        if(previous.get("id").equals(object.get("id")))
-          {
-          already_added=true;
-          }
-        }
-      
-      if(!already_added)
-        {
-        modified.add(object);
+        modified.put(id,object);
         }
       }
     catch(Exception e)
@@ -163,7 +153,7 @@ public class MarauroaRPZone implements IRPZone
         {
         prebuildDeltaPerception=perception;
         
-        Iterator it=modified.iterator();
+        Iterator it=modified.values().iterator();
         while(it.hasNext())
           {
           try
@@ -179,7 +169,7 @@ public class MarauroaRPZone implements IRPZone
       
       return prebuildDeltaPerception;
       }
-    else
+    else /* type==Perception.SYNC */
       {
       if(prebuildTotalPerception==null)
         {

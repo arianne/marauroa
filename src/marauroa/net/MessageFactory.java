@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.14 2004/05/14 15:51:38 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.15 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,8 +18,7 @@ import java.util.*;
 import marauroa.marauroad;
 
 /** MessageFactory is the class that is in charge of building the messages from
- *  the stream of bytes.
- */
+ *  the stream of bytes. */
 public class MessageFactory
   {
   public static class InvalidVersionException extends Exception
@@ -39,9 +38,10 @@ public class MessageFactory
     
   private static Map factoryArray;
   private static MessageFactory messageFactory;
+  
   private MessageFactory()
     {
-    factoryArray= new HashMap();
+    factoryArray=new HashMap();
     register();
     }
   
@@ -88,8 +88,9 @@ public class MessageFactory
   /** Returns a object of the right class from a stream of serialized data.
    @param data the serialized data
    @param source the source of the message needed to build the object.
-   
-   @throws IOException in case of problems with the message */
+   @return a message of the right class   
+   @throws IOException in case of problems with the message 
+   @throws InvalidVersionException if the message version doesn't match */
   public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
     {
     marauroad.trace("MessageFactory::getMessage",">");

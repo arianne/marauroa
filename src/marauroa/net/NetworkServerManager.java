@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.25 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.26 2004/07/07 10:07:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.util.*;
 import java.io.*;
 import java.math.*;
 import marauroa.*;
+import marauroa.game.*;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
@@ -35,6 +36,7 @@ public final class NetworkServerManager
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
   private Statistics stats;
+  
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
   public NetworkServerManager() throws SocketException
@@ -66,15 +68,12 @@ public final class NetworkServerManager
       marauroad.trace("NetworkServerManager","<");
       }
     }
+    
   /** This method adds a new netmask which is banned */
   public InetAddressMask addBan(InetAddressMask bannedMask)
     {
-      if(bannedIPNetworkList==null)
-      {
-        bannedIPNetworkList=new ArrayList();
-      }
-      bannedIPNetworkList.add(bannedMask);
-      return(bannedMask);
+    bannedIPNetworkList.add(bannedMask);
+    return(bannedMask);
     }
     
   /** This method notify the thread to finish it execution */
@@ -92,6 +91,7 @@ public final class NetworkServerManager
         {
         }
       }
+      
     socket.close();
     marauroad.trace("NetworkServerManager::finish","<");
     }
@@ -120,6 +120,7 @@ public final class NetworkServerManager
           {
           }
         }
+        
       if(messages.size()==0)
         {
         marauroad.trace("NetworkServerManager::getMessage","D","Message not available.");
@@ -154,6 +155,7 @@ public final class NetworkServerManager
           {
           }
         }
+        
       return (Message)messages.remove(0);
       }
     finally
@@ -170,6 +172,7 @@ public final class NetworkServerManager
     writeManager.write(msg);
     marauroad.trace("NetworkServerManager::addMessage","<");
     }
+    
   /** The active thread in charge of recieving messages from the network. */
   class NetworkServerManagerRead extends Thread
     {
@@ -191,6 +194,7 @@ public final class NetworkServerManager
           {
           socket.receive(packet);
           marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");         
+          
           /*** Statistics ***/
           stats.addBytesRecv(packet.getLength());
           stats.addMessageRecv();
@@ -227,6 +231,7 @@ public final class NetworkServerManager
           marauroad.trace("NetworkServerManagerRead::run","X",e.getMessage());
           }
         }
+        
       isfinished=true;
       marauroad.trace("NetworkServerManagerRead::run","<");
       }
@@ -261,6 +266,7 @@ public final class NetworkServerManager
           /*** Statistics ***/
           stats.addBytesSend(buffer.length);
           stats.addMessageSend();
+          
           marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
           int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;

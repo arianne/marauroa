@@ -1,4 +1,4 @@
-/* $Id: Util.java,v 1.3 2004/05/27 18:49:00 arianne_rpg Exp $ */
+/* $Id: Util.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,32 +20,29 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * this class contains some methods which are taken from GNU crypto project
- **/
+/** This class contains some methods which are taken from GNU crypto project */
 public class Util
-{
+  {
   // Hex charset
   private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
   
   //use WeakReference, so gc can remove MessageDigest instance
   private static WeakReference md5DigestRef;
   
-  /**
-   * returns a md5 hash (as string) of input string
+  /** Returns a md5 hash (as string) of input string
    */
   public synchronized static String getMd5Hash(String string)
     throws NoSuchAlgorithmException,UnsupportedEncodingException
-  {
+    {
     String ret = null;
     if(string!=null)
-    {
+      {
       MessageDigest md = getMD5Instance();
       md.update(string.getBytes("UTF-8"));
       ret = toHexString(md.digest());
-    }
+      }
     return(ret);
-  }
+    }
   
   /**
    * Stolen from GNU crypto package
@@ -63,9 +60,9 @@ public class Util
    * representing the designated input byte array.
    */
   public static String toHexString(byte[] ba)
-  {
+    {
     return toHexString(ba, 0, ba.length);
-  }
+    }
   
   /**
    * Stolen from GNU crypto package
@@ -82,46 +79,32 @@ public class Util
    * representing the designated input byte sub-array.
    */
   public static final String toHexString(byte[] ba, int offset, int length)
-  {
+    {
     char[] buf = new char[length * 2];
     for (int i = 0, j = 0, k; i < length; )
-    {
+      {
       k = ba[offset + i++];
       buf[j++] = HEX_DIGITS[(k >>> 4) & 0x0F];
       buf[j++] = HEX_DIGITS[ k        & 0x0F];
-    }
+      }
+    
     return new String(buf);
-  }
+    }
   
   /**
    * creates (if needed) a new instance of MD5 MessageDigest and returns it
    */
   private synchronized static MessageDigest getMD5Instance()
     throws NoSuchAlgorithmException
-  {
+    {
     MessageDigest md = null;
     if(md5DigestRef==null || (md=(MessageDigest)md5DigestRef.get())==null)
-    {
+      {
       md = MessageDigest.getInstance("MD5");
       md5DigestRef = new WeakReference(md);
-    }
+      }
     md = (MessageDigest)md5DigestRef.get();
     md.reset();
     return(md);
+    }
   }
-  
-  /**
-   * just tests
-   */
-  public static void main(String argv[])
-  {
-    try
-    {
-      System.out.println(getMd5Hash(argv[0])+" --");
-	}
-	catch(Exception e)
-	{
-	e.printStackTrace();
-	}
-  }
-}

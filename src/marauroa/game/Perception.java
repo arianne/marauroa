@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.3 2004/06/24 10:40:55 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,9 +15,12 @@ package marauroa.game;
 import java.util.*;
 import marauroa.*;
 
+/** The Perception class provides a encapsultated way of managing perceptions */
 public class Perception
   {
+  /** A Delta perception sends only changes */  
   final public static byte DELTA=0;
+  /** A sync perception sends the whole world */
   final public static byte SYNC=1;
   
   public byte type;
@@ -25,6 +28,7 @@ public class Perception
   public List modifiedAddedAttribsList;
   public List modifiedDeletedAttribsList;
   public List deletedList;
+  
   public Perception(byte type)
     {
     this.type=type;
@@ -34,6 +38,7 @@ public class Perception
     deletedList=new LinkedList();
     }
   
+  /** This method adds an added object to the world */
   public void added(RPObject object)
     {
     if(!addedHas(object))
@@ -42,6 +47,7 @@ public class Perception
       }
     }
     
+  /** This method adds an modified object of the world */
   public void modified(RPObject modified) throws Exception
     {
     if(!removedHas(modified) && !addedHas(modified))
@@ -66,6 +72,7 @@ public class Perception
       }
     }
   
+  /** This method adds a removed object of the world */
   public void removed(RPObject object)
     {
     if(addedHas(object))
@@ -96,6 +103,21 @@ public class Perception
       }
     }
   
+  /** Returns the number of elements of the perception */
+  public int size()
+    {
+    return (addedList.size()+modifiedAddedAttribsList.size()+modifiedDeletedAttribsList.size()+deletedList.size());
+    }
+  
+  /** Clear the perception */
+  public void clear()
+    {
+    addedList.clear();
+    modifiedAddedAttribsList.clear();
+    modifiedDeletedAttribsList.clear();
+    deletedList.clear();
+    }
+
   private boolean removedHas(RPObject object)
     {
     try
@@ -137,19 +159,6 @@ public class Perception
       }
     
     return false;
-    }
-  
-  public int size()
-    {
-    return (addedList.size()+deletedList.size());
-    }
-  
-  public void clear()
-    {
-    addedList.clear();
-    modifiedAddedAttribsList.clear();
-    modifiedDeletedAttribsList.clear();
-    deletedList.clear();
     }
   }
   

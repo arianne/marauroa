@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.11 2004/06/22 11:47:43 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.12 2004/07/07 10:07:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,26 +18,48 @@ import java.util.*;
 import marauroa.game.*;
 import marauroa.*;
 
+/** The PerceptionHandler class is in charge of applying correctly the perceptions
+ *  to the world. You should always use this class because it is a complex task that
+ *  is easy to do in the wrong way. */
 public class PerceptionHandler
-  {    
-  /*** HACK: From here and below all the stuff about applying perceptions, I 
-   *  think it is asking for a refactoring ***/
-
+  {
+  /** The IPerceptionListener interface provides methods that are called while 
+   *  applying the perception */    
   public interface IPerceptionListener
     {
+    /** onAdded is called when an object is added to the world for first time.
+     *  Return true to stop further processing. */
     public boolean onAdded(RPObject object);
+    /** onModifiedAdded is called when an object is modified by adding or changing 
+     *  one of its attributes. Return true to stop further processing. */
     public boolean onModifiedAdded(RPObject object, RPObject changes);
-    public boolean onModifiedDeleted(RPObject object, RPObject changes);
-    public boolean onDeleted(RPObject object);    
-    public boolean onMyRPObject(boolean changed,RPObject object);    
-    public boolean onClear();
+    /** onModifiedDeleted is called each time the object has one of its attributes
+     *  removed. Return true to stop further processing. */
 
+    public boolean onModifiedDeleted(RPObject object, RPObject changes);
+    /** onDeleted is called when an object is removed of the world
+     *  Return true to stop further processing. */
+    public boolean onDeleted(RPObject object);    
+    /** onMyRPObject is called when our rpobject avatar is processed.
+     *  Return true to stop further processing. */
+    public boolean onMyRPObject(boolean changed,RPObject object);    
+    /** onClear is called when the whole world is going to be cleared. 
+     *  It happens on sync perceptions
+     *  Return true to stop further processing. */
+    public boolean onClear();
+   
+    /** onTimeout is called when the client has timeout, that is, when it is 50 turns far from server*/
     public int onTimeout();
+    /** onSynced is called when the client recover sync */
     public int onSynced();
+    /** onUnsynced is called when the client lose sync */
     public int onUnsynced();
     
+    /** onPerceptionBegin is called when the perception is going to be applied */
     public int onPerceptionBegin(byte type, int timestamp);
+    /** onPerceptionBegin is called when the perception has been applied */
     public int onPerceptionEnd(byte type, int timestamp);
+    /** onException is called when an exception happens */
     public int onException(Exception e, MessageS2CPerception perception) throws Exception;
     }
   
@@ -134,14 +156,6 @@ public class PerceptionHandler
     synced=false;
     }
   
-  /**
-  TODO: Still not ready for this one 
-  public void apply(MessageS2CPerception message)
-    {
-    apply(message,null)
-    }
-  **/
-    
   public void apply(MessageS2CPerception message, Map world_instance) throws Exception
     {
     listener.onPerceptionBegin(message.getTypePerception(), message.getPerceptionTimestamp());
@@ -159,9 +173,6 @@ public class PerceptionHandler
 
         if(!synced)
           {
-            System.out.println("<World>");
-            System.out.println(world_instance.toString());
-            System.out.println("</World>");
           synced=true;
           listener.onSynced();
           }
@@ -185,9 +196,6 @@ public class PerceptionHandler
         }
       catch(Exception e)
         {
-            System.out.println("<World>");
-            System.out.println(world_instance.toString());
-            System.out.println("</World>");
         listener.onException(e, message);
         }
       }
@@ -342,6 +350,7 @@ public class PerceptionHandler
       }
     }
   
+  /** This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject> passed as argument. */
   private void applyPerceptionMyRPObject(MessageS2CPerception message,Map world) throws IRPZone.RPObjectNotFoundException
     {
     try
@@ -365,6 +374,5 @@ public class PerceptionHandler
       marauroad.trace("MessageS2CPerception::applyPerceptionMyRPObject","X",e.getMessage());
       throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }
-    }
-      
+    }      
   }

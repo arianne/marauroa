@@ -1,4 +1,4 @@
-/* $Id: mapacmancreateaccount.java,v 1.4 2004/06/03 13:03:44 arianne_rpg Exp $ */
+/* $Id: mapacmancreateaccount.java,v 1.5 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,8 @@ import java.io.*;
 import marauroa.game.*;
 import marauroa.Configuration;
 
+/** The mapacmancreateaccount extends the createaccount class of marauroa package
+ *  so that it defines the specific behaviour for an account of mapacman */
 public class mapacmancreateaccount extends marauroa.createaccount
   {
   public static void main (String[] args)
@@ -32,7 +34,7 @@ public class mapacmancreateaccount extends marauroa.createaccount
 
     Configuration.setConfigurationFile("mapacman.ini");
     }
-  
+    
   public RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception
     {
     Transaction trans=playerDatabase.getTransaction();

@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.7 2004/06/15 18:39:22 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.8 2004/07/07 10:07:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,9 @@ public class OutputSerializer
     write((int)a.length);
     out.write(a);
     }
-
+ 
+  /** Add a byte array whose size is smaller than 255 to the serializer 
+   *  @param a the byte array to serialize */
   public void write255LongArray(byte[] a) throws IOException
     {
     if(a.length>Byte.MAX_VALUE)
@@ -95,6 +97,8 @@ public class OutputSerializer
     write(a.getBytes("UTF-8"));
     }
 
+  /** Add a short string to the serializer, using UTF-8 encoding
+   *  @param a the String to serialize */
   public void write255LongString(String a) throws IOException,UnsupportedEncodingException
     {
     write255LongArray(a.getBytes("UTF-8"));

@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.1 2004/05/31 14:13:09 arianne_rpg Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.2 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
 *                      (C) Copyright 2003 - Marauroa                      *
 ***************************************************************************
@@ -15,11 +15,12 @@ package marauroa.net;
 import java.io.*;
 import java.net.*;
   
-  /** This class just counts the bytes written into underlaying outputstream */
+/** This class just counts the bytes written into underlaying outputstream */
 public class ByteCounterOutputStream extends OutputStream
   {
   OutputStream os;
   long bytesWritten;
+  
   public ByteCounterOutputStream(OutputStream os)
     {
     if(os==null) throw new NullPointerException("OutputStream is null!!!");

@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.7 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.8 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,19 +27,8 @@ public class PlayerDatabaseFactory
       {
       Configuration conf=Configuration.getConfiguration();
       String database_type=conf.get("marauroa_DATABASE");
-    
-      if(database_type.equals("MemoryPlayerDatabase"))
-        {
-        marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen MemoryPlayerDatabase");
-        return MemoryPlayerDatabase.getDatabase();
-        }
-      if(database_type.equals("JDBCPlayerDatabase"))
-        {
-        marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen JDBCPlayerDatabase");
-        return JDBCPlayerDatabase.getDatabase();
-        }
-      marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
-      throw new IPlayerDatabase.NoDatabaseConfException();
+      
+      return getDatabase(database_type);    
       }
     catch(Exception e)
       {

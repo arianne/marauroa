@@ -1,4 +1,4 @@
-/* $Id: Serializable.java,v 1.3 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Serializable.java,v 1.4 2004/07/07 10:07:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,9 +19,5 @@ public interface Serializable
   /** Method to convert the object into a stream */
   void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException;
   /** Method to build the object from a stream of bytes */
-  void readObject(marauroa.net.InputSerializer in) throws java.io.IOException,
-      java.lang.ClassNotFoundException;  	  
+  void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException;  	  
   }
-
-
-;

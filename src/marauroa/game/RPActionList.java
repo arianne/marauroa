@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.9 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: RPActionList.java,v 1.10 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,7 @@ package marauroa.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/** This class represents a list of RPActions and uses a LinkedList as backstore.
- **/
+/** This class represents a list of RPActions and uses a LinkedList as backstore. **/
 public class RPActionList
   {
   /** A LinkedList<RPAction> that contains actions */
@@ -70,6 +69,7 @@ public class RPActionList
     {
     return(new RPActionIterator(actionsList.iterator()));
     }
+    
   /** An iterator for a RPActionList */
   public static class RPActionIterator implements Iterator
     {

@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.13 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.14 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,8 @@ import java.net.*;
 import java.io.*;
 import marauroa.marauroad;
 import marauroa.net.*;
+
+// TODO: Stupid class. Consider removing it.
 
 /** This is memory interface to the database, when you init it, it is empty, and when
  *  you finish the application it is emptied. */

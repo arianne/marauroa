@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.1 2004/05/27 22:44:11 root777 Exp $ */
+/* $Id: InetAddressMask.java,v 1.2 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,11 +17,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import marauroa.game.Util;
 
-/**
- * works only for ip4 addresses
- */
+/** This class is a mask that determines if a IPv4 address match with the mask.
+ *  It works only for IPv4 addresses */
 public class InetAddressMask
-{
+  {
   private byte address[];
   private byte mask[];
   
@@ -30,22 +29,22 @@ public class InetAddressMask
    * mask    in form aaa.bbb.ccc.ddd
    */
   public InetAddressMask(String address, String mask)
-  {
+    {
     this(string2bytes(address),string2bytes(mask));
-  }
+    }
   
   public InetAddressMask(byte address[], byte mask[])
-  {
+    {
     this.address = address;
     this.mask = mask;
     address[0]=(byte)(address[0]&mask[0]);
     address[1]=(byte)(address[1]&mask[1]);
     address[2]=(byte)(address[2]&mask[2]);
     address[3]=(byte)(address[3]&mask[3]);
-  }
+    }
   
   public boolean matches(InetAddress another_address)
-  {
+    {
     byte ob[] = another_address.getAddress();
     ob[0]=(byte)(ob[0]&mask[0]);
     ob[1]=(byte)(ob[1]&mask[1]);
@@ -63,61 +62,32 @@ public class InetAddressMask
     //which must be performanter - but no one knows one what part exactly was false and what part was true...
     
     return(ret);
-  }
+    }
   
   public String toString()
-  {
-    try
     {
+    try
+      {
       return(InetAddress.getByAddress(address).getHostAddress()+"/"+InetAddress.getByAddress(mask).getHostAddress());
-    }
+      }
     catch (UnknownHostException e) {return("");}
-  }
+    }
   
   /**
    * converts string in form aaa.bbb.ccc.ddd into byte array[]{aaa,bbb,ccc,ddd}
    */
   public static byte[] string2bytes(String ipv4Address)
-  {
+    {
     String [] str_bytes = ipv4Address.split("\\.");
     byte addr[] = new byte[4];
     addr[0]=addr[1]=addr[2]=addr[3]=0;
+    
     for (int i = 0; i < str_bytes.length && i<4; i++)
-    {
-      addr[i]=(byte)Integer.parseInt(str_bytes[i]);
-    }
-    return(addr);
-  }
-  
-  public static void main(String argv[])
-  {
-    try
-    {
-      InetAddress id = InetAddress.getLocalHost();
-      InetAddressMask iam = new InetAddressMask("192.168.100.15","255.255.255.0");
-      byte addr [] = id.getAddress();
-      addr[3]++;
-      InetAddress id2 = InetAddress.getByAddress(addr);
-      System.out.println(id.getHostAddress());
-      System.out.println(id2.getHostAddress());
-      System.out.println(id2.getHostAddress() +" is "+(iam.matches(id2)?" matched ":" not matched ")+"by " + iam);
-      int count = 100;
-      boolean x = true;
-      long start = System.currentTimeMillis();
-      for (int i = 0; i < count; i++)
       {
-        x=x&&iam.matches(id2);
+      addr[i]=(byte)Integer.parseInt(str_bytes[i]);
       }
-      long duration = System.currentTimeMillis()-start;
-      System.out.println("Duration: "+duration + " for "+count+" calls.");
       
-      System.out.println((duration>0?""+count/duration:"more then "+count)+" calls per ms.");
-      System.out.println(x?"OK":"NOK");
-    }
-    catch (UnknownHostException e)
-    {
-      e.printStackTrace();
+    return(addr);
     }
   }
-}
 

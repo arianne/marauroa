@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.12 2004/05/31 08:11:15 root777 Exp $ */
+/* $Id: Configuration.java,v 1.13 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,16 @@ public class Configuration
   private static String configurationFile="marauroa.ini";
   private Properties properties;
   private static Configuration configuration=null;
+  
+  /** This method defines the default configuration file for all the instances 
+   *  of Configuration
+   *  @param conf the location of the file */
   public static void setConfigurationFile(String conf)
     {
     configurationFile=conf;
     }  
+  
+  /** This exception is thrown when a propierty of the file is not found */  
   public static class PropertyNotFoundException extends Exception
     {
     PropertyNotFoundException(String property)
@@ -34,8 +40,8 @@ public class Configuration
       super("Property ["+property+"] not found");
       }
     }
-    
 
+  /** This exception is thrown when the file is not found */  
   public static class PropertyFileNotFoundException extends Exception
     {
     private String message;
@@ -50,7 +56,7 @@ public class Configuration
       return message;
       }
     }
-  /** Constructor */
+    
   private Configuration() throws PropertyFileNotFoundException
     {
     marauroad.trace("Configuration",">");
@@ -80,7 +86,7 @@ public class Configuration
     }
     
   /** This method returns an instance of Configuration 
-   *  @return A shared instance of Configuration */
+   *  @return a shared instance of Configuration */
   public static Configuration getConfiguration() throws PropertyFileNotFoundException
     {
     marauroad.trace("Configuration::getConfiguration",">");
@@ -100,6 +106,7 @@ public class Configuration
     
   /** This method returns a String with the value of the property.
    *  @param property the property we want the value
+   *  @return a string containing the value of the propierty
    *  @exception PropertyNotFound if the property is not found. */
   public String get(String property) throws PropertyNotFoundException
     {
@@ -139,33 +146,9 @@ public class Configuration
       }
     }
   
+  /** This method returns an enumeration of the propierties that the file contains */
   public Enumeration propertyNames()
     {
-      return properties.propertyNames();
-    }
-  
-  public void store() throws PropertyFileNotFoundException
-    {
-    marauroad.trace("Configuration::store",">");
-    try
-      {
-      properties.store(new FileOutputStream(configurationFile),"Marauroa Configuration file");
-      }
-    catch(FileNotFoundException e)
-      {
-      marauroad.trace("Configuration::store","X","Configuration file not found: "+configurationFile);
-      marauroad.thrown("Configuration::store","X",e);
-      throw new PropertyFileNotFoundException();
-      }
-    catch(IOException e)
-      {
-      marauroad.trace("Configuration::store","X","Error loading Configuration file: "+configurationFile);
-      marauroad.thrown("Configuration::store","X",e);
-      throw new PropertyFileNotFoundException();
-      }
-    finally
-      {
-      marauroad.trace("Configuration::store","<");
-      }
+    return properties.propertyNames();
     }
   }

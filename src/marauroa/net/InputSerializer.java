@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.10 2004/06/15 18:39:22 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.11 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -177,6 +177,11 @@ public class InputSerializer
     return new String(readByteArray(),"UTF-8");
     }
 
+  /** This method read a short string ( whose size is smaller than 255 chars long ) from the Serializer
+   @return the String serialized
+   @throws java.io.IOException if there is an IO error
+   @throws java.lang.ClassNotFoundException
+   if the class to serialize doesn't exist. */
   public String read255LongString() throws IOException, java.lang.ClassNotFoundException,UnsupportedEncodingException
     {
     return new String(read255LongByteArray(),"UTF-8");
@@ -205,6 +210,3 @@ public class InputSerializer
     return buffer;
     }
   }
-
-
-;

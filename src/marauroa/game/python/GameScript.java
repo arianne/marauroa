@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.3 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import org.python.core.*;
 import marauroa.game.*;
 import marauroa.*;
 
+/** This class is a wrapper for calling python in a better way. */
 class GameScript 
   {
   private PythonInterpreter interpreter;
@@ -33,16 +34,19 @@ class GameScript
   
   private static GameScript gameScript=null;
   
+  /** Set the RPZone on the script */
   public void setRPZone(IRPZone zone)
     {    
     interpreter.set("gamescript__zone",zone);   
     }
 
+  /** Set the RPSheduler on the script */
   public void setRPScheduler(RPScheduler scheduler)
     {    
     interpreter.set("gamescript__scheduler",scheduler);   
     }
     
+  /** Gets an instance of the GameScript */
   public static GameScript getGameScript() throws Exception
     {
     if(gameScript==null)

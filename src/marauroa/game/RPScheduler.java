@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.16 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.17 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,7 @@ public class RPScheduler
   private HashMap nextTurn;
   /** Turn we are executing now */
   private int turn;
+  
   static class ActionInvalidException extends Exception
     {
     ActionInvalidException(String attribute)
@@ -33,6 +34,7 @@ public class RPScheduler
       super("Action is invalid: It lacks of mandatory attribute ["+attribute+"]");
       }
     }
+    
   /** Constructor */
   public RPScheduler()
     {
@@ -147,7 +149,6 @@ public class RPScheduler
     marauroad.trace("RPScheduler::nextTurn",">");
     ++turn;
     /* we cross-exchange the two turns and erase the contents of the next turn */
-    actualTurn.clear();
     actualTurn=nextTurn;
     nextTurn=new HashMap();
     marauroad.trace("RPScheduler::nextTurn","<");

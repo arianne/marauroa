@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.28 2004/06/03 13:04:43 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.29 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,8 +17,12 @@ import java.util.*;
 import java.io.*;
 import marauroa.game.*;
 
+/** This is the base class to extend in order to create an account.
+ *  The class provide a few methods of which you inherit and implement. */
 public abstract class createaccount
   {
+  /** This class store some basic information about the type of param, its name
+   *  it default value and the allowed size ( > min and < max ) */
   public static class Information
     {
     public String param;
@@ -47,7 +51,7 @@ public abstract class createaccount
     }
     
   protected List information;
-    
+  
   public createaccount()
     {
     information= new LinkedList();
@@ -72,7 +76,10 @@ public abstract class createaccount
     
     throw new Attributes.AttributeNotFoundException(name);
     }
-    
+
+  /** Implement this method on the subclass in order to create an object that will be 
+   *  inserted into the database by the createaccount class. You are given a playerDatabase
+   *  instance so that you can get valid rpobjects' ids */    
   public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
 
   protected int run(String[] args)

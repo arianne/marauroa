@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.105 2004/07/04 22:51:22 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.106 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class RPServerManager extends Thread
       }
     catch(Exception e)
       {
-      SYNC_PERCEPTION_FRECUENCY=20;
+      SYNC_PERCEPTION_FRECUENCY=30;
       }
     marauroad.trace("NetConst::(static)","<");
     }
@@ -80,10 +80,8 @@ public class RPServerManager extends Thread
       
       Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
-      zone=(IRPZone)zoneClass.newInstance();
-      
-      zone.onInit();
-      
+      zone=(IRPZone)zoneClass.newInstance();      
+      zone.onInit();      
       
       Class AIManagerClass=Class.forName(conf.get("rp_RPAIClass"));
       aiMan=(IRPAIManager)AIManagerClass.newInstance();
@@ -136,6 +134,7 @@ public class RPServerManager extends Thread
       }
     }
 
+  /** This method finish the thread that run the RPServerManager */
   public void finish()
     {
     marauroad.trace("RPServerManager::finish",">");
@@ -163,6 +162,7 @@ public class RPServerManager extends Thread
     marauroad.trace("RPServerManager::finish","<");
     }
   
+  /** Adds an action for the next turn */
   public void addRPAction(RPAction action) throws RPScheduler.ActionInvalidException
     {
     marauroad.trace("RPServerManager::addRPAction",">");
@@ -180,7 +180,8 @@ public class RPServerManager extends Thread
       marauroad.trace("RPServerManager::addRPAction","<");
       }
     }
-    
+  
+  /** Adds an object to the rpzone */  
   public void addRPObject(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     marauroad.trace("RPServerManager::addRPObject",">");
@@ -199,6 +200,7 @@ public class RPServerManager extends Thread
       }
     }
   
+  /** Returns an object of the world */
   public RPObject getRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::getRPObject",">");
@@ -212,6 +214,7 @@ public class RPServerManager extends Thread
       }
     }
   
+  /** Returns true if the object exists in world */
   public boolean hasRPObject(RPObject.ID id)
     {
     marauroad.trace("RPServerManager::hasRPObject",">");
@@ -225,6 +228,7 @@ public class RPServerManager extends Thread
       }
     }
   
+  /** Returns an object that is removed of the world */
   public RPObject removeRPObject(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::removeRPObject",">");
@@ -241,6 +245,7 @@ public class RPServerManager extends Thread
     
   private int deltaPerceptionSend=0;
   
+  // TODO: Refactor 
   synchronized private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
@@ -451,19 +456,22 @@ public class RPServerManager extends Thread
       }
     }
 
+  /** This method is called when a player is added to the game */
   public boolean onInit(RPObject object) throws IRPZone.RPObjectInvalidException
     {
     incubator.add(object);
     return true;
     }
     
+  /** This method is called when a player leave to the game */
   public boolean onExit(RPObject.ID id) throws IRPZone.RPObjectNotFoundException
     {
-    /** TODO: Remove from incubator */
+    // TODO: Remove from incubator 
     scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);
     }
   
+  /** Returns a list of objects that represent the map */
   public List buildMapObjectsList(RPObject.ID id)
     {
     scheduler.clearRPActions(id);

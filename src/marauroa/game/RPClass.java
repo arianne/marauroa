@@ -3,19 +3,29 @@ package marauroa.game;
 import marauroa.net.*;
 import java.util.*;
 
+/** The RPClass class implements a container of attributes with its code, name,
+ *  type and visibility. It adds support for strict type definition and class 
+ *  hierarchy */  
 public class RPClass implements Serializable
   {
-  /** Visibility **/
+  /* Visibility */
+  /** The attribute is visible */
   final public static byte VISIBLE=1;
+  /** The attribute is invisible and so only server related */ 
   final public static byte HIDDEN=2;
   
-  /** Type **/
+  /* Type */
+  /** a string */
   final public static byte STRING=1;
-  final public static byte SHORT_STRING=2;
-  
+  /** a string of up to 255 chars long */
+  final public static byte SHORT_STRING=2;  
+  /** an integer of 32 bits */
   final public static byte INT=3;
+  /** an integer of 16 bits */
   final public static byte SHORT=4;
+  /** an integer of 8 bits */
   final public static byte BYTE=5;  
+  /** an boolean attribute that either is present or not. */
   final public static byte FLAG=6;
 
   static public class SyntaxException extends java.io.IOException
@@ -25,7 +35,6 @@ public class RPClass implements Serializable
       super();
       }
     }
-  
   static private class AttributeDesc implements Serializable
     {
     private static short lastCode=0;
@@ -95,7 +104,8 @@ public class RPClass implements Serializable
     parent=null;
     attributes=new HashMap();
     }
-    
+  
+  /** This constructor adds the rpclass to the global list of rpclasses. */  
   public RPClass(String type)
     {    
     parent=null;
@@ -108,16 +118,20 @@ public class RPClass implements Serializable
     rpClassList.put(type,this);
     }
   
+  /** This method sets the parent of this rpclass */
   public void isA(RPClass parent)
     {
     this.parent=parent;
     }
   
+  /** This method sets the parent of this rpclass */
   public void isA(String parent) throws SyntaxException
     {
     this.parent=getRPClass(parent);
     }
   
+  /** This method returns true if it is a subclass of parentClass or if it is the
+   *  class itself. */
   public boolean subclassOf(String parentClass)
     {
     if(!hasRPClass(parentClass))
@@ -139,6 +153,8 @@ public class RPClass implements Serializable
   
   static RPClass defaultRPClass;
   
+  /** Returns a default rpclass for lazy developers. You won't get any advantages
+   *  on the engine by using it. */
   public static RPClass getBaseRPObjectDefault()
     {
     if(defaultRPClass==null)
@@ -172,6 +188,8 @@ public class RPClass implements Serializable
     return defaultRPClass;
     }
 
+  /** Returns a default rpclass for lazy developers. You won't get any advantages
+   *  on the engine by using it. */
   public static RPClass getBaseRPActionDefault()
     {
     if(defaultRPClass==null)
@@ -182,12 +200,13 @@ public class RPClass implements Serializable
     return defaultRPClass;
     }
   
-  
+  /** Adds a visible attribute to the rpclass */
   public boolean add(String name, byte type)
     {    
     return add(name, type, VISIBLE);
     }
     
+  /** Adds a attribute to the rpclass */
   public boolean add(String name, byte type, byte visibility)
     {    
     AttributeDesc desc=new AttributeDesc(name,type,visibility);
@@ -196,11 +215,13 @@ public class RPClass implements Serializable
     return true;
     }
 
+  /** Returns the name of the rpclass */
   public String getName()
     {
     return name;
     }
     
+  /** Returns the code of the attribute whose name is name for this rpclass */
   public short getCode(String name) throws SyntaxException
     {
     if(attributes.containsKey(name))
@@ -217,6 +238,7 @@ public class RPClass implements Serializable
     throw new SyntaxException();  
     }
 
+  /** Returns the name of the attribute whose code is code for this rpclass */
   public String getName(short code) throws SyntaxException
     {
     Iterator it=attributes.values().iterator();
@@ -237,6 +259,7 @@ public class RPClass implements Serializable
     throw new SyntaxException();  
     }
   
+  /** Returns the type of the attribute whose name is name for this rpclass */
   public byte getType(String name) throws SyntaxException
     {
     if(attributes.containsKey(name))
@@ -253,6 +276,7 @@ public class RPClass implements Serializable
     throw new SyntaxException();  
     }
 
+  /** Returns the visibility of the attribute whose name is name for this rpclass */
   public byte getVisibility(String name) throws SyntaxException
     {
     if(attributes.containsKey(name))
@@ -269,6 +293,7 @@ public class RPClass implements Serializable
     throw new SyntaxException();  
     }
 
+  /** Returns true if the attribute whose name is name exists for this rpclass */
   public boolean hasAttribute(String name)
     {
     if(attributes.containsKey(name))
@@ -284,6 +309,8 @@ public class RPClass implements Serializable
     return false;
     }
   
+
+  /** Returns true if the global list contains the name rpclass */
   public static boolean hasRPClass(String name)
     {    
     if(rpClassList.containsKey(name))
@@ -294,6 +321,7 @@ public class RPClass implements Serializable
     return false;
     }
     
+  /** Returns the name rpclass from the global list */
   public static RPClass getRPClass(String name) throws SyntaxException
     {
     if(rpClassList.containsKey(name))
@@ -374,11 +402,13 @@ public class RPClass implements Serializable
     rpClassList.put(name,this);
     }
     
+  /** Iterates over the global list of rpclasses */
   public static Iterator iterator()
     {
     return rpClassList.values().iterator();
     }
   
+  /** Returns the size of the rpclass global list */
   public static int size()
     {
     return rpClassList.size();

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.44 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.45 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,15 +13,8 @@
 package marauroa.game;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import marauroa.TimeoutConf;
-import marauroa.marauroad;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import java.util.*;
+import marauroa.*;
 
 /** This class implements an Object. Please refer to "Objects Explained" document */
 public class RPObject extends Attributes
@@ -98,6 +91,7 @@ public class RPObject extends Attributes
   
   /** a List<RPSlot> of slots */
   private List slots;
+  
   public static class NoSlotFoundException extends Exception
     {
     public NoSlotFoundException(String slot)
@@ -140,6 +134,7 @@ public class RPObject extends Attributes
       return (RPSlot)it.next();
       }
     }
+    
   public final static ID INVALID_ID=new ID(-1);
   
   /** Constructor */
@@ -180,11 +175,13 @@ public class RPObject extends Attributes
     deleted=new LinkedList();
     }
   
+  /** Returns an ID object representing the id of this object */
   public RPObject.ID getID() throws Attributes.AttributeNotFoundException
     {
     return new ID(this);
     }
 	
+  /** Returns true if the object is empty */
   public boolean isEmpty()
     {
     return super.isEmpty() && slots.isEmpty();
@@ -225,6 +222,7 @@ public class RPObject extends Attributes
       }
     }
 
+  /** This method is used to remove an slot of the object */
   public void removeSlot(String name) throws NoSlotFoundException
     {
     if(hasSlot(name))
@@ -347,7 +345,36 @@ public class RPObject extends Attributes
       }
     }
 
-  /** TODO: Refactor this method. Looks like it claims for bugs!" */	
+  /** Returns the size of the object */
+  public int size()
+    {
+    try
+      {
+      int total=super.size();
+    
+      Iterator it=slots.iterator();
+      while(it.hasNext())
+        {
+        RPSlot slot=(RPSlot)it.next();
+        
+        Iterator objects=slot.iterator();
+        while(objects.hasNext())
+          {
+          RPObject object=(RPObject)objects.next();
+          total+=object.size();
+          }
+        }
+      
+      return total;
+      }
+    catch(Exception e) 
+      {
+      return -1;
+      }    
+    }
+  
+  // TODO: Refactor this method. Looks like it claims for bugs!"
+  /** This method get the changes on added and deleted things from this object */
   public void getDifferences(RPObject oadded, RPObject odeleted) throws Exception 
     {
     oadded.setAddedAttributes(this);
@@ -426,33 +453,8 @@ public class RPObject extends Attributes
       }
     }
   
-  public int size()
-    {
-    try
-      {
-      int total=super.size();
-    
-      Iterator it=slots.iterator();
-      while(it.hasNext())
-        {
-        RPSlot slot=(RPSlot)it.next();
-        
-        Iterator objects=slot.iterator();
-        while(objects.hasNext())
-          {
-          RPObject object=(RPObject)objects.next();
-          total+=object.size();
-          }
-        }
-      
-      return total;
-      }
-    catch(Exception e) 
-      {
-      return -1;
-      }    
-    }
-    
+  // TODO: Refactor this method. Looks like it claims for bugs!"
+  /** This method apply the changes retrieved from getDifferences and build the updated object */  
   public RPObject applyDifferences(RPObject added, RPObject deleted) throws Exception
     {
     if(deleted!=null)
@@ -544,6 +546,7 @@ public class RPObject extends Attributes
     return this;  
     }
   
+  /** Create a real copy of the object */
   public Object copy()
     {
     RPObject object=new RPObject();
@@ -565,7 +568,8 @@ public class RPObject extends Attributes
       }
     return object;
     }
-    
+  
+  /** Returns true if two objects are exactly equal */  
   public boolean equals(Object obj) 
     {
     RPObject object=(RPObject)obj;
@@ -591,73 +595,6 @@ public class RPObject extends Attributes
       return -1;
       }
     }
-  
-  public void removeAllButHidden()
-    {
-    try
-      {
-      Iterator it=iterator();
-     
-      while(it.hasNext())
-        {
-        String attrib=(String)it.next();
-        if(!attrib.startsWith("!") && !attrib.equals("id"))
-          {
-          remove(attrib);
-          it=iterator();
-          }
-        }    
-     
-      SlotsIterator sit=this.slotsIterator();
-      while(sit.hasNext())
-        {
-        RPSlot slot=sit.next();
-        if(!slot.getName().startsWith("!"))
-          {
-          removeSlot(slot.getName());
-          sit=this.slotsIterator();
-          }
-        }
-      }
-    catch(Exception e)
-      {
-      /** NOTE: Shouldn't happen */
-      }
-    }  
-
-  public void removeAllHidden()
-    {
-    try
-      {
-      Iterator it=iterator();
-     
-      while(it.hasNext())
-        {
-        String attrib=(String)it.next();
-        if(attrib.startsWith("!"))
-          {
-          remove(attrib);
-          it=iterator();
-          }
-        }    
-     
-      SlotsIterator sit=this.slotsIterator();
-      while(sit.hasNext())
-        {
-        RPSlot slot=sit.next();
-        if(slot.getName().startsWith("!"))
-          {
-          removeSlot(slot.getName());
-          sit=this.slotsIterator();
-          }
-        }
-      }
-    catch(Exception e)
-      {
-      /** NOTE: Shouldn't happen */
-      }
-    }  
-      
     
   /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
@@ -727,56 +664,6 @@ public class RPObject extends Attributes
     public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
       {
       id=in.readInt();
-      }
-    }
-    
-  public void toXML(Element xml_rp_object)
-    {
-    if(xml_rp_object!=null)
-      {
-      Document xml_doc = xml_rp_object.getOwnerDocument();
-
-      // first attributes ...
-      super.toXML(xml_rp_object);
-
-      // then slots ...
-      SlotsIterator  it = slotsIterator();
-
-      while(it.hasNext())
-        {
-        RPSlot slot = it.next();
-        Element elem_rpslot = xml_doc.createElement("rp_slot");
-
-        slot.toXML(elem_rpslot);
-        xml_rp_object.appendChild(elem_rpslot);
-        }
-      }
-    }
-	
-  public void fromXML(Element xml_rp_object)
-    {
-    if(xml_rp_object!=null)
-      {
-      super.fromXML(xml_rp_object);
-
-      NodeList nl = xml_rp_object.getElementsByTagName("rp_slot");
-      int count = nl.getLength();
-
-      for (int i = 0; i < count; i++)
-        {
-        Element attr_elem = (Element)nl.item(i);
-        RPSlot rp_slot = new RPSlot();
-
-        rp_slot.fromXML(attr_elem);
-        try
-          {
-          addSlot(rp_slot);
-          }
-        catch (RPObject.SlotAlreadyAddedException e)
-          {
-          marauroad.thrown("RPObject::fromXML","X",e);
-          }
-        }
       }
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.3 2004/03/24 15:25:32 arianne_rpg Exp $ */
+/* $Id: RWLock.java,v 1.4 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ public class RWLock
   private int givenLocks;
   private int waitingWriters;
   private Object mutex;
+  
   public RWLock()
     {
     mutex = new Object();

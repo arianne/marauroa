@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.7 2004/05/31 08:11:18 root777 Exp $ */
+/* $Id: Transaction.java,v 1.8 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,19 +28,15 @@ public class Transaction
       {
       super(msg);
       }
-    };
+    }
    
-  /**
-   * commits the changes made to backstore.
-   * @exception TransactionException if the underlaying backstore throws an Exception
-   */
+  /** commits the changes made to backstore.
+   * @exception TransactionException if the underlaying backstore throws an Exception   */
   public void commit() throws TransactionException
     {
     }
 
-  /**
-   * makes previous changes to backstore invalid
-   */
+  /** Makes previous changes to backstore invalid */
   public void rollback()
     {
     }

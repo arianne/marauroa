@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.17 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.18 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,6 +59,7 @@ public class NetworkClientManager
     socket.close();
     }
     
+  // TODO: Refactor this method. It doesn't smell nice 
   /** This method returns a message if it is available or null
    *  @return a Message*/
   public Message getMessage() throws MessageFactory.InvalidVersionException
@@ -219,7 +220,7 @@ public class NetworkClientManager
     catch(IOException e)
       {
       /* Report the exception */
-      marauroad.report(e.getMessage());
+      marauroad.thrown("NetworkClientManager::addMessage","X",e);
       }
     }
   }

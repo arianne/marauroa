@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.24 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.1 2004/07/07 10:12:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,14 +10,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa;
-
-import marauroa.game.*;
+package marauroa.game;
 
 import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import marauroa.*;
 
+/** This class encapsulate everything related to the statistics recollection and
+ *  storage. */
 public class Statistics
   {
   public static class GatheredVariables

@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.15 2004/05/31 08:10:20 root777 Exp $ */
+/* $Id: Message.java,v 1.16 2004/07/07 10:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,8 +47,7 @@ public class Message implements marauroa.net.Serializable
   
   protected InetSocketAddress source;
   /** Constructor with a TCP/IP source/destination of the message
-   *  @param source The TCP/IP address associated to this message
-   */
+   *  @param source The TCP/IP address associated to this message */
   public Message(InetSocketAddress source)
     {
     this.type=TYPE_INVALID;
@@ -57,6 +56,8 @@ public class Message implements marauroa.net.Serializable
     timestampMessage=(int)(System.currentTimeMillis());
     }
 
+  /** Sets the TCP/IP source/destination of the message
+   *  @param source The TCP/IP address associated to this message  */
   public void setAddress(InetSocketAddress source)
     {
     this.source=source;
@@ -91,14 +92,14 @@ public class Message implements marauroa.net.Serializable
     return clientid;
     }
     
+  /** Returns the timestamp of the message. Usually milliseconds */
   public int getMessageTimestamp()
     {
     return timestampMessage;
     }
 
   /** Serialize the object into an ObjectOutput 
-   *  @exception IOException if the serializations fails 
-   */
+   *  @exception IOException if the serializations fails */
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     out.write(NetConst.NETWORK_PROTOCOL_VERSION);
@@ -109,19 +110,16 @@ public class Message implements marauroa.net.Serializable
     
   /** Serialize the object from an ObjectInput 
    *  @exception IOException if the serializations fails 
-   *  @exception java.lang.ClassNotFoundException if the serialized class doesn't exist.
-   */
+   *  @exception java.lang.ClassNotFoundException if the serialized class doesn't exist. */
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     if(in.readByte()!=NetConst.NETWORK_PROTOCOL_VERSION)
       {
       throw new IOException();
       }
+      
     type=in.readByte();
     clientid=in.readInt();
     timestampMessage=in.readInt();
     }  
   }
-
-
-;

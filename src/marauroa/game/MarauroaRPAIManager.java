@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPAIManager.java,v 1.3 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: MarauroaRPAIManager.java,v 1.4 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,8 +12,6 @@
  ***************************************************************************/
 package marauroa.game;
 
-/** Interface for the class that is in charge of executing AI.
- *  Implement it to personalize the AI */
 public class MarauroaRPAIManager implements IRPAIManager
   {
   public MarauroaRPAIManager()

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.101 2004/07/06 11:15:10 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.102 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,13 +17,11 @@ import java.util.*;
 import java.io.*;
 import marauroa.game.*;
 
-/**
- * The launcher of the whole Marauroa Server.
- */
+/** the launcher of the whole Marauroa Server. */
 public class marauroad extends Thread
   {
   final private static boolean DEBUG=false;
-  final private static String VERSION="0.40";
+  final private static String VERSION="0.41";
   
   private static PrintWriter out;
   private static marauroad marauroa;
@@ -143,13 +141,15 @@ public class marauroad extends Thread
             System.exit(-1);
             }
           }
-        wait(5000);
+          
+        wait(30000);
         }
       catch(InterruptedException e)
         {
         finish=true;
         }
       }
+      
     instance.finish();
     marauroad.trace("marauroad::run","<");
     }
@@ -165,6 +165,7 @@ public class marauroad extends Thread
       {
       marauroa=new marauroad();
       }
+      
     return marauroa;
     }
   
@@ -313,10 +314,5 @@ public class marauroad extends Thread
       }
     
     return result;
-    }
-    
-  public static void report(String text)
-    {
-    getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+": "+text);
     }
   }

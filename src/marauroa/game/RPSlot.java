@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.29 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.30 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/** This class represent a slot in an object */
 public class RPSlot implements marauroa.net.Serializable, Cloneable
   {
   public static class RPObjectNotFoundException extends Exception
@@ -92,6 +93,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
   private String name;
   /** A List<RPObject> of objects */
   private List objects;
+  
   public RPSlot()
     {
     name="";
@@ -100,6 +102,15 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     deleted=new LinkedList();
     }
   
+  public RPSlot(String name)
+    {
+    this.name=name;
+    objects=new LinkedList();
+    added=new LinkedList();
+    deleted=new LinkedList();
+    }
+  
+  /** This method create a copy of the slot */
   public Object copy()
     {
     RPSlot slot=new RPSlot();
@@ -116,24 +127,19 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     return slot;
     }
   
-  public RPSlot(String name)
-    {
-    this.name=name;
-    objects=new LinkedList();
-    added=new LinkedList();
-    deleted=new LinkedList();
-    }
-  
+  /** Sets the name of the slot */
   public void setName(String name)
     {
     this.name=name;
     }
   
+  /** Get the name of the slot */
   public String getName()
     {
     return name;
     }
   
+  /** Add an object to the slot */
   public void add(RPObject object)
     {
     try
@@ -155,15 +161,16 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
         {
         added.add(object);      
         }
+  
+      objects.add(object);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
       marauroad.thrown("RPSlot::add","X",e);
       }
-
-    objects.add(object);
     }
   
+  /** Gets the object from the slot */
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException
     {
     try
@@ -188,6 +195,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     }
   
+  // TODO: Consider removing this method
   public RPObject get() throws RPObjectNotFoundException
     {
     if(objects.size()>0)
@@ -197,6 +205,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     throw new RPObjectNotFoundException("- not available -");
     }
   
+  /** This method removes the object of the slot */
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
     try
@@ -241,6 +250,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     }
   
+  /** This method empty the slot */
   public void clear()
     {
     Iterator it=objects.iterator();
@@ -260,6 +270,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     objects.clear();
     }
   
+  /** This method returns true if the slot has the object whose id is id */
   public boolean has(RPObject.ID id)
     {
     try
@@ -283,16 +294,19 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       }
     }
   
+  /** Return the number of elements in the slot */
   public int size()
     {
     return objects.size();
     }
   
+  /** Iterate over the objects of the slot */
   public Iterator iterator()
     {
     return objects.iterator();
     }
   
+  /** Returns true if both objects are equal */
   public boolean equals(Object object)
     {
     RPSlot slot=(RPSlot)object;
@@ -358,47 +372,6 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     for(int i=0;i<size;++i)
       {
       objects.add(in.readObject(new RPObject()));
-      }
-    }
-	
-  public void toXML(Element xml_slot)
-    {
-    if(xml_slot!=null)
-      {
-      Document xml_doc = xml_slot.getOwnerDocument();
-
-      xml_slot.setAttribute("name",name);
-
-      Iterator  it=objects.iterator();
-
-      while(it.hasNext())
-        {
-        RPObject entry=(RPObject)it.next();
-        Element elem_rpobj = xml_doc.createElement("rp_object");
-
-        entry.toXML(elem_rpobj);
-        xml_slot.appendChild(elem_rpobj);
-        }
-      }
-    }
-	
-  public void fromXML(Element xml_slot)
-    {
-    if(xml_slot!=null)
-      {
-      setName(xml_slot.getAttribute("name"));
-
-      NodeList nl = xml_slot.getElementsByTagName("rp_object");
-      int count = nl.getLength();
-
-      for (int i = 0; i < count; i++)
-        {
-        Element attr_elem = (Element)nl.item(i);
-        RPObject rp_object = new RPObject();
-
-        rp_object.fromXML(attr_elem);
-        add(rp_object);
-        }
       }
     }
   }

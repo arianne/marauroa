@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.45 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.46 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,9 @@ import junit.framework.*;
 import java.util.*;
 import java.io.*;
 
-/**
- * TestSuite that runs all the sample tests
- */
+/* TODO: Improve code quality here. It stinks */
+
+/** TestSuite that runs all the sample tests */
 public class RunTests
   {
   private static class Killer extends Thread
@@ -58,6 +58,7 @@ public class RunTests
       finishRequest=true;
       }
     }
+    
   public static void main (String[] args)
     {
     /** NOTE: On my machine it took 93000 milliseconds. */

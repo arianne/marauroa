@@ -1,4 +1,4 @@
-/* $Id: IRPAIManager.java,v 1.1 2004/06/03 13:04:44 arianne_rpg Exp $ */
+/* $Id: IRPAIManager.java,v 1.2 2004/07/07 10:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ package marauroa.game;
  *  Implement it to personalize the AI */
 public interface IRPAIManager
   {
+  /** This method sets the zone and the scheduler for the AI Manager */
   public void setContext(IRPZone zone, RPScheduler sched);
+  /** This method is called each turn to execute the AI logic */
   public boolean compute(long timelimit);
   }

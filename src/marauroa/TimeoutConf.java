@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.21 2004/06/18 13:32:48 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.22 2004/07/07 10:07:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa;
 
 public class TimeoutConf
   {
-  final public static boolean TIMEOUT_ENABLE=true;
   /** This indicate when we stop to wait on the socket. The lower the slower. */
   final public static int SOCKET_TIMEOUT=100;
   /** This indicate how many time we wait for a message to arrive. The lower the slower. */
@@ -26,8 +25,11 @@ public class TimeoutConf
   /** This indicate that the player is totally dead and must be removed.
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */
   final public static int GAMESERVER_PLAYER_TIMEOUT=60000;
+  /** This indicate that how often the player is stored on database.*/
   final public static int GAMESERVER_PLAYER_STORE_LAPSUS=600000;
   
+  /** Maximum size of bytes on a message (128KB) */
   final public static int MAX_BYTE_ARRAY_ELEMENTS=128*1024;
+  /** Maximum size of elements on a array (65536) */
   final public static int MAX_ARRAY_ELEMENTS=64*1024;
   }
