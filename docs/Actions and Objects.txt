@@ -24,7 +24,10 @@ RPServerManager entity.
 
 Mandatory Actions Attributes:
 - object_id
+- action_id
 - action_type
+
+The action_id is used to identify the action when the result come in a percetion.
 
 Optional Actions Attributes:
 Read Actions Explained for more details.

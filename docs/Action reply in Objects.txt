@@ -75,4 +75,5 @@ The attributes added to the object are:
 The action_exchange_status denotes if the action is complete, incomplete or failed.
 This action last several turns until both peers accept or the timeout elapses.
 
-
+On every object that executed an action you will have an status_<action_id>=<status>
+that explain what happened with the action.
