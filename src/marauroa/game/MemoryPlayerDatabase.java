@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.4 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.5 2004/01/30 18:59:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -101,6 +101,11 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       }
     }
   
+  public boolean validString(String string)
+    {
+    return true;
+    }
+    
   /** This method returns the number of Players that exist on database 
    *  @return the number of players that exist on database */
   public int getPlayerCount() throws GenericDatabaseException

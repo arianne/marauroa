@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.4 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: PlayerDatabase.java,v 1.5 2004/01/30 18:59:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,6 +64,9 @@ public interface PlayerDatabase
       super(msg);
       }
     }
+  
+  /** Retursn true if the strign is valid and doesn't contains any strange character */
+  public boolean validString(String string);
   
   /** This method returns true if the username/password match with any of the accounts in 
    *  database or false if none of them match.
