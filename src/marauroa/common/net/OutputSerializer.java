@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.2 2005/02/18 23:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,6 +90,23 @@ public class OutputSerializer
     out.write(tmp);
     }
   
+  /** Add the float to the serializer
+   *  @param a the int to serialize */
+  public void write(float a) throws IOException
+    {
+    int tmp;
+    int bits=Float.floatToIntBits(a);
+    
+    tmp=bits&0xFF;
+    out.write(tmp);
+    tmp=(bits>>8)&0xFF;
+    out.write(tmp);
+    tmp=(bits>>16)&0xFF;
+    out.write(tmp);
+    tmp=(bits>>24)&0xFF;
+    out.write(tmp);
+    }
+
   /** Add the String to the serializer, using UTF-8 encoding
    *  @param a the String to serialize */
   public void write(String a) throws IOException,UnsupportedEncodingException

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.2 2005/02/08 20:20:21 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.3 2005/02/18 23:18:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -290,7 +290,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
   public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
     {
     int size=content.size();
-		
+    
     for(String key: content.keySet())
       {
       if(fulldata==false && (rpClass.getVisibility(key)==RPClass.HIDDEN))
@@ -332,6 +332,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
         else if(rpClass.getType(key)==RPClass.SHORT_STRING)
           {
           out.write255LongString(entry.getValue());
+          }
+        else if(rpClass.getType(key)==RPClass.FLOAT)
+          {
+          out.write(Float.parseFloat(entry.getValue()));
           }
         else if(rpClass.getType(key)==RPClass.INT)
           {
@@ -390,6 +394,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
         {
         content.put(key,in.read255LongString());
         }
+      else if(rpClass.getType(key)==RPClass.FLOAT)
+        {
+        content.put(key,Float.toString(in.readFloat()));
+        }      
       else if(rpClass.getType(key)==RPClass.INT)
         {
         content.put(key,Integer.toString(in.readInt()));

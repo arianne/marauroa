@@ -1,6 +1,7 @@
 package marauroa.common.game;
 
 import java.util.*;
+import marauroa.common.*;
 
 /** The RPClass class implements a container of attributes with its code, name,
  *  type and visibility. It adds support for strict type definition and class 
@@ -18,14 +19,16 @@ public class RPClass implements marauroa.common.net.Serializable
   final public static byte STRING=1;
   /** a string of up to 255 chars long */
   final public static byte SHORT_STRING=2;  
+  /** an float number of 32 bits */
+  final public static byte FLOAT=3;
   /** an integer of 32 bits */
-  final public static byte INT=3;
+  final public static byte INT=4;
   /** an integer of 16 bits */
-  final public static byte SHORT=4;
+  final public static byte SHORT=5;
   /** an integer of 8 bits */
-  final public static byte BYTE=5;  
+  final public static byte BYTE=6;  
   /** an boolean attribute that either is present or not. */
-  final public static byte FLAG=6;
+  final public static byte FLAG=7;
 
   static public class SyntaxException extends java.io.IOException
     {
@@ -113,6 +116,7 @@ public class RPClass implements marauroa.common.net.Serializable
 
     add("id",INT);
     add("clientid",INT,HIDDEN);
+    add("#db_id",INT,HIDDEN);
     add("zoneid",STRING);
     add("type",STRING);    
     

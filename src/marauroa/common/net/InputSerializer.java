@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.2 2005/02/18 23:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -168,6 +168,35 @@ public class InputSerializer
     result+=(data[2]&0xFF) << 16;
     result+=(data[3]&0xFF) << 24;
     return result;
+    }
+  
+  /** This method read a float from the Serializer
+   @return the float serialized
+   @throws java.io.IOException if there is an IO error
+   @throws java.lang.ClassNotFoundException
+   if the class to serialize doesn't exist. */
+  public float readFloat() throws IOException, java.lang.ClassNotFoundException
+    {
+    int size = 4;
+    byte[] data=new byte[size];
+    int bytes_read_total = 0;
+    int bytes_read = 0;
+
+    while((bytes_read_total<size)&&(bytes_read=in.read(data,bytes_read_total,size-bytes_read_total))!=-1)
+      {
+      bytes_read_total+=bytes_read; 
+      }
+    if(bytes_read_total!=size)
+      {
+      throw new IOException("Declared array size=" +size+" is not equal to actually read bytes count("+bytes_read_total+")!");
+      }
+        
+    int result=data[0]&0xFF;
+
+    result+=(data[1]&0xFF) << 8;
+    result+=(data[2]&0xFF) << 16;
+    result+=(data[3]&0xFF) << 24;
+    return Float.intBitsToFloat(result);
     }
   
   /** This method read a String from the Serializer
