@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.3 2004/05/10 11:57:05 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.4 2004/05/14 15:51:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -302,6 +302,7 @@ public class PerceptionHandler
         if(!listener.onMyRPObject(true,myObject))
           {
           RPObject w_object=(RPObject)world.get(myObject.get("id"));    
+          w_object.removeAllHidden();
           w_object.applyDifferences(myObject,null);        
           }        
         }

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.40 2004/05/10 11:57:05 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.41 2004/05/14 15:51:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -583,9 +583,10 @@ public class RPObject extends Attributes
       while(it.hasNext())
         {
         String attrib=(String)it.next();
-        if(!attrib.startsWith("!"))
+        if(!attrib.startsWith("!") && !attrib.equals("id"))
           {
           remove(attrib);
+          it=iterator();
           }
         }    
      
@@ -596,6 +597,40 @@ public class RPObject extends Attributes
         if(!slot.getName().startsWith("!"))
           {
           removeSlot(slot.getName());
+          sit=this.slotsIterator();
+          }
+        }
+      }
+    catch(Exception e)
+      {
+      /** NOTE: Shouldn't happen */
+      }
+    }  
+
+  public void removeAllHidden()
+    {
+    try
+      {
+      Iterator it=iterator();
+     
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+        if(attrib.startsWith("!"))
+          {
+          remove(attrib);
+          it=iterator();
+          }
+        }    
+     
+      SlotsIterator sit=this.slotsIterator();
+      while(sit.hasNext())
+        {
+        RPSlot slot=sit.next();
+        if(slot.getName().startsWith("!"))
+          {
+          removeSlot(slot.getName());
+          sit=this.slotsIterator();
           }
         }
       }

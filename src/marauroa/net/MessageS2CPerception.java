@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.44 2004/05/13 12:21:04 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.45 2004/05/14 15:51:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -165,24 +165,51 @@ public class MessageS2CPerception extends Message
     }
   
   private static byte[] precomputed_StaticPartPerception=null;
+  private static long precomputed_StaticPartSavedBytes=0;
   
   public static void clearPrecomputedPerception()
     {
     precomputed_StaticPartPerception=null;
+    precomputed_StaticPartSavedBytes=0;
     }
   
   private byte[] getPrecomputedStaticPartPerception() throws IOException
     {
     if(precomputed_StaticPartPerception==null)
-      {
+      {      
       ByteArrayOutputStream array=new ByteArrayOutputStream();
-      OutputSerializer serializer=new OutputSerializer(array);
+      ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(array));
+      OutputSerializer serializer=new OutputSerializer(out_stream);
+      
       computeStaticPartPerception(serializer);
       
+      out_stream.close();
       precomputed_StaticPartPerception=array.toByteArray();
+      
+      precomputed_StaticPartSavedBytes=out_stream.getBytesWritten()-precomputed_StaticPartPerception.length;
       }
     
+    Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytes);
     return precomputed_StaticPartPerception;
+    }
+
+  private byte[] getDynamicPartPerception() throws IOException
+    {
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    OutputSerializer serializer=new OutputSerializer(array);
+
+    serializer.write((int)timestampPerception);
+    if(myRPObject==null)
+      {
+      serializer.write((byte)0);
+      }
+    else
+      {
+      serializer.write((byte)1);
+      myRPObject.writeObject(serializer,true);
+      }
+      
+    return array.toByteArray();
     }
   
   private void computeStaticPartPerception(OutputSerializer ser) throws IOException
@@ -227,31 +254,27 @@ public class MessageS2CPerception extends Message
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
+    out.write(getPrecomputedStaticPartPerception());
+    out.write(getDynamicPartPerception());      
     
-    ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
-    ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
-    OutputSerializer ser=new OutputSerializer(out_stream);
-
-    /** TODO: Join the dinamic part of the perception on a single block */
-    out_stream.write(getPrecomputedStaticPartPerception());
-    ser.write((int)timestampPerception);
-    if(myRPObject==null)
-      {
-      ser.write((byte)0);
-      }
-    else
-      {
-      ser.write((byte)1);
-      myRPObject.writeObject(ser,true);
-      }
-      
-    out_stream.close();
-
-    byte [] array = compressed_array.toByteArray();
-    long saved = out_stream.getBytesWritten()-array.length;
-
-    Statistics.getStatistics().addBytesSaved(saved);
-    out.write(array);
+// TODO: Miguel changed this to improve speed of perception creation and he thinks
+//    he has fucked the stats system :D
+//
+//    ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
+//    ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
+//    OutputSerializer ser=new OutputSerializer(out_stream);
+//
+//    /** TODO: Join the dinamic part of the perception on a single block */
+//    out_stream.write(getPrecomputedStaticPartPerception());
+//    out_stream.write(getDynamicPartPerception());      
+//    
+//    out_stream.close();
+//
+//    byte [] array = compressed_array.toByteArray();
+//    long saved = out_stream.getBytesWritten()-array.length;
+//
+//    Statistics.getStatistics().addBytesSaved(saved);
+//    out.write(array);
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
@@ -315,7 +338,12 @@ public class MessageS2CPerception extends Message
       {
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
-      
+    
+    
+    /** Dynamic part */  
+    array=new ByteArrayInputStream(in.readByteArray());
+    ser=new InputSerializer(array);
+
     timestampPerception=ser.readInt();
 
     marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
