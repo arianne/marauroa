@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.28 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.29 2004/09/21 19:53:49 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,11 +31,11 @@ public final class NetworkServerManager
   private boolean isfinished;
   /** A List of Message objects: List<Message> */
   private List messages;
-  private List bannedIPNetworkList;
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
   private Statistics stats;
+  private PacketValidater packetValidater;
   
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
@@ -43,9 +43,9 @@ public final class NetworkServerManager
     {
     marauroad.trace("NetworkServerManager",">");
     try
-      {      
-      /* read ban list from configuration */
-      initbannedIPNetworkList();
+      {
+      /* init the packet validater (which can now only check if the address is banned)*/
+      packetValidater = new PacketValidater();
       
       /* Create the socket and set a timeout of 1 second */
       socket=new DatagramSocket(NetConst.marauroa_PORT);
@@ -68,14 +68,7 @@ public final class NetworkServerManager
       marauroad.trace("NetworkServerManager","<");
       }
     }
-    
-  /** This method adds a new netmask which is banned */
-  public InetAddressMask addBan(InetAddressMask bannedMask)
-    {
-    bannedIPNetworkList.add(bannedMask);
-    return(bannedMask);
-    }
-    
+        
   /** This method notify the thread to finish it execution */
   public void finish()
     {
@@ -187,13 +180,13 @@ public final class NetworkServerManager
         try
           {
           socket.receive(packet);
-          marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");         
+          marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
           
           /*** Statistics ***/
           stats.addBytesRecv(packet.getLength());
           stats.addMessageRecv();
           
-          if(!checkBanned(packet))
+          if(!packetValidater.checkBanned(packet))
             {
             try
               {
@@ -251,7 +244,7 @@ public final class NetworkServerManager
         if(keepRunning)
           {
           ByteArrayOutputStream out=new ByteArrayOutputStream();
-          OutputSerializer s=new OutputSerializer(out);     
+          OutputSerializer s=new OutputSerializer(out);
 
           s.write(msg);
 
@@ -314,87 +307,5 @@ public final class NetworkServerManager
         marauroad.trace("NetworkServerManagerWrite::write","<");
         }
       }
-    }
-    
-  /** Reads ban list from configuration 
-    * the ban list looks like: 
-    *  192.168.100.100/255.255.255.0;192.168.90.100/255.255.255.0
-    *
-    * That is: <IP>/<NetMask>;...    
-    */
-  private void initbannedIPNetworkList()
-    {
-    marauroad.trace("NetworkServerManager::initbannedIPNetworkList",">");
-    bannedIPNetworkList = new ArrayList();
-    try
-      {
-      Configuration conf = Configuration.getConfiguration();
-      String str_bannedIPNetworkList = conf.get("bannedIPNetworkList");
-      if(str_bannedIPNetworkList!=null&&!"".equals(str_bannedIPNetworkList))
-        {
-        String bans[] = str_bannedIPNetworkList.split(";");   
-        for(int i=0; i<bans.length; i++)
-          {
-          String address_mask_pair [] = bans[i].split("\\/");
-          InetAddressMask iam = null;
-          if(address_mask_pair.length==2)
-            {
-            iam = new InetAddressMask(address_mask_pair[0].trim(),address_mask_pair[1].trim());
-            }
-          else if (address_mask_pair.length==1)
-            {
-            //single host
-            iam = new InetAddressMask(address_mask_pair[0].trim(),"255.255.255.255");
-            }
-          else
-            {
-            marauroad.trace("NetworkServerManager::initbannedIPNetworkList","D","Ignoring invalid entry "+bans[i]);
-            }
-         
-          if(iam!=null)
-            {
-            marauroad.trace("NetworkServerManager::initbannedIPNetworkList","D","Adding new ban entry: "+iam);
-            bannedIPNetworkList.add(iam);
-            }
-          }
-        }
-      }
-    catch(Exception e)
-      {
-      marauroad.trace("NetworkServerManager::initbannedIPNetworkList","X","Error initializing ban list");
-      marauroad.thrown("NetworkServerManager::initbannedIPNetworkList","X",e);      
-      }
-    finally
-      {
-      marauroad.trace("NetworkServerManager::initbannedIPNetworkList","<");
-      }
-    }
-      
-  /** returns true if the source ip is banned */
-  private boolean checkBanned(DatagramPacket packet)
-    {
-    boolean banned = false;
-    marauroad.trace("NetworkServerManager::checkBanned",">");
-    
-    try
-      {
-      Iterator it=bannedIPNetworkList.iterator();
-      while(it.hasNext())
-        {
-        InetAddressMask i=(InetAddressMask)it.next();
-        if(i.matches(packet.getAddress()))
-          {
-          marauroad.trace("NetworkServerManager::checkBanned","D","Packet from "+ packet.getAddress()+" is banned by "+i);
-          banned=true;
-          break;
-          }
-        }
-      }
-    finally
-      {
-      marauroad.trace("NetworkServerManager::checkBanned","<");
-      }
-
-    return(banned);
     }
   }
