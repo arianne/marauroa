@@ -1,0 +1,7 @@
+Title  : Actions reply in Objects
+Info   : Deep overview of the attributes related to action results in Objects.
+Keyword: actions, classes, types, XML, attributes, Object, perception.
+Author : Miguel Angel Blanch Lardin
+Created: 2003/11/27
+status : planning
+

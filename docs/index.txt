@@ -46,6 +46,9 @@ Contents
 		
 	c) Actions Explained.txt
 		Explains all the details related to Actions
+		
+	c.1) How Perceptions and Actions work
+		Explains how Marauroa handles actions using perceptions.
 
 	d) RP Manager.txt
 		Basic explication of the RP active entity.

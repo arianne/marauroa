@@ -1,0 +1,7 @@
+Title  : How Perceptions and Actions work
+Info   : Basic introduction about how the action system works
+Keyword: actions, classes, types, XML, attributes, Object, perception.
+Author : Miguel Angel Blanch Lardin
+Created: 2003/11/27
+status : planning
+
