@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.8 2003/12/08 12:43:52 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.9 2003/12/26 13:01:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,7 +102,7 @@ public class RPScheduler
           try
             {
             RPAction action=(RPAction)action_it.next();
-            RPAction.Status status=ruleProcessor.execute(id,action);
+            RPAction.Status status=ruleProcessor.execute(id,action);            
                         
             /* If state is incomplete add for next turn */
             if(status.equals(RPAction.STATUS_INCOMPLETE))
