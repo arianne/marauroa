@@ -88,14 +88,16 @@ Edit marauroad.ini to use JDBC Database.
 Please refer to docs/JDBC Database HOWTO.txt
 
 Read simpleGame/README about how to play it.
-Read the1001/READMA about how to run Gladiators
+Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
-0.30	Mar XX, 2004
+0.30	Mar 26, 2004
 - Added persistent objects
 - Added transactional database support
 - Fixed zlib compression problem due to incorrect deserialization
+- Send less TOTAL perceptions so it improve bandwidth usage
+- A ton of little bugs/features fixed/added
 
 0.25	Mar	06,	2004
 - Added zlib compression
@@ -138,48 +140,6 @@ Changelog
 - Maraurorized simpleGame
 - Fixed several logical bugs in simpleGame
 - Fixed bugs
-   · 863672	MakeMove before ChallengeAnswer	  
-   · 863460	Class cast at simplegame: GameBoard	
-   · 863459	More classcast exception, this in simpleGame
-   · 863456	Exception at MakeMove
-   · 863455	ClassCast exception at ChallengeAnswer	  
-   · 863451	ClassCast exception at Challenge action	 
-   · 862855	Challenge does not work correctly	 
-   · 862604	simpleGame server bug in new players
-   · 862597	attribute not found in simplegame
-   · 862582	Problem with CharacterList	 
-   · 862460	Problem when there are no more characters	
-   · 862450	iterator for both Attributes and CharacterList	
-   · 862441	Lack of copy constructor for RPObject	 
-   · 862430	classcast exception at SimpleGame	 
-   · 861298	NullPointerException thrown when no characters returned	  
-   · 860677	Fix usage of instanceof in simpleGame.	  
-   · 860676	Remove actionType and objectType
-   · 860671	Spell fixes
-   · 860668	Traces at data structures are a bad idea TM
-   · 860665	Postnuke does not allow images. Replace it!
-   · 860657	Call RPZone.modify at simplegameRPRuleProcessor
-   · 860655	Remove RPActionFactory
-   · 860651	Remove RPObjectFactory
-   · 860645	Attributes support for List
-   · 860634	Add connectorJ support in the build.xml file
-   · 860620	Recreate run scripts using Build.xml
-   · 860461	Server stop working with simpleGame
-   · 860459	Client fails to start simpleGame
-   · 860328	Modify build.xml to copy sounds
-   · 860324	simpleGame only runs once
-   · 859093	RPAction.Status lack of info	  
-   · 859090	Can't iterate Attributes	  
-   · 859075	How to understand Marauroa outdated
-   · 859004	RPServerManager is not scheduling correctly	  
-   · 857217	Bug found! NetworkClientManager related	  
-   · 857184	Timelimit the RunTest application	  
-   · 856879	Make simpler output at RunTest	  
-   · 856876	RunTest should be simpler to debug
-   · 856566	Client stopped working
-   · 856525	RunTests doesn't end
-   · 856332	Document Test cases
-   · 856328	Test cases fails
 
 0.10 	Dic 16, 2003
 - simpleGame working.
@@ -197,104 +157,12 @@ Changelog
 - Multipacket UDP communication protocol
 - Updated documentation
 - Fixed bugs
-   · 851207	Test both MemoryPlayerDatabase and JDBCPlayerDatabase
-   · 852401	Website is not working
-   · 852887	MemoryDatabasePlayer don't throw GenericDatabaseException
-   · 852890	GameServerManager doesn't close properly
-   · 852946	Logout fails if login is incomplete
-   · 852947	JDBCDatabase allow us to setRPObject on a unexisting character
-   · 852951	CharacterNotFound catched on getRPObject
-   · 853333	RunTest test fails if database is empty
-   · 853388	Wrong table name in JDBCPlayerDatabase
-   · 853394	If Test Player exists in Database
-   · 853391	Perception can make test fails
-   · 853285	runtests wont stop
-   · 853426	RPObject putSlot use has instead of hasSlot
-   · 853680	marauroad fails to start if player exists
-   · 854075	Check in RPScheduler value returned by RPRuleProcessor
-   · 852891	build.xml should substitute @version@
-   · 854961	Document how the NEW perception system works
-   · 854951	Send one TOTAL perception between X delta perceptions
-   · 854946	Server keeps sending total perception
-   · 854937	Update documentation about Messages
-   · 854936	There is no method to process C2S Perception ACK
-   · 854878	Perception is sent if players doesnt' logout correctly
-   · 854840	Modify notification for RPZone needed
-   · 854373	Packet size is 1500 and bigger packets silently fails
-   · 854940	Update documentation about Timeouts in PlayerContainer
-   · 851232	Implement the timestamp handling
-   · 851215	Exceptions should have more info
-   · 854870	Update documentation at Sourceforge
-   · 851574	Concurrency problems in PlayerEntryContainer
-   · 855405	Lack of Test case for RWLock
-   · 854854	Lack of Test Case for MarauroaRPZone
-   · 851594	Concurrecy problem too in RPZone
-   · 854856	Lack of Test case in MarauroaRPRuleProcessor
-   · 854789	Lack of Test case for RPObjectFactory
-   · 854788	Lack of Test case for RPActionFactory
-   · 855553	Message bigger than 1500 bytes
-   · 855709	Test both directions in NetworkServerManager
-   · 855589	Client don't handle multipart messages
-   · 855584	Clean hacks done to implement Messages bigger than 1500
-   · 855696	in NetworkClientManager use same code
-   · 855768	Remove lost packets in NetworkClientManager
-   · 855767	Update UDP Packet format document
-   · 855581	Document modifications on Network*Manager
-   · 855688	new Constructors for Messages
-   · 854875	Problems with slots in JMarauroa
-   · 851768	PlayerNotFoundException is usually a hidden problem
-   · 851628	Enforce any rpzone and rpruleprocessor to implement
-
 
 0.02	Nov 30, 2003
 - Added Perception message
 - Added JDBC Database
 - Added RP Code: Hacked and Slashed 
 - Fixed bugs:
-   · 835039	Messages are not arriving correctly to Server
-   · 838103	Client can log twice due to a logical bug
-   · 835222	Player can login twice without error
-   · 838373	PlayerEntryContainer is not safe
-   · 816411	Bug in protocol description
-   · 838592	Attacker can guess clientid using Action Message
-   · 846099	Forgot to set Character
-   · 846094	Logout doesnt' work correctly
-   · 847211	RPObject.ID equals method is wrong
-   · 847201	RPZone is not working correctly	
-   · 846197	Logging out doesn't clean the state correctly
-   · 847187	Ant build is not totally correct
-   · 847420	Logout ACK and NACK description is incorrect
-   · 847599	marauroad should create tables
-   · 847421	GameManager.txt doesn't consider Database
-   · 847863	setIconImage in JMarauroa doesn't work
-   · 847608	Verify on GameManager that messages come from client
-   · 847607	Clientid random number should be initialized correctly
-   · 849274	Message overwritting in NetworkServerManager
-   · 849299	Character name MUST be unique
-   · 849790	Passing null to JDBCPlayerDatabase parm
-   · 849655	JDBCPlayerDatabase is not working correctly.
-   · 849809	Fix SQL Code
-   · 849815	RPObject problem with Slots
-   · 849315	register method of Messages is not called
-   · 851130	setRPObject doesn't throw CharacterNotFoundException
-   · 851117	Adding a existing character does not throw any exception
-   · 850876	Use same char for same things in Traces
-   · 851134	reInit bug	
-   · 851161	initDB, dropDB and reInitDB should also throw exception
-   · 851129	getPlayerCount should throw an exception
-   · 851218	removeCharacter should drop CharacterNotFoundException
-   · 851160	createConnection should throw exception
-   · 851262	fix build.xml on CVS
-   · 851338	How client knows object id of the character?
-   · 851523	RPServerManager neeed to send messages
-   · 851572	There is no way to iterate on PlayerEntrycontainer
-   · 851596	Update MessageS2ChooseCharacterACK to print RPObject.ID
-   · 845807	clientid should be an int
-   · 851230	Enforce RPObject source in actions
-   · 851621	Forgot break in GameServerManager
-   · 851098	Login event is only added on success
-   · 851099	Test expect database to be empty
-   · 849306	RP Scheduler not fair
 - Fixed Traces output
 
 0.01	Nov 22, 2003
