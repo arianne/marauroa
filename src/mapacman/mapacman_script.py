@@ -113,6 +113,8 @@ class RealPythonRP(PythonRP):
     
     def _movePlayer(self,player):
         pos=self.move(player)
+        self._zone.modify(player)
+        
         if self._map.hasZoneRPObject(pos):
             object_in_pos=self._map.getZoneRPObject(pos)
             if object_in_pos.get("type")=="ball":
@@ -120,7 +122,6 @@ class RealPythonRP(PythonRP):
                     
                 # Increment the score of the player
                 player.add("score",1)
-                self._zone.modify(player)
             elif object_in_pos.get("type")=="superball":
                 self._removeBall(object_in_pos,pos)
                     
@@ -129,7 +130,6 @@ class RealPythonRP(PythonRP):
                 player.put("super",timeout)
                 element={'timeout':timeout,'object':player}
                 self._super_players.append(element)
-                self._zone.modify(player)
         
 
     def _ghostCollisions(self, player):
