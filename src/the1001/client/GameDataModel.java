@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.24 2004/04/30 20:37:52 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.25 2004/04/30 20:42:12 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -338,7 +338,7 @@ public final class GameDataModel
     {
       long ts = System.currentTimeMillis();
       int time_stamp = (int)(ts%100000);
-      System.out.println("TS on system: " + ts + ", timestamp in action: " + time_stamp);
+//      System.out.println("TS on system: " + ts + ", timestamp in action: " + time_stamp);
       put("action_id",time_stamp);
     }
     
@@ -748,7 +748,7 @@ public final class GameDataModel
     int act_id     = msg.getActionID();
     int time_stamp = (int)(ts%100000);
     pingTime       = time_stamp - act_id;
-    System.out.println("TS from action: " + act_id + ", timestamp on system: " + time_stamp + ", ping: " + pingTime);
+//    System.out.println("TS from action: " + act_id + ", timestamp on system: " + time_stamp + ", ping: " + pingTime);
   }
   
   /**
@@ -1268,3 +1268,4 @@ public final class GameDataModel
   }
   
 }
+
