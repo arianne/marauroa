@@ -481,7 +481,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     marauroad.trace("JDBCPlayerDatabase::setRPObject","<");
     }
   
-  public RPObject getRPObject(String username, String character) throws PlayerNotFoundException, CharacterNotFoundException
+  public RPObject getRPObject(String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getRPObject",">");
 
@@ -504,11 +504,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
           }
         catch (IOException e)
           {
-          /* TODO: Need to drop an exception */
+          marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Error serializing character: "+e.getMessage());
+          throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
           }          
         catch (ClassNotFoundException e)
           {
-          /* TODO: Need to drop an exception */
+          marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Error serializing character: "+e.getMessage());
+          throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
           }
         }
       else

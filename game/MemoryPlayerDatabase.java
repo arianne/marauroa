@@ -185,7 +185,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
     marauroad.trace("MemoryPlayerDatabase::setRPObject","<");
     }
     
-  public RPObject getRPObject(String username,String character) throws PlayerNotFoundException, CharacterNotFoundException
+  public RPObject getRPObject(String username,String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("MemoryPlayerDatabase::getRPObject",">");
     if(!players.containsKey(username))

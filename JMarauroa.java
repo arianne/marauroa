@@ -266,7 +266,6 @@ public class JMarauroa extends JFrame
   
   private void chooseCharacter(String character)
   {
-    /* TODO: Write here the code to send Choose Character message */
     addLog(character+" choosen\n");
     Message msg=new MessageC2SChooseCharacter(null,character);
     msg.setClientID(clientId);
