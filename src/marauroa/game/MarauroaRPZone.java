@@ -5,15 +5,18 @@ import java.util.*;
 public class MarauroaRPZone implements RPZone
   {
   private HashMap objects;
-  /** TODO: This is not delta perception */
-  private Perception listObjects;
+  private List listObjects;
+  private Perception perception;
+
   private static Random rand=new Random();
   
   public MarauroaRPZone()
     {
     rand.setSeed(new Date().getTime());
     objects=new HashMap();
-    listObjects=new Perception(Perception.DELTA);
+    
+    listObjects=new LinkedList();
+    perception=new Perception(Perception.DELTA);
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -22,7 +25,9 @@ public class MarauroaRPZone implements RPZone
       {
       RPObject.ID id=new RPObject.ID(object);
       objects.put(id,object);
-      listObjects.modified(object);
+      
+      listObjects.add(object);
+      perception.modified(object);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
@@ -35,7 +40,9 @@ public class MarauroaRPZone implements RPZone
     if(objects.containsKey(id))
       {
       RPObject object=(RPObject)objects.remove(id);
-      listObjects.removed(object);
+      
+      listObjects.remove(object);
+      perception.removed(object);
       
       return object;
       }
@@ -86,11 +93,22 @@ public class MarauroaRPZone implements RPZone
 
   public Perception getPerception(RPObject.ID id, byte type)
     {
-    return listObjects;
+    if(type==Perception.DELTA)
+      {
+      return perception;
+      }
+    else
+      {
+      Perception p=new Perception(Perception.TOTAL);
+      p.modifiedList=listObjects;
+      
+      return p;
+      }
     }
   
   public void nextTurn() 
     {
+    perception=new Perception(Perception.DELTA);
     }  
   }
 
