@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.3 2005/02/19 18:50:58 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.4 2005/03/02 22:24:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,10 @@ import java.io.*;
 
 import marauroa.common.*;
 import marauroa.server.game.*;
+
+//java management stuff
+import javax.management.*;
+import java.lang.management.*;
 
 /** the launcher of the whole Marauroa Server. */
 public class marauroad extends Thread
@@ -100,6 +104,23 @@ public class marauroad extends Thread
   public synchronized void run()
     {
     Logger.trace("marauroad::run",">");
+
+    try 
+      {
+      MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+      // Unique identification of MBeans
+      Statistics statBean = Statistics.getStatistics();
+      // Uniquely identify the MBeans and register them with the platform MBeanServer 
+      ObjectName statName = new ObjectName("marauroad:name=Statistics");
+      mbs.registerMBean(statBean, statName);
+      Logger.trace("marauroad::run","D","Statistics bean registered.");
+      } 
+    catch(Exception e) 
+      {
+      Logger.trace("marauroad::run","X","Error registering statistics bean, continuing anyway.");
+      e.printStackTrace();
+      }
+
 
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.2 2005/03/02 22:21:59 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.server.*;
 /** This class encapsulate everything related to the statistics recollection and
  *  storage. */
 public class Statistics
+  implements StatisticsMBean
   {
   public static class GatheredVariables
     {
@@ -215,4 +216,70 @@ public class Statistics
       {
       }
     }
+
+  public long getBytesRecv()
+    {
+    return allTimeVar==null?-1:allTimeVar.bytesRecv;
+    }
+
+  public long getBytesSend()
+    {
+    return allTimeVar==null?-1:allTimeVar.bytesSend;
+    }
+
+  public long getMessagesRecv()
+    {
+    return allTimeVar==null?-1:allTimeVar.messagesRecv;
+    }
+
+  public long getMessagesSend()
+    {
+    return allTimeVar==null?-1:allTimeVar.messagesSend;
+    }
+
+  public long getMessagesIncorrect()
+    {
+    return allTimeVar==null?-1:allTimeVar.messagesIncorrect;
+    }
+
+  public long getPlayersLogin()
+    {
+    return allTimeVar==null?-1:allTimeVar.playersLogin;
+    }
+
+  public long getPlayersInvalidLogin()
+    {
+    return allTimeVar==null?-1:allTimeVar.playersInvalidLogin;
+    }
+
+  public long getPlayersLogout()
+    {
+    return allTimeVar==null?-1:allTimeVar.playersLogout;
+    }
+
+  public long getPlayersTimeout()
+    {
+    return allTimeVar==null?-1:allTimeVar.playersTimeout;
+    }
+
+  public long getPlayersOnline()
+    {
+    return allTimeVar==null?-1:allTimeVar.playersOnline;
+    }
+
+  public long getObjectsNow()
+    {
+    return allTimeVar==null?-1:allTimeVar.objectsNow;
+    }
+
+  public long getActionsAdded() 
+    {
+    return allTimeVar==null?-1:allTimeVar.actionsAdded;
+    }
+
+  public long getActionsInvalid()
+    {
+    return allTimeVar==null?-1:allTimeVar.actionsInvalid;
+    }
+
   }
