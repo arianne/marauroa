@@ -55,7 +55,44 @@ public class PlayerEntryContainer
       super("Unable to find the requested player");
       }
     }
+    
+  /** This class is a iterator over the player in PlayerEntryContainer */
+  static public class PlayerEntryContainerIterator implements Iterator
+    {
+    private Iterator entryIter;
+    
+    /** Constructor */
+    private PlayerEntryContainerIterator(Iterator iter)
+      {
+      entryIter = iter;
+      }
+     
+    /** This method returns true if there are still most elements.
+     *  @return true if there are more elements. */    
+    public boolean hasNext()
+      {
+      return(entryIter.hasNext());
+      }
+     
+    /** This method returs the clientid and move the pointer to the next element
+     *  @return an clientid */
+    public Object next()
+      {
+      Map.Entry entry=(Map.Entry)entryIter.next();
+      return entry.getKey();
+      }
+    
+    public void remove()
+      {
+      }
+    }
   
+  /** This method returns an iterator of the players in the container */  
+  public Iterator iterator()
+    {
+    return new PlayerEntryContainerIterator(listPlayerEntries.entrySet().iterator());
+    }
+    
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */
   private HashMap listPlayerEntries;
   /** A object representing the database */

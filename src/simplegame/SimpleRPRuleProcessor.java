@@ -47,6 +47,10 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   
   public void approvedActions(RPActionList actionList)
     {
+    while(actionList.size()<2)
+      {
+      actionList.remove(0);
+      }
     }
 
   public RPAction.Status execute(RPObject.ID id, RPAction action)

@@ -102,48 +102,72 @@ public class RPServerManager extends Thread
     }
   
   public RPObject getRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
-  {
+    {
     marauroad.trace("RPServerManager::getRPObject",">");
-    RPObject object=zone.get(id);
-    marauroad.trace("RPServerManager::getRPObject","<");
-    return object;
-  }
+    
+    try
+      {
+      return zone.get(id);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::getRPObject","<");
+      }
+    }
   
   public boolean hasRPObject(RPObject.ID id)
-  {
+    {
     marauroad.trace("RPServerManager::hasRPObject",">");
-    boolean has=zone.has(id);
-    marauroad.trace("RPServerManager::hasRPObject","<");
-    return has;
-  }
+    
+    try
+      {
+      return zone.has(id);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::hasRPObject","<");      
+      }
+    }
   
   public void removeRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
-  {
+    {
     marauroad.trace("RPServerManager::removeRPObject",">");
-    marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
-    zone.remove(id);
-    marauroad.trace("RPServerManager::removeRPObject","<");
-  }
+    
+    try
+      {
+      marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
+      zone.remove(id);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::removeRPObject","<");
+      }
+    }
+    
+  private void buildPerceptions()
+    {
+    Iterator it=playerContainer.iterator();
+    }
   
   public void run()
-  {
+    {
     marauroad.trace("RPServerManager::run",">");
     
     while(keepRunning)
-    {
+      {
       scheduler.visit(ruleProcessor);
       scheduler.nextTurn();
       
       try
-      {
+        {
         Thread.sleep(turnDuration);
-      }
+        }
       catch(InterruptedException e)
-      {
+        {
+        }
       }
-    }
     
     marauroad.trace("RPServerManager::run","<");
+    }
   }
-}
 

@@ -33,6 +33,15 @@ public class RPActionList
     {
     return((RPAction)actionsList.get(index));
     }
+    
+  /** This method removes the RPAction at position index
+   * @param index index of RPAction to remove
+   * @return actions that was just removed
+   **/
+  public RPAction remove(int index)
+    {
+    return (RPAction)actionsList.remove(index);
+    }
   
   /** This method gets the size
    * @return count of RPActions in this list
