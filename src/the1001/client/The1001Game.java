@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.18 2004/04/25 14:26:46 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.19 2004/04/26 22:08:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -170,16 +170,16 @@ public class The1001Game
               }
               if(full_perception)
               {
-                previous_timestamp=perception.getTimestamp()-1;
+                previous_timestamp=perception.getPerceptionTimestamp()-1;
               }
               marauroad.trace("The1001Game::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
               
               if(synced)
               {
-                if(previous_timestamp+1!=perception.getTimestamp())
+                if(previous_timestamp+1!=perception.getPerceptionTimestamp())
                 {
                   marauroad.trace("The1001Game::messageLoop","D","We are out of sync. Waiting for sync perception");
-                  marauroad.trace("The1001Game::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
+                  marauroad.trace("The1001Game::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getPerceptionTimestamp());
                   synced=false;
                   /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.20 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.21 2004/04/26 22:10:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,12 +68,12 @@ public class the1001RPZone extends MarauroaRPZone
       marauroad.trace("the1001RPZone::the1001RPZone","<");
       }
     }
-	
+    
   public RPObject getHeroesHouse()
     {
     return heroesHouse;
     }
-	
+    
   public RPObject getArena()
     {
     try
@@ -85,31 +85,19 @@ public class the1001RPZone extends MarauroaRPZone
       return null;
       }
     }
-	
+    
   public RPObject create(RPObject object)
     {
-    /** TODO: Must copy the object and assign a new Object id
-     *  It is used in the Buy action. */
     try
       {
       RPObject result=(RPObject)object.copy();
-
       result.put(RPCode.var_object_id,new RPObject.ID(super.create()).getObjectID());
-      // Iterator it=object.iterator();
-      // while(it.hasNext())
-      // {
-      // String attrib=(String)it.next();
-      // if(attrib.equals(RPCode.var_object_id)==false)
-      // {
-      // result.put(attrib,object.get(attrib));
-      // }
-      // }
-      //
+
       return result;
       }
     catch(Exception e)
       {
-      return null;	 
+      return null;
       }
     }
   }
