@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.8 2004/01/01 22:24:30 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.9 2004/01/01 22:38:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -172,22 +172,18 @@ public class Test_RPCode extends TestCase
       assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(newgladiator)));
       assertEquals(newplayer.get("status"),"onArena");
 
-      /** We now add another player, but the fight has already begin... */
-      RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()),"a name");
-      zone.add(waitingPlayer);
-      RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
-      waitingPlayer.getSlot("gladiators").add(waitingGladiator);
-
-      status=RPCode.RequestFight(new RPObject.ID(waitingPlayer),new RPObject.ID(waitingGladiator));
+      status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),"rock");
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
-      assertEquals(arena.get("status"),"fighting");
-      assertFalse(arena.getSlot("gladiators").has(new RPObject.ID(waitingGladiator)));
-      assertTrue(arena.has("waiting"));
-      assertFalse(waitingPlayer.get("status").equals("onArena"));
-      assertEquals(waitingPlayer.getInt("requested"),rpu.getTurn());
+      status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scisor");
+      assertEquals(status,RPAction.STATUS_SUCCESS);
       
       /** Now it is turn to begin the fight */
+      RPCode.ResolveFight();
+      
+      assertFalse(gladiator.has("damage"));
+      assertTrue(newgladiator.has("damage"));
+      assertTrue(newgladiator.getInt("damage")<newgladiator.getInt("attack"));
       }
     catch(Exception e)
       {
