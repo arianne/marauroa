@@ -6,7 +6,9 @@ status possible states are:
 - planning 
 - implemented
 
-The planning state means that it is still in a request for comments (RFC) status. While when it has implemented status we consider it fixed until next iteration.
+The planning state means that it is still in a request for comments (RFC) 
+status. While when it has implemented status we consider it fixed until 
+next iteration.
 
 
 Contents
@@ -20,4 +22,9 @@ Messages Types.txt
 UDP Packet Format.txt
   Author : Miguel Angel Blanch Lardin
   Created: 2003/09/02
+  status : planning
+
+NetworkManager.txt
+  Author : Miguel Angel Blanch Lardin
+  Created: 2003/09/26
   status : planning

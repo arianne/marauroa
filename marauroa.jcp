@@ -69,14 +69,21 @@ FILTER := ""
 LABEL := "doc"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
 #[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "game"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\game\\PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]

@@ -15,17 +15,17 @@ public class Test_NetworkServerManager extends TestCase
   public void testNetworkServerManager()
     {
     NetworkServerManager netManager=null;
-    
+
     try
       {
       netManager=new NetworkServerManager();
       }
-    catch(java.net.SocketException e)
+    catch(SocketException e)
       {
       fail(e.getMessage());
       return;
       }
-      
+       
     assertNotNull(netManager);
       
     InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
@@ -33,7 +33,7 @@ public class Test_NetworkServerManager extends TestCase
     msg.setClientID((short)1423);
     
     netManager.addMessage(msg);
-    Message result=netManager.getMessage();
+    Message result=netManager.getMessage(0);
     
     MessageC2SLogin realResult=(MessageC2SLogin)result;
     

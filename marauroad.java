@@ -41,6 +41,11 @@ public class marauroad
       report(e.getMessage());
       }
     }
+    
+  private static void finish()
+    {
+    netMan.finish();
+    }
 	
   public static void println(String text)
     {

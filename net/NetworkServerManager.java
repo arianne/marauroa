@@ -11,6 +11,8 @@ public class NetworkServerManager
   {
   private DatagramSocket socket;
   private boolean keepRunning;  
+  private boolean isfinished;
+  
   private MessageFactory msgFactory;
   private List messages;  
   private NetworkServerManagerRead readManager;
@@ -23,6 +25,7 @@ public class NetworkServerManager
        
     msgFactory=MessageFactory.getFactory();
     keepRunning=true;
+    isfinished=false;
     
     messages=Collections.synchronizedList(new LinkedList());
     
@@ -32,9 +35,22 @@ public class NetworkServerManager
     writeManager=new NetworkServerManagerWrite();
     }
   
-  public void finish()
+  public synchronized void finish()
     {
     keepRunning=false;
+    
+    while(isfinished==false)
+      {
+      try
+        {
+        wait(100);
+        }
+      catch(java.lang.InterruptedException e)
+        {
+        }
+      }
+    
+    socket.close();
     }
     
   private synchronized void newMessageArrived()
@@ -42,6 +58,30 @@ public class NetworkServerManager
     notify();
     }
  
+  public synchronized Message getMessage(int timeout)
+    {
+    if(messages.size()==0)
+      {
+      try
+        {
+        wait(timeout);
+        }
+      catch(InterruptedException e)
+        {
+        marauroad.report(e.getMessage());
+        }
+      }
+    
+    if(messages.size()==0)
+      {
+      return null;      
+      }
+    else
+      {  
+      return (Message)messages.remove(0); 
+      }
+    }
+
   public synchronized Message getMessage()
     {
     while(messages.size()==0)
@@ -73,7 +113,8 @@ public class NetworkServerManager
     
     public void run()
       {
-      marauroa.marauroad.report("Start thread "+this.getName());
+      marauroad.report("Start thread "+this.getName());
+
       while(keepRunning)
         {
         byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
@@ -98,7 +139,8 @@ public class NetworkServerManager
           }
         }
         
-      marauroad.report("End thread "+this.getName());        
+      marauroad.report("End thread "+this.getName());
+      isfinished=true;              
       }    
     }        
     
@@ -115,15 +157,18 @@ public class NetworkServerManager
  	  {
  	  try
  	    {
- 	    ByteArrayOutputStream out=new ByteArrayOutputStream();
- 	    OutputSerializer s=new OutputSerializer(out);
+ 	    if(keepRunning)
+ 	      {
+ 	      ByteArrayOutputStream out=new ByteArrayOutputStream();
+ 	      OutputSerializer s=new OutputSerializer(out);
  	 
- 	    s.write(message);
- 	  
- 	    byte[] buffer=out.toByteArray();
- 	    DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,message.getAddress());
- 	    
- 	    socket.send(pkt);
+ 	      s.write(message);
+ 	   
+ 	      byte[] buffer=out.toByteArray();
+   	      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,message.getAddress());
+ 	     
+ 	      socket.send(pkt);
+ 	      }
  	    }
  	  catch(IOException e)
  	    { 	 

@@ -8,16 +8,12 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\net\\NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\marauroad.java" #[EndFile]
-#[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_MessageFactory.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_Serializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_Messages.java" #[EndFile]
-#[BeginFile]SOURCE := "C:\\j2sdk1.4.2\\docs\\api\\java\\util\\LinkedList.html@" #[EndFile]
-#[BeginFile]SOURCE := "C:\\j2sdk1.4.2\\docs\\api\\java\\lang\\Thread.html@" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\GameConst.java" #[EndFile]
 #[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\game\\PlayerDatabase.java" #[EndFile]
 
 ! Start Breakpoint Structure
 

@@ -1,0 +1,2 @@
+- Problem with client guessing other player's clientid using a protocol hole at
+  Login event.

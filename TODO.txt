@@ -21,3 +21,20 @@ Tasks to do:
 - Search info about Monitors for NetworkServerManager.
 
 - Implement methods to explict request termination of the threads.
+
+- Write document for PlayerEntry structure
+- Write document for client id generation
+
+- Document missing reply to events on GameManager
+- Proper output at exceptions.
+
+- On error report place at least:
+  File name and line number of the error.
+  Brief Error description.
+  Complete error description.
+  Resolution taken.
+  
+- Write document about error reporting.
+
+- Create an XML database.
+  
