@@ -77,10 +77,8 @@ public class JMarauroa
                              {
           public void keyPressed(KeyEvent e)
           {
-            //            addLog("Key pressed " + e+"\n");
             if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
             {
-              actionHandler.interruptCurrentAction();
             }
           }} );
     glassPane.addFocusListener(new FocusListener()
@@ -88,12 +86,10 @@ public class JMarauroa
           
           public void focusGained(FocusEvent e)
           {
-            //            addLog("Focus gained\n");
           }
           
           public void focusLost(FocusEvent e)
           {
-            //            addLog("Focus lost\n");
           }
           
         });
@@ -354,9 +350,6 @@ public class JMarauroa
   
   private void login()
   {
-    // In a ComponentDialog, you can show as many message components and
-    // as many options as you want:
-    
     // Messages
     Object[]      message = new Object[6];
     message[0] = "Server to login:";
@@ -466,16 +459,9 @@ public class JMarauroa
       SimpleGame sg = new SimpleGame(netMan,JMarauroa.this);
       sg.pack();
       sg.show();
-      new Thread(sg).run();
+      new Thread(sg,"Lets play thread...").start();
     }
     
-    private void interruptCurrentAction()
-    {
-      //      if(currentEvent!=null)
-      //      {
-      addLog("Interrupt current action...\n");
-      //      }
-    }
     
     private void process(ActionEvent e)
     {
