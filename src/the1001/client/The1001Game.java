@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.17 2004/04/25 09:27:44 root777 Exp $ */
+/* $Id: The1001Game.java,v 1.18 2004/04/25 14:26:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,20 +166,20 @@ public class The1001Game
               if(!synced)
               {
                 synced=full_perception;
-                marauroad.trace("The1001Bot::messageLoop","D",synced?"Synced.":"Unsynced!");
+                marauroad.trace("The1001Game::messageLoop","D",synced?"Synced.":"Unsynced!");
               }
               if(full_perception)
               {
                 previous_timestamp=perception.getTimestamp()-1;
               }
-              marauroad.trace("The1001Bot::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
+              marauroad.trace("The1001Game::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
               
               if(synced)
               {
                 if(previous_timestamp+1!=perception.getTimestamp())
                 {
-                  System.out.println("We are out of sync. Waiting for sync perception");
-                  System.out.println("Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
+                  marauroad.trace("The1001Game::messageLoop","D","We are out of sync. Waiting for sync perception");
+                  marauroad.trace("The1001Game::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
                   synced=false;
                   /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }
@@ -207,6 +207,8 @@ public class The1001Game
                   e.printStackTrace();
                   synced=false;
                 }
+                gm.react(false);
+                gm.fireListeners();
               }
               else
               {
@@ -216,7 +218,7 @@ public class The1001Game
             else if(msg instanceof MessageS2CLogoutACK)
             {
               loggedOut=true;
-              System.out.println("Logged out...");
+              marauroad.trace("The1001Game::messageLoop","D","Logged out...");
               sleep(20);
               System.exit(-1);
             }
@@ -235,7 +237,7 @@ public class The1001Game
             timeout_count++;
             if(timeout_count>=time_out_max_count)
             {
-              System.out.println("TIMEOUT. EXIT.");
+              marauroad.trace("The1001Game::messageLoop","D","TIMEOUT. EXIT.");
               System.exit(1);
             }
             sleep(1);
@@ -368,7 +370,7 @@ public class The1001Game
     }
     catch(MessageFactory.InvalidVersionException e)
     {
-      System.out.println("Not able to connect to server because you are using an outdated client");
+      marauroad.trace("The1001Game::messageLoop","X","Not able to connect to server because you are using an outdated client");
       System.exit(-1);
     }
     catch(SocketException e)
@@ -415,7 +417,7 @@ public class The1001Game
     }
     catch(MessageFactory.InvalidVersionException e)
     {
-      System.out.println("Not able to connect to server because you are using an outdated client");
+      marauroad.trace("The1001Game::messageLoop","X","Not able to connect to server because you are using an outdated client");
       System.exit(-1);
     }
     if(!complete)

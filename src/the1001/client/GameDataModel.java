@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.22 2004/04/25 09:27:44 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.23 2004/04/25 14:26:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -109,6 +109,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::getArena","X",e.getMessage());
         e.printStackTrace(System.out);
       }
     }
@@ -136,14 +137,6 @@ public final class GameDataModel
     if(ownCharacterId!=null)
     {
       rp_own_char = getObject(ownCharacterId);
-    }
-    else
-    {
-      System.out.println("ownCharacterID is null...");
-    }
-    if(rp_own_char==null)
-    {
-      System.out.println("ownCharacter is null...");
     }
     return rp_own_char;
   }
@@ -198,6 +191,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::getSpectators","X",e.getMessage());
         e.printStackTrace(System.out);
       }
     }
@@ -233,6 +227,7 @@ public final class GameDataModel
             }
             catch (RPObject.NoSlotFoundException e)
             {
+              marauroad.trace("GameDataModel::getShopGladiators","X",e.getMessage());
               e.printStackTrace(System.out);
             }
           }
@@ -241,6 +236,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::getShopGladiators","X",e.getMessage());
         e.printStackTrace(System.out);
       }
     }
@@ -267,23 +263,25 @@ public final class GameDataModel
             }
             else
             {
-              System.out.println("Object ignored because it is not gladiator: "+rp_g);
+              marauroad.trace("GameDataModel::getFighters","D","Object ignored because it is not gladiator: "+rp_g);
             }
           }
           catch (Attributes.AttributeNotFoundException e)
           {
+            marauroad.trace("GameDataModel::getFighters","X",e.getMessage());
             e.printStackTrace(System.out);
           }
         }
       }
       catch (RPObject.NoSlotFoundException e)
       {
+        marauroad.trace("GameDataModel::getFighters","X",e.getMessage());
         e.printStackTrace(System.out);
       }
     }
     else
     {
-      System.out.println("No slot " +RPCode.var_gladiators + " in " + rp_arena );
+      marauroad.trace("GameDataModel::getFighters","D","No slot " +RPCode.var_gladiators + " in " + rp_arena);
     }
     return(l_gladiators);
   }
@@ -295,7 +293,6 @@ public final class GameDataModel
     if(gladiator!=null)
     {
       int gl_id = RPObject.INVALID_ID.getObjectID();
-      
       try
       {
         gl_id = gladiator.getInt(RPCode.var_object_id);
@@ -345,40 +342,17 @@ public final class GameDataModel
         }
         catch (RPObject.NoSlotFoundException e)
         {
+          marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
           e.printStackTrace(System.out);
         }
       }
     }
     if(gladiator==null)
     {
-      System.out.println("Own gladiator is null");
+      marauroad.trace("GameDataModel::getFirstOwnGladiator","D","Own gladiator is not set.");
     }
     return gladiator;
   }
-  
-  //  public RPObject getFirstGladiatorOf(RPObject rp_char)
-  //  {
-  //    RPObject gladiator = null;
-//
-  //    try
-  //    {
-  //      if(mGlobalObjects.size()>0)
-  //      {
-  //        RPObject gl_char = (RPObject)mGlobalObjects.get(rp_char.get(RPCode.var_object_id));
-  //        if(gl_char!=null)
-  //        {
-  //          RPSlot slot_glads = gl_char.getSlot(RPCode.var_myGladiators);
-  //          gladiator = slot_glads.get();
-  //        }
-  //      }
-  //    }
-  //    catch(Exception e)
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    return gladiator;
-  //  }
-  
   
   public void sendMessage(String msg)
   {
@@ -434,7 +408,7 @@ public final class GameDataModel
         setFightMode(random_value==0?RPCode.var_scissor:(random_value==1?RPCode.var_rock:RPCode.var_paper));
         break;
     }
-    System.out.println(strg+getFightMode());
+    //System.out.println(strg+getFightMode());
   }
   
   public String getFightMode()
@@ -543,7 +517,7 @@ public final class GameDataModel
     return(ret);
   }
   
-  private void fireListeners()
+  protected void fireListeners()
   {
     for (int i = 0; i < listeners.size(); i++)
     {
@@ -568,6 +542,7 @@ public final class GameDataModel
     }
     catch (Attributes.AttributeNotFoundException e)
     {
+      marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
       e.printStackTrace(System.out);
     }
     if(RPCode.var_waiting.equals(getStatus())||RPCode.var_request_fame.equals(getStatus()))
@@ -613,6 +588,7 @@ public final class GameDataModel
       }
       catch(Exception e)
       {
+        marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
         e.printStackTrace(System.out);
       }
       if(!voted)
@@ -626,6 +602,7 @@ public final class GameDataModel
           }
           catch(Exception e)
           {
+            marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
             e.printStackTrace(System.out);
           }
           if(winner_id==own_glad_id)
@@ -675,6 +652,7 @@ public final class GameDataModel
           }
           catch(Exception e)
           {
+            marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
             e.printStackTrace(System.out);
           }
           if(getFightMode()==null || own_damage>0)
@@ -703,10 +681,10 @@ public final class GameDataModel
     }
     if(System.currentTimeMillis()-switchStrategyTS>=switchStrategyTimeOut)
     {
-      System.out.print("Strategy switched from "+strategy);
+      marauroad.trace("GameDataModel::getFirstOwnGladiator","D","Strategy switched from "+strategy);
       //time to change strategy...
       strategy = random.nextInt(1);
-      System.out.println(" to "+strategy);
+      marauroad.trace("GameDataModel::getFirstOwnGladiator","D"," to "+strategy);
       switchStrategyTS=System.currentTimeMillis();
     }
     
@@ -741,6 +719,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::getFirstOwnGladiator","E",e.getMessage());
         e.printStackTrace(System.out);
         count++;
       }
@@ -768,6 +747,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
         e.printStackTrace(System.out);
       }
       status="Request fame(";
@@ -783,6 +763,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
         e.printStackTrace(System.out);
       }
     }
@@ -850,6 +831,7 @@ public final class GameDataModel
         }
         catch (Attributes.AttributeNotFoundException e)
         {
+          marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
           e.printStackTrace(System.out);
         }
       }
@@ -872,6 +854,7 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e)
       {
+        marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
         e.printStackTrace(System.out);
       }
       ret+="|"+setStringWidth("Gladiators ",' ',line_length)+"|\n";
@@ -922,8 +905,9 @@ public final class GameDataModel
         }
         catch (Attributes.AttributeNotFoundException e)
         {
+          marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
           e.printStackTrace(System.out);
-          System.out.println("object was: "+fighter);
+          marauroad.trace("GameDataModel::dumpToString","E"," object was: "+fighter);
         }
       }
       ret+=middle;
@@ -931,7 +915,7 @@ public final class GameDataModel
     }
     else
     {
-      System.out.println("NO GLadiators!!!");
+      marauroad.trace("GameDataModel::dumpToString","E","NO GLadiators!!!");
     }
     ret+=bottom;
     return(ret);
@@ -980,7 +964,7 @@ public final class GameDataModel
         }
         else
         {
-          marauroad.trace("GameDataModel","D","Unknown command "+command + ", e="+e);
+          marauroad.trace("GameDataModel.ActionHandler.actionPerformed","D","Unknown command "+command + ", e="+e);
         }
       }
     }

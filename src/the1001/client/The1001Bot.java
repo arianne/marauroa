@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.28 2004/04/25 10:31:41 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.29 2004/04/25 14:26:46 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,7 +66,7 @@ public class The1001Bot
             {
               if(!loggedOut&&netMan!=null)
               {
-                System.out.println("Shutting down while not logged out, trying to logout anyway...");
+                marauroad.trace("The1001Bot::messageLoop","D","Shutting down while not logged out, trying to logout anyway...");
                 netMan.addMessage(new MessageC2SLogout());
                 loggedOut = true;
               }
@@ -125,8 +125,8 @@ public class The1001Bot
               {
                 if(previous_timestamp+1!=perception.getPerceptionTimestamp())
                 {
-                  System.out.println("We are out of sync. Waiting for sync perception");
-                  System.out.println("Expected "+previous_timestamp+" but we got "+perception.getPerceptionTimestamp());
+                  marauroad.trace("The1001Bot::messageLoop","D","We are out of sync. Waiting for sync perception");
+                  marauroad.trace("The1001Bot::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
                   synced=false;
                   /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
                 }
@@ -164,7 +164,7 @@ public class The1001Bot
             else if(msg instanceof MessageS2CLogoutACK)
             {
               loggedOut=true;
-              System.out.println("Logged out...");
+              marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
               sleep(20);
               System.exit(-1);
             }
@@ -183,7 +183,7 @@ public class The1001Bot
             timeout_count++;
             if(timeout_count>=time_out_max_count)
             {
-              System.out.println("TIMEOUT. EXIT.");
+              marauroad.trace("The1001Bot::messageLoop","X","TIMEOUT. EXIT.");
               System.exit(1);
             }
             sleep(1);
@@ -201,91 +201,6 @@ public class The1001Bot
       e.printStackTrace();
     }
   }
-  
-  //  /**
-  //   * Method applyAddedObjects
-  //   *
-  //   * @param    added_objects       a  List
-  //   *
-  //   */
-  //  private void applyAddedObjects(List added_objects) throws Attributes.AttributeNotFoundException, RPObject.NoSlotFoundException
-  //  {
-  //    for (int i = 0; i < added_objects.size(); i++)
-  //    {
-  //      RPObject obj = (RPObject)added_objects.get(i);
-//
-  //      if("arena".equals(obj.get("type")))
-  //      {
-  //        gm.setArena(obj);
-//
-  //        String name = obj.get("name");
-  //        String status = obj.get("status");
-//
-  //        if(RPCode.var_waiting.equals(status))
-  //        {
-  //          if(System.currentTimeMillis()>startTS+TIME_TO_RUN_BEFORE_LOGOUT)
-  //          {
-  //            gm.logout();
-  //          }
-  //        }
-  //        marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
-  //        try
-  //        {
-  //          RPSlot slot = obj.getSlot(RPCode.var_gladiators);
-  //          for (Iterator iter = slot.iterator(); iter.hasNext() ; )
-  //          {
-  //            RPObject gladiator = (RPObject)iter.next();
-//
-  //            if("gladiator".equalsIgnoreCase(gladiator.get("type")))
-  //            {
-  //              gm.addFighter(gladiator);
-  //              marauroad.trace("The1001Bot::messageLoop","D","Arena Gladiator: "+gladiator);
-  //            }
-  //            else
-  //            {
-  //              marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena "+gladiator) ;
-  //            }
-  //          }
-  //        }
-  //        catch (RPObject.NoSlotFoundException e)
-  //        {
-  //          marauroad.trace("The1001Bot::messageLoop","X","Arena has no slot gladiators");
-  //        }
-  //      }
-  //      else if("character".equals(obj.get("type")))
-  //      {
-  //        marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
-  //        gm.addSpectator(obj);
-  //      }
-  //      else if("shop".equals(obj.get("type")))
-  //      {
-  //        marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
-  //        if(obj.hasSlot("!gladiators"))
-  //        {
-  //          RPSlot slot = obj.getSlot("!gladiators");
-  //          Iterator iter = slot.iterator();
-//
-  //          while(iter.hasNext())
-  //          {
-  //            RPObject shop_object = (RPObject)iter.next();
-//
-  //            if("gladiator".equals(shop_object.get(RPCode.var_type)))
-  //            {
-  //              gm.addShopGladiator(shop_object);
-  //            }
-  //            else
-  //            {
-  //              marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
-  //            }
-  //          }
-  //        }
-  //      }
-  //      else
-  //      {
-  //        marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
-  //      }
-  //    }
-  //  }
   
   private static void writeStats(RPObject glad)
   {
@@ -411,13 +326,13 @@ public class The1001Bot
         }
         else
         {
-          System.out.println("Timeout "+recieved+"...");
+          marauroad.trace("The1001Bot::messageLoop","D","Timeout "+recieved+"...");
           sleep(1);
         }
       }
       if(!complete)
       {
-        System.out.println("Failed to connect to server. Exiting.");
+        marauroad.trace("The1001Bot::messageLoop","X","Failed to connect to server. Exiting.");
         System.exit(-1);
       }
       marauroad.trace("The1001Bot::connectAndChooseCharacter","D","characters: "+characters);
@@ -427,13 +342,13 @@ public class The1001Bot
       }
       else
       {
-        System.out.println("No characters received from server - wrong username/password?");
+        marauroad.trace("The1001Bot::messageLoop","X","No characters received from server - wrong username/password?");
         System.exit(-1);
       }
     }
     catch(MessageFactory.InvalidVersionException e)
     {
-      System.out.println("Not able to connect to server because you are using an outdated client");
+      marauroad.trace("The1001Bot::messageLoop","X","Not able to connect to server because you are using an outdated client");
       System.exit(-1);
     }
     catch(SocketException e)
@@ -461,7 +376,7 @@ public class The1001Bot
       }
       catch(MessageFactory.InvalidVersionException e)
       {
-        // Should never happens
+        marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
       }
       
       recieved++;
@@ -483,13 +398,13 @@ public class The1001Bot
       }
       else
       {
-        System.out.println("Timeout "+recieved+"...");
+        marauroad.trace("The1001Bot::messageLoop","D","Timeout "+recieved+"...");
         sleep(1);
       }
     }
     if(!complete)
     {
-      System.out.println("Failed to connect to server. Exiting.");
+      marauroad.trace("The1001Bot::messageLoop","X","Failed to connect to server. Exiting.");
       System.exit(-1);
     }
   }
