@@ -67,25 +67,39 @@ public class RPServerManager extends Thread
     }
   
   public void finish()
-  {
+    {
+    marauroad.trace("RPServerManager::finish",">");
     keepRunning=false;
-  }
+    marauroad.trace("RPServerManager::finish","<");
+    }
   
   public void addRPAction(RPAction action) throws RPScheduler.ActionInvalidException
-  {
+    {
     marauroad.trace("RPServerManager::addRPAction",">");
-    marauroad.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
-    scheduler.addRPAction(action);
-    marauroad.trace("RPServerManager::addRPAction","<");
-  }
+    try
+      {
+      marauroad.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
+      scheduler.addRPAction(action);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::addRPAction","<");
+      }
+    }
   
   public void addRPObject(RPObject object) throws RPZone.RPObjectInvalidException
-  {
+    {
     marauroad.trace("RPServerManager::addRPObject",">");
-    marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
-    zone.add(object);
-    marauroad.trace("RPServerManager::addRPObject","<");
-  }
+    try
+      {
+      marauroad.trace("RPServerManager::addRPObject","D","Added object: "+object.toString());
+      zone.add(object);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::addRPObject","<");
+      }
+    }
   
   public RPObject getRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
   {
