@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.35 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.36 2004/03/16 22:43:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class RunTests
   public static Test suiteOneTest ( )
     {
     TestSuite suite= new TestSuite("One Test case marauroa Tests");
-//    suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_JDBCRPObjectDatabase.class));
 
     return suite;
     }

@@ -1,4 +1,4 @@
-/* $Id: Test_JDBCRPObjectDatabase.java,v 1.2 2004/03/16 13:49:52 arianne_rpg Exp $ */
+/* $Id: Test_JDBCRPObjectDatabase.java,v 1.3 2004/03/16 22:43:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,7 +67,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
     try
       {
       JDBCRPObjectDatabase database=JDBCRPObjectDatabase.getDatabase();
-      int total=5;
+      int total=500;
       
       long t1,t2,t3,t4,t5;
       
@@ -87,7 +87,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       while(it.hasNext())
         {
         RPObject object=database.loadRPObject(it.next());
-        System.out.println(object);
+        //System.out.println(object);
         }      
       
       t3=new Date().getTime();
@@ -117,5 +117,30 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       e.printStackTrace();
       fail(e.getMessage());
       }
+    }
+
+  public void testStoreRPObjectException()
+    {
+    try
+      {
+      JDBCRPObjectDatabase database=JDBCRPObjectDatabase.getDatabase();
+
+      RPObject example=new RPObject();
+      example.put("object_id",1);
+      example.put("type","TEST");
+  
+      example.addSlot(new RPSlot("l_hand"));
+    
+      RPObject item=new RPObject();
+      item.put("example","shield");
+    
+      example.getSlot("l_hand").add(item);
+
+      database.storeRPObject(example);
+      assertFalse(database.hasRPObject(new RPObject.ID(1)));        
+      }
+    catch(Exception e)
+      {
+      }      
     }
   }

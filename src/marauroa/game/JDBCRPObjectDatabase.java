@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.3 2004/03/16 13:49:52 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.4 2004/03/16 22:43:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -200,7 +200,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
         RPObject object=new RPObject();
         
         loadRPObject(object,id.getObjectID());
-        
+                
         return object;        
         }
       else
@@ -210,7 +210,6 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     catch(Exception e)
       {
-      e.printStackTrace();
       marauroad.trace("JDBCRPObjectDatabase::loadRPObject","X",e.getMessage());
       throw e;
       }
@@ -274,9 +273,12 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
         {
         throw new SQLException("RPObject not found");
         }
+
+      connection.commit();      
       }
     catch(SQLException e)
       {
+      connection.rollback();      
       marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","X",e.getMessage());
       throw e;
       }
@@ -342,14 +344,18 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
         }      
 
       storeRPObject(object,0);
+
+      connection.commit();
       }
     catch(Attributes.AttributeNotFoundException e)
       {
+      connection.rollback();      
       marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
       throw new SQLException(e.getMessage());
       }
     catch(SQLException e)
       {
+      connection.rollback();      
       marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
       throw e;
       }
@@ -438,7 +444,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       connInfo.put("password", props.get("jdbc_pwd"));
       connInfo.put("charSet", "UTF-8");
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-      conn.setAutoCommit(true);
+      conn.setAutoCommit(false);
       
       return conn;
       }
@@ -460,11 +466,11 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     try
       {
       Statement stmt = connection.createStatement();      
-      String query = "create table if not exists  RPObject(id integer not null primary key, slot_id integer);";
+      String query = "create table if not exists  RPObject(id integer not null primary key, slot_id integer) TYPE=INNODB;";
       stmt.addBatch(query);
-      query = "create table if not exists RPAttribute(object_id integer not null, name varchar(64) not null, value varchar(255), primary key(object_id,name));";
+      query = "create table if not exists RPAttribute(object_id integer not null, name varchar(64) not null, value varchar(255), primary key(object_id,name)) TYPE=INNODB;";
       stmt.addBatch(query);
-      query = "create table if not exists  RPSlot(object_id integer not null, name varchar(64) not null, slot_id integer auto_increment primary key);";
+      query = "create table if not exists  RPSlot(object_id integer not null, name varchar(64) not null, slot_id integer auto_increment primary key) TYPE=INNODB;";
       stmt.addBatch(query);
 
       int ret_array[] = stmt.executeBatch();
