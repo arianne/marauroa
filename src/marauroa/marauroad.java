@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.28 2004/01/28 18:54:26 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.29 2004/01/29 19:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -263,7 +263,7 @@ public class marauroad extends Thread
     return false;
     }
   
-  private static String[] allowed={"*","RPCode","the1001"};
+  private static String[] allowed={"RPCode","the1001","buildPerceptions"};
   
   public static void trace(String module,String event)
     {

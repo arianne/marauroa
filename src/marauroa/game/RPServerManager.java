@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.41 2004/01/29 17:15:37 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.42 2004/01/29 19:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -234,7 +234,6 @@ class RPServerManager extends Thread
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
-              deltaPerceptionSend=0;
               }
             else
               {
@@ -256,6 +255,11 @@ class RPServerManager extends Thread
           {
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
           }
+        }
+      
+      if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+        {
+        deltaPerceptionSend=0;
         }
 
       playerContainer.getLock().releaseLock();
