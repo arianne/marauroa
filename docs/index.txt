@@ -43,6 +43,9 @@ Contents
 		
 	b) Objects Explained.txt
 		Explains all the details related to Objects
+	
+	b.1) Objects and Slots.txt
+		Basic introduction to the Slots.
 		
 	c) Actions Explained.txt
 		Explains all the details related to Actions
