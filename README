@@ -1,0 +1,27 @@
+Marauroa
+--------
+
+Marauroa is a Java clone of Arianne.
+You can find the latest version of Marauroa at: http://marauroa.sf.net
+Marauroa is a GPL project.
+
+status
+------
+Actually Marauroa is not playable and it is target to create a server running in Java, and a later time a Java based client will be deployed too.
+
+
+Requirements
+------------
+Actually to compile Marauroa you need:
+- Java SDK 1.4.2	( http://java.sun.com 		)
+- JUnit 1.3.8		( http://junit.sf.net 		)
+
+
+Build
+-----
+TODO
+
+
+Running
+-------
+TODO

@@ -1,0 +1,13 @@
+! ** JCreator Workspace File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.00"
+LABEL := "marauroa"
+
+! Start Project Structure
+#[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
+
+! Start Last Document Structure
+
+! Start Breakpoint Structure
+
