@@ -11,6 +11,7 @@
   <property name="junitlib" value="c:/j2sdk1.4.2_03/junit/junit.jar"/>
   <property name="connectorJ" value="c:/j2sdk1.4.2_03/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
   <property name="jython" value="c:/archivos de programa/jython-2.1/jython.jar"/>
+  <property name="the1001" value=""/>
   <property name="classpath" value="classes;${junitlib};${connectorJ};${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
@@ -54,7 +55,7 @@
       </not>
     </condition>
 
-    <condition property="exclude.the1001.client" value="**/the1001/*.*">
+    <condition property="exclude.the1001.client" value="**/the1001/client/*.*">
       <not>
        <available file="${the1001jar}"/>
       </not>
