@@ -4,6 +4,7 @@ from marauroa import marauroad
 from mapacman import *
 
 from java.io import ByteArrayOutputStream
+from java.util import LinkedList
 
 pacman_mapfile='map_definition.txt'
 
@@ -329,13 +330,13 @@ class mapacmanRPMap:
             object.put("type","block")
             return object
             
-        list=java.util.LinkedList()
-        for j in grid:
-            for i in grid[j]:
-                if (grid[j])[i]=='*':
-                    list.add(createBlock((i,j)))
+        listObjects=LinkedList()
+        for j in self.__grid:
+            for i in (self.__grid[j]):
+                if ((self.__grid[j])[i])=='*':
+                    listObjects.add(createBlock((i,j)))
 
-        return list
+        return listObjects
         
 #
 # A few constants to make things more beautiful

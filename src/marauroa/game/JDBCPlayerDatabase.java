@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.40 2004/05/19 20:56:36 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.41 2004/05/22 17:27:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1276,18 +1276,19 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         Statement stmt=connection.createStatement();
       
         String query = "select max(id) from player";
-        marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
+        marauroad.trace("JDBCPlayerDatabase::getValidRPObjectID","D",query);
 
         ResultSet result = stmt.executeQuery(query);
 
         if(result.next())
           {
           last_idAssigned=result.getInt(1);
+	  if(last_idAssigned<1) last_idAssigned=1;
           }
         }
       catch(Exception e)
         {
-        marauroad.thrown("JDBCRPObjectDatabase::storeRPObject","X",e);
+        marauroad.thrown("JDBCRPObjectDatabase::getValidRPObjectID","X",e);
         }
       }
 
