@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.20 2003/12/20 10:43:05 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.21 2003/12/21 12:29:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.io.*;
 import marauroa.game.PlayerDatabase;
 import marauroa.game.PlayerDatabaseFactory;
 import marauroa.game.RPObject;
@@ -24,6 +25,7 @@ import marauroa.game.RPObject;
  */
 public class marauroad extends Thread
   {
+  private static PrintWriter out;
   private static marauroad marauroa;
   private static Date timestamp;
   private static SimpleDateFormat formatter;
@@ -33,6 +35,7 @@ public class marauroad extends Thread
   
   static
     {
+    out=null;
 	timestamp=new Date();
 	formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
@@ -47,6 +50,19 @@ public class marauroad extends Thread
       if(args[i].equals("-c"))
         {
         Configuration.setConfigurationFile(args[i+1]);
+        }
+      else if(args[i].equals("-l"))
+        {
+        try
+          {
+          out=new PrintWriter(new FileOutputStream("server_log.txt"));
+          }
+        catch(FileNotFoundException e)
+          {
+          marauroad.trace("marauroad::setArguments","X",e.getMessage());
+          marauroad.trace("marauroad::setArguments","!","ABORT: marauroad can't open log file");
+          System.exit(-1);
+          }
         }
       else if(args[i].equals("-h"))
         {
@@ -99,7 +115,7 @@ public class marauroad extends Thread
     catch(Exception e)
       {
       marauroad.trace("marauroad::setTestDatabase","X",e.getMessage());
-      marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
+      marauroad.trace("marauroad::setTestDatabase","!","ABORT: marauroad can't allocate database");
       System.exit(-1);
       }
     finally
@@ -185,7 +201,7 @@ public class marauroad extends Thread
     catch(java.net.SocketException e)
       {
       marauroad.trace("marauroad::init","X",e.getMessage());
-      marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate server socket");
+      marauroad.trace("marauroad::init","!","ABORT: marauroad can't allocate server socket");
       System.exit(-1);
       }
     finally
@@ -204,6 +220,11 @@ public class marauroad extends Thread
   
   private void message(String text)
     {
+    if(out!=null)
+      {
+      out.println(text);
+      }
+      
     System.out.println(text);
     }
   
@@ -219,23 +240,6 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event)
     {
-    boolean found=false;
-    
-    Iterator it=onlyTracesFrom.iterator();
-    while(it.hasNext())
-      {
-      if(module.indexOf((String)it.next())!=-1)
-        {
-        found=true;
-        break;
-        }
-      }
-    
-    if(!found)
-      {
-      return;
-      }
-    
 	timestamp.setTime(System.currentTimeMillis());
 	String ts = formatter.format(timestamp);
     getMarauroa().message(ts+"\t"+event+"\t"+module);
@@ -243,34 +247,9 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event,String text)
     {
-    boolean found=false;
-    
-    Iterator it=onlyTracesFrom.iterator();
-    while(it.hasNext())
-      {
-      if(module.indexOf((String)it.next())!=-1)
-        {
-        found=true;
-        break;
-        }
-      }
-    
-    if(!found)
-      {
-      return;
-      }
-   
     timestamp.setTime(System.currentTimeMillis());
 	String ts = formatter.format(timestamp);
     getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
-    }
-  
-  private static List onlyTracesFrom;
-  
-  static
-    {
-    onlyTracesFrom=new LinkedList();
-    onlyTracesFrom.add("SimpleRPRuleProcessor");
     }
     
   public static void report(String text)
