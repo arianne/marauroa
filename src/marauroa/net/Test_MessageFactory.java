@@ -2,6 +2,7 @@ package marauroa.net;
 
 import marauroa.net.*;
 import marauroa.game.*;
+import marauroa.*;
 import java.io.*;
 import java.lang.Byte;
 import junit.framework.*;
@@ -21,6 +22,8 @@ public class Test_MessageFactory extends TestCase
 	
   public void testMessageFactoryRandomMessage()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryRandomMessage",">");
+
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
@@ -61,10 +64,14 @@ public class Test_MessageFactory extends TestCase
       {
       fail(e.getMessage());
       }
+
+    marauroad.trace("Test_MessageFactory::testMessageFactoryRandomMessage","<");
     }
 
   public void testMessageFactoryFailOnUnregisteredMessage()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnUnregisteredMessage",">");
+
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
@@ -96,10 +103,14 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {      
       }
+
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnUnregisteredMessage","<");
     }
 
   public void testMessageFactoryFailOnWrongProtocol()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnWrongProtocol",">");
+
     MessageFactory msgFac=MessageFactory.getFactory();
    
     String character="Test character";
@@ -132,10 +143,14 @@ public class Test_MessageFactory extends TestCase
     catch(IOException e)
       {      
       }
+
+    marauroad.trace("Test_MessageFactory::testMessageFactoryFailOnWrongProtocol","<");
     }
 
   public void testMessageFactoryAllMessages()
     {
+    marauroad.trace("Test_MessageFactory::testMessageFactoryAllMessages",">");
+
     MessageFactory msgFac=MessageFactory.getFactory();
     
     Message msg_0=new MessageC2SAction(null,new marauroa.game.RPAction());
@@ -241,5 +256,7 @@ public class Test_MessageFactory extends TestCase
       {
       fail(e.getMessage());
       }
+
+    marauroad.trace("Test_MessageFactory::testMessageFactoryAllMessages","<");
     }
   }

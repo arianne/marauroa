@@ -2,6 +2,7 @@ package marauroa.game;
 
 import junit.framework.*;
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 
 public class Test_RPAction extends TestCase
@@ -20,6 +21,8 @@ public class Test_RPAction extends TestCase
 	
   public void testAttributes()
     {
+    marauroad.trace("Test_RPAction::testAttributes",">");
+
     try
       {
       RPAction attr=new RPAction();
@@ -38,10 +41,16 @@ public class Test_RPAction extends TestCase
       {
       fail(e.getMessage());
       }
+    finally
+      {
+      marauroad.trace("Test_RPAction::testAttributes","<");
+      }
     }
 
   public void testAttributesException()
     {
+    marauroad.trace("Test_RPAction::testAttributesException",">");
+
     try
       {
       RPAction attr=new RPAction();
@@ -55,10 +64,16 @@ public class Test_RPAction extends TestCase
       {
       assertTrue(true);
       }
+    finally
+      {
+      marauroad.trace("Test_RPAction::testAttributesException","<");
+      }
     }
 
   public void testAttributesSerialization()
     {
+    marauroad.trace("Test_RPAction::testAttributesSerialization",">");
+
     RPAction attr=new RPAction();
     assertNotNull(attr);
   
@@ -98,11 +113,14 @@ public class Test_RPAction extends TestCase
       }
     
     assertEquals(attr,result);
+    marauroad.trace("Test_RPAction::testAttributesSerialization","<");
     }
 
 
   public void testAttributesStatus()
     {
+    marauroad.trace("Test_RPAction::testAttributesStatus",">");
+
     RPAction.Status status=new RPAction.Status(RPAction.STATUS_FAIL.getStatus());
     assertTrue(status.equals(RPAction.STATUS_FAIL));
     assertFalse(status.equals(RPAction.STATUS_INCOMPLETE));
@@ -111,5 +129,7 @@ public class Test_RPAction extends TestCase
     assertEquals(RPAction.STATUS_FAIL,new RPAction.Status("fail"));
     assertEquals(RPAction.STATUS_INCOMPLETE,new RPAction.Status("incomplete"));
     assertEquals(RPAction.STATUS_SUCCESS,new RPAction.Status("success"));   
+
+    marauroad.trace("Test_RPAction::testAttributesStatus","<");
     }
   }

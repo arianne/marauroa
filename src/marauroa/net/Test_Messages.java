@@ -2,6 +2,7 @@ package marauroa.net;
 
 import marauroa.net.*;
 import marauroa.game.*;
+import marauroa.*;
 import java.io.*;
 import java.lang.Byte;
 import junit.framework.*;
@@ -22,6 +23,7 @@ public class Test_Messages extends TestCase
 	
   public void testMessageC2SChooseCharacter()
     {
+    marauroad.trace("Test_Messages::testMessageC2SChooseCharacter",">");
     String character="Test character";
     int clientid=14324;
     
@@ -65,10 +67,12 @@ public class Test_Messages extends TestCase
     assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(character,result.getCharacter());
+    marauroad.trace("Test_Messages::testMessageC2SChooseCharacter","<");
     }
 
   public void testMessageC2SLogin()
     {
+    marauroad.trace("Test_Messages::testMessageC2SLogin",">");
     String username="Test username";
     String password="Test password";
     int clientid=14324;
@@ -115,10 +119,12 @@ public class Test_Messages extends TestCase
     assertEquals(clientid,result.getClientID());
     assertEquals(username,result.getUsername());
     assertEquals(password,result.getPassword());
+    marauroad.trace("Test_Messages::testMessageC2SLogin","<");
     }
 
   public void testMessageC2SLogout()
     {
+    marauroad.trace("Test_Messages::testMessageC2SLogout",">");
     int clientid=14324;
     
     MessageC2SLogout msg=new MessageC2SLogout(null);
@@ -159,10 +165,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_C2S_LOGOUT,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageC2SLogout","<");
     }
   
   public void testMessageS2CCharacterList()
     {
+    marauroad.trace("Test_Messages::testMessageS2CCharacterList",">");
     int clientid=14324;
     String[] characters={"Test character","Another Test character"};
     
@@ -211,10 +219,12 @@ public class Test_Messages extends TestCase
       {
       assertEquals(characters[i],result.getCharacters()[i]);
       }
+    marauroad.trace("Test_Messages::testMessageS2CCharacterList","<");
     }  
 
   public void testMessageS2CChooseCharacterACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK",">");
     int clientid=14324;
     
     MessageS2CChooseCharacterACK msg=new MessageS2CChooseCharacterACK(null,new RPObject.ID(0));
@@ -255,10 +265,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterACK","<");
     }
   
   public void testMessageS2CChooseCharacterNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK",">");
     int clientid=14324;
     
     MessageS2CChooseCharacterNACK msg=new MessageS2CChooseCharacterNACK(null);
@@ -299,10 +311,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_CHOOSECHARACTER_NACK,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CChooseCharacterNACK","<");
     }
   
   public void testMessageS2CLoginACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLoginACK",">");
     int clientid=14324;
     
     MessageS2CLoginACK msg=new MessageS2CLoginACK(null);
@@ -343,10 +357,13 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_LOGIN_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
+    
+    marauroad.trace("Test_Messages::testMessageS2CLoginACK","<");
     }
    
   public void testMessageS2CLoginNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLoginNACK",">");
     byte reason=MessageS2CLoginNACK.USERNAME_WRONG;
     int clientid=14324;
     
@@ -390,10 +407,13 @@ public class Test_Messages extends TestCase
     assertEquals(Message.TYPE_S2C_LOGIN_NACK,result.getType());
     assertEquals(reason,msg.getResolutionCode());
     assertEquals(clientid,result.getClientID());
+    
+    marauroad.trace("Test_Messages::testMessageS2CLoginNACK","<");
     }
 
   public void testMessageS2CLogoutACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLogoutACK",">");
     int clientid=14324;
     
     MessageS2CLogoutACK msg=new MessageS2CLogoutACK(null);
@@ -434,10 +454,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_LOGOUT_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CLogoutACK","<");
     }
 
   public void testMessageS2CLogoutNACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CLogoutNACK",">");
     int clientid=14324;
     
     MessageS2CLogoutNACK msg=new MessageS2CLogoutNACK(null);
@@ -478,10 +500,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_LOGOUT_NACK,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CLogoutNACK","<");
     }
     
   public void testMessageC2SAction()
     {
+    marauroad.trace("Test_Messages::testMessageC2SAction",">");
     int clientid=14324;
     marauroa.game.RPAction action=new marauroa.game.RPAction();
     action.put("object_id","156123");
@@ -528,10 +552,13 @@ public class Test_Messages extends TestCase
     assertEquals(Message.TYPE_C2S_ACTION,result.getType());
     assertEquals(clientid,result.getClientID());
     assertEquals(action,result.getRPAction());
+
+    marauroad.trace("Test_Messages::testMessageC2SAction","<");
     }
 
   public void testMessageS2CActionACK()
     {
+    marauroad.trace("Test_Messages::testMessageS2CActionACK",">");
     int clientid=14324;
     
     MessageS2CActionACK msg=new MessageS2CActionACK(null);
@@ -572,10 +599,13 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_ACTION_ACK,result.getType());
     assertEquals(clientid,result.getClientID());
+
+    marauroad.trace("Test_Messages::testMessageS2CActionACK","<");
     }
       
   public void testMessageS2CPerception()
     {
+    marauroad.trace("Test_Messages::testMessageS2CPerception",">");
     int clientid=14324;
     
     MessageS2CPerception msg=new MessageS2CPerception(null, new LinkedList(), new LinkedList());
@@ -616,10 +646,12 @@ public class Test_Messages extends TestCase
     
     assertEquals(Message.TYPE_S2C_PERCEPTION,result.getType());
     assertEquals(clientid,result.getClientID());
+    marauroad.trace("Test_Messages::testMessageS2CPerception","<");
     }
     
   public void testSeveralMessageSameStream()
     {
+    marauroad.trace("Test_Messages::testSeveralMessageSameStream",">");
     int clientid=14324;
     String username="Test username";
     String password="Test password";
@@ -692,5 +724,7 @@ public class Test_Messages extends TestCase
     assertEquals(clientid,resultLoginACK.getClientID());
     assertEquals(clientid,resultLogout.getClientID());
     assertEquals(clientid,resultLogoutNACK.getClientID());
+
+    marauroad.trace("Test_Messages::testSeveralMessageSameStream","<");
     }  
   }

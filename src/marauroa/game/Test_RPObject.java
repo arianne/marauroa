@@ -2,6 +2,7 @@ package marauroa.game;
 
 import junit.framework.*;
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 
 public class Test_RPObject extends TestCase
@@ -13,6 +14,8 @@ public class Test_RPObject extends TestCase
 	
   public void testRPObjectAttributes()
     {
+    marauroad.trace("Test_RPObject::testRPObjectAttributes",">");
+
     try
       {
       RPObject SonGoku=new RPObject();
@@ -38,9 +41,13 @@ public class Test_RPObject extends TestCase
       {
       fail(e.getMessage());
       }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectAttributes",">");
+      }
     }
 
   public void testRPObjectException()
-    {
+    {    
     }
   }

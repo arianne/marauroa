@@ -11,6 +11,8 @@ public class Test_Configuration extends TestCase
 	
   public void testConfiguration()
     {
+    marauroad.trace("Test_Configuration::testConfiguration",">");
+
     try
       {    
       Configuration conf=Configuration.getConfiguration();
@@ -32,6 +34,10 @@ public class Test_Configuration extends TestCase
     catch(Configuration.PropertyNotFoundException e)
       {
       fail(e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("Test_Configuration::testConfiguration","<");
       }
     }
   }

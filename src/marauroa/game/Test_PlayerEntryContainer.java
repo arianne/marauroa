@@ -1,6 +1,7 @@
 package marauroa.game;
 
 import marauroa.net.NetConst;
+import marauroa.*;
 import junit.framework.*;
 import java.net.*;
 
@@ -66,6 +67,8 @@ public class Test_PlayerEntryContainer extends TestCase
     
   public void testPlayerEntryContainer()
     {
+    marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainer",">");
+
     createDatabase();
     PlayerEntryContainer container=PlayerEntryContainer.getContainer();
     
@@ -114,11 +117,13 @@ public class Test_PlayerEntryContainer extends TestCase
     finally
       {
 	  cleanDatabase();
+      marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainer","<");
       }
     }
 
   public void testPlayerEntryContainerExceptions()
     {
+    marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainerExceptions",">");
     PlayerEntryContainer container=PlayerEntryContainer.getContainer();
     
     assertNotNull(container);
@@ -171,5 +176,7 @@ public class Test_PlayerEntryContainer extends TestCase
       {
       assertTrue(true);
       }
+
+    marauroad.trace("Test_PlayerEntryContainer::testPlayerEntryContainerExceptions","<");
     }
   }

@@ -1,6 +1,7 @@
 package marauroa.game;
 
 import junit.framework.*;
+import marauroa.*;
 
 public class Test_PlayerDatabase extends TestCase
   {
@@ -32,6 +33,8 @@ public class Test_PlayerDatabase extends TestCase
 	
   private void testPlayerDatabase(String type)
     {
+    marauroad.trace("Test_PlayerDatabase::testPlayerDatabase",">");
+    
     try
       {    
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase(type);
@@ -67,10 +70,15 @@ public class Test_PlayerDatabase extends TestCase
       {
       fail(e.getMessage());
       }
+    finally
+      {
+      marauroad.trace("Test_PlayerDatabase::testPlayerDatabase","<");
+      }
     }
 
   private void testPlayerDatabaseExceptions(String type)
     {
+    marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions",">");
     PlayerDatabase playerDatabase=null;
     
     try
@@ -290,5 +298,7 @@ public class Test_PlayerDatabase extends TestCase
         fail("Player has not been added");
         }
       }
+
+    marauroad.trace("Test_PlayerDatabase::testPlayerDatabaseExceptions","<");
     }
   }

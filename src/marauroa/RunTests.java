@@ -1,5 +1,6 @@
 package marauroa;
 import junit.framework.*;
+import java.io.*;
 
 /**
  * TestSuite that runs all the sample tests
@@ -8,8 +9,16 @@ public class RunTests
   {  
   public static void main (String[] args)
     {
-    //junit.swingui.TestRunner.run(RunTests.class);
-    junit.textui.TestRunner.run(suite());
+    try
+      {
+      System.setOut(new PrintStream(new FileOutputStream("output.txt")));
+    
+      //junit.swingui.TestRunner.run(RunTests.class);
+      junit.textui.TestRunner.run(suite());
+      }
+    catch(Exception e) 
+      {
+      }
     }
   
   public static Test suite ( )

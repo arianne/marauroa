@@ -1,6 +1,7 @@
 package marauroa.net;
 
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 import java.net.*;
 import junit.framework.*;
@@ -14,6 +15,8 @@ public class Test_NetworkServerManager extends TestCase
 
   public void testNetworkServerManager()
     {
+    marauroad.trace("Test_NetworkServerManager::testNetworkServerManager",">");
+
     NetworkServerManager netManager=null;
 
     try
@@ -42,5 +45,7 @@ public class Test_NetworkServerManager extends TestCase
     assertEquals(realResult.getPassword(),"Test password");
     
     netManager.finish();
+    
+    marauroad.trace("Test_NetworkServerManager::testNetworkServerManager","<");
     }
   }

@@ -1,6 +1,7 @@
 package marauroa.net;
 
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 import java.lang.Byte;
 import junit.framework.*;
@@ -20,6 +21,8 @@ public class Test_SerializerByteArray extends TestCase
 	
   public void testByteArray()
     {
+    marauroad.trace("Test_SerializerByteArray::testByteArray",">");
+
     byte[] data=new byte[256];
     for(int i=0;i<data.length;i++) data[i]=(byte)(java.lang.Math.random()*256-127);
     
@@ -59,5 +62,7 @@ public class Test_SerializerByteArray extends TestCase
       {
       assertTrue(data[i]==result[i]);    
       }
+
+    marauroad.trace("Test_SerializerByteArray::testByteArray","<");
 	}  
   }

@@ -2,6 +2,7 @@ package marauroa.game;
 
 import junit.framework.*;
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 
 public class Test_Attributes extends TestCase
@@ -20,6 +21,8 @@ public class Test_Attributes extends TestCase
 	
   public void testAttributes()
     {
+    marauroad.trace("Test_Attributes::testAttributes",">");
+
     try
       {
       Attributes attr=new Attributes();
@@ -38,10 +41,16 @@ public class Test_Attributes extends TestCase
       {
       fail(e.getMessage());
       }
+    finally
+      { 
+      marauroad.trace("Test_Attributes::testAttributes","<");
+      }
     }
 
   public void testAttributesException()
     {
+    marauroad.trace("Test_Attributes::testAttributesException",">");
+
     try
       {
       Attributes attr=new Attributes();
@@ -55,10 +64,16 @@ public class Test_Attributes extends TestCase
       {
       assertTrue(true);
       }
+    finally
+      {
+      marauroad.trace("Test_Attributes::testAttributesException","<");
+      }
     }
 
   public void testAttributesSerialization()
     {
+    marauroad.trace("Test_Attributes::testAttributesSerialization",">");
+    
     Attributes attr=new Attributes();
     assertNotNull(attr);
   
@@ -98,5 +113,7 @@ public class Test_Attributes extends TestCase
       }
     
     assertEquals(attr,result);
+    
+    marauroad.trace("Test_Attributes::testAttributesSerialization","<");
     }
   }

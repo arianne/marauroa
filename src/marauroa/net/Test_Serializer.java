@@ -2,6 +2,7 @@ package marauroa.net;
 
 import junit.framework.*;
 import marauroa.net.*;
+import marauroa.*;
 import java.io.*;
 
 abstract class Test_Serializer extends TestCase
@@ -18,6 +19,8 @@ abstract class Test_Serializer extends TestCase
 	
   protected void test(Object[] data) 
     {
+    marauroad.trace("Test_Serializer::test",">");
+
     out=new ByteArrayOutputStream();
     sout=new OutputSerializer(out);
     
@@ -58,6 +61,8 @@ abstract class Test_Serializer extends TestCase
       {
       assertTrue(equals(data[i],result[i]));    
       }
+
+    marauroad.trace("Test_Serializer::test","<");
 	}  
   }
   

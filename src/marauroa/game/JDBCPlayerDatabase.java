@@ -415,7 +415,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       int id=getDatabasePlayerId(username);
 
-      String query = "insert into logEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
+      String query = "insert into loginEvent values(player_id,'"+source.getHostName()+"',?,"+(correctLogin?1:0)+")";
       PreparedStatement prep_stmt = connection.prepareStatement(query);
       prep_stmt.setTimestamp(1,new Timestamp(System.currentTimeMillis()));
   

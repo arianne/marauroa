@@ -3,6 +3,7 @@ package marauroa.game;
 import junit.framework.*;
 import marauroa.game.*;
 import marauroa.net.*;
+import marauroa.*;
 import java.net.*;
 
 public class Test_GameServerManager extends TestCase
@@ -74,6 +75,7 @@ public class Test_GameServerManager extends TestCase
 
   public void testMainProcedures()
     {
+    marauroad.trace("Test_GameServerManager::testMainProcedures",">");
 	createEnviroment();
 	
     try
@@ -151,11 +153,13 @@ public class Test_GameServerManager extends TestCase
     finally
       {
       finalizeEnviroment();
+      marauroad.trace("Test_GameServerManager::testMainProcedures","<");
       }
     }  
 
   public void testMainLoginFailures()
     {
+    marauroad.trace("Test_GameServerManager::testMainLoginFailures",">");
 	createEnviroment();
 	
 	try
@@ -279,11 +283,13 @@ public class Test_GameServerManager extends TestCase
     finally
       {
       finalizeEnviroment();
+      marauroad.trace("Test_GameServerManager::testMainLoginFailures","<");
       }
     } 
 	
   public void testMainChooseCharacterFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures",">");
 	createEnviroment();
 	
 	try
@@ -411,11 +417,13 @@ public class Test_GameServerManager extends TestCase
     finally
       {
       finalizeEnviroment();
+      marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures","<");
       }
     }  
 
   public void testMainLogoutFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainLogoutFailures",">");
 	createEnviroment();
 	
 	try
@@ -446,12 +454,14 @@ public class Test_GameServerManager extends TestCase
     finally
       {
       finalizeEnviroment();
+      marauroad.trace("Test_GameServerManager::testMainLogoutFailures","<");
       }
     }  
 
 
   public void testMainActionFailures()
     {    
+    marauroad.trace("Test_GameServerManager::testMainActionFailures",">");
 	createEnviroment();
 	
 	try
@@ -482,6 +492,7 @@ public class Test_GameServerManager extends TestCase
     finally
       {
       finalizeEnviroment();
+      marauroad.trace("Test_GameServerManager::testMainActionFailures","<");
       }
     }  
   }
