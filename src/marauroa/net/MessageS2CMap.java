@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.3 2004/04/25 01:19:33 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.4 2004/04/26 15:51:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,6 +53,11 @@ public class MessageS2CMap extends Message
   public byte[] getMapData()
     {
     return mapByteArray;
+    }
+  
+  public String toString()
+    {
+    return "Message (S2C Map) from ("+source.toString()+") CONTENTS: ("+mapByteArray.length+")";
     }
 
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException

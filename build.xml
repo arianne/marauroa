@@ -47,9 +47,15 @@
        <available file="${jython}"/>
       </not>
     </condition>
+
+    <condition property="exclude.the1001.client" value="**/the1001/*.*">
+      <not>
+       <available file="${the1001jar}"/>
+      </not>
+    </condition>
 		    
     <!-- run javac to compile the source files -->
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" excludes="the1001/client/**,${exclude.mapacman}">
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" excludes="${exclude.the1001.client},${exclude.mapacman}">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
