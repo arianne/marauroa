@@ -27,3 +27,6 @@ well, we used perception to precalculate the delta perception.
 Actually the perception is the same for all the players on the Zone, on the 
 future we could split the zone into several smaller areas each of them would
 have its own perception
+
+In order to make percetions work, you have to manually call modify method so 
+that you notify the zone about changes in a character.

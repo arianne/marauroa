@@ -54,3 +54,7 @@ transport and you can also have new clients joining.
 So the point is to adjust turn duration and relation so that the maximum time a 
 client is out of sync is around 20-30 seconds. Of course, depending of the type 
 of game you may lower or increase this value.
+
+To make perception works it is important to call the modify method on RPZone so
+this way objects modified are stored in the modified list. If you skip this part
+the perception system will only work in Total mode.
