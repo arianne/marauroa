@@ -56,7 +56,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         String objid = rp_player.get("object_id");
         if(list!=null && list.size()>0)
         {
-          RPAction action = list.get(0);
+          RPAction action = list.get(list.size()-1);
           marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" sent an action " + action);
           int row = Integer.parseInt(action.get("row"));
           int column = Integer.parseInt(action.get("column"));
