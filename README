@@ -75,7 +75,7 @@ You will have a marauroa-<version>.jar file in the lib folder.
 Running
 -------
 Use the BAT files to run it:
-- marauroad is the server 
+- marauroad [-c configurationFile] is the server 
 - JMarauroa is the client
 
 Edit marauroa.ini to use JDBC Database.

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.15 2003/12/12 18:31:46 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.17 2003/12/15 16:39:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,25 @@ public class marauroad extends Thread
 	timestamp=new Date();
 	formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
+	
+  private void setArguments(String[] args)
+    {
+    int i=0;
+    
+    while(i!=args.length)
+      {
+      if(args[i].equals("-c"))
+        {
+        Configuration.setConfigurationFile(args[i+1]);
+        }
+      else if(args[i].equals("-h"))
+        {
+        // TODO: Write help
+        }
+        
+      ++i;
+      }
+    }
 	
   private void setTestDatabase()
     {

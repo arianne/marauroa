@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.5 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.6 2003/12/15 16:38:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,11 @@ public class Configuration
   
   private Properties properties;
   private static Configuration configuration=null;
+  
+  public static void setConfigurationFile(String conf)
+    {
+    configurationFile=conf;
+    }  
   
   public static class PropertyNotFoundException extends Exception
     {
