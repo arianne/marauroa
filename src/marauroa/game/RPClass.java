@@ -118,6 +118,25 @@ public class RPClass implements Serializable
     this.parent=getRPClass(parent);
     }
   
+  public boolean subclassOf(String parentClass)
+    {
+    if(!hasRPClass(parentClass))
+      {
+      return false;
+      }
+    
+    if(name.equals(parentClass))
+      {
+      return true;
+      }
+    else if(parent!=null)
+      {
+      return parent.subclassOf(parentClass);
+      }
+    
+    return false;     
+    }
+  
   static RPClass defaultRPClass;
   
   public static RPClass getBaseRPObjectDefault()

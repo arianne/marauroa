@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.34 2004/06/15 18:59:04 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.35 2004/06/15 22:28:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -278,9 +278,9 @@ public class Attributes implements marauroa.net.Serializable
     return content.keySet().iterator();
     }
   
-  public boolean instanceOf(RPClass rpClass)
+  public boolean instanceOf(RPClass baseclass)
     {
-    return this.rpClass.getName()==rpClass.getName();
+    return rpClass.subclassOf(baseclass.getName());
     }
 	
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
