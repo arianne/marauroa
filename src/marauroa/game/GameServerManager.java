@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.20 2003/12/08 23:10:02 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.21 2003/12/08 23:58:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -225,9 +225,10 @@ public class GameServerManager extends Thread
 	    netMan.addMessage(msgLoginACK);
 
 		/* Send player the ServerInfo */
-	    MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
-	    msgServerInfo.setClientID(clientid);
-	    netMan.addMessage(msgServerInfo);
+//		TODO: Fix problems on JMarauroa first.
+//	    MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
+//	    msgServerInfo.setClientID(clientid);
+//	    netMan.addMessage(msgServerInfo);
 	      
 	    /* Build player character list and send it to client */
 	    String[] characters=playerContainer.getCharacterList(clientid);
