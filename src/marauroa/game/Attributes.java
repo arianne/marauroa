@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.6 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.7 2003/12/12 07:50:41 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,10 @@
  ***************************************************************************/
 package marauroa.game;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import marauroa.marauroad;
 
 /** This class host a list of Attributes stored as a pair String=String */
 public class Attributes implements marauroa.net.Serializable
@@ -42,7 +45,7 @@ public class Attributes implements marauroa.net.Serializable
     content=new HashMap();
     }
 
-  /** This method returns true if the attribute exists 
+  /** This method returns true if the attribute exists
    *  @param attribute the attribute name to check
    *  @return true if it exist or false otherwise */
   public boolean has(String attribute)
@@ -50,23 +53,23 @@ public class Attributes implements marauroa.net.Serializable
     return content.containsKey(attribute);
     }
 
-  /** This method set the value of an attribute 
+  /** This method set the value of an attribute
    *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */    
+   *  @param value the value we want to set. */
   public void put(String attribute, String value)
     {
     content.put(attribute,value);
     }
 
-  /** This method set the value of an attribute 
+  /** This method set the value of an attribute
    *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */    
+   *  @param value the value we want to set. */
   public void put(String attribute, int value)
     {
     content.put(attribute,Integer.toString(value));
     }
 
-  /** This methods return the value of an attribute 
+  /** This methods return the value of an attribute
    *  @param attribute the attribute we want to get
    *  @return the value of the attribute
    *  @throw AttributesNotFoundException if the attributes doesn't exist. */
@@ -105,7 +108,7 @@ public class Attributes implements marauroa.net.Serializable
     return content.equals(((Attributes)attr).content);
     }
 
-  /** This method returns a String that represent the object 
+  /** This method returns a String that represent the object
    *  @return a string representing the object.*/
   public String toString()
     {
@@ -126,11 +129,13 @@ public class Attributes implements marauroa.net.Serializable
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
     Iterator  it=content.entrySet().iterator();
+//	  marauroad.trace("Attributes::writeObject","D","Attributes count: "+content.size());
     out.write((int)content.size());
     
     while(it.hasNext())
       {
       Map.Entry entry=(Map.Entry)it.next();
+//			marauroad.trace("Attributes::writeObject","D","Attribute["+(String)entry.getKey()+","+(String)entry.getValue()+"]");
       out.write((String)entry.getKey());
       out.write((String)entry.getValue());
       }
@@ -139,11 +144,15 @@ public class Attributes implements marauroa.net.Serializable
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
     int size=in.readInt();
+//		marauroad.trace("Attributes::readObject","D","Attributes count: "+size);
     content.clear();
         
     for(int i=0;i<size;++i)
       {
-      content.put(in.readString(),in.readString());
+			String key   = in.readString();
+			String value = in.readString();
+      content.put(key,value);
+//			marauroad.trace("Attributes::readObject","D","Attribute["+key+","+value+"]");
       }
     }
   }
