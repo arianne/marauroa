@@ -111,7 +111,7 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
-0.33 	Apr XX, 2004
+0.33 	May 01, 2004
 - Static part of the perception, that one that doesn't change depending of the player is precomputed.
 - Added Python RP rules system.
 - Added mapacman game.

@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.24 2004/04/26 15:42:30 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.25 2004/05/01 16:26:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,16 +174,19 @@ public abstract class createaccount
       }
     catch(Exception e)
       {
-      out.println("Failed: "+e.getMessage());
-      e.printStackTrace(out);
+      if(out!=null)
+        {
+        out.println("Failed: "+e.getMessage());
+        e.printStackTrace(out);
       
-      try
-        {
-        trans.rollback();
-        }
-      catch(Exception ae)
-        {
-        out.println("Failed Rollback: "+ae.getMessage());
+        try
+          {
+          trans.rollback();
+          }
+        catch(Exception ae)
+          {
+          out.println("Failed Rollback: "+ae.getMessage());
+          }
         }
       return (5);
       }
