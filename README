@@ -33,13 +33,13 @@ reporting problems is simply invaluable: You are our best developer and we want
 to read from you.
 
 You can find the latest version of Marauroa at: 
-http://marauroa.sourceforge.net
+http://arianne.sourceforge.net
 
 Marauroa is a GPL project.
 
 Version
 -------
-0.35 version 
+0.36 version 
 
 
 Status
@@ -61,6 +61,7 @@ Actually to compile Marauroa you need:
 - Java SDK 1.4.2	( http://java.sun.com )
 - JUnit 1.3.8		( http://junit.sourceforge.net )
 - Ant 1.5.4			( http://ant.apache.org )
+- Jython 2.1	    ( http://jython.org )
 
 In order to get it working with MySQL you also need:
 - MySQL Connector/J ( http://www.mysql.com/downloads/api-jdbc-stable.html )
@@ -100,6 +101,9 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
+0.36 
+- Database modified to stored hashed passwords
+
 0.35
 - Changed RPMap message
 - Client can try to resync using old perceptions
