@@ -1,5 +1,6 @@
 from marauroa.game import *
 from marauroa.net import *
+from marauroa import marauroad
 from mapacman import *
 
 from java.io import ByteArrayOutputStream
@@ -12,17 +13,18 @@ pacman_mapfile='map_definition.txt'
 #
 
 class RealPythonRP(PythonRP):
-    map
-    removed_elements=[]
-    super_players=[]
-    online_players=[]
+    __map=None
+    __removed_elements=[]
+    __super_players=[]
+    __online_players=[]
     
     def __init__(self):
-        self.map=mapacmanRPMap(pacman_mapfile)
+        self.__map=mapacmanRPMap(pacman_mapfile)
 
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants
         to do action action """
+        marauroad.trace("mapacman_script.py",">")
         action_code=action.get("type")
         result=0
     
@@ -46,26 +48,26 @@ class RealPythonRP(PythonRP):
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
-        for player in self.online_players:
-            pos=move(player,self.map)
-            if self.map.hasZoneRPObject(pos):
-                object_in_pos=self.map.getZoneRPObject(pos)
+        for player in self.__online_players:
+            pos=move(player,self.__map)
+            if self.__map.hasZoneRPObject(pos):
+                object_in_pos=self.__map.getZoneRPObject(pos)
                 if object_in_pos.get("type")=="ball":
                     zone.remove(RPObject.ID(object_in_pos))
-                    self.map.removeZoneRPObject(pos)
+                    self.__map.removeZoneRPObject(pos)
                     element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
-                    self.removed_elements.append(element)
+                    self.__removed_elements.append(element)
                     player.put("score",player.getInt("score")+1)
                     zone.modify(player)
                 elif object_in_pos.get("type")=="superball":
                     zone.remove(RPObject.ID(object_in_pos))
-                    self.map.removeZoneRPObject(pos)
+                    self.__map.removeZoneRPObject(pos)
                     element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
-                    self.removed_elements.append(element)
+                    self.__removed_elements.append(element)
                     timeout=object_in_pos.getInt("!timeout")
                     player.put("super",timeout)
                     element=RemovedElement(timeout,player)
-                    self.super_players.append(element)
+                    self.__super_players.append(element)
                     zone.modify(player)
 
             for player_in_pos in self.getPlayers(pos):
@@ -77,13 +79,13 @@ class RealPythonRP(PythonRP):
                         # kill the player
                         pass
         
-        for object in self.removed_elements:
+        for object in self.__removed_elements:
             if object.timeout==0:
-                self.map.addZoneRPObject(object.object)
+                self.__map.addZoneRPObject(object.object)
             else:
                 object.timeout=object.timeout-1
 
-        for object in self.super_players:
+        for object in self.__super_players:
             if object.timeout==0:
                 object.object.remove("super")
             else:
@@ -93,26 +95,26 @@ class RealPythonRP(PythonRP):
 
     def getPlayers(self,pos):
         list=[]
-        for player in self.online_players:
+        for player in self.__online_players:
             if pos[0]==player.getInt("x") and pos[1]==player.getInt("y"):
                 list.append(player)
         return list
         
     def onInit(self, object):
         """ Do what you need to initialize this player """
-        pos=self.map.getRandomRespawn()
+        pos=self.__map.getRandomRespawn()
         object.put("x",pos[0])
         object.put("y",pos[1])
         
         zone.add(object)
-        self.online_players.append(object)
+        self.__online_players.append(object)
         return 1
 
     def onExit(self, objectid):
         """ Do what you need to remove this player """
-        for x in _online_players:
+        for x in ___online_players:
             if x.get("id")==playerid.getObjectID():
-                self.online_players.remove(x)
+                self.__online_players.remove(x)
                 break
             
         zone.remove(objectid)
@@ -122,13 +124,7 @@ class RealPythonRP(PythonRP):
         return onExit(self,objectid)
     
     def serializeMap(self):
-        by=ByteArrayOutputStream()
-        out=OutputSerializer(by)
-        out.write(int(len(self.map.grid)))
-        for item in self.map.grid:
-            out.write(item)
-        
-        return by
+        return self.__map.serializeMap()
     
 
 class RemovedElement:
@@ -206,6 +202,16 @@ class mapacmanRPMap:
     def getRandomRespawn(self):
         self.last_respawnPoints=(self.last_respawnPoints+1)%(len(self.respawnPoints))
         return self.respawnPoints[self.last_respawnPoints]
+    
+    def serializeMap(self):
+        by=ByteArrayOutputStream()
+        out=OutputSerializer(by)
+        out.write(int(len(self.grid)))
+        for item in self.grid:
+            out.write(item)
+        
+        return by
+        
         
 
 #
