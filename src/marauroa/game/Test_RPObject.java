@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.16 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.17 2004/04/14 09:49:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -327,6 +327,16 @@ public class Test_RPObject extends TestCase
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
       }      
     catch(Exception e)
       {
@@ -360,6 +370,16 @@ public class Test_RPObject extends TestCase
       player.getDifferences(added,deleted);   
       
       assertEquals(3,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -398,6 +418,16 @@ public class Test_RPObject extends TestCase
       
       assertEquals(0,added.size());
       assertEquals(2,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
@@ -440,6 +470,16 @@ public class Test_RPObject extends TestCase
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
       }      
     catch(Exception e)
       {
@@ -473,6 +513,16 @@ public class Test_RPObject extends TestCase
       player.getDifferences(added,deleted);   
       
       assertEquals(4,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -514,6 +564,16 @@ public class Test_RPObject extends TestCase
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
       }      
     catch(Exception e)
       {
@@ -549,6 +609,16 @@ public class Test_RPObject extends TestCase
       
       assertEquals(4,added.size());
       assertEquals(1,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      assertEquals(0,added.size());
+      assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  

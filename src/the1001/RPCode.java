@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.63 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.64 2004/04/14 09:49:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,7 +144,9 @@ public class RPCode
         marauroad.trace("RPCode::RequestFight","D","Player("+player_id.toString()+") PROCEED for fighting with gladiator("+gladiator_id.toString()+")");        
         player.put(RPCode.var_fighting,"");
         player.put(RPCode.var_choose,gladiator_id.getObjectID());
-        arena.getSlot(RPCode.var_gladiators).add(gladiator);
+        /** We do a copy of the object to allow delta-delta to work */
+        arena.getSlot(RPCode.var_gladiators).add((RPObject)gladiator.copy());
+        
         playersFighting.add(player);
         /** We check now if Arena is complete */
         if(arena.getSlot(RPCode.var_gladiators).size()==GLADIATORS_PER_FIGHT)
@@ -618,6 +620,7 @@ public class RPCode
             {
             winner_id=RPObject.INVALID_ID;
             }
+            
           if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
             {
             RPObject winner=arena.getSlot(RPCode.var_gladiators).get(winner_id);
@@ -693,7 +696,11 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+        RPObject gladiator=arena.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+        
+        /** HACK: We need to update the gladiator on player */
+        player.getSlot(RPCode.var_myGladiators).remove(new RPObject.ID(gladiator));
+        player.getSlot(RPCode.var_myGladiators).add(gladiator);
 
         gladiator.put(RPCode.var_hp,gladiator.get(RPCode.var_initial_hp));
         player.remove(RPCode.var_fighting);

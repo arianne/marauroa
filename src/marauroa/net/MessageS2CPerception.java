@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.26 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.27 2004/04/14 09:49:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -135,7 +135,7 @@ public class MessageS2CPerception extends Message
     super.writeObject(out);
     
     StringBuffer perception_string=new StringBuffer();
-    perception_string.append("Type: "+typePerception+") contents: ");
+    perception_string.append("Type: "+typePerception+" Timestamp: "+timestamp+") contents: ");
 
     ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
