@@ -33,6 +33,9 @@ Contents
 	d) PlayerContainer Explained.txt
 		Explains the basic usage and structure of PlayerContainer.
 
+	e) ClientID Generation.txt
+		Explains how the clientid are generated
+
 
 4) RP related
 	a) Actions and Objects.txt
