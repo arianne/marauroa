@@ -45,6 +45,11 @@ public interface RPZone
       {
       deletedList.add(object);
       }
+    
+    public int size()
+      {
+      return (modifiedList.size()+deletedList.size());
+      }
     }
   
   public void add(RPObject object) throws RPObjectInvalidException;
