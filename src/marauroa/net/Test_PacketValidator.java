@@ -1,4 +1,4 @@
-/* $Id: Test_PacketValidator.java,v 1.1 2004/11/27 10:31:57 root777 Exp $ */
+/* $Id: Test_PacketValidator.java,v 1.2 2004/11/27 11:04:12 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,7 +81,21 @@ public class Test_PacketValidator extends TestCase
         address = InetAddress.getByAddress(new byte[]{(byte)192,(byte)168,(byte)200,(byte)i});
         assertTrue("192.168.200."+i+"+ schould be banned",validator.checkBanned(address));
         }
-
+       
+      //just one performance check...
+      //192.168.213.100 should not be banned - the worst case, as the whole banlist must be checked
+      address = InetAddress.getByAddress(new byte[]{(byte)192,(byte)168,(byte)213,(byte)100});
+      boolean banned = false;
+      int count = 1000;
+      long start_ts = System.currentTimeMillis();
+      for(int i=0;i<count; i++)
+        {
+        banned = banned || validator.checkBanned(address);
+        }
+      long duration = System.currentTimeMillis() - start_ts;
+      marauroad.trace("Test_PacketValidator::testValidator","D",""+count+" checks are took "+duration + " ms.");
+      marauroad.trace("Test_PacketValidator::testValidator","D","It makes about "+(100*duration/count)+" ms per 100 calls.");
+      
    
       }
     catch(Exception e)
