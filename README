@@ -94,13 +94,13 @@ Changelog
 - Maraurorized simpleGame
 - Fixed several logical bugs in simpleGame
 - Fixed bugs
-   · 863672	MakeMove before ChallengeAnswer	  2003-12-20 20:41	arianne_rpg	arianne_rpg	
-   · 863460	Class cast at simplegame: GameBoard	  2003-12-20 11:42	arianne_rpg	arianne_rpg	
-   · 863459	More classcast exception, this in simpleGame	  2003-12-20 11:35	arianne_rpg	arianne_rpg	
-   · 863456	Exception at MakeMove	  2003-12-20 11:25	arianne_rpg	arianne_rpg	
-   · 863455	ClassCast exception at ChallengeAnswer	  2003-12-20 11:20	arianne_rpg	arianne_rpg	
-   · 863451	ClassCast exception at Challenge action	  2003-12-20 11:04	arianne_rpg	arianne_rpg	
-   · 862855	Challenge does not work correctly	  2003-12-19 11:53	arianne_rpg	arianne_rpg	
+   · 863672	MakeMove before ChallengeAnswer	  
+   · 863460	Class cast at simplegame: GameBoard	
+   · 863459	More classcast exception, this in simpleGame
+   · 863456	Exception at MakeMove
+   · 863455	ClassCast exception at ChallengeAnswer	  
+   · 863451	ClassCast exception at Challenge action	 
+   · 862855	Challenge does not work correctly	 
    · 862604	simpleGame server bug in new players
    · 862597	attribute not found in simplegame
    · 862582	Problem with CharacterList	 
