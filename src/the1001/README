@@ -17,3 +17,98 @@ that should be able to play with Arianne 3D Client.
 At first it will be a very simple thing, but each time it will be become richer 
 and richer, up to getting to a real game.
 
+Description
+-----------
+You are the player, and you OWN several characters, each characters is a 
+gladiator. As a gladiator your task is t fight and survive in the Arena.
+You can also play as a spectator, and join the arena to see the combat and
+decide the luck of the fighters, as spectator you can decide if the looser die
+or not and the amount of fame that is assigned to each of the fighters.
+Your main goal is to get fame so that you can buy better equipment, and better 
+gladiators.
+
+So your task as player is either fight for earn fame or watch fights for 
+assigning fame.
+
+Your gladiator can also train other gladiators for exchange of fame.
+
+Appart of fame, each gladiator has a set of attributes and skills. 
+Let's see the attributes:
+- Strengh
+	Determine the hit strengh of the character, the greater the more hard it will
+	hit.
+- Speed
+ 	Determine how fast the gladiator is, and this is related with the skill to 
+ 	defense and attack.
+- Size
+	Determine how easy is to take down your gladiator, and it is related with 
+	Strengh and speed.
+- Breath
+	Determine how tired you are.	
+- Fame
+	Determine the value of your gladiator and it is like a change value to adquiere
+	new gladiators and equipment.
+	
+They also have a set of Skills:
+- Attack skill
+	Determine how good you are at attacking, determine how fast and how hard you hit.
+- Defense skill
+	Determine how good you are absorbing hits.
+- Evasion skill
+	Determine your skill to avoid being hitted.
+- Movement skill
+	Determine how fast you can move.
+	
+With the fame you have earnt you can buy new items and gladiators.
+The available items are:
+- Helm
+- Shield
+- Armor	
+	They are protection for the head, hit and body respectively
+- Weapons
+    · Sword
+    · Spear
+	They are the weapon gladiators use.
+
+You can buy new items and gladiators at "the 1001 Heroes House".
+Each one has a price in fame that you must pay.
+
+You can retire your gladiator to "the 1001 Heroes House" and you will also get
+extra fame for that.
+
+
+Elements in the game
+--------------------
+
+Player			Player
+Character		Player
+RPObject		Player
+				Gladiator
+				Items
+				  Helm
+				  Shield
+				  Armor
+				  Weapon
+				Arena
+				Heroes House
+
+RPAction		Join Arena
+				Fight 
+				Attack
+				Defend
+				Dogde
+				Decide
+				Kill
+				Indult
+				AwardFame
+				Talk
+				Buy
+				Retire
+				Train
+				
+Description of each element
+---------------------------					
+
+Player
+We need to have something to represent users in the virtual world, and we are 
+going to use an invisible avatar, that is a player.
