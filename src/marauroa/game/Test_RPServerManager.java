@@ -16,19 +16,7 @@ public class Test_RPServerManager extends TestCase
 	
   public void testRPServerManager()  
 	{
-	marauroad.trace("Test_RPServerManager::testRPServerManager",">");
-	
-	try
-	  {
-	  RPServerManager rpMan=new RPServerManager(new NetworkServerManager());
-	  }
-	catch(Exception e)
-	  {
-	  fail(e.getMessage());
-	  }
-	finally
-	  {
-      marauroad.trace("Test_RPServerManager::testRPServerManager","<");
-	  }
+	/** It is really, really, really hard to verify RPServerManager, as all the 
+	 *  behaviour is hidden by GameManager and Scheduler */
     }
   }

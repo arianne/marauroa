@@ -9,7 +9,7 @@ import marauroa.*;
 
 /** This class is responsible for adding actions to scheduler, and to build and 
  *  sent perceptions */
-public class RPServerManager extends Thread
+class RPServerManager extends Thread
   {
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
