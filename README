@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.21 version 
+0.22 version 
 
 Status
 ------
@@ -94,6 +94,12 @@ Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.22 	Feb 06, 2004
+- Fixed JDBC problem with accounts
+- Fixed stupid problem on createaccount
+- Combat does end now
+- Fame is added now to winner
+
 0.21 	Jan 31, 2004
 - Fixed security problem at JDBCDatabase
 - Fixed delta perception
