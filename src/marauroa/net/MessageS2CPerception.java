@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.22 2004/03/26 16:36:55 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.23 2004/03/26 21:55:03 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -163,6 +163,8 @@ public class MessageS2CPerception extends Message
     typePerception=ser.readByte();
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
+    modifiedAddedAttribsRPObjects=new LinkedList();
+    modifiedDeletedAttribsRPObjects=new LinkedList();
     
     int added=ser.readInt();
     
