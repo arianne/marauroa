@@ -1,4 +1,4 @@
-/* $Id: Test_Attributes.java,v 1.4 2003/12/12 16:18:24 arianne_rpg Exp $ */
+/* $Id: Test_Attributes.java,v 1.5 2003/12/18 23:56:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import junit.framework.*;
 import marauroa.net.*;
 import marauroa.*;
 import java.io.*;
+import java.util.*;
 
 public class Test_Attributes extends TestCase
   {
@@ -49,6 +50,27 @@ public class Test_Attributes extends TestCase
       assertEquals("value",value);
     
       assertTrue(attr.has("Attribute"));
+      
+      attr.put("Attribute",1);
+      value=attr.get("Attribute");
+      assertNotNull(value);
+      assertEquals(1,Integer.parseInt(value));      
+
+      List list=new LinkedList();
+      list.add("Hi");
+      list.add("World");
+      list.add("This is a test");
+      
+      attr.put("Attribute",list);
+      value=attr.get("Attribute");
+      assertNotNull(value);
+      
+      Iterator it=list.iterator();
+      Iterator it_result=Attributes.StringToList(value).iterator();
+      while(it.hasNext())
+        {
+        assertEquals(it.next(),it_result.next());
+        }
       }
     catch(Attributes.AttributeNotFoundException e)
       {

@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.30 2003/12/18 19:18:48 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.31 2003/12/18 23:56:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -205,11 +205,14 @@ public class SimpleGame
                   if(result!=JOptionPane.CLOSED_OPTION)
                     {
                     String player=(String)cb_characters.getSelectedItem();
-                    otherCharacterID = CharacterList.getId(player);
-                    ChallengeAction c_action=new ChallengeAction();
-                    c_action.setWho(ownCharacterID);
-                    c_action.setWhom(otherCharacterID);
-                    netMan.addMessage(new MessageC2SAction(null,c_action));
+                    if(player!=null && !player.equals(""))
+                      {                      
+                      otherCharacterID = CharacterList.getId(player);
+                      ChallengeAction c_action=new ChallengeAction();
+                      c_action.setWho(ownCharacterID);
+                      c_action.setWhom(otherCharacterID);
+                      netMan.addMessage(new MessageC2SAction(null,c_action));
+                      }
                     }
                   }
                 }

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.11 2003/12/18 19:18:47 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.12 2003/12/18 23:56:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -177,7 +177,7 @@ public class Attributes implements marauroa.net.Serializable
     
   public static List StringToList(String list)
     {
-    String[] array=list.split(":");
+    String[] array=list.substring(1,list.length()-1).split(":");
     
     List result=new LinkedList();
     for(int i=0;i<array.length;++i)
