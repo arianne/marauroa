@@ -92,6 +92,12 @@ public class RPObjectFactory
       int index = rp_object.objectType;
       os.write(index);
       rp_object.writeObject(os);
+//wt i dont like it.
+//      if(factoryArray.get(new Integer(index))==null)
+//      {
+//        //it is not registered yet, so register it
+//        register(index,rp_object.getClass());
+//      }
     }
     catch(Exception e)
     {
@@ -104,4 +110,5 @@ public class RPObjectFactory
     }
   }
 }
+
 
