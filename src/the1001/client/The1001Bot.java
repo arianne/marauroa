@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.30 2004/04/26 12:50:01 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.31 2004/04/29 17:50:11 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -349,6 +349,7 @@ public class The1001Bot
     catch(MessageFactory.InvalidVersionException e)
     {
       marauroad.trace("The1001Bot::messageLoop","X","Not able to connect to server because you are using an outdated client");
+      marauroad.trace("The1001Bot::messageLoop","X","Expected: "+marauroa.net.NetConst.NETWORK_PROTOCOL_VERSION+" Got: "+e.getVersion());
       System.exit(-1);
     }
     catch(SocketException e)
