@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.10 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.11 2004/01/01 22:51:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,16 @@ public class RPAction extends Attributes
   public final static Status STATUS_FAIL=new Status(Status.FAIL);
   public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
   
+  public static Status Success()
+    {
+    return new Status(Status.SUCCESS);
+    }
+    
+  public static Status Fail(String message)
+    {
+    return new Status(Status.FAIL,message);
+    }
+      
   /** This class represent the status of the action */
   public static class Status
     {

@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.9 2004/01/01 22:38:04 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.10 2004/01/01 22:51:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -176,6 +176,7 @@ public class Test_RPCode extends TestCase
       assertEquals(status,RPAction.STATUS_SUCCESS);
 
       status=RPCode.FightMode(new RPObject.ID(newplayer),new RPObject.ID(newgladiator),"scisor");
+      System.out.println(status);
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
       /** Now it is turn to begin the fight */

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.14 2004/01/01 22:38:04 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.15 2004/01/01 22:51:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,13 +67,13 @@ public class RPCode
       if(!player.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because player does not own that object */
-        return RPAction.STATUS_FAIL;
+        return RPAction.Fail("Failed because player does not own that object");
         }
 
       if(player.get("status").equals("onArena"))
         {
         /** Failed because player is already fighting */
-        return RPAction.STATUS_FAIL;
+        return RPAction.Fail("Failed because player is already fighting");
         }
       
       RPObject gladiator=player.getSlot("gladiators").get(gladiator_id);
@@ -138,20 +138,20 @@ public class RPCode
       if(!player.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because player does not own that object */
-        return RPAction.STATUS_FAIL;
+        return RPAction.Fail("Failed because player does not own that object");
         }
 
       if(!arena.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because gladiator is not fighting on the arena*/
-        return RPAction.STATUS_FAIL;
+        return RPAction.Fail("Failed because gladiator is not fighting on the arena");
         }
       
       /** NOTE: Here is the combat type choosal. */
       if(!(fight_mode.equals("rock") || fight_mode.equals("paper") || fight_mode.equals("scissor")))
         {
         /** Failed because gladiator is fighting using an unsupported mode. */
-        return RPAction.STATUS_FAIL;
+        return RPAction.Fail("Failed because gladiator is fighting using an unsupported mode");
         }
       
       RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
@@ -216,7 +216,7 @@ public class RPCode
   
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
-    if((gladiator1.getInt("hp")<=0) || (gladiator1.getInt("hp")<=0))
+    if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
       {
       /** Failed because the gladiator is dead */
       return;
