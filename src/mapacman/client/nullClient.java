@@ -25,7 +25,7 @@ public class nullClient extends Thread
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
-        System.out.println(object);
+        //System.out.println(object);
         if(object.getInt("x")>maxh) maxh=object.getInt("x");
         if(object.getInt("y")>maxv) maxv=object.getInt("y");
         }
@@ -229,6 +229,15 @@ public class nullClient extends Thread
           return 0;
           }
         
+        public int onException(Exception e, marauroa.net.MessageS2CPerception perception)
+          {
+          e.printStackTrace();
+          System.out.println(perception);
+          
+          System.exit(0);
+          return 0;
+          }
+        
         public boolean onMyRPObject(boolean changed,RPObject object)
           {
           if(changed)
@@ -243,7 +252,7 @@ public class nullClient extends Thread
 
       boolean cond=true;
       long ticks=System.currentTimeMillis();
-      long exit_time=((rand.nextInt()%100+600)*1000);
+      long exit_time=((rand.nextInt()%100+900)*1000);
         
       while(cond)
         {
@@ -260,10 +269,16 @@ public class nullClient extends Thread
           
           if(synced)
             {
-            map_objects.print(System.out,world_objects);
-            System.out.println(">");
+//            map_objects.print(System.out,world_objects);
+//            System.out.println(">");
             gameLogic(myRPObject,map_objects);
-            System.out.println("<");
+//            System.out.println("<");
+            }
+          else
+            {
+            System.out.println("Out of sync");
+            System.out.println(msgPer);
+            System.exit(0);            
             }
           }
         
@@ -294,6 +309,8 @@ public class nullClient extends Thread
           throw new Exception();
           }
         }
+
+      System.out.println("Logout --> Login");
       }
     catch(Exception e)
       {
@@ -316,9 +333,12 @@ public class nullClient extends Thread
       
     boolean changed=true;
     boolean do_crosspaths=false;
+    int max_ite=0;
 
-    while(changed)
+    while(changed && max_ite<5)
       {
+      max_ite++;
+      
       changed=false;
       
       if((turn.get("dir").equals("N") && map_objects.get(x,y-1)=='*'))
