@@ -45,6 +45,7 @@ public class RunTests
 //    suite.addTest(new TestSuite(marauroa.game.Test_RPAction.class));
 //    suite.addTest(new TestSuite(marauroa.game.Test_RPZone.class));
 //    suite.addTest(new TestSuite(marauroa.game.Test_RPObject.class));
+    suite.addTest(new TestSuite(marauroa.game.Test_RPSlot.class));
 //    suite.addTest(new TestSuite(marauroa.game.Test_RPScheduler.class));
 //
 //    suite.addTest(new TestSuite(marauroa.game.Test_GameServerManager.class));

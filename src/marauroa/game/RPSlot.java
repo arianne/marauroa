@@ -7,6 +7,14 @@ import marauroa.marauroad;
 
 public class RPSlot implements marauroa.net.Serializable
   {
+  public static class RPObjectNotFoundException extends Exception
+    {
+    public RPObjectNotFoundException()
+      {
+      super("RP Object not found");
+      }
+    }
+    
   private String name;
   /** A List<RPObject> of objects */
   private List objects;
@@ -38,9 +46,62 @@ public class RPSlot implements marauroa.net.Serializable
     objects.add(object);
     }
   
-  public RPObject get(int index)
+  public RPObject get(RPObject.ID id) throws RPObjectNotFoundException
     {
-    return (RPObject)objects.get(index);
+    Iterator it=objects.iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      if(id.equals(object))
+        {
+        return object;
+        }
+      }
+    
+    throw new RPObjectNotFoundException();
+    }
+  
+  public RPObject get() throws RPObjectNotFoundException
+    {
+    if(objects.size()>0)
+      {
+      return (RPObject)objects.get(0);
+      }
+      
+    throw new RPObjectNotFoundException();
+    } 
+    
+  public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
+    {
+    Iterator it=objects.iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      if(id.equals(object))
+        {
+        it.remove();
+        return object;
+        }
+      }
+    
+    throw new RPObjectNotFoundException();
+    }
+  
+  public boolean has(RPObject.ID id)
+    {
+    Iterator it=objects.iterator();
+    
+    while(it.hasNext())
+      {
+      if(id.equals((RPObject)it.next()))
+        {
+        return true;
+        }
+      }
+    
+    return false;
     }
   
   public int size()

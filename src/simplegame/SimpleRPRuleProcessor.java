@@ -101,11 +101,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     try
     {
       RPObject rp_player = zone.get(id);
-      GameBoard gb;
+      GameBoard gb=null;
       int last_id = -1;
       try
       {
-        gb = (GameBoard)rp_player.getSlot("hand").get(0);
+        gb = (GameBoard)rp_player.getSlot("hand").get();
         last_id = gb.getLastPlayerID();
       }
       catch (RPObject.NoSlotFoundException e)
@@ -121,6 +121,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         {
         }
       }
+      catch (RPSlot.RPObjectNotFoundException e)
+      {
+      	// TODO: There is no object on the slot. Decide what to do
+      }
+      
       if(id.getObjectID()==last_id)
       {
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");

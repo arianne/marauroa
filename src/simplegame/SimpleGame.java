@@ -20,8 +20,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
-import marauroa.game.Attributes;
-import marauroa.game.RPObject;
+import marauroa.game.*;
 import marauroa.net.Message;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageS2CPerception;
@@ -84,7 +83,7 @@ public class SimpleGame
                 {
                   try
                   {
-                    RPObject gb = obj.getSlot("hand").get(0);
+                    RPObject gb = obj.getSlot("hand").get();
                     int size = Integer.parseInt(gb.get("size"));
                     for (int k = 0; k < size; k++)
                     {
@@ -98,6 +97,10 @@ public class SimpleGame
                   catch (RPObject.NoSlotFoundException e)
                   {
                     e.printStackTrace();
+                  }
+                  catch (RPSlot.RPObjectNotFoundException e)
+                  {
+                  	e.printStackTrace();
                   }
                 }
                 catch (Attributes.AttributeNotFoundException e)

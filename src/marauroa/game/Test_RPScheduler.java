@@ -82,7 +82,7 @@ public class Test_RPScheduler extends TestCase
 
   public void testRPSchedulerExceptions()
     {
-    marauroad.trace("Test_RPScheduler::testRPScheduler",">");
+    marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions",">");
     
     try
       {
@@ -104,7 +104,7 @@ public class Test_RPScheduler extends TestCase
       }
   finally
       {
-      marauroad.trace("Test_RPScheduler::testRPScheduler","<");
+      marauroad.trace("Test_RPScheduler::testRPSchedulerExceptions","<");
       }
     }  
   }
