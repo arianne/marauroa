@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.8 2004/03/04 22:37:01 root777 Exp $ */
+/* $Id: The1001Game3D.java,v 1.9 2004/03/08 19:15:34 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -400,7 +400,7 @@ public class The1001Game3D
 		arena.setFighters(fighters);
 		arena.setArena(gdm.getArena());
 		arena.setArenaMode(gdm.getStatus());
-		arena.setOwnGladiator(gdm.getOwnGladiator());
+		arena.setOwnGladiator(gdm.getFirstOwnGladiator());
 		arena.setOwnCharacter(gdm.getOwnCharacter());
   }
   

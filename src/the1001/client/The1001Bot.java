@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.3 2004/03/07 20:29:46 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.4 2004/03/08 19:15:34 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,9 +42,9 @@ public class The1001Bot
 	private static Random random=new Random();
 	private static String rndMsg[]=
 	{
-		"What are the goals for this release of Marauroa?",
-			"Why is Marauroa using Java?",
-			"Is there any estimation of when it will be released?"			
+		"What are the goals for this release of Marauroa?","","","",
+			"Why is Marauroa using Java?","","","","",
+			"Is there any estimation of when it will be released?","","","","",""			
 	};
 	
 	
@@ -54,13 +54,6 @@ public class The1001Bot
 		netMan = netman;
 		this.ownCharacterID=characterID.getObjectID();
 		gm = new GameDataModel(netMan);
-//		try
-//		{
-//			URL url = new URL("http://www.google.com/search?q=marauroa&sourceid=mozilla-search&start=0&start=0&ie=utf-8&oe=utf-8");
-//			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream());						
-//			br.readLine();			
-//		}
-//		catch (IOException e) {}
 	}
 	
 	
@@ -91,6 +84,27 @@ public class The1001Bot
 						netMan.addMessage(replyMsg);
 						
 						MessageS2CPerception perception = (MessageS2CPerception)msg;
+						RPObject my_object = perception.getMyRPObject();
+						if(my_object!=null)
+						{
+							gm.setOwnCharacter(my_object);
+							if(my_object.hasSlot(RPCode.var_myGladiators))
+							{
+								for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
+								{
+									gm.addMyGladiator((RPObject)iter.next());
+								}								
+							}								
+							else
+							{
+								RPObject glads_in_shop[] = gm.getShopGladiators();
+								if(glads_in_shop.length>0)
+								{
+									RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
+									gm.buyGladiator(first_avail_glad.get(RPCode.var_object_id));										
+								}
+							}							
+						}
 						List modified_objects = perception.getModifiedRPObjects();
 						for (int i = 0; i < modified_objects.size(); i++)
 						{
@@ -160,7 +174,7 @@ public class The1001Bot
 										}
 									}
 									
-									RPObject own_gl  = gm.getOwnGladiator();
+									RPObject own_gl  = gm.getFirstOwnGladiator();
 									for (int x = 0; x < new_fighters.length; x++)
 									{
 										gm.addFighter(new_fighters[x]);
@@ -199,35 +213,6 @@ public class The1001Bot
 								marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
 								gm.addSpectator(obj);
 								int id = obj.getInt("object_id");
-								if(ownCharacterID==id)
-								{
-									gm.setOwnCharacter(obj);
-									marauroad.trace("The1001Bot::messageLoop","D","Own character:"+obj);
-									if(obj.hasSlot("!gladiators"))
-									{
-										try
-										{
-											RPSlot glad_slot   = obj.getSlot("!gladiators");
-											RPObject gladiator = glad_slot.get();
-											gm.setOwnGladiator(gladiator);
-											gm.setOwnCharacter(obj);
-											marauroad.trace("The1001Bot::messageLoop","D","Own gladiator:"+gladiator);
-										}
-										catch(Exception e)
-										{
-											e.printStackTrace();
-										}
-									}
-									else
-									{
-										RPObject glads_in_shop[] = gm.getShopGladiators();
-										if(glads_in_shop.length>0)
-										{
-											RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
-											gm.buyGladiator(first_avail_glad.get(RPCode.var_object_id));										
-										}
-									}
-								}
 								if(obj.has(RPCode.var_text))
 								{
 									String text = obj.get(RPCode.var_text);
