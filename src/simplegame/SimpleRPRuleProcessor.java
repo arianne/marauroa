@@ -4,7 +4,7 @@
  * @author Created by wt
  */
 
-package marauroa.simplegame;
+package simplegame;
 
 import marauroa.game.*;
 

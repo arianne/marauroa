@@ -18,7 +18,8 @@ import java.io.PrintStream;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import marauroa.simplegame.SimpleGame;
+
+import simplegame.SimpleGame;
 
 
 /**

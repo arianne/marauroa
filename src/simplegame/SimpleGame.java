@@ -6,7 +6,7 @@
  * @author Created by wt
  */
 
-package marauroa.simplegame;
+package simplegame;
 
 import java.awt.Color;
 import java.awt.Dimension;
