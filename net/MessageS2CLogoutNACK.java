@@ -34,6 +34,15 @@ public class MessageS2CLogoutNACK extends Message
     {
     super.readObject(in);
     }    
+ 
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_S2C_LOGOUT_NACK,new MessageS2CLogoutNACK());
+    return true;
+    }
   };
 
 

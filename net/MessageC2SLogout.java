@@ -35,5 +35,14 @@ public class MessageC2SLogout extends Message
     {
     super.readObject(in);
     }    
+ 
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_C2S_LOGOUT,new MessageC2SLogout());
+    return true;
+    }
   };
 

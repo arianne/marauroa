@@ -34,6 +34,15 @@ public class MessageS2CChooseCharacterNACK extends Message
     {
     super.readObject(in);
     }    
+ 
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_S2C_CHOOSECHARACTER_NACK,new MessageS2CChooseCharacterNACK());
+    return true;
+    }
   };
 
 

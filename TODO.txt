@@ -15,9 +15,9 @@ Tasks to do:
 
 - Add log4j to create a log file with all the relevant events.
 
-- Make Messages to register themselves with MessageFactory at start-up
-
-- MessageFactory should throw exceptions instead of returning null messages.
-
 - Create a graphical frontend for server and a text one.
   Messages should be reported using a method of it.
+  
+- Search info about Monitors for NetworkServerManager.
+
+- Implement methods to explict request termination of the threads.

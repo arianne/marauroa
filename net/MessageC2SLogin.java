@@ -62,6 +62,15 @@ public class MessageC2SLogin extends Message
     username=in.readString();
     password=in.readString();
     }    
+
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_C2S_LOGIN,new MessageC2SLogin());
+    return true;
+    }
   };
 
 

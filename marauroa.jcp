@@ -41,6 +41,7 @@ FILTER := ""
 #[BeginFile]SOURCE := "\\net\\Test_SerializerInt.java" #[EndFile]
 #[BeginFile]SOURCE := "\\net\\Test_SerializerByteArray.java" #[EndFile]
 #[BeginFile]SOURCE := "\\net\\Test_SerializerString.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_NetworkServerManager.java" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "Types"

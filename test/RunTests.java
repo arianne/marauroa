@@ -9,8 +9,8 @@ public class RunTests
   {
   public static void main (String[] args) 
     {
-// 	junit.swingui.TestRunner.run(marauroa.net.Test_Messages.class);
-	junit.textui.TestRunner.run(suite());
+ 	//junit.swingui.TestRunner.run(RunTests.class);
+ 	junit.textui.TestRunner.run(suite());
 	}
   
   public static Test suite ( ) 
@@ -25,6 +25,8 @@ public class RunTests
 	
 	suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
 	suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
+	
+	suite.addTest(new TestSuite(marauroa.net.Test_NetworkServerManager.class));
 
 	return suite;
 	}

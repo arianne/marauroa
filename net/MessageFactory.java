@@ -35,7 +35,7 @@ public class MessageFactory
   /** Returns a object of the right class from a stream of serialized data.
       @param data the serialized data
       @param source the source of the message needed to build the object. */  
-  public Message getMessage(byte[] data, InetSocketAddress source)
+  public Message getMessage(byte[] data, InetSocketAddress source) throws IOException
     {
     if(data[0]==NetConst.NETWORK_PROTOCOL_VERSION)
       {
@@ -52,21 +52,24 @@ public class MessageFactory
           }
         catch(java.io.IOException e)
           {
-          return null;
+          throw e;
           }
         catch(java.lang.ClassNotFoundException e)
           {
-          return null;
+          throw new IOException("Unable to find correct class to serialize in the data.");
           }
         
         return tmp;
         }
       else
         {
-        return null;
+        throw new IOException("Message type "+data[1]+" is not registered in the MessageFactory");
         }
       }
-      
-    return null;
+    else
+      {      
+      throw new IOException("Message has incorrect protocol version: "+data[0]+
+        " ( expected "+NetConst.NETWORK_PROTOCOL_VERSION+")");
+      }
     }
   };

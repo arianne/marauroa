@@ -49,6 +49,15 @@ public class MessageS2CCharacterList extends Message
     super.readObject(in);
     characters=in.readStringArray();
     }    
+ 
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_S2C_CHARACTERLIST,new MessageS2CCharacterList());
+    return true;
+    }
   };
 
 

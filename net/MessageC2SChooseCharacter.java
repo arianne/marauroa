@@ -52,4 +52,13 @@ public class MessageC2SChooseCharacter extends Message
     super.readObject(in);
     character=in.readString();
     }    
+
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_C2S_CHOOSECHARACTER,new MessageC2SChooseCharacter());
+    return true;
+    }
   };

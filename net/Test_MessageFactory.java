@@ -21,6 +21,7 @@ public class Test_MessageFactory extends TestCase
   public void testMessageFactory()
     {
     MessageFactory msgFac=MessageFactory.getFactory();
+/*
     msgFac.register(Message.TYPE_C2S_LOGIN,new MessageC2SLogin());
     msgFac.register(Message.TYPE_S2C_LOGIN_ACK,new MessageS2CLoginACK());
     msgFac.register(Message.TYPE_S2C_LOGIN_NACK,new MessageS2CLoginNACK());
@@ -34,7 +35,7 @@ public class Test_MessageFactory extends TestCase
     msgFac.register(Message.TYPE_C2S_LOGOUT,new MessageC2SLogout());
     msgFac.register(Message.TYPE_S2C_LOGOUT_ACK,new MessageS2CLogoutACK());
     msgFac.register(Message.TYPE_S2C_LOGOUT_NACK,new MessageS2CLogoutNACK());
-    
+*/    
     
     String character="Test character";
     short clientid=14324;
@@ -61,14 +62,21 @@ public class Test_MessageFactory extends TestCase
     in=new ByteArrayInputStream(out.toByteArray());
     sin=new InputSerializer(in);
     
-    Message result=msgFac.getMessage(out.toByteArray(),null);
+    try
+      {
+      Message result=msgFac.getMessage(out.toByteArray(),null);
 
-    assertNotNull(result);    
-    assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,result.getType());
+      assertNotNull(result);    
+      assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,result.getType());
     
-    MessageC2SChooseCharacter realResult=(MessageC2SChooseCharacter)result;
-    assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,realResult.getType());
-    assertEquals(clientid,realResult.getClientID());
-    assertEquals(character,realResult.getCharacter());
+      MessageC2SChooseCharacter realResult=(MessageC2SChooseCharacter)result;
+      assertEquals(Message.TYPE_C2S_CHOOSECHARACTER,realResult.getType());
+      assertEquals(clientid,realResult.getClientID());
+      assertEquals(character,realResult.getCharacter());
+      }
+    catch(IOException e)
+      {
+      fail(e.getMessage());
+      }
     }
   }

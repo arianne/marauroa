@@ -62,6 +62,15 @@ public class MessageS2CLoginNACK extends Message
     super.readObject(in);
     reason=in.readByte();
     }    
+ 
+  static private boolean registered=register();
+  
+  static private boolean register()
+    {
+    MessageFactory msgFactory=MessageFactory.getFactory();
+    msgFactory.register(TYPE_S2C_LOGIN_NACK,new MessageS2CLoginNACK());
+    return true;
+    }
   };
 
 
