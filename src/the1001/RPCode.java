@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.11 2004/01/01 12:41:14 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.12 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -206,6 +206,7 @@ public class RPCode
         /** We check for dead players and determine if combat is finished. */
         for(i=0;i<gladiators.length;++i)
           {
+          /* TODO */
           }
         }      
       }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.33 2003/12/29 11:46:01 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.34 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,7 +241,7 @@ class RPServerManager extends Thread
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
               }
             
-            Message messages2cPerception=new MessageS2CPerception(source, perception.modifiedList, perception.deletedList);
+            Message messages2cPerception=new MessageS2CPerception(source, perception.type, perception.modifiedList, perception.deletedList);
             netMan.addMessage(messages2cPerception);            
             }
             

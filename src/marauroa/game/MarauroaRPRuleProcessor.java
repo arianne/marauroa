@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.12 2003/12/29 11:46:01 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.13 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
   public RPAction.Status execute(RPObject.ID id, RPAction list)
     {
     marauroad.trace("RPRuleProcessor::execute",">");
-    /* TODO: Implement action procession code */
+    /* NOTE: Implement action procession code */
     marauroad.trace("RPRuleProcessor::execute","<");
     
     return new RPAction.Status(RPAction.Status.FAIL);

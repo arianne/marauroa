@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.7 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.8 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,7 +80,7 @@ public class Test_NetworkServerManager extends TestCase
       assertEquals(realResult.getPassword(),"Test password");  
       
       List modifiedObjects=createBigPerception();
-      msg=new MessageS2CPerception(clientAddress,modifiedObjects,new LinkedList());
+      msg=new MessageS2CPerception(clientAddress, RPZone.Perception.TOTAL, modifiedObjects,new LinkedList());
       netManager.addMessage(msg);
       
       result=null;

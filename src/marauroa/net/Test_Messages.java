@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.8 2003/12/12 16:33:30 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.9 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -646,7 +646,7 @@ public class Test_Messages extends TestCase
     marauroad.trace("Test_Messages::testMessageS2CPerception",">");
     int clientid=14324;
     
-    MessageS2CPerception msg=new MessageS2CPerception(null, new LinkedList(), new LinkedList());
+    MessageS2CPerception msg=new MessageS2CPerception(null, RPZone.Perception.TOTAL, new LinkedList(), new LinkedList());
     msg.setClientID(clientid);
     
     out=new ByteArrayOutputStream();

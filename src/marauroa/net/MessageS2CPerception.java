@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.9 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.10 2004/01/01 12:56:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,10 +38,6 @@ public class MessageS2CPerception extends Message
   public MessageS2CPerception()
     {
     super(null);
-    
-    /** TODO: Make this choosable */
-    typePerception=RPZone.Perception.TOTAL;
-    
     type=TYPE_S2C_PERCEPTION;
     }
 
@@ -51,16 +47,21 @@ public class MessageS2CPerception extends Message
    *  @param modifiedRPObjects the list of object that has been modified.
    *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
-  public MessageS2CPerception(InetSocketAddress source,List modifiedRPObjects, List deletedRPObjects)
+  public MessageS2CPerception(InetSocketAddress source,byte typePerception, List modifiedRPObjects, List deletedRPObjects)
     {
     super(source);
     
     type=TYPE_S2C_PERCEPTION;
 
     /** TODO: Make this choosable */
-    typePerception=RPZone.Perception.TOTAL;
+    this.typePerception=typePerception;
     this.modifiedRPObjects=modifiedRPObjects;
     this.deletedRPObjects=deletedRPObjects;
+    }
+  
+  public byte getTypePerception()
+    {
+    return typePerception;
     }
   
   /** This method returns the list of modified objects
