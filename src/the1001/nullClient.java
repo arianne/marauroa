@@ -1,4 +1,4 @@
-/* $Id: nullClient.java,v 1.1 2004/07/07 10:12:01 arianne_rpg Exp $ */
+/* $Id: nullClient.java,v 1.2 2004/08/29 11:07:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -134,10 +134,6 @@ public class nullClient extends Thread
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
           myID=((MessageS2CChooseCharacterACK)msg).getObjectID();
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CMap)
-          {
           ++recieved;
           }
         else if(msg instanceof MessageS2CPerception)

@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.13 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.14 2004/08/29 11:07:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class Test_the1001 extends TestCase
 
       zone=new the1001RPZone();
       rpu=new the1001RPRuleProcessor();
-      rpu.setContext(zone);
+      rpu.setContext(null,zone);
       assertEquals(rpu.getTurn(),0);
 
       RPObject arena=zone.getArena();    

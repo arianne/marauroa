@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.58 2004/07/13 20:31:54 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.59 2004/08/29 11:07:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,7 @@ public class the1001RPRuleProcessor implements IRPRuleProcessor
   
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
-  public void setContext(IRPZone zone)
+  public void setContext(RPServerManager rpman, IRPZone zone)
     {
     this.zone=(the1001RPZone)zone;
     }
