@@ -12,16 +12,7 @@
 Marauroa
 --------
 
-Marauroa is a implementation, using Java, of Arianne, but we are also 
-extending some of the concepts implemented in Arianne to improve it.
-
-Marauroa wants to be a multiplayer role playing game that you can access
-through your internet connection. It is a virtual world, and you have
-an unprecedented degree of freedom to shape your own destiny. Social 
-interaction, combat, or just hanging out with friends will all be parts of 
-your experience.
-
-Marauroa is also a Multiplayer Onlince Engine, that you can use to build 
+Marauroa is a Multiplayer Online Engine Server, that you can use to build 
 you own online games using Marauroa as a Content Management system.
 
 Marauroa is completly written in Java using a multithreaded server architecture
@@ -114,6 +105,9 @@ Changelog
 0.35
 - Changed RPMap message
 - Client can try to resync using old perceptions
+- Fixed bugs at mapacman_script.py 
+- Reused PythonRPRuleProcessor
+- Added command line help to server
 
 0.34	May 17, 2004
 - Added out of sync message
