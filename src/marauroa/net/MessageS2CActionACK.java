@@ -1,4 +1,4 @@
-/* $Id: MessageS2CActionACK.java,v 1.3 2003/12/12 16:33:30 arianne_rpg Exp $ */
+/* $Id: MessageS2CActionACK.java,v 1.4 2004/03/22 13:18:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,11 @@ public class MessageS2CActionACK extends Message
     
     type=TYPE_S2C_ACTION_ACK;
     }  
+  
+  public int getActionID()
+    {
+    return actionId;
+    }
 
   /** This method returns a String that represent the object 
    *  @return a string representing the object.*/
