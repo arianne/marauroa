@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.11 2004/02/16 15:42:24 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.12 2004/02/16 15:48:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public class Statistics
       {
       eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt"));
       eventfile.println("#Version: 1.0");
-      eventfile.println("#Fields: time cs-uri");
+      eventfile.println("#Fields: date time cs-uri");
       }
     catch(Exception e)
       {

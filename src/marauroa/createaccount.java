@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.7 2004/02/06 16:01:04 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.8 2004/02/16 15:48:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -122,32 +122,32 @@ class createaccount
         }
 
       out.println("Checking string size");
-      if(username.length()>10) 
+      if(username.length()>10 && username.length()<4) 
         {
         out.println("String size not valid: "+username);
         return (3);
         }
-      if(password.length()>10) 
+      if(password.length()>10 && password.length()<4) 
         {
         out.println("String size not valid: "+password);
         return (3);
         }
-      if(character.length()>20) 
+      if(character.length()>20 && character.length()<4) 
         {
         out.println("String size not valid: "+character);
         return (3);
         }
-      if(character_model.length()>10) 
+      if(character_model.length()>10 && character_model.length()<4) 
         {
         out.println("String size not valid: "+character_model);
         return (3);
         }
-      if(gladiator.length()>20) 
+      if(gladiator.length()>20 && gladiator.length()<4) 
         {
         out.println("String size not valid: "+gladiator);
         return (3);
         }
-      if(gladiator_model.length()>10) 
+      if(gladiator_model.length()>10 && gladiator_model.length()<4) 
         {
         out.println("String size not valid: "+gladiator_model);
         return (3);
