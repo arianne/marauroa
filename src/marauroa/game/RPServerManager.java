@@ -11,6 +11,9 @@ import marauroa.*;
  *  sent perceptions */
 class RPServerManager extends Thread
   {
+  /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
+  private final static int TOTAL_PERCEPTION_RELATION=10;
+  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
@@ -163,12 +166,15 @@ class RPServerManager extends Thread
       }
     }
 
+  private int deltaPerceptionSend=0;
+  
   private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
     
     try
       {
+      ++deltaPerceptionSend;
       List playersToRemove=new LinkedList();
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
     
@@ -181,9 +187,19 @@ class RPServerManager extends Thread
           if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
-            RPZone.Perception perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
+            RPZone.Perception perception;
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+              {
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
+              deltaPerceptionSend=0;
+              }
+            else
+              {
+              perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.DELTA);
+              }
+            
             Message messages2cPerception=new MessageS2CPerception(source, perception.modifiedList, perception.deletedList);
-            netMan.addMessage(messages2cPerception);
+            netMan.addMessage(messages2cPerception);            
             }
             
           if(playerContainer.timedout(clientid))

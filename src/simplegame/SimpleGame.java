@@ -68,7 +68,7 @@ public class SimpleGame
         {
           if(msg instanceof MessageS2CPerception)
           {
-          	MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK();
+          	MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
           	replyMsg.setClientID(msg.getClientID());
           	netMan.addMessage(replyMsg);
           	

@@ -65,7 +65,7 @@ public class GameServerManager extends Thread
       {
       while(keepRunning)
         {
-        Message msg=netMan.getMessage();
+        Message msg=netMan.getMessage(5000);
        
         if(msg!=null)
           {    
