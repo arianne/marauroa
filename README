@@ -62,6 +62,9 @@ Use the BAT files to run it:
 - marauroad is the server 
 - JMarauroa is the client 
 
+Edit marauroa.ini to use JDBC Database.
+Please refer to docs/JDBC Database HOWTO.txt
+
 
 Changelog
 ---------
