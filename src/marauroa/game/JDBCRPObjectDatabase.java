@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.1 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.2 2004/03/16 13:14:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -291,6 +291,23 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
         {
         deleteRPObject(new RPObject.ID(object));
         }
+      
+      List attribToRemove=new LinkedList();
+      Iterator it=object.iterator();
+      while(it.hasNext())
+        {
+        String attrib=(String)it.next();
+        if(attrib.charAt(0)=='?')
+          {
+          attribToRemove.add(attrib);
+          }
+        }
+      
+      it=attribToRemove.iterator();
+      while(it.hasNext())
+        {
+        object.remove((String)it.next());
+        }      
 
       storeRPObject(object,0);
       }
