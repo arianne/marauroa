@@ -54,7 +54,7 @@ public class JMarauroa extends JFrame
   public JMarauroa()
   {
     setTitle("Marauroa test client");
-    //    setIconImage(new ImageIcon("marauroa.png").getImage());
+    //setIconImage(new ImageIcon("marauroa_ICON.png").getImage());
     initMenu();
     initComponents();
     clientId=-10;
