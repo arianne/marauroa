@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.36 2004/05/07 14:56:34 root777 Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.37 2004/05/07 17:28:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -383,16 +383,19 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       if(result.next())
         {
-	String account_status = result.getString(1);
+	    String account_status = result.getString(1);
+	    
         if("active".equals(account_status))
           {	  
           return true;
           }
-	  else
-	  {
-	  marauroad.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
-	  }
+	    else
+	      {
+	      marauroad.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
+	      return false;
+	      }
         }
+        
       return false;
       }
     catch(SQLException sqle)
