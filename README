@@ -48,7 +48,7 @@ Requirements
 Actually to compile Marauroa you need:
 - Java SDK 1.4.2	( http://java.sun.com )
 - JUnit 1.3.8		( http://junit.sourceforge.net )
-- Ant 1.5.4		( http://ant.apache.org )
+- Ant 1.5.4			( http://ant.apache.org )
 
 In order to get it working with MySQL you also need:
 - MySQL Connector/J ( http://www.mysql.com/downloads/api-jdbc-stable.html )
@@ -63,6 +63,11 @@ Before running ant you need to edit build.xml in Marauroa to point to correct
 Junit.jar file.
 
   <property name="junitlib" value="../../../classes/junit.jar"/>
+
+Also if you want to use JDBC MySQL database please, modify also build.xml
+ 
+  <property name="connectorJ" value="../../../classes/mysql-connector-java-3.0.9-stable-bin.jar"/>
+
 
 Then save and run ant.
 
@@ -81,7 +86,7 @@ Use the BAT files to run it:
 Edit marauroa.ini to use JDBC Database.
 Please refer to docs/JDBC Database HOWTO.txt
 
-Read simpleGame about how to play it.
+Read simpleGame/README about how to play it.
 
 Changelog
 ---------

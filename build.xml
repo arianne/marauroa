@@ -9,7 +9,8 @@
   
   <!-- Modify to point to your junit.jar file -->
   <property name="junitlib" value="D:/j2sdk1.4.2/junit/junit3.8.1/junit.jar"/>
-  <property name="classpath" value="classes;${junitlib}"/>
+  <property name="connectorJ" value="D:/j2sdk1.4.2/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
+  <property name="classpath" value="classes;${junitlib};${connectorJ}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
@@ -36,11 +37,12 @@
       </fileset>
     </copy>
     <copy todir="${build}" file="${src}/marauroa.ini"/>
+    <copy todir="${build}" file="${src}/simplegame.ini"/>
   </target>
 
   <target name="compile" depends="init,installation">
     <!-- run javac to compile the source files -->
-    <javac srcdir="${src}" destdir="${build}">
+    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
