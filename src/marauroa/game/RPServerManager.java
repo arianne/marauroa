@@ -4,7 +4,7 @@ import java.util.*;
 import java.io.*;
 
 import marauroa.net.*;
-import marauroa.marauroad;
+import marauroa.*;
 
 
 public class RPServerManager extends Thread
@@ -23,14 +23,23 @@ public class RPServerManager extends Thread
     keepRunning=true;
     scheduler=new RPScheduler();
     
-    //the  class for the RPZone should come
-    //from Configuration or may be the RuleProcessor
-    //should choose by self one
-    zone=new MarauroaRPZone();
+    try
+      {
+      //the  class for the RPZone should come
+      //from Configuration
+      Configuration conf=Configuration.getConfiguration();    
+      zone=(RPZone)Class.forName(conf.get("rp_RPZoneClass")).newInstance();
     
-    //the  class for the rule processor should come
-    //from Configuration
-    ruleProcessor=new MarauroaRPRuleProcessor(zone);
+      //the  class for the rule processor should come
+      //from Configuration
+      ruleProcessor=(RPRuleProcessor)Class.forName(conf.get("rp_RPZoneClass")).newInstance();
+      }
+    catch(Throwable e)
+      {
+      marauroad.trace("RPServerManager","X",e.getMessage());
+      marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone and RPRuleProcessor instances");
+      System.exit(-1);
+      }
     
     marauroad.trace("RPServerManager","<");
     }

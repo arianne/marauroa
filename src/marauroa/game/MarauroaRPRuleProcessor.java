@@ -13,7 +13,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
 {
   private RPZone zone;
   
-  public MarauroaRPRuleProcessor(RPZone zone)
+  public MarauroaRPRuleProcessor()
   {
     this.zone=zone;
   }
