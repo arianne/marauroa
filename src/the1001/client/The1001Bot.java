@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.24 2004/04/12 19:03:04 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.25 2004/04/16 09:21:40 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,19 +16,20 @@ package the1001.client;
 import marauroa.net.*;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import marauroa.game.Attributes;
 import marauroa.game.RPObject;
 import marauroa.game.RPSlot;
 import marauroa.game.RPZone;
 import marauroa.marauroad;
 import the1001.RPCode;
-import marauroa.game.Attributes;import marauroa.game.Attributes;
 
 /**
  *
@@ -41,7 +42,9 @@ public class The1001Bot
   private final static long serialVersionUID = 4715;
   private transient NetworkClientManager netMan;
   public static long TIME_TO_RUN_BEFORE_LOGOUT=1*60*60*1000;// 1*60*60*1000; //one hour
+  public static long TIME_TO_WRITE_STATS=5*60*1000; //5 mins
   public static long startTS;
+  public long writeStatsTS;
   private boolean continueGamePlay;
   private transient GameDataModel gm;
   private static Random random=new Random();
@@ -91,9 +94,11 @@ public class The1001Bot
     continueGamePlay = true;
     
     startTS = System.currentTimeMillis();
+    writeStatsTS = startTS;
     boolean synced = false;
     try
     {
+      int previous_timestamp=0;
       while(continueGamePlay)
       {
         if(netMan!=null)
@@ -118,11 +123,26 @@ public class The1001Bot
                 synced=full_perception;
                 marauroad.trace("The1001Bot::messageLoop","D",synced?"Synced.":"Unsynced!");
               }
+	      if(full_perception)
+	      {
+	        previous_timestamp=perception.getTimestamp()-1;								
+	      }
               marauroad.trace("The1001Bot::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
-              
+             
+              if(synced)
+	      {
+                if(previous_timestamp+1!=perception.getTimestamp())
+                {
+                  System.out.println("We are out of sync. Waiting for sync perception");
+                  System.out.println("Expected "+previous_timestamp+" but we got "+perception.getTimestamp());
+                  synced=false;
+                /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
+                }
+	      }
+	     
               if(synced)
               {
-                System.out.println(full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
+	        previous_timestamp = perception.getTimestamp();
                 if(full_perception)
                 {
                   gm.clearAllObjects();
@@ -143,6 +163,8 @@ public class The1001Bot
                     }
                   }
                 }
+		try
+		{
                 if(!full_perception)
                 {
                   List deleted_objects = perception.getDeletedRPObjects();
@@ -186,6 +208,11 @@ public class The1001Bot
                     }
                   }
                 }
+		}
+		catch(Exception e)
+		{
+		  e.printStackTrace();
+		}
                 List added_objects = perception.getAddedRPObjects();
                 if(added_objects!=null && added_objects.size()>0)
                 {
@@ -193,6 +220,11 @@ public class The1001Bot
                   applyAddedObjects(added_objects);
                 }
                 gm.react(doPrint);
+                if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
+                {
+                  writeStats(gm.getFirstOwnGladiator());
+                  writeStatsTS=System.currentTimeMillis();
+                }
               }
               else
               {
@@ -324,6 +356,30 @@ public class The1001Bot
         marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
       }
     }
+  }
+  
+  private static void writeStats(RPObject glad)
+  {
+    try
+    {
+      File stats_dir = new File(".gladiators_stats");
+      if(stats_dir.exists() && stats_dir.isDirectory())
+      {
+      String glad_name  = glad.get(RPCode.var_name);
+      String glad_karma = glad.get(RPCode.var_karma);
+      String glad_won   = glad.get(RPCode.var_num_victory);
+      String glad_def   = glad.get(RPCode.var_num_defeat);
+      FileWriter fw = new FileWriter(stats_dir.getAbsolutePath()+"/"+glad_name,true);
+      fw.write(System.currentTimeMillis()/1000+":"+glad_karma+":"+glad_won+":"+glad_def+"\n");
+      fw.close();
+      }
+      else
+      {
+      }
+    }
+    catch (IOException e){e.printStackTrace();}
+    catch (Attributes.AttributeNotFoundException e){e.printStackTrace();}
+    finally{}
   }
   
   /**

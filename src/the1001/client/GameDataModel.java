@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.18 2004/04/04 21:50:37 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.19 2004/04/16 09:21:32 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import marauroa.game.Attributes;
 import marauroa.game.RPAction;
 import marauroa.game.RPObject;
+import marauroa.game.RPSlot;
 import marauroa.marauroad;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageC2SLogout;
@@ -43,7 +44,7 @@ public final class GameDataModel
   // private RPObject ownGladiator;
   private long switchStrategyTimeOut; //all 30 mins choose strategy
   private long switchStrategyTS;
-  private int strategy;               //1 - smart, 2 - more random, other - completely random
+  private int strategy;               //0 - smart, 1 - more random, other - completely random
   private RPObject ownCharacter;
   private RPObject arena;
   private Map spectators;
@@ -61,6 +62,7 @@ public final class GameDataModel
   private Random random=new Random(System.currentTimeMillis());
   private String myName;
   private Map mAllObjects;
+  private static Map mGlobalObjects=new HashMap();
   
   public GameDataModel(NetworkClientManager net_man)
   {
@@ -77,7 +79,7 @@ public final class GameDataModel
     arenaWaitingTS=-1;
     switchStrategyTimeOut=30*60*1000;
     switchStrategyTS=System.currentTimeMillis();
-    strategy = 1;
+    strategy = 0;
   }
   
   /**
@@ -128,6 +130,7 @@ public final class GameDataModel
     {
       myName=ownCharacter.get(RPCode.var_name);
       mAllObjects.put(ownCharacter.get(RPCode.var_object_id),ownCharacter);
+      mGlobalObjects.put(ownCharacter.get(RPCode.var_object_id),ownCharacter);
     }
     catch (Attributes.AttributeNotFoundException e) {}
   }
@@ -196,6 +199,7 @@ public final class GameDataModel
       {
         myGladiators.put(gladiator.get(RPCode.var_object_id),gladiator);
         mAllObjects.put(gladiator.get(RPCode.var_object_id),gladiator);
+        mGlobalObjects.put(gladiator.get(RPCode.var_object_id),gladiator);
         fireListeners();
       }
       catch (Attributes.AttributeNotFoundException e)
@@ -276,6 +280,7 @@ public final class GameDataModel
         if(myGladiators.remove(gladiator.get(RPCode.var_object_id))!=null)
         {
           mAllObjects.remove(gladiator.get(RPCode.var_object_id));
+          mGlobalObjects.remove(gladiator.get(RPCode.var_object_id));
           fireListeners();
         }
       }
@@ -425,6 +430,12 @@ public final class GameDataModel
     }
   }
   
+  
+  public static RPObject getGlobalObject(String id)
+  {
+    return((RPObject)mGlobalObjects.get(id));
+  }
+  
   public RPObject getObject(String id)
   {
     return((RPObject)mAllObjects.get(id));
@@ -446,6 +457,30 @@ public final class GameDataModel
     return gladiator;
   }
   
+  public RPObject getFirstGladiatorOf(RPObject rp_char)
+  {
+    RPObject gladiator = null;
+    
+    try
+    {
+      if(mGlobalObjects.size()>0)
+      {
+        RPObject gl_char = (RPObject)mGlobalObjects.get(rp_char.get(RPCode.var_object_id));
+        if(gl_char!=null)
+        {
+          RPSlot slot_glads = gl_char.getSlot(RPCode.var_myGladiators);
+          gladiator = slot_glads.get();
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+    return gladiator;
+  }
+  
+  
   public void sendMessage(String msg)
   {
     RPAction action = new RPAction();
@@ -456,13 +491,18 @@ public final class GameDataModel
     marauroad.trace("The1001Game::sendMessage","D","Chat message sent.");
   }
   
+  /**
+   * Method setRandomFightMode
+   *
+   * @param    strategy            an int
+   *
+   */
   public void setRandomFightMode(int strategy)
   {
-    System.out.print(myName+"["+strategy+"]:"+lastFightMode+"->"+getFightMode()+"->");
-    System.out.flush();
+    String strg = myName+"["+strategy+"]:"+lastFightMode+"->"+getFightMode()+"->";
     switch(strategy)
     {
-    case 1:
+    case 0:
       HashSet hs = new HashSet(3);
       hs.add(RPCode.var_scissor);
       hs.add(RPCode.var_rock);
@@ -473,7 +513,7 @@ public final class GameDataModel
       setFightMode((String)hs.iterator().next());
       hs = null;
       break;
-    case 2:
+    case 1:
       int random_value = random.nextInt(2);
       lastFightMode = currentFightMode;
       if(RPCode.var_scissor.equals(getFightMode()))
@@ -489,13 +529,14 @@ public final class GameDataModel
         setFightMode(random_value==0?RPCode.var_scissor:RPCode.var_paper);
       }
       break;
+    case 2:
     default:
       random_value = random.nextInt(3);
       lastFightMode = currentFightMode;
       setFightMode(random_value==0?RPCode.var_scissor:(random_value==1?RPCode.var_rock:RPCode.var_paper));
       break;
     }
-    System.out.println(getFightMode());
+    System.out.println(strg+getFightMode());
   }
   
   public String getFightMode()
@@ -529,6 +570,10 @@ public final class GameDataModel
         action.put(RPCode.var_gladiator_id,gl_id);
         action.put(RPCode.var_type,"fight_mode");
         action.put("fight_mode",mode);
+        netMan.addMessage(new MessageC2SAction(null,action));
+        netMan.addMessage(new MessageC2SAction(null,action));
+        netMan.addMessage(new MessageC2SAction(null,action));
+        netMan.addMessage(new MessageC2SAction(null,action));
         netMan.addMessage(new MessageC2SAction(null,action));
         marauroad.trace("The1001Game::setFightMode","D","Fight mode set.");
       }
@@ -665,9 +710,40 @@ public final class GameDataModel
     }
     if(RPCode.var_request_fame.equals(getStatus()))
     {
+      int winner_id = -1;
+      try
+      {
+        winner_id = arena.getInt(RPCode.var_winner); 
+      }
+      catch(Exception e)
+      {      
+      }
       if(!voted)
       {
-        vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+        if(getFirstOwnGladiator()!=null)
+	{
+	  int own_glad_id = -2;
+	  try
+	  {
+	    own_glad_id = getFirstOwnGladiator().getInt(RPCode.var_object_id);
+	  }
+	  catch(Exception e)
+	  {
+	  
+	  }
+          if(winner_id==own_glad_id)
+	  {
+	     vote(RPCode.var_voted_up);
+	  }
+	  else
+	  {
+	    vote(Math.random()>0.1?RPCode.var_voted_up:"VOTE_DOWN");
+	  }
+	}
+	else
+	{
+	  vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+	}
         voted = true;
       }
       currentFightMode=null;
@@ -705,7 +781,7 @@ public final class GameDataModel
           }
           if(getFightMode()==null || own_damage>0)
           {
-            setRandomFightMode(strategy%3);
+            setRandomFightMode(strategy%1);
           }
           if(own_damage==0)
           {
@@ -731,7 +807,7 @@ public final class GameDataModel
     {
       System.out.print("Strategy switched from "+strategy);
       //time to change strategy...
-      strategy = random.nextInt(3);
+      strategy = random.nextInt(1);
       System.out.println(" to "+strategy);
       switchStrategyTS=System.currentTimeMillis();
     }
@@ -756,7 +832,7 @@ public final class GameDataModel
       try
       {
         String name = rp_obj.get(RPCode.var_name);
-        if(name.matches("[Bb][Oo][Tt].*|root[0-9][0-9][0-9]"))
+        if(name.matches("[Bb][Oo][Tt]_.*|root[0-9][0-9][0-9]"))
         {
           //          System.out.println("Bot detected: " + name);
         }
@@ -776,16 +852,25 @@ public final class GameDataModel
   
   public String dumpToString()
   {
-    String top    = "+"+setStringWidth("-",'-',80)+"+\n";
-    String middle = "|"+setStringWidth("-",'-',80)+"|\n";
-    String empty  = "|"+setStringWidth(" ",' ',80)+"|\n";
-    String bottom = "+"+setStringWidth("-",'-',80)+"+\n";
-    // String divider="|"+setStringWidth("-",'-',80)+"|\n";
+    int line_length=115;
+    String top    = "+"+setStringWidth("-",'-',line_length)+"+\n";
+    String middle = "|"+setStringWidth("-",'-',line_length)+"|\n";
+    String empty  = "|"+setStringWidth(" ",' ',line_length)+"|\n";
+    String bottom = "+"+setStringWidth("-",'-',line_length)+"+\n";
+    // String divider="|"+setStringWidth("-",'-',line_length)+"|\n";
     String ret = top;
     String status = getStatus();
+    int winner_id = -1;
     
     if(RPCode.var_request_fame.equals(status))
     {
+      try
+      {
+        winner_id = arena.getInt(RPCode.var_winner);
+      }
+      catch (Attributes.AttributeNotFoundException e)
+      {
+      }
       status="Request fame(";
       try
       {
@@ -799,8 +884,8 @@ public final class GameDataModel
       }
       catch (Attributes.AttributeNotFoundException e) {}
     }
-    ret+=setStringWidth("|Arena: "+status,' ',81)+"|\n";
-    ret+="|"+setStringWidth(" ",' ',80)+"|\n";
+    ret+=setStringWidth("|Arena: "+status,' ',line_length+1)+"|\n";
+    ret+="|"+setStringWidth(" ",' ',line_length)+"|\n";
     ret+=middle;
     
     RPObject [] spectators = getSpectators();
@@ -817,9 +902,9 @@ public final class GameDataModel
         }
       }
       catch (Attributes.AttributeNotFoundException e) {}
-      ret+="|"+setStringWidth("Characters ",' ',80)+"|\n";
+      ret+="|"+setStringWidth("Characters ",' ',line_length)+"|\n";
       ret+=middle;
-      ret+="|"+setStringWidth(setStringWidth("Name",' ',21)+setStringWidth("Fame",' ',6)+setStringWidth("Karma",' ',6)+setStringWidth("s",' ',3)+setStringWidth("fmode",' ',10)+setStringWidth("freq",' ',10)+setStringWidth("Message",' ',23),' ',80)+"|\n";
+      ret+="|"+setStringWidth(setStringWidth("Name",' ',21)+setStringWidth("Fame",' ',6)+setStringWidth("Karma",' ',6)+setStringWidth("s",' ',3)+setStringWidth("fmode",' ',10)+setStringWidth("freq",' ',10)+setStringWidth("Message",' ',58),' ',line_length)+"|\n";
       ret+=middle;
       for (int i = 0; i < spectators.length; i++)
       {
@@ -827,7 +912,7 @@ public final class GameDataModel
         {
           String name = spectators[i].get(RPCode.var_name);
           String fame = spectators[i].get(RPCode.var_fame);
-          String msg  ="<>";
+          String msg  ="";
           
           if(spectators[i].has(RPCode.var_text))
           {
@@ -838,13 +923,16 @@ public final class GameDataModel
           String fight_mode;
           String wait_to_req_fight;
           String karma;
-          
+          String strtg;
+          RPObject gladiator = null;
           if(id==own_char_id)
           {
+            gladiator = getFirstOwnGladiator();
             name="*"+name;
             fight_mode = currentFightMode;
             wait_to_req_fight = String.valueOf((REQ_FIGHT_WAIT_TIME - (System.currentTimeMillis()-lastReqFightTS))/1000);
-            karma=(getFirstOwnGladiator()==null?"":getFirstOwnGladiator().get(RPCode.var_karma));
+            
+            strtg = String.valueOf(strategy);
           }
           else
           {
@@ -852,8 +940,20 @@ public final class GameDataModel
             fight_mode = "";
             wait_to_req_fight ="";
             karma = "";
+            strtg="   ";
+            gladiator = getFirstGladiatorOf(spectators[i]);
           }
-          ret+="|"+setStringWidth(setStringWidth(name,' ',21)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(""+strategy,' ',3)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',29),' ',80)+"|\n";
+          karma=(gladiator==null?"":gladiator.get(RPCode.var_karma));
+          if(gladiator!=null && winner_id==gladiator.getInt(RPCode.var_karma))
+          {
+            name="W"+name;
+          }
+          else
+          {
+            name=" "+name;
+          }
+          
+          ret+="|"+setStringWidth(setStringWidth(name,' ',21)+setStringWidth(fame,' ',6)+setStringWidth(karma,' ',6)+setStringWidth(strtg,' ',3)+setStringWidth(fight_mode,' ',10)+setStringWidth(wait_to_req_fight,' ',10)+setStringWidth(msg,' ',58),' ',line_length)+"|\n";
         }
         catch (Attributes.AttributeNotFoundException e) {}
       }
@@ -876,32 +976,35 @@ public final class GameDataModel
         }
       }
       catch (Attributes.AttributeNotFoundException e) {}
-      ret+="|"+setStringWidth("Gladiators ",' ',80)+"|\n";
+      ret+="|"+setStringWidth("Gladiators ",' ',line_length)+"|\n";
       ret+=middle;
-      ret+="|"+setStringWidth(setStringWidth("Name",' ',25)+setStringWidth("Karma",' ',8)+setStringWidth("Health",' ',8)+setStringWidth("Damage",' ',8)+setStringWidth("Won",' ',5)+setStringWidth("Lost",' ',5)+setStringWidth("W/(W+L)%",' ',10),' ',80)+"|\n";
+      ret+="|"+setStringWidth(setStringWidth("Name",' ',25)+setStringWidth("Karma",' ',8)+setStringWidth("Health",' ',8)+setStringWidth("Damage",' ',8)+setStringWidth("Won",' ',5)+setStringWidth("Lost",' ',5)+setStringWidth("W/(W+L)%",' ',10),' ',line_length)+"|\n";
       ret+=middle;
       for (int i = 0; i < fighters.length; i++)
       {
         try
         {
-          String name   = fighters[i].get(RPCode.var_name);
-          String karma  = fighters[i].get(RPCode.var_karma);
-          String health = fighters[i].get(RPCode.var_hp);
+          RPObject fighter = (RPObject)mGlobalObjects.get(fighters[i].get(RPCode.var_object_id));
+          if(fighter==null)
+          {
+            fighter=fighters[i];
+          }
+          String name   = fighter.get(RPCode.var_name);
+          String karma  = fighter.get(RPCode.var_karma);
+          String health = fighter.get(RPCode.var_hp);
           String damage ="";
           
-          if(fighters[i].has(RPCode.var_damage))
+          if(fighter.has(RPCode.var_damage))
           {
-            damage = fighters[i].get(RPCode.var_damage);
+            damage = fighter.get(RPCode.var_damage);
           }
           
-          int won       = fighters[i].getInt(RPCode.var_num_victory);
-          int lost      = fighters[i].getInt(RPCode.var_num_defeat);
-          double winp   = ((double)won)/Math.max(won+lost,1);
-          
-          winp*=100;
+          int won       = fighter.getInt(RPCode.var_num_victory);
+          int lost      = fighter.getInt(RPCode.var_num_defeat);
+          double winp   = ((double)won*100)/Math.max(won+lost,1);
           
           int i_winp    = (int)winp;
-          int id        = fighters[i].getInt(RPCode.var_object_id);
+          int id        = fighter.getInt(RPCode.var_object_id);
           
           if(id==own_glad_id)
           {
@@ -911,7 +1014,15 @@ public final class GameDataModel
           {
             name=" "+name;
           }
-          ret+="|"+setStringWidth(setStringWidth(name,' ',25)+setStringWidth(karma,' ',8)+setStringWidth(health,' ',8)+setStringWidth(damage,' ',8)+setStringWidth(""+won,' ',5)+setStringWidth(""+lost,' ',5)+setStringWidth(""+i_winp,' ',10),' ',80)+"|\n";
+          if(winner_id==id)
+          {
+            name="W"+name;
+          }
+          else
+          {
+            name=" "+name;
+          }
+          ret+="|"+setStringWidth(setStringWidth(name,' ',25)+setStringWidth(karma,' ',8)+setStringWidth(health,' ',8)+setStringWidth(damage,' ',8)+setStringWidth(""+won,' ',5)+setStringWidth(""+lost,' ',5)+setStringWidth(""+i_winp,' ',10),' ',line_length)+"|\n";
         }
         catch (Attributes.AttributeNotFoundException e)
         {
