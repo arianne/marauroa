@@ -40,7 +40,7 @@ public class RPObject extends Attributes
     }
   }
   
-  public static class ID
+  public static class ID implements marauroa.net.Serializable
   {
     private int id;
     
