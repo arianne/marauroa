@@ -97,7 +97,7 @@ public class MessageS2CPerception extends Message
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
-      marauroad.trace("MessageS2CPerception.readObject()","<");
+    marauroad.trace("MessageS2CPerception::readObject()",">");
     super.readObject(in);
     
     typePerception=in.readByte();
@@ -105,7 +105,7 @@ public class MessageS2CPerception extends Message
     deletedRPObjects=new LinkedList();
     
     int mod=in.readInt();
-    marauroad.trace("MessageS2CPerception.readObject()","D",mod + " modified objects..");
+    marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
     for(int i=0;i<mod;++i)
       {
       RPObject tmp=new RPObject();
@@ -114,14 +114,15 @@ public class MessageS2CPerception extends Message
       }
 
     int del=in.readInt();
-    marauroad.trace("MessageS2CPerception.readObject()","D",del + " deleted objects..");
+    marauroad.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
       RPObject tmp=new RPObject();
       tmp.readObject(in);
       deletedRPObjects.add(tmp);
       }
-      marauroad.trace("MessageS2CPerception.readObject()",">");
+    
+    marauroad.trace("MessageS2CPerception::readObject()","<");
     }
     
   };
