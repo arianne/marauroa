@@ -69,7 +69,7 @@ public class MarauroaRPZone implements RPZone
     {
     RPObject.ID id=new RPObject.ID(rand.nextInt());
     
-    while(has(id))    
+    while(has(id) || id.getObjectID()==-1)    
       {
       id=new RPObject.ID(rand.nextInt());
       }

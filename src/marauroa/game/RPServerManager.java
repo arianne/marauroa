@@ -58,6 +58,8 @@ public class RPServerManager extends Thread
       
       String duration =conf.get("rp_turnDuration");
       turnDuration = Long.parseLong(duration);
+      
+      start();
       }
     catch(Exception e)
       {

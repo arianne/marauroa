@@ -63,8 +63,6 @@ public class GameServerManager extends Thread
 
     try
       {
-      rpMan.start();    
- 
       while(keepRunning)
         {
         Message msg=netMan.getMessage(1000);
