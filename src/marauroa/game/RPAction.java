@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.14 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.15 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,7 @@
  ***************************************************************************/
 package marauroa.game;
 
-/** This class represent an action. Please refer to Actions Explained document */
+/** This class represent an Action. Please refer to "Actions Explained" document */
 public class RPAction extends Attributes
   {
   public final static Status STATUS_SUCCESS=new Status(Status.SUCCESS);
@@ -20,7 +20,7 @@ public class RPAction extends Attributes
   public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
   public static Status Success()
     {
-    return new Status(Status.SUCCESS);
+    return STATUS_SUCCESS;
     }
     
   public static Status Fail(String message)
@@ -44,7 +44,7 @@ public class RPAction extends Attributes
     
     /** Constructor
      *  @param val the status of the action 
-     *  @param reason explaing if needed the status of the action. */
+     *  @param reason explaining the status of the action. */
     public Status(byte val, String reason)
       {
       this.val=val;
@@ -71,8 +71,8 @@ public class RPAction extends Attributes
       return val;
       }
     
-    /** This method returns a String that represent the object
-     *  @return a string representing the object.*/
+    /** This method returns a String that represents the status value of the object
+     *  @return a string representing the status value ("success", "fail: " + reason + incomplete") */
     public String toString()
       {
       if(val==0) return "success";
@@ -84,20 +84,5 @@ public class RPAction extends Attributes
   /** Constructor */
   public RPAction()
     {
-    }
-  
-  public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException    
-    {
-    writeObject(out,false);
-    }
-    
-  public void writeObject(marauroa.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
-    {
-    super.writeObject(out,fulldata);
-    }
-  
-  public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
-    {
-    super.readObject(in);
-    }
+    }  
   }

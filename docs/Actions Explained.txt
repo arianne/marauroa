@@ -31,8 +31,8 @@ action, but this attribute is filled on server rather than in client.
 
 Action Talk
 This action is intended to express what the character wants to say. As that it 
-is send from client to server.
-Action has the next set of attributes:
+is sent from client to server.
+Action has this next set of attributes:
 - type
 - sourceid
 - talk_text
@@ -43,7 +43,7 @@ The talk_text attribute is for containing the text that send the client.
 Action Move
 This action is intended to indicate the willing to move from one point to 
 another point.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - move_to
@@ -51,7 +51,7 @@ Action has the next set of attributes:
 
 The move_to is a Position <x,y>, in the system the Z is a fake, as there is no 
 technology ready for using a huge world with multiple levels. The move_speed is
-also a <x,y> meaining the increase of positions per turns.
+also a <x,y> meaning the increase of positions per turns.
 This action should take care of:
 - Collision detection
 - Path finding
@@ -59,7 +59,7 @@ This action should take care of:
 
 Action Get
 This action is intended to indicate the action of taking one object from floor.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - get_objectid
@@ -76,7 +76,7 @@ This action has several limitations:
 Action Release
 This action is the contrary of Get, and it is used to drop an object from an 
 Slot.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - release_fromSlot
@@ -90,7 +90,7 @@ The only limitation of this action is that of course the object MUST be there.
 Action Use
 This action makes the object to perform the expected action from them. 
 This action is a real good candidate for scripting.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - use_objectid
@@ -103,7 +103,7 @@ Action UseWith
 This action is closely related with Use action, the difference is that we use
 ObjectA with ObjectB so that the state of ObjectA is modified, ObjectB may be
 modified as well.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - usewith_objectidA
@@ -116,7 +116,7 @@ respectively.
 
 Action Exchange
 This action is use to exchange an object between two characters.
-Action has the next set of attributes:
+Action has this set of attributes:
 - type
 - sourceid
 - exchange_sourceSlot
@@ -130,5 +130,5 @@ The action MUST be executed by both peers on the same terms so they agree and
 the action is executed.
 
 
-Actions reply are placed inside Objects and sent to clients as perceptions, so 
-please refer to the Action reply in Objects document.
+Action replies are placed inside Objects and sent to clients as perceptions, so 
+please refer to the Action reply in "Objects Explained" document.

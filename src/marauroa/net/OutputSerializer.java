@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.4 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.5 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,8 +20,8 @@ import java.io.*;
 public class OutputSerializer
   {
   OutputStream out;
-  /** Constructor that pass the OutputStream to the serializer
-   @param in the InputStream */
+  /** Constructor that defines a specified OutputStream for the serializer
+   @param out the OutputStream to which objects are serialized */
   public OutputSerializer(OutputStream out)
     {
     this.out=out;

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.42 2004/05/16 10:37:41 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.43 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/** This class implements an Object. Please refer to Objects Explained document */
+/** This class implements an Object. Please refer to "Objects Explained" document */
 public class RPObject extends Attributes
   {
   private List added;

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.28 2004/05/07 13:50:33 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.29 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/** This class host a list of Attributes stored as a pair String=String */
+/** This class hosts a list of Attributes stored as pairs String=String */
 public class Attributes implements marauroa.net.Serializable
   {
   private Map added;

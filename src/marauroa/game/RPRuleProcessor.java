@@ -1,4 +1,4 @@
-/* $Id: RPRuleProcessor.java,v 1.16 2004/05/19 16:38:33 arianne_rpg Exp $ */
+/* $Id: RPRuleProcessor.java,v 1.17 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ public interface RPRuleProcessor
    *  @param id the new player id that exits the game. 
    *  @return true to update the player on database. */
   public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException;
-  /** Callback method called when a new player timeouts 
+  /** Callback method called when a new player time out 
    *  @param id the new player id that timeouts. */
   public boolean onTimeout(RPObject.ID id) throws RPZone.RPObjectNotFoundException;  
   /** Method to create the map to send to player's client */

@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.13 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.14 2004/05/19 22:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.game;
 import java.util.*;
 import marauroa.*;
 
-/** This class represent a scheduler to deliver action by turns, so every action 
+/** This class represents a scheduler to deliver action by turns, so every action
  *  added to the scheduler is executed on the next turn.
  *  Each object can cast as many actions as it wants. */
 public class RPScheduler
@@ -41,7 +41,7 @@ public class RPScheduler
     nextTurn=new HashMap();
     }
   
-  /** Add an RPAction to the scheduler for the next turn 
+  /** Add an RPAction to the scheduler for the next turn
    *  @param action the RPAction
    *  @throws ActionInvalidException if the action lacks of sourceid attribute.*/
   public synchronized void addRPAction(RPAction action) throws ActionInvalidException
@@ -73,12 +73,12 @@ public class RPScheduler
       throw new ActionInvalidException(e.getAttribute());
       }
     finally
-      {    
+      {
       marauroad.trace("RPScheduler::addRPAction","<");
       }
     }
   
-  /** For each action in the actual turn, make it to be run in the ruleProcessor 
+  /** For each action in the actual turn, make it to be run in the ruleProcessor
    *  Depending on the result the action needs to be added for next turn. */
   public void visit(RPRuleProcessor ruleProcessor)
     {
@@ -102,13 +102,13 @@ public class RPScheduler
           try
             {
             RPAction action=(RPAction)action_it.next();
-            RPAction.Status status=ruleProcessor.execute(id,action);            
+            RPAction.Status status=ruleProcessor.execute(id,action);
                         
             /* If state is incomplete add for next turn */
             if(status.equals(RPAction.STATUS_INCOMPLETE))
               {
               addRPAction(action);
-              }      
+              }
             }
           catch(Exception e)
             {
@@ -127,11 +127,13 @@ public class RPScheduler
       }
     }
   
-  /** This method change the turn and delete all the actions in the actual turn */
+  /** This method moves to the next turn and deletes all the actions in the
+   *  actual turn */
   public synchronized void nextTurn()
     {
     marauroad.trace("RPScheduler::nextTurn",">");
     ++turn;
+    /* we cross-exchange the two turns and erase the contents of the next turn */
     actualTurn.clear();
     actualTurn=nextTurn;
     nextTurn=new HashMap();
