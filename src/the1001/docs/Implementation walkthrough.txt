@@ -5,7 +5,8 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/12/30
 status : planning
 
-Let's describe a common session and along it we describe how each part is implemented.
+Let's describe a common session and along it we describe how each part is 
+implemented.
 
 1) Player starts the game and click on the Start button.
    Common login-character procedure follow as in SimpleGame.
@@ -16,7 +17,8 @@ Let's describe a common session and along it we describe how each part is implem
      add Player to Zone
      }
 
-2) We are now on the main screen, and the client would have showed that a new player have joined.
+2) We are now on the main screen, and the client would have showed that a new 
+   player have joined.
    
    RuleProcessor.nextTurn
      {
@@ -129,8 +131,10 @@ Let's describe a common session and along it we describe how each part is implem
        }  
      }
      
-   Well, a bit legnthy, but that would be the real content of a Zone that is just with two players, and none of them has requested to fight.
-   As I have said, we will consider buy action on a later revision, so our players already comes with a gladiator to fight.
+   Well, a bit legnthy, but that would be the real content of a Zone that is 
+   just with two players, and none of them has requested to fight.
+   As I have said, we will consider buy action on a later revision, so our 
+   players already comes with a gladiator to fight.
    
 3) There are two possible actions now:
    · Equip
@@ -166,7 +170,9 @@ Let's describe a common session and along it we describe how each part is implem
        }
      }
    
-   The basic translation to common english is: "If the arena is waiting for fighters and there are no still enough fighters for the fight to begin, then add ourselves to the fight, else put us on the waiting queue".
+   The basic translation to common english is: "If the arena is waiting for 
+   fighters and there are no still enough fighters for the fight to begin, 
+   then add ourselves to the fight, else put us on the waiting queue".
    
    RuleProcessor.NextTurn
      {
@@ -245,8 +251,11 @@ Let's describe a common session and along it we describe how each part is implem
      }
    
 5) Requesting Fame
-   When client see on Arena the REQUEST FAME status, he/she is presented a screen to vote for the result of the combat.
-   The more thumbs up, the best the combat has been and so the more fame you are awarded. On the other side if combat has been really boring, you will see lots of thumbs and you will recieve a small amount of fame instead.
+   When client see on Arena the REQUEST FAME status, he/she is presented a 
+   screen to vote for the result of the combat.
+   The more thumbs up, the best the combat has been and so the more fame you
+   are awarded. On the other side if combat has been really boring, you will
+   see lots of thumbs and you will recieve a small amount of fame instead.
    Basically the process is control in the arena with a timeout value.
    
    Zone
@@ -321,7 +330,7 @@ Let's describe a common session and along it we describe how each part is implem
 Things that are left away on this analysis
 ------------------------------------------
 
-1) If player is playing and exists we have to remove it from the queue.
+1) If player is playing and exits we have to remove it from the queue.
 
    RuleProcessor.onExit
      {

@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.6 2003/12/17 15:32:37 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.7 2003/12/30 08:45:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,8 @@ import the1001.objects.*;
 
 public class the1001RPZone extends MarauroaRPZone
   {
-  RPObject heroesHouse;
+  private RPObject heroesHouse;
+  private RPObject arena;
   
   public the1001RPZone()
     {
@@ -41,14 +42,23 @@ public class the1001RPZone extends MarauroaRPZone
       RPSlot items=new RPSlot("items");
       items.add(new Item(new RPObject.ID(super.create()),"sword"));
       items.add(new Item(new RPObject.ID(super.create()),"shield"));
-      heroesHouse.addSlot(items);
-      
+      heroesHouse.addSlot(items);      
       /* Add to zone */
       add(heroesHouse);      
+      
+      arena=super.create();
+      arena.put("type","arena");
+      arena.put("name","Arena");
+      arena.put("status","waiting");
+      arena.put("waiting",0);
+      
+      arena.addSlot(new RPSlot("gladiators"));      
+      /* Add to zone */
+      add(arena);
       }
     catch(Exception e)
       {
-      marauroad.trace("the1001RPZone::the1001RPZone","!","Can't initialize world");
+      marauroad.trace("the1001RPZone::the1001RPZone","!","Can't initialize world: "+e.getMessage());
       System.exit(-1);      
       }
     finally
@@ -61,6 +71,11 @@ public class the1001RPZone extends MarauroaRPZone
     {
     return heroesHouse;
     }
+    
+  public RPObject getArena()
+    {
+    return arena;
+    }    
     
   public RPObject create(RPObject object)
     {
