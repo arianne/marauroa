@@ -1,5 +1,5 @@
 <!--
-/*  $Id: index.jsp,v 1.1 2004/05/07 15:27:49 root777 Exp $ */
+/*  $Id: index.jsp,v 1.2 2004/05/09 19:11:05 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,32 @@
       playerDatabase = null;
     }
   }
+/*
+  private void sendMail(String to)
+  {
+    String host = "localhost";
+    String from = "marauroa@tribus.dyndns.org";
+
+    // Get system properties
+    Properties props = System.getProperties();
+
+    // Setup mail server
+    props.put("mail.smtp.host", host);
+
+    // Get session
+    Session session = Session.getDefaultInstance(props, null);
+
+    // Define message
+    MimeMessage message = new MimeMessage(session);
+    message.setFrom(new InternetAddress(from));
+    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+    message.setSubject("marauroa account");
+    message.setText("Welcome to this marauroa server!");
+
+    // Send message
+    Transport.send(message); 
+  }
+  */
 %>
 <html>
   <body>
@@ -121,7 +147,7 @@
   else
   {
     %>
-    <form name="accountForm" method="POST" action="/test/index.jsp">
+    <form name="accountForm" method="POST" action="index.jsp">
       <input type="hidden" name="cmd" value="newaccount"/>
       <table width="90%">
         <tr><td width="30%">Real name: </td><td><input type="text" name="realname" size="60" maxlength="60"/></td></tr>
