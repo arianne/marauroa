@@ -86,15 +86,6 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.add(tmp);
       }
     }    
- 
-  static private boolean registered=register();
-  
-  static private boolean register()
-    {
-    MessageFactory msgFactory=MessageFactory.getFactory();
-    msgFactory.register(TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
-    return true;
-    }
   };
 
 

@@ -26,7 +26,6 @@ public class NetworkClientManager
     socket.setSoTimeout(100);
        
     msgFactory=MessageFactory.getFactory();
-    msgFactory.register();
     }
   
   /** This method notify the thread to finish it execution */
