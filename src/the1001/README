@@ -195,7 +195,8 @@ Fight
 This action is issue to request to participate on a Fight.
 It has no params
 It is replied with a "fight_granted" attribute in your player when you are allowed
-to enter the fight.
+to enter the fight. While you find another partner, you will have a "wanna_fight" 
+attribute.
 * NOTE: Combats are now 1vs1
 
 
@@ -419,6 +420,8 @@ Buy
 See the order doesn't matter, as it will be stored into the player.
 On the next perception the wise Rufus will have his character as this:
 
+Perception
+  {
   Character
     {
     type="character"
@@ -460,6 +463,7 @@ On the next perception the wise Rufus will have his character as this:
         }
       }
     }
+  }
   
 Just a few points to notice:
 1) See how the rp_fame of Ragnar dropped from 70 to 0. You guessed it, it is the price.
@@ -554,7 +558,7 @@ Perception (It is delta perception )
       Gladiator
         {
         type="gladiator"
-        object_id="1122"
+        object_id="1123"
         name="No MDW found"
         rp_strengh="3"
         rp_speed="4"
@@ -575,9 +579,155 @@ Perception (It is delta perception )
   }
 
 See it has reduced health on "No MDW found" to 0. So the combat ends and it is now
-turn for the spectators to issue a score.
+turn for the spectators to issue a score. To do that we create a new object that 
+will gather the scores:
+
+ArenaScore
+  {
+  turns="100"
+  winner_id="1122"
+  losser_id="1123"
+  fame_winner="100"
+  fame_losser="0"
+  number_electors="0"
+  }
+
+Here is the turn of our player "Rufus" to issue the score. So he sends a ACTION
+that is a AwardFame
+
+AwardFame
+  {
+  action_id="12131"
+  fame_winner="30"
+  fame_losser="70"
+  }
   
-TODO:
+So on the next perception we will have:
+
+Perception
+  {
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_12131="success"
+    fame_awarded=""
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+    }
+
+  ArenaScore
+    {
+    turns="99"
+    winner_id="1122"
+    losser_id="1123"
+    fame_winner="30"
+    fame_losser="70"
+    number_electors="1"
+    }
+  }
+
+Nothing more happens, but turns MUST elapse before a new step is taken.
+Then when turns elapses, players are granted fame.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="80"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="4"
+        num_defeat="1"  
+        }
+      }
+    }
+    
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Another Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1123"
+        name="No MDW found"
+        rp_strengh="3"
+        rp_speed="4"
+        rp_size="3"
+        rp_breath="2"
+        rp_fame="90"
+        rp_attack="7"
+        rp_defend="2"
+        rp_evasion="4"
+        rp_health="0"
+        num_victory="0"
+        num_defeat="2"  
+        }
+      }
+    }
+  }
+
+Observe that num_victory and num_defeat is changed accordinly the same that
+fame. Note also that characters are not healthed, they will health alone
+after a number of turns.
+  
+TODO: Explain how Rufus enter in combat against "A-Bush"
 
 Bugs:  
 - Determine a way of knowing to which Action an Action reply belongs
@@ -585,3 +735,4 @@ Bugs:
 - Add as mandatory action_id attribute
 - Fill action_id attribute in server
 - Send action_id in Action ACK
+- Add PreTurn and PostTurn to RPRuleProcessor
