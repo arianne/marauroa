@@ -245,43 +245,72 @@ public class nullClient extends Thread
                 
               RPAction turn=new RPAction();
               turn.put("type","turn");
-              if((dir.equals("N") && y>0 &&map_objects.get(x,y-1)=='*') ||
-                   (dir.equals("S") && y<map_objects.getSizeY()-1 && map_objects.get(x,y+1)=='*'))
+/**
+    If Not bWall(Ghost.X - 1, Ghost.Y) Then i = i + 1 'Left
+    If Not bWall(Ghost.X + 1, Ghost.Y) Then i = i + 1 'Right
+    If Not bWall(Ghost.X, Ghost.Y - 1) Then i = i + 1 'Up
+    If Not bWall(Ghost.X, Ghost.Y + 1) Then i = i + 1 'Down
+    
+    Select Case i
+    Case 1
+        'Dead end
+        'Here we reverse ghost direction
+    Case 2
+        'Corner or straight
+        'Go off in the direction which does not make us go
+        'back (check iLastX and iLastY parameters)
+    Case Else
+        'Intersection of some sort
+        'Check which route brings us closest to pacman
+        'and move that way
+    End If
+**/
+              int i=0;
+              if(map_objects.get(x,y-1)=='*') i++;
+              if(map_objects.get(x,y+1)=='*') i++;
+              if(map_objects.get(x-1,y)=='*') i++;
+              if(map_objects.get(x+1,y)=='*') i++;
+              
+              System.out.println("Case :"+i);
+              
+              switch(i)
                 {
-                if(rand.nextInt()%2==0)
-                  {
-                  turn.put("dir","W");
-                  }
-                else
-                    {
-                    turn.put("dir","E");
-                    }
-                  }
-                else if((dir.equals("W") && x>0 &&map_objects.get(x-1,y)=='*') ||
-                   (dir.equals("E") && x<map_objects.getSizeX()-1 && map_objects.get(x+1,y)=='*'))
-                  {
-                  if(rand.nextInt()%2==0)
-                    {
-                    turn.put("dir","N");
-                    }
-                  else
-                    {
-                    turn.put("dir","S");
-                    }
-                  }
+                case 1:
+                  if(dir.equals("S")) {turn.put("dir","N");break;}
+                  if(dir.equals("N")) {turn.put("dir","S");break;}
+                  if(dir.equals("E")) {turn.put("dir","W");break;}
+                  if(dir.equals("W")) {turn.put("dir","E");break;}
+                case 2:
+                  String hor_dirs[]={"W","E"};
+                  String ver_dirs[]={"N","S"};
                   
-                if(turn.size()>1)
-                  {
-                  Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
-                  msgTurn.setClientID(clientid);
-                  netMan.addMessage(msgTurn);
-                  }
+                  if((dir.equals("N") && map_objects.get(x,y-1)=='*')||(dir.equals("S") && map_objects.get(x,y+1)=='*'))
+                    {
+                    turn.put("dir",hor_dirs[Math.abs(rand.nextInt()%2)]);
+                    break;
+                    }
+                  if((dir.equals("W") && map_objects.get(x-1,y)=='*')||(dir.equals("E") && map_objects.get(x+1,y)=='*'))
+                    {
+                    turn.put("dir",ver_dirs[Math.abs(rand.nextInt()%2)]);
+                    break;
+                    }
+                case 3:
+                  String dirs[]={"N","S","W","E"};
+                  turn.put("dir",dirs[Math.abs(rand.nextInt()%4)]);
+                  break;
+                }
+
+              if(turn.size()>1)
+                {
+                Message msgTurn=new MessageC2SAction(msg.getAddress(),turn);
+                msgTurn.setClientID(clientid);
+                netMan.addMessage(msgTurn);
+                }
                 
-                map_objects.print(System.out,world_objects);
+              map_objects.print(System.out,world_objects);
               }
             }
           }
-        
         }
           
       Message msgL=new MessageC2SLogout(address);

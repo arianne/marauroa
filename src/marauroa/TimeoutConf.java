@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.14 2004/04/15 18:35:39 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.15 2004/04/27 22:42:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,15 +19,15 @@ public class TimeoutConf
   final public static int SOCKET_TIMEOUT=100;
   /** This indicate how many time we wait for a message to arrive. The lower the slower. */
   final public static int GAMESERVER_MESSAGE_GET_TIMEOUT=10000;
-  /** This indicate when the client remove the incomplete packet from its queue */  
+  /** This indicate when the client remove the incomplete packet from its queue */
   final public static int CLIENT_MESSAGE_DROPPED_TIMEOUT=60000;
   /** Indicate how many packets can be read from network before returing */
-  final public static int CLIENT_NETWORK_NUM_READ=5;  
+  final public static int CLIENT_NETWORK_NUM_READ=5;
   /** This indicate that the player is totally dead and must be removed.
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */
-  final public static int GAMESERVER_PLAYER_TIMEOUT=60000;  
+  final public static int GAMESERVER_PLAYER_TIMEOUT=60000;
   final public static int GAMESERVER_PLAYER_STORE_LAPSUS=60000;
   
   final public static int MAX_BYTE_ARRAY_ELEMENTS=8*1024;
-  final public static int MAX_ARRAY_ELEMENTS=256;
+  final public static int MAX_ARRAY_ELEMENTS=8*1024;
   }

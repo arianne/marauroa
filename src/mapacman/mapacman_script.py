@@ -24,60 +24,68 @@ class RealPythonRP(PythonRP):
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants
         to do action action """
-        marauroad.trace("mapacman_script.py",">")
-        action_code=action.get("type")
+      
         result=0
-    
+        player=zone.get(id)
+        action_code=action.get("type")
+
         if action_code=="turn":
-            direction=action.get("dir")
-            if _directions.count(direction)==1:
-                player=zone.get(id)
-                player.put("dir",direction)
-                result=1
-                zone.modify(player)
+            result=turn(player,self.__map,action.get("dir"))
         elif action_code=="chat":
-            content=action.get("content")
-            player=zone.get(id)
-            player.put("?text",content)
-            zone.modify(player)
-            result=1
+            result=chat(player,action.get("content"))
         else:
             print "action not registered"
+        
+        print "Player doing ",
+        print action.toString(),
+        print " with result ",
+        print result
     
         return result
+        
+    def __removeBall(self, ball, pos):
+        zone.remove(RPObject.ID(ball))
+        self.__map.removeZoneRPObject(pos)
+        element=TimecountElement(ball.getInt("!respawn"),ball)
+        self.__removed_elements.append(element)
+    
+    def __foreachPlayer(self):
+        for player in self.__online_players:
+            if(canMove(player,self.__map,player.get("dir"))):
+                print "You move in that direction"
+                pos=move(player,self.__map)
+                if self.__map.hasZoneRPObject(pos):
+                    object_in_pos=self.__map.getZoneRPObject(pos)
+                    if object_in_pos.get("type")=="ball":
+                        self.__removeBall(object_in_pos,pos)
+                    
+                        # Increment the score of the player
+                        player.put("score",player.getInt("score")+1)
+                        zone.modify(player)
+                    elif object_in_pos.get("type")=="superball":
+                        self.__removeBall(object_in_pos,pos)
+                    
+                        # Notify to remove the attribute on timeout
+                        timeout=object_in_pos.getInt("!timeout")
+                        player.put("super",timeout)
+                        element=TimecountElement(timeout,player)
+                        self.__super_players.append(element)
+                        zone.modify(player)
+
+                for player_in_pos in self.getPlayers(pos):
+                    if player_in_pos.get("type")=="ghost":
+                        if player.has("super"):
+                            # Eat the ghost
+                            pass
+                        else:
+                            # kill the player
+                            pass
+            else:
+                print "You Can't move in that direction"
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
-        for player in self.__online_players:
-            pos=move(player,self.__map)
-            if self.__map.hasZoneRPObject(pos):
-                object_in_pos=self.__map.getZoneRPObject(pos)
-                if object_in_pos.get("type")=="ball":
-                    zone.remove(RPObject.ID(object_in_pos))
-                    self.__map.removeZoneRPObject(pos)
-                    element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
-                    self.__removed_elements.append(element)
-                    player.put("score",player.getInt("score")+1)
-                    zone.modify(player)
-                elif object_in_pos.get("type")=="superball":
-                    zone.remove(RPObject.ID(object_in_pos))
-                    self.__map.removeZoneRPObject(pos)
-                    element=RemovedElement(object_in_pos.getInt("!respawn"),object_in_pos)
-                    self.__removed_elements.append(element)
-                    timeout=object_in_pos.getInt("!timeout")
-                    player.put("super",timeout)
-                    element=RemovedElement(timeout,player)
-                    self.__super_players.append(element)
-                    zone.modify(player)
-
-            for player_in_pos in self.getPlayers(pos):
-                if player_in_pos.get("type")=="ghost":
-                    if player.has("super"):
-                        # Eat the ghost
-                        pass
-                    else:
-                        # kill the player
-                        pass
+        self.__foreachPlayer()
         
         for object in self.__removed_elements:
             if object.timeout==0:
@@ -112,8 +120,8 @@ class RealPythonRP(PythonRP):
 
     def onExit(self, objectid):
         """ Do what you need to remove this player """
-        for x in ___online_players:
-            if x.get("id")==playerid.getObjectID():
+        for x in self.__online_players:
+            if x.getInt("id")==objectid.getObjectID():
                 self.__online_players.remove(x)
                 break
             
@@ -127,7 +135,7 @@ class RealPythonRP(PythonRP):
         return self.__map.serializeMap()
     
 
-class RemovedElement:
+class TimecountElement:
     timeout=0
     object=0
     
@@ -212,13 +220,65 @@ class mapacmanRPMap:
         
         return by
         
+#
+# RPRuleProcessor method definitions
+#
+
+def move(player,map):
+    """ This methods try to move the player and return the new position """
+    x=player.getInt("x")
+    y=player.getInt("y")
+    dir=player.get("dir")
+    
+    if dir=='N' and (y-1)>=0 and map.get(x,y-1)<>'*':
+        y=y-1
+        player.put("y",y)
+    elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
+        x=x-1
+        player.put("x",x)
+    elif dir=='S' and (y+1)<map.sizex() and map.get(x,y+1)<>'*':
+        y=y+1
+        player.put("y",y)
+    elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
+        x=x+1
+        player.put("x",x)
         
+    return (x,y)
+
+def canMove(player,map,dir):
+    """ This methods try to move the player and return the new position """
+    x=player.getInt("x")
+    y=player.getInt("y")
+    
+    if dir=='N' and (y-1)>=0 and map.get(x,y-1)<>'*':
+        return 1
+    elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
+        return 1
+    elif dir=='S' and (y+1)<map.sizex() and map.get(x,y+1)<>'*':
+        return 1
+    elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
+        return 1
+    else:
+        return 0
+    
+def turn(player, map, direction):
+    result=failed
+    if _directions.count(direction)==1 and canMove(player,map,direction):
+        player.put("dir",direction)
+        zone.modify(player)
+        result=success
+    return result
+
+def chat(player, content):
+    player.put("?text",content)
+    zone.modify(player)
+    return success
 
 #
+# A few constants to make things more beautiful
 #
-#
-SUCCESS=0
-FAILED=1
+success=1
+failed=0
 
 _directions=['N','W','S','E']
 
@@ -273,31 +333,6 @@ def createSuperBall(x,y):
     return object;
     
 
-#
-# RPRuleProcessor method definitions
-#
-
-def move(player,map):
-    """ This methods try to move the player and return the new position """
-    x=player.getInt("x")
-    y=player.getInt("y")
-    dir=player.get("dir")
-    
-    if dir=='N' and (y-1)>=0 and map.get(x,y-1)<>'*':
-        y=y-1
-        player.put("y",y)
-    elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
-        x=x-1
-        player.put("x",x)
-    elif dir=='S' and (y+1)<map.sizex() and map.get(x,y+1)<>'*':
-        y=y+1
-        player.put("y",y)
-    elif dir=='E' and (x+1)<map.sizey() and map.get(x+1,y)<>'*':
-        x=x+1
-        player.put("x",x)
-        
-    return (x,y)
-    
 
 #
 # Test the whole thing
