@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.9 2003/12/09 23:40:16 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.10 2004/01/29 19:57:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,7 @@ import java.util.*;
 import java.io.*;
 import java.math.*;
 
-import marauroa.marauroad;
+import marauroa.*;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
@@ -186,6 +186,9 @@ public class NetworkServerManager
           {
           socket.receive(packet);          
           marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
+          
+          /*** Statistics ***/
+          Statistics.addBytesRecv(packet.getLength());
 
           Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
           marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
@@ -237,7 +240,11 @@ public class NetworkServerManager
  	      s.write(msg);
  	   
  	      byte[] buffer=out.toByteArray();
- 	      marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
+  
+          /*** Statistics ***/
+          Statistics.addBytesSend(buffer.length);
+  
+          marauroad.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
 
 		  int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
 		  ++last_signature;
