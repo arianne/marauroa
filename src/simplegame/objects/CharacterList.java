@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.5 2003/12/13 14:19:17 root777 Exp $ */
+/* $Id: CharacterList.java,v 1.6 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package simplegame.objects;
 
 import marauroa.game.RPObject;
-import marauroa.game.RPObjectFactory;
 import marauroa.game.Attributes;
 import marauroa.net.OutputSerializer;
 import marauroa.net.InputSerializer;
@@ -30,80 +29,26 @@ public class CharacterList
   public final static int TYPE_CHARACTER_LIST=4;
   public final static int TYPE_CHARACTER_LIST_ENTRY=5;
   
-  private LinkedList charList;
-  
   public CharacterList()
   {
-    objectType=TYPE_CHARACTER_LIST;
+    put("type",TYPE_CHARACTER_LIST);
   }
   
-  public void writeObject(OutputSerializer out)
-    throws IOException
-  {
-    try
-    {
-      marauroad.trace("CharacterList.writeObject()","<");
-      super.writeObject(out);
-      
-      if(charList!=null)
-      {
-        out.write((int)charList.size());
-        Iterator it=charList.iterator();
-        while(it.hasNext())
-        {
-          RPObjectFactory.getFactory().addRPObject(out,(RPObject)it.next());
-        }
-      }
-      else
-      {
-        out.write((int)0);
-      }
-    }
-    finally
-    {
-      marauroad.trace("CharacterList.writeObject()",">");
-    }
-  }//writeObject
-  
-  public void readObject(InputSerializer in)
-    throws IOException, ClassNotFoundException
-  {
-    try
-    {
-      marauroad.trace("CharacterList.readObject()","<");
-      super.readObject(in);
-      int size=in.readInt();
-      marauroad.trace("CharacterList.readObject()","D",size+" characters found");
-      if(size>0)
-      {
-        charList=new LinkedList();
-        for(int i=0;i<size;++i)
-        {
-          charList.add(RPObjectFactory.getFactory().getRPObject(in));
-        }
-      }
-    }
-    finally
-    {
-      marauroad.trace("CharacterList.readObject()",">");
-    }
-  }//readObject
-  
-  public void addCharacter(int char_id, String char_name, String char_status)
+  public void addCharacter(int char_id, String char_name, String char_status) throws Attributes.AttributeNotFoundException
   {
     CharEntry entry = new CharEntry();
     entry.setName(char_name);
     entry.setId(char_id);
     entry.setStatus(char_status);
-    if(charList==null)
-    {
-      charList = new LinkedList();
-    }
+    
+    List charList=Attributes.StringToList(get("charList"));
     charList.add(entry);
+    put("charList",charList);
   }
   
-  public CharEntryIterator iterator()
+  public CharEntryIterator iterator() throws Attributes.AttributeNotFoundException
   {
+    List charList=Attributes.StringToList(get("charList"));
     return(new CharEntryIterator(charList));
   }
   
@@ -138,7 +83,7 @@ public class CharacterList
   {
     public CharEntry()
     {
-      objectType=TYPE_CHARACTER_LIST_ENTRY;
+      put("type",TYPE_CHARACTER_LIST_ENTRY);
     }
     
     public void setName(String char_name)
@@ -165,13 +110,13 @@ public class CharacterList
     
     public void setStatus(String char_st)
     {
-      put("st",char_st);
+      put("status",char_st);
     }
     
     public String getStatus()
       throws Attributes.AttributeNotFoundException
     {
-      return(get("st"));
+      return(get("status"));
     }
     
     public String toString()

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.4 2003/12/08 01:08:30 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.5 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,13 +61,13 @@ public class MessageC2SAction extends Message
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    RPActionFactory.getFactory().addRPAction(out,action);
+    action.writeObject(out); 
     }
     
   public void readObject(marauroa.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    action=RPActionFactory.getFactory().getRPAction(in);
+    action=(RPAction)in.readObject(new RPAction());
     
     if(type!=TYPE_C2S_ACTION)
       {

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.12 2003/12/10 20:43:18 root777 Exp $ */
+/* $Id: RPSlot.java,v 1.13 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -122,13 +122,11 @@ public class RPSlot implements marauroa.net.Serializable
     }
   }
   
-  public void removeAll()
-  {
-    if(objects!=null)
+  public void clear()
     {
-      objects.clear();
+    objects.clear();
     }
-  }
+  
   
   public boolean has(RPObject.ID id)
   {
@@ -186,29 +184,19 @@ public class RPSlot implements marauroa.net.Serializable
     while(it.hasNext())
     {
       RPObject entry=(RPObject)it.next();
-      RPObjectFactory.getFactory().addRPObject(out,entry);
+      entry.writeObject(out);
     }
   }
   
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
   {
-    try
-    {
-      marauroad.trace("RPSlot.readObject()",">");
-      name = in.readString();
-      marauroad.trace("RPSlot.readObject()","D"," Slot name: " +name);
-      int size=in.readInt();
-      marauroad.trace("RPSlot.readObject()","D",size+" objects found");
-      objects.clear();
+    name = in.readString();
+    int size=in.readInt();
+    objects.clear();
       
-      for(int i=0;i<size;++i)
+    for(int i=0;i<size;++i)
       {
-        objects.add(RPObjectFactory.getFactory().getRPObject(in));
+      objects.add(in.readObject(new RPObject())); 
       }
-    }
-    finally
-    {
-      marauroad.trace("RPSlot.readObject()","<");
-    }
   }
 }

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.27 2003/12/15 07:29:17 root777 Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.28 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,19 +77,19 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       RPObject rp_player = null;
       rp_player = zone.get(id);
       
-      if(action instanceof MoveAction)
+      if(action.get("type").equals(Integer.toString(MoveAction.ACTION_MOVE)))
       {
         status = makeMove(id, action);
       }
-      else if(action instanceof GetCharacterListAction)
+      else if(action.get("type").equals(Integer.toString(GetCharacterListAction.ACTION_GETCHARLIST)))
       {
         status = getCharacterList(id, action);
       }
-      else if(action instanceof ChallengeAnswer)
+      else if(action.get("type").equals(Integer.toString(ChallengeAnswer.ACTION_CHALLENGE_ANSWER)))
       {
         status = challengeAnswer(id, action);
       }
-      else if(action instanceof ChallengeAction)
+      else if(action.get("type").equals(Integer.toString(ChallengeAction.ACTION_CHALLENGE)))
       {
         status = challenge(id, action);
       }
@@ -154,7 +154,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
             clist.addCharacter(oid,object.get("name"),pl_status);
           }
         }
-        playerlist.removeAll();
+        playerlist.clear();
         playerlist.add(clist);
       }
     }
@@ -180,7 +180,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       RPObject player_challenged = zone.get(new RPObject.ID(challenged_id));
       RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
       RPSlot slot = ensureSlot(rp_player,"ear");
-      slot.removeAll();
+      slot.clear();
       //it is enough just to send id/name...
       CharacterList clist = new CharacterList();
       clist.addCharacter(Integer.parseInt(rp_player.get("object_id")),rp_player.get("name"),"wurst");
@@ -315,11 +315,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   private void  emptyAllSlots(RPObject rp_player)
   {
     RPSlot slot = ensureSlot(rp_player,"ear");
-    slot.removeAll();
+    slot.clear();
     slot = ensureSlot(rp_player,"challenge");
-    slot.removeAll();
+    slot.clear();
     slot = ensureSlot(rp_player,"hand");
-    slot.removeAll();
+    slot.clear();
   }
   
   private RPSlot ensureSlot(RPObject player, String slot_name)

@@ -1,4 +1,4 @@
-/* $Id: Test_RPAction.java,v 1.3 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_RPAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -138,10 +138,6 @@ public class Test_RPAction extends TestCase
     assertFalse(status.equals(RPAction.STATUS_INCOMPLETE));
     assertFalse(status.equals(RPAction.STATUS_SUCCESS));
     
-    assertEquals(RPAction.STATUS_FAIL,new RPAction.Status("fail"));
-    assertEquals(RPAction.STATUS_INCOMPLETE,new RPAction.Status("incomplete"));
-    assertEquals(RPAction.STATUS_SUCCESS,new RPAction.Status("success"));   
-
     marauroad.trace("Test_RPAction::testAttributesStatus","<");
     }
   }

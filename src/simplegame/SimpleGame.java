@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.23 2003/12/13 19:27:22 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.24 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,9 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
-import marauroa.game.RPActionFactory;
 import marauroa.game.RPObject;
-import marauroa.game.RPObjectFactory;
 import marauroa.net.Message;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageC2SPerceptionACK;
@@ -59,23 +57,23 @@ public class SimpleGame
   private int ownCharacterID;
   private int otherCharacterID;
   private static Sequencer player;
-  private boolean continueMusikPlay;
+  private boolean continueMusicPlay;
   private boolean continueGamePlay;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
     netMan = netman;
     
-    //register our objects
-    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
-    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST_ENTRY,CharacterList.CharEntry.class);
-    RPObjectFactory.getFactory().register(GameBoard.TYPE_GAME_BOARD,GameBoard.class);
-    
-    //register our actions
-    RPActionFactory.getFactory().register(ChallengeAction.ACTION_CHALLENGE,ChallengeAction.class);
-    RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
-    RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
-    RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
+//    //register our objects
+//    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST,CharacterList.class);
+//    RPObjectFactory.getFactory().register(CharacterList.TYPE_CHARACTER_LIST_ENTRY,CharacterList.CharEntry.class);
+//    RPObjectFactory.getFactory().register(GameBoard.TYPE_GAME_BOARD,GameBoard.class);
+//    
+//    //register our actions
+//    RPActionFactory.getFactory().register(ChallengeAction.ACTION_CHALLENGE,ChallengeAction.class);
+//    RPActionFactory.getFactory().register(ChallengeAnswer.ACTION_CHALLENGE_ANSWER,ChallengeAnswer.class);
+//    RPActionFactory.getFactory().register(MoveAction.ACTION_MOVE,MoveAction.class);
+//    RPActionFactory.getFactory().register(GetCharacterListAction.ACTION_GETCHARLIST,GetCharacterListAction.class);
     
     this.marauroa = marauroa;
     this.ownCharacterID=characterID.getObjectID();
@@ -86,7 +84,7 @@ public class SimpleGame
                       {
           public void windowClosing(WindowEvent e)
           {
-            continueMusikPlay = false;
+            continueMusicPlay = false;
             continueGamePlay  = false;
           }
         });
@@ -112,18 +110,20 @@ public class SimpleGame
             MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
             replyMsg.setClientID(msg.getClientID());
             netMan.addMessage(replyMsg);
+            
             MessageS2CPerception perception = (MessageS2CPerception)msg;
             List modified_objects = perception.getModifiedRPObjects();
-            if(modified_objects!=null && modified_objects.size()>0)
+            if(modified_objects.size()>0)
             {
               //the only object we should see hier is the player object itself.
               RPObject obj = (RPObject)modified_objects.get(0);
               addLog(obj.toString()+"\n");
               
-              // now it can be one of three things:
-              // 1. GameBoard in "hand" slot
-              // 2. CharacterList in "ear" slot
-              // 3. other RPPlayer in "challenge" slot
+//              if(obj.hasSlot("hand"))
+//                {
+//                /** Game already started. Only */
+//                GameBoard gameBoard=(GameBoard)obj.getSlot("hand").get();
+//                }
               
               try //gameboard
               {
@@ -151,12 +151,13 @@ public class SimpleGame
                   }
                   JOptionPane.showMessageDialog(marauroa,msg_1,msg_1,JOptionPane.INFORMATION_MESSAGE);
                   continueGamePlay  = false;
-                  continueMusikPlay = false;
+                  continueMusicPlay = false;
                   SimpleGame.this.dispose();
                 }
               }
               catch (Exception e1)
               {
+              	/** BUG: OMG, should test that slot doesn't exist with hasSlot */
                 if(otherCharacterID==-1)
                 {
                   try
@@ -409,7 +410,7 @@ public class SimpleGame
                 player.open();
                 player.setSequence(theSound);
                 player.addMetaEventListener(SimpleGame.this);
-                continueMusikPlay = true;
+                continueMusicPlay = true;
               }
               player.start();
               //player.close();
@@ -437,7 +438,7 @@ public class SimpleGame
     {
       System.out.println("song ended");
       // Sequencer is done playing
-      if (continueMusikPlay && player != null)
+      if (continueMusicPlay && player != null)
       {
         player.setTickPosition(0);
         playMidi();

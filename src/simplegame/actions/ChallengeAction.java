@@ -1,4 +1,4 @@
-/* $Id: ChallengeAction.java,v 1.6 2003/12/12 07:48:49 root777 Exp $ */
+/* $Id: ChallengeAction.java,v 1.7 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,45 +15,41 @@ package simplegame.actions;
 import marauroa.game.Attributes;
 import marauroa.game.RPAction;
 
-public class ChallengeAction
-  extends RPAction
-{
+public class ChallengeAction extends RPAction
+  {
   public final static int ACTION_CHALLENGE=2;
   
   public ChallengeAction()
-  {
-    actionType=ACTION_CHALLENGE;
-  }
+    {
+    put("type",ACTION_CHALLENGE);
+    }
   
   //Who is challenge
   public void setWho(int charID)
-  {
+    {
     put("who",charID);
-  }
+    }
   
   //Who was challenged
   public void setWhom(int charID)
-  {
+    {
     put("whom",charID);
-  }
+    }
   
   public int getWho()
-  {
+    {
     int ret = -1;
     try
-    {
+      {
       ret = Integer.parseInt(get("who"));
-    }
-    catch (NumberFormatException e)
-    {
+      }
+    catch (Exception e)
+      {
       e.printStackTrace(System.out);
-    }
-    catch (Attributes.AttributeNotFoundException e)
-    {
-      e.printStackTrace(System.out);
-    }
+      }
+
     return(ret);
-  }
+    }
   
   public int getWhom()
   {

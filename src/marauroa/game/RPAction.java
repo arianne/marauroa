@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.9 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.10 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,8 +19,6 @@ public class RPAction extends Attributes
   public final static Status STATUS_FAIL=new Status(Status.FAIL);
   public final static Status STATUS_INCOMPLETE=new Status(Status.INCOMPLETE);
   
-  protected int actionType;
-  
   /** This class represent the status of the action */
   public static class Status
     {
@@ -28,6 +26,7 @@ public class RPAction extends Attributes
     public final static byte FAIL=1;
     public final static byte INCOMPLETE=2;
     private byte val;
+    private String reason;
     
     /** Constructor
      *  @param val the status of the action */
@@ -37,14 +36,14 @@ public class RPAction extends Attributes
       }
     
     /** Constructor
-     *  @param val the status of the action */
-    public Status(String val)
+     *  @param val the status of the action 
+     *  @param reason explaing if needed the status of the action. */
+    public Status(byte val, String reason)
       {
-      if(val.equalsIgnoreCase("success")) this.val=SUCCESS;
-      if(val.equalsIgnoreCase("fail")) this.val=FAIL;
-      if(val.equalsIgnoreCase("incomplete")) this.val=INCOMPLETE;
+      this.val=val;
+      this.reason=reason;
       }
-    
+
     /** This method returns the status of the action
      *  @return the status of the action */
     public byte getStatus()
@@ -65,7 +64,7 @@ public class RPAction extends Attributes
     public String toString()
       {
       if(val==0) return "success";
-      if(val==1) return "fail";
+      if(val==1) return "fail: "+reason;
       if(val==2) return "incomplete";
       
       return "-incoherent status-";
@@ -75,7 +74,6 @@ public class RPAction extends Attributes
   /** Constructor */
   public RPAction()
     {
-    actionType=0;
     }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException

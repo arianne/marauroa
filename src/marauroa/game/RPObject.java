@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.20 2003/12/08 12:39:53 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.21 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,6 @@ import marauroa.marauroad;
 /** This class implements an Object. Please refer to Objects Explained document */
 public class RPObject extends Attributes
   {
-  /**  object type used by factory to choose a  right class*/
-  protected int objectType;
   /** a List<RPSlot> of slots */
   private List slots;
   
@@ -76,7 +74,6 @@ public class RPObject extends Attributes
     super();
 
     slots=new LinkedList();
-      objectType=0;
     }
 
   /** Constructor

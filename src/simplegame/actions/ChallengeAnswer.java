@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.3 2003/12/12 21:41:50 root777 Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ public class ChallengeAnswer
   
   public ChallengeAnswer()
   {
-    actionType = ACTION_CHALLENGE_ANSWER;
+    put("type",ACTION_CHALLENGE_ANSWER);
   }
   
   public void setAccept(boolean accepted)

@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.30 2003/12/10 16:55:21 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.31 2003/12/17 16:05:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,15 +67,13 @@ public class RunTests
     
     try
       {
-//      while(true)
-//      {
       Killer killer=new Killer(TIMEOUT_KILL_APPLICATION);
       
       Date start=new Date();
       boolean wasSuccessful=true;
       String timestamp=Long.toString(new Date().getTime());
       
-      System.err.println("Test will long around 93.0 seconds. Please wait!");
+      System.err.println("Test will last around 93.0 seconds. Please wait!");
       wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
@@ -92,9 +90,6 @@ public class RunTests
         }
         
       killer.finish();
-      
-//      Thread.sleep(2000);
-//      }
       }
     catch(Exception e) 
       {

@@ -1,4 +1,4 @@
-/* $Id: GetCharacterListAction.java,v 1.3 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: GetCharacterListAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ public class GetCharacterListAction
   public final static int ACTION_GETCHARLIST=3;
   public GetCharacterListAction()
   {
-    actionType=ACTION_GETCHARLIST;
+    put("type",ACTION_GETCHARLIST);
   }
 }
 

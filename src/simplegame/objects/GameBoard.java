@@ -1,4 +1,4 @@
-/* $Id: GameBoard.java,v 1.6 2003/12/13 19:27:22 root777 Exp $ */
+/* $Id: GameBoard.java,v 1.7 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,12 +30,12 @@ public class GameBoard
   
   public GameBoard(int size)
   {
-    objectType=TYPE_GAME_BOARD;
+    put("type",TYPE_GAME_BOARD);
     put("size",size);
     //last player id
-    put("l_id",-1);
+    put("last_id",-1);
     //winner id
-    put("w_id",-1);
+    put("winner_id",-1);
   }
   
   /**
@@ -47,7 +47,7 @@ public class GameBoard
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("l_id"));
+      ret = Integer.parseInt(get("last_id"));
     }
     catch (NumberFormatException e)
     {
@@ -67,7 +67,7 @@ public class GameBoard
     int ret = -1;
     try
     {
-      ret = Integer.parseInt(get("w_id"));
+      ret = Integer.parseInt(get("winner_id"));
     }
     catch (NumberFormatException e)
     {
@@ -118,7 +118,7 @@ public class GameBoard
     catch (Attributes.AttributeNotFoundException e)
     {
       put(row+"X"+column,characterID);
-      put("l_id",characterID);
+      put("last_id",characterID);
     }
   }
   
@@ -177,7 +177,7 @@ public class GameBoard
       }
       if(winner!=-1)
       {
-        put("w_id",winner);
+        put("winner_id",winner);
       }
     }
     finally

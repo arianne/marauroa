@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.8 2003/12/12 21:41:50 root777 Exp $ */
+/* $Id: Attributes.java,v 1.9 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,9 +12,7 @@
  ***************************************************************************/
 package marauroa.game;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import marauroa.marauroad;
 
 /** This class host a list of Attributes stored as a pair String=String */
@@ -67,6 +65,14 @@ public class Attributes implements marauroa.net.Serializable
   public void put(String attribute, int value)
     {
     content.put(attribute,Integer.toString(value));
+    }
+
+  /** This method set the value of an attribute
+   *  @param attribute the attribute to be set.
+   *  @param value the value we want to set. */
+  public void put(String attribute, List value)
+    {
+    content.put(attribute,Attributes.ListToString(value));
     }
 
   /** This methods return the value of an attribute
@@ -129,13 +135,11 @@ public class Attributes implements marauroa.net.Serializable
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
     Iterator  it=content.entrySet().iterator();
-//    marauroad.trace("Attributes::writeObject","D","Attributes count: "+content.size());
     out.write((int)content.size());
     
     while(it.hasNext())
       {
       Map.Entry entry=(Map.Entry)it.next();
-//      marauroad.trace("Attributes::writeObject","D","Attribute["+(String)entry.getKey()+","+(String)entry.getValue()+"]");
       out.write((String)entry.getKey());
       out.write((String)entry.getValue());
       }
@@ -144,7 +148,6 @@ public class Attributes implements marauroa.net.Serializable
   public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
     int size=in.readInt();
-//    marauroad.trace("Attributes::readObject","D","Attributes count: "+size);
     content.clear();
         
     for(int i=0;i<size;++i)
@@ -152,7 +155,36 @@ public class Attributes implements marauroa.net.Serializable
       String key   = in.readString();
       String value = in.readString();
       content.put(key,value);
-//      marauroad.trace("Attributes::readObject","D","Attribute["+key+","+value+"]");
       }
+    }
+    
+  private static String ListToString(List list)
+    {
+    Iterator it=list.iterator();
+    StringBuffer buffer=new StringBuffer("[");
+    while(it.hasNext())
+      {
+      buffer.append((String)it.next());
+      if(it.hasNext()) 
+        {
+        buffer.append(":");
+        }
+      }
+      
+    buffer.append("]");    
+    return buffer.toString();
+    }
+    
+  public static List StringToList(String list)
+    {
+    String[] array=list.split(":");
+    
+    List result=new LinkedList();
+    for(int i=0;i<array.length;++i)
+      {
+      result.add(array[i]);
+      }
+    
+    return result;
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: MoveAction.java,v 1.3 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: MoveAction.java,v 1.4 2003/12/17 16:05:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ public class MoveAction
   
   public MoveAction()
   {
-    actionType=ACTION_MOVE;
+    put("type",ACTION_MOVE);
   }
   
   public void setRow(int row)
