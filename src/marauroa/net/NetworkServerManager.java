@@ -224,7 +224,7 @@ public class NetworkServerManager
    	      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
  	     
  	      socket.send(pkt);
-          marauroad.trace("NetworkServerManagerRead::run","D","Sent message: "+msg.toString());
+          marauroad.trace("NetworkServerManagerWrite::write","D","Sent message: "+msg.toString());
  	      }
  	    }
  	  catch(IOException e)
