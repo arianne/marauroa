@@ -33,6 +33,9 @@ FILTER := ""
 LABEL := "mods"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModelListenerIF.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
 #[BeginFolder]
 LABEL := "SimpleGame"
 FILTER := ""
