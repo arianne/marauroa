@@ -1,4 +1,4 @@
-/* $Id: Test_RPZone.java,v 1.5 2004/02/06 21:42:16 root777 Exp $ */
+/* $Id: Test_RPZone.java,v 1.4 2004/02/06 21:38:40 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,11 +41,9 @@ public class Test_RPZone extends TestCase
 			RPObject.ID id=new RPObject.ID(SonGoku);
 			assertTrue(zone.has(id));
 			
-			//save/load Zone inbetween...
 			((MarauroaRPZone)zone).saveToFile("MarauroaRPZone.xml");
 			zone = new MarauroaRPZone();
 			((MarauroaRPZone)zone).loadFromFile("MarauroaRPZone.xml");
-			
 			RPObject object=zone.get(id);
 			assertEquals(object,SonGoku);
 			
