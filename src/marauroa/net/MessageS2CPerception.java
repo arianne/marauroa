@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.43 2004/05/11 22:11:39 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.44 2004/05/13 12:21:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -124,10 +124,44 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Perception) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+addedRPObjects.size()+
-      " added objects, "+modifiedAddedAttribsRPObjects.size()+" modified Added attributes objects, "+
-      modifiedDeletedAttribsRPObjects.size()+" modified Deleted attributes objects and "+
-      deletedRPObjects.size()+" deleted objects)";
+    Iterator it;
+      
+    StringBuffer perception_string=new StringBuffer();
+    perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
+
+    perception_string.append("\n  added: \n");
+    it=addedRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      }
+
+    perception_string.append("\n  modified added: \n");
+    it=modifiedAddedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      }
+
+    perception_string.append("\n  modified deleted: \n");
+    it=modifiedDeletedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      }
+    
+    perception_string.append("\n  deleted: \n");
+    it=deletedRPObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      }
+
+    return perception_string.toString();
     }
   
   private static byte[] precomputed_StaticPartPerception=null;
@@ -194,48 +228,6 @@ public class MessageS2CPerception extends Message
     {
     super.writeObject(out);
     
-    if(marauroad.loggable("MessageS2CPerception::writeObject","D"))
-      {
-      Iterator it;
-      
-      StringBuffer perception_string=new StringBuffer();
-      perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
-
-      perception_string.append("\n  added: \n");
-      it=addedRPObjects.iterator();
-      while(it.hasNext())
-        {
-        RPObject object=(RPObject)it.next();
-        perception_string.append("    "+object.toString()+"\n");
-        }
-
-      perception_string.append("\n  modified added: \n");
-      it=modifiedAddedAttribsRPObjects.iterator();
-      while(it.hasNext())
-        {
-        RPObject object=(RPObject)it.next();
-        perception_string.append("    "+object.toString()+"\n");
-        }
-
-      perception_string.append("\n  modified deleted: \n");
-      it=modifiedDeletedAttribsRPObjects.iterator();
-      while(it.hasNext())
-        {
-        RPObject object=(RPObject)it.next();
-        perception_string.append("    "+object.toString()+"\n");
-        }
-    
-      perception_string.append("\n  deleted: \n");
-      it=deletedRPObjects.iterator();
-      while(it.hasNext())
-        {
-        RPObject object=(RPObject)it.next();
-        perception_string.append("    "+object.toString()+"\n");
-        }
-    
-      marauroad.trace("MessageS2CPerception::writeObject","D",perception_string.toString());
-      }
-
     ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
     OutputSerializer ser=new OutputSerializer(out_stream);
