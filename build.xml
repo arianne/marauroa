@@ -28,18 +28,11 @@
       </fileset>
     </copy>
     <copy todir="${build}" file="${src}/marauroa.ini"/>
-    <copy todir="${build}">
-      <fileset dir="${src}" includes="**/*.java"/>
-      <!-- apply a substitution @version@ with the value of ${version} -->
-      <filterset>
-        <filter token="version" value="${version}"/>
-      </filterset>
-    </copy>
   </target>
 
   <target name="compile" depends="init,installation">
     <!-- run javac to compile the source files -->
-    <javac srcdir="${build}" destdir="${build}">
+    <javac srcdir="${src}" destdir="${build}">
       <classpath>
         <pathelement path="${classpath}"/>
       </classpath>
