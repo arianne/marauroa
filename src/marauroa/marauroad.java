@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.12 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.13 2003/12/12 07:51:57 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,11 @@
  ***************************************************************************/
 package marauroa;
 
-import marauroa.game.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import marauroa.game.PlayerDatabase;
+import marauroa.game.PlayerDatabaseFactory;
+import marauroa.game.RPObject;
 
 /**
  * The launcher of the whole Marauroa Server.
@@ -21,9 +25,18 @@ import marauroa.game.*;
 public class marauroad extends Thread
   {
   private static marauroad marauroa;
+	private static Date timestamp;
+	private static SimpleDateFormat formatter;
+	
   private marauroa.net.NetworkServerManager netMan;
   private marauroa.game.GameServerManager gameMan;
   
+	static
+	{
+		timestamp = new Date();
+		formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	}
+	
   private void setTestDatabase()
     {
     marauroad.trace("marauroad::setTestDatabase",">");
@@ -182,8 +195,9 @@ public class marauroad extends Thread
     
   public static void trace(String module,String event)
     {
-    getMarauroa().message(new java.sql.Timestamp(new java.util.Date().getTime())+"\t"+event+"\t"+
-       module);
+			timestamp.setTime(System.currentTimeMillis());
+			String ts = formatter.format(timestamp);
+      getMarauroa().message(ts+"\t"+event+"\t"+module);
     }
     
   public static void trace(String module,String event,String text)
