@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.6 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.7 2003/12/08 12:39:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,11 @@ public class Test_RPScheduler extends TestCase
       {
       i++;
       return RPAction.STATUS_SUCCESS;
-      }      
+      }
+    
+    public void nextTurn()
+      {
+      }
     }
 	
   public void testRPScheduler()

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.20 2003/12/08 01:12:20 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.21 2003/12/08 12:39:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -334,6 +334,10 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       }
     }
     return(challenge_slot);
+  }
+
+  public void nextTurn()
+  {
   }
 }
 
