@@ -1,0 +1,30 @@
+<!-- Model.html, Created by Omnicore CodeGuide -->
+<HTML>
+<BODY>
+<PRE>
+<i>*Player => a guy sitting in front of monitor, not the  class player.  </i>
+Zone contains (directly) only characters.
+
+Normal case:
+1. After login player gets the  list of characters  in Zone by sending GetCharacterListAction.
+
+2. The server sends the list with all registered characters to player inclusiv
+   status information (idle, busy).
+   
+3. The player chooses one character and sends "challenge" action addressed to
+   this character to server
+   
+4. The Server puts "you have been challenged from X" action in character object.
+
+5. The challenged player answers with "accept challenge" action.
+
+6. The game begins:
+6.1 GameBoard object is created and assigned to both characters.
+    (f.e. slot "hand" )
+6.2 Players are making moves in order (MoveAction).
+    to be continued...
+   
+</PRE>
+</BODY>
+</HTML>
+
