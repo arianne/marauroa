@@ -721,18 +721,104 @@ Perception (It is delta perception )
         }
       }
     }
+
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
   }
 
 Observe that num_victory and num_defeat is changed accordinly the same that
 fame. Note also that characters are not healthed, they will health alone
 after a number of turns.
   
-TODO: Explain how Rufus enter in combat against "A-Bush"
+Now our mighty Rufus is going to fight against any brave gladiator, so he
+request a fight.  
 
-Bugs:  
-- Determine a way of knowing to which Action an Action reply belongs
-- Modify documentation to show the above solution
-- Add as mandatory action_id attribute
-- Fill action_id attribute in server
-- Send action_id in Action ACK
-- Add PreTurn and PostTurn to RPRuleProcessor
+Fight
+  {
+  action_id="2393";
+  }
+  
+And again in the next perception we will have:
+
+Perception
+  {
+  Character
+    {
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_12131="success"
+    fame_awarded=""
+    
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        wanna_fight=""
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+  }
+
+TODO: Explain how "A-Bush" accept the fight and fight against rufus...
