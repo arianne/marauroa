@@ -21,13 +21,19 @@ public class InputSerializer
   /** This method serialize an object that implements the interface Serializable
       allowing to implement this behaviour in several classes
       @param obj the object were we will serialize the data
-      @return the object serialized, just for interface coherence */
+      @return the object serialized, just for interface coherence 
+      @throws java.io.IOException if there is an IO error 
+      @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */    
   public Object readObject(marauroa.net.Serializable obj) throws IOException, java.lang.ClassNotFoundException
     {
     obj.readObject(this);
     return obj;
     }
     
+  /** This method read a byte from the Serializer
+      @return the byte serialized
+      @throws java.io.IOException if there is an IO error 
+      @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */    
   public byte readByte() throws IOException, java.lang.ClassNotFoundException
     {
     int result=in.read();
@@ -38,6 +44,10 @@ public class InputSerializer
     return (byte)result;
     }
     
+  /** This method read a byte array from the Serializer
+      @return the byte array serialized
+      @throws java.io.IOException if there is an IO error 
+      @throws java.lang.ClassNotFoundException if the class to serialize doesn't exist. */    
   public byte[] readByteArray() throws IOException, java.lang.ClassNotFoundException
     {
     int size=readInt();
@@ -48,6 +58,11 @@ public class InputSerializer
     return buffer;
     }
 
+  /** This method read a short from the Serializer
+      @return the short serialized
+      @throws java.io.IOException if there is an IO error 
+      @throws java.lang.ClassNotFoundException 
+        if the class to serialize doesn't exist. */    
   public short readShort() throws IOException, java.lang.ClassNotFoundException
     {
     byte[] data=new byte[2];
@@ -63,6 +78,11 @@ public class InputSerializer
     return (short)result;
     }
 
+  /** This method read a int from the Serializer
+      @return the int serialized
+      @throws java.io.IOException if there is an IO error
+      @throws java.lang.ClassNotFoundException 
+        if the class to serialize doesn't exist. */    
   public int readInt() throws IOException, java.lang.ClassNotFoundException
     {
     byte[] data=new byte[4];
@@ -79,12 +99,22 @@ public class InputSerializer
     return result;
     }
   
+  /** This method read a String from the Serializer
+      @return the String serialized
+      @throws java.io.IOException if there is an IO error
+      @throws java.lang.ClassNotFoundException 
+        if the class to serialize doesn't exist. */    
   public String readString() throws IOException, java.lang.ClassNotFoundException
     {
     /** TODO: Fix to use UTF charset */
     return new String(readByteArray());
     }
 
+  /** This method read a String array from the Serializer
+      @return the String array serialized
+      @throws java.io.IOException if there is an IO error
+      @throws java.lang.ClassNotFoundException 
+        if the class to serialize doesn't exist. */    
   public String[] readStringArray() throws IOException, java.lang.ClassNotFoundException
     {
     int size=readInt();

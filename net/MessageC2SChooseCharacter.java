@@ -26,15 +26,15 @@ public class MessageC2SChooseCharacter extends Message
     this.character=character;
     }  
   
-  /** Returns the name of the chosen character */
-  String getCharacter()
+  /** This methods returns the name of the chosen character 
+      @return the character name*/
+  public String getCharacter()
     {
     return character;    
     }
 
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
-    /** @todo Make sure that this work with UTF instear of 8bits chars */
     super.writeObject(out);    
     out.write(character);
     }
