@@ -37,7 +37,8 @@
       </fileset>
     </copy>
     <copy todir="${build}" file="${src}/marauroa.ini"/>
-    <copy todir="${build}" file="${src}/simplegame.ini"/>
+    <copy todir="${build}" file="${src}/simplegame/simplegame.ini"/>
+    <copy todir="${build}" file="${src}/the1001/the1001.ini"/>
   </target>
 
   <target name="compile" depends="init,installation">
