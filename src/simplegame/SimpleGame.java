@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
@@ -68,7 +69,29 @@ public class SimpleGame
           if(msg instanceof MessageS2CPerception)
           {
             MessageS2CPerception perception = (MessageS2CPerception)msg;
-            addLog(""+perception+"\n");
+            List modified_objects = perception.getModifiedRPObjects();
+            if(modified_objects!=null && modified_objects.size()>0)
+            {
+              for (int i = 0; i < modified_objects.size(); i++)
+              {
+                RPObject obj = (RPObject)modified_objects.get(i);
+                try
+                {
+                  if("cell".equals(obj.get("type")))
+                  {
+                    byte color = Byte.parseByte(obj.get("color"));
+                    int id = Integer.parseInt(obj.get("object_id"));
+                    int row = id/gdm.getRowsCount();
+                    int column = id%gdm.getRowsCount();
+                    gdm.setColorAt(row,column,color);
+                  }
+                }
+                catch (marauroa.game.Attributes.AttributeNotFoundException e)
+                {
+                  //e.printStackTrace();
+                }
+              }
+            }
           }
         }
       }
@@ -154,8 +177,13 @@ public class SimpleGame
         for (int j = 0; j < r; j++)
         {
           y=starty+j*cell_height;
-          Color color = gameDataModel.getColorAt(j,i)==0?Color.red:null;
-          color = gameDataModel.getColorAt(j,i)==1?Color.green:null;
+          Color color = null;
+          switch(gameDataModel.getColorAt(j,i))
+          {
+            case  0: color = Color.red;  break;
+            case  1: color = Color.green; break;
+            default: color = null;
+          }
           if(color!=null)
           {
             g.setColor(color);

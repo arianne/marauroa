@@ -47,7 +47,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
   
   public void approvedActions(RPActionList actionList)
   {
-    while(actionList.size()<2)
+    while(actionList.size()>1)
     {
       actionList.remove(0);
     }
