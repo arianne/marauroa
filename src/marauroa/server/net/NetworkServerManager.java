@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.1 2005/01/23 21:00:48 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.2 2005/01/29 17:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,6 +64,7 @@ public final class NetworkServerManager
       msgFactory=MessageFactory.getFactory();
       keepRunning=true;
       isfinished=false;
+      
       /* Because we access the list from several places we create a synchronized list. */
       messages=Collections.synchronizedList(new LinkedList<Message>());
       stats=Statistics.getStatistics();
@@ -181,12 +182,12 @@ public final class NetworkServerManager
     {
     Logger.trace("NetworkServerManager::addMessage",">");
     synchronized(messagesToSend)
-    {
+      {
       messagesToSend.add(msg);
       //wake up waiting Writer-Threads
       messagesToSend.notifyAll();
-    }
-    //writeManager.write(msg);
+      }
+      
     Logger.trace("NetworkServerManager::addMessage","<");
     }
     
@@ -277,17 +278,25 @@ public final class NetworkServerManager
           if(messagesToSend.size()==0)
             {
             //sleep max 1 second until some one wake me up...
-            try{messagesToSend.wait(1000);}catch(InterruptedException ie){}
+            try
+              {
+              messagesToSend.wait(1000);
+              }
+            catch(InterruptedException ie)
+              {
+              }
             }
+        
           if(messagesToSend.size()>0)
             {
             msg = messagesToSend.remove(0);
             }
           }
-          if(msg!=null)
-            {
-            write(msg);
-            }
+        
+        if(msg!=null)
+          {
+          write(msg);
+          }
         }
       Logger.trace("NetworkServerManagerWrite::run","<");
       }
@@ -307,19 +316,19 @@ public final class NetworkServerManager
           s.write(msg);
 
           byte[] buffer=out.toByteArray();
+          int used_signature;
   
           /*** Statistics ***/
           synchronized(stats) //we can have many threads now...
             {
+            used_signature=++last_signature;
+
             stats.addBytesSend(buffer.length);
             stats.addMessageSend();
             }
           
           Logger.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
-
           int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
-
-          ++last_signature;
 
           int remaining=buffer.length;
           
@@ -343,7 +352,7 @@ public final class NetworkServerManager
 
             data[0]=(byte)total;
             data[1]=(byte)i;
-            data[2]=(byte)last_signature;
+            data[2]=(byte)used_signature;
             System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
 
             DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress());
