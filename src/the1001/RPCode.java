@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.16 2004/01/01 22:56:07 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.17 2004/01/01 23:32:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -221,6 +221,18 @@ public class RPCode
       /** Failed because the gladiator is dead */
       return;
       }
+    
+    if(!gladiator1.has("!mode"))
+      {
+      return;
+      }
+         
+    if(!gladiator2.has("!mode"))
+      {
+      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
+      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+      gladiator2.put("damage",damage);
+      }
       
     String mode_g1=gladiator1.get("!mode");
     String mode_g2=gladiator2.get("!mode");
@@ -232,38 +244,30 @@ public class RPCode
       
       damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("damage",damage);
+      gladiator2.put("?damage",damage);
 
       damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
       gladiator1.put("hp",gladiator1.getInt("hp")-damage);
-      gladiator1.put("damage",damage);
+      gladiator1.put("?damage",damage);
       }
     else if(mode_g1.equals("rock") && mode_g2.equals("scissor"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("damage",damage);
+      gladiator2.put("?damage",damage);
       }  
     else if(mode_g1.equals("paper") && mode_g2.equals("rock"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("damage",damage);
+      gladiator2.put("?damage",damage);
       }  
     else if(mode_g1.equals("scissor") && mode_g2.equals("paper"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("damage",damage);
+      gladiator2.put("?damage",damage);
       }  
-    else
-      {
-      /** Whatever other valid combination means gladiator 2 wins */
-      int damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
-      gladiator1.put("hp",gladiator1.getInt("hp")-damage);
-      gladiator1.put("damage",damage);
-      }
-    
     }  
   }
   
