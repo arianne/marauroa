@@ -20,18 +20,28 @@ public class RPObject extends Attributes
     {
     int i;
     
+    /** Constructor */
     public SlotsIterator()
       {
       i=0;
       }
     
+    /** This method returns true if there are still most elements.
+     *  @return true if there are more elements. */    
     public boolean hasNext()
       {
       return (i<slots.length);
       }
     
-    public Object next()
+    /** This method returs the RPSlot and move the pointer to the next element
+     *  @return an RPSlot */ 
+    public Object next() throws NoSuchElementException
       {
+      if(i==slots.length) 
+        {
+        throw new NoSuchElementException("Acceding slots beyond limit");
+        }
+        
       RPSlot obj=slots[i];
       ++i;
       return obj;
@@ -42,25 +52,35 @@ public class RPObject extends Attributes
       }
     }
   
+  /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
     {
     private int id;
     
+    /** Constructor 
+     *  @param oid the object id */
     public ID(int oid)
       {
       id=oid;
       }
     
+    /** Constructor 
+     *  @param attr an Attributes object( RPObject or RPAction ) containing object_id attribute */
     public ID(Attributes attr) throws Attributes.AttributeNotFoundException
       {
       id=new Integer(attr.get("object_id")).intValue();
       }
     
+    /** This method returns the object id 
+     *  @return the object id. */
     public int getObjectID()
       {
       return id;
       }
     
+    /** This method returns true of both ids are equal.
+     *  @param anotherid another id object
+     *  @return true if they are equal, or false otherwise. */
     public boolean equals(Object anotherid)
       {
       if(anotherid!=null)
@@ -72,12 +92,15 @@ public class RPObject extends Attributes
         return(false);
         }
       }
-    
+      
+    /** We need it for HashMap */
     public int hashCode()
       {
       return id;
       }
     
+    /** This method returns a String that represent the object 
+     *  @return a string representing the object.*/
     public String toString()
       {
       return "RPObject.ID [id="+id+"]";
@@ -94,6 +117,7 @@ public class RPObject extends Attributes
       }
     }
   
+  /** Constructor */
   public RPObject()
     {
     super();
@@ -142,7 +166,13 @@ public class RPObject extends Attributes
     StringBuffer tmp=new StringBuffer("RPObject with ");
     tmp.append(super.toString());
     tmp.append(" and RPSlots ");
-    /* TODO: Print slots too. */
+    
+    Iterator it=slotsIterator();
+    while(it.hasNext())
+      {
+      RPSlot slot=(RPSlot)it.next();
+      tmp.append("["+slot.toString()+"]");
+      }
     
     return tmp.toString();
     }

@@ -35,6 +35,7 @@ public class RPServerManager extends Thread
       //from Configuration
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
+      ruleProcessor.setContext(zone);
       }
     catch(Throwable e)
       {

@@ -48,6 +48,12 @@ public class RPSlot implements marauroa.net.Serializable
     {
     return objects.iterator();
     } 
+    
+  public String toString()
+    {
+    /* TODO: Implement it */
+    return "TODO";
+    }
 
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {

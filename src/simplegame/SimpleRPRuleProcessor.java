@@ -11,18 +11,21 @@ import marauroa.game.*;
 import java.awt.Color;
 import marauroa.marauroad;
 
-public class SimpleRPRuleProcessor
-  implements RPRuleProcessor
+public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
   private SimpleRPZone zone;
   private RPObject.ID lastPlayerID;
   
-  public SimpleRPRuleProcessor(SimpleRPZone zone)
+  public SimpleRPRuleProcessor()
   {
-    this.zone=zone;
     lastPlayerID = null;
   }
-  
+
+  public void setContext(RPZone zone)
+    {
+    /* TODO: Check this casting... */
+    this.zone=(SimpleRPZone)zone;
+    }  
   
   public RPAction.Status execute(RPObject.ID id, RPActionList list)
   {
