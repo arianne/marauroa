@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPZone.java,v 1.3 2004/05/19 20:56:09 arianne_rpg Exp $ */
+/* $Id: mapacmanRPZone.java,v 1.4 2004/05/22 09:18:58 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package mapacman;
 import marauroa.marauroad;
 import marauroa.game.*;
 import java.util.*;
-import the1001.objects.*;
+//import the1001.objects.*;
 
 public class mapacmanRPZone extends MarauroaRPZone
   {
