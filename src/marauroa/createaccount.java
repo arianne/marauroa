@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.16 2004/03/25 22:20:43 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.17 2004/03/28 18:11:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,7 +141,7 @@ class createaccount
         out.println("String size not valid: "+password);
         return (3);
         }
-      if(password.length()>50 || password.length()<5) 
+      if(email.length()>50 || email.length()<5) 
         {
         out.println("String size not valid: "+password);
         return (3);
