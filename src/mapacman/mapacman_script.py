@@ -4,6 +4,8 @@ from marauroa.net import *
 
 from java.util import LinkedList
 
+import random
+
 pacman_mapfile='map_definition.txt'
 
 #
@@ -12,10 +14,11 @@ pacman_mapfile='map_definition.txt'
 success=1
 failed=0
 
+
 _directions=['N','W','S','E']
 
 def randomDirection():
-    return directions[int((rand()/32768)*4)]
+    return _directions[int((random.random()/32768)*4)]
 
 #
 # PythonRP Interface for Java classes
@@ -47,13 +50,23 @@ class RealPythonAI(PythonAI):
         self._zone=zone
         self._sched=sched
         self.pythonRP=None
+        self.ghosts=[]
         
         setPythonAI(self)
         
     def setPythonRP(self, pythonRP):
         self.pythonRP=pythonRP
-
+     
+    def createEnviroment(self):
+    	ghost=self.pythonRP.createGhost('Sticky')
+    	self.pythonRP.onInitAIGhost(ghost)
+        self.ghosts.append(ghost)
+        
     def compute(self,timelimit):
+        # TODO: Code here the ghost AI
+        # Personally I would use the PythonRP directly and move the ghost at will
+        # But if you are really in need, add actions to the scheduler so they are
+        # done as if you are a simple player.
         return 1
     
 class RealPythonRP(PythonRP):
@@ -61,6 +74,7 @@ class RealPythonRP(PythonRP):
         self._removed_elements=[]
         self._super_players=[]
         self._online_players=[]
+        self._online_ghosts=[]
 
         self._zone=zone
         self._map=mapacmanRPMap(self,pacman_mapfile)
@@ -68,6 +82,7 @@ class RealPythonRP(PythonRP):
 
         instance=getPythonAI()
         instance.setPythonRP(self)
+        instance.createEnviroment()
         
     def getZone(self):
         return self._zone
@@ -172,14 +187,18 @@ class RealPythonRP(PythonRP):
 
     def _ghostCollisions(self, player):
         pos=(player.getInt("x"),player.getInt("y"))
-        for player_in_pos in self.getPlayers(pos):
-            if player_in_pos.get("type")=="ghost":
-                if player.has("super"):
-                    # Eat the ghost
-                    pass
-                else:
-                    # kill the player
-                    pass
+        for player_in_pos in self.getGhosts(pos):
+            if player.has("super"):
+                # TODO: Eat the ghost
+                pass
+            else:
+                # TODO: kill the player
+                print "Ghost killed player ",player.get("id") 
+                pos=self._map.getRandomRespawn()
+                player.put("x",pos[0])
+                player.put("y",pos[1])
+                player.put("score",player.get("score")/2)
+                self._zone.modify(player)
     
     def _foreachPlayer(self):
         for player in self._online_players:
@@ -211,11 +230,11 @@ class RealPythonRP(PythonRP):
         self._foreachPlayer()
         
 
-    def getPlayers(self,pos):
+    def getGhosts(self,pos):
         list=[]
-        for player in self._online_players:
-            if pos[0]==player.getInt("x") and pos[1]==player.getInt("y"):
-                list.append(player)
+        for ghost in self._online_ghosts:
+            if pos[0]==ghost.getInt("x") and pos[1]==ghost.getInt("y"):
+                list.append(ghost)
         return list
         
     def onInit(self, object):
@@ -226,6 +245,16 @@ class RealPythonRP(PythonRP):
         
         self._zone.add(object)
         self._online_players.append(object)
+        return 1
+
+    def onInitAIGhost(self, object):
+        """ Do what you need to initialize this AI """
+        pos=self._map.getRandomRespawn()
+        object.put("x",pos[0])
+        object.put("y",pos[1])
+        
+        self._zone.add(object)
+        self._online_ghosts.append(object)
         return 1
 
     def onExit(self, objectid):
