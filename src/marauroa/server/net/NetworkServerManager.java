@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.2 2005/01/29 17:39:57 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.3 2005/01/29 17:59:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -300,22 +300,28 @@ public final class NetworkServerManager
         }
       Logger.trace("NetworkServerManagerWrite::run","<");
       }
+
+    private byte[] serializeMessage(Message msg) throws IOException    
+      {
+      ByteArrayOutputStream out=new ByteArrayOutputStream();
+      OutputSerializer s=new OutputSerializer(out);
+
+      s.write(msg);
+      return out.toByteArray();
+      }
     
+    final private int PACKET_SIGNATURE_SIZE=3;
+    final private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
+      
     /** Method that execute the writting */
     public void write(Message msg)
       {
       Logger.trace("NetworkServerManagerWrite::write",">");
       try
         {
-        /* TODO: Looks like hardcoded, write it in a better way */
         if(keepRunning)
           {
-          ByteArrayOutputStream out=new ByteArrayOutputStream();
-          OutputSerializer s=new OutputSerializer(out);
-
-          s.write(msg);
-
-          byte[] buffer=out.toByteArray();
+          byte[] buffer=serializeMessage(msg);
           int used_signature;
   
           /*** Statistics ***/
@@ -328,37 +334,35 @@ public final class NetworkServerManager
             }
           
           Logger.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
-          int total=buffer.length/(NetConst.UDP_PACKET_SIZE-3)+1;
-
-          int remaining=buffer.length;
+          int totalNumberOfPackets=(buffer.length/CONTENT_PACKET_SIZE)+1;
+          int bytesRemaining=buffer.length;
           
-          for(int i=0;i<total;++i)
+          byte[] data=new byte[CONTENT_PACKET_SIZE+PACKET_SIGNATURE_SIZE];
+          
+          for(int i=0;i<totalNumberOfPackets;++i)
             {
-            int size=0;
+            int packetSize=CONTENT_PACKET_SIZE;
 
-            if((NetConst.UDP_PACKET_SIZE-3)>remaining)
+            if((CONTENT_PACKET_SIZE)>bytesRemaining)
               {
-              size=remaining;
+              packetSize=bytesRemaining;
               }
-            else
-              {
-              size=NetConst.UDP_PACKET_SIZE-3;
-              }
-            remaining-=size;
-            Logger.trace("NetworkServerManagerWrite::write","D","Packet size: "+size);
-            Logger.trace("NetworkServerManagerWrite::write","D","Bytes remaining: "+remaining);
+
+            bytesRemaining-=packetSize;
+            
+            Logger.trace("NetworkServerManagerWrite::write","D","Packet size: "+packetSize);
+            Logger.trace("NetworkServerManagerWrite::write","D","Bytes remaining: "+bytesRemaining);
               
-            byte[] data=new byte[size+3];
-
-            data[0]=(byte)total;
+            data[0]=(byte)totalNumberOfPackets;
             data[1]=(byte)i;
             data[2]=(byte)used_signature;
-            System.arraycopy(buffer,(NetConst.UDP_PACKET_SIZE-3)*i,data,3,size);
+            
+            System.arraycopy(buffer,CONTENT_PACKET_SIZE*i,data,PACKET_SIGNATURE_SIZE,packetSize);
 
-            DatagramPacket pkt=new DatagramPacket(data,data.length,msg.getAddress());
+            DatagramPacket pkt=new DatagramPacket(data,packetSize+PACKET_SIGNATURE_SIZE,msg.getAddress());
 
             socket.send(pkt);
-            Logger.trace("NetworkServerManagerWrite::write","D","Sent packet "+(i+1)+" of "+total);
+            Logger.trace("NetworkServerManagerWrite::write","D","Sent packet "+(i+1)+" of "+totalNumberOfPackets);
             }
           
           if(Logger.loggable("NetworkServerManagerWrite::write","D"))
