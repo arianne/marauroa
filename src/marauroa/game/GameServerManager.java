@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.18 2003/12/08 01:12:19 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.19 2003/12/08 17:02:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import java.util.*;
 import java.io.*;
 
 import marauroa.net.*;
-import marauroa.marauroad;
+import marauroa.*;
 
 /** The GameServerManager is a active entity of the marauroa.game package,
  *  it is in charge of processing all the messages and modify PlayerEntry Container accordingly. */
@@ -138,6 +138,51 @@ public class GameServerManager extends Thread
       marauroad.trace("GameServerManager::run","<");
       }
     }
+  
+  private static class ServerInfo
+    {
+    static private String typeGame;
+    static private String name;
+    static private String version;
+    static private String contact;
+    
+    static
+      {
+      marauroad.trace("GameServerManager::ServerInfo::(static)",">");
+      
+      try
+        {
+	    Configuration conf=Configuration.getConfiguration();
+	    
+	    typeGame=conf.get("server_typeGame");
+	    name=conf.get("server_name");
+	    version=conf.get("server_version");
+	    contact=conf.get("server_contact");
+	    }
+	  catch(Exception e)
+	    {
+        marauroad.trace("GameServerManager::ServerInfo::(static)","X",e.getMessage());
+        marauroad.trace("GameServerManager::ServerInfo::(static)","!","ABORT: Unable to load Server info");
+        System.exit(-1);
+	    }    
+	  finally
+	    {
+        marauroad.trace("GameServerManager::ServerInfo::(static)","<");
+	    }
+      }
+    
+    public static String[] get()
+      {
+      String[] result=new String[4];
+      
+      result[0]=typeGame;
+      result[1]=name;
+      result[2]=version;
+      result[3]=contact;      
+      
+      return result;
+      }
+    }  
     
   private void processLoginEvent(MessageC2SLogin msg)
     {
@@ -178,6 +223,11 @@ public class GameServerManager extends Thread
 	    MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
 	    msgLoginACK.setClientID(clientid);
 	    netMan.addMessage(msgLoginACK);
+
+		/* Send player the ServerInfo */
+	    MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
+	    msgServerInfo.setClientID(clientid);
+	    netMan.addMessage(msgServerInfo);
 	      
 	    /* Build player character list and send it to client */
 	    String[] characters=playerContainer.getCharacterList(clientid);
