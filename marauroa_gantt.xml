@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ganttproject.sourceforge.net>
 
-<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/3/2004" view-zoom="3" version="1.9.10">
+<project name="Marauroa" company="Miguel Angel Blanch Lardin" view-date="1/2/2004" view-zoom="5" version="1.9.10">
     <description>
         Marauroa a an online development project aimed at create a open source multiplayer online framework.
     </description>
@@ -59,7 +59,7 @@
         <task id="44" name="Release Marauroa 0.01" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="22/11/2003" duration="3" complete="100" priority="2">
             <depend id="85" type="2"/>
         </task>
-        <task id="76" name="Complete documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="25/11/2003" duration="8" complete="90" priority="1">
+        <task id="76" name="Complete documentation" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="25/11/2003" duration="8" complete="100" priority="1">
             <depend id="85" type="2"/>
         </task>
         <task id="80" name="Integrate JDBC Database" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="19/11/2003" duration="18" complete="100" priority="1">
@@ -83,7 +83,7 @@
         <task id="93" name="Release Marauroa 0.03" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="10/12/2003" duration="3" complete="100" priority="1">
             <depend id="113" type="2"/>
         </task>
-        <task id="79" name="Create a simple game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="3/12/2003" duration="8" complete="90" priority="1">
+        <task id="79" name="Create a simple game" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="3/12/2003" duration="8" complete="100" priority="1">
             <depend id="86" type="2"/>
         </task>
         <task id="96" name="Document SimpleGame" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="8/12/2003" duration="9" complete="100" priority="1">
@@ -163,39 +163,44 @@
         <task id="159" name="Add Equip and Buy actions" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="1/3/2004" duration="12" complete="80" priority="1">
             <depend id="164" type="2"/>
         </task>
-        <task id="160" name="Add Lua support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/3/2004" duration="10" complete="0" priority="1">
-            <depend id="164" type="2"/>
-            <depend id="162" type="2"/>
-        </task>
         <task id="179" name="Develop AI Bot for Gladiators" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="7/2/2004" duration="23" complete="100" priority="1">
             <depend id="164" type="2"/>
         </task>
         <task id="164" name="Release Marauroa 0.25" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="28/3/2004" duration="3" complete="0" priority="1">
-            <depend id="256" type="2"/>
-            <depend id="257" type="2"/>
-            <depend id="258" type="2"/>
             <depend id="279" type="2"/>
+            <depend id="292" type="2"/>
+            <depend id="293" type="2"/>
+        </task>
+        <task id="160" name="Add Lua support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2/3/2004" duration="10" complete="0" priority="1">
+            <depend id="162" type="2"/>
         </task>
         <task id="162" name="Rewrite 1001 using Lua" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/3/2004" duration="15" complete="0" priority="1">
-            <depend id="164" type="2"/>
             <depend id="279" type="2"/>
         </task>
-        <task id="279" name="Release Marauroa 0.26" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="31/3/2004" duration="3" complete="0" priority="1">
+        <task id="292" name="Add Persistent Objects" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="10" complete="90" priority="1">
+            <depend id="279" type="2"/>
+            <depend id="257" type="2"/>
+        </task>
+        <task id="293" name="Transactional database support" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="7" complete="66" priority="1"/>
+        <task id="279" name="Release Marauroa 0.30" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="10/4/2004" duration="3" complete="0" priority="1">
+            <depend id="260" type="2"/>
+            <depend id="257" type="2"/>
+            <depend id="256" type="2"/>
+            <depend id="258" type="2"/>
+        </task>
+        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="24" complete="46" priority="1">
             <depend id="260" type="2"/>
         </task>
-        <task id="257" name="Persistent world" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="24" complete="46" priority="1">
+        <task id="256" name="Enlarge World" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="20" complete="0" priority="1">
             <depend id="260" type="2"/>
         </task>
-        <task id="256" name="Enlarge World" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="20" complete="0" priority="1">
-            <depend id="260" type="2"/>
-        </task>
-        <task id="258" name="Add Move action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="31/3/2004" duration="8" complete="0" priority="1">
+        <task id="258" name="Add Move action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="13/4/2004" duration="8" complete="0" priority="1">
             <depend id="259" type="2"/>
         </task>
-        <task id="259" name="Add Enter and Leave action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="8/4/2004" duration="10" complete="0" priority="1">
+        <task id="259" name="Add Enter and Leave action" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="21/4/2004" duration="10" complete="0" priority="1">
             <depend id="260" type="2"/>
         </task>
-        <task id="260" name="Release Marauroa 0.30" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="24/4/2004" duration="3" complete="0" priority="1"/>
+        <task id="260" name="Release Marauroa 1.00" color="#8cb6ce" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="true" start="7/5/2004" duration="3" complete="0" priority="1"/>
     </tasks>
 
     <resources>
