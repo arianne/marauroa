@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.39 2004/07/11 10:23:24 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.40 2004/07/11 16:53:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -426,7 +426,7 @@ public class Attributes implements marauroa.net.Serializable
     deleted.clear();
     }
 
-  public void setAddedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
+  public void setAddedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
     Iterator it=attr.added.entrySet().iterator();
@@ -434,9 +434,13 @@ public class Attributes implements marauroa.net.Serializable
     int i=0;
     while(it.hasNext())
       {
-      ++i;
       Map.Entry entry=(Map.Entry)it.next();
-      put((String)entry.getKey(),(String)entry.getValue());
+      
+      if(rpClass.getVisibility((String)entry.getKey())==RPClass.VISIBLE)
+        {
+        ++i;
+        put((String)entry.getKey(),(String)entry.getValue());
+        }
       } 
             
     if(i>0)
@@ -447,7 +451,7 @@ public class Attributes implements marauroa.net.Serializable
     attr.added.clear();
     }
 
-  public void setDeletedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
+  public void setDeletedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
     Iterator it=attr.deleted.entrySet().iterator();
@@ -455,9 +459,13 @@ public class Attributes implements marauroa.net.Serializable
     int i=0;
     while(it.hasNext())
       {
-      ++i;
       Map.Entry entry=(Map.Entry)it.next();
-      put((String)entry.getKey(),(String)entry.getValue());
+      
+      if(rpClass.getVisibility((String)entry.getKey())==RPClass.VISIBLE)
+        {
+        ++i;
+        put((String)entry.getKey(),(String)entry.getValue());
+        }
       }       
 
     if(i>0)

@@ -472,7 +472,7 @@ public class nullClient extends Thread
         }
 
       System.out.println("Non parameter operation");
-      int num=8;
+      int num=11;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("bot_0","nopass","bot_0");
@@ -483,6 +483,9 @@ public class nullClient extends Thread
       test[5]=new nullClient("bot_5","nopass","bot_5");
       test[6]=new nullClient("bot_6","nopass","bot_6");
       test[7]=new nullClient("bot_7","nopass","bot_7");
+      test[8]=new nullClient("bot_8","nopass","bot_8");
+      test[9]=new nullClient("bot_9","nopass","bot_9");
+      test[10]=new nullClient("bot_10","nopass","bot_10");
       
       for(int i=0;i<num;++i)
         {

@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.12 2004/07/07 10:07:22 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.13 2004/07/11 16:53:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -339,12 +339,15 @@ public class PerceptionHandler
       }
     catch(IRPZone.RPObjectNotFoundException e)
       {
+      e.printStackTrace();
+      System.out.println(world);
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
       throw e;
       }
     catch(Exception e)
       {
       e.printStackTrace();
+      System.out.println(world);
       marauroad.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
       throw new IRPZone.RPObjectNotFoundException(new RPObject.ID(-1));
       }

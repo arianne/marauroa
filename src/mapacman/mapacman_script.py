@@ -96,13 +96,13 @@ class RealPythonZone(PythonZone):
         objclass.add("super",BYTE)
         objclass.add("!vdir",STRING,HIDDEN)
         objclass.add("!hdir",STRING,HIDDEN)
+        objclass.add("?kill",FLAG)        
         
         objclass=RPClass("ghost")
         objclass.isA("player")
         objclass.add("!target",INT,HIDDEN)
+        objclass.add("!runaway",FLAG,HIDDEN)
         objclass.add("!decision",INT,HIDDEN)
-        objclass.add("?kill",FLAG)        
-        objclass.add("?scared",FLAG)        
         
         objclass=RPClass("block")
         objclass.isA("position")
@@ -173,6 +173,7 @@ class RealPythonAI(PythonAI):
         self._sched=sched
         self.pythonRP=None
         self.ghosts=[]
+        self.i=0
         
         setPythonAI(self)
         
@@ -191,6 +192,8 @@ class RealPythonAI(PythonAI):
         # Personally I would use the PythonRP directly and move the ghost at will
         # But if you are really in need, add actions to the scheduler so they are
         # done as if you are a simple player.
+        self.i+=1
+        
         if len(self.pythonRP._online_players)==0:
             return 1
             
@@ -212,6 +215,10 @@ class RealPythonAI(PythonAI):
                 ghost.put("!decision",5)
                 difx=target.getInt("x")-ghost.getInt("x")
                 dify=target.getInt("y")-ghost.getInt("y")
+
+                if target.has("super"):
+                    difx*=-1;
+                    dify*=-1;                    
                 
                 if difx>0:
                     ghost.put("!hdir","E")
@@ -226,9 +233,10 @@ class RealPythonAI(PythonAI):
             if self.pythonRP.canMove(ghost)==0:
                 dir=randomDirection()
                 ghost.put("dir",dir)
-            else:            
-                self.pythonRP.move(ghost)
-                self.pythonRP._zone.modify(ghost)
+            else:
+                if not ghost.has("!runaway") or self.i%2==0:
+                    self.pythonRP.move(ghost)
+                    self.pythonRP._zone.modify(ghost)
 
         for player in self.pythonRP._online_players:
             self.pythonRP._ghostCollisions(player)
@@ -237,7 +245,6 @@ class RealPythonAI(PythonAI):
     
 class RealPythonRP(PythonRP):
     def __init__(self,zone):
-        self._i=0;
         self._removed_elements=[]
         self._super_players=[]
         self._online_players=[]
@@ -374,7 +381,7 @@ class RealPythonRP(PythonRP):
                 self._super_players.append(element)
 
                 for ghost in self._online_ghosts:
-                    ghost.put("?scared","")
+                    ghost.put("!runaway","");
                     self._zone.modify(ghost)
     
     def removeKilledFlag(self):
@@ -391,7 +398,18 @@ class RealPythonRP(PythonRP):
         for ghost in self.getGhosts(pos):
             if player.has("super"):
                 # TODO: Eat the ghost
-                pass
+                print "Player killed ghost ",ghost.get("id") 
+                player.put("?kill","")
+                player.add("score",50)
+                self._killedFlagGhosts.append(player)
+                self._zone.modify(player)
+                
+                pos=self._map.getRandomGhostRespawn()
+                ghost.put("x",pos[0])
+                ghost.put("y",pos[1])
+                ghost.put("score",int(ghost.getInt("score")*0.75))
+                if ghost.has("!target"): ghost.remove("!target")
+                self._zone.modify(ghost)
             else:
                 # TODO: kill the player
                 print "Ghost killed player ",player.get("id") 
@@ -416,14 +434,6 @@ class RealPythonRP(PythonRP):
                 pass
     
     def nextTurn(self):
-        self._i+=1
-        if self._i==10:
-            self._i=0
-            print "Removed: ",len(self._removed_elements)
-            print "Online: ",len(self._online_players)
-            print "Ghosts: ",len(self._online_ghosts)
-            print "KilledFlagGhost: ",len(self._killedFlagGhosts)
-        
         """ execute actions needed to place this code on the next turn """
         self.removeKilledFlag()
         
@@ -442,11 +452,11 @@ class RealPythonRP(PythonRP):
                 object['object'].put("super",object['timeout'])
 
             self._zone.modify(object['object'])
-            
-        if len(self._super_players)==0:
+
+        if len(self._super_players)==0:                        
             for ghost in self._online_ghosts:
-                if ghost.has("?scared"):
-                    ghost.remove("?scared")
+                if ghost.has("!runaway"):
+                    ghost.remove("!runaway");
                     self._zone.modify(ghost)
 
         self._foreachPlayer()
@@ -472,7 +482,7 @@ class RealPythonRP(PythonRP):
 
     def onInitAIGhost(self, object):
         """ Do what you need to initialize this AI """
-        pos=self._map.getRandomRespawn()
+        pos=self._map.getRandomGhostRespawn()
         object.put("x",pos[0])
         object.put("y",pos[1])
         
@@ -513,6 +523,7 @@ class mapacmanRPMap:
         line=f.readline()
         
         self._respawnPoints=[]
+        self._ghostRespawnPoints=[]
         self._last_respawnPoints=0
         self._objects_grid={}
         
@@ -540,6 +551,12 @@ class mapacmanRPMap:
             pos=(i,y)
             self._respawnPoints.append(pos)
             i=line.find('+',i+1)
+
+        i=line.find('X')
+        while i<>-1:
+            pos=(i,y)
+            self._ghostRespawnPoints.append(pos)
+            i=line.find('+',i+1)                
     
     def get(self,x,y):
         return (self._grid[y])[x]
@@ -569,6 +586,10 @@ class mapacmanRPMap:
     def getRandomRespawn(self):
         self._last_respawnPoints=(self._last_respawnPoints+1)%(len(self._respawnPoints))
         return self._respawnPoints[self._last_respawnPoints]
+
+    def getRandomGhostRespawn(self):
+        self._last_respawnPoints=(self._last_respawnPoints+1)%(len(self._ghostRespawnPoints))
+        return self._ghostRespawnPoints[self._last_respawnPoints]
     
     def serializeMap(self):
         def createBlock(pos):
