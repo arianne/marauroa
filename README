@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.30 version 
+0.31 version 
 
 
 Status
@@ -92,6 +92,10 @@ Read the1001/README about how to run Gladiators
 
 Changelog
 ---------
+0.31	Apr 03, 2004
+- Added Delta-delta perception so now only diffs between actual and previous object is send.
+- Change attributes name to save even more bandwidth
+
 0.30	Mar 26, 2004
 - Added persistent objects
 - Added transactional database support
