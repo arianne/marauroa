@@ -29,6 +29,7 @@ public class Message implements marauroa.net.Serializable
   public final static byte TYPE_S2C_ACTION_ACK=50;
   
   public final static byte TYPE_S2C_PERCEPTION=6;
+  public final static byte TYPE_C2S_PERCEPTION_ACK=61;
 
   protected byte type;
   protected int clientid;

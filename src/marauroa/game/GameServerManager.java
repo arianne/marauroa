@@ -65,7 +65,7 @@ public class GameServerManager extends Thread
       {
       while(keepRunning)
         {
-        Message msg=netMan.getMessage(1000);
+        Message msg=netMan.getMessage();
        
         if(msg!=null)
           {    
@@ -86,6 +86,10 @@ public class GameServerManager extends Thread
             case Message.TYPE_C2S_ACTION:
               marauroad.trace("GameServerManager::run","D","Processing C2S Action Message");
               processActionEvent((MessageC2SAction)msg);
+              break;
+            case Message.TYPE_C2S_PERCEPTION_ACK:
+              marauroad.trace("GameServerManager::run","D","Processing C2S Perception ACK Message");
+              processPerceptionACKEvent((MessageC2SPerceptionACK)msg);
               break;
             default:
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
@@ -380,10 +384,8 @@ public class GameServerManager extends Thread
         marauroad.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
 	    return;	    
 	    }
-	  
-	  /* Enforce source_id */
-	  RPObject.ID id=playerContainer.getRPObjectID(clientid);
-	  action.put("source_id",id.getObjectID());
+
+	  playerContainer.updateTimestamp(clientid);
       }
     catch(Exception e)      
       {

@@ -21,10 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
 import marauroa.game.*;
-import marauroa.net.Message;
-import marauroa.net.MessageC2SAction;
-import marauroa.net.MessageS2CPerception;
-import marauroa.net.NetworkClientManager;
+import marauroa.net.*;
 import simplegame.actions.MoveAction;
 import simplegame.objects.GameBoard;
 
@@ -71,6 +68,10 @@ public class SimpleGame
         {
           if(msg instanceof MessageS2CPerception)
           {
+          	MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK();
+          	replyMsg.setClientID(msg.getClientID());
+          	netMan.addMessage(replyMsg);
+          	
             MessageS2CPerception perception = (MessageS2CPerception)msg;
             List modified_objects = perception.getModifiedRPObjects();
             if(modified_objects!=null && modified_objects.size()>0)

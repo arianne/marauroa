@@ -214,7 +214,6 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        entry.timestamp=new Date();    
         if(source.equals(entry.source))
           {
           return true;
@@ -249,7 +248,6 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        entry.timestamp=new Date();    
         return entry.state;
         }
       else
@@ -283,7 +281,6 @@ public class PlayerEntryContainer
      
         byte oldState=entry.state;
         entry.state=newState;
-        entry.timestamp=new Date();
       
         return oldState;
         }
@@ -700,6 +697,68 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::getUsername","<");
       }
     }
+  
+  /** The method update the timestamp value of clientid
+   *  @param clientid the runtime id of the player   *
+   *  @throws NoSuchClientIDException if clientid is not found */
+  public void updateTimestamp(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::updateTimestamp",">");
+    
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));         
+        entry.timestamp=new Date();
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::updateTimestamp","<");
+      }
+    }
+     
+  /** The method returns true if the clientid has timed out.
+   *  @param clientid the runtime id of the player   *
+   *  @return true if the player timed out.
+   *  @throws NoSuchClientIDException if clientid is not found */
+  public boolean timedout(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::updateTimestamp",">");
+    
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));         
+        long value=new Date().getTime()-entry.timestamp.getTime();
+        if(value>GameConst.TIMEOUT)
+          {
+          return true;
+          }
+        else
+          {
+          return false;
+          }
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::updateTimestamp","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException();
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::updateTimestamp","<");
+      }
+    }
+     
     
   /** The method returns the IP address of the player represented by clientid
    *  @param clientid the runtime id of the player   *

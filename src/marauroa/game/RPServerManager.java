@@ -148,27 +148,28 @@ class RPServerManager extends Thread
       }
     }
   
-  public void removeRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+  public RPObject removeRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
     marauroad.trace("RPServerManager::removeRPObject",">");
     
     try
       {
       marauroad.trace("RPServerManager::removeRPObject","D","Removed object: "+id.toString());
-      zone.remove(id);
+      return zone.remove(id);
       }
     finally
       {
       marauroad.trace("RPServerManager::removeRPObject","<");
       }
     }
-    
+
   private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
     
     try
       {
+      List playersToRemove=new LinkedList();
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
     
       while(it.hasNext())
@@ -184,16 +185,55 @@ class RPServerManager extends Thread
             Message messages2cPerception=new MessageS2CPerception(source, perception.modifiedList, perception.deletedList);
             netMan.addMessage(messages2cPerception);
             }
+            
+          if(playerContainer.timedout(clientid))
+            {
+            playersToRemove.add(new Integer(clientid));
+            }          
           }
         catch(Exception e)
           {
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
           }
         }
+      
+      removeTimedoutPlayers(playersToRemove);
       }      
     finally
       {
       marauroad.trace("RPServerManager::buildPerceptions","<");
+      }
+    }
+
+  private void removeTimedoutPlayers(List playersToRemove)    
+    {
+    marauroad.trace("RPServerManager::removeTimedoutPlayers",">");
+
+    try
+      {
+      Iterator it_removed=playersToRemove.iterator();
+      while(it_removed.hasNext())
+        {
+        int clientid=((Integer)it_removed.next()).intValue();
+     
+        RPObject.ID id=playerContainer.getRPObjectID(clientid);	  
+        RPObject object=removeRPObject(id);
+      
+        /* NOTE: Set the Object so that it is stored in Database */
+        playerContainer.setRPObject(clientid,object);  
+        playerContainer.removeRuntimePlayer(clientid);
+
+        marauroad.trace("RPServerManager::removeTimedoutPlayers","D","Removed player ("+clientid+")");
+  	    }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPServerManager::removeTimedoutPlayers","!","We can't remove a player that timeout");
+      System.exit(-1);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::removeTimedoutPlayers","<");
       }
     }
   
