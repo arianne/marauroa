@@ -253,7 +253,7 @@ public class MemoryPlayerDatabase implements PlayerDatabase
     return has;
     }
     
-  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, GenericDatabaseException
+  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterAlreadyAddedException, GenericDatabaseException
     {
     marauroad.trace("MemoryPlayerDatabase::addCharacter",">");
     if(!players.containsKey(username))

@@ -435,7 +435,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param character is the name of the character that the username player wants to add.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
-  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, GenericDatabaseException
+  public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterAlreadyAddedException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addCharacter",">");
 
@@ -452,7 +452,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       catch (IOException e)
         {
-        marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Error serializing character: "+e.getMessage());
+        marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Error serializing character: "+e.getMessage());
         throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
@@ -464,15 +464,18 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
+      throw new CharacterAlreadyAddedException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::addCharacter","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addCharacter","<");
+      }
     }
   
   public int getPlayerCount()
