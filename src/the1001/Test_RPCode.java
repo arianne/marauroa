@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.3 2003/12/30 18:17:41 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.4 2003/12/31 12:16:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,14 @@ public class Test_RPCode extends TestCase
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
       
+      RPObject arena=zone.getArena();
+      assertEquals(arena.get("status"),"waiting");
+      assertTrue(arena.getSlot("gladiators").has(new RPObject.ID(gladiator)));
+      assertEquals(player.get("status"),"onArena");
       
+      /** If we try to add again it should fail */
+      status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
+      assertEquals(status,RPAction.STATUS_FAIL);      
       }
     catch(Exception e)
       {
