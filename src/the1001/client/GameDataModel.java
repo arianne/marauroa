@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.19 2004/04/16 09:21:32 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.20 2004/04/18 06:47:54 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -749,14 +749,14 @@ public final class GameDataModel
       currentFightMode=null;
       lastFightMode=null;
     }
-    else if(RPCode.var_fighting.equals(getStatus()) || ownCharacter.has(RPCode.var_damage))
+    else if(RPCode.var_fighting.equals(getStatus()) || (ownCharacter!=null && ownCharacter.has(RPCode.var_damage)))
     {
       if(!RPCode.var_fighting.equals(getStatus()))
       {
         System.out.println("BUG!!! Already fighting(damage is there) but the arena is not in fight status!!!");
       }
       voted=false;
-      if(ownCharacter.has(RPCode.var_fighting) || ownCharacter.has(RPCode.var_damage))
+      if(ownCharacter!=null && (ownCharacter.has(RPCode.var_fighting) || ownCharacter.has(RPCode.var_damage)))
       {
         if(!ownCharacter.has(RPCode.var_fighting))
         {
