@@ -4,3 +4,44 @@ Keyword: Objects, classes, types, XML, attributes.
 Author : Miguel Angel Blanch Lardin
 Created: 2003/10/23
 status : planning
+
+Objects are the basic Marauroa data structure, and you should already be
+familiarized with it because you read Actions and Object document.
+
+So let's point the multiple objects that we are going to have in Marauroa 
+and their attributes and slots.
+
+Avatar
+The avatar is the entity in Marauroa that represent our character and it is the
+way of handling everything in that world.
+This object must have the next set of attributes:
+- object_id				
+- object_type		
+- object_look		
+- object_position
+- object_name
+
+Also add too the RP attributes that are still to be defined.
+The object_id attribute define the unique identifier of the object in the world.
+The object_type define the type of object it is, for example: human.
+The object_look would point to the model used to represent this object.
+The object_position determine where the object is in the world using a X,Y basis
+Again, we could add the Z value, but it is totally fake, we calculate Z for 
+adjusting character to terrain.
+The object_name is just the name of the character this object is representing.
+
+
+Stone
+A stone is just a little rock used for testing get, release and exchange actions.
+This object must have the next set of attributes:
+- object_id				
+- object_type		
+- object_look		
+- object_position
+
+The object_id attribute define the unique identifier of the object in the world.
+The object_type define the type of object it is, for example: stone.
+The object_look would point to the model used to represent this object.
+The object_position determine where the object is in the world using a X,Y basis
+Again, we could add the Z value, but it is totally fake, we calculate Z for 
+adjusting character to terrain.

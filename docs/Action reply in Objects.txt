@@ -27,4 +27,52 @@ The action_move_destination is the place where the object wants to go when the
 action ends, and it is as before a Position denoted by <x,y>, action_move_speed
 is the assigned speed for the character by the RP. The action_move_status denotes
 if the action is complete, incompleted or failed.
+This action is completed when position==destination and fail if destination is 
+unreachable.
+
+
+Action Get
+The attributes added to the object are:
+- action_get_status
+
+The action_get_status denotes if the action is complete or failed
+This action is always one turn long.
+
+
+Action Release
+The attributes added to the object are:
+- action_release_status
+
+The action_release_status denotes if the action is complete or failed
+This action is always one turn long.
+
+
+Action Use
+The attributes added to the object are:
+- action_use_status
+- (Specific attributes depending on the object)
+
+The action_use_status denotes if the action is complete, incompleted or failed.
+Usually this action modify attributes of the RPObject instead of adding new 
+attributes.
+
+
+Action UseWith
+The attributes added to the object are:
+- action_usewith_status
+- (Specific attributes depending on the object)
+
+The action_usewith_status denotes if the action is complete, incompleted or failed.
+Usually this action modify attributes of the RPObject instead of adding new 
+attributes.
+
+
+Action Exchange
+The attributes added to the object are:
+- action_exchange_status
+- action_exchange_timeout
+
+The action_exchange_status denotes if the action is complete, incomplete or failed.
+This action last several turns until both peers accept or the timeout elapses.
+
 
