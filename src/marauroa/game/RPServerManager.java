@@ -76,6 +76,34 @@ class RPServerManager extends Thread
       }
     }
   
+  /** Constructor 
+   *  @param netMan the NetworkServerManager so that we can send message */
+  public RPServerManager(NetworkServerManager netMan, RPZone zone, RPRuleProcessor ruleProcessor, long turnDuration)
+    {
+    super("RPServerManager");
+    
+    marauroad.trace("RPServerManager",">");
+   
+    try
+      {
+      keepRunning=true;
+      isfinished=false;
+      
+      scheduler=new RPScheduler();
+      playerContainer=PlayerEntryContainer.getContainer();    
+      this.netMan=netMan;
+      this.zone=zone;
+      this.ruleProcessor=ruleProcessor;
+      this.turnDuration=turnDuration;
+      
+      start();
+      }
+    finally
+      {    
+      marauroad.trace("RPServerManager","<");
+      }
+    }
+
   public void finish()
     {
     marauroad.trace("RPServerManager::finish",">");
@@ -120,20 +148,6 @@ class RPServerManager extends Thread
     finally
       {
       marauroad.trace("RPServerManager::addRPObject","<");
-      }
-    }
-  
-  public void modifyRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
-    {
-    marauroad.trace("RPServerManager::modifyRPObject",">");
-    try
-      {
-      marauroad.trace("RPServerManager::modifyRPObject","D","Modified object: "+id);
-      zone.modify(id);
-      }
-    finally
-      {
-      marauroad.trace("RPServerManager::modifyRPObject","<");
       }
     }
   

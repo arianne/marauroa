@@ -36,6 +36,24 @@ public class GameServerManager extends Thread
     marauroad.trace("GameServerManager","<");
     }
 
+  /** Constructor that initialize also the RPManager 
+   *  @param netMan a NetworkServerManager instance.
+   *  @param rpMan a RPManager instance */
+  public GameServerManager(NetworkServerManager netMan, RPServerManager rpMan)
+    {
+    super("GameServerManager");
+    marauroad.trace("GameServerManager",">");    
+    
+    keepRunning=true;    
+    this.netMan=netMan;
+    this.rpMan=rpMan;
+    playerContainer=PlayerEntryContainer.getContainer();    
+    
+    start();
+        
+    marauroad.trace("GameServerManager","<");
+    }
+
   public void finish()
     {
     marauroad.trace("GameServerManager::finish",">");

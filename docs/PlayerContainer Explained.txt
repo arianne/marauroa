@@ -25,14 +25,19 @@ while it is online. RuntimePlayerEntry contains:
 Let's see what each field is for. 
 Clientid is the field in charge of indexing players in server, see the document
 about clientid generation to understand what they are and how they are generated.
+
 Source is the IPv4 address of the client, so that we can determine if message is
 really coming from client or another person trying to impersonate it.
+
 Timestamp is used to determine if a client has timeout and as such, it is only 
 wasting resources on the server. As you know UDP is not a delivery-guaranted 
-protocol, so we need to check ourselves for dead clients.
+protocol, so we need to check ourselves for dead clients. Take care that it only
+indicates that the player timedout, it doesn't apply any kind of measures over them
+
 Username and choosenCharacter are filled in runtime in Login and ChooseCharacter
 events respectively so that we are able to use the database from PlayerContainer,
 this way knowing the clientid we can know also the username and the choosenCharacter.
+
 State is a number expresing the state in which the player is. There are four states:
 - Have to login
 - Login Complete
