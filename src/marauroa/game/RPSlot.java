@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.27 2004/04/18 15:51:54 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.28 2004/04/19 07:17:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,6 +219,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
             if(id.equals(new RPObject.ID(added_object)))
               {
               added_it.remove();
+              found_in_added_list=true;
               }
             }
 
