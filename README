@@ -52,7 +52,7 @@ You need to grab game package in order to be able to play it.
 Requeriments
 ------------
 To actually compile Marauroa you will need:
-- Java SDK 1.4 http://java.sun.com
+- Java SDK 1.5 http://java.sun.com
 - Ant 1.6 http://ant.apache.org
 
 Optionally:
