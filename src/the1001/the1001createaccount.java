@@ -1,4 +1,4 @@
-/* $Id: the1001createaccount.java,v 1.3 2004/04/26 15:25:34 arianne_rpg Exp $ */
+/* $Id: the1001createaccount.java,v 1.2 2004/04/26 15:22:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,8 +33,6 @@ public class the1001createaccount extends marauroa.createaccount
     information.add(new Information("-cm","character_model"));
     information.add(new Information("-g","gladiator",4,20));
     information.add(new Information("-gm","gladiator_model"));
-
-    Configuration.setConfigurationFile("the1001.ini");
     }
   
   public RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception

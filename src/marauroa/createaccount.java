@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.23 2004/04/26 15:22:41 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.22 2004/04/26 15:18:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,11 @@ public abstract class createaccount
       }
     }
     
+  public static void execute(createaccount instance,String[] args)
+    {
+    System.exit(instance.run(args));
+    }
+  
   protected List information;
     
   public createaccount()
@@ -74,7 +79,7 @@ public abstract class createaccount
     
   public abstract RPObject populatePlayerRPObject(PlayerDatabase playerDatabase) throws Exception;
 
-  protected int run(String[] args)
+  private int run(String[] args)
     {
     /** TODO: Factorize this method */
     int i=0;

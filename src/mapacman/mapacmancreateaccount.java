@@ -1,4 +1,4 @@
-/* $Id: mapacmancreateaccount.java,v 1.2 2004/04/26 15:22:38 arianne_rpg Exp $ */
+/* $Id: mapacmancreateaccount.java,v 1.1 2004/04/26 15:18:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,7 @@ public class mapacmancreateaccount extends marauroa.createaccount
   {
   public static void main (String[] args)
     {
-    mapacmancreateaccount instance=new mapacmancreateaccount();
-    System.exit(instance.run(args));
+    execute(new mapacmancreateaccount(),args);
     }
   
   public mapacmancreateaccount()
