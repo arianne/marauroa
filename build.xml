@@ -7,12 +7,12 @@
   <property name="sounds" value="${build}/sounds"/>
   <property name="lib"  value="lib"/>
   
-  <!-- Modify to point to your junit.jar file -->
-  <property name="junitlib" value="c:/j2sdk1.4.2_03/junit/junit.jar"/>
-  <property name="connectorJ" value="c:/j2sdk1.4.2_03/ConnectorJ/mysql-connector-java-3.0.9-stable-bin.jar"/>
-  <property name="jython" value="c:/archivos de programa/jython-2.1/jython.jar"/>
-  <property name="the1001" value=""/>
-  <property name="classpath" value="classes;${junitlib};${connectorJ};${jython}"/>
+  <property name="junitlib" value="${libdir}/junit.jar"/>
+  <property name="connectorJ" value="${libdir}/mysql-connector-java-3.1.1-alpha-bin.jar"/>
+  <property name="3dloaders" value="${libdir}/StarfireExt.jar:${libdir}/quakeloaders.jar"/>
+  <property name="jorbis" value="${libdir}/jogg-0.0.5.jar:${libdir}/jorbis-0.0.12.jar"/>
+  <property name="jython" value="${libdir}/jython.jar"/>
+  <property name="classpath" value="${build};${junitlib};${connectorJ}:${jorbis}:${3dloaders}:${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
