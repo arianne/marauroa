@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.32 2004/02/02 13:06:13 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.33 2004/02/02 23:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -250,7 +250,7 @@ public class marauroad extends Thread
     {
     for(int j=0;j<rejected.length;++j)
       {
-      if(word.indexOf(rejected[i])!=-1)
+      if(word.indexOf(rejected[j])!=-1)
         {
         return false;
         }

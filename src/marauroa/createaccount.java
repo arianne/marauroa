@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.4 2004/01/31 18:34:06 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.5 2004/02/02 23:01:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,11 @@ import the1001.objects.*;
 class createaccount
   {
   public static void main (String[] args)
+    {
+    System.exit(createaccount(args));
+    }
+
+  public static int createaccount(String[] args)
     {
     int i=0;
     PrintWriter out=null;
@@ -67,12 +72,12 @@ class createaccount
       ++i;
       }
     
-    if(username==null) System.exit(1);
-    if(password==null) System.exit(1);
-    if(character==null) System.exit(1);
-    if(character_model==null) System.exit(1);
-    if(gladiator==null) System.exit(1);
-    if(gladiator_model==null) System.exit(1);
+    if(username==null) return (1);
+    if(password==null) return (1);
+    if(character==null) return (1);
+    if(character_model==null) return (1);
+    if(gladiator==null) return (1);
+    if(gladiator_model==null) return (1);
       
     try
       {      
@@ -84,74 +89,75 @@ class createaccount
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       
       out.println("Checking for valid string");
+      out.flush();
       if(playerDatabase.validString(username)==false) 
         {
         out.println("String not valid: "+username);
-        System.exit(2);
+        return (2);
         }
       if(playerDatabase.validString(password)==false)
         {
         out.println("String not valid: "+password);
-        System.exit(2);
+        return (2);
         }
       if(playerDatabase.validString(character)==false)
         {
         out.println("String not valid: "+character);
-        System.exit(2);
+        return (2);
         }
       if(playerDatabase.validString(character_model)==false)       
         {
         out.println("String not valid: "+character_model);
-        System.exit(2);
+        return (2);
         }
       if(playerDatabase.validString(gladiator)==false)
         {
         out.println("String not valid: "+gladiator);
-        System.exit(2);
+        return (2);
         }
       if(playerDatabase.validString(gladiator_model)==false)       
         {
         out.println("String not valid: "+gladiator_model);
-        System.exit(2);
+        return (2);
         }
 
       out.println("Checking string size");
       if(username.length()>10) 
         {
         out.println("String size not valid: "+username);
-        System.exit(3);
+        return (3);
         }
       if(password.length()>10) 
         {
         out.println("String size not valid: "+password);
-        System.exit(3);
+        return (3);
         }
       if(character.length()>20) 
         {
         out.println("String size not valid: "+character);
-        System.exit(3);
+        return (3);
         }
       if(character_model.length()>10) 
         {
         out.println("String size not valid: "+character_model);
-        System.exit(3);
+        return (3);
         }
       if(gladiator.length()>20) 
         {
         out.println("String size not valid: "+gladiator);
-        System.exit(3);
+        return (3);
         }
       if(gladiator_model.length()>10) 
         {
         out.println("String size not valid: "+gladiator_model);
-        System.exit(3);
+        return (3);
         }
         
       out.println("Checking if player exists");
       if(playerDatabase.hasPlayer(username))
         {
         out.println("ERROR: Player exists");
-        System.exit(4);
+        return (4);
         }
 
       out.println("Adding player");
@@ -177,7 +183,7 @@ class createaccount
     catch(Exception e)
       {
       out.println("Failed: "+e.getMessage());
-      System.exit(5);
+      return (5);
       }    
     finally
       {
@@ -188,6 +194,6 @@ class createaccount
         }
       }
     
-    System.exit(0);
+    return (0);
     }
   }
