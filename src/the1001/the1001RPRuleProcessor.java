@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.30 2004/02/05 23:13:22 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.31 2004/02/10 22:22:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,6 +76,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         {
         String vote=action.get(RPCode.var_vote);
         status=RPCode.Vote(id, vote);
+        }
+      else if(action.get(RPCode.var_type).equals(RPCode.var_chat))
+        {
+        String text=action.get(RPCode.var_content);
+        status=RPCode.Chat(id,text);
         }
       else
         {

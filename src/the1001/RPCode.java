@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.49 2004/02/10 13:30:00 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.50 2004/02/10 22:22:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,6 +56,10 @@ public class RPCode
   final public static String var_vote="vote";  
   final public static String var_combat_mode="mode";  
   final public static String var_look="look";  
+  final public static String var_chat="chat";  
+  final public static String var_content="content";  
+  final public static String var_text="?text";  
+  
   
   private static the1001RPRuleProcessor ruleProcessor;
   private static Random rand;
@@ -749,6 +753,28 @@ public class RPCode
     finally
       {
       marauroad.trace("RPCode::SetUpNextCombat","<");
+      }
+    }
+
+   public static RPAction.Status Chat(RPObject.ID player_id, String text) throws Exception
+    {
+    marauroad.trace("RPCode::Chat",">");
+   
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject player=zone.get(player_id);
+      
+      player.put(RPCode.var_text,text);  
+            
+      ruleProcessor.trackObject(player);
+      zone.modify(player);
+      
+      return RPAction.STATUS_SUCCESS;
+      }
+    finally
+      {
+      marauroad.trace("RPCode::Vote","<");
       }
     }
   }
