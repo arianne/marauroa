@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.45 2003/12/21 12:21:01 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.46 2003/12/23 09:05:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -430,7 +430,7 @@ public class SimpleGame
                         {
                             if(player==null)
                             {
-                                InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
+                                InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/bgmusic_001.mid");
                                 Sequence theSound = MidiSystem.getSequence(is_midi);
                                 player = MidiSystem.getSequencer();
                                 player.open();
