@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.24 version 
+0.25 version 
 
 
 Status
@@ -92,6 +92,13 @@ Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.25	Mar	06,	2004
+- Added zlib compression
+- Added Buy item and Buy gladiator
+- Added completely access to our gladiator inventory
+- The rest of Players has their gladiators and items hidden.
+- Fixed a bug that make HP not to be restored if you logout before request fame ends
+
 0.24	Mar 02,	2004
 - Fixed SQL bug that can cause a denial of service on server
 - Fixed bug on Fame to be assigned to winner
