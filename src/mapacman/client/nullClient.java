@@ -252,7 +252,7 @@ public class nullClient extends Thread
 
       boolean cond=true;
       long ticks=System.currentTimeMillis();
-      long exit_time=((rand.nextInt()%100+30)*1000);
+      long exit_time=((rand.nextInt()%600+30)*1000);
         
       while(cond)
         {
@@ -472,7 +472,7 @@ public class nullClient extends Thread
         }
 
       System.out.println("Non parameter operation");
-      int num=11;
+      int num=20;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("bot_0","nopass","bot_0");
@@ -486,6 +486,15 @@ public class nullClient extends Thread
       test[8]=new nullClient("bot_8","nopass","bot_8");
       test[9]=new nullClient("bot_9","nopass","bot_9");
       test[10]=new nullClient("bot_10","nopass","bot_10");
+      test[11]=new nullClient("bot_11","nopass","bot_11");
+      test[12]=new nullClient("bot_12","nopass","bot_12");
+      test[13]=new nullClient("bot_13","nopass","bot_13");
+      test[14]=new nullClient("bot_14","nopass","bot_14");
+      test[15]=new nullClient("bot_15","nopass","bot_15");
+      test[16]=new nullClient("bot_16","nopass","bot_16");
+      test[17]=new nullClient("bot_17","nopass","bot_17");
+      test[18]=new nullClient("bot_18","nopass","bot_18");
+      test[19]=new nullClient("bot_19","nopass","bot_19");
       
       for(int i=0;i<num;++i)
         {

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.1 2004/07/07 10:12:01 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.2 2004/07/12 19:33:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,26 +43,11 @@ public class Statistics
     
     public void print(PrintWriter out, double diff)
       {
-      out.println("Bytes RECV: "+String.valueOf(bytesRecv));
-      out.println("Bytes RECV (avg hour): "+String.valueOf((int)(bytesRecv/(diff/3600))));
-      out.println("Bytes SEND: "+String.valueOf(bytesSend));
-      out.println("Bytes saved by compression: "+String.valueOf(bytesSavedByCompression));
-      out.println("Bytes SEND (avg hour): "+String.valueOf((int)(bytesSend/(diff/3600))));
-      out.println("Messages RECV: "+String.valueOf(messagesRecv));
-      out.println("Messages RECV (avg hour): "+String.valueOf((int)(messagesRecv/(diff/3600))));
-      out.println("Messages SEND: "+String.valueOf(messagesSend));
-      out.println("Messages SEND (avg hour): "+String.valueOf((int)(messagesSend/(diff/3600))));
-      out.println("Messages INCORRECT: "+String.valueOf(messagesIncorrect));
-      out.println();
-      out.println("Players LOGIN: "+String.valueOf(playersLogin));
-      out.println("Players LOGIN INVALID: "+String.valueOf(playersInvalidLogin));
-      out.println("Players LOGOUT: "+String.valueOf(playersLogout));
-      out.println("Players TIMEDOUT: "+String.valueOf(playersTimeout));
-      out.println("Players ONLINE: "+String.valueOf(playersOnline));
-      out.println();
-      out.println("Objects ONLINE: "+String.valueOf(objectsNow));
-      out.println("Actions ADDED: "+String.valueOf(actionsAdded));
-      out.println("Actions INVALID: "+String.valueOf(actionsInvalid));
+      out.println("  <byte recv=\""+String.valueOf(bytesRecv)+"\" send=\""+String.valueOf(bytesSend)+"\" saved=\""+String.valueOf(bytesSavedByCompression)+"\"/>");
+      out.println("  <message recv=\""+String.valueOf(messagesRecv)+"\" send=\""+String.valueOf(messagesSend)+"\" incorrect=\""+String.valueOf(messagesIncorrect)+"\"/>");
+      out.println("  <player login=\""+String.valueOf(playersLogin)+"\" failed=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(playersTimeout)+"\"/>");
+      out.println("  <online players=\""+String.valueOf(playersOnline)+"\" objects=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(objectsNow)+"\"/>");
+      out.println("  <actions added=\""+String.valueOf(actionsAdded)+"\" invalid=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(actionsInvalid)+"\"/>");
       }
 
     public void add(GatheredVariables var)
@@ -77,8 +62,8 @@ public class Statistics
       playersInvalidLogin=var.playersInvalidLogin+playersInvalidLogin;
       playersTimeout=var.playersTimeout+playersTimeout;
       playersLogout=var.playersLogout+playersLogout;
-      playersOnline=Math.round((var.playersOnline+playersOnline)/2.0f);
-      objectsNow=Math.round((var.objectsNow+objectsNow)/2.0f);
+      playersOnline=var.playersOnline;
+      objectsNow=var.objectsNow;
       actionsAdded=var.actionsAdded+actionsAdded;
       actionsInvalid=var.actionsInvalid+actionsInvalid;
       }
@@ -106,18 +91,10 @@ public class Statistics
     nowVar=new GatheredVariables();
     allTimeVar=new GatheredVariables();
     meanMinuteVar=new GatheredVariables();
-    
-    try
-      {
-      eventfile=new PrintWriter(new FileOutputStream("logs/"+"server_events.txt",true));
-      }
-    catch(Exception e)
-      {
-      marauroad.thrown("Statistics::static","!",e);
-      System.exit(-1);
-      }
     }
+    
   private static Statistics stats;
+  
   public static Statistics getStatistics()
     {
     if(stats==null)
@@ -125,18 +102,6 @@ public class Statistics
       stats=new Statistics();
       }
     return stats;
-    }
- 
-  public void addEvent(String event,int session_id,String text)
-    {
-    marauroad.trace("Statistics::addEvent",">");
-    timestamp.setTime(System.currentTimeMillis());
-
-    String ts = formatter.format(timestamp);
-    
-    eventfile.println(ts+"\t/"+String.valueOf(session_id)+"\t"+event+"\t"+text);
-    eventfile.flush();
-    marauroad.trace("Statistics::addEvent","<");
     }
   
   public void addBytesRecv(long bytes)
@@ -171,25 +136,21 @@ public class Statistics
   
   public void addPlayerLogin(String username, int id)
     {
-    addEvent("login OK",id,"username="+username);
     ++nowVar.playersLogin;
     }
   
   public void addPlayerLogout(String username, int id)
     {
-    addEvent("logout",id,"username="+username);
     ++nowVar.playersLogout;
     }
   
   public void addPlayerInvalidLogin(String username)
     {
-    addEvent("login FAIL",0,"username="+username);
     ++nowVar.playersInvalidLogin;
     }
 
   public void addPlayerTimeout(String username, int id)
     {
-    addEvent("timeout",id,"username="+username);
     ++nowVar.playersTimeout;
     }
   
@@ -205,13 +166,11 @@ public class Statistics
 
   public void addActionsAdded(String action, int id)
     {
-    addEvent("action",id,"type="+action);
     ++nowVar.actionsAdded;
     }
   
   public void addActionsAdded(String action, int id, String text)
     {
-    addEvent("action",id,"type="+action+"&extra=\""+text+"\"");
     ++nowVar.actionsAdded;
     }
   
@@ -231,7 +190,8 @@ public class Statistics
       {
       Configuration conf=Configuration.getConfiguration();
       String webfolder=conf.get("server_stats_directory");
-      PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.txt"));
+      
+      PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
       
@@ -249,14 +209,10 @@ public class Statistics
         meanMinuteVar=new GatheredVariables();
         }
       
-      out.println("-- Statistics ------");
-      out.println("Uptime: "+String.valueOf(diff));
-      out.println();
+      out.println("<statistics time=\""+Long.toString(actualTime.getTime()/1000)+"\">");
+      out.println("  <uptime value=\""+String.valueOf(diff)+"\"/>");
       allTimeVar.print(out,diff);
-      out.println("-- Statistics ------");
-      out.close();
-      out=new PrintWriter(new FileOutputStream(webfolder+"server_up.txt"));
-      out.println(actualTime.getTime()/1000);
+      out.println("</statistics>");
       out.close();
       
       nowVar=new GatheredVariables();
