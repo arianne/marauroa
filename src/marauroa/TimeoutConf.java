@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.7 2004/01/27 17:03:10 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.8 2004/01/27 23:42:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ public class TimeoutConf
   final public static int CLIENT_NETWORK_NUM_READ=5;  
   /** This indicate that the player is totally dead and must be removed.
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */
-  final public static int GAMESERVER_PLAYER_TIMEOUT=60000;  
+  final public static int GAMESERVER_PLAYER_TIMEOUT=10000;  
   
   final public static int MAX_BYTE_ARRAY_ELEMENTS=1024;
   final public static int MAX_ARRAY_ELEMENTS=256;

@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.43 2004/01/27 19:13:10 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.44 2004/01/27 23:42:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,7 +174,7 @@ public class RPCode
    *  @return true if the player has been removed or false otherwise. */
   public static boolean RemovePlayer(RPObject.ID player_id)
     {
-    marauroad.trace("RPCode::RemoveWaitingPlayer",">");
+    marauroad.trace("RPCode::RemovePlayer",">");
    
     try
       {
@@ -184,7 +184,7 @@ public class RPCode
       
       if(player.has(RPCode.var_requested))
         {
-        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Waiting Gladiators List");
+        marauroad.trace("RPCode::RemovePlayer","D","Player("+player_id.toString()+") removed from Waiting Gladiators List");
         arena.put(RPCode.var_waiting,arena.getInt(RPCode.var_waiting)-1);
         player.remove(RPCode.var_requested);
         player.remove(RPCode.var_choose);
@@ -194,7 +194,7 @@ public class RPCode
        
       if(player.has(RPCode.var_fighting))
         {
-        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
+        marauroad.trace("RPCode::RemovePlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
         
         /** Player abandon the fight. */        
         playersFighting.remove(player);
@@ -202,6 +202,7 @@ public class RPCode
         player.remove(RPCode.var_fighting);
         int gladiator_id=player.getInt(RPCode.var_choose);          
         arena.getSlot(RPCode.var_gladiators).remove(new RPObject.ID(gladiator_id));
+        marauroad.trace("RPCode::RemovePlayer","D","Gladiator("+gladiator_id+") removed from Arena");
         player.remove(RPCode.var_choose);
 
         playersFighting.remove(player);
@@ -209,7 +210,7 @@ public class RPCode
         
       if(player.has(RPCode.var_hidden_vote))
         {
-        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
+        marauroad.trace("RPCode::RemovePlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
         player.remove(RPCode.var_hidden_vote);
         }
       
@@ -217,13 +218,13 @@ public class RPCode
       }
     catch(Exception e)
       {
-      marauroad.trace("RPCode::RemoveWaitingPlayer","X",e.getMessage());
+      marauroad.trace("RPCode::RemovePlayer","X",e.getMessage());
       e.printStackTrace(System.out);
       return false;
       }
     finally
       {
-      marauroad.trace("RPCode::RemoveWaitingPlayer","<");
+      marauroad.trace("RPCode::RemovePlayer","<");
       }
     }
 
@@ -306,8 +307,9 @@ public class RPCode
       
       if(arena.get(RPCode.var_status).equals(RPCode.var_fighting))
         {
-        RPObject[] gladiators=new RPObject[GLADIATORS_PER_FIGHT];
+        RPObject[] gladiators=new RPObject[arena.getSlot(RPCode.var_gladiators).size()];
         int i=0;
+
         
         Iterator it=arena.getSlot(RPCode.var_gladiators).iterator();
         while(it.hasNext())
@@ -315,6 +317,8 @@ public class RPCode
           gladiators[i]=(RPObject)it.next();
           ++i;
           }
+
+        marauroad.trace("RPCode::ResolveFight","D",String.valueOf(gladiators.length)+" gladiators on Arena");
           
         marauroad.trace("RPCode::ResolveFight","D","Compute damage that each gladiator does");
         for(i=0;i<gladiators.length;++i)
@@ -350,7 +354,7 @@ public class RPCode
             
           arena.put(RPCode.var_status,RPCode.var_request_fame);
           arena.put(RPCode.var_fame,fame);
-          arena.put(RPCode.var_timeout,60);
+          arena.put(RPCode.var_timeout,30);
           arena.put(RPCode.var_thumbs_up,0);
           arena.put(RPCode.var_thumbs_down,0);
           }
@@ -540,8 +544,16 @@ public class RPCode
             }
           
           int fame_result=fame*up/total;
-          RPObject winner=arena.getSlot(RPCode.var_gladiators).get(new RPObject.ID(arena.getInt(RPCode.var_winner)));
-          winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
+          RPObject.ID winner_id=new RPObject.ID(arena.getInt(RPCode.var_winner));
+          if(arena.getSlot(RPCode.var_gladiators).has(winner_id))
+            {
+            RPObject winner=arena.getSlot(RPCode.var_gladiators).get();
+            winner.put(RPCode.var_fame,winner.getInt(RPCode.var_fame)+fame_result);    
+            }
+          else
+            {
+            /* Winner was not present... */
+            }
         
           SetUpNextCombat();
           }
@@ -582,10 +594,13 @@ public class RPCode
       it=playersVoted.iterator();
       while(it.hasNext())
         {
-        RPObject player=(RPObject)it.next();        
-        player.remove(RPCode.var_hidden_vote);
-        /* NOTE: It will use some objects that are not really in the world now.
-         * but, who cares? :-) */
+        RPObject player=(RPObject)it.next(); 
+        if(player.has(RPCode.var_hidden_vote))
+          {
+          player.remove(RPCode.var_hidden_vote);          
+          /* NOTE: It will use some objects that are not really in the world now.
+           * but, who cares? :-) */
+          }
         }
           
       playersVoted.clear();

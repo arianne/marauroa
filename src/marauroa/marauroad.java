@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.25 2004/01/27 19:13:04 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.26 2004/01/27 23:42:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -150,11 +150,22 @@ public class marauroad extends Thread
     println("along with this program; if not, write to the Free Software");
     println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
-    marauroad.trace("marauroad::main",">");
-    marauroad.setArguments(args);
-    marauroad.getMarauroa().start();
-    marauroad.trace("marauroad::main","<");
-  }
+    try
+      {
+      marauroad.trace("marauroad::main",">");
+      marauroad.setArguments(args);
+      marauroad.getMarauroa().start();
+      marauroad.trace("marauroad::main","<");
+      }
+    finally
+      {
+      if(out!=null)
+        {
+        out.flush();
+        out.close();
+        }
+      }
+    }
  
   public synchronized void run()
     {
