@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.25 2004/03/05 13:39:21 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.26 2004/03/05 16:27:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,7 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot(RPCode.var_gladiators).add(gladiator);
+      player.getSlot(RPCode.var_myGladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -61,7 +61,7 @@ public class Test_RPCode extends TestCase
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
+      newplayer.getSlot(RPCode.var_myGladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -74,7 +74,7 @@ public class Test_RPCode extends TestCase
       RPObject waitingPlayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(waitingPlayer);
       RPObject waitingGladiator=new Gladiator(new RPObject.ID(zone.create()));
-      waitingPlayer.getSlot(RPCode.var_gladiators).add(waitingGladiator);
+      waitingPlayer.getSlot(RPCode.var_myGladiators).add(waitingGladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(waitingPlayer),new RPObject.ID(waitingGladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -110,7 +110,7 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot(RPCode.var_gladiators).add(gladiator);
+      player.getSlot(RPCode.var_myGladiators).add(gladiator);
       
       RPAction.Status status=RPCode.FightMode(new RPObject.ID(player),new RPObject.ID(gladiator),RPCode.var_rock);
       assertEquals(status,RPAction.STATUS_FAIL);
@@ -152,7 +152,7 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot(RPCode.var_gladiators).add(gladiator);
+      player.getSlot(RPCode.var_myGladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -165,7 +165,7 @@ public class Test_RPCode extends TestCase
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
+      newplayer.getSlot(RPCode.var_myGladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -225,7 +225,7 @@ public class Test_RPCode extends TestCase
       RPObject player=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(player);
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      player.getSlot(RPCode.var_gladiators).add(gladiator);
+      player.getSlot(RPCode.var_myGladiators).add(gladiator);
       
       RPAction.Status status=RPCode.RequestFight(new RPObject.ID(player),new RPObject.ID(gladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);
@@ -238,7 +238,7 @@ public class Test_RPCode extends TestCase
       RPObject newplayer=new Player(new RPObject.ID(zone.create()),"a name");
       zone.add(newplayer);
       RPObject newgladiator=new Gladiator(new RPObject.ID(zone.create()));
-      newplayer.getSlot(RPCode.var_gladiators).add(newgladiator);
+      newplayer.getSlot(RPCode.var_myGladiators).add(newgladiator);
 
       status=RPCode.RequestFight(new RPObject.ID(newplayer),new RPObject.ID(newgladiator));
       assertEquals(status,RPAction.STATUS_SUCCESS);

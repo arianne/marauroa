@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.11 2004/03/05 13:39:21 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.12 2004/03/05 16:27:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public class Test_the1001 extends TestCase
 
       /** NOTE: The rest of the test expect one gladiator per player */
       RPObject gladiator=new Gladiator(new RPObject.ID(zone.create()));
-      objects[i].getSlot(RPCode.var_gladiators).add(gladiator);
+      objects[i].getSlot(RPCode.var_myGladiators).add(gladiator);
       }
     
     return objects;
@@ -66,7 +66,7 @@ public class Test_the1001 extends TestCase
       
       for(int i=0;i<players.length;++i)
         {
-        RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_gladiators).get()));
+        RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get()));
         assertEquals(status,RPAction.STATUS_SUCCESS);
         
         if(rand.nextBoolean())
@@ -77,21 +77,21 @@ public class Test_the1001 extends TestCase
         if(i==0)
           {
           assertEquals(arena.get(RPCode.var_status),RPCode.var_waiting);
-          assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_gladiators).get())));
+          assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get())));
           assertTrue(players[i].has(RPCode.var_fighting));      
           assertFalse(players[i].has(RPCode.var_requested));      
           }
         else if(i==1)
           {
           assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
-          assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_gladiators).get())));
+          assertTrue(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get())));
           assertTrue(players[i].has(RPCode.var_fighting));      
           assertFalse(players[i].has(RPCode.var_requested));      
           }
         else
           {          
           assertEquals(arena.get(RPCode.var_status),RPCode.var_fighting);
-          assertFalse(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_gladiators).get())));
+          assertFalse(arena.getSlot(RPCode.var_gladiators).has(new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get())));
           assertFalse(players[i].has(RPCode.var_fighting));    
           assertTrue(players[i].has(RPCode.var_requested));      
           }
@@ -110,7 +110,7 @@ public class Test_the1001 extends TestCase
             int j=rand.nextInt(NUM_PLAYERS);
 
             marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
-            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot(RPCode.var_gladiators).get()));
+            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot(RPCode.var_myGladiators).get()));
             marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
             }
 
@@ -120,7 +120,7 @@ public class Test_the1001 extends TestCase
             int j=rand.nextInt(NUM_PLAYERS);
 
             marauroad.trace("Test_the1001::testFullGame","D","A gladiator("+j+") request to fight again");          
-            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot(RPCode.var_gladiators).get()));
+            status=RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot(RPCode.var_myGladiators).get()));
             marauroad.trace("Test_the1001::testFullGame","D","request: "+status.toString());          
             }
           }
@@ -134,7 +134,7 @@ public class Test_the1001 extends TestCase
             if(players[i].has(RPCode.var_fighting))
               {
               String[] options={RPCode.var_rock,RPCode.var_paper,RPCode.var_scissor};                      
-              RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_gladiators).get()),options[rand.nextInt(3)]);
+              RPAction.Status status=RPCode.FightMode(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot(RPCode.var_myGladiators).get()),options[rand.nextInt(3)]);
               assertEquals(status,RPAction.STATUS_SUCCESS);
               }
             }

@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.34 2004/03/04 22:27:21 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.35 2004/03/05 16:27:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,10 +82,15 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         String text=action.get(RPCode.var_content);
         status=RPCode.Chat(id,text);
         }
-      else if(action.get(RPCode.var_type).equals(RPCode.var_buy))
+      else if(action.get(RPCode.var_type).equals(RPCode.var_buyItem))
         {
         String item_id=action.get(RPCode.var_choosen_item);        
-        status=RPCode.Buy(id,new RPObject.ID(Integer.parseInt(item_id)));
+        status=RPCode.BuyItem(id,new RPObject.ID(Integer.parseInt(item_id)));
+        }
+      else if(action.get(RPCode.var_type).equals(RPCode.var_buyGladiator))
+        {
+        String item_id=action.get(RPCode.var_choosen_item);        
+        status=RPCode.BuyGladiator(id,new RPObject.ID(Integer.parseInt(item_id)));
         }
       else
         {
@@ -205,7 +210,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       RPObject.ID valid_id=new RPObject.ID(zone.create());
       object.put(RPCode.var_object_id,valid_id.getObjectID());
       
-      Iterator it=object.getSlot(RPCode.var_gladiators).iterator();
+      Iterator it=object.getSlot(RPCode.var_myGladiators).iterator();
       while(it.hasNext())
         {
         RPObject slot_object=(RPObject)it.next();

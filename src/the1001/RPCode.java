@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.59 2004/03/04 17:04:42 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.60 2004/03/05 16:27:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,9 @@ public class RPCode
   final public static String var_defend="defend";
   final public static String var_price="price";
   final public static String var_gladiators="gladiators";
-  final public static String var_items="items";
+  final public static String var_items="!items";
+  final public static String var_myGladiators="!gladiators";
+  final public static String var_myItems="!items";
   final public static String var_fighting="fighting";
   final public static String var_requested="requested";
   final public static String var_status="status";
@@ -60,7 +62,8 @@ public class RPCode
   final public static String var_chat="chat";  
   final public static String var_content="content";  
   final public static String var_text="?text";  
-  final public static String var_buy="buy";  
+  final public static String var_buyItem="buyItem";  
+  final public static String var_buyGladiator="buyGladiator";  
   final public static String var_choosen_item="choosen_item";  
   
   
@@ -115,7 +118,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(!player.getSlot(RPCode.var_gladiators).has(gladiator_id))
+      if(!player.getSlot(RPCode.var_myGladiators).has(gladiator_id))
         {
         /** Failed because player does not own that object */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
@@ -139,7 +142,7 @@ public class RPCode
         return status;
         }
       
-      RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(gladiator_id);
+      RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(gladiator_id);
 
       if(arena.get(RPCode.var_status).equals(RPCode.var_waiting) && arena.getSlot(RPCode.var_gladiators).size()<GLADIATORS_PER_FIGHT)
         {
@@ -345,7 +348,7 @@ public class RPCode
       RPObject arena=zone.getArena();
       RPObject player=zone.get(player_id);
       
-      if(!player.getSlot(RPCode.var_gladiators).has(gladiator_id))
+      if(!player.getSlot(RPCode.var_myGladiators).has(gladiator_id))
         {
         /** Failed because player does not own that object */
         RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
@@ -721,7 +724,7 @@ public class RPCode
       while(it.hasNext())
         {
         RPObject player=(RPObject)it.next();
-        RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+        RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
         gladiator.put(RPCode.var_hp,gladiator.get(RPCode.var_initial_hp));
 
         player.remove(RPCode.var_fighting);
@@ -745,7 +748,7 @@ public class RPCode
           {
           /** Closely related to RequestFight code. We should avoid duplication */
           RPObject player=(RPObject)it.next();
-          RPObject gladiator=player.getSlot(RPCode.var_gladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
+          RPObject gladiator=player.getSlot(RPCode.var_myGladiators).get(new RPObject.ID(player.getInt(RPCode.var_choose)));
 
           marauroad.trace("RPCode::SetUpNextCombat","D","Added player("+new RPObject.ID(player).toString()+") with gladiator("+new RPObject.ID(gladiator).toString()+")");
           
@@ -795,9 +798,9 @@ public class RPCode
       }
     }
 
-   public static RPAction.Status Buy(RPObject.ID player_id, RPObject.ID object_to_buy) throws Exception
+   public static RPAction.Status BuyItem(RPObject.ID player_id, RPObject.ID object_to_buy) throws Exception
      {
-     marauroad.trace("RPCode::Buy",">");
+     marauroad.trace("RPCode::BuyItem",">");
    
      try
       {
@@ -809,7 +812,7 @@ public class RPCode
         {
         /** Failed because shop has not such item*/
         RPAction.Status status=RPAction.Fail("Failed because shop has not such item");
-        marauroad.trace("RPCode::Buy","D",status.toString());
+        marauroad.trace("RPCode::BuyItem","D",status.toString());
         return status;
         }
         
@@ -817,12 +820,12 @@ public class RPCode
       
       if(player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_price)<0)
         {
-        RPAction.Status status=RPAction.Fail("Failed because player has not enough money");
-        marauroad.trace("RPCode::Buy","D",status.toString());
+        RPAction.Status status=RPAction.Fail("Failed because player has not enough fame");
+        marauroad.trace("RPCode::BuyItem","D",status.toString());
         return status;
         }
        
-      player.getSlot(RPCode.var_items).add(zone.create(item));
+      player.getSlot(RPCode.var_myItems).add(zone.create(item));
       player.put(RPCode.var_fame,player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_price));
       
       zone.modify(player);
@@ -831,7 +834,47 @@ public class RPCode
       }
     finally
       {
-      marauroad.trace("RPCode::Buy","<");
+      marauroad.trace("RPCode::BuyItem","<");
+      }
+    }
+
+   public static RPAction.Status BuyGladiator(RPObject.ID player_id, RPObject.ID gladiator_to_buy) throws Exception
+     {
+     marauroad.trace("RPCode::BuyGladiator",">");
+   
+     try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject player=zone.get(player_id);
+      RPObject shop=zone.getHeroesHouse();
+      
+      if(shop.getSlot(RPCode.var_gladiators).has(gladiator_to_buy)==false)
+        {
+        /** Failed because shop has not such item*/
+        RPAction.Status status=RPAction.Fail("Failed because shop has not such item");
+        marauroad.trace("RPCode::BuyGladiator","D",status.toString());
+        return status;
+        }
+        
+      RPObject item=shop.getSlot(RPCode.var_gladiators).get(gladiator_to_buy);
+      
+      if(player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_karma)<0)
+        {
+        RPAction.Status status=RPAction.Fail("Failed because player has not enough fame");
+        marauroad.trace("RPCode::BuyGladiator","D",status.toString());
+        return status;
+        }
+       
+      player.getSlot(RPCode.var_myGladiators).add(zone.create(item));
+      player.put(RPCode.var_fame,player.getInt(RPCode.var_fame)-item.getInt(RPCode.var_karma));
+      
+      zone.modify(player);
+      
+      return RPAction.STATUS_SUCCESS;
+      }
+    finally
+      {
+      marauroad.trace("RPCode::BuyGladiator","<");
       }
     }
   }

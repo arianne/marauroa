@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.15 2004/03/03 22:40:15 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.16 2004/03/05 16:27:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class the1001RPZone extends MarauroaRPZone
 			heroesHouse.put(RPCode.var_type,"shop");
 			heroesHouse.put(RPCode.var_name,"Heroes' House");
 
-			RPSlot gladiators=new RPSlot(RPCode.var_gladiators);
+            RPSlot gladiators=new RPSlot(RPCode.var_gladiators);
 			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
 			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
 			gladiators.add(new Gladiator(new RPObject.ID(super.create())));
