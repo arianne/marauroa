@@ -41,14 +41,14 @@ public interface RPZone
       modifiedList.add(object);
       }
 
-    public void deleted(RPObject object)
+    public void removed(RPObject object)
       {
-      modifiedList.add(object);
+      deletedList.add(object);
       }
     }
   
   public void add(RPObject object) throws RPObjectInvalidException;
-  public void remove(RPObject.ID id) throws RPObjectNotFoundException;
+  public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
   public boolean has(RPObject.ID id);
   public RPObject create();

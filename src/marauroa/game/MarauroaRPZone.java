@@ -13,7 +13,7 @@ public class MarauroaRPZone implements RPZone
     {
     rand.setSeed(new Date().getTime());
     objects=new HashMap();
-    listObjects=new LinkedList();
+    listObjects=new Perception(Perception.DELTA);
     }
   
   public void add(RPObject object) throws RPObjectInvalidException
@@ -22,7 +22,7 @@ public class MarauroaRPZone implements RPZone
       {
       RPObject.ID id=new RPObject.ID(object);
       objects.put(id,object);
-      listObjects.add(object);
+      listObjects.modified(object);
       }
     catch(Attributes.AttributeNotFoundException e)
       {
@@ -30,12 +30,14 @@ public class MarauroaRPZone implements RPZone
       }
     }
   
-  public void remove(RPObject.ID id) throws RPObjectNotFoundException
+  public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
     if(objects.containsKey(id))
       {
-      Object object=objects.remove(id);
-      listObjects.remove(object);
+      RPObject object=(RPObject)objects.remove(id);
+      listObjects.removed(object);
+      
+      return object;
       }
     else
       {
@@ -79,17 +81,12 @@ public class MarauroaRPZone implements RPZone
     
   public Iterator iterator()
     {
-    return listObjects.iterator();
+    return objects.entrySet().iterator();
     }
 
   public Perception getPerception(RPObject.ID id, byte type)
     {
-    /** Using TOTAL perception per turn */
-    RPZone.Perception perception=new RPZone.Perception(RPZone.Perception.TOTAL);
-    perception.modifiedList=listObjects;
-    perception.deletedList=new LinkedList();    
-    
-    return perception;
+    return listObjects;
     }
   
   public void nextTurn() 
