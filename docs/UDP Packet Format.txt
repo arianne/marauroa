@@ -1,14 +1,16 @@
-Author : Miguel Angel Blanch Lardin
-Created: 2003/08/26
-status : planning
 Title  : UDP Packet Format
 Info   : Description of the internal structure of an UDP Packet for Marauroa
 Keyword: UDP, packet, net, TCP/IP, client, Message, Protocol 
+Author : Miguel Angel Blanch Lardin
+Created: 2003/08/26
+status : planning
+
 
 %% BEGIN %%
 
 It is based on Messages transmited using UDP Packets.
-Each message is selfcontained on a SINGLE UDP Packet, and there isn't any mechanism to recovery from lost messages or repeated ones.
+Each message is selfcontained on a SINGLE UDP Packet, and there isn't any 
+mechanism to recovery from lost messages or repeated ones.
 
 Each UDP Packet is composed of:
 - Protocol version ( 1 byte           )
@@ -17,11 +19,16 @@ Each UDP Packet is composed of:
 - Rest of Message  ( up to 1496 bytes )
 
 Messages are sent from server by simply serializing them.
-So the message itself contains the protocol version, the type of message and the clientid.
+So the message itself contains the protocol version, the type of message and
+the clientid.
 
 To recieve the message is a bit more complex.
-We need to determine that we are running a compatible version of the protocol, once we have agreed that the protocol is compatible we read type of message and we ask a MessageFactory ( "Java Design Patterns" ) to build an object of that type with the data.
-Once the message is build we simply store it on a queue of incomming messages waiting to be processed.
+We need to determine that we are running a compatible version of the protocol,
+once we have agreed that the protocol is compatible we read type of message 
+and we ask a MessageFactory ( "Java Design Patterns" ) to build an object of
+that type with the data.
+Once the message is build we simply store it on a queue of incomming messages 
+waiting to be processed.
 
 
 Thread Read

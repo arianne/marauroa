@@ -3,7 +3,10 @@ package marauroa.net;
 import java.net.InetSocketAddress;
 import java.io.*;
   
-public class MessageS2CLoginFailure extends Message
+/** This message indicate the client that the server has reject its login Message
+ *  @see marauroa.net.Message
+ */
+public class MessageS2CLoginNACK extends Message
   {
   public static short UNKNOWN_REASON=0;
   public static short USERNAME_WRONG=1;
@@ -16,14 +19,18 @@ public class MessageS2CLoginFailure extends Message
     "Server is full."    
     };
     
-  private byte reason;    
+  private byte reason;  
   
-  MessageS2CLoginFailure(InetSocketAddress source,byte reason)
+  /** Constructor with a TCP/IP source/destination of the message 
+   *  @param source The TCP/IP address associated to this message
+   *  @param resolution the reason to deny the login */
+  MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
     {
     super(source);
     
-    type=TYPE_S2C_LOGINFAILURE;
-    this.reason=reason;
+    type=TYPE_S2C_LOGIN_NACK;
+    
+    reason=resolution;
     }  
   
   String getResolution()

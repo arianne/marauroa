@@ -1,31 +1,40 @@
+Title  : Message Types
+Info   : Description of the different types of messages, its structure and use.
+Keyword: Message, Login, Logout, Character, chooseCharacter, ACK, NACK, Action,
+         Map, MapHash, Perception
 Author : Miguel Angel Blanch Lardin
 Created: 2003/09/11
 status : planning
-Title  : Message Types
-Info   : Description of the different types of messages, its structure and its use.
-Keyword: Message, Login, Logout, Character, chooseCharacter, ACK, NACK, Action, Map, MapHash, Perception
+
 
 %% BEGIN %%
 
 To communicate client and server marauroa uses a stream of UDP packets.
 Message system belongs to marauroa.net package, so refer to code.
 
-The main idea is that messages has side, so we have Client to Server aka C2S and Server to Client aka S2C messages. Most of the messages have two versions: C2S and S2C.
+The main idea is that messages has side, so we have Client to Server aka C2S 
+and Server to Client aka S2C messages. Most of the messages have two versions:
+C2S and S2C.
 
 The idea of communication that we need to model is:
 Client				Server
 ------				------
 --onConnect:
-Send Login			If Login is correct 
- 				  Send LoginACK
+Send Login			
+				If Login is correct 
+ 			  	  Send LoginACK
 				else
-				  Send LoginNACK
-				  Finish
+			    	  Send LoginNACK
+			  	  Finish
 
 				Send CharacterList
 
 Send ChooseCharacter
-				Send ChooseCharacterACK
+				If character is correct
+				  Send ChooseCharacterACK
+				else
+				  Send ChooseCharacterNACK
+				  Finish
 
 --onTimer:
 Send Map Hash
@@ -37,13 +46,141 @@ Send Map Hash
 Send Action
 				Send ActionACK
 
---onRemoteEvent:
-				Send Action
-
 --onExit:
 Send Logout
+				If client can logout
+				  Send Logout ACK
+				else
+				  Send Logout NACK
 			
-					
 
+Let's detail each message type now.
+
+
+Message C2S Login					
+-----------------
+The login Message is sent from client to server to request rights to access
+to the game.
+The message is composed by:
+- username
+- password
+
+Username is a string that is already registered on server as the name of an
+user account, and password is a string that is associated with that account.
+
+If the username/password combination is correct then Server must send a Login
+ACK Message to indicate the client that the message has been correctly 
+processed. On the contrary, if the username/password is wrong the server will
+send a Login NACK.
+
+
+
+Message S2C LoginACK
+--------------------
+The LoginACK Message is sent from server to client to indicate that the login
+process has been completed correctly and that it will procced with the next 
+step.
+It has no params.
+
+
+Message S2C LoginNACK
+---------------------
+The LoginNACK Message is sent from server to client to indicate client that its
+login message is incorrect because either username or password is wrong or 
+because server has decided to reject it, mainly because it is full or because 
+the IP is banned.
+
+The message is composed by:
+- Message indicating the resolution.
+
+
+Message S2C CharacterList
+-------------------------
+The CharacterList Message is sent from server to client to inform client about
+the possible election of character to play with. This feature models the 
+behaviuor of having several characters associated with a single account.
+
+The message is composed by:
+- A List of Character names
+
+Each character name must be unique at server level, and it is assigned when the
+character is created.
+
+
+Message C2S ChooseCharacter
+---------------------------
+The ChooseCharacter Message is sent from client to server to tell server what
+character to choose to play the game. 
+
+The message is composed by:
+- the name of the character
+
+The name of the character must be one of the listed on CharacterList Message or
+the server will reply with a ChooseCharacter NACK message. Once the character 
+has been choosen client is ready to start the game.
+
+The server will reply this message with a ChooseCharacter ACK or a 
+ChooseCharacter NACK message. The client must have alredy log in before reciving 
+this message, if this is violated the server will send a ChooseCharacterNACK.
+
+Once a character is chosen, the only way to choose a new one is by logging out 
+and logging in.
+
+
+Message S2C ChooseCharacter ACK
+-------------------------------
+The ChooseCharacter ACK Message is sent from server to client to notify the 
+client that the character has been choosen.
+It has no params.
+
+
+Message S2C ChooseCharacter NACK
+-------------------------------
+The ChooseCharacter NACK Message is sent from server to client to notify the 
+client that the character has not been choosen, and so it requiere from client
+that it send again a ChooseCharacter Message.
+It has no params.
+
+
+Message C2S Logout
+------------------
+The Logout Message is sent from client to server to indicate that it wants to 
+finish the session.
+It has no params.
+
+If the client can logout the server will send a Logout ACK Message and the 
+client can safely close the connection, but if server sends a Logout NACK
+Message, client should keep playing as disconnecting in that moment will
+let its avatar in the game uncontrolled ( idle ).
+
+Message S2C Logout ACK
+----------------------
+The Logout ACK Message is sent from server to client to notify the 
+client that the character has been choosen.
+It has no params.
+
+
+Message S2C Logout NACK
+-----------------------
+The Logout NACK Message is sent from server to client to notify the 
+client that the character has not been choosen, and so it requiere from client
+that it send again a ChooseCharacter Message.
+It has no params.
+
+
+Message C2S Map Hash
+--------------------
+
+Message S2C Map
+---------------
+
+Message S2C Perception
+----------------------
+
+Message C2S Action
+------------------
+
+Message S2C Action ACK
+----------------------
 
 %% END %%

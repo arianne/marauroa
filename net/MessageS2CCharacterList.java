@@ -2,11 +2,19 @@ package marauroa.net;
   
 import java.net.InetSocketAddress;
 import java.io.*;
-  
+
+/** The CharacterListMessage is sent from server to client to inform client about
+ *  the possible election of character to play with.*/  
 public class MessageS2CCharacterList extends Message
   {
   private String[] characters;
   
+  /** Constructor with a TCP/IP source/destination of the message and the name
+   *  of the choosen character.
+   *  @param source The TCP/IP address associated to this message
+   *  @param characters the list of characters of the player
+   *  @see marauroa.net.MessageS2CCharacters
+   */
   MessageS2CCharacterList(InetSocketAddress source,String[] characters)
     {
     super(source);
@@ -15,7 +23,9 @@ public class MessageS2CCharacterList extends Message
     this.characters=characters;
     }  
   
-  String[] getCharacters()
+  /** This method returns the list of characters that the player owns 
+   *  @return the list of characters that the player owns */
+  public String[] getCharacters()
     {
     return characters;    
     }

@@ -38,7 +38,7 @@ public class NetworkServerManager
           {
           }
       
-        Message msg=MessageFactory.getClass(packet.getData(),packet.getSocketAddress()); 
+        //Message msg=MessageFactory.getClass(packet.getData(),packet.getSocketAddress()); 
         }
       }    
     }        

@@ -18,36 +18,54 @@ LABEL := "Root"
 FILTER := ""
 
 #[BeginFolder]
-LABEL := "net"
+LABEL := "game"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\net\\NetConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\InputSerializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\OutputSerializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Serializable.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Message.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SLogout.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SChooseCharacter.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CLoginFailure.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageS2CCharacterList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\MessageC2SLogin.java" #[EndFile]
-#[BeginFolder]
-LABEL := "Test"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\net\\Test_Serializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_SerializerByte.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_SerializerShort.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_SerializerInt.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_SerializerByteArray.java" #[EndFile]
-#[BeginFile]SOURCE := "\\net\\Test_SerializerString.java" #[EndFile]
 #[EndFolder]
+#[BeginFolder]
+LABEL := "doc"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "test"
 FILTER := ""
 
 #[BeginFile]SOURCE := "\\test\\RunTests.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "net"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\net\\MessageS2CLogoutNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CLogoutACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CChooseCharacterNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CChooseCharacterACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CLoginNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CLoginACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageC2SLogin.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageS2CCharacterList.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageC2SChooseCharacter.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\MessageC2SLogout.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\NetworkServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Message.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Serializable.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\OutputSerializer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\InputSerializer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\NetConst.java" #[EndFile]
+#[BeginFolder]
+LABEL := "Test"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\net\\Test_SerializerString.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_SerializerByteArray.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_SerializerInt.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_SerializerShort.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_SerializerByte.java" #[EndFile]
+#[BeginFile]SOURCE := "\\net\\Test_Serializer.java" #[EndFile]
+#[EndFolder]
 #[EndFolder]
 #[EndFolder]

@@ -22,7 +22,7 @@ public class MessageC2SChooseCharacter extends Message
     {
     super(source);
     
-    type=TYPE_C2S_LOGIN;
+    type=TYPE_C2S_CHOOSECHARACTER;
     this.character=character;
     }  
   

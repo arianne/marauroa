@@ -14,6 +14,7 @@ public class MessageC2SLogin extends Message
   
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
+   *  @param source The TCP/IP address associated to this message
    *  @param username the username of the user that wants to login
    *  @param password the plain password of the user that wants to login
    */
@@ -40,7 +41,7 @@ public class MessageC2SLogin extends Message
     return password;
     }
 
-  public public void writeObject(marauroa.net.OutputSerializer out) throws IOException
+  public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
     out.write(username);

@@ -5,16 +5,24 @@ import java.io.*;
 
 /** Message is a class to represent all the kind of messages that are possible
  *  to exist in marauroa.
- *  
- * @author Miguel Angel Blanch Lardin
  */
 public class Message implements marauroa.net.Serializable
   {
   public static byte TYPE_INVALID=-1;
+  
   public static byte TYPE_C2S_LOGIN=1;
+  public static byte TYPE_S2C_LOGIN_ACK=10;
+  public static byte TYPE_S2C_LOGIN_NACK=11;
+  
   public static byte TYPE_S2C_CHARACTERLIST=2;
-  public static byte TYPE_S2C_LOGINFAILURE=3;
+  
+  public static byte TYPE_C2S_CHOOSECHARACTER=3;
+  public static byte TYPE_S2C_CHOOSECHARACTER_ACK=30;
+  public static byte TYPE_S2C_CHOOSECHARACTER_NACK=31;
+  
   public static byte TYPE_C2S_LOGOUT=4;
+  public static byte TYPE_S2C_LOGOUT_ACK=40;
+  public static byte TYPE_S2C_LOGOUT_NACK=41;
     
   protected byte type;
   protected byte flags;
