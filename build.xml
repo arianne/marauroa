@@ -75,9 +75,6 @@
     <copy todir="${lib}" file="${src}/mapacman/mapacman.ini"/>
     
     <copy todir="${lib}" file="${src}/marauroa.ini"/>
-    
-    <copy todir="${lib}" file="${src}/simplegame/simplegame.ini"/>
-    
     <copy todir="${lib}" file="${src}/the1001/the1001.ini"/>
   </target>
   
