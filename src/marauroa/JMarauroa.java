@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.8 2003/12/08 01:06:29 arianne_rpg Exp $ */
+/* $Id: JMarauroa.java,v 1.9 2003/12/09 15:30:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,6 +116,52 @@ public class JMarauroa
     MessageC2SLogin msg=new MessageC2SLogin(null,user,pwd);
     netMan.addMessage(msg);
     
+    boolean complete=false;
+    int recieved=0;
+    boolean login_worked=false;
+    
+    String[] characters=null;
+    String[] serverInfo=null;
+    
+    while(!complete && recieved<3)
+      {
+      Message message=netMan.getMessage();
+      
+      if(message==null) continue;
+      
+      switch(message.getType())
+        {
+        case Message.TYPE_S2C_LOGIN_NACK:
+          addLog("Login reject because "+((MessageS2CLoginNACK)message).getResolution()+"\n");
+          complete=true;
+          break;
+        case Message.TYPE_S2C_LOGIN_ACK:        
+          addLog("Login successful\n");
+          clientId=message.getClientID();
+          addLog("Recieved clientid: "+clientId+"\n");
+          ++recieved;
+          break;
+        case Message.TYPE_S2C_CHARACTERLIST:
+          characters=((MessageS2CCharacterList)message).getCharacters();
+          for(int i=0;i<characters.length;++i)
+            {
+          	addLog("- "+characters[i]+"\n");
+            }
+            
+          ++recieved;
+          break;
+        case Message.TYPE_S2C_SERVERINFO:
+          serverInfo=((MessageS2CServerInfo)message).getContents();
+          for(int i=0;i<serverInfo.length;++i)
+            {
+          	addLog("- "+serverInfo[i]+"\n");
+            }
+          ++recieved;
+          break;        
+        }      
+      }    
+
+/*    
     boolean is_correct_login=false;
     Message msgReply=null;
     while(msgReply==null)
@@ -156,7 +202,7 @@ public class JMarauroa
         }
       }
     }
-    
+*/    
     if(characters!=null && characters.length>0)
     {
       Object[]      message = new Object[2];
