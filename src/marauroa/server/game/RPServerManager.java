@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.5 2005/02/20 17:20:03 root777 Exp $ */
+/* $Id: RPServerManager.java,v 1.6 2005/02/21 13:47:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,6 +43,8 @@ public class RPServerManager extends Thread
   private NetworkServerManager netMan;
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
+
+  private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
   
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
@@ -56,8 +58,9 @@ public class RPServerManager extends Thread
       keepRunning=true;
       isfinished=false;
       scheduler=new RPScheduler();
+      contentsToTransfer=new HashMap<RPObject.ID, List<TransferContent>>();
       playerContainer=PlayerEntryContainer.getContainer();
-      this.netMan=netMan;
+      this.netMan=netMan;      
       
       Configuration conf=Configuration.getConfiguration();
       Class worldClass=Class.forName(conf.get("rp_RPWorldClass"));
@@ -342,25 +345,38 @@ public class RPServerManager extends Thread
     return ruleProcessor.onExit(id);
     }
   
+  private void deliverTransferContent()
+    {
+    for(RPObject.ID id: contentsToTransfer.keySet())
+      {
+      try
+        {
+        List<TransferContent> content=contentsToTransfer.get(id);
+      
+        int clientid=playerContainer.getClientidPlayer(id);
+        PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
+      
+        entry.contentToTransfer=content;
+    
+        MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
+        mes.setClientID(entry.clientid);
+     
+        netMan.addMessage(mes);
+        }
+      catch(NoSuchClientIDException e)
+        {
+        Logger.thrown("RPServerManager::transferContent","X",e);
+        }
+      }
+      
+    contentsToTransfer.clear();
+    }
+  
+  
   /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
-    try
-      {
-      int clientid=playerContainer.getClientidPlayer(id);
-      PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
-      
-      entry.contentToTransfer=content;
-    
-      MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
-      mes.setClientID(entry.clientid);
-    
-      netMan.addMessage(mes);
-      }
-    catch(NoSuchClientIDException e)
-      {
-      Logger.thrown("RPServerManager::transferContent","X",e);
-      }
+    contentsToTransfer.put(id,content);
     }
 
   /** This method is triggered to send content to the clients */
@@ -395,12 +411,16 @@ public class RPServerManager extends Thread
         {
         /** Get actions that players send */
         scheduler.nextTurn();
+
         /** Execute them all */
         scheduler.visit(ruleProcessor);
 
         /** Compute game RP rules to move to the next turn */
         ruleProcessor.nextTurn();
 
+        /** Send content that is waiting to players */
+        deliverTransferContent();
+        
         /** Tell player what happened */
         buildPerceptions();
         
