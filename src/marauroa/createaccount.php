@@ -18,7 +18,7 @@ if(isset($HTTP_POST_VARS['cmd']))
   else
     {
     /* Create the account. */
-    $cmdline='java -cp "mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.21.jar" marauroa.createaccount';
+    $cmdline='C:/j2sdk1.4.2_03/bin/java -cp "mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.21.jar" marauroa.createaccount';
     $cmdline=$cmdline.' -u "'.$HTTP_POST_VARS['username'].'"';
     $cmdline=$cmdline.' -p "'.$HTTP_POST_VARS['password'].'"';
     $cmdline=$cmdline.' -c "'.$HTTP_POST_VARS['username'].'"';
