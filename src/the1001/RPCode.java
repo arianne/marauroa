@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.55 2004/02/24 14:08:42 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.56 2004/02/24 17:23:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -707,7 +707,10 @@ public class RPCode
       arena.remove(RPCode.var_thumbs_down);
       arena.remove(RPCode.var_fame);
       arena.remove(RPCode.var_timeout);
-      arena.remove(RPCode.var_winner);
+      if(arena.has(RPCode.var_winner))
+        {
+        arena.remove(RPCode.var_winner);
+        }
       
       marauroad.trace("RPCode::SetUpNextCombat","D","Restore fighters HP and set them to idle");
       /* Restore fighthing players */
