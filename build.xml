@@ -8,10 +8,9 @@
   <property name="src" value="."/>
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
-  <property name="classpath"  value="classes"/>
+  <property name="classpath"  value="classes;D:\j2sdk1.4.2\junit\junit3.8.1\junit.jar"/>
   <property name="jarname" value="hello.jar"/>
   <property name="docs" value="docs"/>
-  <property name="include" value="include"/>
 
   <property name="runclass" value="marauroa.marauroad"/>
   
@@ -43,10 +42,7 @@
     <!-- use the value of the ${classpath} property in the classpath -->
        <pathelement path="${classpath}"/>
        <!-- include all jar files  -->
-       <fileset dir="${include}">
-           <include name="**/*.jar"/>
-       </fileset>
-  </classpath>
+    </classpath>
  </javac>
  
   </target>
