@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.11 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.13 2004/04/04 22:20:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,7 +241,6 @@ public class Test_RPObject extends TestCase
       }
     }
 
-/*
   public void testRPObjectDifferences_EqualObjects()  
     {    
     try
@@ -301,7 +300,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -377,7 +376,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -453,7 +452,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -531,7 +530,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -602,7 +601,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -673,7 +672,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);
 
@@ -751,7 +750,7 @@ public class Test_RPObject extends TestCase
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
             
-      example2.getDifferencesFrom(example1,added,deleted);
+      example1.getDifferences(added,deleted);
 
       RPObject build=example1.applyDifferences(added,deleted);      
 
@@ -769,5 +768,4 @@ public class Test_RPObject extends TestCase
       marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
       }
     }
-*/
   }

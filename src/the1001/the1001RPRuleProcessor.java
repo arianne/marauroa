@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.39 2004/04/03 17:40:32 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.40 2004/04/04 22:17:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -210,13 +210,6 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     try
       {
       object.put("?joined","");
-      /*
-       Iterator it=object.getSlot(RPCode.var_myGladiators).iterator();
-       while(it.hasNext())
-       {
-       RPObject slot_object=(RPObject)it.next();        
-       }
-       */        
       
       zone.add(object);
       trackObject(object);

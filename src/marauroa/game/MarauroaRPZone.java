@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.29 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.30 2004/04/04 22:17:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.marauroad;
 public class MarauroaRPZone implements RPZone
   {
   private Map objects;
+  private List modified;
   private Perception perception;
 
   private JDBCPlayerDatabase rpobjectDatabase;
@@ -36,6 +37,7 @@ public class MarauroaRPZone implements RPZone
     {
     rand.setSeed(new Date().getTime());
     objects=new LinkedHashMap();
+    modified=new LinkedList();
     perception=new Perception(Perception.DELTA);
     try
       {
@@ -54,6 +56,8 @@ public class MarauroaRPZone implements RPZone
     try
       {
       RPObject.ID id=new RPObject.ID(object);
+      
+      object.resetAddedAndDeleted();
 
       objects.put(id,object);
       perception.added(object);
@@ -69,6 +73,8 @@ public class MarauroaRPZone implements RPZone
     {
     try 
       {
+      perception.added(object);
+      //modified.add(object);
       //perception.modified(object);
       }
     catch(Exception e)
@@ -146,7 +152,7 @@ public class MarauroaRPZone implements RPZone
         {
         prebuildDeltaPerception=perception;
         
-        Iterator it=objects.values().iterator();
+        Iterator it=modified.iterator();
         while(it.hasNext())
           {
           try
@@ -158,6 +164,8 @@ public class MarauroaRPZone implements RPZone
             e.printStackTrace();
             }
           }
+
+        modified=new LinkedList();
         }
       
       return prebuildDeltaPerception;
@@ -210,6 +218,7 @@ public class MarauroaRPZone implements RPZone
     {
     prebuildTotalPerception=null;
     prebuildDeltaPerception=null;
+
     perception=new Perception(Perception.DELTA);
     }
   }
