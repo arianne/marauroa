@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.18 2004/03/15 22:21:15 root777 Exp $ */
+/* $Id: Statistics.java,v 1.19 2004/03/16 00:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,8 +43,8 @@ public class Statistics
       out.println("Bytes RECV: "+String.valueOf(bytesRecv));
       out.println("Bytes RECV (avg hour): "+String.valueOf((int)(bytesRecv/(diff/3600))));
       out.println("Bytes SEND: "+String.valueOf(bytesSend));
-      out.println("Bytes SEND (avg hour): "+String.valueOf((int)(bytesSend/(diff/3600))));
       out.println("Bytes saved by compression: "+String.valueOf(bytesSavedByCompression));
+      out.println("Bytes SEND (avg hour): "+String.valueOf((int)(bytesSend/(diff/3600))));
       out.println("Messages RECV: "+String.valueOf(messagesRecv));
       out.println("Messages RECV (avg hour): "+String.valueOf((int)(messagesRecv/(diff/3600))));
       out.println("Messages SEND: "+String.valueOf(messagesSend));
