@@ -31,7 +31,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.10 version 
+0.11 version 
 
 Status
 ------
@@ -90,6 +90,53 @@ Read simpleGame/README about how to play it.
 
 Changelog
 ---------
+0.11	Dic 21, 2003
+- Maraurorized simpleGame
+- Fixed several logical bugs in simpleGame
+- Fixed bugs
+   · 863672	MakeMove before ChallengeAnswer	  2003-12-20 20:41	arianne_rpg	arianne_rpg	
+   · 863460	Class cast at simplegame: GameBoard	  2003-12-20 11:42	arianne_rpg	arianne_rpg	
+   · 863459	More classcast exception, this in simpleGame	  2003-12-20 11:35	arianne_rpg	arianne_rpg	
+   · 863456	Exception at MakeMove	  2003-12-20 11:25	arianne_rpg	arianne_rpg	
+   · 863455	ClassCast exception at ChallengeAnswer	  2003-12-20 11:20	arianne_rpg	arianne_rpg	
+   · 863451	ClassCast exception at Challenge action	  2003-12-20 11:04	arianne_rpg	arianne_rpg	
+   · 862855	Challenge does not work correctly	  2003-12-19 11:53	arianne_rpg	arianne_rpg	
+   · 862604	simpleGame server bug in new players
+   · 862597	attribute not found in simplegame
+   · 862582	Problem with CharacterList	 
+   · 862460	Problem when there are no more characters	
+   · 862450	iterator for both Attributes and CharacterList	
+   · 862441	Lack of copy constructor for RPObject	 
+   · 862430	classcast exception at SimpleGame	 
+   · 861298	NullPointerException thrown when no characters returned	  
+   · 860677	Fix usage of instanceof in simpleGame.	  
+   · 860676	Remove actionType and objectType
+   · 860671	Spell fixes
+   · 860668	Traces at data structures are a bad idea TM
+   · 860665	Postnuke does not allow images. Replace it!
+   · 860657	Call RPZone.modify at simplegameRPRuleProcessor
+   · 860655	Remove RPActionFactory
+   · 860651	Remove RPObjectFactory
+   · 860645	Attributes support for List
+   · 860634	Add connectorJ support in the build.xml file
+   · 860620	Recreate run scripts using Build.xml
+   · 860461	Server stop working with simpleGame
+   · 860459	Client fails to start simpleGame
+   · 860328	Modify build.xml to copy sounds
+   · 860324	simpleGame only runs once
+   · 859093	RPAction.Status lack of info	  
+   · 859090	Can't iterate Attributes	  
+   · 859075	How to understand Marauroa outdated
+   · 859004	RPServerManager is not scheduling correctly	  
+   · 857217	Bug found! NetworkClientManager related	  
+   · 857184	Timelimit the RunTest application	  
+   · 856879	Make simpler output at RunTest	  
+   · 856876	RunTest should be simpler to debug
+   · 856566	Client stopped working
+   · 856525	RunTests doesn't end
+   · 856332	Document Test cases
+   · 856328	Test cases fails
+
 0.10 	Dic 16, 2003
 - simpleGame working.
 - sound support
