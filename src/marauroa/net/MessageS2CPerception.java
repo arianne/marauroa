@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.34 2004/04/21 16:39:51 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.35 2004/04/25 10:31:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ import marauroa.*;
  */
 public class MessageS2CPerception extends Message
   {
-  private int timestamp;
+  private int timestampPerception;
   private byte typePerception;
 
   private List addedRPObjects;
@@ -78,12 +78,12 @@ public class MessageS2CPerception extends Message
   
   public void setTimestamp(int timestamp)
     {
-    this.timestamp=timestamp;
+    this.timestampPerception=timestampPerception;
     }
   
-  public int getTimestamp()
+  public int getPerceptionTimestamp()
     {
-    return timestamp;
+    return timestampPerception;
     }
   
   
@@ -199,7 +199,7 @@ public class MessageS2CPerception extends Message
       Iterator it;
       
       StringBuffer perception_string=new StringBuffer();
-      perception_string.append("Type: "+typePerception+" Timestamp: "+timestamp+") contents: ");
+      perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
 
       perception_string.append("\n  added: \n");
       it=addedRPObjects.iterator();
@@ -241,7 +241,7 @@ public class MessageS2CPerception extends Message
     OutputSerializer ser=new OutputSerializer(out_stream);
 
     /** HACK: Join the dinamic part of the perception on a single block */
-    ser.write((int)timestamp);    
+    ser.write((int)timestampPerception);    
     out_stream.write(getPrecomputedStaticPartPerception());
     if(myRPObject==null)
       {
@@ -270,7 +270,7 @@ public class MessageS2CPerception extends Message
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
     InputSerializer ser=new InputSerializer(szlib);
     
-    timestamp=ser.readInt();
+    timestampPerception=ser.readInt();
     typePerception=ser.readByte();
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
@@ -389,7 +389,7 @@ public class MessageS2CPerception extends Message
     {
     try
       {
-      if(previous+1==timestamp)
+      if(previous+1==timestampPerception)
         { 
         applyPerceptionDeletedRPObjects(world);
         applyPerceptionModifiedRPObjects(world);
@@ -416,7 +416,7 @@ public class MessageS2CPerception extends Message
       throw new OutOfSyncException();
       }
 
-    return timestamp;
+    return timestampPerception;
     }
 
 

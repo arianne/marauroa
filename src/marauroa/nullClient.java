@@ -102,19 +102,19 @@ class TestClient extends Thread
           if(msgPer.getTypePerception()==1 && outofsync)
             {
             outofsync=false;
-            previous_timestamp=msgPer.getTimestamp()-1;
+            previous_timestamp=msgPer.getPerceptionTimestamp()-1;
             }
           else if(outofsync==true)
             {
-            System.out.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+            System.out.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
             }
           
           if(outofsync==false)
             {
-            if(previous_timestamp+1!=msgPer.getTimestamp())
+            if(previous_timestamp+1!=msgPer.getPerceptionTimestamp())
               {
               System.out.println("We are out of sync. Waiting for sync perception");
-              System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getTimestamp());
+              System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getPerceptionTimestamp());
               outofsync=true;
               /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */                
               }
@@ -123,8 +123,8 @@ class TestClient extends Thread
               timestamp.setTime(System.currentTimeMillis());
               String ts = formatter.format(timestamp);
 
-              System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
-              out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
+              out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
               
               previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);          
               }       

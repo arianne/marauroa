@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.10 2004/04/24 12:12:31 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.11 2004/04/25 10:31:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,8 @@ public class Message implements marauroa.net.Serializable
   
   protected byte type;
   protected int clientid;
+  protected int timestampMessage;
+  
   protected InetSocketAddress source;
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message
@@ -51,6 +53,7 @@ public class Message implements marauroa.net.Serializable
     this.type=TYPE_INVALID;
     this.clientid=CLIENTID_INVALID;
     this.source=source;
+    timestampMessage=(int)(System.currentTimeMillis()&0xFFFFFFFF);
     }
 
   public void setAddress(InetSocketAddress source)
@@ -86,6 +89,11 @@ public class Message implements marauroa.net.Serializable
     {
     return clientid;
     }
+    
+  public int getMessageTimestamp()
+    {
+    return timestampMessage;
+    }
 
   /** Serialize the object into an ObjectOutput 
    *  @throws IOException if the serializations fails 
@@ -95,6 +103,7 @@ public class Message implements marauroa.net.Serializable
     out.write(NetConst.NETWORK_PROTOCOL_VERSION);
     out.write(type);
     out.write(clientid);
+    out.write(timestampMessage);
     }
     
   /** Serialize the object from an ObjectInput 
@@ -109,6 +118,7 @@ public class Message implements marauroa.net.Serializable
       }
     type=in.readByte();
     clientid=in.readInt();
+    timestampMessage=in.readInt();
     }  
   }
 

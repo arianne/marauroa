@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.15 2004/04/15 18:35:59 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.16 2004/04/25 10:31:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ public class NetworkClientManager
   private InetSocketAddress address;
   private int clientid;
   private MessageFactory msgFactory;
+  
   static private class PacketContainer
     {
     public byte signature;
@@ -33,7 +34,10 @@ public class NetworkClientManager
     public InetSocketAddress address;
     public Date timestamp;
     }
+    
   private Map pendingPackets;
+  private List processedMessages;
+  
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
   public NetworkClientManager(String host) throws SocketException
@@ -45,7 +49,8 @@ public class NetworkClientManager
     socket.setTrafficClass(0x08|0x10);
       
     msgFactory=MessageFactory.getFactory();
-    pendingPackets=Collections.synchronizedMap(new HashMap());
+    pendingPackets=new LinkedHashMap();
+    processedMessages=new LinkedList();
     }
     
   /** This method notify the thread to finish it execution */
@@ -60,6 +65,26 @@ public class NetworkClientManager
     {
     try
       {
+      if(processedMessages.size()>0)
+        {
+        Message choosenMsg=((Message)processedMessages.get(0));
+        int smallestTimestamp=choosenMsg.getMessageTimestamp();
+
+        Iterator messages=processedMessages.iterator();
+        while(messages.hasNext())
+          {
+          Message msg=(Message)messages.next();
+          if(msg.getMessageTimestamp()<smallestTimestamp)
+            {
+            choosenMsg=msg;
+            smallestTimestamp=msg.getMessageTimestamp();
+            }
+          }
+        
+        processedMessages.remove(choosenMsg);      
+        return choosenMsg;
+        }
+        
       Iterator it=pendingPackets.entrySet().iterator();
 
       while(it.hasNext())
@@ -79,7 +104,8 @@ public class NetworkClientManager
             {
             clientid=msg.getClientID();
             }
-          return msg;
+            
+          processedMessages.add(msg);
           }
         if(new Date().getTime()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
           {
