@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.29 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.30 2004/03/23 15:23:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -247,13 +247,9 @@ public class RPObject extends Attributes
 			slots.add((RPSlot)in.readObject(new RPSlot()));
 		}
 	}
-
-  /** TODO: Refactor this method. Looks like it claims for bugs!" */	
-  public void getDifferencesFrom(RPObject object, RPObject added, RPObject deleted) throws Exception 
+	
+  private void getAttributesDifferencesFrom(RPObject object, RPObject added, RPObject deleted) throws Exception
     {
-    added.put("object_id",get("object_id"));
-    deleted.put("object_id",get("object_id"));
-    
     Iterator it=object.iterator();
     
     /* get modified or deleted attributes */
@@ -284,96 +280,96 @@ public class RPObject extends Attributes
         added.put(attrib,get(attrib));        
         }    
       }    
+    }
+
+  private void getSlotDifferencesFrom(RPObject object, RPObject added, RPObject deleted) throws Exception
+    {
+    SlotsIterator it=object.slotsIterator();
     
-    /* get deleted or modified slots */ 
-    SlotsIterator sit=object.slotsIterator();     
-    while(sit.hasNext())
+    /* get modified or deleted slots */
+    while(it.hasNext())
       {
-      RPSlot slot=(RPSlot)sit.next();
+      RPSlot slot=(RPSlot)it.next();
+      
       if(hasSlot(slot.getName()))
         {
-        RPSlot actualSlot=getSlot(slot.getName());
-        
-        /* Check if objects match: deleted and modified*/
-        Iterator objects=slot.iterator();
-        while(objects.hasNext())
+        if(!getSlot(slot.getName()).equals(object.getSlot(slot.getName())))
           {
-          RPObject objectInSlot=(RPObject)objects.next();
-          if(actualSlot.has(new ID(objectInSlot)))
-            {
-            RPObject slotAdded=new RPObject();
-            RPObject slotDeleted=new RPObject();
-            
-            actualSlot.get(new ID(objectInSlot)).getDifferencesFrom(objectInSlot,slotAdded,slotDeleted);
-            
-            /** TODO: If there are no changes it shouldn't be added */
-            String id=slotAdded.get("object_id");
-            slotAdded.remove("object_id");
-            if(!slotAdded.isEmpty())
-              {
-              slotAdded.put("object_id",id);
-              if(!added.hasSlot(slot.getName()))
-                {
-                added.addSlot(new RPSlot(slot.getName()));
-                }            
-              added.getSlot(slot.getName()).add(slotAdded);
-              }
-            
-            id=slotDeleted.get("object_id");
-            slotDeleted.remove("object_id");
-            if(!slotDeleted.isEmpty())
-              {
-              slotDeleted.put("object_id",id);
-              if(!deleted.hasSlot(slot.getName()))
-                {
-                deleted.addSlot(new RPSlot(slot.getName()));
-                }            
-              deleted.getSlot(slot.getName()).add(slotDeleted);
-              }
-            }
-          else
-            {            
-            if(!added.hasSlot(slot.getName()))
-              {
-              added.addSlot(new RPSlot(slot.getName()));
-              }
-            
-            added.getSlot(slot.getName()).add((RPObject)objectInSlot.copy());
-            }
-          }        
-          
-        /** New objects only */
-        objects=actualSlot.iterator();
-        while(objects.hasNext())
-          {
-          RPObject objectInSlot=(RPObject)objects.next();
-          if(!slot.has(new ID(objectInSlot)))
-            {
-            if(!added.hasSlot(slot.getName()))
-              {
-              added.addSlot(new RPSlot(slot.getName()));
-              }
-            
-            added.getSlot(slot.getName()).add((RPObject)objectInSlot.copy());
-            }
-          }            
-        }
+          added.addSlot(new RPSlot(slot.getName()));
+          deleted.addSlot(new RPSlot(slot.getName()));
+          /** Look for differences and build the added/deleted list */
+          getRPObjectSlotDifferencesFrom(getSlot(slot.getName()),object.getSlot(slot.getName()),added,deleted);
+          }
+        }    
       else
         {
         deleted.addSlot(new RPSlot(slot.getName()));
-        }
-      }  
+        }    
+      }    
+
+    /* get new slots */
+    it=slotsIterator();
     
-    /* get new slots */  
-    sit=slotsIterator();     
-    while(sit.hasNext())
+    while(it.hasNext())
       {
-      RPSlot slot=(RPSlot)sit.next();
+      RPSlot slot=(RPSlot)it.next();
       if(!object.hasSlot(slot.getName()))
         {
-        added.addSlot((RPSlot)slot.copy());
-        }
-      }  
+        added.addSlot((RPSlot)slot.copy());        
+        }    
+      }    
+    }
+
+  private void getRPObjectSlotDifferencesFrom(RPSlot delta,RPSlot delta_1, RPObject added, RPObject deleted) throws Exception
+    {
+    Iterator it=delta_1.iterator();
+    
+    /* get modified or deleted object */
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      if(delta.has(new ID(object)))
+        {
+        if(!delta.get(new ID(object)).equals(object))
+          {
+          /* Objects are different: recursively run the algorithm */          
+          RPObject addedObjects=new RPObject();
+          RPObject deletedObjects=new RPObject();
+          
+          delta.get(new ID(object)).getDifferencesFrom(object,addedObjects,deletedObjects);
+          
+          added.getSlot(delta.getName()).add(addedObjects);
+          deleted.getSlot(delta.getName()).add(deletedObjects);
+          }
+        }    
+      else
+        {
+        /* Object doesn't exists in delta, so remove */
+        deleted.getSlot(delta.getName()).add((RPObject)object.copy());
+        }    
+      }    
+
+    /* get new objects */
+    it=delta.iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      if(!delta_1.has(new ID(object)))
+        {
+        added.getSlot(delta.getName()).add((RPObject)object.copy());
+        }    
+      }    
+    }
+
+  /** TODO: Refactor this method. Looks like it claims for bugs!" */	
+  public void getDifferencesFrom(RPObject object, RPObject added, RPObject deleted) throws Exception 
+    {
+    added.put("object_id",get("object_id"));
+    deleted.put("object_id",get("object_id"));
+    
+    getAttributesDifferencesFrom(object,added,deleted);  
+    getSlotDifferencesFrom(object,added,deleted);
     }
     
   public RPObject applyDifferences(RPObject added, RPObject deleted) throws Exception

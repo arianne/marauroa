@@ -205,6 +205,8 @@ FILTER := ""
 LABEL := "game"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCTransaction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Transaction.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameDatabaseException.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCRPObjectDatabase.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameConst.java" #[EndFile]

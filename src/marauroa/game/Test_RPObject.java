@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.6 2004/03/22 18:31:48 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.7 2004/03/23 15:23:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -161,88 +161,555 @@ public class Test_RPObject extends TestCase
       }
     }
 
-  public void testRPObjectDifferences()  
+  public void testRPObjectDifferences_EqualObjects()  
     {    
     try
       {
-      RPObject example=new RPObject();
-      example.put("object_id",10);
-      example.put("type","gladiator");
-      example.put("name","Stupid random name");
-      example.put("look","database_look");
-      example.put("!hp",100);
-      example.put("hp",100);
-      example.put("attack",5);
-      example.put("karma",100);
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
   
-      example.addSlot(new RPSlot("l_hand"));
-      
+      example1.addSlot(new RPSlot("l_hand"));      
       RPObject item=new RPObject();
       item.put("object_id",11);
       item.put("type","shield");
       item.put("def",10);
-      item.put("price",50);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
       
-      example.getSlot("l_hand").add(item);
-      
-      example.addSlot(new RPSlot("r_hand"));
+      example1.addSlot(new RPSlot("r_hand"));
 
       item=new RPObject();
-//      item.put("object_id",12);
-//      item.put("type","sword");
-//      item.put("def",0);
-//      item.put("price",100);
-//      
-//      example.getSlot("r_hand").add(item);
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
 
-      RPObject example_mod=new RPObject();
-      example_mod.put("object_id",10);
-      example_mod.put("type","gladiator");
-      example_mod.put("name","A better stupid random name");
-      example_mod.put("look","database_look");
-      example_mod.put("!hp",100);
-      example_mod.put("hp",90);
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",100);
+      example2.put("attack",5);
+      example2.put("karma",100);
   
-      example_mod.addSlot(new RPSlot("l_hand"));
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
       
-      RPObject item_mod=new RPObject();
-      item_mod.put("object_id",11);
-      item_mod.put("type","shield");
-      item_mod.put("def",10);
-      item_mod.put("price",50);
-      
-      example_mod.getSlot("l_hand").add(item_mod);
-      
-      example_mod.addSlot(new RPSlot("r_hand"));
+      example2.addSlot(new RPSlot("r_hand"));
 
-      item_mod=new RPObject();
-      item_mod.put("object_id",12);
-      item_mod.put("type","sword");
-      item_mod.put("def",0);
-      item_mod.put("price",100);
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
       
-      example_mod.getSlot("r_hand").add(item_mod);
+      example2.getSlot("r_hand").add(item);
+      
       
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
-      
-      example_mod.getDifferencesFrom(example,added,deleted);
-      assertTrue(added.has("name"));
-      assertTrue(added.has("hp"));
-      assertTrue(deleted.has("karma"));
-      assertTrue(deleted.has("attack"));
-      
-      System.out.println("Original --> "+example.toString());
-      System.out.println("Added --> "+added.toString());
-      System.out.println("Deleted --> "+deleted.toString());
-      System.out.println("New --> "+example_mod.toString());
-      
-      RPObject build=example.applyDifferences(added,deleted);
-      System.out.println("Build --> "+build.toString());
-      
-      assertTrue(example_mod.equals(build));      
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
       build.getSlot("r_hand").get().put("test_shit","");
-      assertFalse(example_mod.equals(build));      
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+  public void testRPObjectDifferences_AhasNewAttrib()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      example1.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
+
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      example2.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example2.getSlot("r_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+  public void testRPObjectDifferences_BhasNewAttrib()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      example1.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
+
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",100);
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      example2.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example2.getSlot("r_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+  
+
+  public void testRPObjectDifferences_AhasDifferentAttributes()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      example1.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
+
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Another stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",80);
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      example2.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example2.getSlot("r_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+  public void testRPObjectDifferences_AhasNewSlot()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      example1.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
+
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",100);
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("l_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+
+  public void testRPObjectDifferences_BhasNewSlot()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",100);
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      example2.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example2.getSlot("r_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      RPObject build=example1.applyDifferences(added,deleted);
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
+      }
+    catch(Exception e)
+      {      
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    finally
+      {
+      marauroad.trace("Test_RPObject::testRPObjectSerialization","<");
+      }
+    }
+
+  public void testRPObjectDifferences_AhasDifferentSlot()  
+    {    
+    try
+      {
+      RPObject example1=new RPObject();
+      example1.put("object_id",10);
+      example1.put("type","gladiator");
+      example1.put("name","Stupid random name");
+      example1.put("look","database_look");
+      example1.put("!hp",100);
+      example1.put("hp",100);
+      example1.put("attack",5);
+      example1.put("karma",100);
+  
+      example1.addSlot(new RPSlot("l_hand"));      
+      RPObject item=new RPObject();
+      item.put("object_id",11);
+      item.put("type","shield");
+      item.put("def",10);
+      item.put("price",50);      
+      example1.getSlot("l_hand").add(item);
+      
+      example1.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example1.getSlot("r_hand").add(item);
+
+      RPObject example2=new RPObject();
+      example2.put("object_id",10);
+      example2.put("type","gladiator");
+      example2.put("name","Stupid random name");
+      example2.put("look","database_look");
+      example2.put("!hp",100);
+      example2.put("hp",100);
+      example2.put("attack",5);
+      example2.put("karma",100);
+  
+      example2.addSlot(new RPSlot("l_hand"));      
+      item=new RPObject();
+      item.put("object_id",13);
+      item.put("type","sword");
+      item.put("def",10);
+      item.put("price",50);      
+      example2.getSlot("l_hand").add(item);
+      
+      example2.addSlot(new RPSlot("r_hand"));
+
+      item=new RPObject();
+      item.put("object_id",12);
+      item.put("type","sword");
+      item.put("def",0);
+      item.put("price",100);
+      
+      example2.getSlot("r_hand").add(item);
+      
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      example2.getDifferencesFrom(example1,added,deleted);
+      
+      System.out.println(example1.toString());
+      System.out.println(added.toString());
+      System.out.println(deleted.toString());
+      System.out.println(example2.toString());
+      
+      RPObject build=example1.applyDifferences(added,deleted);      
+
+      System.out.println(build.toString());
+
+      assertTrue(example2.equals(build));      
+
+      build.getSlot("r_hand").get().put("test_shit","");
+      assertFalse(example2.equals(build));      
       }
     catch(Exception e)
       {      
