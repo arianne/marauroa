@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.43 2003/12/21 12:06:15 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.44 2003/12/21 12:09:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,6 +53,7 @@ public class SimpleGame
     private NetworkClientManager netMan;
     private SimpleGameDataModel gdm;
     private JMarauroa marauroa;
+    private RPObject ownCharacter;
     private int ownCharacterID;
     private int otherCharacterID;
     private static Sequencer player;
@@ -65,6 +66,7 @@ public class SimpleGame
         netMan = netman;
         
         this.marauroa = marauroa;
+        ownCharacter=null;
         this.ownCharacterID=characterID.getObjectID();
         this.otherCharacterID=-1;
         gdm = new SimpleGameDataModel(3);
@@ -112,6 +114,7 @@ public class SimpleGame
                         {
                             //the only object we should see here is the player object itself.
                             RPObject obj = (RPObject)modified_objects.get(0);
+                            ownCharacter=obj;
                             addLog(obj.toString()+"\n");
                             
                             if(obj.hasSlot("hand"))
@@ -341,7 +344,7 @@ public class SimpleGame
         {
             public void mouseClicked(MouseEvent e)
             {
-                if(otherCharacterID==-1)
+                if(ownCharacter==null || (ownCharacter!=null && !ownCharacter.hasSlot("hand")))
                 {
                     addLog("get the list of players...\n");
                     GetCharacterListAction rpaction = new GetCharacterListAction();
