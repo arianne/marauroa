@@ -59,7 +59,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     }  
 
   private Connection connection;  
-  private static PlayerDatabase playerDatabase;
+  private static PlayerDatabase playerDatabase=null;
 
   /**
    *

@@ -8,7 +8,7 @@ import marauroa.marauroad;
 public class MemoryPlayerDatabase implements PlayerDatabase
   {
   private final static byte MAX_NUMBER_OF_LOGIN_EVENTS=5;
-  private static PlayerDatabase playerDatabase;
+  private static PlayerDatabase playerDatabase=null;
   
   static class LoginEvent
     {
