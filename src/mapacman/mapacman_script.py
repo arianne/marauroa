@@ -4,7 +4,7 @@ from mapacman import *
 
 pacman_mapfile='map_definition.txt'
 
-# 
+#
 # PythonRP Interface for Java classes
 # * We need it because calling functions is VERY slow
 #
@@ -66,7 +66,6 @@ class RealPythonRP(PythonRP):
 
     def onTimeout(self, objectid):
         return onExit(self,objectid)
-        
 
 
 class mapacmanRPMap:
@@ -98,7 +97,7 @@ class mapacmanRPMap:
         while i<>-1:
             pos=(i,y)
             self.respawnPoints.append(pos)
-            i=line.find('+',i+1)            
+            i=line.find('+',i+1)
     
     def get(self,x,y):
         return (self.grid[y])[x]
@@ -117,7 +116,6 @@ class mapacmanRPMap:
 #
 #
 #
-
 SUCCESS=0
 FAILED=1
 
@@ -153,7 +151,6 @@ def createGhost(name):
     object.put("dir",randomDirection())
     return object;
 
-
 def createBall(x,y):
     """ This function create a Ball object that when eats by player increments
     its score. """
@@ -164,7 +161,6 @@ def createBall(x,y):
     object.put("!score",1)
     object.put("!respawn",60)
     return object;
-
 
 def createSuperBall(x,y):
     """ This function create a SuperBall object that when eats by player
