@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.46 2004/01/28 17:53:29 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.47 2004/01/31 20:14:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -201,8 +201,6 @@ public class RPCode
         {
         player.remove(RPCode.var_hidden_vote);
         }
-      
-      zone.modify(player);
       }
     catch(Exception e)
       {
