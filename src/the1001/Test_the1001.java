@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.5 2004/01/07 23:29:08 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.6 2004/01/07 23:59:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import marauroa.game.*;
 
 public class Test_the1001 extends TestCase
   {
+  private final static int NUM_PLAYERS=10;
   private the1001RPRuleProcessor rpu;
   private the1001RPZone zone;
   
@@ -59,7 +60,7 @@ public class Test_the1001 extends TestCase
       assertEquals(rpu.getTurn(),0);
 
       RPObject arena=zone.getArena();    
-      RPObject[] players=createPlayers(10);
+      RPObject[] players=createPlayers(NUM_PLAYERS);
 
       assertEquals(arena.get("status"),"waiting");
       
@@ -101,11 +102,15 @@ public class Test_the1001 extends TestCase
         {
         ++combatRound;
         
-        if(combatRound<10)
-          {
-          RPAction.Status status=RPCode.RequestFight(new RPObject.ID(players[i]),new RPObject.ID(players[i].getSlot("gladiators").get()));
-          assertEquals(status,RPAction.STATUS_SUCCESS);
-          }
+//        if(combatRound<10 && rand.nextBoolean())
+//          {
+//          int j=rand.nextInt(NUM_PLAYERS);
+////          if(!(players[j].has("requested") || players[j].has("fighting")))
+//            {
+//            marauroad.trace("Test_the1001::testFullGame","D","A gladiator request to fight again");          
+//            RPCode.RequestFight(new RPObject.ID(players[j]),new RPObject.ID(players[j].getSlot("gladiators").get()));
+//            }
+//          }
           
         marauroad.trace("Test_the1001::testFullGame","D","Combat begin: "+combatRound);
 
