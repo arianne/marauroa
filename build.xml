@@ -2,11 +2,15 @@
 <project name="marauroa" default="compile" basedir=".">
   <property name="version" value="0.90"/>
   <property name="src" value="src"/>
+  <property name="extras" value="extras"/>
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
   
-  <property name="connectorJ" value="${lib}/mysql-connector-java-3.0.15-ga-bin.jar"/>
-  <property name="jython" value="${lib}/jython.jar"/>
+  <property name="connectorJ_jar" value="mysql-connector-java-3.0.15-ga-bin.jar"/>
+  <property name="jython_jar" value="jython.jar"/>
+  
+  <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
+  <property name="jython" value="${libdir}/${jython_jar}"/>
   <property name="classpath" value="${build};${connectorJ};${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
@@ -14,6 +18,7 @@
 
   <target name="clean">
     <delete dir="${build}"/>
+    <delete dir="${lib}"/>
     <delete dir="${docs}"/>
   </target>
 
@@ -43,6 +48,53 @@
   <target name="jar" depends="compile">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>    
     <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
+  </target>
+
+  <target name="release" depends="release_binary,release_source"/>
+  
+  <target name="release_binary" depends="jar">
+    <replaceregexp file="${extras}/marauroad.bat    "
+                   match="set LOCALCLASSPATH=.*"
+                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar}"
+                   byline="true"/>
+    <mkdir dir="marauroa-${version}"/>
+    <copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>
+    <copy todir="marauroa-${version}" file="${lib}/${jarname}"/>
+    <copy todir="marauroa-${version}" file="${connectorJ}"/>
+    <copy todir="marauroa-${version}" file="${jython}"/>
+    <copy todir="marauroa-${version}" file="${lib}/marauroa.ini"/>
+    <copy todir="marauroa-${version}" file="AUTHORS"/>
+    <copy todir="marauroa-${version}" file="BUGS"/>
+    <copy todir="marauroa-${version}" file="COPYING"/>
+    <copy todir="marauroa-${version}" file="LICENSE"/>
+    <copy todir="marauroa-${version}" file="README"/>
+    <zip destfile="marauroa-${version}.zip" 
+         basedir="marauroa-${version}"/>
+    <delete dir="marauroa-${version}"/>
+  </target>
+
+  <target name="release_source" depends="clean">
+    <mkdir dir="marauroa-${version}"/>
+    <copy todir="marauroa-${version}/src">
+    	<fileset dir="src"/>
+    </copy>
+    <copy todir="marauroa-${version}/extras">
+    	<fileset dir="extras"/>
+    </copy>
+    <copy todir="marauroa-${version}" file="build.xml"/>
+    <copy todir="marauroa-${version}" file="AUTHORS"/>
+    <copy todir="marauroa-${version}" file="BUGS"/>
+    <copy todir="marauroa-${version}" file="COPYING"/>
+    <copy todir="marauroa-${version}" file="LICENSE"/>
+    <copy todir="marauroa-${version}" file="README"/>
+  	
+    <tar destfile="marauroa-${version}.tar.gz" compression="gzip">
+       <tarfileset dir="marauroa-${version}" prefix="marauroa-${version}">
+         <exclude name="**/CVS/**"/>
+       </tarfileset>
+     </tar>
+
+    <delete dir="marauroa-${version}"/>
   </target>
   
   <target name="docs" depends="compile">
