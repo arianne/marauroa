@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.19 2004/03/22 22:53:19 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.21 2004/03/23 22:52:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,15 +129,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
       }
       
-      try
-      {
-        trans=trans==null?getTransaction():trans;
-      }
-      catch (GameDatabaseException.GenericDatabaseException e)
-      {
-        marauroad.trace("JDBCPlayerDatabase::hasPlayer","x",e.getMessage());
-        return(false);
-      }
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) from  player where username like '"+username+"'";
@@ -181,15 +172,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
       
       String[] characters = null;
-      try
-      {
-        trans=trans==null?getTransaction():trans;
-      }
-      catch (GameDatabaseException.GenericDatabaseException e)
-      {
-        marauroad.trace("JDBCPlayerDatabase::hasPlayer","x",e.getMessage());
-        throw new PlayerNotFoundException(username+":"+e.getMessage());
-      }
+
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
@@ -236,15 +219,6 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       if(!validString(username) || !validString(password))
       {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
-      }
-      try
-      {
-        trans=trans==null?getTransaction():trans;
-      }
-      catch (GameDatabaseException.GenericDatabaseException e)
-      {
-        marauroad.trace("JDBCPlayerDatabase::addPlayer","x",e.getMessage());
-        throw new PlayerAlreadyAddedException(username+":"+e.getMessage());
       }
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
@@ -420,7 +394,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select address,timedate,result from loginEvent where player_id="+id+" order by timedate";
+      String query = "select address,timedate,result from loginEvent where player_id="+id+" order by timedate limit 5";
       
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","D",query);
       ResultSet result = stmt.executeQuery(query);
@@ -767,7 +741,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       connInfo.put("password", props.get("jdbc_pwd"));
       connInfo.put("charSet", "UTF-8");
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
-      conn.setAutoCommit(false);
+      conn.setAutoCommit(true);
       
       return conn;
     }
