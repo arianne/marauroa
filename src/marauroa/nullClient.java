@@ -152,15 +152,15 @@ public class nullClient extends Thread
     {
     try
       {
-      int num=1;
+      int num=6;
       nullClient test[]=new nullClient[num];
       
       test[0]=new nullClient("miguel","qwerty","miguel");
-//      test[1]=new nullClient("prueba","qwerty","prueba");
-//      test[2]=new nullClient("bot_8","nopass","bot_8");
-//      test[3]=new nullClient("bot_9","nopass","bot_9");
-//      test[4]=new nullClient("bot_10","nopass","bot_10");
-//      test[5]=new nullClient("bot_11","nopass","bot_11");
+      test[1]=new nullClient("prueba","qwerty","prueba");
+      test[2]=new nullClient("bot_8","nopass","bot_8");
+      test[3]=new nullClient("bot_9","nopass","bot_9");
+      test[4]=new nullClient("bot_10","nopass","bot_10");
+      test[5]=new nullClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {
