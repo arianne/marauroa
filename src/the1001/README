@@ -95,13 +95,11 @@ RPAction		Fight
 				Attack
 				Defend
 				Dogde
-				
 				AwardFame
 				Talk
 				Buy
 				ModifyEquiment
 				Retire
-				Train
 				
 				
 Description of each RPObject
@@ -113,6 +111,7 @@ slot name "gladiators", that contains the gladiators that the player owns.
 Also the player will have a name to represent him/her.
 
 Attributes
+	type
 	name
 	fame
 Slots
@@ -128,15 +127,19 @@ This is the character that fights and die on the Arena, for the fame and glory o
 players. It will have all the attributes and skill posted above so:
 
 Attributes
+    type
+	name
 	rp_strengh
 	rp_speed
 	rp_size
 	rp_breath
 	rp_fame
-	skill_attack
-	skill_defend
-	skill_evasion
+	rp_attack
+	rp_defend
+	rp_evasion
 	rp_health
+	num_victory
+	num_defeat	
 Slots
 	l_hand
 	r_hand
@@ -152,17 +155,22 @@ blocking hits. It increase a lot the defend skill of the character but
 it also decrease a lot the evasion skill and the speed attribute
 
 Attributes
+	type
+ 	rp_attack
 	rp_defend	
+	rp_price
 
 
 Sword & Spear
 It is a piece of metal that is used to hit the rival. These items will determine
 the damage done to the rival and it is heavily modified by strengh, breath and 
-attack attributes. It will affects breath, the more weight, the worse.
+attack attributes.
 
 Attributes
-	rp_damage
-	rp_weight
+	type
+ 	rp_attack
+	rp_defend	
+	rp_price
 
 
 Arena
@@ -176,6 +184,7 @@ object has also the fact of create new Gladiators and Items on demand. It has to
 contain reference items so set prices and so.
 
 Slots
+	type
 	retiredGladiators
 	items
 	
@@ -250,4 +259,201 @@ Attributes
 	shop_item
 	
 
-This actions decrease your player fame.	
+This actions decrease your player's fame.	
+
+
+ModifyEquipment
+This action enable you to modify the equipment of your gladiators. You can move
+an equipment piece from and to gladiators from and to another gladiator or the backpack.
+
+Attributes
+	source_slot
+	source_id
+	dest_slot
+	dest_id
+	
+* We will see a example later.
+
+
+Retire
+This action remove the gladiator from your player and add it to the Hero house,
+and you will be awarded with a amount of fame that is proportional to the fame
+of your gladiator and the number of victories that it has had.
+
+Attributes
+	retire
+	
+
+
+These are the main objects and actions.
+Let's describe now how one game would look like, exactly as Marauroa server would
+see it.
+
+Example of a real game
+----------------------
+
+We can assume that player did already created a player for play the game.
+It it the next player:
+
+Player
+  {
+  name="Rufus"
+  password="zafe pazzword"
+  }
+
+So Rufus LOGIN into our Server, and it is granted login with a LOGIN ACK Message.
+Just after that server tell Rufus that he is playing "1001 Gladiators" with a SERVER
+INFO Message, and it sends Rufus his list of characters. Because the type of game we
+are creating Rufus has only one character.
+
+Character
+  {
+  type="character"
+  object_id="1"
+  name="Rufus Maximus"
+  fame="100"
+  
+  gladiators
+    {
+    empty
+    }
+    
+  backpack
+    {
+    empty
+    }
+  }
+  
+Rufus is a wise man and he decide to buy a above standard gladiator with his fame
+and just a simple sword. To do that he send a ACTION message to server with the info
+he saw at Heroes Shop object in the last perception.
+
+Heroes' shop
+  {
+  type="shop"
+  gladiators
+    {
+    Gladiator
+      {
+      type="gladiator"
+      object_id="1122"
+      name="Ragnar"
+      rp_strengh="10"
+      rp_speed="4"
+      rp_size="10"
+      rp_breath="10"
+      rp_fame="70"
+      rp_attack="10"
+      rp_defend="10"
+      rp_evasion="4"
+      rp_health="100"
+      num_victory=0
+      num_defeat=0      
+      }
+    Gladiator
+      {
+      type="gladiator"
+      object_id="1242"
+      name="Speedy Gonzalez"
+      rp_strengh="4"
+      rp_speed="10"
+      rp_size="5"
+      rp_breath="12"
+      rp_fame="70"
+      rp_attack="6"
+      rp_defend="5"
+      rp_evasion="14"
+      rp_health="100"
+      num_victory=0
+      num_defeat=0      
+      }
+    }
+    
+  items
+    {
+    Sword
+      {
+      type="sword"
+      object_id="11672"
+      rp_attack="7"
+      rp_defend="3"
+      rp_price="30";
+      }
+    Shield
+      {
+      type="shield"
+      object_id="11673"
+      rp_attack="1"
+      rp_defend="10"
+      rp_price="70";
+      }
+    Spear
+      {
+      type="spear"
+      object_id="11674"
+      rp_attack="10"
+      rp_defend="0"
+      rp_price="10";
+      }      
+    }
+  }
+
+So our mighty Rufus would send the next actions.
+
+Buy
+  {
+  shop_item="11672"
+  }
+  
+Buy
+  {
+  shop_item="1122"
+  }
+  
+See the order doesn't matter, as it will be stored into the player.
+On the next perception the wise Rufus will have his character as this:
+
+Character
+  {
+  type="character"
+  object_id="1"
+  name="Rufus Maximus"
+  fame="0"
+  
+  gladiators
+    {
+    Gladiator
+      {
+      type="gladiator"
+      object_id="1122"
+      name="Ragnar"
+      rp_strengh="10"
+      rp_speed="4"
+      rp_size="10"
+      rp_breath="10"
+      rp_fame="0"
+      rp_attack="10"
+      rp_defend="10"
+      rp_evasion="4"
+      rp_health="100"
+      num_victory=0
+      num_defeat=0      
+      }
+    }
+    
+  backpack
+    {
+    Sword
+      {
+      type="sword"
+      object_id="15672"
+      rp_attack="7"
+      rp_defend="3"
+      }
+    }
+  }
+  
+Just three points to notice:
+1) See how the rp_fame of Ragnar dropped from 70 to 0. You guessed it, it is the price.
+2) See that sword has a new different Object id.  
+3) rp_price was removed from the sword.
