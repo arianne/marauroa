@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.19 2003/12/13 14:19:17 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.20 2003/12/13 14:43:24 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,7 @@ import simplegame.actions.GetCharacterListAction;
 import simplegame.actions.MoveAction;
 import simplegame.objects.CharacterList;
 import simplegame.objects.GameBoard;
+import sun.audio.AudioPlayer;
 
 public class SimpleGame
   extends JFrame implements Runnable
@@ -214,7 +215,7 @@ public class SimpleGame
       }
     }
   }
-
+  
   private void playMidi()
   {
     InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
@@ -330,6 +331,7 @@ public class SimpleGame
           }
           addLog("Player makes move on [" +row +","+column+"]\n");
         }
+        playWav(getClass().getClassLoader().getResourceAsStream("sounds/human_spell.wav"));
       }
     }
   }
@@ -344,6 +346,37 @@ public class SimpleGame
     {
       System.out.print(msg);
     }
+  }
+  
+  public static void playWav(final InputStream wavstream)
+  {
+    AudioPlayer.player.start(wavstream);
+    //    new Thread(new Runnable()
+    //               {
+    //          public void run()
+    //          {
+    //            try
+    //            {
+    //              AudioPlayer.player.start(wavstream);
+    //              Sequence theSound = MidiSystem.getSequence(midistream);
+    //              if(player==null)
+    //              {
+    //                player = MidiSystem.getSequencer();
+    //                player.open();
+    //              }
+    //              else
+    //              {
+    //                player.stop();
+    //              }
+    //              player.setSequence(theSound);
+    //              player.start();
+    //              //player.close();
+    //            }
+    //            catch (Exception ex)
+    //            {
+    //              ex.printStackTrace();
+    //            }
+    //          }},"midi player").start();
   }
   
   public static void playMidi(final InputStream midistream)
@@ -377,4 +410,5 @@ public class SimpleGame
   
   
 }
+
 
