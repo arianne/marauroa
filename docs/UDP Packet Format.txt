@@ -1,5 +1,11 @@
-UDP Packet Format
------------------
+Author : Miguel Angel Blanch Lardin
+Created: 2003/08/26
+status : planning
+Title  : UDP Packet Format
+Info   : Description of the internal structure of an UDP Packet for Marauroa
+Keyword: UDP, packet, net, TCP/IP, client, Message, Protocol 
+
+%% BEGIN %%
 
 It is based on Messages transmited using UDP Packets.
 Each message is selfcontained on a SINGLE UDP Packet, and there isn't any mechanism to recovery from lost messages or repeated ones.
@@ -32,3 +38,5 @@ Thread Write
   {
   send UDP
   } 
+
+%% END %%

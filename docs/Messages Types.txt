@@ -1,87 +1,49 @@
-marauroa Messaging System
+Author : Miguel Angel Blanch Lardin
+Created: 2003/09/11
+status : planning
+Title  : Message Types
+Info   : Description of the different types of messages, its structure and its use.
+Keyword: Message, Login, Logout, Character, chooseCharacter, ACK, NACK, Action, Map, MapHash, Perception
+
+%% BEGIN %%
 
 To communicate client and server marauroa uses a stream of UDP packets.
 Message system belongs to marauroa.net package, so refer to code.
 
 The main idea is that messages has side, so we have Client to Server aka C2S and Server to Client aka S2C messages. Most of the messages have two versions: C2S and S2C.
 
-The idea behind the protocol is this:
-1) <Client> Send C2S Login
-2) <Server> Reply with S2C ACK
-3) <Server> Send S2C LoginFailure or S2C CharacterList depending on the result of accout authentification. 
-4) <Client> Reply with C2S ACK
-5) <Client> Choose one character of the list and send C2S ChooseCharacter
-6) <Server> Reply with S2C ACK
+The idea of communication that we need to model is:
+Client				Server
+------				------
+--onConnect:
+Send Login			If Login is correct 
+ 				  Send LoginACK
+				else
+				  Send LoginNACK
+				  Finish
 
-7) <Client> Send C2S Logout
+				Send CharacterList
 
-The UDP packet format is as follows:
+Send ChooseCharacter
+				Send ChooseCharacterACK
 
-(Client Unique ID       ) -- 4 bytes
-(Message Unique ID      ) -- 4 bytes
-(Total number of packets) -- 1 byte
-(Packet sequence number ) -- 1 byte
-(Data                   ) -- PACKET_SIZE - 10 bytes
+--onTimer:
+Send Map Hash
+					
+				Send Perception
+				Send Map
 
-So we need to deploy a data structure to handle the UDP packets for each different player.
+--onEvent:
+Send Action
+				Send ActionACK
 
-ClientID --> MessageID --> List<UDPPackets>
+--onRemoteEvent:
+				Send Action
 
-Once the packet is completly recieved we need to convert it to a Message.
-There are no confirmations explicetly on the Messages, the protocol itself should be a prove of correct communication between the peers.
-
-The size of the list is limited and can't grown in an unhandled way. And from time to time it is deleted.
-
-
-To use the above structure we need to define a Manager with two methods:
-- Read
-- Write
-
-The Write method should be like this:
-
-Write ( Message )
-  {
-  Convert into a stream of bytes the Message
-  Break the Message in arrays of PACKET_SIZE-10 bytes
-  
-  foreach array do
-    {
-    Add ClientID
-    Add Message ID
-    Add Total Number of Messages
-    Add Message sequence
-
-    Send to Client
-    }
-  }
+--onExit:
+Send Logout
+			
+					
 
 
-The Read method is more complex:
-
-Read ( ) 
-  {
-  while(true)
-    {
-    Read from Server
-   
-    Add Packet to PacketLists of ClientID
-
-    if( Message is ready )
-      {
-      Add Message List of Messages
-      Clear PacketLists of ClientID
-      }
-
-    Check PacketLists timeouts
-    }
-  }
-
-
-So we have a data structure that does all the *ugly* work for us. As we can see this data structure requiere at least the next methods:
-- void add ( <ClientID,MessageID>, Packet )
-- boolean isMessage( <ClientID,MessageID> )
-- Message get ( <ClientID,MessageID> )
-- void clear ( <ClientID,MessageID> )
-- boolean isTimeout ( <ClientID,MessageID> )
-
-Once a Message is completly recieved it is pushed into a list for being processed by another Manager.
+%% END %%
