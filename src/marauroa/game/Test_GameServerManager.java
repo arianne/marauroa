@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.10 2003/12/12 16:18:24 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.11 2004/03/02 19:36:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -252,9 +252,9 @@ public class Test_GameServerManager extends TestCase
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
         
-        if(msg instanceof MessageS2CLoginNACK)
+        if(msg instanceof MessageS2CLoginACK)
           {
-          assertTrue("Correct login failure",true);
+          assertTrue("Correct login ",true);
           ++recieved;
           }
         else
