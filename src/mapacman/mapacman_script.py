@@ -172,10 +172,9 @@ class RealPythonZone(PythonZone):
         object.setRPClass(RPClass.getRPClass("superball"))
         return object;
 
-class RealPythonAI(PythonAI):
-    def __init__(self, zone, sched):
+class RealPythonAI:
+    def __init__(self, zone):
         self._zone=zone
-        self._sched=sched
         self.pythonRP=None
         self.ghosts=[]
         self.i=0
@@ -194,9 +193,6 @@ class RealPythonAI(PythonAI):
             self.ghosts.append(ghost)
         
     def compute(self,timelimit):
-        # Personally I would use the PythonRP directly and move the ghost at will
-        # But if you are really in need, add actions to the scheduler so they are
-        # done as if you are a simple player.
         self.i+=1
         
         if len(self.pythonRP._online_players)==0:
@@ -260,9 +256,9 @@ class RealPythonRP(PythonRP):
         self._zone=pythonZone.getZone()
         self._map=pythonZone.getMap()
         
-        instance=getPythonAI()
-        instance.setPythonRP(self)
-        instance.createEnviroment()
+        self.ai=RealPythonAI(zone)
+        self.ai.setPythonRP(self)
+        self.ai.createEnviroment()
     
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants to do action action """      
@@ -440,6 +436,7 @@ class RealPythonRP(PythonRP):
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
+        self.ai.compute(0)
         self.removeKilledFlag()
         
         for object in self._removed_elements:
@@ -480,6 +477,8 @@ class RealPythonRP(PythonRP):
         object.put("x",pos[0])
         object.put("y",pos[1])
         object.setRPClass(RPClass.getRPClass("player"))
+
+        if object.has("super"): object.remove("super")
         
         self._zone.add(object)
         self._online_players.append(object)
@@ -490,8 +489,6 @@ class RealPythonRP(PythonRP):
         pos=self._map.getRandomGhostRespawn()
         object.put("x",pos[0])
         object.put("y",pos[1])
-
-        if object.has("super"): object.remove("super")
         
         self._zone.add(object)
         self._online_ghosts.append(object)
