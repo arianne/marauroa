@@ -73,6 +73,16 @@ public class RPObject extends Attributes
     {
       return "RPObject.ID [id="+id+"]";
     }
+
+    public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
+    {
+      out.write(id);
+    }
+  
+    public void readObject(marauroa.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+      id=in.readInt();
+    }
   }
   
   public RPObject()

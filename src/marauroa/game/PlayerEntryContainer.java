@@ -305,6 +305,7 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::addLoginEvent","X","No such Player(unknown)");
+          marauroad.trace("PlayerEntryContainer::addLoginEvent","!","This should never happens");
           throw new NoSuchPlayerException();
           }
         }
@@ -341,6 +342,7 @@ public class PlayerEntryContainer
         catch(PlayerDatabase.PlayerNotFoundException e)
           {
           marauroad.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
+          marauroad.trace("PlayerEntryContainer::getLoginEvent","!","This should never happens");
           throw new NoSuchPlayerException();
           }
         }

@@ -1,6 +1,7 @@
 package marauroa.net;
 
 import marauroa.net.*;
+import marauroa.game.*;
 import java.io.*;
 import java.lang.Byte;
 import junit.framework.*;
@@ -142,7 +143,7 @@ public class Test_MessageFactory extends TestCase
     Message msg_2=new MessageC2SLogin(null,"Test username","Test password");
     Message msg_3=new MessageC2SLogout(null);
     Message msg_4=new MessageS2CCharacterList(null,new String[0]);
-    Message msg_5=new MessageS2CChooseCharacterACK(null);
+    Message msg_5=new MessageS2CChooseCharacterACK(null, new RPObject.ID(0));
     Message msg_6=new MessageS2CChooseCharacterNACK(null);
     Message msg_7=new MessageS2CLoginACK(null);
     Message msg_8=new MessageS2CLoginNACK(null,MessageS2CLoginNACK.SERVER_IS_FULL);

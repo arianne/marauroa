@@ -1,6 +1,7 @@
 package marauroa.net;
 
 import marauroa.net.*;
+import marauroa.game.*;
 import java.io.*;
 import java.lang.Byte;
 import junit.framework.*;
@@ -216,7 +217,7 @@ public class Test_Messages extends TestCase
     {
     short clientid=14324;
     
-    MessageS2CChooseCharacterACK msg=new MessageS2CChooseCharacterACK(null);
+    MessageS2CChooseCharacterACK msg=new MessageS2CChooseCharacterACK(null,new RPObject.ID(0));
     msg.setClientID(clientid);
     
     out=new ByteArrayOutputStream();

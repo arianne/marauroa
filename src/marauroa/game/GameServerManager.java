@@ -191,7 +191,7 @@ public class GameServerManager extends Thread
 	    playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
 
 	    /* Correct: Character exist */
-	    MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());
+	    MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress(),new RPObject.ID(object));
 	    msgChooseCharacterACK.setClientID(clientid);
 	    netMan.addMessage(msgChooseCharacterACK);
 	    }
