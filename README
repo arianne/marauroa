@@ -103,6 +103,7 @@ Changelog
 ---------
 0.36 
 - Database modified to stored hashed passwords
+- Fixed the two turns delay on actions
 
 0.35
 - Changed RPMap message
