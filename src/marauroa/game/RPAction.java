@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.13 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.14 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,6 +64,11 @@ public class RPAction extends Attributes
     public boolean equals(Object status)
       {
       return val==((Status)status).val;
+      }
+      
+    public int hashCode()
+      {
+      return val;
       }
     
     /** This method returns a String that represent the object

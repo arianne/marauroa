@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.37 2004/04/16 10:26:58 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.38 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,7 +186,7 @@ public class MarauroaRPZone implements RPZone
           ((RPObject)it.next()).resetAddedAndDeleted();
           }
 
-        modified=new LinkedList();
+        modified.clear();
         }
       
       return prebuildDeltaPerception;

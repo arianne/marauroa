@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.12 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.13 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.*;
 public class NetConst
   {
   /** Port that will use the server for listen to incomming packets */
-  static public int marauroa_PORT=3214;
+  static public int marauroa_PORT;
   /** Maximum size in bytes of the UDP packet. */
   final static public int UDP_PACKET_SIZE=1500;
   /** Number of the protocol version.

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.25 2004/04/15 12:08:11 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.26 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -278,6 +278,12 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
 		
     return name.equals(slot.name) && objects.equals(slot.objects);
     }
+
+  public int hashCode()
+    {
+    return name.hashCode()+objects.hashCode();
+    }   
+  
   
   public String toString()
     {

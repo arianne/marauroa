@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.18 2004/04/15 20:35:42 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.19 2004/04/16 12:23:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ class createaccount
 
   public static int createaccount(String[] args)
     {
+    /** TODO: Factorize this method */
     int i=0;
     PrintWriter out=null;
     String username=null;

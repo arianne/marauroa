@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.8 2004/03/25 22:30:53 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.9 2004/04/16 12:23:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,16 +58,7 @@ public class Configuration
       properties=new Properties();
 
       InputStream is = new FileInputStream(configurationFile);
-
-      if(is!=null)
-        {
-        properties.load(is);
-        }
-      else
-        {
-        // The configuration file is not found.
-        throw new FileNotFoundException();
-        }
+      properties.load(is);
       }
     catch(FileNotFoundException e)
       {

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.26 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.27 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -192,6 +192,11 @@ public class Attributes implements marauroa.net.Serializable
     {
     return content.equals(((Attributes)attr).content);
     }  
+    
+  public int hashCode()
+    {
+    return content.hashCode();
+    }
 	
   /** This method returns a String that represent the object
    *  @return a string representing the object.*/

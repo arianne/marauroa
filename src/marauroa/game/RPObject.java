@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.35 2004/04/12 09:26:58 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.36 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -555,6 +555,19 @@ public class RPObject extends Attributes
       return false;
       }
     }
+
+  public int hashCode()
+    {
+    try
+      {
+      return getInt("id");
+      }
+    catch(AttributeNotFoundException e)
+      {
+      return -1;
+      }
+    }
+    
   /** This class stores the basic identification for a RPObject */
   public static class ID implements marauroa.net.Serializable
     {

@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.20 2004/04/15 18:35:59 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.21 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -216,11 +216,9 @@ public final class NetworkServerManager
   class NetworkServerManagerWrite
     {
     private int last_signature;
-    private String name;
     public NetworkServerManagerWrite()
       {
       last_signature=0;
-      name="NetworkServerManagerWrite";
       }
     
     /** Method that execute the writting */

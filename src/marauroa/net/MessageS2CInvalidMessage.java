@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.1 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.2 2004/04/16 12:23:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,7 @@ public class MessageS2CInvalidMessage extends Message
     {
     super(null);
     type=TYPE_S2C_INVALIDMESSAGE;
-    reason=new String();
+    reason="";
     }
 
   /** Constructor with a TCP/IP source/destination of the message and the name
