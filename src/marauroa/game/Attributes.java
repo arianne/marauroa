@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.49 2004/11/21 14:17:31 root777 Exp $ */
+/* $Id: Attributes.java,v 1.50 2004/11/26 20:50:27 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
     {
     setRPClass(attr.rpClass);
 
-    for(Map.Entry<String,String> entry: content.entrySet())
+    for(Map.Entry<String,String> entry: attr.content.entrySet())
       {
       put(entry.getKey(),entry.getValue());
       }    
