@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.27 2004/01/07 12:44:16 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.28 2004/01/07 14:44:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,7 +70,7 @@ public class RPCode
         return RPAction.Fail("Failed because player does not own that object");
         }
 
-      if(player.get("status").equals("onArena"))
+      if(player.has("fighting"))
         {
         /** Failed because player is already fighting */
         return RPAction.Fail("Failed because player is already fighting");
@@ -80,7 +80,7 @@ public class RPCode
 
       if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
         {
-        player.put("status","onArena");
+        player.put("fighting","");
         arena.getSlot("gladiators").add(gladiator);
         }
       else
@@ -445,6 +445,8 @@ public class RPCode
           arena.remove("fame");
           arena.remove("timeout");
           arena.remove("winner");
+          
+          SetUpNextCombat();
           }
         else
           {
@@ -464,8 +466,17 @@ public class RPCode
     }
   
   /** This method take care of initializing the arena for the next combat */
-  private static void SetUpNextCombat()
+  private static void SetUpNextCombat() throws Exception
     {
+    marauroad.trace("RPCode::SetUpNextCombat",">");
+    
+    try
+      {
+      }
+    finally
+      {
+      marauroad.trace("RPCode::SetUpNextCombat","<");
+      }
     }
   }
   

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.13 2004/01/02 00:02:03 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.14 2004/01/07 14:44:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.game;
 
 import java.util.*;
+import java.io.*;
 import marauroa.*;
 
 public class MarauroaRPZone implements RPZone
@@ -122,6 +123,17 @@ public class MarauroaRPZone implements RPZone
       p.modifiedList=listObjects;
       
       return p;
+      }
+    }
+  
+  public void print(PrintStream out)
+    {
+    Iterator it=iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      out.println(object);
       }
     }
   
