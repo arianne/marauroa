@@ -5,37 +5,30 @@
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
   
-  <property name="junitlib" value="${libdir}/junit.jar"/>
-  <property name="connectorJ" value="${libdir}/mysql-connector-java-3.1.1-alpha-bin.jar"/>
-  <property name="3dloaders" value="${libdir}/StarfireExt.jar:${libdir}/quakeloaders.jar"/>
-  <property name="jorbis" value="${libdir}/jogg-0.0.5.jar:${libdir}/jorbis-0.0.12.jar"/>
-  <property name="jython" value="${libdir}/jython.jar"/>
-  <property name="classpath" value="${build};${junitlib};${connectorJ}:${jorbis}:${3dloaders}:${jython}"/>
+  <property name="connectorJ" value="${lib}/mysql-connector-java-3.0.15-ga-bin.jar"/>
+  <property name="jython" value="${lib}/jython.jar"/>
+  <property name="classpath" value="${build};${connectorJ};${jython}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
 
-  <property name="build.mapacman"       value="true"/>
-  <property name="build.stendhal"       value="true"/>
-  
   <target name="clean">
     <delete dir="${build}"/>
-    <delete dir="${lib}"/>
     <delete dir="${docs}"/>
   </target>
 
-  <target name="init" depends="clean">
+  <target name="init">
     <mkdir dir="${build}" />
     <mkdir dir="${lib}" />
     <mkdir dir="${docs}" />
   </target>
 
   <target name="installation" depends="init">
-    <copy todir="${build}" file="${src}/marauroa_init.sql"/>
-    <copy todir="${build}" file="${src}/marauroa_drop.sql"/>
+    <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
+    <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
   </target>
 
-  <target name="compile_marauroa" depends="init">
+  <target name="compile" depends="installation">
     <replaceregexp file="${src}/marauroa/server/marauroad.java"
                    match="final private static String VERSION=&quot;.*&quot;;"
                    replace="final private static String VERSION=&quot;${version}&quot;;"
@@ -43,39 +36,13 @@
     <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/marauroa/**">
       <classpath>
         <pathelement path="${classpath}"/>
-      </classpath>
+      </classpath>    
     </javac>
   </target>
 
-  <target name="compile_mapacman" depends="compile_marauroa" if="build.mapacman">
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/mapacman/**">
-      <classpath>
-        <pathelement path="${classpath}"/>
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="compile_stendhal" depends="compile_marauroa" if="build.stendhal">
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/stendhal/**">
-      <classpath>
-        <pathelement path="${classpath}"/>
-      </classpath>
-    </javac>
-  </target>
-
-
-  <target name="compile" 
-    depends="init,installation,compile_marauroa,compile_mapacman,compile_stendhal">
-  </target>
-  
   <target name="jar" depends="compile">
-    <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
-
-    <copy todir="${lib}" file="${src}/mapacman/mapacman_script.py"/>
-    <copy todir="${lib}" file="${src}/mapacman/map_definition.txt"/>
-    <copy todir="${lib}" file="${src}/mapacman/mapacman.ini"/>
-    
-    <copy todir="${lib}" file="${src}/marauroa.ini"/>
+    <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>    
+    <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
   </target>
   
   <target name="docs" depends="compile">

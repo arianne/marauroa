@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.2 2005/02/19 11:44:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,7 +66,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
   private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
     this.connInfo=connInfo;
-    runDBScript("marauroa_init.sql");
+    runDBScript("marauroa/server/marauroa_init.sql");
     }
   
   private static IPlayerDatabase resetDatabaseConnection() throws Exception
@@ -809,7 +809,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Logger.trace("JDBCPlayerDatabase::reInitDB",">");
     try
       {
-      return (runDBScript("marauroa_drop.sql") && runDBScript("marauroa_init.sql"));
+      return (runDBScript("marauroa/server/marauroa_drop.sql") && runDBScript("marauroa/server/marauroa_init.sql"));
       }
     catch(GenericDatabaseException e)
       {
