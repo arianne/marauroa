@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.2 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.3 2004/11/20 20:06:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,8 +45,14 @@ public class RPWorld
     {
     return (IRPZone)zones.get(new IRPZone.ID(objectid.getZoneID()));
     }
+  
+  public void add(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
+    {
+    IRPZone zone=assignRPObjectID(object);
+    zone.add(object);
+    }
     
-  public void assignRPObjectID(RPObject object) throws NoRPZoneException
+  private IRPZone assignRPObjectID(RPObject object) throws NoRPZoneException
     {
     try
       {
@@ -54,7 +60,7 @@ public class RPWorld
         {
         IRPZone zone=(IRPZone)zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
-        return;
+        return zone;
         }        
       }
     catch(Exception e)
@@ -66,6 +72,7 @@ public class RPWorld
   
   public void changeZone(IRPZone.ID oldzone, IRPZone.ID newzone, RPObject object)
     {
+    /* TODO: Do this, lazy guy */
     }  
   
   public void nextTurn()

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.49 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.50 2004/11/20 20:06:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -601,7 +601,7 @@ public class RPObject extends Attributes
     public ID(RPObject attr) throws AttributeNotFoundException
       {
       id=attr.getInt("id");
-      id=attr.getInt("zoneid");
+      zoneid=attr.get("zoneid");
       }
 		
     /** Constructor
@@ -609,7 +609,7 @@ public class RPObject extends Attributes
     public ID(RPAction attr) throws AttributeNotFoundException
       {
       id=attr.getInt("source_id");
-      id=attr.getInt("zoneid");
+      zoneid=attr.get("zoneid");
       }
 
     public ID(int oid,IRPZone.ID zid)
