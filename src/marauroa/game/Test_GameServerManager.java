@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.21 2004/08/29 11:07:42 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.22 2004/11/26 22:38:45 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,6 +59,7 @@ public class Test_GameServerManager extends TestCase
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");
+      SonGoku.put("zoneid","somewhere");
       SonGoku.put("name","Son Goku");
       playerDatabase.addCharacter(trans,"Test Player", "Son Goku",SonGoku);
       }
