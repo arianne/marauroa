@@ -1,4 +1,4 @@
-/* $Id: the1001createaccount.java,v 1.2 2004/04/26 15:22:42 arianne_rpg Exp $ */
+/* $Id: the1001createaccount.java,v 1.1 2004/04/26 15:18:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,7 @@ public class the1001createaccount extends marauroa.createaccount
   {
   public static void main(String[] args)
     {
-    the1001createaccount instance=new the1001createaccount();
-    System.exit(instance.run(args));
+    execute(new the1001createaccount(),args);
     }
   
   public the1001createaccount()
