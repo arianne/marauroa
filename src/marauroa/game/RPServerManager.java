@@ -6,26 +6,43 @@ import java.io.*;
 import marauroa.net.*;
 import marauroa.*;
 
-
+/** This class is responsible for adding actions to scheduler, and to build and 
+ *  sent perceptions */
 public class RPServerManager extends Thread
-{
+  {
+  /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
-  private RPScheduler scheduler;
-  private RPRuleProcessor ruleProcessor;
-  private RPZone zone;
+  /** The time elapsed between 2 turns. */
   private long turnDuration;
   
-  public RPServerManager()
-  {
+  /** The scheduler needed to organize actions */
+  private RPScheduler scheduler;
+  /** The ruleProcessor that the scheduler will use to execute the actions */
+  private RPRuleProcessor ruleProcessor;
+  /** The place where the objects are stored */
+  private RPZone zone;
+  
+  /** The networkServerManager so that we can send perceptions */
+  private NetworkServerManager netMan;
+  /** The PlayerEntryContainer so that we know where to send perceptions */
+  private PlayerEntryContainer playerContainer;
+  
+  
+  /** Constructor 
+   *  @param netMan the NetworkServerManager so that we can send message */
+  public RPServerManager(NetworkServerManager netMan)
+    {
     super("RPServerManager");
     
     marauroad.trace("RPServerManager",">");
-    
-    keepRunning=true;
-    scheduler=new RPScheduler();
-    
+   
     try
-    {
+      {
+      keepRunning=true;
+      scheduler=new RPScheduler();
+      playerContainer=PlayerEntryContainer.getContainer();    
+      this.netMan=netMan;
+      
       Configuration conf=Configuration.getConfiguration();
       Class zoneClass=Class.forName(conf.get("rp_RPZoneClass"));
       zone=(RPZone)zoneClass.newInstance();
@@ -34,27 +51,20 @@ public class RPServerManager extends Thread
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
       
-      // NOTE: ( miguel: ) IMO We should avoid as much as possible optional components.
-      try
-      {
-        String duration =conf.get("rp_turnDuration");
-        turnDuration = Long.parseLong(duration);
+      String duration =conf.get("rp_turnDuration");
+      turnDuration = Long.parseLong(duration);
       }
-      catch(Throwable e)
-      {
-        turnDuration = 60000;
-        marauroad.trace("RPServerManager","D","Turn duration set to default("+turnDuration+")");
-      }
-    }
     catch(Exception e)
-    {
+      {
       marauroad.trace("RPServerManager","X",e.getMessage());
       marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone and RPRuleProcessor instances");
       System.exit(-1);
+      }
+    finally
+      {    
+      marauroad.trace("RPServerManager","<");
+      }
     }
-    
-    marauroad.trace("RPServerManager","<");
-  }
   
   public void finish()
   {

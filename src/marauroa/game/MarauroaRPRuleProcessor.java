@@ -21,6 +21,10 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     {
     this.zone=zone;
     }
+
+  public void approvedActions(RPActionList actionList)
+    {
+    }
   
   public RPAction.Status execute(RPObject.ID id, RPAction list)
     {

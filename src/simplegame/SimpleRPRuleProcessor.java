@@ -45,6 +45,10 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("SimpleRPRuleProcessor::setContext","<");
   }
   
+  public void approvedActions(RPActionList actionList)
+    {
+    }
+
   public RPAction.Status execute(RPObject.ID id, RPAction action)
   {
     marauroad.trace("SimpleRPRuleProcessor::execute",">");

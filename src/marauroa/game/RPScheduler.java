@@ -81,6 +81,8 @@ public class RPScheduler
       
         RPObject.ID id=(RPObject.ID)val.getKey();
         RPActionList list=(RPActionList)val.getValue();
+
+        ruleProcessor.approvedActions(list);
       
         Iterator action_it=list.iterator();
         while(action_it.hasNext())
@@ -106,11 +108,13 @@ public class RPScheduler
       }
     }
   
+  /** This method change the turn and delete all the actions in the actual turn */
   public synchronized void nextTurn()
     {
     marauroad.trace("RPScheduler::nextTurn",">");
     
     ++turn;
+    actualTurn.clear();
     actualTurn=nextTurn;
     nextTurn=new HashMap();
     
