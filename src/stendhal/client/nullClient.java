@@ -75,7 +75,7 @@ public class nullClient extends Thread
 
       msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
-      while(recieved!=5)
+      while(recieved!=4)
         {
         Message msg=null;
 
@@ -128,35 +128,19 @@ public class nullClient extends Thread
           }
         });
         
-
-      boolean cond=true;
-      
-      for(int i=0; i<5;i++)  
-      //while(cond)
+      for(int i=0;i<5;i++)  
         {
         Message msg=null;
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CPerception)
           {
+          System.out.println("Sending Perception ACK");
           MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
           reply.setClientID(clientid);
           netMan.addMessage(reply);
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
           handler.apply(msgPer,world_objects);
-          
-          if(synced)
-            {
-            }
-          else
-            {
-            System.out.println("Out of sync");
-            System.out.println(msgPer);
-            
-            MessageC2SOutOfSync mes=new MessageC2SOutOfSync(address);
-            mes.setClientID(clientid);
-            netMan.addMessage(mes);
-            }
           }
         else if(msg instanceof MessageS2CTransferREQ)        
           {

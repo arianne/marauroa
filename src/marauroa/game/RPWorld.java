@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.5 2004/11/22 17:07:05 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.6 2004/11/22 19:52:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.util.*;
 public class RPWorld 
   {
   HashMap<IRPZone.ID,IRPZone> zones;
+  PlayerEntryContainer playerContainer;
     
   public RPWorld()
     {
@@ -29,6 +30,11 @@ public class RPWorld
   
   public void onFinish() throws Exception
     {
+    }
+  
+  public void setPlayerContainer(PlayerEntryContainer playerContainer)
+    {
+    this.playerContainer=playerContainer;
     }
   
   public void addRPZone(IRPZone zone)
@@ -57,6 +63,8 @@ public class RPWorld
         IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
         zone.add(object);
+        
+        playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
 
         System.out.println(object);
         }        

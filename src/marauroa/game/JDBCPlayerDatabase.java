@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.55 2004/11/20 21:48:42 root777 Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.56 2004/11/22 19:52:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1122,7 +1122,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       if(hasRPObject(trans,id))
         {
-        deleteRPObject(trans,id);
+        deleteRPObject(connection,id);
         }
       else
         {
@@ -1145,7 +1145,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Statement stmt = connection.createStatement();
     String query=null;
     
-    query = "select id from rpobject,rpslot where object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
+    query = "select rpslot.object_id from rpobject,rpslot where rpobject.object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
     marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
     
     ResultSet result = stmt.executeQuery(query);

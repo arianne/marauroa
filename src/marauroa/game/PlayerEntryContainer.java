@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.41 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.42 2004/11/22 19:52:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -908,6 +908,36 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::getRPObjectID","<");
+      }
+    }
+
+  /** This method set the RPObject.ID of the object the player whose clientid is clientid owns.
+   *  @param clientid the runtime id of the player
+   *  @param id the RPObject.ID id of the player
+   *   
+   *  @throws NoSuchClientIDException if clientid is not found
+   *  @throws NoSuchCharacterException if character is not found
+   *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
+  public void setRPObjectID(int clientid, RPObject.ID id) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
+    {
+    marauroad.trace("PlayerEntryContainer::setRPObjectID",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+
+        entry.characterid=id;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::setRPObjectID","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::setRPObjectID","<");
       }
     }
 

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.114 2004/11/21 14:17:31 root777 Exp $ */
+/* $Id: RPServerManager.java,v 1.115 2004/11/22 19:52:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,6 +81,7 @@ public class RPServerManager extends Thread
       Configuration conf=Configuration.getConfiguration();
       Class worldClass=Class.forName(conf.get("rp_RPWorldClass"));
       world=(RPWorld)worldClass.newInstance();      
+      world.setPlayerContainer(playerContainer);
       world.onInit();      
       
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));

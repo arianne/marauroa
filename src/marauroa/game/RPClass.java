@@ -113,6 +113,8 @@ public class RPClass implements Serializable
     attributes=new HashMap<String,AttributeDesc>();
 
     add("id",INT);
+    add("clientid",INT,HIDDEN);
+    add("zoneid",STRING);
     add("type",STRING);    
     
     rpClassList.put(type,this);
