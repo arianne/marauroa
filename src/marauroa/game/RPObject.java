@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.36 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.37 2004/04/17 10:02:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,8 @@ public class RPObject extends Attributes
   
   public void resetAddedAndDeleted()
     {
-    super.resetAddedAndDeletedAttributes();
+    resetAddedAndDeletedAttributes();
+    
     resetAddedAndDeletedRPSlot();
     }
 

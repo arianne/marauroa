@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.29 2004/04/14 22:41:11 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.30 2004/04/17 10:02:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ public class PlayerEntryContainer
     
     /** A counter to detect dropped packets or bad order at client side */
     public int perception_counter;
+    public RPObject perception_previousRPObject;
     }
   
 
@@ -885,6 +886,43 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::getPerceptionTimestamp","<");
+      }
+    }
+
+  public boolean isPerceptionModifiedRPObject(int clientid,RPObject perception_actualRPObject) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        RPObject pre=entry.perception_previousRPObject;
+        if(pre==null)
+          {
+          entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
+          return false;          
+          }          
+        
+        if(pre.equals(perception_actualRPObject))
+          {
+          return true;
+          }
+        else
+          {
+          entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
+          return false;          
+          }         
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::isPerceptionModifiedRPObject","<");
       }
     }
   

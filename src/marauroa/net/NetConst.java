@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.13 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.14 2004/04/17 10:02:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,8 +33,9 @@ public class NetConst
    *  7 - Modified Perception 
    *      Added Invalid Version message 
    *  8 - Added Delta-delta support
-   *  9 - Added Timestamp to the Perception message  */
-  final static public byte NETWORK_PROTOCOL_VERSION=9;
+   *  9 - Added Timestamp to the Perception message  
+   * 10 - Added conditional myRPObject send to Perception */
+  final static public byte NETWORK_PROTOCOL_VERSION=10;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   static
     {

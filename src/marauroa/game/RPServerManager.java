@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.64 2004/04/16 10:26:59 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.65 2004/04/17 10:02:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,12 +193,15 @@ class RPServerManager extends Thread
       marauroad.trace("RPServerManager::removeRPObject","<");
       }
     }
+    
   private int deltaPerceptionSend=0;
+  
   private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
 
     List playersToRemove=new LinkedList();
+    List playersToUpdate=new LinkedList();
     
     try
       {
@@ -232,8 +235,16 @@ class RPServerManager extends Thread
             int timestamp=playerContainer.getPerceptionTimestamp(clientid);
             
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
-
-            messages2cPerception.setMyRPObject(object);
+            
+            if(playerContainer.isPerceptionModifiedRPObject(clientid,object))
+              {
+              messages2cPerception.setMyRPObject(object);
+              }
+            else
+              {
+              messages2cPerception.setMyRPObject(null);
+              }
+              
             messages2cPerception.setClientID(clientid);
             messages2cPerception.setTimestamp(timestamp);
             
@@ -242,14 +253,7 @@ class RPServerManager extends Thread
             /** We check if we need to update player in the database */
             if(playerContainer.shouldStoredUpdate(clientid))
               {
-              try
-                {
-                playerContainer.setRPObject(clientid,object);
-                }
-              catch(Exception e)
-                {
-                marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
-                }
+              playersToUpdate.add(new Integer(clientid));
               }
             }
             
@@ -267,12 +271,46 @@ class RPServerManager extends Thread
         {
         deltaPerceptionSend=0;
         }
-
+ 
       notifyTimedoutPlayers(playersToRemove);
+      notifyUpdatesOnPlayer(playersToUpdate);
       }      
     finally
       {
       marauroad.trace("RPServerManager::buildPerceptions","<");
+      }
+    }
+
+  private void notifyUpdatesOnPlayer(List playersToNotify)    
+    {
+    marauroad.trace("RPServerManager::notifyUpdatesOnPlayer",">");
+    try
+      {
+      Iterator it_notified=playersToNotify.iterator();
+
+      while(it_notified.hasNext())
+        {
+        int clientid=((Integer)it_notified.next()).intValue();
+        
+        try
+          {
+          RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
+          playerContainer.setRPObject(clientid,object);
+          }
+        catch(Exception e)
+          {
+          marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X","Can't update the player("+clientid+")");
+          marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X",e.getMessage());
+          }
+        }
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","X",e.getMessage());
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::notifyUpdatesOnPlayer","<");
       }
     }
 

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.28 2004/04/14 10:13:16 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.29 2004/04/17 10:02:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ public class MessageS2CPerception extends Message
   private List modifiedAddedAttribsRPObjects;
   private List modifiedDeletedAttribsRPObjects;
   private List deletedRPObjects;
-  
+    
   private RPObject myRPObject;
   
   /** Constructor for allowing creation of an empty message */
@@ -187,8 +187,17 @@ public class MessageS2CPerception extends Message
       }
     
     marauroad.trace("MessageS2CPerception::writeObject","D",perception_string.toString());
-
-    myRPObject.writeObject(ser,true);
+    
+    if(myRPObject==null)
+      {
+      ser.write((byte)0);
+      }
+    else
+      {
+      ser.write((byte)1);
+      myRPObject.writeObject(ser,true);
+      }
+      
     out_stream.close();
 
     byte [] array = compressed_array.toByteArray();
@@ -262,7 +271,15 @@ public class MessageS2CPerception extends Message
       }
       
     marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
-    myRPObject=(RPObject)ser.readObject(myRPObject);
+    byte modifiedMyRPObject=ser.readByte();
+    if(modifiedMyRPObject==1)
+      {
+      myRPObject=(RPObject)ser.readObject(myRPObject);
+      }
+    else
+      {
+      myRPObject=null;
+      }
     }
     
   /** This class just counts the bytes written into underlaying outputstream */

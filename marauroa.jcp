@@ -17,7 +17,7 @@ COMPILER := "<Default>"
 LABEL := "Root"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\testClient.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\nullClient.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\JStatistics.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\Statistics.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\TimeoutConf.java" #[EndFile]

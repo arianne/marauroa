@@ -6,23 +6,30 @@ import java.util.*;
 import marauroa.net.*;
 import marauroa.game.*;
 
-class TestClient
+class TestClient extends Thread
   {
-  public TestClient()
+  private String username;
+  private String password;
+  private String character;
+  
+  public TestClient(String u, String p, String c)
     {
+    username=u;
+    password=p;
+    character=c;
     }
    
   public void run()
     {
     try
       {
-      System.setOut(new PrintStream(new FileOutputStream("testClient.txt")));
+      PrintStream out=new PrintStream(new FileOutputStream(getName()+"_testClient.txt"));
       
       Map world_objects=new LinkedHashMap();
       NetworkClientManager netMan=new NetworkClientManager("127.0.0.1");
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
 
-      netMan.addMessage(new MessageC2SLogin(address,"prueba","qwerty"));
+      netMan.addMessage(new MessageC2SLogin(address,username,password));
 
       int clientid=-1;
       int recieved=0;
@@ -51,7 +58,7 @@ class TestClient
           }
         }
 
-      Message msgCC=new MessageC2SChooseCharacter(address,"prueba");
+      Message msgCC=new MessageC2SChooseCharacter(address,character);
 
       msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
@@ -96,30 +103,30 @@ class TestClient
             }
           else if(outofsync==true)
             {
-            System.err.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+            System.out.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
             }
           
           if(outofsync==false)
             {
             if(previous_timestamp+1!=msgPer.getTimestamp())
               {
-              System.err.println("We are out of sync. Waiting for sync perception");
-              System.err.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getTimestamp());
+              System.out.println("We are out of sync. Waiting for sync perception");
+              System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getTimestamp());
               outofsync=true;
               /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */                
               }
             else
               {
               previous_timestamp=msgPer.getTimestamp();
-              System.err.println("Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
-              System.out.println(msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              System.out.println("Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
+              out.println(msgPer.getTypePerception()+" - "+msgPer.getTimestamp());
           
               Iterator it;
               it=msgPer.getDeletedRPObjects().iterator();
               while(it.hasNext())
                 {
                 RPObject object=(RPObject)it.next();
-                System.out.println("D: "+object);
+                out.println("D: "+object);
                 world_objects.remove(object.get("id"));            
                 }
               
@@ -127,7 +134,7 @@ class TestClient
               while(it.hasNext())
                 {
                 RPObject object=(RPObject)it.next();
-                System.out.println("MD: "+object);
+                out.println("MD: "+object);
                 RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
                 w_object.applyDifferences(null,object);        
                 }
@@ -136,7 +143,7 @@ class TestClient
               while(it.hasNext())
                 {
                 RPObject object=(RPObject)it.next();
-                System.out.println("MA: "+object);
+                out.println("MA: "+object);
                 RPObject w_object=(RPObject)world_objects.get(object.get("id"));    
                 w_object.applyDifferences(object,null);        
                 }
@@ -145,8 +152,13 @@ class TestClient
               while(it.hasNext())
                 {
                 RPObject object=(RPObject)it.next();
-                System.out.println("A: "+object);
+                out.println("A: "+object);
                 world_objects.put(object.get("id"),object);            
+                }
+              
+              if(msgPer.getMyRPObject()!=null)
+                {
+                world_objects.put(msgPer.getMyRPObject().get("id"),msgPer.getMyRPObject());
                 }   
               }       
             }
@@ -160,8 +172,8 @@ class TestClient
           RPObject object=(RPObject)world_it.next();
           world.append("  "+object.toString()+"\n");
           }
-        System.out.println(world.toString());
-        System.out.flush();
+        out.println(world.toString());
+        out.flush();
         }
           
       Message msgL=new MessageC2SLogout(address);
@@ -196,8 +208,19 @@ class TestClient
     {
     try
       {
-      TestClient test=new TestClient();
-      test.run();
+      int num=5;
+      TestClient test[]=new TestClient[num];
+      
+      test[0]=new TestClient("miguel","qwerty","miguel");
+      test[1]=new TestClient("prueba","qwerty","prueba");
+      test[2]=new TestClient("bot_1","nopass","bot_1");
+      test[3]=new TestClient("bot_2","nopass","bot_2");
+      test[4]=new TestClient("bot_3","nopass","bot_3");
+      
+      for(int i=0;i<num;++i)
+        {
+        test[i].start();
+        }
       }
     catch(Exception e)
       {
