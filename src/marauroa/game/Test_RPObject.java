@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.19 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.20 2004/11/26 21:18:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ public class Test_RPObject extends TestCase
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");
+      SonGoku.put("zoneid","somewhere");
       SonGoku.put("name","Son Goku");
       assertTrue(SonGoku.has("id"));
 
@@ -54,7 +55,7 @@ public class Test_RPObject extends TestCase
       assertEquals(SonGoku.getSlot("left_hand"),slot);
       
       RPObject.ID id=new RPObject.ID(SonGoku);
-      RPObject.ID id_1=new RPObject.ID(1,"");
+      RPObject.ID id_1=new RPObject.ID(1,"somewhere");
 
       assertEquals(id,id_1);
       }
@@ -144,11 +145,11 @@ public class Test_RPObject extends TestCase
       RPObject example=new RPObject();
 
       example.put("id",10);
+      example.put("zoneid","somewhere");
       example.put("type","gladiator");
       example.put("name","Stupid random name");
-      
       RPObject example_mod=new RPObject();
-
+      
       example_mod.copy(example);
       assertTrue(example.equals(example_mod));
       example.remove("name");
@@ -170,6 +171,7 @@ public class Test_RPObject extends TestCase
       {
       RPObject player=new RPObject();
       player.put("id",1);
+      player.put("zoneid","somewhere");
       player.put("type","player");
       player.put("name","A nice name");
       player.put("fame",1231);
@@ -178,6 +180,7 @@ public class Test_RPObject extends TestCase
       RPObject example1=new RPObject();
 
       example1.put("id",10);
+      example1.put("zoneid","somewhere");
       example1.put("type","gladiator");
       example1.put("name","Stupid random name");
       example1.put("look","database_look");
@@ -190,6 +193,7 @@ public class Test_RPObject extends TestCase
       RPObject item=new RPObject();
 
       item.put("id",11);
+      item.put("zoneid","somewhere");
       item.put("type","shield");
       item.put("def",10);
       item.put("price",50);      
@@ -197,6 +201,7 @@ public class Test_RPObject extends TestCase
       example1.addSlot(new RPSlot("r_hand"));
       item=new RPObject();
       item.put("id",12);
+      item.put("zoneid","somewhere");
       item.put("type","sword");
       item.put("def",0);
       item.put("price",100);
@@ -253,6 +258,7 @@ public class Test_RPObject extends TestCase
     
     RPObject item=new RPObject();
     item.put("id",21);
+    item.put("zoneid","somewhere");
     item.put("type","coin");
     item.put("val",10);
     
@@ -322,7 +328,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(2,added.size());
+      assertEquals(2+1,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -369,7 +375,7 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(3,added.size());
+      assertEquals(2+2,added.size());
       assertEquals(0,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
@@ -417,7 +423,7 @@ public class Test_RPObject extends TestCase
       player.getDifferences(added,deleted);   
       
       assertEquals(0,added.size());
-      assertEquals(2,deleted.size());
+      assertEquals(2+1,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
@@ -465,8 +471,8 @@ public class Test_RPObject extends TestCase
 
       player.getDifferences(added,deleted);   
       
-      assertEquals(4,added.size());
-      assertEquals(2,deleted.size());
+      assertEquals(2+2+1,added.size());
+      assertEquals(2+1,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  

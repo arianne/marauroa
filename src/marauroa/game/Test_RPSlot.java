@@ -1,4 +1,4 @@
-/* $Id: Test_RPSlot.java,v 1.6 2004/09/05 09:09:24 arianne_rpg Exp $ */
+/* $Id: Test_RPSlot.java,v 1.7 2004/11/26 21:20:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,6 +33,7 @@ public class Test_RPSlot extends TestCase
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");
+      SonGoku.put("zoneid","somewhere");
       SonGoku.put("name","Son Goku");
 
       RPSlot slot=new RPSlot();
@@ -113,6 +114,7 @@ public class Test_RPSlot extends TestCase
       RPObject SonGoku=new RPObject();
 
       SonGoku.put("id","1");
+      SonGoku.put("zoneid","somewhere");
       SonGoku.put("name","Son Goku");
 
       RPSlot slot=new RPSlot();

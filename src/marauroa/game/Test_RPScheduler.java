@@ -1,4 +1,4 @@
-/* $Id: Test_RPScheduler.java,v 1.20 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: Test_RPScheduler.java,v 1.21 2004/11/26 21:20:42 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -88,6 +88,7 @@ public class Test_RPScheduler extends TestCase
 
       action.put("source_id","10");
       action.put("type","testing");
+      action.put("zoneid","somewhere");
       sched.addRPAction(action);
       
       FakeRuleProcessor fake=new FakeRuleProcessor();
@@ -124,6 +125,7 @@ public class Test_RPScheduler extends TestCase
       RPAction action=new RPAction();
 
       action.put("type","testing");
+      action.put("zoneid","somewhere");
       sched.addRPAction(action);
       fail("Should drop exception");
       }
