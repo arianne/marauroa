@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.49 2004/04/28 15:29:25 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.50 2004/04/28 16:52:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -231,6 +231,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         }
         
       RPCode.AddPlayer(object);
+      zone.add(object);
       return true;
       }
     catch(Exception e)

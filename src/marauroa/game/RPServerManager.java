@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.72 2004/04/28 15:26:17 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.73 2004/04/28 16:52:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -230,7 +230,7 @@ class RPServerManager extends Thread
             marauroad.trace("RPServerManager::buildPerceptions","D","Adding object("+object.get("id")+") from incubator");
             if(!ruleProcessor.onInit(object))
               {
-              marauroad.trace("RPServerManager::buildPerceptions","D","Can't add to game "+object.toString());
+              marauroad.trace("RPServerManager::buildPerceptions","W","Can't add to game "+object.toString());
               }
             }
           catch(Exception e) 
