@@ -6,6 +6,12 @@ import java.util.*;
 
 import marauroa.game.*;
 
+/** This message indicate the client the objects that the server has determined that
+ *  this client is able to see.
+ *
+ *  @see marauroa.net.Message
+ *  @see marauroa.game.RPZone
+ */
 public class MessageS2CPerception extends Message
   {  
   private List modifiedRPObjects;
@@ -22,8 +28,8 @@ public class MessageS2CPerception extends Message
   /** Constructor with a TCP/IP source/destination of the message and the name
    *  of the choosen character.
    *  @param source The TCP/IP address associated to this message
-   *  @param 
-   *  @see marauroa.net.MessageS2CCharacters
+   *  @param modifiedRPObjects the list of object that has been modified.
+   *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
   public MessageS2CPerception(InetSocketAddress source,List modifiedRPObjects, List deletedRPObjects)
     {    
@@ -34,7 +40,8 @@ public class MessageS2CPerception extends Message
     this.deletedRPObjects=deletedRPObjects;
     }  
   
-
+  /** This method returns a String that represent the object 
+   *  @return a string representing the object.*/
   public String toString()
     {
     return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: (TODO)";
