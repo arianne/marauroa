@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.34 2004/01/08 13:28:23 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.35 2004/01/08 13:31:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,6 +104,13 @@ public class RPCode
         player.put("choose",gladiator_id.getObjectID());
         arena.getSlot("gladiators").add(gladiator);
         playersFighting.add(player);
+
+        /** We check now if Arena is complete */
+        if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
+          {
+          marauroad.trace("RPCode::RequestFight","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
+          arena.put("status","fighting");
+          }        
         }
       else
         {
@@ -114,13 +121,6 @@ public class RPCode
         playersWaiting.add(player);
         }
       
-      /** We check now if Arena is complete */
-      if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
-        {
-        marauroad.trace("RPCode::RequestFight","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
-        arena.put("status","fighting");
-        }
-        
       zone.modify(player);      
       zone.modify(arena);      
       

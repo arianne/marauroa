@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.19 2004/01/07 14:44:38 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.20 2004/01/08 13:31:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,7 +186,7 @@ public class Test_RPCode extends TestCase
       
         assertFalse(gladiator.has("?damage"));
         assertTrue(newgladiator.has("?damage"));
-        assertTrue(newgladiator.getInt("?damage")<newgladiator.getInt("attack"));
+        assertTrue(newgladiator.getInt("?damage")<=newgladiator.getInt("attack"));
         }
 
       /** We make sure that the combat has ends */
@@ -258,7 +258,7 @@ public class Test_RPCode extends TestCase
       
         assertFalse(gladiator.has("?damage"));
         assertTrue(newgladiator.has("?damage"));
-        assertTrue(newgladiator.getInt("?damage")<newgladiator.getInt("attack"));
+        assertTrue(newgladiator.getInt("?damage")<=newgladiator.getInt("attack"));
         }
 
       /** We make sure that the combat has ends */
