@@ -25,6 +25,7 @@ public class RunTests
     {
     TestSuite suite= new TestSuite("All marauroa Tests");
     
+    suite.addTest(new TestSuite(marauroa.Test_RWLock.class));
     suite.addTest(new TestSuite(marauroa.Test_Configuration.class));
     
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
