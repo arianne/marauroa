@@ -18,9 +18,10 @@
   <property name="docs" value="javadocs"/>
 
   <!-- set hier what should be build -->
-  <property name="build.the1001.client" value="false"/>
-  <property name="build.the1001.server" value="true"/> 
-  <property name="build.mapacman" value="true"/>
+  
+  <!-- <property name="build.the1001.client" value="true"/> -->
+  <!-- <property name="build.the1001.server" value="true"/> -->
+  <property name="build.mapacman"       value="true"/>
 
   <target name="init">
     <mkdir dir="${build}" />

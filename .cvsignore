@@ -1,7 +1,13 @@
 marauroa.jcp
-marauroa.jcwbuild
+marauroa.jcw
 classes
 javadocs
 lib
 *.class
+.cvsignore
+tomcatTasks.properties
+DocGen.java
 build
+build-m.xml
+tomcat.properties
+web.xml
