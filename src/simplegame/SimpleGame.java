@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.40 2003/12/21 09:12:20 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.41 2003/12/21 09:12:47 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -259,7 +259,7 @@ public class SimpleGame
 	}
 	
 	/**
-	 * causes the calling thread to sleep the specified amount of <br>seconds</br>
+	 * causes the calling thread to sleep the specified amount of <b>seconds</b>
 	 * @param timeout the amount of seconds to sleep
 	 **/
 	private static void sleep(long timeout)
