@@ -8,14 +8,8 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\game\\PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\RPServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\Test_PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "C:\\j2sdk1.4.2\\docs\\api\\java\\util\\HashMap.html@" #[EndFile]
-#[BeginFile]SOURCE := "\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
 
 ! Start Breakpoint Structure
+#[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]
 
