@@ -125,6 +125,8 @@ public class nullClient extends Thread
   
   public nullClient(String u, String p, String c) throws SocketException
     {
+    Configuration.setConfigurationFile("mapacman.ini");
+    
     username=u;
     password=p;
     character=c;
