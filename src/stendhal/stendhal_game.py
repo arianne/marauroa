@@ -22,30 +22,30 @@ from marauroa import *
 import java.util.LinkedList
 
 class StendhalRP(PythonRP):
-	def __init__(self, world):
-    	self.world=world
+    def __init__(self, world):
+        self.world=world
 
-	def execute(self, id, action):
-    	return 0
+    def execute(self, id, action):
+        return 0
 
-	def nextTurn(self):
-    	pass
+    def nextTurn(self):
+        pass
 
-	def onInit(self, object):
-		object.put("zoneid","village");
-		self.world.add(object)
-		return 1
+    def onInit(self, object):
+        object.put("zoneid","village");
+        self.world.add(object)
+        return 1
 
-	def onExit(self, objectid):
-		return 0
+    def onExit(self, objectid):
+        return 0
 
-	def onTimeout(self, objectid):
-		return 0
+    def onTimeout(self, objectid):
+        return 0
 
 
 class StendhalWorld(PythonWorld):
     def __init__(self, world):
-    	self.world=world
+        self.world=world
         self.createRPClasses()
 
     def createRPClasses(self):
@@ -72,10 +72,10 @@ class StendhalWorld(PythonWorld):
         objclass.add("zoneid",SHORT_STRING,HIDDEN)
       
     def createRPWorld(self):
-    	village=marauroa.game.MarauroaRPZone("village")
-    	self.world.addRPZone(village)
-    	
-    	
+        village=marauroa.game.MarauroaRPZone("village")
+        self.world.addRPZone(village)
+        
+        
     
     def onInit(self):
         pass
