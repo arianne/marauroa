@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.17 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.18 2004/05/04 16:23:42 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,8 +51,8 @@ public class NetConst
       }
     catch(Exception e)
       {
-      marauroad.trace("NetConst::(static)","X","Using default: "+e.getMessage());
       marauroa_PORT=3214;
+      marauroad.trace("NetConst::(static)","X","Using default port "+  marauroa_PORT   +" : "+e.getMessage());
       }
     marauroad.trace("NetConst::(static)","<");
     }
