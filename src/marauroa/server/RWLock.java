@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.1 2005/01/23 21:00:45 arianne_rpg Exp $ */
+/* $Id: RWLock.java,v 1.2 2005/03/01 07:21:09 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,8 @@ package marauroa.server;
  *  and writing.*/
 public class RWLock
   {
-  private int givenLocks;
-  private int waitingWriters;
+  private volatile int givenLocks;
+  private volatile int waitingWriters;
   private Object mutex;
   
   public RWLock()
@@ -40,7 +40,7 @@ public class RWLock
         {
         while((givenLocks == -1) || (waitingWriters != 0))
           {
-          mutex.wait();
+          mutex.wait(100);
           }
         }
       catch(java.lang.InterruptedException e)
@@ -60,7 +60,7 @@ public class RWLock
         {
         while(givenLocks != 0)
           {
-          mutex.wait();
+          mutex.wait(100);
           }
         }
       catch(java.lang.InterruptedException e)
