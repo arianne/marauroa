@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.47 2004/07/12 19:33:18 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.48 2004/11/27 11:05:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -158,6 +158,8 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerString.class));
     suite.addTest(new TestSuite(marauroa.net.Test_Messages.class));
     suite.addTest(new TestSuite(marauroa.net.Test_MessageFactory.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_InetAddressMask.class));
+    suite.addTest(new TestSuite(marauroa.net.Test_PacketValidator.class));
     return suite;
     }
 
