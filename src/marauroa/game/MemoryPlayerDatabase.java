@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.10 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.11 2004/05/07 14:56:35 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -115,6 +115,19 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       marauroad.trace("MemoryPlayerDatabase::getPlayerCount","<");
       }
     }
+
+   /** This method sets the account into one of the predefined states:
+   *  active,inactive,banned
+   * @param username is the name of the player
+   * @param status   the new status of the account
+  **/
+  public void setAccountStatus(Transaction trans, String username, String status)
+    throws GenericDatabaseException
+  {
+    marauroad.trace("MemoryPlayerDatabase::setAccountStatus",">");
+    marauroad.trace("MemoryPlayerDatabase::setAccountStatus","D","Dummy method, do nothing.");
+    marauroad.trace("MemoryPlayerDatabase::setAccountStatus","<");    
+  }
   
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.

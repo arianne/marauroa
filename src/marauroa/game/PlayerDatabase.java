@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.11 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: PlayerDatabase.java,v 1.12 2004/05/07 14:56:35 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,16 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @param password is the string used to verify access.
    *  @return true if username/password is correct, false otherwise. */
   public boolean verifyAccount(Transaction trans, String username, String password) throws GenericDatabaseException;
+
+  /** This method sets the account into one of the predefined states:
+   *  active,inactive,banned
+   *  don't forget to commit the changes.
+   * @param username is the name of the player
+   * @param status   the new status of the account
+  **/
+  public void setAccountStatus(Transaction trans, String username, String status)
+    throws GenericDatabaseException;
+
   /** This method returns the number of Players that exist on database
    *  @return the number of players that exist on database */
   public int getPlayerCount(Transaction trans) throws GenericDatabaseException;

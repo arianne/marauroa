@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.35 2004/05/07 13:50:33 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.36 2004/05/07 14:56:34 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -223,7 +223,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
-        query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL)";
+        query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL,DEFAULT)";
         stmt.execute(query);
         }
       }
@@ -324,6 +324,39 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","<");
       }
     }
+
+  /** This method sets the account into one of the predefined states:
+   *  active,inactive,banned
+   *  don't forget to commit the changes.
+   * @param username is the name of the player
+   * @param status   the new status of the account 
+  **/
+  public void setAccountStatus(Transaction trans, String username, String status)
+    throws GenericDatabaseException
+  {
+    try
+    {
+      marauroad.trace("JDBCPlayerDatabase::setAccountStatus",">");
+      if(!validString(username) || !validString(status))
+      {
+        throw new SQLException("Trying to use invalid username '"+username+"' or status '"+status+"'.");
+      }
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      String query = "update player set status='"+status+"' where username like '"+username+"'";
+      marauroad.trace("JDBCPlayerDatabase::setAccountStatus","D",query);
+      stmt.executeUpdate(query);      
+    }
+    catch(SQLException sqle)
+    {
+      marauroad.trace("JDBCPlayerDatabase::setAccountStatus","X",sqle.getMessage());
+      throw new GenericDatabaseException(sqle.getMessage());
+    }			    
+    finally
+    {
+      marauroad.trace("JDBCPlayerDatabase::setAccountStatus","<");
+    }    
+  }
   
   /** This method returns true if the username/password match with any of the accounts in
    *  database or false if none of them match.
@@ -342,7 +375,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "select count(*) from  player where username like '"+username+"' and password like '"+password+"'";
+      String query = "select status from player where username like '"+username+"' and password like '"+password+"'";
       
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","D",query);
 
@@ -350,10 +383,15 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       if(result.next())
         {
-        if(result.getInt(1)!=0)
-          {
+	String account_status = result.getString(1);
+        if("active".equals(account_status))
+          {	  
           return true;
           }
+	  else
+	  {
+	  marauroad.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
+	  }
         }
       return false;
       }
