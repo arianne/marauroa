@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.38 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.39 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -167,6 +167,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       while(it.hasNext())
         {
         RPObject object=(RPObject)it.next();
+        
         Iterator attributesit=object.iterator();
       
         while(attributesit.hasNext())

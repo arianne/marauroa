@@ -1,4 +1,4 @@
-/* $Id: Test_RPZone.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_RPZone.java,v 1.8 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,7 @@ public class Test_RPZone extends TestCase
 		
     RPObject SonGoku=new RPObject();
 
-    SonGoku.put("object_id","1");
+    SonGoku.put("id","1");
     SonGoku.put("name","Son Goku");
 		
     RPZone zone=new MarauroaRPZone();

@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.36 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.37 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -153,7 +153,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       while(iter.hasNext())
         {
         RPObject object = (RPObject)iter.next();
-        int oid = object.getInt("object_id");
+        int oid = object.getInt("id");
 
         if(oid!=id.getObjectID())
           {
@@ -209,7 +209,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       // it is enough just to send id/name...
       CharacterList clist = new CharacterList();
 
-      clist.addCharacter(rp_player.getInt("object_id"),rp_player.get("name"),"wurst");
+      clist.addCharacter(rp_player.getInt("id"),rp_player.get("name"),"wurst");
 
       RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
 

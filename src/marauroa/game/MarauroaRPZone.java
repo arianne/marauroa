@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.28 2004/03/27 10:54:05 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.29 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,17 +24,18 @@ import marauroa.marauroad;
 
 public class MarauroaRPZone implements RPZone
   {
-  private Map previous_turn;
   private Map objects;
   private Perception perception;
+
   private JDBCPlayerDatabase rpobjectDatabase;
   private Transaction transaction;
+
   private static Random rand=new Random();
+
   public MarauroaRPZone()
     {
     rand.setSeed(new Date().getTime());
     objects=new LinkedHashMap();
-    previous_turn=new LinkedHashMap();
     perception=new Perception(Perception.DELTA);
     try
       {
@@ -68,16 +69,7 @@ public class MarauroaRPZone implements RPZone
     {
     try 
       {
-//      if(previous_turn.containsKey(new RPObject.ID(object)))
-//        {
-//        RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
-//        perception.modified(object,previous);
-//        previous_turn.remove(new RPObject.ID(object));      
-//        }
-//      else
-        {
-        perception.added(object);
-        }
+      //perception.modified(object);
       }
     catch(Exception e)
       {
@@ -106,11 +98,6 @@ public class MarauroaRPZone implements RPZone
     if(objects.containsKey(id))
       {
       RPObject object=(RPObject)objects.get(id);
-      
-      if(!previous_turn.containsKey(id))
-        {
-        previous_turn.put(id,object.copy());
-        }
       return object;
       }
     throw new RPObjectNotFoundException(id);
@@ -137,19 +124,68 @@ public class MarauroaRPZone implements RPZone
     {
     return objects.values().iterator();
     }
-	
+  
+  private Perception prebuildDeltaPerception=null;
+  private Perception prebuildTotalPerception=null;
+ 
   public Perception getPerception(RPObject.ID id, byte type)
     {
+    StringBuffer world=new StringBuffer("World content: \n");
+    
+    Iterator world_it=objects.values().iterator();
+    while(world_it.hasNext())
+      {
+      RPObject object=(RPObject)world_it.next();
+      world.append("  "+object.toString()+"\n");
+      }
+    marauroad.trace("World content--","D",world.toString());
+
     if(type==Perception.DELTA)
       {
-      return perception;
+      if(prebuildDeltaPerception==null)
+        {
+        prebuildDeltaPerception=perception;
+        
+        Iterator it=objects.values().iterator();
+        while(it.hasNext())
+          {
+          try
+            {          
+            prebuildDeltaPerception.modified(((RPObject)it.next()));
+            }
+          catch(Exception e)
+            {
+            e.printStackTrace();
+            }
+          }
+        }
+      
+      return prebuildDeltaPerception;
       }
     else
       {
-      Perception p=new Perception(Perception.TOTAL);
-
-      p.addedList=new ArrayList(objects.values());
-      return p;
+      if(prebuildTotalPerception==null)
+        {
+        prebuildTotalPerception=new Perception(Perception.TOTAL);
+        prebuildTotalPerception.addedList=new ArrayList(objects.values());
+        
+        Iterator it=prebuildTotalPerception.addedList.iterator();
+        while(it.hasNext())
+          {
+          ((RPObject)it.next()).resetAddedAndDeleted();
+          }
+        }
+        
+      return prebuildTotalPerception;
+      }
+    }
+  
+  public void reset()
+    {
+    Iterator it=objects.values().iterator();
+    while(it.hasNext())
+      {
+      ((RPObject)it.next()).resetAddedAndDeleted();
       }
     }
 	
@@ -172,7 +208,8 @@ public class MarauroaRPZone implements RPZone
   
   public void nextTurn()
     {
-    previous_turn.clear();
+    prebuildTotalPerception=null;
+    prebuildDeltaPerception=null;
     perception=new Perception(Perception.DELTA);
     }
   }

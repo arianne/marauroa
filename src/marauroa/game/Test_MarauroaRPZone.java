@@ -1,4 +1,4 @@
-/* $Id: Test_MarauroaRPZone.java,v 1.7 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Test_MarauroaRPZone.java,v 1.8 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,7 @@ public class Test_MarauroaRPZone extends TestCase
       RPZone zone=new MarauroaRPZone();
       RPObject SonGoku=new RPObject();
 
-      SonGoku.put("object_id","1");
+      SonGoku.put("id","1");
       SonGoku.put("name","Son Goku");
       assertFalse(zone.has(new RPObject.ID(SonGoku)));
       zone.add(SonGoku);
@@ -66,7 +66,7 @@ public class Test_MarauroaRPZone extends TestCase
       RPZone zone=new MarauroaRPZone();
       RPObject SonGoku=new RPObject();
 
-      SonGoku.put("object_id","1");
+      SonGoku.put("id","1");
       SonGoku.put("name","Son Goku");
       assertFalse(zone.has(new RPObject.ID(SonGoku)));
       zone.add(SonGoku);

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.25 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.26 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,9 @@ import org.w3c.dom.NodeList;
 /** This class host a list of Attributes stored as a pair String=String */
 public class Attributes implements marauroa.net.Serializable
   {
+  private Map added;
+  private Map deleted;
+  
   /** A Map<String,String> that contains the attributes */
   private Map content;
   public static class AttributeNotFoundException extends Exception
@@ -43,6 +46,7 @@ public class Attributes implements marauroa.net.Serializable
       return attribute;
       }
     }
+    
   public Object copy()
     {
     Attributes attr=new Attributes();
@@ -74,6 +78,8 @@ public class Attributes implements marauroa.net.Serializable
   public Attributes()
     {
     content=new HashMap();
+    added=new HashMap();
+    deleted=new HashMap();
     }
   
   public boolean isEmpty()
@@ -99,6 +105,9 @@ public class Attributes implements marauroa.net.Serializable
    *  @param value the value we want to set. */
   public void put(String attribute, String value)
     {
+    /* This is for Delta-delta feature */
+    added.put(attribute,value);
+    
     content.put(attribute,value);
     }
 	
@@ -107,7 +116,7 @@ public class Attributes implements marauroa.net.Serializable
    *  @param value the value we want to set. */
   public void put(String attribute, int value)
     {
-    content.put(attribute,Integer.toString(value));
+    put(attribute,Integer.toString(value));
     }
 	
   /** This method set the value of an attribute
@@ -115,7 +124,7 @@ public class Attributes implements marauroa.net.Serializable
    *  @param value the value we want to set. */
   public void put(String attribute, List value)
     {
-    content.put(attribute,Attributes.ListToString(value));
+    put(attribute,Attributes.ListToString(value));
     }
 	
   /** This methods return the value of an attribute
@@ -165,6 +174,9 @@ public class Attributes implements marauroa.net.Serializable
     {
     if(content.containsKey(attribute))
       {
+      /* This is for Delta-delta feature */
+      deleted.put(attribute,"");
+      
       content.remove(attribute);
       }
     else
@@ -179,7 +191,7 @@ public class Attributes implements marauroa.net.Serializable
   public boolean equals(Object attr)
     {
     return content.equals(((Attributes)attr).content);
-    }
+    }  
 	
   /** This method returns a String that represent the object
    *  @return a string representing the object.*/
@@ -321,5 +333,51 @@ public class Attributes implements marauroa.net.Serializable
         put(attr_elem.getAttribute("key"),attr_elem.getAttribute("value"));
         }
       }
+    }
+  
+  public void resetAddedAndDeletedAttributes()
+    {
+    added.clear();
+    deleted.clear();
+    }
+
+  public void setAddedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
+    {
+    Iterator it=attr.added.entrySet().iterator();
+    
+    int i=0;
+    while(it.hasNext())
+      {
+      ++i;
+      Map.Entry entry=(Map.Entry)it.next();
+      put((String)entry.getKey(),(String)entry.getValue());
+      } 
+            
+    if(i>0)
+      {
+      put("id",attr.get("id"));
+      }
+    
+    attr.added.clear();
+    }
+
+  public void setDeletedAttributes(Attributes attr) throws Attributes.AttributeNotFoundException
+    {
+    Iterator it=attr.deleted.entrySet().iterator();
+    
+    int i=0;
+    while(it.hasNext())
+      {
+      ++i;
+      Map.Entry entry=(Map.Entry)it.next();
+      put((String)entry.getKey(),(String)entry.getValue());
+      }       
+
+    if(i>0)
+      {
+      put("id",attr.get("id"));
+      }
+
+    attr.deleted.clear();
     }
   }

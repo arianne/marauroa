@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.27 2004/03/31 12:25:36 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.28 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -533,7 +533,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         Connection connection = ((JDBCTransaction)trans).getConnection();
         Statement stmt = connection.createStatement();
         int id=getDatabasePlayerId(trans,username);
-        String query = "insert into characters values("+id+",'"+character+"',"+object.get("object_id")+")";
+        String query = "insert into characters values("+id+",'"+character+"',"+object.get("id")+")";
 
         stmt.execute(query);
         storeRPObject(trans,object);
@@ -1157,7 +1157,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query=null;
-    String object_id=object.get("object_id");
+    String object_id=object.get("id");
 
     query = "insert into rpobject values("+object_id+","+slot_id+");";
     marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);

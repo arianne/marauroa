@@ -1,4 +1,4 @@
-/* $Id: The1001Game3D.java,v 1.13 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: The1001Game3D.java,v 1.14 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1239,7 +1239,7 @@ public class The1001Game3D
     // for (int i = 0; i < spectators.length; i++)
     // {
     // RPObject rp = new RPObject();
-    // rp.put("object_id","spec_"+i);
+    // rp.put("id","spec_"+i);
     // rp.put("name","Spectator_"+i);
     // spectators[i] = rp;
     // }
@@ -1248,7 +1248,7 @@ public class The1001Game3D
     // try
     // {
     // RPObject rp = new Gladiator(new RPObject.ID(i));
-    // rp.put("object_id","glad_"+i);
+    // rp.put("id","glad_"+i);
     // fighters[i] = rp;
     // }
     // catch (RPObject.SlotAlreadyAddedException e) {}

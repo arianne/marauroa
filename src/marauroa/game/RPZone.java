@@ -1,4 +1,4 @@
-/* $Id: RPZone.java,v 1.19 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: RPZone.java,v 1.20 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,6 +43,7 @@ public interface RPZone
     {
     final public static byte DELTA=0;
     final public static byte TOTAL=1;
+    
     public byte type;
     public List addedList;
     public List modifiedAddedAttribsList;
@@ -69,14 +70,22 @@ public interface RPZone
         }
       }
       
-    public void modified(RPObject modified, RPObject original) throws Exception
+    public void modified(RPObject modified) throws Exception
       {
       RPObject added=new RPObject();
       RPObject deleted=new RPObject();
       
-      modified.getDifferencesFrom(original,added,deleted);
-      modifiedAddedAttribsList.add(added);
-      modifiedDeletedAttribsList.add(deleted);
+      modified.getDifferences(added,deleted);
+      
+      if(added.size()>0)
+        {
+        modifiedAddedAttribsList.add(added);
+        }
+
+      if(deleted.size()>0)
+        {
+        modifiedDeletedAttribsList.add(deleted);
+        }
       }
     
     public void removed(RPObject object)

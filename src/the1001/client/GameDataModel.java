@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.15 2004/04/02 08:06:33 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.16 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -536,7 +536,7 @@ public final class GameDataModel
       
       try
       {
-        gl_id = gladiator.getInt("object_id");
+        gl_id = gladiator.getInt(RPCode.var_object_id);
       }
       catch (Attributes.AttributeNotFoundException e)
       {

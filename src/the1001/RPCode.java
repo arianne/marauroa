@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.62 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.63 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import java.util.*;
 public class RPCode
   {
   final public static byte GLADIATORS_PER_FIGHT=2;  
-  final public static String var_object_id="object_id";
+  final public static String var_object_id="id";
   final public static String var_type="type";
   final public static String var_name="name";
   final public static String var_hp="hp";
@@ -630,6 +630,7 @@ public class RPCode
             /* Winner was not present... */
             marauroad.trace("RPCode::RequestFame","D","Karma("+karma_result+") not assigned to because winner wasn't logged in");
             }
+            
           SetUpNextCombat();
           }
         else
@@ -639,6 +640,7 @@ public class RPCode
           marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME timer ("+timeout+")");
           arena.put(RPCode.var_timeout,timeout);
           }
+          
         zone.modify(arena);
         }
       }
@@ -700,7 +702,9 @@ public class RPCode
         }
       marauroad.trace("RPCode::SetUpNextCombat","D","Setup Arena to waiting status");
       playersFighting.clear();
+      // TODO: Delta-delta doesn't understand the clear thing...
       arena.getSlot(RPCode.var_gladiators).clear();
+      
       arena.put(RPCode.var_status,RPCode.var_waiting);          
       /* Choose new fighters if available */ 
       if(arena.getInt(RPCode.var_waiting)>0)
@@ -727,7 +731,7 @@ public class RPCode
             break;
             }
           }        
-        } 
+        }
       }
     finally
       {

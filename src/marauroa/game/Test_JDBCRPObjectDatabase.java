@@ -1,4 +1,4 @@
-/* $Id: Test_JDBCRPObjectDatabase.java,v 1.6 2004/03/25 16:41:49 arianne_rpg Exp $ */
+/* $Id: Test_JDBCRPObjectDatabase.java,v 1.7 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
     {
     RPObject example=new RPObject();
 
-    example.put("object_id",i);
+    example.put("id",i);
     example.put("type","gladiator");
     example.put("name","Stupid random name");
     example.put("look","database_look");
@@ -39,14 +39,14 @@ public class Test_JDBCRPObjectDatabase extends TestCase
     
     RPObject item=new RPObject();
 
-    item.put("object_id",i+1000);
+    item.put("id",i+1000);
     item.put("type","shield");
     item.put("def",10);
     item.put("price",50);
     example.getSlot("l_hand").add(item);
     example.addSlot(new RPSlot("r_hand"));
     item=new RPObject();
-    item.put("object_id",i+100000);
+    item.put("id",i+100000);
     item.put("type","sword");
     item.put("def",0);
     item.put("price",100);
@@ -116,7 +116,7 @@ public class Test_JDBCRPObjectDatabase extends TestCase
       Transaction trans = database.getTransaction();
       RPObject example=new RPObject();
 
-      example.put("object_id",1);
+      example.put("id",1);
       example.put("type","TEST");
       example.addSlot(new RPSlot("l_hand"));
       

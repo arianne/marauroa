@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.57 2004/03/31 12:25:36 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.58 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import marauroa.*;
 class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
-  private final static int TOTAL_PERCEPTION_RELATION=60;
+  private final static int TOTAL_PERCEPTION_RELATION=20;
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
@@ -219,7 +219,7 @@ class RPServerManager extends Thread
             RPZone.Perception perception;
             RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
-            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION || object.has("?joined"))
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION /*|| object.has("?joined")*/)
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);

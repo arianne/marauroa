@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.22 2004/03/24 15:25:34 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.23 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,58 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
       super("RP Object ["+id+"] not found");
       }
     }
+
+
+  private List added;
+  private List deleted;
+  
+  public void resetAddedAndDeletedRPObjects()
+    {
+    added.clear();
+    deleted.clear();
+    }
+
+  public void setAddedRPObject(RPSlot slot)
+    {
+    Iterator it=slot.added.iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      try
+        {
+        add((RPObject)object.copy());
+        }
+      catch(Exception e)
+        {
+        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        }
+      }       
+    
+    slot.added.clear();
+    }
+
+  public void setDeletedRPObject(RPSlot slot)
+    {
+    Iterator it=slot.deleted.iterator();
+    
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      try
+        {
+        add((RPObject)object.copy());
+        }
+      catch(Exception e)
+        {
+        marauroad.trace("RPObject::setAddedRPSlot","X",e.getMessage());
+        }
+      }       
+    
+    slot.deleted.clear();
+    }
+
+   
   private String name;
   /** A List<RPObject> of objects */
   private List objects;
@@ -44,6 +96,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     {
     name="";
     objects=new LinkedList();
+    added=new LinkedList();
+    deleted=new LinkedList();
     }
   
   public Object copy()
@@ -57,7 +111,6 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     while(it.hasNext())
       {
       RPObject object=(RPObject)it.next();
-
       slot.add((RPObject)object.copy());
       }
     return slot;
@@ -67,6 +120,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
     {
     this.name=name;
     objects=new LinkedList();
+    added=new LinkedList();
+    deleted=new LinkedList();
     }
   
   public void setName(String name)
@@ -81,6 +136,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
   
   public void add(RPObject object)
     {
+    added.add(object);
     objects.add(object);
     }
   
@@ -129,6 +185,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
 
         if(id.equals(new RPObject.ID(object)))
           {
+          deleted.add(new RPObject(new RPObject.ID(object)));
           it.remove();
           return object;
           }
@@ -143,6 +200,20 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable
   
   public void clear()
     {
+    Iterator it=objects.iterator();
+            
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      try
+        {
+        deleted.add(new RPObject(new RPObject.ID(object)));
+        }
+      catch(Attributes.AttributeNotFoundException e)
+        {
+        }
+      }
+      
     objects.clear();
     }
   

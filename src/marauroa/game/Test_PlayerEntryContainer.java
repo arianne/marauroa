@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.14 2004/03/25 22:20:44 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.15 2004/04/03 17:40:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class Test_PlayerEntryContainer extends TestCase
       
       RPObject test=new RPObject();
 
-      test.put("object_id",1);
+      test.put("id",1);
       playerDatabase.addCharacter(trans,"Test Player", "Test Character",test);
       assertTrue(playerDatabase.hasCharacter(trans,"Test Player", "Test Character"));
       }
@@ -112,7 +112,7 @@ public class Test_PlayerEntryContainer extends TestCase
       
       RPObject test=new RPObject();
 
-      test.put("object_id",1);
+      test.put("id",1);
       assertEquals(test,container.getRPObject(clientid,"Test Character"));
       container.removeRuntimePlayer(clientid);
       assertEquals(container.size(),0);

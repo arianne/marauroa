@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.50 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: SimpleGame.java,v 1.51 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
 
  *                      (C) Copyright 2003 - Marauroa                      *
@@ -417,7 +417,7 @@ public class SimpleGame
             {
             MoveAction rpaction = new MoveAction();
 
-            rpaction.put("object_id", ""+ownCharacterID);
+            rpaction.put("id", ""+ownCharacterID);
             rpaction.setRow(row);
             rpaction.setColumn(column);
 

@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.19 2004/03/24 15:25:35 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.20 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class the1001RPZone extends MarauroaRPZone
       items.add(new Item(new RPObject.ID(super.create()),"shield"));
       heroesHouse.addSlot(items);
       /* Add to zone */
-      add(heroesHouse);
+      //add(heroesHouse);
       arena=super.create();
       arena.put(RPCode.var_type,"arena");
       arena.put(RPCode.var_name,"Arena");
@@ -76,7 +76,14 @@ public class the1001RPZone extends MarauroaRPZone
 	
   public RPObject getArena()
     {
-    return arena;
+    try
+      {
+      return get(new RPObject.ID(arena));
+      }
+    catch(Exception e)
+      {
+      return null;
+      }
     }
 	
   public RPObject create(RPObject object)

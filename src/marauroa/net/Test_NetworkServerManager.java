@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.10 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.11 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,7 +116,7 @@ public class Test_NetworkServerManager extends TestCase
       {
       RPObject object=new RPObject();
 
-      object.put("object_id",i);
+      object.put("id",i);
       object.put("name","A good name");
       object.put("extra","more extra attributes so that it takes several bytes");
       object.put("more","You know... this is big");

@@ -1,4 +1,4 @@
-/* $Id: Test_Messages.java,v 1.12 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: Test_Messages.java,v 1.13 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -499,7 +499,7 @@ public class Test_Messages extends TestCase
     int clientid=14324;
     marauroa.game.RPAction action=new marauroa.game.RPAction();
 
-    action.put("object_id","156123");
+    action.put("id","156123");
     action.put("zone_id","1");
     action.put("action_type","null action");
     

@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.10 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.11 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,8 +31,9 @@ public class NetConst
    *  5 - Modified Action message
    *  6 - Added zlib support to Perception message 
    *  7 - Modified Perception 
-   *      Added Invalid Version message */
-  final static public byte NETWORK_PROTOCOL_VERSION=7;
+   *      Added Invalid Version message 
+   *  8 - Added Delta-delta support */
+  final static public byte NETWORK_PROTOCOL_VERSION=8;
   final static public long PACKET_TIMEOUT_VALUE=5000;
   static
     {

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.24 2004/03/27 11:05:10 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.25 2004/04/03 17:40:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,13 +112,18 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+addedRPObjects.size()+" modified objects and "+
+    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+addedRPObjects.size()+
+      " added objects, "+modifiedAddedAttribsRPObjects.size()+" modified Added attributes objects, "+
+      modifiedDeletedAttribsRPObjects.size()+" modified Deleted attributes objects and "+
       deletedRPObjects.size()+" deleted objects)";
     }
   
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
+    
+    StringBuffer perception_string=new StringBuffer();
+    perception_string.append("Type: "+typePerception+") contents: ");
 
     ByteArrayOutputStream compressed_array=new ByteArrayOutputStream();
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
@@ -128,33 +133,47 @@ public class MessageS2CPerception extends Message
     
     Iterator it=null;
     
+    perception_string.append("\n  added: \n");
     it=addedRPObjects.iterator();
     ser.write((int)addedRPObjects.size());
     while(it.hasNext())
       {
-      ser.write((RPObject)it.next());
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      ser.write(object);
       }
 
+    perception_string.append("\n  modified added: \n");
     ser.write((int)modifiedAddedAttribsRPObjects.size());
     it=modifiedAddedAttribsRPObjects.iterator();
     while(it.hasNext())
       {
-      ser.write((RPObject)it.next());
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      ser.write(object);
       }
 
+    perception_string.append("\n  modified deleted: \n");
     ser.write((int)modifiedDeletedAttribsRPObjects.size());
     it=modifiedDeletedAttribsRPObjects.iterator();
     while(it.hasNext())
       {
-      ser.write((RPObject)it.next());
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      ser.write(object);
       }
     
+    perception_string.append("\n  deleted: \n");
     ser.write((int)deletedRPObjects.size());
     it=deletedRPObjects.iterator();
     while(it.hasNext())
       {
-      ser.write((RPObject)it.next());
+      RPObject object=(RPObject)it.next();
+      perception_string.append("    "+object.toString()+"\n");
+      ser.write(object);
       }
+    
+    marauroad.trace("MessageS2CPerception::writeObject","D",perception_string.toString());
 
     myRPObject.writeObject(ser,true);
     out_stream.close();
