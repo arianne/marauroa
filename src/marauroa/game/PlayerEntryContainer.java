@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.30 2004/04/17 10:02:49 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.31 2004/04/17 10:52:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -901,17 +901,17 @@ public class PlayerEntryContainer
         if(pre==null)
           {
           entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
-          return false;          
+          return true;          
           }          
         
         if(pre.equals(perception_actualRPObject))
           {
-          return true;
+          return false;
           }
         else
           {
           entry.perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
-          return false;          
+          return true;          
           }         
         }
       else

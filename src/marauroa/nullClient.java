@@ -156,6 +156,7 @@ class TestClient extends Thread
                 world_objects.put(object.get("id"),object);            
                 }
               
+              out.println("MY: "+msgPer.getMyRPObject());
               if(msgPer.getMyRPObject()!=null)
                 {
                 world_objects.put(msgPer.getMyRPObject().get("id"),msgPer.getMyRPObject());
