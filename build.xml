@@ -5,6 +5,7 @@
   <property name="build" value="build"/>
   <property name="images" value="${build}/images"/>
   <property name="lib"  value="lib"/>
+  
   <!-- Modify to point to your junit.jar file -->
   <property name="junitlib" value="../../../classes/junit.jar"/>  
   <property name="classpath"  value="classes;${junitlib}"/>
@@ -28,16 +29,17 @@
     </javac>
   </target>
 
-  <target name="images" depends="init">
+  <target name="installation" depends="init">
     <copy todir="${images}">
       <fileset dir="images">
         <include name="**/*.*"/>
 	<exclude name="CVS"/>
       </fileset>
     </copy>
+    <copy todir="${build}" file="${src}/marauroa.ini"/>
   </target>
 
-  <target name="jar" depends="compile,images">
+  <target name="jar" depends="compile,installation">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
   </target>
   
