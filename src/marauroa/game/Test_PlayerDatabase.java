@@ -8,15 +8,42 @@ public class Test_PlayerDatabase extends TestCase
     {
     return new TestSuite(Test_PlayerDatabase.class);
 	}
+  
+  public void testMemoryPlayerDatabase()
+    {
+    testPlayerDatabase("MemoryPlayerDatabase");
+    }
+
+  public void testMemoryPlayerDatabaseExceptions()
+    {
+    testPlayerDatabaseExceptions("MemoryPlayerDatabase");
+    }
+    
+  public void testJDBCPlayerDatabase()
+    {
+    testPlayerDatabase("JDBCPlayerDatabase");
+    }
+
+  public void testJDBCPlayerDatabaseExceptions()
+    {
+    testPlayerDatabaseExceptions("JDBCPlayerDatabase");
+    }
+    
 	
-  public void testPlayerDatabase()
+  private void testPlayerDatabase(String type)
     {
     try
       {    
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase(type);
       assertNotNull(playerDatabase);
       int size=playerDatabase.getPlayerCount();
 
+ 	  if(playerDatabase.hasPlayer("Test Player"))
+ 	    {
+ 	    playerDatabase.removePlayer("Test Player");
+ 	    }
+ 	  assertFalse(playerDatabase.hasPlayer("Test Player"));
+ 	    
       playerDatabase.addPlayer("Test Player","Test Password");
       assertTrue(playerDatabase.hasPlayer("Test Player"));
       
@@ -42,13 +69,13 @@ public class Test_PlayerDatabase extends TestCase
       }
     }
 
-  public void testPlayerDatabaseExceptions()
+  private void testPlayerDatabaseExceptions(String type)
     {
     PlayerDatabase playerDatabase=null;
     
     try
       {
-      playerDatabase=PlayerDatabaseFactory.getDatabase();
+      playerDatabase=PlayerDatabaseFactory.getDatabase(type);
       assertNotNull(playerDatabase);
       }
     catch(Exception e)

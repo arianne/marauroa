@@ -42,4 +42,38 @@ public class PlayerDatabaseFactory
       marauroad.trace("PlayerDatabaseFactory::getDatabase","<");
       }
     }
+
+  /** This method returns an instance of PlayerDatabase choosen using the param.
+   *  @param type A String containing the type of database
+   *  @return A shared instance of PlayerDatabase */
+  public static PlayerDatabase getDatabase(String database_type) throws PlayerDatabase.NoDatabaseConfException
+    {
+    marauroad.trace("PlayerDatabaseFactory::getDatabase",">");
+    try
+      {
+      if(database_type.equals("MemoryPlayerDatabase"))
+        {
+        marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen MemoryPlayerDatabase");
+        return MemoryPlayerDatabase.getDatabase();
+        }
+    
+      if(database_type.equals("JDBCPlayerDatabase"))
+        {
+        marauroad.trace("PlayerDatabaseFactory::getDatabase","D","Choosen JDBCPlayerDatabase");
+        return JDBCPlayerDatabase.getDatabase();
+        }
+
+      marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
+      throw new PlayerDatabase.NoDatabaseConfException();
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("PlayerDatabaseFactory::getDatabase","X",e.getMessage());
+      throw new PlayerDatabase.NoDatabaseConfException();      
+      }
+    finally
+      {     
+      marauroad.trace("PlayerDatabaseFactory::getDatabase","<");
+      }
+    }
   }  
