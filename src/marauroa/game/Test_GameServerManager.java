@@ -39,7 +39,12 @@ public class Test_GameServerManager extends TestCase
     
     try
       {
-      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("MemoryPlayerDatabase");
+      PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+
+      if(playerDatabase.hasPlayer("Test Player"))
+        {
+        playerDatabase.removePlayer("Test Player");
+        }
       assertFalse(playerDatabase.hasPlayer("Test Player"));
 
       playerDatabase.addPlayer("Test Player","Test Password");
@@ -121,6 +126,9 @@ public class Test_GameServerManager extends TestCase
           assertTrue("Correct character parameters",true);
           ++recieved;
           }
+        else if(msg instanceof MessageS2CPerception)
+          {
+          }
         else
           {
           fail("ERROR: Can't choose character. Got "+msg.toString());
@@ -140,6 +148,9 @@ public class Test_GameServerManager extends TestCase
           {
           assertTrue("Correct logout parameters",true);
           ++recieved;
+          }
+        else if(msg instanceof MessageS2CPerception)
+          {
           }
         else
           {
