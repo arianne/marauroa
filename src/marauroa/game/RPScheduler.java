@@ -40,7 +40,7 @@ public class RPScheduler
     try
       {
       RPObject.ID id=new RPObject.ID(action);
-      marauroad.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") to RPObject("+id+")");
+      marauroad.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
       
       if(nextTurn.containsKey(id))
         {
@@ -87,18 +87,25 @@ public class RPScheduler
         Iterator action_it=list.iterator();
         while(action_it.hasNext())
           {
-          RPAction action=(RPAction)action_it.next();
-          RPAction.Status status=ruleProcessor.execute(id,action);
-      
-          /* If state is incomplete add for next turn */
-          if(status.equals(RPAction.STATUS_INCOMPLETE))
+          try
             {
-            addRPAction(action);
-            }      
+            RPAction action=(RPAction)action_it.next();
+            RPAction.Status status=ruleProcessor.execute(id,action);
+                        
+            /* If state is incomplete add for next turn */
+            if(status.equals(RPAction.STATUS_INCOMPLETE))
+              {
+              addRPAction(action);
+              }      
+            }
+          catch(Exception e)
+            {
+            marauroad.trace("RPScheduler::visit","X",e.getMessage());
+            }
           }
         }
       }
-    catch(ActionInvalidException e)
+    catch(Exception e)
       {
       marauroad.trace("RPScheduler::visit","X",e.getMessage());
       }

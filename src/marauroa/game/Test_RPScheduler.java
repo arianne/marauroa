@@ -36,7 +36,8 @@ public class Test_RPScheduler extends TestCase
       
     public RPAction.Status execute(RPObject.ID id, RPAction action)
       {
-      return null;
+      i++;
+      return RPAction.STATUS_SUCCESS;
       }      
     }
 	
@@ -53,10 +54,24 @@ public class Test_RPScheduler extends TestCase
       action.put("type","testing");
     
       sched.addRPAction(action);
-      sched.visit(null);
+      
+      FakeRuleProcessor fake=new FakeRuleProcessor();
+      sched.visit(fake);      
+      assertEquals(0,fake.getActionsExecuted());      
+      sched.nextTurn();
+      
+      fake=new FakeRuleProcessor();
+      sched.visit(fake);      
+      assertEquals(1,fake.getActionsExecuted());      
+      sched.nextTurn();
+      
+      fake=new FakeRuleProcessor();
+      sched.visit(fake);      
+      assertEquals(0,fake.getActionsExecuted());
       }
     catch(Exception e)
       {
+      System.out.println(e.getMessage());
       fail(e.getMessage());
       }
     finally
@@ -64,4 +79,32 @@ public class Test_RPScheduler extends TestCase
       marauroad.trace("Test_RPScheduler::testRPScheduler","<");
       }
     }
+
+  public void testRPSchedulerExceptions()
+    {
+    marauroad.trace("Test_RPScheduler::testRPScheduler",">");
+    
+    try
+      {
+      RPScheduler sched=new RPScheduler();
+    
+      RPAction action=new RPAction();
+      action.put("type","testing");
+    
+      sched.addRPAction(action);
+      fail("Should drop exception");
+      }
+    catch(RPScheduler.ActionInvalidException e)
+      {      
+      assertTrue(true);
+      }
+    catch(Exception e)
+      {
+      fail(e.getMessage());
+      }
+  finally
+      {
+      marauroad.trace("Test_RPScheduler::testRPScheduler","<");
+      }
+    }  
   }

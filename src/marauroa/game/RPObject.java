@@ -125,6 +125,8 @@ public class RPObject extends Attributes
       id=in.readInt();
       }
     }
+  
+  public static ID INVALID_ID=new ID(-1);
     
   /** Constructor */
   public RPObject()
