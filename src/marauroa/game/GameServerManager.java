@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.57 2004/11/22 19:52:34 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.58 2004/11/25 19:33:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -580,11 +580,17 @@ public final class GameServerManager extends Thread
         {
         if(content.ack==true)        
           {
+          marauroad.trace("GameServerManager::processTransferACK","D","Trying transfer content "+content);
           content=entry.getContent(content.name);          
           if(content!=null)
             {
+            marauroad.trace("GameServerManager::processTransferACK","D","Transfering content "+content);
             MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
             netMan.addMessage(msgTransfer);
+            }
+          else
+            {
+            marauroad.trace("GameServerManager::processTransferACK","D","CAN'T transfer content "+content);
             }
           }
         }

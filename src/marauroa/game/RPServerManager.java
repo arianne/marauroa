@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.116 2004/11/25 17:03:16 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.117 2004/11/25 19:33:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -429,6 +429,15 @@ public class RPServerManager extends Thread
       {
       marauroad.thrown("RPServerManager::transferContent","X",e);
       }
+    }
+
+  /** This method is triggered to send content to the clients */
+  public void transferContent(RPObject.ID id, TransferContent content)
+    {
+    List<TransferContent> list=new LinkedList<TransferContent>();
+    list.add(content);
+    
+    transferContent(id, list);
     }
   
   public void run()

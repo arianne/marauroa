@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.42 2004/11/22 19:52:35 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.43 2004/11/25 19:33:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -114,7 +114,7 @@ public class PlayerEntryContainer
       }
     
     /** Contains the content that is going to be transfered to client */
-    List contentToTransfer;
+    List<TransferContent> contentToTransfer;
     
     public void clearContent()
       {
@@ -128,13 +128,11 @@ public class PlayerEntryContainer
         return null;
         }
       
-      Iterator it=contentToTransfer.iterator();
-      while(it.hasNext())
+      for(TransferContent item: contentToTransfer)
         {
-        TransferContent content=(TransferContent)it.next();
-        if(content.name==name)
+        if(item.name.equals(name))
           {
-          return content;
+          return item;
           }
         }
       

@@ -144,7 +144,33 @@ public class nullClient extends Thread
           }
         else if(msg instanceof MessageS2CTransferREQ)        
           {
-          System.out.println("Transfer REQ");
+          System.out.println("Transfer REQ: "+((MessageS2CTransferREQ)msg));
+          List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
+          
+          for(TransferContent item: items)
+            {
+            item.ack=true;
+            }
+          
+          MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
+          reply.setClientID(clientid);
+          netMan.addMessage(reply);
+          }
+        else if(msg instanceof MessageS2CTransfer)        
+          {
+          System.out.println("Transfer: "+((MessageS2CTransfer)msg));
+          List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
+          
+          for(TransferContent item: items)
+            {
+            System.out.println(item.data);
+            for(int byteContent:  item.data)
+              {
+              System.out.print(byteContent+",");
+              }
+              
+            System.out.println();
+            }
           }
         }
           

@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.1 2004/08/29 11:12:42 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.2 2004/11/25 19:34:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,21 @@ public class TransferContent
   
   public TransferContent()
     {
+    }
+  
+  public String toString()
+    {
+    StringBuffer sstr=new StringBuffer();
+    
+    sstr.append("TransferContent: [name=\"");
+    sstr.append(name);
+    sstr.append("\" timestamp=");
+    sstr.append(timestamp);
+    sstr.append(" data=\"");
+    sstr.append(data);
+    sstr.append("\"]");
+    
+    return sstr.toString();
     }
     
   public TransferContent(String name, int timestamp, byte[] data)

@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.3 2004/11/18 20:53:23 root777 Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.4 2004/11/25 19:34:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,13 +27,12 @@ public class MessageC2STransferACK extends Message
     type=TYPE_C2S_TRANSFER_ACK;
     }
   
-  public MessageC2STransferACK(InetSocketAddress source,TransferContent content)
+  public MessageC2STransferACK(InetSocketAddress source,List<TransferContent> content)
     {
     super(source);
     type=TYPE_C2S_TRANSFER_ACK;
     
-    this.contents=new LinkedList<TransferContent>();
-    contents.add(content);
+    this.contents=content;
     }
   
   public List<TransferContent> getContents()

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.3 2004/11/18 19:58:01 root777 Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.4 2004/11/25 19:34:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,7 @@ public class MessageS2CTransfer extends Message
     contents.add(content);
     }
   
-  public List getContents()
+  public List<TransferContent> getContents()
     {
     return contents;
     }
