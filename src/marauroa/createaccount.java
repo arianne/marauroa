@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.26 2004/05/02 21:34:04 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.27 2004/05/24 19:04:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -102,6 +102,8 @@ public abstract class createaccount
           Information item=(Information)it.next();          
           System.out.println(item.param+" to use/add "+item.name);
           }
+          
+        System.exit(0);
         }
         
       ++i;
