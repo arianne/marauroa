@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.24 2004/01/07 10:55:16 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.25 2004/01/07 11:16:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,6 +106,10 @@ public class RPCode
       }
     }
   
+  /** This method removes players that have requested to fight but that have logout
+   *  before the fight happens.
+   *  @param player_id the id of the player.
+   *  @return true if the player has been removed or false otherwise. */
   public static boolean RemoveWaitingPlayer(RPObject.ID player_id)
     {
     marauroad.trace("RPCode::RemoveWaitingPlayer",">");
@@ -194,7 +198,9 @@ public class RPCode
       marauroad.trace("RPCode::FightMode","<");
       }
     }
-    
+  
+  /** This method does the fight for this turn, assigning damage to the fighters and in 
+   *  case of a winner happens, setting the arena to request fame. */  
   public static void ResolveFight()
     {
     marauroad.trace("RPCode::ResolveFight",">");
@@ -263,7 +269,8 @@ public class RPCode
       marauroad.trace("RPCode::ResolveFight","<");
       }
     }      
-    
+  
+  /** This method returns true if the combat is completed */  
   private static boolean combatCompleted(RPObject[] gladiators) throws Exception
     {
     /** NOTE: This routine fails if both players die. Is that possible? */
@@ -280,7 +287,9 @@ public class RPCode
     
     return (gladiatorsStillFighting==1)?true:false;
     }
-    
+  
+  /** This method is the combat system itself, and it is an implementation of the 
+   *  Rock-Paper-Scissor game with a bit of RP features. */  
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
     if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
@@ -291,11 +300,13 @@ public class RPCode
     
     if(!gladiator1.has("!mode"))
       {
+      /** Gladiator1 has not begin to fight. */
       return;
       }
          
     if(!gladiator2.has("!mode"))
       {
+      /** Gladiator2 is idle, no combat, just hit */
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("damage",damage);
