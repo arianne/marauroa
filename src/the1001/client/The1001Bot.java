@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.14 2004/03/19 14:18:25 root777 Exp $ */
+/* $Id: The1001Bot.java,v 1.15 2004/03/19 14:19:07 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,7 +77,7 @@ public class The1001Bot
     continueGamePlay = true;
     boolean i_am_fighting = false;
     boolean voted = false;
-	long last_fight = System.currentTimeMillis();
+	long last_fight = 0;
     try
     {
       while(continueGamePlay)
@@ -458,6 +458,7 @@ public class The1001Bot
   }
   
 }
+
 
 
 
