@@ -1,4 +1,4 @@
-/* $Id: JMarauroa.java,v 1.11 2003/12/12 07:54:09 root777 Exp $ */
+/* $Id: JMarauroa.java,v 1.12 2003/12/15 16:19:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -250,12 +250,12 @@ public class JMarauroa
 		mnu_item_disconnect.setMnemonic('D');
 		mnu_server.add(mnu_item_disconnect);
 		
-		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
-		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
-		mnu_item_letsplay.addActionListener(actionHandler);
-		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
-		mnu_item_letsplay.setMnemonic('P');
-		mnu_server.add(mnu_item_letsplay);
+//		JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
+//		mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
+//		mnu_item_letsplay.addActionListener(actionHandler);
+//		mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
+//		mnu_item_letsplay.setMnemonic('P');
+//		mnu_server.add(mnu_item_letsplay);
 		
 		JMenuItem mnu_item_exit = new JMenuItem("Exit");
 		mnu_item_exit.setAccelerator(KeyStroke.getKeyStroke("control X"));
@@ -326,8 +326,14 @@ public class JMarauroa
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
 			{
 				MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)msgReply;
-				characterID = msg_ack.getObjectID();
+				characterID = msg_ack.getObjectID();				
 				addLog("Character choosen correctly(id is "+characterID+")\n");
+
+				/** Automagically create a new simplegame event */
+				SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
+				sg.pack();
+				sg.show();
+				new Thread(sg,"Lets play thread...").start();
 			}
 			
 			if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
@@ -452,7 +458,7 @@ public class JMarauroa
   
   private void about()
   {
-		JOptionPane.showMessageDialog(this,"<html><body><font color=\"blue\">Marauroa</font> client version x.y.z</body></html>","About",JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this,"<html><body><font color=\"blue\">Marauroa</font> client version 0.10</body></html>","About",JOptionPane.INFORMATION_MESSAGE);
   }
   
   

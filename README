@@ -76,17 +76,19 @@ Running
 -------
 Use the BAT files to run it:
 - marauroad is the server 
-- JMarauroa is the client 
+- JMarauroa is the client
 
 Edit marauroa.ini to use JDBC Database.
 Please refer to docs/JDBC Database HOWTO.txt
 
+Read simpleGame about how to play it.
 
 Changelog
 ---------
 0.10 	Dic XX, 2003
 - simpleGame working.
 - First steps of Gladiators
+- sound support
 
 0.04 	Dic 11, 2003
 - Fixed FATAL bug at NetworkServerManager and JMarauroa
