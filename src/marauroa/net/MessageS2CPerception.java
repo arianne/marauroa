@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.21 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.22 2004/03/26 16:36:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,6 +41,8 @@ public class MessageS2CPerception extends Message
     {
     super(null);
     type=TYPE_S2C_PERCEPTION;
+    
+    myRPObject=new RPObject();
     }
   
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -109,22 +111,37 @@ public class MessageS2CPerception extends Message
     OutputSerializer ser=new OutputSerializer(out_stream);
     
     ser.write((byte)typePerception);
+    
+    Iterator it=null;
+    
+    it=addedRPObjects.iterator();
     ser.write((int)addedRPObjects.size());
-    
-    Iterator it_mod=addedRPObjects.iterator();
-
-    while(it_mod.hasNext())
+    while(it.hasNext())
       {
-      ser.write((RPObject)it_mod.next());
+      ser.write((RPObject)it.next());
       }
+
+    ser.write((int)modifiedAddedAttribsRPObjects.size());
+    it=modifiedAddedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      ser.write((RPObject)it.next());
+      }
+
+    ser.write((int)modifiedDeletedAttribsRPObjects.size());
+    it=modifiedDeletedAttribsRPObjects.iterator();
+    while(it.hasNext())
+      {
+      ser.write((RPObject)it.next());
+      }
+    
     ser.write((int)deletedRPObjects.size());
-    
-    Iterator it_del=deletedRPObjects.iterator();
-
-    while(it_del.hasNext())
+    it=deletedRPObjects.iterator();
+    while(it.hasNext())
       {
-      ser.write((RPObject)it_del.next());
+      ser.write((RPObject)it.next());
       }
+
     myRPObject.writeObject(ser,true);
     out_stream.close();
 
@@ -147,18 +164,43 @@ public class MessageS2CPerception extends Message
     addedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     
-    int mod=ser.readInt();
+    int added=ser.readInt();
     
-    if(mod>TimeoutConf.MAX_ARRAY_ELEMENTS)
+    if(added>TimeoutConf.MAX_ARRAY_ELEMENTS)
       {
-      throw new IOException("Illegal request of an list of "+String.valueOf(mod)+" size");
+      throw new IOException("Illegal request of an list of "+String.valueOf(added)+" size");
       }
-    marauroad.trace("MessageS2CPerception::readObject()","D",mod + " modified objects..");
-    for(int i=0;i<mod;++i)
+    marauroad.trace("MessageS2CPerception::readObject()","D",added + " added objects..");
+    for(int i=0;i<added;++i)
       {
       addedRPObjects.add(ser.readObject(new RPObject()));
       }
     
+
+    int modAdded=ser.readInt();
+    
+    if(modAdded>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(modAdded)+" size");
+      }
+    marauroad.trace("MessageS2CPerception::readObject()","D",modAdded + " modified Added objects..");
+    for(int i=0;i<modAdded;++i)
+      {
+      modifiedAddedAttribsRPObjects.add(ser.readObject(new RPObject()));
+      }
+
+    int modDeleted=ser.readInt();
+    
+    if(modDeleted>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(modDeleted)+" size");
+      }
+    marauroad.trace("MessageS2CPerception::readObject()","D",modDeleted + " modified Deleted objects..");
+    for(int i=0;i<modDeleted;++i)
+      {
+      modifiedDeletedAttribsRPObjects.add(ser.readObject(new RPObject()));
+      }
+
     int del=ser.readInt();
     
     if(del>TimeoutConf.MAX_ARRAY_ELEMENTS)
@@ -170,6 +212,7 @@ public class MessageS2CPerception extends Message
       {
       deletedRPObjects.add(ser.readObject(new RPObject()));
       }
+      
     marauroad.trace("MessageS2CPerception::readObject()","D","My RPObject");
     myRPObject=(RPObject)ser.readObject(myRPObject);
     }
