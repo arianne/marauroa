@@ -71,6 +71,13 @@ public class RPObject extends Attributes
       id=new Integer(attr.get("object_id")).intValue();
       }
     
+    /** Constructor 
+     *  @param attr an Attributes object( RPObject or RPAction ) containing source_id attribute */
+    public ID(RPAction attr) throws Attributes.AttributeNotFoundException
+      {
+      id=new Integer(attr.get("source_id")).intValue();
+      }
+
     /** This method returns the object id 
      *  @return the object id. */
     public int getObjectID()

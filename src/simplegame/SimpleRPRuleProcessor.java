@@ -45,7 +45,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     marauroad.trace("SimpleRPRuleProcessor::setContext","<");
   }
   
-  public RPAction.Status execute(RPObject.ID id, RPActionList list)
+  public RPAction.Status execute(RPObject.ID id, RPAction action)
   {
     marauroad.trace("SimpleRPRuleProcessor::execute",">");
     RPAction.Status status = RPAction.STATUS_FAIL;
@@ -62,13 +62,10 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
       {
         String objid = rp_player.get("object_id");
         rp_player.put("color",String.valueOf(color));
-        if(list!=null && list.size()>0)
-        {
-          RPAction action = list.get(list.size()-1);
-          marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" sent an action " + action);
-          int row = Integer.parseInt(action.get("row"));
-          int column = Integer.parseInt(action.get("column"));
-          if(zone.gameDataModel.getColorAt(row,column)==-1)
+        marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" sent an action " + action);
+        int row = Integer.parseInt(action.get("row"));
+        int column = Integer.parseInt(action.get("column"));
+        if(zone.gameDataModel.getColorAt(row,column)==-1)
           {
             zone.gameDataModel.setColorAt(row,column,color);
             lastPlayerID = id;
@@ -87,7 +84,6 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
           {
             //this field is already set
           }
-        }
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" - no actions???.");
       }
     }

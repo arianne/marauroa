@@ -22,7 +22,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
     this.zone=zone;
     }
   
-  public RPAction.Status execute(RPObject.ID id, RPActionList list)
+  public RPAction.Status execute(RPObject.ID id, RPAction list)
     {
     marauroad.trace("RPRuleProcessor::execute",">");
     /* TODO: Implement action procession code */

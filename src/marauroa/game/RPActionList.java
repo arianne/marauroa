@@ -52,7 +52,7 @@ public class RPActionList
     }
   
   /** An iterator for a RPActionList */
-  public class RPActionIterator
+  public class RPActionIterator implements Iterator
     {
     private Iterator actionsIter;
     
@@ -71,9 +71,13 @@ public class RPActionList
      
     /** This method returs the RPAction and move the pointer to the next element
      *  @return an RPAction */
-    public RPAction next()
+    public Object next()
       {
-      return((RPAction)actionsIter.next());
+      return actionsIter.next();
+      }
+    
+    public void remove()
+      {
       }
     }
   }
