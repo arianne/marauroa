@@ -1,4 +1,4 @@
-/* $Id: Test_SerializerString.java,v 1.2 2003/12/08 01:08:31 arianne_rpg Exp $ */
+/* $Id: Test_SerializerString.java,v 1.3 2004/02/07 19:48:55 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import junit.framework.*;
 
 public class Test_SerializerString extends Test_Serializer
   {
-  public static Test suite ( ) 
+  public static Test suite ( )
     {
     return new TestSuite(Test_SerializerString.class);
 	}
@@ -28,15 +28,15 @@ public class Test_SerializerString extends Test_Serializer
     {
     String[] data=
       {
-      new String(),
-      new String("marauroa"),
-      new String("espa—a"),
-      new String("GNU"),
-      new String("java"),
-      new String("Miguel Angel Blanch Lardin")
+      "",
+      "marauroa",
+      "espa—a",
+      "GNU",
+      "java",
+      "Miguel Angel Blanch Lardin"
       };
     
-    test(data);   
+    test(data);
     }
  
   protected void write(OutputSerializer out, Object obj) throws IOException
@@ -46,11 +46,11 @@ public class Test_SerializerString extends Test_Serializer
     
   protected Object read(InputSerializer in) throws IOException, ClassNotFoundException
     {
-    return new String(in.readString());
+    return in.readString();
     }
   
   protected boolean equals(Object a, Object b)
     {
-    return ((String)a).equals((String)b);
+    return a.equals(b);
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: CharacterList.java,v 1.11 2003/12/18 23:56:55 arianne_rpg Exp $ */
+/* $Id: CharacterList.java,v 1.12 2004/02/07 19:50:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class CharacterList extends RPObject
     }
 
   public CharacterList()
-    {    
+    {
     put("type",TYPE_CHARACTER_LIST);
     }
   
@@ -52,9 +52,9 @@ public class CharacterList extends RPObject
     else
       {
       charList=new LinkedList();
-      }    
+      }
       
-    charList.add(new String(char_id+","+char_name+","+char_status));
+    charList.add(char_id+","+char_name+","+char_status);
     put("charList",charList);
     }
     
@@ -74,17 +74,17 @@ public class CharacterList extends RPObject
     {
     String[] list=player.split(",");
     return Integer.parseInt(list[0]);
-    } 
+    }
 
   public static int getName(String player)
     {
     String[] list=player.split(",");
     return Integer.parseInt(list[1]);
-    } 
+    }
 
   public static int getStatus(String player)
     {
     String[] list=player.split(",");
     return Integer.parseInt(list[2]);
-    } 
+    }
   }

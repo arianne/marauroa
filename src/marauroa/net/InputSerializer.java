@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.4 2004/01/27 17:03:12 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.5 2004/02/07 19:48:55 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,12 +65,16 @@ public class InputSerializer
     
     if(size>TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS)
       {
-      throw new IOException("Ilegal request of an array of "+String.valueOf(size)+" size");
+      throw new IOException("Ilegal request of an array of "+size+" size");
       }
     
     byte[] buffer=new byte[size];
     
-    in.read(buffer);
+    int bytes_read = in.read(buffer);
+		if(bytes_read!=size)
+			{
+				throw new IOException("Declared array size=" +size+" is not equal to actually read bytes count("+bytes_read+")!");
+			}
     
     return buffer;
     }

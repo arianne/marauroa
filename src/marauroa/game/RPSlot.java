@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.19 2004/02/06 21:38:45 root777 Exp $ */
+/* $Id: RPSlot.java,v 1.20 2004/02/07 19:50:37 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,7 @@ public class RPSlot implements marauroa.net.Serializable
   
   public RPSlot()
 	{
-		name=new String();
+		name="";
 		objects=new LinkedList();
 	}
   
