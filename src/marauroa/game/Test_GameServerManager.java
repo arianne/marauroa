@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.12 2004/03/02 20:03:41 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.13 2004/03/22 19:10:45 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,10 @@ import java.net.*;
 
 public class Test_GameServerManager extends TestCase
   {
-  public static Test suite ( ) 
+  public static Test suite ( )
     {
     return new TestSuite(Test_GameServerManager.class);
-	}
+  }
 
   private NetworkClientManager netMan;
   private NetworkClientManager netManSpoffer;
@@ -31,7 +31,7 @@ public class Test_GameServerManager extends TestCase
   private GameServerManager gameMan;
 
   private void createEnviroment()
-    {    
+    {
     try
       {
       /* We want to avoid the port in use error */
@@ -52,19 +52,20 @@ public class Test_GameServerManager extends TestCase
     try
       {
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase();
+        Transaction trans = playerDatabase.getTransaction();
 
-      if(playerDatabase.hasPlayer("Test Player"))
+      if(playerDatabase.hasPlayer(trans,"Test Player"))
         {
-        playerDatabase.removePlayer("Test Player");
+        playerDatabase.removePlayer(trans,"Test Player");
         }
-      assertFalse(playerDatabase.hasPlayer("Test Player"));
+      assertFalse(playerDatabase.hasPlayer(trans,"Test Player"));
 
-      playerDatabase.addPlayer("Test Player","Test Password");
+      playerDatabase.addPlayer(trans,"Test Player","Test Password");
 
       RPObject SonGoku=new RPObject();
       SonGoku.put("object_id","1");
       SonGoku.put("name","Son Goku");
-      playerDatabase.addCharacter("Test Player", "Son Goku",SonGoku);
+      playerDatabase.addCharacter(trans,"Test Player", "Son Goku",SonGoku);
       }
     catch(Exception e)
       {
@@ -80,22 +81,23 @@ public class Test_GameServerManager extends TestCase
     try
       {
       PlayerDatabase playerDatabase=PlayerDatabaseFactory.getDatabase("MemoryPlayerDatabase");
-      playerDatabase.removeCharacter("Test Player", "Son Goku");
-      playerDatabase.removePlayer("Test Player");
+        Transaction trans = playerDatabase.getTransaction();
+      playerDatabase.removeCharacter(trans,"Test Player", "Son Goku");
+      playerDatabase.removePlayer(trans,"Test Player");
       }
     catch(Exception e)
       {
       }
     
     assertTrue("Shutdown correctly",true);
-    }    
+    }
 
   public void testMainProcedures()
     {
     marauroad.trace("Test_GameServerManager::testMainProcedures","?","This test case show how thing should go if everything is fine");
     marauroad.trace("Test_GameServerManager::testMainProcedures",">");
-	createEnviroment();
-	
+  createEnviroment();
+  
     try
       {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
@@ -127,11 +129,11 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
-          }        
+          }
         }
 
       Message msgCC=new MessageC2SChooseCharacter(address,"Son Goku");
-      msgCC.setClientID(clientid);      
+      msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
       
       while(recieved!=4)
@@ -150,11 +152,11 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't choose character. Got "+msg.toString());
-          }        
+          }
         }
         
       Message msgL=new MessageC2SLogout(address);
-      msgL.setClientID(clientid);      
+      msgL.setClientID(clientid);
       netMan.addMessage(msgL);
       
       while(recieved!=5)
@@ -173,7 +175,7 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't logout. Got "+msg.toString());
-          }        
+          }
         }
       }
     catch(Exception e)
@@ -184,17 +186,17 @@ public class Test_GameServerManager extends TestCase
       finalizeEnviroment();
       marauroad.trace("Test_GameServerManager::testMainProcedures","<");
       }
-    }  
+    }
 
   public void testMainLoginFailures()
     {
     marauroad.trace("Test_GameServerManager::testMainLoginFailures","?","This test case shows the two tipical login"+
       " failures: login with bad username/password or login twice");
     marauroad.trace("Test_GameServerManager::testMainLoginFailures",">");
-	createEnviroment();
-	
-	try
-	  {
+  createEnviroment();
+  
+  try
+    {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
       netMan.addMessage(new MessageC2SLogin(address,"Wrong Test Player","Wrong Test Password"));
       int clientid=-1;
@@ -213,10 +215,10 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can login. Got "+msg.toString());
-          }        
+          }
         }
 
-	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+    netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
       
       while(recieved!=4)
         {
@@ -242,7 +244,7 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
-          }        
+          }
         }
 
       netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
@@ -260,18 +262,18 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can login. Got "+msg.toString());
-          }        
+          }
         }
         
       Message msgLSpoffer=new MessageC2SLogout(address);
-      msgLSpoffer.setClientID(clientid);  
+      msgLSpoffer.setClientID(clientid);
       netManSpoffer.addMessage(msgLSpoffer);
       
       if(msgLSpoffer!=null)
-        {  
+        {
         int i=0;
         Message msg=null;
-        while(msg==null && i<10) 
+        while(msg==null && i<10)
           {
           msg=netMan.getMessage();
           ++i;
@@ -282,8 +284,8 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can spof. Got "+msg.toString());
           }
 
-	    i=0;
-        while(msg==null && i<10) 
+      i=0;
+        while(msg==null && i<10)
           {
           msg=netManSpoffer.getMessage();
           ++i;
@@ -297,7 +299,7 @@ public class Test_GameServerManager extends TestCase
 
 
       Message msgL=new MessageC2SLogout(address);
-      msgL.setClientID(clientid);      
+      msgL.setClientID(clientid);
       netMan.addMessage(msgL);
       
       while(recieved!=6)
@@ -313,38 +315,38 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't logout. Got "+msg.toString());
-          }        
+          }
         }
-	  }
+    }
     finally
       {
       finalizeEnviroment();
       marauroad.trace("Test_GameServerManager::testMainLoginFailures","<");
       }
-    } 
-	
+    }
+  
   public void testMainChooseCharacterFailures()
-    {    
+    {
     marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures","?","This test case show the failures on"+
       " chooseCharacter, for example that a not logged player can't choose character or that if we choose an incorrect"+
       " character it will also fail");
     marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures",">");
-	createEnviroment();
-	
-	try
-	  {
+  createEnviroment();
+  
+  try
+    {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
       int clientid=-1;
 
       Message msgCC=new MessageC2SChooseCharacter(address,"Son Goku");
-      msgCC.setClientID(clientid);  
+      msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
       
       if(msgCC!=null)
-        {  
+        {
         int i=0;
         Message msg=null;
-        while(msg==null && i<10) 
+        while(msg==null && i<10)
           {
           msg=netMan.getMessage();
           ++i;
@@ -356,8 +358,8 @@ public class Test_GameServerManager extends TestCase
           }
         }
         
-	  netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
-	  int recieved=0;
+    netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
+    int recieved=0;
       
       while(recieved!=3)
         {
@@ -383,11 +385,11 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't login. Got "+msg.toString());
-          }        
+          }
         }
 
       Message msgCCFail=new MessageC2SChooseCharacter(address,"Wrong Son Goku");
-      msgCCFail.setClientID(clientid);  
+      msgCCFail.setClientID(clientid);
       netMan.addMessage(msgCCFail);
       
       while(recieved!=4)
@@ -403,18 +405,18 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can choose character. Got "+msg.toString());
-          }        
+          }
         }
 
       Message msgCCSpoffer=new MessageC2SChooseCharacter(address,"Son Goku");
-      msgCCSpoffer.setClientID(clientid);  
+      msgCCSpoffer.setClientID(clientid);
       netManSpoffer.addMessage(msgCCSpoffer);
       
       if(msgCCSpoffer!=null)
-        {  
+        {
         int i=0;
         Message msg=null;
-        while(msg==null && i<10) 
+        while(msg==null && i<10)
           {
           msg=netMan.getMessage();
           ++i;
@@ -425,8 +427,8 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can sppof. Got "+msg.toString());
           }
 
-	    i=0;
-        while(msg==null && i<10) 
+      i=0;
+        while(msg==null && i<10)
           {
           msg=netManSpoffer.getMessage();
           ++i;
@@ -439,7 +441,7 @@ public class Test_GameServerManager extends TestCase
         }
         
       Message msgL=new MessageC2SLogout(address);
-      msgL.setClientID(clientid);      
+      msgL.setClientID(clientid);
       netMan.addMessage(msgL);
       
       while(recieved!=5)
@@ -455,7 +457,7 @@ public class Test_GameServerManager extends TestCase
         else
           {
           fail("ERROR: Can't logout. Got "+msg.toString());
-          }        
+          }
         }
       }
     finally
@@ -463,29 +465,29 @@ public class Test_GameServerManager extends TestCase
       finalizeEnviroment();
       marauroad.trace("Test_GameServerManager::testMainChooseCharacterFailures","<");
       }
-    }  
+    }
 
   public void testMainLogoutFailures()
-    {    
+    {
     marauroad.trace("Test_GameServerManager::testMainLogoutFailures","?","This test case shows that a not logged player"+
       " can't logout out");
     marauroad.trace("Test_GameServerManager::testMainLogoutFailures",">");
-	createEnviroment();
-	
-	try
-	  {
+  createEnviroment();
+  
+  try
+    {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
       int clientid=-1;
 
       Message msgL=new MessageC2SLogout(address);
-      msgL.setClientID(clientid);      
+      msgL.setClientID(clientid);
       netMan.addMessage(msgL);
       
       if(msgL!=null)
-        {  
+        {
         int i=0;
         Message msg=null;
-        while(msg==null && i<10) 
+        while(msg==null && i<10)
           {
           msg=netMan.getMessage();
           ++i;
@@ -496,36 +498,36 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can logout. Got "+msg.toString());
           }
         }
-	  }
+    }
     finally
       {
       finalizeEnviroment();
       marauroad.trace("Test_GameServerManager::testMainLogoutFailures","<");
       }
-    }  
+    }
 
 
   public void testMainActionFailures()
-    {    
+    {
     marauroad.trace("Test_GameServerManager::testMainActionFailures","?","This test case try to show that"+
       " a not logged in player can't command any kind of actions");
     marauroad.trace("Test_GameServerManager::testMainActionFailures",">");
-	createEnviroment();
-	
-	try
-	  {
+  createEnviroment();
+  
+  try
+    {
       InetSocketAddress address=new InetSocketAddress("127.0.0.1",NetConst.marauroa_PORT);
       int clientid=-1;
 
       Message msgA=new MessageC2SAction(address,new RPAction());
-      msgA.setClientID(clientid);      
+      msgA.setClientID(clientid);
       netMan.addMessage(msgA);
       
       if(msgA!=null)
-        {  
+        {
         int i=0;
         Message msg=null;
-        while(msg==null && i<10) 
+        while(msg==null && i<10)
           {
           msg=netMan.getMessage();
           ++i;
@@ -536,11 +538,11 @@ public class Test_GameServerManager extends TestCase
           fail("ERROR: Can add action. Got "+msg.toString());
           }
         }
-	  }
+    }
     finally
       {
       finalizeEnviroment();
       marauroad.trace("Test_GameServerManager::testMainActionFailures","<");
       }
-    }  
+    }
   }

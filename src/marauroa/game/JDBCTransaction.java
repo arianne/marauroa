@@ -36,6 +36,17 @@ public class JDBCTransaction
   }
   
   
+  public void commit() throws Exception
+  {
+    connection.commit();
+  }
+  
+  public void rollback() throws Exception
+  {
+    connection.rollback();
+  }
+  
+  
   public boolean isValid()
   {
     boolean valid = false;
@@ -62,7 +73,6 @@ public class JDBCTransaction
       }
     }
     return(valid);
-    
   }
 }
 
