@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.6 2003/12/20 10:22:12 arianne_rpg Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.7 2003/12/21 11:59:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ public class ChallengeAnswer extends ChallengeAction
   public ChallengeAnswer()
   {
     put("type",ACTION_CHALLENGE_ANSWER);
+    put("start","");
   }
 
   public ChallengeAnswer(RPAction action) throws Attributes.AttributeNotFoundException

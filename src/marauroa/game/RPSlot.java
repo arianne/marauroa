@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.13 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.14 2003/12/21 11:59:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,6 @@ public class RPSlot implements marauroa.net.Serializable
     }
     catch(Attributes.AttributeNotFoundException e)
     {
-      marauroad.trace("RPSlot::remove","X",e.getMessage());
       throw new RPObjectNotFoundException(id);
     }
   }
@@ -147,7 +146,6 @@ public class RPSlot implements marauroa.net.Serializable
     }
     catch(Attributes.AttributeNotFoundException e)
     {
-      marauroad.trace("RPSlot::add","X",e.getMessage());
       return false;
     }
   }
