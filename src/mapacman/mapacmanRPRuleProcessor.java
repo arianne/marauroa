@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.10 2004/05/19 16:38:31 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.11 2004/05/23 12:30:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -91,7 +91,15 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
   synchronized public void nextTurn()
     {
     marauroad.trace("mapacmanRPRuleProcessor::nextTurn",">");
-    pythonRP.nextTurn();
+    try
+      {
+      pythonRP.nextTurn();
+      }
+    catch(Exception e)
+      {
+      marauroad.thrown("mapacmanRPRuleProcessor::nextTurn","X",e);
+      }
+      
     marauroad.trace("mapacmanRPRuleProcessor::nextTurn","<");
     }
   
@@ -135,6 +143,74 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     {
     return pythonRP.serializeMap();
     }
+
+
+   public static void main(String[] args) throws Exception
+     {
+     try
+       {
+       long init=System.currentTimeMillis();
+       mapacmanRPRuleProcessor pacmanRP=new mapacmanRPRuleProcessor();
+ 
+       RPObject player=new RPObject();
+       player.put("type","player");
+       player.put("id",1);
+       player.put("name",1);
+       player.put("x",0);
+       player.put("y",0);
+       player.put("dir","N");
+       player.put("score",0);
+     
+       pacmanRP.setContext(new mapacmanRPZone());
+       pacmanRP.onInit(player);
+       
+       long start=System.currentTimeMillis();
+       for(int j=0;j<1;++j)
+         {
+         RPAction action=new RPAction();
+         action.put("source_id","1");
+         action.put("type","turn");
+         action.put("dir","S");
+         
+         pacmanRP.execute(new RPObject.ID(action),action);
+         //System.out.println(player);
+         }
+       
+       pacmanRP.nextTurn();
+       System.out.println(player);
+ 
+       pacmanRP.nextTurn();
+       System.out.println(player);
+ 
+       pacmanRP.nextTurn();
+       System.out.println(player);
+ 
+       pacmanRP.nextTurn();
+       System.out.println(player);
+ 
+       for(int j=0;j<1;++j)
+         {
+         RPAction action=new RPAction();
+         action.put("source_id","1");
+         action.put("type","turn");
+         action.put("dir","E");
+         
+         pacmanRP.execute(new RPObject.ID(action),action);
+         //System.out.println(player);
+         }
+         
+       pacmanRP.nextTurn();
+       System.out.println(player);
+ 
+       long stop=System.currentTimeMillis();
+       System.out.println("Python load: "+(start-init));
+       System.out.println("Python execute: "+(stop-start));
+       }
+     catch(Exception e)
+       {
+       e.printStackTrace();
+       }
+     }
   }
 
 
