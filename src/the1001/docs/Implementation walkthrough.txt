@@ -354,4 +354,4 @@ Things that are left away on this analysis
 2) Attributes of Gladiators have been deliveratedly ignored.
    They depend on the doc that Ragnar should follow soon.     
 
-
+3) What happens when a player logouts or exit in the middle of the combat.
