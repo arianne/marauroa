@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.1 2005/01/23 21:00:45 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.2 2005/03/07 19:36:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,8 +35,11 @@ public interface IRPRuleProcessor
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action);
   
-  /** Notify it when a new turn happens */
-  public void nextTurn();
+  /** Notify it when a new turn happens.
+   *  At all effects endTurn replaces the old nextTurn.
+   *  Having two methods simplify the RP development. */      
+  public void beginTurn();
+  public void endTurn();
   
   /** Callback method called when a new player enters in the game
    *  @param object the new player that enters in the game. */

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.1 2005/01/23 21:00:47 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.2 2005/03/07 19:36:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,10 +90,17 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     }
 
   /** Notify it when a new turn happens */
-  synchronized public void nextTurn()
+  synchronized public void endTurn()
     {
     Logger.trace("PythonRPRuleProcessor::nextTurn",">");
-    pythonRP.nextTurn();
+    pythonRP.endTurn();
+    Logger.trace("PythonRPRuleProcessor::nextTurn","<");
+    }
+
+  synchronized public void beginTurn()
+    {
+    Logger.trace("PythonRPRuleProcessor::nextTurn",">");
+    pythonRP.beginTurn();
     Logger.trace("PythonRPRuleProcessor::nextTurn","<");
     }
 

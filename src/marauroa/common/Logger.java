@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.6 2005/03/06 21:32:59 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.7 2005/03/07 19:36:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,6 +33,11 @@ public class Logger
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     }
   
+  public static void initialize()
+    {    
+    getLogger().out=null;
+    }
+    
   public static void initialize(String base, String prefix)
     {    
     try

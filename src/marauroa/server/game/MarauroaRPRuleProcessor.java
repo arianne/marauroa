@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.2 2005/03/07 19:36:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,11 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     return RPAction.Status.FAIL;
     }
 
-  public void nextTurn()
+  public void beginTurn()
+    {
+    }
+    
+  public void endTurn()
     {
     }
 

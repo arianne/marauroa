@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.7 2005/03/06 21:32:59 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.8 2005/03/07 19:36:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,7 @@ public class marauroad extends Thread
   private static void setArguments(String[] args)
     {
     int i=0;
+    Logger.initialize();
     
     while(i!=args.length)
       {

@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.1 2005/01/23 21:00:47 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.2 2005/03/07 19:36:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,11 @@ public class PythonRP
     return 0;
     }
   
-  public void nextTurn()
+  public void beginTurn()
+    {
+    }
+
+  public void endTurn()
     {
     }
 

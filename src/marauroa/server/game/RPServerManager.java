@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.9 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.10 2005/03/07 19:36:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -432,7 +432,7 @@ public class RPServerManager extends Thread
             scheduler.visit(ruleProcessor);
 
             /** Compute game RP rules to move to the next turn */
-            ruleProcessor.nextTurn();
+            ruleProcessor.endTurn();
  
             /** Send content that is waiting to players */
             deliverTransferContent();
@@ -445,6 +445,8 @@ public class RPServerManager extends Thread
 
             /** Move zone to the next turn */
             world.nextTurn();
+            
+            ruleProcessor.beginTurn();
             }
           }
         finally

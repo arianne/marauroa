@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.4 2005/03/06 21:32:59 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.5 2005/03/07 19:36:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,9 +26,17 @@ public abstract class ariannexp
   private int clientid;
   private List<Message> messages;
   
-  public ariannexp()
+  public ariannexp(boolean logging)
     {
-    Logger.initialize("base/","client_log");
+    if(logging)
+      {
+      Logger.initialize("base","client_log");
+      }
+    else
+      {
+      Logger.initialize();
+      }
+    
     Logger.trace("ariannexp::ariannexp",">");
     messages=new LinkedList<Message>();
     Logger.trace("ariannexp::ariannexp","<");
