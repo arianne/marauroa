@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.10 2004/01/27 15:51:14 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.11 2004/03/05 13:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -152,7 +152,7 @@ public class Test_the1001 extends TestCase
           }
     
         assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
-        assertTrue(arena.has(RPCode.var_fame));      
+        assertTrue(arena.has(RPCode.var_karma));      
         
         assertEquals(arena.getInt(RPCode.var_thumbs_up),0);
         assertEquals(arena.getInt(RPCode.var_thumbs_down),0);
@@ -177,7 +177,7 @@ public class Test_the1001 extends TestCase
         assertTrue(arena.has(RPCode.var_timeout));
         assertTrue(arena.has(RPCode.var_thumbs_up));
         assertTrue(arena.has(RPCode.var_thumbs_down));
-        assertTrue(arena.has(RPCode.var_fame));
+        assertTrue(arena.has(RPCode.var_karma));
     
         rpu.nextTurn();
     

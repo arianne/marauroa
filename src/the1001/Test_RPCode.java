@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.24 2004/01/27 16:39:58 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.25 2004/03/05 13:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,7 +198,7 @@ public class Test_RPCode extends TestCase
       assertFalse(newgladiator.has(RPCode.var_damage));
 
       assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
-      assertTrue(arena.has(RPCode.var_fame));      
+      assertTrue(arena.has(RPCode.var_karma));      
       }
     catch(Exception e)
       {
@@ -273,7 +273,7 @@ public class Test_RPCode extends TestCase
       assertFalse(newgladiator.has(RPCode.var_damage));
 
       assertEquals(arena.get(RPCode.var_status),RPCode.var_request_fame);
-      assertTrue(arena.has(RPCode.var_fame));      
+      assertTrue(arena.has(RPCode.var_karma));      
       
       assertEquals(arena.getInt(RPCode.var_thumbs_up),0);
 
@@ -297,7 +297,7 @@ public class Test_RPCode extends TestCase
       assertTrue(arena.has(RPCode.var_timeout));
       assertTrue(arena.has(RPCode.var_thumbs_up));
       assertTrue(arena.has(RPCode.var_thumbs_down));
-      assertTrue(arena.has(RPCode.var_fame));
+      assertTrue(arena.has(RPCode.var_karma));
       assertTrue(player.has(RPCode.var_hidden_vote));
       assertTrue(newplayer.has(RPCode.var_hidden_vote));
 
