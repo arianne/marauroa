@@ -130,7 +130,10 @@ Message S2C ChooseCharacter ACK
 -------------------------------
 The ChooseCharacter ACK Message is sent from server to client to notify the 
 client that the character has been choosen.
-It has no params.
+The message is composed by:
+- the object.ID of the character
+
+We need this value to be able to track our own character.
 
 
 Message S2C ChooseCharacter NACK
