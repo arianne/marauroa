@@ -54,7 +54,7 @@ public class JDBCTransaction extends Transaction
     catch(SQLException e)
       {
       //throw new TransactionException(e.getMessage());
-      marauroad.trace("JDBCTransaction::rollback","!",e.getMessage());
+      marauroad.thrown("JDBCTransaction::rollback","!",e);
       }
     }
   
@@ -82,7 +82,7 @@ public class JDBCTransaction extends Transaction
         }
       catch(SQLException sqle)
         {
-        marauroad.trace("JDBCTransaction::isValid","X","Invalid!: "+sqle.getMessage());
+        marauroad.thrown("JDBCTransaction::isValid","X",sqle);
         }
       }
     return(valid);

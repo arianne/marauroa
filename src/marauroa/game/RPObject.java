@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.37 2004/04/17 10:02:49 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.38 2004/05/07 13:50:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -159,6 +159,11 @@ public class RPObject extends Attributes
     added=new LinkedList();
     deleted=new LinkedList();
     put("id",id.getObjectID());
+    }
+  
+  public RPObject.ID getID() throws Attributes.AttributeNotFoundException
+    {
+    return new ID(this);
     }
 	
   public boolean isEmpty()

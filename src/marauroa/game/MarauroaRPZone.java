@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.40 2004/04/20 15:11:43 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.41 2004/05/07 13:52:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,7 @@ public class MarauroaRPZone implements RPZone
       }
     catch(Exception e)
       {
+      marauroad.thrown("MarauroaRPZone::MarauroaRPZone","X",e);
       marauroad.trace("MarauroaRPZone::MarauroaRPZone","!",e.getMessage());
       System.exit(1);
       }
@@ -64,7 +65,7 @@ public class MarauroaRPZone implements RPZone
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("MarauroaRPZone::add","X",e.getMessage());
+      marauroad.thrown("MarauroaRPZone::add","X",e);
       throw new RPObjectInvalidException(e.getAttribute());
       }
     }
@@ -94,7 +95,6 @@ public class MarauroaRPZone implements RPZone
       }
     catch(Exception e)
       {
-      e.printStackTrace();
       throw new RPObjectInvalidException(e.getMessage());
       }
     }

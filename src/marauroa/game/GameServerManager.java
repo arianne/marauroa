@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.44 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.45 2004/05/07 13:50:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -147,8 +147,8 @@ public final class GameServerManager extends Thread
         }
       catch(Exception e)
         {
-        marauroad.trace("GameServerManager::ServerInfo::(static)","X",e.getMessage());
         marauroad.trace("GameServerManager::ServerInfo::(static)","!","ABORT: Unable to load Server info");
+        marauroad.thrown("GameServerManager::ServerInfo::(static)","X",e);
         System.exit(-1);
         }
       finally
@@ -255,8 +255,8 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      e.printStackTrace();
       marauroad.trace("GameServerManager::processLoginEvent","X",e.getMessage());
+      marauroad.thrown("GameServerManager::processLoginEvent","X",e);
       }
     finally
       {
@@ -325,8 +325,7 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      marauroad.trace("GameServerManager::processChooseCharacterEvent","X",e.getMessage());
-      e.printStackTrace();
+      marauroad.thrown("GameServerManager::processChooseCharacterEvent","X",e);
       }
     finally
       {
@@ -369,6 +368,7 @@ public final class GameServerManager extends Thread
         catch(Exception e)
           {
           marauroad.trace("GameServerManager::processLogoutEvent","X","Exception while storing character: "+e.getMessage());
+          marauroad.thrown("GameServerManager::processLogoutEvent","X",e);
           }
         }
       else
@@ -387,7 +387,7 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      marauroad.trace("GameServerManager::processLogoutEvent","X",e.getMessage());
+      marauroad.thrown("GameServerManager::processLogoutEvent","X",e);
       }
     finally
       {
@@ -452,7 +452,7 @@ public final class GameServerManager extends Thread
     catch(Exception e)
       {
       stats.addActionsInvalid();
-      marauroad.trace("GameServerManager::processActionEvent","X",e.getMessage());
+      marauroad.thrown("GameServerManager::processActionEvent","X",e);
       }
     finally
       {
@@ -489,7 +489,7 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      marauroad.trace("GameServerManager::processPerceptionACKEvent","X",e.getMessage());
+      marauroad.thrown("GameServerManager::processPerceptionACKEvent","X",e);
       }
     finally
       {

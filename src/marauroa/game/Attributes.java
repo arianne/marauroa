@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.27 2004/04/16 12:23:58 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.28 2004/05/07 13:50:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -110,7 +110,12 @@ public class Attributes implements marauroa.net.Serializable
     
     content.put(attribute,value);
     }
-	
+
+  public void add(String attribute, int value) throws AttributeNotFoundException
+    {
+    put(attribute,getInt(attribute)+value);
+    }
+    
   /** This method set the value of an attribute
    *  @param attribute the attribute to be set.
    *  @param value the value we want to set. */

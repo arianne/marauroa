@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.9 2004/04/16 12:23:42 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.10 2004/05/07 13:50:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,12 +62,14 @@ public class Configuration
       }
     catch(FileNotFoundException e)
       {
-      marauroad.trace("Configuration","X","Configuration file not found: "+e.getMessage());
+      marauroad.trace("Configuration","X","Configuration file not found: "+configurationFile);
+      marauroad.thrown("Configuration","X",e);
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
-      marauroad.trace("Configuration","X","Error loading Configuration file: "+e.getMessage());
+      marauroad.trace("Configuration","X","Error loading Configuration file");
+      marauroad.thrown("Configuration","X",e);
       throw new PropertyFileNotFoundException();
       }
     finally
@@ -145,12 +147,14 @@ public class Configuration
       }
     catch(FileNotFoundException e)
       {
-      marauroad.trace("Configuration::store","X","Configuration file not found: "+e.getMessage());
+      marauroad.trace("Configuration::store","X","Configuration file not found: "+configurationFile);
+      marauroad.thrown("Configuration::store","X",e);
       throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
-      marauroad.trace("Configuration::store","X","Error loading Configuration file: "+e.getMessage());
+      marauroad.trace("Configuration::store","X","Error loading Configuration file: "+configurationFile);
+      marauroad.thrown("Configuration::store","X",e);
       throw new PropertyFileNotFoundException();
       }
     finally

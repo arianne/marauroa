@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.34 2004/04/30 13:48:43 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.35 2004/05/07 13:50:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Exception e)
       {
-      marauroad.trace("JDBCPlayerDatabase::getDatabase","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::getDatabase","X",e);
       throw new NoDatabaseConfException();
       }
     finally
@@ -135,7 +135,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::hasPlayer","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::hasPlayer","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -179,12 +179,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getCharacterList","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::getCharacterList","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
       marauroad.trace("JDBCPlayerDatabase::getCharactersList","X","Database doesn't contains that username("+username+")");
+      marauroad.thrown("JDBCPlayerDatabase::getCharactersList","X",e);
       throw e;
       }
     finally
@@ -228,7 +229,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addPlayer","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::addPlayer","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -263,11 +264,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::removePlayer","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::removePlayer","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::removePlayer","X",e);
       marauroad.trace("JDBCPlayerDatabase::removePlayer","X","Database doesn't contains that username("+username+")");
       throw e;
       }
@@ -308,11 +310,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::removeCharacter","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::removeCharacter","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::removeCharacter","X",e);
       marauroad.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")");
       throw e;
       }
@@ -356,7 +359,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::verifyAccount","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::verifyAccount","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -405,11 +408,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::getLoginEvent","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::getLoginEvent","X",e);
       marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X","Database doesn't contains that username("+username+")");
       throw e;
       }
@@ -454,11 +458,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::hasCharacter","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::hasCharacter","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::hasCharacter","X",e);
       marauroad.trace("JDBCPlayerDatabase::hasCharacter","X","Database doesn't contains that username("+username+")");
       throw e;
       }
@@ -499,7 +504,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::addLoginEvent","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -543,12 +548,13 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       {
       trans.rollback();
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Invalid RPObject: Lacks of attribute "+e.getAttribute());
+      marauroad.thrown("JDBCPlayerDatabase::addCharacter","X",e);
       throw new PlayerNotFoundException(username);
       }
     catch(Exception sqle)
       {
       trans.rollback();
-      marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::addCharacter","X",sqle);
       throw new GenericDatabaseException(username);
       }
     finally
@@ -580,7 +586,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::getPlayerCount","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally
@@ -633,11 +639,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::setRPObject","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::setRPObject","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::setRPObject","X",e);
       marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Database doesn't contains that username("+username+")");
       throw e;
       }
@@ -688,21 +695,24 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getRPObject","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::getRPObject","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     catch(PlayerNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::getRPObject","X",e);
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Database doesn't contains that username("+username+")");
       throw e;
       }
     catch(CharacterNotFoundException e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::getRPObject","X",e);
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Player("+username+") doesn't contains that character("+character+")");
       throw e;
       }
     catch (Exception e)
       {
+      marauroad.thrown("JDBCPlayerDatabase::getRPObject","X",e);
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Error serializing character: "+e.getMessage());
       throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
       }
@@ -749,7 +759,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(GenericDatabaseException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::reInitDB","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::reInitDB","X",e);
       throw e;
       }
     finally
@@ -802,7 +812,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Exception e)
       {
-      marauroad.trace("JDBCPlayerDatabase::runDBScript","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::runDBScript","X",e);
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
@@ -857,7 +867,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch (Exception e)
       {
-      marauroad.trace("JDBCRPObjectDatabase::createConnection","X",e.getMessage());
+      marauroad.thrown("JDBCRPObjectDatabase::createConnection","X",e);
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
@@ -939,7 +949,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::iterator","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::iterator","X",e);
       return null;
       }
     finally
@@ -972,7 +982,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException e)
       {
-      marauroad.trace("JDBCRPObjectDatabase::hasRPObject","X",e.getMessage());
+      marauroad.thrown("JDBCRPObjectDatabase::hasRPObject","X",e);
       return false;
       }
     finally
@@ -1021,7 +1031,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Exception e)
       {
-      marauroad.trace("JDBCRPObjectDatabase::loadRPObject","X",e.getMessage());
+      marauroad.thrown("JDBCRPObjectDatabase::loadRPObject","X",e);
       throw e;
       }
     finally
@@ -1089,7 +1099,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException e)
       {
-      marauroad.trace("JDBCRPObjectDatabase::deleteRPObject","X",e.getMessage());
+      marauroad.thrown("JDBCRPObjectDatabase::deleteRPObject","X",e);
       throw e;
       }
     finally
@@ -1140,12 +1150,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(Attributes.AttributeNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::storeRPObject","X",e);
       throw new SQLException(e.getMessage());
       }
     catch(SQLException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::storeRPObject","X",e.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::storeRPObject","X",e);
       throw e;
       }
     finally
@@ -1236,7 +1246,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       catch(Exception e)
         {
-        marauroad.trace("JDBCRPObjectDatabase::storeRPObject","X",e.getMessage());
+        marauroad.thrown("JDBCRPObjectDatabase::storeRPObject","X",e);
         }
       }
 
@@ -1270,7 +1280,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
+      marauroad.thrown("JDBCPlayerDatabase::addLoginEvent","X",sqle);
       throw new GenericDatabaseException(sqle.getMessage());
       }
     finally

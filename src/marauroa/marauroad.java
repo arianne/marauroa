@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.80 2004/05/06 13:00:05 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.81 2004/05/07 13:50:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -205,6 +205,7 @@ public class marauroad extends Thread
       out.println(text);
       out.flush();
       }
+      
     System.out.println(text);
     }
   
@@ -279,6 +280,18 @@ public class marauroad extends Thread
 
       getMarauroa().message(ts+"\t"+event+"\t"+module+"\t"+text);
       }
+    }
+  
+  public static void thrown(String module, String event, Throwable exception)
+    {
+    StringBuffer sb=new StringBuffer();
+    StackTraceElement[] ste=exception.getStackTrace();
+    for(int i=0;i<ste.length;++i)
+      {
+      sb.append(ste[i].toString()+"\n");
+      }    
+    
+    trace(module,"X",sb.toString());
     }
     
   public static boolean loggable(String module,String event)

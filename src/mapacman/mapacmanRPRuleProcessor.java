@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.7 2004/04/29 14:16:50 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.8 2004/05/07 13:50:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -79,8 +79,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      marauroad.trace("mapacmanRPRuleProcessor::execute","X",e.getMessage());
-      e.printStackTrace();
+      marauroad.thrown("mapacmanRPRuleProcessor::execute","X",e);
       return RPAction.STATUS_FAIL;
       }
     finally
@@ -119,7 +118,7 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       }
     catch(Exception e)
       {
-      e.printStackTrace(System.out);
+      marauroad.thrown("mapacmanRPRuleProcessor::onExit","X",e);
       }
     finally
       {
