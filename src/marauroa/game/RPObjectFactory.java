@@ -12,6 +12,7 @@ import java.util.Map;
 import marauroa.game.RPObject;
 import marauroa.marauroad;
 import marauroa.net.InputSerializer;
+import marauroa.net.OutputSerializer;
 
 public class RPObjectFactory
 {
@@ -76,6 +77,30 @@ public class RPObjectFactory
     finally
     {
       marauroad.trace("RPObjectFactory::getRPObject","<");
+    }
+  }
+  
+  /**
+   * adds the given RPObject into serializer
+   **/
+  public void RPObject(OutputSerializer os,RPObject rp_object)
+    throws IOException
+  {
+    marauroad.trace("RPObjectFactory::addRPObject",">");
+    try
+    {
+      int index = rp_object.objectType;
+      os.write(index);
+      rp_object.writeObject(os);
+    }
+    catch(Exception e)
+    {
+      marauroad.trace("RPObjectFactory::addRPObject","X",e.getMessage());
+      throw new IOException(e.getMessage());
+    }
+    finally
+    {
+      marauroad.trace("RPObjectFactory::addRPObject","<");
     }
   }
 }

@@ -216,7 +216,6 @@ public class RPObject extends Attributes
       try
       {
       marauroad.trace("RPObject.writeObject()","<");
-    out.write(objectType);
     super.writeObject(out);
     
     out.write((int)slots.size());

@@ -70,7 +70,6 @@ public class RPAction extends Attributes
   
   public void writeObject(marauroa.net.OutputSerializer out) throws java.io.IOException
     {
-      out.write(actionType);
     super.writeObject(out);
     }
   

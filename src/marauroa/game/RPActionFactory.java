@@ -9,9 +9,9 @@ package marauroa.game;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import marauroa.game.RPObject;
 import marauroa.marauroad;
 import marauroa.net.InputSerializer;
+import marauroa.net.OutputSerializer;
 
 public class RPActionFactory
 {
@@ -77,5 +77,30 @@ public class RPActionFactory
       marauroad.trace("RPActionFactory::getRPAction","<");
     }
   }
+  
+  /**
+   * adds the given RPAction into serializer
+   */
+  public void addRPAction(OutputSerializer os,RPAction rp_action)
+    throws IOException
+  {
+    marauroad.trace("RPActionFactory::addRPAction",">");
+    try
+    {
+      int index = rp_action.actionType;
+      os.write(index);
+      rp_action.writeObject(os);
+    }
+    catch(Exception e)
+    {
+      marauroad.trace("RPActionFactory::addRPAction","X",e.getMessage());
+      throw new IOException(e.getMessage());
+    }
+    finally
+    {
+      marauroad.trace("RPActionFactory::addRPAction","<");
+    }
+  }
+  
 }
 
