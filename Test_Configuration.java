@@ -22,6 +22,9 @@ public class Test_Configuration extends TestCase
 
       result=conf.get("test_ATestString");
       assertEquals(result,"AnotherTestString");
+
+      conf.set("test_ATestString", "ATestString");
+      conf.store();
       }
     catch(Configuration.PropertyFileNotFoundException e)
       {

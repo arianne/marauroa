@@ -21,10 +21,18 @@ public class Configuration
     
   public static class PropertyFileNotFoundException extends Throwable
     {
+    private String message;
     PropertyFileNotFoundException()
       {
-      super("Property File ["+configurationFile+"] not found");
+      super();
+      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+      message="Property File ["+file+"] not found";
       }
+    
+    public String getMessage()
+      {
+      return message;
+      }     
     }
 
   private Configuration() throws PropertyFileNotFoundException
@@ -32,7 +40,8 @@ public class Configuration
     try
       {
       properties=new Properties();
-      properties.load(new FileInputStream(configurationFile));
+      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+      properties.load(new FileInputStream(file));
       }
     catch(FileNotFoundException e)
       {
@@ -73,21 +82,22 @@ public class Configuration
     properties.put(property,value);
     }
   
-  public void store()
+  public void store() throws PropertyFileNotFoundException
     {
     try
       {
-      properties.store(new FileOutputStream(configurationFile),"Marauroa Configuration file");
+      String file=getClass().getClassLoader().getResource(configurationFile).getPath();
+      properties.store(new FileOutputStream(file),"Marauroa Configuration file");
       }
     catch(FileNotFoundException e)
       {
       marauroad.trace("Configuration::store","X","Configuration file not found: "+e.getMessage());
-      System.exit(-1);
+      throw new PropertyFileNotFoundException();
       }
     catch(IOException e)
       {
       marauroad.trace("Configuration::store","X","Error loading Configuration file: "+e.getMessage());
-      System.exit(-1);
+      throw new PropertyFileNotFoundException();
       }
     }
   }
