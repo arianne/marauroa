@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.33 2004/01/08 01:42:57 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.34 2004/01/08 13:28:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,25 +74,32 @@ public class RPCode
       if(!player.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because player does not own that object */
-        return RPAction.Fail("Failed because player does not own that object");
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
+        marauroad.trace("RPCode::RequestFight","D",status.toString());
+        return status;
         }
 
       if(player.has("fighting"))
         {
         /** Failed because player is already fighting */
-        return RPAction.Fail("Failed because player is already fighting");
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") is already fighting");
+        marauroad.trace("RPCode::RequestFight","D",status.toString());
+        return status;
         }
 
       if(player.has("requested"))
         {
         /** Failed because player is already fighting */
-        return RPAction.Fail("Failed because player has already requested to fight");
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") has already requested to fight");
+        marauroad.trace("RPCode::RequestFight","D",status.toString());
+        return status;
         }
       
       RPObject gladiator=player.getSlot("gladiators").get(gladiator_id);
 
       if(arena.get("status").equals("waiting") && arena.getSlot("gladiators").size()<GLADIATORS_PER_FIGHT)
         {
+        marauroad.trace("RPCode::RequestFight","D","Player("+player_id.toString()+") PROCEED for fighting with gladiator("+gladiator_id.toString()+")");        
         player.put("fighting","");
         player.put("choose",gladiator_id.getObjectID());
         arena.getSlot("gladiators").add(gladiator);
@@ -100,6 +107,7 @@ public class RPCode
         }
       else
         {
+        marauroad.trace("RPCode::RequestFight","D","Player("+player_id.toString()+") has to WAIT for fighting with gladiator("+gladiator_id.toString()+")");        
         player.put("requested",ruleProcessor.getTurn());
         player.put("choose",gladiator_id.getObjectID());
         arena.put("waiting",arena.getInt("waiting")+1);
@@ -109,6 +117,7 @@ public class RPCode
       /** We check now if Arena is complete */
       if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
         {
+        marauroad.trace("RPCode::RequestFight","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
         arena.put("status","fighting");
         }
         
@@ -139,6 +148,7 @@ public class RPCode
       
       if(player.has("requested"))
         {
+        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Waiting Gladiators List");
         arena.put("waiting",arena.getInt("waiting")-1);
         player.remove("requested");
         player.remove("choose");
@@ -148,12 +158,14 @@ public class RPCode
        
       if(player.has("fighting"))
         {
+        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Fighting Gladiators List");
         /** TODO: Player abandon the fight. */        
         playersFighting.remove(player);
         }
         
       if(player.has("!vote"))
         {
+        marauroad.trace("RPCode::RemoveWaitingPlayer","D","Player("+player_id.toString()+") removed from Vote Gladiators List");
         player.remove("!vote");
         playersVoted.remove(player);
         }
@@ -203,20 +215,26 @@ public class RPCode
       if(!player.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because player does not own that object */
-        return RPAction.Fail("Failed because player does not own that object");
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") does not own that object("+gladiator_id.toString()+")");
+        marauroad.trace("RPCode::FightMode","D",status.toString());
+        return status;
         }
 
       if(!arena.getSlot("gladiators").has(gladiator_id))
         {
         /** Failed because gladiator is not fighting on the arena*/
-        return RPAction.Fail("Failed because gladiator is not fighting on the arena");
+        RPAction.Status status=RPAction.Fail("Failed because gladiator("+gladiator_id.toString()+") is not fighting on the arena");
+        marauroad.trace("RPCode::FightMode","D",status.toString());
+        return status;
         }
       
       /** NOTE: Here is the combat type choosal. */
       if(!(fight_mode.equals("rock") || fight_mode.equals("paper") || fight_mode.equals("scissor")))
         {
         /** Failed because gladiator is fighting using an unsupported mode. */
-        return RPAction.Fail("Failed because gladiator is fighting using an unsupported mode");
+        RPAction.Status status=RPAction.Fail("Failed because gladiator("+gladiator_id.toString()+") is fighting using an unsupported mode("+fight_mode+")");
+        marauroad.trace("RPCode::FightMode","D",status.toString());
+        return status;
         }
       
       RPObject gladiator=arena.getSlot("gladiators").get(gladiator_id);
@@ -253,6 +271,7 @@ public class RPCode
           ++i;
           }
           
+        marauroad.trace("RPCode::ResolveFight","D","Compute damage that each gladiator does");
         for(i=0;i<gladiators.length;++i)
           {
           for(int j=0;j<gladiators.length;++j)
@@ -267,6 +286,7 @@ public class RPCode
         /** Check if Combat is completed */
         if(combatCompleted(gladiators))
           {
+          marauroad.trace("RPCode::ResolveFight","D","Combat is FINISHED");
           int fame=0;
           
           for(i=0;i<gladiators.length;++i)
@@ -323,53 +343,52 @@ public class RPCode
    *  Rock-Paper-Scissor game with a bit of RP features. */  
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
-    if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
-      {
-      /** Failed because the gladiator is dead */
-      return;
-      }
+    marauroad.trace("RPCode::computeDamageGladiators",">");
     
-    if(!gladiator1.has("!mode"))
-      {
-      /** Gladiator1 has not begin to fight. */
-      return;
-      }
+    try
+      {    
+      if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
+        {
+        /** Failed because the gladiator is dead */
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator is dead (hp<=0)");
+        return;
+        }
+    
+      if(!gladiator1.has("!mode"))
+        {
+        /** Gladiator1 has not begin to fight. */
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE 0 because gladiator("+gladiator1.get("object_id")+") has not choose fight mode");
+        return;
+        }
          
-    if(!gladiator2.has("!mode"))
-      {
-      /** Gladiator2 is idle, no combat, just hit */
-      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
-      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("damage",damage);
-      }
+      if(!gladiator2.has("!mode"))
+        {
+        /** Gladiator2 is idle, no combat, just hit */
+        int damage=gladiator1.getInt("attack");
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiator("+gladiator2.get("object_id")+") has not choose fight mode");
+        gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+        gladiator2.put("damage",damage);
+        }
       
-    String mode_g1=gladiator1.get("!mode");
-    String mode_g2=gladiator2.get("!mode");
+      String mode_g1=gladiator1.get("!mode");
+      String mode_g2=gladiator2.get("!mode");
     
-    if(mode_g1.equals(mode_g2))
-      {
-      /** Draw: We substract damage to each side */
-      int damage;
-      
-      damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
-      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("?damage",damage);
-      ruleProcessor.trackObject(gladiator2);
-
-      damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
-      gladiator1.put("hp",gladiator1.getInt("hp")-damage);
-      gladiator1.put("?damage",damage);
-      ruleProcessor.trackObject(gladiator1);
+      if((mode_g1.equals("rock") && mode_g2.equals("scissor")) ||
+        (mode_g1.equals("paper") && mode_g2.equals("rock"))    ||
+        (mode_g1.equals("scissor") && mode_g2.equals("paper")) ||
+        (mode_g1.equals(mode_g2)))
+        {
+        int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"))+1;
+        marauroad.trace("RPCode::computeDamageGladiators","D","DAMAGE "+damage+" because gladiators has WIN to ("+mode_g1+") vs ("+mode_g2+")");
+        gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+        gladiator2.put("?damage",damage);
+        ruleProcessor.trackObject(gladiator2);
+        }  
       }
-    else if((mode_g1.equals("rock") && mode_g2.equals("scissor")) ||
-      (mode_g1.equals("paper") && mode_g2.equals("rock"))   ||
-      (mode_g1.equals("scissor") && mode_g2.equals("paper")))
+    finally
       {
-      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
-      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
-      gladiator2.put("?damage",damage);
-      ruleProcessor.trackObject(gladiator2);
-      }  
+      marauroad.trace("RPCode::computeDamageGladiators","<");
+      }
     }
     
   /** This action is used to vote for a gladiator once the fight is over.
@@ -399,21 +418,27 @@ public class RPCode
       if(player.has("!vote"))
         {
         /** Failed because player already voted */
-        return RPAction.Fail("Failed because player already voted");
+        RPAction.Status status=RPAction.Fail("Failed because player("+player_id.toString()+") already voted");
+        marauroad.trace("RPCode::Vote","D",status.toString());
+        return status;
         }
 
       if(!arena.get("status").equals("request_fame"))
         {
         /** Failed because arena is not still requesting fame */
-        return RPAction.Fail("Failed because arena is not still requesting fame");
+        RPAction.Status status=RPAction.Fail("Failed because arena ("+arena.get("status")+") is not still requesting fame");
+        marauroad.trace("RPCode::Vote","D",status.toString());
+        return status;
         }
       
       if(vote.equals("up"))
         {
+        marauroad.trace("RPCode::Vote","D","Player("+player_id.toString()+") voted UP");
         arena.put("thumbs_up",arena.getInt("thumbs_up")+1);
         }
       else
         {
+        marauroad.trace("RPCode::Vote","D","Player("+player_id.toString()+") voted DOWN");
         arena.put("thumbs_down",arena.getInt("thumbs_down")+1);
         }
       
@@ -445,6 +470,7 @@ public class RPCode
         {
         if(arena.getInt("timeout")==0)
           {
+          marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME completed");
           int up=arena.getInt("thumbs_up");
           int down=arena.getInt("thumbs_up");
           int fame=arena.getInt("fame");
@@ -458,7 +484,9 @@ public class RPCode
           }
         else
           {
-          arena.put("timeout",arena.getInt("timeout")-1);
+          int timeout=arena.getInt("timeout")-1;
+          marauroad.trace("RPCode::RequestFame","D","Arena REQUEST FAME timer ("+timeout+")");
+          arena.put("timeout",timeout);
           }
         
         zone.modify(arena);
@@ -466,7 +494,6 @@ public class RPCode
       }
     catch(Exception e)
       {
-      e.printStackTrace();
       marauroad.trace("RPCode::RequestFame","X",e.getMessage());
       }
     finally
@@ -487,6 +514,7 @@ public class RPCode
 
       Iterator it;
 
+      marauroad.trace("RPCode::SetUpNextCombat","D","Clean players votes");
       it=playersVoted.iterator();
       while(it.hasNext())
         {
@@ -502,6 +530,7 @@ public class RPCode
       arena.remove("timeout");
       arena.remove("winner");
       
+      marauroad.trace("RPCode::SetUpNextCombat","D","Restore fighters HP and set them to idle");
       /* Restore fighthing players */
       it=playersFighting.iterator();
       while(it.hasNext())
@@ -516,6 +545,7 @@ public class RPCode
         zone.modify(player);
         }
       
+      marauroad.trace("RPCode::SetUpNextCombat","D","Setup Arena to waiting status");
       playersFighting.clear();
       arena.getSlot("gladiators").clear();
       arena.put("status","waiting");          
@@ -523,15 +553,17 @@ public class RPCode
       /* Choose new fighters if available */ 
       if(arena.getInt("waiting")>0)
         {
-        int i=0;
+        marauroad.trace("RPCode::SetUpNextCombat","D","Add waiting fighters to Arena");
         it=playersWaiting.iterator();
        
         while(it.hasNext())
           {
-          ++i;
           /** Closely related to RequestFight code. We should avoid duplication */
           RPObject player=(RPObject)it.next();
           RPObject gladiator=player.getSlot("gladiators").get(new RPObject.ID(player.getInt("choose")));
+
+          marauroad.trace("RPCode::SetUpNextCombat","D","Added player("+new RPObject.ID(player).toString()+") with gladiator("+new RPObject.ID(gladiator).toString()+")");
+          
           player.remove("requested");
           arena.put("waiting",arena.getInt("waiting")-1);
           
@@ -541,8 +573,9 @@ public class RPCode
           playersFighting.add(player);
           it.remove();
           
-          if(i==GLADIATORS_PER_FIGHT)
+          if(arena.getSlot("gladiators").size()==GLADIATORS_PER_FIGHT)
             {
+            marauroad.trace("RPCode::SetUpNextCombat","D","Arena has "+GLADIATORS_PER_FIGHT+" gladiators and FIGHT begins");        
             arena.put("status","fighting");
             break;
             }
