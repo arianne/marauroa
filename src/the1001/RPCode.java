@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.10 2004/01/01 11:55:03 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.11 2004/01/01 12:41:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -171,7 +171,7 @@ public class RPCode
       }
     }
     
-  public static void ResolveFight() throws Exception
+  public static void ResolveFight()
     {
     marauroad.trace("RPCode::ResolveFight",">");
    
@@ -202,7 +202,16 @@ public class RPCode
               }
             }
           }
+        
+        /** We check for dead players and determine if combat is finished. */
+        for(i=0;i<gladiators.length;++i)
+          {
+          }
         }      
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPCode::ResolveFight","X",e.getMessage());
       }
     finally
       {
@@ -223,8 +232,37 @@ public class RPCode
     
     if(mode_g1.equals(mode_g2))
       {
-      /** Draw: We substract one to each side */
+      /** Draw: We substract damage to each side */
+      int damage;
+      
+      damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
+      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+
+      damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
+      gladiator1.put("hp",gladiator1.getInt("hp")-damage);
       }
+    else if(mode_g1.equals("rock") && mode_g2.equals("scissor"))
+      {
+      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
+      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+      }  
+    else if(mode_g1.equals("paper") && mode_g2.equals("rock"))
+      {
+      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
+      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+      }  
+    else if(mode_g1.equals("scissor") && mode_g2.equals("paper"))
+      {
+      int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
+      gladiator2.put("hp",gladiator2.getInt("hp")-damage);
+      }  
+    else
+      {
+      /** Whatever other valid combination means gladiator 2 wins */
+      int damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
+      gladiator1.put("hp",gladiator1.getInt("hp")-damage);
+      }
+    
     }  
   }
   

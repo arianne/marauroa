@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.12 2003/12/31 13:03:07 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.13 2004/01/01 12:41:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,10 +61,16 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     
     try
       {
-      if(action.get("type")=="request_fight")
+      if(action.get("type").equals("request_fight"))
         {
         int gladiator_id=action.getInt("gladiator_id");
         status=RPCode.RequestFight(id, new RPObject.ID(gladiator_id));
+        }
+      else if(action.get("type").equals("fight_mode"))
+        {
+        int gladiator_id=action.getInt("gladiator_id");
+        String fight_mode=action.get("fight_mode");
+        status=RPCode.FightMode(id, new RPObject.ID(gladiator_id),fight_mode);
         }
       
       /** We notify the player about the action result */
@@ -96,6 +102,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     marauroad.trace("the1001RPRuleProcessor::nextTurn",">");        
     ++turn;
     removeOneTurnAttributes();      
+    RPCode.ResolveFight();
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
     }
   

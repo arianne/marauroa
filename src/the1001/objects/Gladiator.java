@@ -1,4 +1,4 @@
-/* $Id: Gladiator.java,v 1.6 2004/01/01 11:55:04 arianne_rpg Exp $ */
+/* $Id: Gladiator.java,v 1.7 2004/01/01 12:41:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,7 @@ public class Gladiator extends RPObject
     put("type","gladiator");
     put("name",randomNames[Math.abs(random.nextInt()%randomNames.length)]);
     put("hp",100);
-    put("hit",10);
+    put("attack",5);
 	put("fame",0);
 	put("num_victory",0);
 	put("num_defeat",0);    
