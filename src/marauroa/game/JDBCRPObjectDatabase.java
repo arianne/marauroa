@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.2 2004/03/16 13:14:37 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.3 2004/03/16 13:49:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,38 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   {
   private Connection connection;  
   private static JDBCRPObjectDatabase playerDatabase=null;
+  
+  public static String EscapeString(String text)
+    {
+    StringBuffer result=new StringBuffer();
+    
+    for(int i=0;i<text.length();++i)
+      {
+      if(text.charAt(i)=='\'' || text.charAt(i)=='\"' || text.charAt(i)=='\\')
+        {
+        result.append("\\");
+        }
+        
+      result.append(text.charAt(i));      
+      }
+    
+    return result.toString();
+    }
+  
+  public static String UnescapeString(String text)
+    {
+    StringBuffer result=new StringBuffer();
+    
+    for(int i=0;i<text.length();++i)
+      {
+      if(text.charAt(i)!='\\' || (text.charAt(i)=='\\' && text.charAt(((i-1)>0?i-1:0))=='\\'))
+        {
+        result.append(text.charAt(i));      
+        }
+      }
+    
+    return result.toString();
+    }
   
   private JDBCRPObjectDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
@@ -199,7 +231,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     ResultSet result = stmt.executeQuery(query);
     while(result.next())
       {
-      object.put(result.getString(1),result.getString(2));
+      object.put(UnescapeString(result.getString(1)),UnescapeString(result.getString(2)));
       }
       
     query = "select name,slot_id from rpslot where object_id="+object_id+";";
@@ -208,7 +240,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     result = stmt.executeQuery(query);
     while(result.next())
       {
-      RPSlot slot=new RPSlot(result.getString(1));
+      RPSlot slot=new RPSlot(UnescapeString(result.getString(1)));
       object.addSlot(slot);
       
       int slot_id=result.getInt(2);
@@ -343,7 +375,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       String attrib=(String) it.next();
       String value=object.get(attrib);
 
-      query = "insert into rpattribute values("+object_id+",'"+attrib+"','"+value+"');";
+      query = "insert into rpattribute values("+object_id+",'"+EscapeString(attrib)+"','"+EscapeString(value)+"');";
       marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
       stmt.execute(query);
       }
@@ -353,11 +385,11 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       {
       RPSlot slot=(RPSlot) sit.next();
        
-      query = "insert into rpslot values("+object_id+",'"+slot.getName()+"',NULL);";
+      query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
       marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
       stmt.execute(query);
 
-      query = "select slot_id from rpslot where object_id="+object_id+" and name like '"+slot.getName()+"';";
+      query = "select slot_id from rpslot where object_id="+object_id+" and name like '"+EscapeString(slot.getName())+"';";
       marauroad.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
       int object_slot_id;
       

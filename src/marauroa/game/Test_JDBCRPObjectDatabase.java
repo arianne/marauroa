@@ -1,4 +1,4 @@
-/* $Id: Test_JDBCRPObjectDatabase.java,v 1.1 2004/03/16 00:00:43 arianne_rpg Exp $ */
+/* $Id: Test_JDBCRPObjectDatabase.java,v 1.2 2004/03/16 13:49:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,6 +60,10 @@ public class Test_JDBCRPObjectDatabase extends TestCase
     
   public void testStoreRPObject()
     {
+    String initial="Hi World 'example', See \"This is \\ an example \" Rocks, isn't it?!";
+    String escaped=JDBCRPObjectDatabase.EscapeString(initial);
+    assertEquals(JDBCRPObjectDatabase.UnescapeString(escaped),initial);
+    
     try
       {
       JDBCRPObjectDatabase database=JDBCRPObjectDatabase.getDatabase();
