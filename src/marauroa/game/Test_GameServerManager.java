@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.11 2004/03/02 19:36:04 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.12 2004/03/02 20:03:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -254,7 +254,7 @@ public class Test_GameServerManager extends TestCase
         
         if(msg instanceof MessageS2CLoginACK)
           {
-          assertTrue("Correct login ",true);
+          assertTrue("Correct login",true);
           ++recieved;
           }
         else
