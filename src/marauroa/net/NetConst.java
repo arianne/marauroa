@@ -23,7 +23,7 @@ public class NetConst
       Configuration conf=Configuration.getConfiguration();
       marauroa_PORT=Integer.parseInt(conf.get("marauroa_PORT"));
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       marauroad.trace("NetConst::onInit","X","Using default: "+e.getMessage());
       marauroa_PORT=3214;

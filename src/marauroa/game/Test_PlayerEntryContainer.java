@@ -35,7 +35,7 @@ public class Test_PlayerEntryContainer extends TestCase
       playerDatabase.addCharacter("Test Player", "Test Character",new RPObject());
       assertTrue(playerDatabase.hasCharacter("Test Player", "Test Character"));
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }

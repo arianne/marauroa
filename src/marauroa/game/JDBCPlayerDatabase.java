@@ -75,7 +75,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
 
       return playerDatabase;
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       marauroad.trace("JDBCPlayerDatabase::getDatabase","X",e.getMessage());
       throw new NoDatabaseConfException();
@@ -626,7 +626,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-    catch (Throwable e)
+    catch (Exception e)
       {
       marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Error serializing character: "+e.getMessage());
       throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
@@ -657,7 +657,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       
       return conn;
       }
-    catch (Throwable e)
+    catch (Exception e)
       {
       marauroad.trace("JDBCPlayerDatabase::createConnection","X",e.getMessage());
       throw new GenericDatabaseException(e.getMessage());

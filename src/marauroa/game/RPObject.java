@@ -7,7 +7,7 @@ public class RPObject extends Attributes
   {
   private RPSlot[] slots;
   
-  public static class NoSlotFoundException extends Throwable
+  public static class NoSlotFoundException extends Exception
     {
     public NoSlotFoundException()
       {

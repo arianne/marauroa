@@ -138,7 +138,7 @@ public class GameServerManager extends Thread
 	    netMan.addMessage(msgLoginNACK);
 	    }
 	  }
-    catch(Throwable e)      
+    catch(Exception e)      
       {
       marauroad.trace("GameServerManager::processLoginEvent","X",e.getMessage());
       }
@@ -207,7 +207,7 @@ public class GameServerManager extends Thread
 	    netMan.addMessage(msgChooseCharacterNACK);
 	    }
       }
-    catch(Throwable e)      
+    catch(Exception e)      
       {
       marauroad.trace("GameServerManager::processChooseCharacterEvent","X",e.getMessage());
       }
@@ -253,7 +253,7 @@ public class GameServerManager extends Thread
       msgLogout.setClientID(clientid);
 	  netMan.addMessage(msgLogout);
       }
-    catch(Throwable e)      
+    catch(Exception e)      
       {
       marauroad.trace("GameServerManager::processLogoutEvent","X",e.getMessage());
       }
@@ -301,7 +301,7 @@ public class GameServerManager extends Thread
       msgAction.setClientID(clientid);
 	  netMan.addMessage(msgAction);	  
       }
-    catch(Throwable e)      
+    catch(Exception e)      
       {
       marauroad.trace("GameServerManager::processActionEvent","X",e.getMessage());
       }

@@ -4,7 +4,7 @@ import java.util.*;
 
 public interface RPZone
   {  
-  static class RPObjectNotFoundException extends Throwable
+  static class RPObjectNotFoundException extends Exception
     {
     public RPObjectNotFoundException()
       {
@@ -12,7 +12,7 @@ public interface RPZone
       }
     }
   
-  static class RPObjectInvalidException extends Throwable
+  static class RPObjectInvalidException extends Exception
     {
     public RPObjectInvalidException()
       {

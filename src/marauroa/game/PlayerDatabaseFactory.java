@@ -32,7 +32,7 @@ public class PlayerDatabaseFactory
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
       throw new PlayerDatabase.NoDatabaseConfException();
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       marauroad.trace("PlayerDatabaseFactory::getDatabase","X",e.getMessage());
       throw new PlayerDatabase.NoDatabaseConfException();      

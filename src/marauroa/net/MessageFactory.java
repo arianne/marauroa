@@ -94,7 +94,7 @@ public class MessageFactory
 	    throw new IOException("Message has incorrect protocol version: "+data[0]+" ( expected "+NetConst.NETWORK_PROTOCOL_VERSION+")");
         }
       }
-	catch(Throwable e)
+	catch(Exception e)
 	  {
       marauroad.trace("MessageFactory::getMessage","X",e.getMessage());
       throw new IOException(e.getMessage());

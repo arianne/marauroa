@@ -36,7 +36,7 @@ public class Test_PlayerDatabase extends TestCase
 
       assertEquals(0,playerDatabase.getPlayerCount());
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }
@@ -52,7 +52,7 @@ public class Test_PlayerDatabase extends TestCase
       assertNotNull(playerDatabase);
       assertEquals(0,playerDatabase.getPlayerCount());
       }
-    catch(Throwable e)
+    catch(Exception e)
       {
       fail(e.getMessage());
       }

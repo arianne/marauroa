@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 /** The interface that all the databases marauroa use MUST implement. */
 public interface PlayerDatabase
   {
-  static public class PlayerAlreadyAddedException extends Throwable
+  static public class PlayerAlreadyAddedException extends Exception
     {
     PlayerAlreadyAddedException()
       {
@@ -13,7 +13,7 @@ public interface PlayerDatabase
       }
     }
   
-  static public class PlayerNotFoundException extends Throwable
+  static public class PlayerNotFoundException extends Exception
     {
     PlayerNotFoundException()
       {
@@ -21,7 +21,7 @@ public interface PlayerDatabase
       }
     }
   
-  static public class CharacterNotFoundException extends Throwable
+  static public class CharacterNotFoundException extends Exception
     {
     CharacterNotFoundException()
       {
@@ -29,7 +29,7 @@ public interface PlayerDatabase
       }
     }
 
-  static public class CharacterAlreadyAddedException extends Throwable
+  static public class CharacterAlreadyAddedException extends Exception
     {
     CharacterAlreadyAddedException()
       {
@@ -37,7 +37,7 @@ public interface PlayerDatabase
       }
     }
     
-  static public class NoDatabaseConfException extends Throwable
+  static public class NoDatabaseConfException extends Exception
     {
     NoDatabaseConfException()
       {
@@ -45,7 +45,7 @@ public interface PlayerDatabase
       }
     }
 
-  static public class GenericDatabaseException extends Throwable
+  static public class GenericDatabaseException extends Exception
     {
     GenericDatabaseException(String msg)
       {

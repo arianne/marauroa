@@ -333,7 +333,7 @@ public class JMarauroa
     reportsTextArea.setCaretPosition(reportsTextArea.getText().length());
   }
   
-  private void addLog(Throwable  thr)
+  private void addLog(Exception  thr)
   {
     ByteArrayOutputStream out= new ByteArrayOutputStream();
     thr.printStackTrace(new PrintStream(out));
@@ -496,7 +496,7 @@ public class JMarauroa
           }
           addLog("event "+action_cmd + " procesed\n");
         }
-        catch(Throwable thr)
+        catch(Exception thr)
         {
           addLog("Uncaught exception processing : " + action_cmd + "\n");
           addLog(thr);

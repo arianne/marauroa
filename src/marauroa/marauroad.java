@@ -36,7 +36,7 @@ public class marauroad extends Thread
       DrCoreDump.put("name","Dr CoreDump");
       playerDatabase.addCharacter("Test Player", "Dr CoreDump",new RPObject());
       }
-    catch(Throwable e) 
+    catch(Exception e) 
       {
       marauroad.trace("marauroad::setTestDatabase","X",e.getMessage());
       marauroad.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");

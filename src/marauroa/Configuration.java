@@ -12,7 +12,7 @@ public class Configuration
   private Properties properties;
   private static Configuration configuration=null;
   
-  public static class PropertyNotFoundException extends Throwable
+  public static class PropertyNotFoundException extends Exception
     {
     PropertyNotFoundException(String property)
       {
@@ -20,7 +20,7 @@ public class Configuration
       }
     }
     
-  public static class PropertyFileNotFoundException extends Throwable
+  public static class PropertyFileNotFoundException extends Exception
     {
     private String message;
     PropertyFileNotFoundException()

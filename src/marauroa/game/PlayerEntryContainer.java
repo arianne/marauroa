@@ -32,7 +32,7 @@ public class PlayerEntryContainer
     public String username;
     }
     
-  static public class NoSuchClientIDException extends Throwable
+  static public class NoSuchClientIDException extends Exception
     {
     public NoSuchClientIDException()
       {
@@ -40,7 +40,7 @@ public class PlayerEntryContainer
       }
     }
   
-  static public class NoSuchCharacterException extends Throwable
+  static public class NoSuchCharacterException extends Exception
     {
     public NoSuchCharacterException()
       {
@@ -48,7 +48,7 @@ public class PlayerEntryContainer
       }
     }
   
-  static public class NoSuchPlayerException extends Throwable
+  static public class NoSuchPlayerException extends Exception
     {
     public NoSuchPlayerException()
       {

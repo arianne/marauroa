@@ -23,7 +23,6 @@ public class RPServerManager extends Thread
     
     keepRunning=true;
     scheduler=new RPScheduler();
-    turnDuration = 60000;
         
     try
       {
@@ -35,19 +34,19 @@ public class RPServerManager extends Thread
       ruleProcessor=(RPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(zone);
       
+      // NOTE: ( miguel: ) IMO We should avoid as much as possible optional components.
       try
-      {
+        {
         String duration =conf.get("rp_turnDuration");
         turnDuration = Long.parseLong(duration);
-      }
+        }
       catch(Exception e)
-      {
+        {
         turnDuration = 60000;
         marauroad.trace("RPServerManager","D","Turn duration set to default("+turnDuration+")");
+        }      
       }
-      
-      }
-    catch(Throwable e)
+    catch(Exception e)
       {
       marauroad.trace("RPServerManager","X",e.getMessage());
       marauroad.trace("RPServerManager","!","ABORT: Unable to create RPZone and RPRuleProcessor instances");

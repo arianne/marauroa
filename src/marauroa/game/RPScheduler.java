@@ -9,7 +9,7 @@ public class RPScheduler
   private HashMap nextTurn;
   private int turn;
   
-  static class ActionInvalidException extends Throwable
+  static class ActionInvalidException extends Exception
   {
     ActionInvalidException()
     {

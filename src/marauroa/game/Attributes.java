@@ -8,7 +8,7 @@ public class Attributes implements marauroa.net.Serializable
   /* A Map<String,String> that contains the attributes */
   private Map content;
   
-  public static class AttributeNotFoundException extends Throwable
+  public static class AttributeNotFoundException extends Exception
     {
     public AttributeNotFoundException()
       {
