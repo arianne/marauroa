@@ -1,91 +1,61 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-
-  <!-- set global properties for this build -->
-  
   <property name="version" value="0.1"/>
-  
   <property name="src" value="."/>
   <property name="build" value="build"/>
   <property name="lib"  value="lib"/>
   <property name="classpath"  value="classes;D:\j2sdk1.4.2\junit\junit3.8.1\junit.jar"/>
-  <property name="jarname" value="hello.jar"/>
+  <property name="jarname" value="marauroa.jar"/>
   <property name="docs" value="docs"/>
-
   <property name="runclass" value="marauroa.marauroad"/>
-  
-  
+
 
   <target name="init">
-    <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}" />
-    <!-- Create the directory for the jar file -->
     <mkdir dir="${lib}" />
-    <!-- Create the directory for the java docs -->
     <mkdir dir="${docs}" />
   </target>
 
   <target name="compile" depends="init">
-    <!-- copy all .java files from ${src} to ${build}  -->
-    <copy todir="${build}/">
-      <fileset dir="${src}" includes="**/*.java"/>
-      <!-- apply a substitution @version@ with the value of ${version} -->
-      <filterset>
-        <filter token="version" value="${version}"/>
-      </filterset>
-    </copy>
-   
     <!-- run javac to compile the source files -->
-    <javac srcdir="${build}" destdir="${build}">
-
-    <classpath>
-    <!-- use the value of the ${classpath} property in the classpath -->
-       <pathelement path="${classpath}"/>
-       <!-- include all jar files  -->
-    </classpath>
- </javac>
- 
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
   </target>
 
   <target name="jar" depends="compile">
-    <!-- make a jar file -->
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
   </target>
   
   <target name="docs" depends="compile">
-   <!-- create javadocs -->
- <javadoc packagenames="marauroa.*"
-           sourcepath="${build}"
+    <javadoc packagenames="marauroa.*"
+           sourcepath="${src}"
            defaultexcludes="yes"
            destdir="${docs}"
            author="true"
            version="true"
            use="true"
            windowtitle="Marauroa API Documentation Version: ${version}">
- </javadoc>
+      <fileset dir="${src}">
+          <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
   </target>
   
-  <target name="run" depends="jar,docs">
-   <!-- run the class -->
-   <java classname="${runclass}">
-         <!-- add a command line arg: <arg value="-h"/> -->
-         <classpath>
-     <!-- use the value of the ${classpath} property in the classpath -->
+  <target name="run" depends="jar">
+    <java classname="${runclass}">
+      <classpath>
         <pathelement path="${classpath}"/>
-     <!-- include all jar files  -->
-        <fileset dir="${include}">
-            <include name="**/*.jar"/>
-        </fileset>
         <fileset dir="${lib}">
             <include name="**/*.jar"/>
         </fileset>
-  </classpath>
-       </java>
-
+      </classpath>
+    </java>
   </target>
   
   <target name="clean">
-    <!-- Delete the ${build} and ${lib} directory trees -->
     <delete dir="${build}"/>
     <delete dir="${lib}"/>
     <delete dir="${docs}"/>
