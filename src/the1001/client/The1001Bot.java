@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.32 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.33 2004/04/30 20:37:52 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,20 +43,14 @@ public class The1001Bot
   private final static long serialVersionUID = 4715;
   private transient NetworkClientManager netMan;
   public static long TIME_TO_RUN_BEFORE_LOGOUT=1*60*60*1000;// 1*60*60*1000; //one hour
-  public static long TIME_TO_WRITE_STATS=5*60*1000; //5 mins
-  public static long startTS;
-  public long writeStatsTS;
   private boolean continueGamePlay;
   private transient GameDataModel gm;
-  private static Random random=new Random();
-  private boolean doPrint;
   private boolean loggedOut;
   
   private The1001Bot(NetworkClientManager netman,boolean do_print)
   {
     netMan = netman;
-    gm = new GameDataModel(netMan);
-    doPrint=do_print;
+    gm = new GameDataModel(netMan, do_print, true);
     loggedOut = false;
     Runtime.getRuntime().addShutdownHook(new Thread()
                                          {
@@ -80,154 +74,56 @@ public class The1001Bot
   
   public void run()
   {
-    int time_out_max_count = 20;
-    int timeout_count = 0;
-    
     continueGamePlay = true;
-    
-    startTS = System.currentTimeMillis();
-    writeStatsTS = startTS;
-    boolean synced = false;
-    try
+    PerceptionHandler handler=new PerceptionHandler(gm);
+    Message msg;
+    while(continueGamePlay)
     {
-      int previous_timestamp=0;
-      while(continueGamePlay)
+      try
       {
-        if(netMan!=null)
+        msg=netMan.getMessage();
+        if(msg!=null)
         {
-          Message msg = netMan.getMessage();
-          
-          if(msg!=null)
+          if(msg instanceof MessageS2CPerception)
           {
-            if(msg instanceof MessageS2CPerception)
-            {
-              timeout_count = 0;
-              MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
-              
-              replyMsg.setClientID(msg.getClientID());
-              netMan.addMessage(replyMsg);
-              
-              MessageS2CPerception perception = (MessageS2CPerception)msg;
-              boolean full_perception = perception.getTypePerception()==RPZone.Perception.SYNC;
-              
-              if(!synced)
-              {
-                synced=full_perception;
-                marauroad.trace("The1001Bot::messageLoop","D",synced?"Synced.":"Unsynced!");
-              }
-              if(full_perception)
-              {
-                previous_timestamp=perception.getPerceptionTimestamp()-1;
-              }
-              marauroad.trace("The1001Bot::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
-              
-              if(synced)
-              {
-                if(previous_timestamp+1!=perception.getPerceptionTimestamp())
-                {
-                  marauroad.trace("The1001Bot::messageLoop","D","We are out of sync. Waiting for sync perception");
-                  marauroad.trace("The1001Bot::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getPerceptionTimestamp());
-                  synced=false;
-                  /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
-                }
-              }
-              
-              if(synced)
-              {
-                Map world_objects = gm.getAllObjects();
-                try
-                {
-                  previous_timestamp=perception.applyPerception(world_objects,previous_timestamp,null);
-                  RPObject my_object = perception.getMyRPObject();
-                  if(my_object!=null)
-                  {
-                    gm.setOwnCharacterID(my_object.get(RPCode.var_object_id));
-                  }
-                  gm.react(doPrint);
-                  if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
-                  {
-                    writeStats(gm.getFirstOwnGladiator());
-                    writeStatsTS=System.currentTimeMillis();
-                  }
-                }
-                catch (MessageS2CPerception.OutOfSyncException e)
-                {
-                  e.printStackTrace();
-                  synced=false;
-                }
-              }
-              else
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","Waiting for sync...");
-              }
-            }
-            else if(msg instanceof MessageS2CLogoutACK)
-            {
-              loggedOut=true;
-              marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
-              sleep(20);
-              System.exit(-1);
-            }
-            else if(msg instanceof MessageS2CActionACK)
-            {
-              MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
-              marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
-            }
-            else
-            {
-              // something other than
-            }
+            MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+            reply.setClientID(msg.getClientID());
+            netMan.addMessage(reply);
+            MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+            handler.apply(msgPer,gm.getAllObjects());
+          }
+          else if(msg instanceof MessageS2CLogoutACK)
+          {
+            loggedOut=true;
+            marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
+            sleep(30);
+            System.exit(-1);
+          }
+          else if(msg instanceof MessageS2CActionACK)
+          {
+            MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
+            gm.actionAck(msg_act_ack);
+            marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
           }
           else
           {
-            timeout_count++;
-            if(timeout_count>=time_out_max_count)
-            {
-              marauroad.trace("The1001Bot::messageLoop","X","TIMEOUT. EXIT.");
-              System.exit(1);
-            }
-            sleep(1);
+            marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
           }
         }
-        else
+        else // null message - sleep a little to not abuse cpu
         {
           sleep(5);
         }
       }
-    }
-    catch(Exception e)
-    {
-      marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
-      e.printStackTrace();
+      catch (MessageFactory.InvalidVersionException e)
+      {
+        marauroad.trace("The1001Bot.messageLoop","X","Invalid protocol version");
+        System.exit(-1);
+      }
     }
   }
   
-  private static void writeStats(RPObject glad)
-  {
-    try
-    {
-      if(glad!=null)
-      {
-        File stats_dir = new File(".gladiators_stats");
-        if(stats_dir.exists() && stats_dir.isDirectory())
-        {
-          String glad_name  = glad.get(RPCode.var_name);
-          String glad_karma = glad.get(RPCode.var_karma);
-          String glad_won   = glad.get(RPCode.var_num_victory);
-          String glad_def   = glad.get(RPCode.var_num_defeat);
-          FileWriter fw = new FileWriter(stats_dir.getAbsolutePath()+"/"+glad_name,true);
-          fw.write(System.currentTimeMillis()/1000+":"+glad_karma+":"+glad_won+":"+glad_def+"\n");
-          fw.close();
-        }
-        else
-        {
-        }
-      }
-    }
-    catch (IOException e){e.printStackTrace();}
-    catch (Attributes.AttributeNotFoundException e){e.printStackTrace();}
-    finally{}
-  }
+  
   
   /**
    * causes the calling thread to sleep the specified amount of <b>seconds</b>

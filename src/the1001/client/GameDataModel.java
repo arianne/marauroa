@@ -1,4 +1,4 @@
-/* $Id: GameDataModel.java,v 1.23 2004/04/25 14:26:46 root777 Exp $ */
+/* $Id: GameDataModel.java,v 1.24 2004/04/30 20:37:52 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,8 +14,12 @@
 package the1001.client;
 
 import java.util.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import marauroa.game.Attributes;
 import marauroa.game.RPAction;
 import marauroa.game.RPObject;
@@ -23,24 +27,29 @@ import marauroa.game.RPSlot;
 import marauroa.marauroad;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageC2SLogout;
+import marauroa.net.MessageS2CActionACK;
 import marauroa.net.NetworkClientManager;
+import marauroa.net.PerceptionHandler;
 import the1001.RPCode;
 
 /**
  *@author Waldemar Tribus
  */
 public final class GameDataModel
+  implements PerceptionHandler.IPerceptionListener
 {
-  public final static String CMD_SCISSOR = "SCISSOR";
-  public final static String CMD_STONE   = "STONE";
-  public final static String CMD_PAPER   = "PAPER";
-  public final static String CMD_FIGHT   = "FIGHT";
-  public final static String CMD_VOTE_UP = RPCode.var_voted_up;
+  public final static String CMD_SCISSOR   = "SCISSOR";
+  public final static String CMD_STONE     = "STONE";
+  public final static String CMD_PAPER     = "PAPER";
+  public final static String CMD_FIGHT     = "FIGHT";
+  public final static String CMD_VOTE_UP   = RPCode.var_voted_up;
   public final static String CMD_VOTE_DOWN = "VOTE_DOWN";
-  public final static int REQ_FIGHT_WAIT_TIME = 5*60*1000; // 5 minutes
+  public final static int    REQ_FIGHT_WAIT_TIME = 5*60*1000; // 5 minutes
   public final static String ARENA_MODE_WAITING  = RPCode.var_waiting;
   public final static String ARENA_MODE_FIGHTING = RPCode.var_fighting;
   public final static String ARENA_MODE_REQ_FAME = RPCode.var_request_fame;
+  public final static long   TIME_TO_WRITE_STATS=5*60*1000; //5 mins
+  public final static int    TIME_OUT_MAX_COUNT = 20;
   
   private long switchStrategyTimeOut; //all 30 mins choose strategy
   private long switchStrategyTS;
@@ -60,9 +69,18 @@ public final class GameDataModel
   private String arenaId;
   private String shopId;
   private Map mAllObjects;
-  //  private static Map mGlobalObjects=new HashMap();
+  private boolean verbose;
   
-  public GameDataModel(NetworkClientManager net_man)
+  
+  private int timeoutCount;
+  private long startTS;
+  private long writeStatsTS = startTS;
+  private int pingTime;
+  
+  private boolean botMode;
+  
+  
+  public GameDataModel(NetworkClientManager net_man, boolean verbose, boolean bot_mode)
   {
     netMan     = net_man;
     listeners  = new ArrayList(1);
@@ -74,6 +92,11 @@ public final class GameDataModel
     switchStrategyTimeOut=30*60*1000;
     switchStrategyTS=System.currentTimeMillis();
     strategy = 0;
+    this.verbose = verbose;
+    timeoutCount = 0;
+    writeStatsTS = System.currentTimeMillis();
+    botMode = bot_mode;
+    pingTime = -1;
   }
   
   /**
@@ -83,7 +106,6 @@ public final class GameDataModel
   public void logout()
   {
     MessageC2SLogout msg = new MessageC2SLogout(null);
-    
     netMan.addMessage(msg);
   }
   
@@ -302,12 +324,38 @@ public final class GameDataModel
         marauroad.trace("The1001Game::requestFight","X","Gladiator has no or invalid object id.");
       }
       
-      RPAction action = new RPAction();
-      
+      RPAction action = new GMAction();
       action.put(RPCode.var_type,"request_fight");
       action.put(RPCode.var_gladiator_id,gl_id);
       netMan.addMessage(new MessageC2SAction(null,action));
       marauroad.trace("The1001Game::requestFight","D","Fight requested.");
+    }
+  }
+  
+  private final class GMAction extends RPAction
+  {
+    public GMAction()
+    {
+      long ts = System.currentTimeMillis();
+      int time_stamp = (int)(ts%100000);
+      System.out.println("TS on system: " + ts + ", timestamp in action: " + time_stamp);
+      put("action_id",time_stamp);
+    }
+    
+    public int getActionId()
+    {
+      int id = -1;
+      if(has("action_id"))
+      {
+        try
+        {
+          id = getInt("action_id");
+        }
+        catch (Attributes.AttributeNotFoundException e)
+        {
+        }
+      }
+      return(id);
     }
   }
   
@@ -356,7 +404,7 @@ public final class GameDataModel
   
   public void sendMessage(String msg)
   {
-    RPAction action = new RPAction();
+    RPAction action = new GMAction();
     action.put(RPCode.var_type,RPCode.var_chat);
     action.put(RPCode.var_content,msg);
     netMan.addMessage(new MessageC2SAction(null,action));
@@ -437,7 +485,7 @@ public final class GameDataModel
           marauroad.trace("The1001Game::setFightMode","X","Gladiator has no or invalid object id.");
         }
         
-        RPAction action = new RPAction();
+        RPAction action = new GMAction();
         
         action.put(RPCode.var_gladiator_id,gl_id);
         action.put(RPCode.var_type,"fight_mode");
@@ -454,7 +502,7 @@ public final class GameDataModel
   
   public void buyGladiator(String gladiator_id)
   {
-    RPAction action = new RPAction();
+    RPAction action = new GMAction();
     action.put(RPCode.var_type,RPCode.var_buyGladiator);
     action.put(RPCode.var_choosen_item,gladiator_id);
     netMan.addMessage(new MessageC2SAction(null,action));
@@ -478,7 +526,7 @@ public final class GameDataModel
         marauroad.trace("The1001Game::vote","X","Gladiator has no or invalid object id.");
       }
       
-      RPAction action = new RPAction();
+      RPAction action = new GMAction();
       
       action.put(RPCode.var_gladiator_id,gl_id);
       action.put(RPCode.var_type,RPCode.var_vote);
@@ -525,7 +573,7 @@ public final class GameDataModel
     }
   }
   
-  public void react(boolean doPrint)
+  public void react()
   {
     try
     {
@@ -583,7 +631,7 @@ public final class GameDataModel
       {
         if(rp_arena.has(RPCode.var_winner))
         {
-          winner_id = getArena().getInt(RPCode.var_winner);
+          winner_id = rp_arena.getInt(RPCode.var_winner);
         }
       }
       catch(Exception e)
@@ -688,10 +736,19 @@ public final class GameDataModel
       switchStrategyTS=System.currentTimeMillis();
     }
     
-    if(doPrint)
+    if(verbose)
     {
       System.out.println(dumpToString());
     }
+  }
+  
+  public void actionAck(MessageS2CActionACK msg)
+  {
+    long ts        = System.currentTimeMillis();
+    int act_id     = msg.getActionID();
+    int time_stamp = (int)(ts%100000);
+    pingTime       = time_stamp - act_id;
+    System.out.println("TS from action: " + act_id + ", timestamp on system: " + time_stamp + ", ping: " + pingTime);
   }
   
   /**
@@ -741,23 +798,25 @@ public final class GameDataModel
     
     if(RPCode.var_request_fame.equals(status))
     {
+      RPObject rp_arena = getArena();
       try
       {
-        winner_id = getArena().getInt(RPCode.var_winner);
+        if(rp_arena.has(RPCode.var_winner))
+        {
+          winner_id = getArena().getInt(RPCode.var_winner);
+        }
       }
       catch (Attributes.AttributeNotFoundException e)
       {
-        marauroad.trace("GameDataModel::dumpToString","E",e.getMessage());
-        e.printStackTrace(System.out);
       }
       status="Request fame(";
       try
       {
-        String timeout      = getArena().get(RPCode.var_timeout);
-        String thumbs_up    = getArena().get(RPCode.var_thumbs_up);
-        String thumbs_down  = getArena().get(RPCode.var_thumbs_down);
-        String waiting      = getArena().get(RPCode.var_waiting);
-        String fame         = getArena().get(RPCode.var_karma);
+        String timeout      = rp_arena.get(RPCode.var_timeout);
+        String thumbs_up    = rp_arena.get(RPCode.var_thumbs_up);
+        String thumbs_down  = rp_arena.get(RPCode.var_thumbs_down);
+        String waiting      = rp_arena.get(RPCode.var_waiting);
+        String fame         = rp_arena.get(RPCode.var_karma);
         
         status+=fame+"): "+timeout + " Up: "+thumbs_up+" Down: "+thumbs_down+" Wait: "+waiting;
       }
@@ -768,6 +827,7 @@ public final class GameDataModel
       }
     }
     ret+=setStringWidth("|Arena: "+status,' ',line_length+1)+"|\n";
+    ret+=setStringWidth("|Ping : "+pingTime,' ',line_length+1)+"|\n";
     ret+="|"+setStringWidth(" ",' ',line_length)+"|\n";
     ret+=middle;
     
@@ -969,4 +1029,242 @@ public final class GameDataModel
       }
     }
   }
+  
+  ///////////////////////////////////////////////////////////////
+  // Statistics
+  //////////////////////////////////////////////////////////////
+  /**
+   * Method stats
+   *
+   */
+  private void checkStats()
+  {
+    if(System.currentTimeMillis()-writeStatsTS>=TIME_TO_WRITE_STATS)
+    {
+      writeStats(getFirstOwnGladiator());
+      writeStatsTS=System.currentTimeMillis();
+    }
+  }
+  
+  private static void writeStats(RPObject glad)
+  {
+    try
+    {
+      if(glad!=null)
+      {
+        File stats_dir = new File(".gladiators_stats");
+        if(stats_dir.exists() && stats_dir.isDirectory())
+        {
+          String glad_name  = glad.get(RPCode.var_name);
+          String glad_karma = glad.get(RPCode.var_karma);
+          String glad_won   = glad.get(RPCode.var_num_victory);
+          String glad_def   = glad.get(RPCode.var_num_defeat);
+          FileWriter fw = new FileWriter(stats_dir.getAbsolutePath()+"/"+glad_name,true);
+          fw.write(System.currentTimeMillis()/1000+":"+glad_karma+":"+glad_won+":"+glad_def+"\n");
+          fw.close();
+        }
+        else
+        {
+        }
+      }
+    }
+    catch (IOException e){e.printStackTrace();}
+    catch (Attributes.AttributeNotFoundException e){e.printStackTrace();}
+    finally{}
+  }
+  
+  
+  ///////////////////////////////////////////////////////////////
+  //  PerceptionListener Interface Implementation
+  //////////////////////////////////////////////////////////////
+  /**
+   * Method onAdded
+   *
+   * @param    object              a  RPObject
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onAdded(RPObject object)
+  {
+    // TODO
+    return false;
+  }
+  
+  /**
+   * Method onModifiedAdded
+   *
+   * @param    object              a  RPObject
+   * @param    changes             a  RPObject
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onModifiedAdded(RPObject object, RPObject changes)
+  {
+    // TODO
+    return false;
+  }
+  
+  /**
+   * Method onModifiedDeleted
+   *
+   * @param    object              a  RPObject
+   * @param    changes             a  RPObject
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onModifiedDeleted(RPObject object, RPObject changes)
+  {
+    // TODO
+    return false;
+  }
+  
+  /**
+   * Method onDeleted
+   *
+   * @param    object              a  RPObject
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onDeleted(RPObject object)
+  {
+    // TODO
+    return false;
+  }
+  
+  /**
+   * Method onMyRPObject
+   *
+   * @param    changed             a  boolean
+   * @param    object              a  RPObject
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onMyRPObject(boolean changed, RPObject object)
+  {
+    if(object!=null)
+    {
+      try
+      {
+        setOwnCharacterID(object.get(RPCode.var_object_id));
+      }
+      catch (Attributes.AttributeNotFoundException e)
+      {
+        marauroad.trace("GameDataModel.onMyRPObject","E","Invalid my object given.");
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Method onClear
+   *
+   * @return   a boolean
+   *
+   */
+  public boolean onClear()
+  {
+    // TODO
+    return false;
+  }
+  
+  /**
+   * Method onTimeout
+   *
+   * @return   an int
+   *
+   */
+  public int onTimeout()
+  {
+    timeoutCount++;
+    if(timeoutCount>TIME_OUT_MAX_COUNT)
+    {
+      System.out.println("TIMEOUT. EXIT.");
+      System.exit(-1);
+    }
+    return 0;
+  }
+  
+  /**
+   * Method onSynced
+   *
+   * @return   an int
+   *
+   */
+  public int onSynced()
+  {
+    // TODO
+    return 0;
+  }
+  
+  /**
+   * Method onUnsynced
+   *
+   * @return   an int
+   *
+   */
+  public int onUnsynced()
+  {
+    // TODO
+    return 0;
+  }
+  
+  /**
+   * Method onPerceptionBegin
+   *
+   * @param    type                a  byte
+   * @param    timestamp           an int
+   *
+   * @return   an int
+   *
+   */
+  public int onPerceptionBegin(byte type, int timestamp)
+  {
+    timeoutCount = 0;
+    return 0;
+  }
+  
+  /**
+   * Method onPerceptionEnd
+   *
+   * @param    type                a  byte
+   * @param    timestamp           an int
+   *
+   * @return   an int
+   *
+   */
+  public int onPerceptionEnd(byte type, int timestamp)
+  {
+    if (botMode)
+    {
+      react();
+      checkStats();
+    }
+    else
+    {
+      fireListeners();
+    }
+    return 0;
+  }
+  
+  
+  
+  /**
+   * Method onException
+   *
+   * @param    e                   an Exception
+   *
+   * @return   an int
+   *
+   */
+  public int onException(Exception e)
+  {
+    // TODO
+    return 0;
+  }
+  
 }

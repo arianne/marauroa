@@ -1,4 +1,4 @@
-/* $Id: The1001Game.java,v 1.19 2004/04/26 22:08:23 arianne_rpg Exp $ */
+/* $Id: The1001Game.java,v 1.20 2004/04/30 20:37:53 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,7 +60,7 @@ public class The1001Game
   {
     JPanel main_panel = new JPanel(new BorderLayout());
     
-    gm = new GameDataModel(netMan);
+    gm = new GameDataModel(netMan,false,false);
     statusLine = new JLabel("<html><body>Launching <font color=blue>Gladiators</font>...</body></html>");
     
     The1001Game3D g3d = new The1001Game3D(gm);
@@ -135,126 +135,54 @@ public class The1001Game
   
   public void run()
   {
-    int time_out_max_count = 20;
-    int timeout_count = 0;
     continueGamePlay = true;
-    loggedOut = false;
-    
-    boolean synced = false;
-    try
+    PerceptionHandler handler=new PerceptionHandler(gm);
+    Message msg;
+    while(continueGamePlay)
     {
-      int previous_timestamp=0;
-      while(continueGamePlay)
+      try
       {
-        if(netMan!=null)
+        msg=netMan.getMessage();
+        if(msg!=null)
         {
-          Message msg = netMan.getMessage();
-          
-          if(msg!=null)
+          if(msg instanceof MessageS2CPerception)
           {
-            if(msg instanceof MessageS2CPerception)
-            {
-              timeout_count = 0;
-              MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
-              
-              replyMsg.setClientID(msg.getClientID());
-              netMan.addMessage(replyMsg);
-              
-              MessageS2CPerception perception = (MessageS2CPerception)msg;
-              boolean full_perception = perception.getTypePerception()==RPZone.Perception.SYNC;
-              
-              if(!synced)
-              {
-                synced=full_perception;
-                marauroad.trace("The1001Game::messageLoop","D",synced?"Synced.":"Unsynced!");
-              }
-              if(full_perception)
-              {
-                previous_timestamp=perception.getPerceptionTimestamp()-1;
-              }
-              marauroad.trace("The1001Game::messageLoop","D",full_perception?"TOTAL PRECEPTION":"DELTA PERCEPTION");
-              
-              if(synced)
-              {
-                if(previous_timestamp+1!=perception.getPerceptionTimestamp())
-                {
-                  marauroad.trace("The1001Game::messageLoop","D","We are out of sync. Waiting for sync perception");
-                  marauroad.trace("The1001Game::messageLoop","D","Expected "+previous_timestamp+" but we got "+perception.getPerceptionTimestamp());
-                  synced=false;
-                  /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */
-                }
-              }
-              
-              if(synced)
-              {
-                Map world_objects = gm.getAllObjects();
-                if(full_perception)
-                {
-                  gm.clearAllObjects();
-                  //full perception contains all objects???
-                }
-                try
-                {
-                  previous_timestamp=perception.applyPerception(world_objects,previous_timestamp,null);
-                  RPObject my_object = perception.getMyRPObject();
-                  if(my_object!=null)
-                  {
-                    gm.setOwnCharacterID(my_object.get(RPCode.var_object_id));
-                  }
-                }
-                catch (MessageS2CPerception.OutOfSyncException e)
-                {
-                  e.printStackTrace();
-                  synced=false;
-                }
-                gm.react(false);
-                gm.fireListeners();
-              }
-              else
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","Waiting for sync...");
-              }
-            }
-            else if(msg instanceof MessageS2CLogoutACK)
-            {
-              loggedOut=true;
-              marauroad.trace("The1001Game::messageLoop","D","Logged out...");
-              sleep(20);
-              System.exit(-1);
-            }
-            else if(msg instanceof MessageS2CActionACK)
-            {
-              MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
-              marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
-            }
-            else
-            {
-              // something other than
-            }
+            MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+            reply.setClientID(msg.getClientID());
+            netMan.addMessage(reply);
+            MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+            handler.apply(msgPer,gm.getAllObjects());
+          }
+          else if(msg instanceof MessageS2CLogoutACK)
+          {
+            loggedOut=true;
+            marauroad.trace("The1001Bot::messageLoop","D","Logged out...");
+            sleep(30);
+            System.exit(-1);
+          }
+          else if(msg instanceof MessageS2CActionACK)
+          {
+            MessageS2CActionACK msg_act_ack = (MessageS2CActionACK)msg;
+            marauroad.trace("The1001Bot::messageLoop","D",msg_act_ack.toString());
           }
           else
           {
-            timeout_count++;
-            if(timeout_count>=time_out_max_count)
-            {
-              marauroad.trace("The1001Game::messageLoop","D","TIMEOUT. EXIT.");
-              System.exit(1);
-            }
-            sleep(1);
+            marauroad.trace("The1001Bot::messageLoop","D","Unknown message: "+msg.toString());
           }
         }
-        else
+        else // null message - sleep a little to not abuse cpu
         {
           sleep(5);
         }
       }
-    }
-    catch(Exception e)
-    {
-      marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
-      e.printStackTrace();
+      catch (MessageFactory.InvalidVersionException e)
+      {
+        marauroad.trace("The1001Bot.messageLoop","X","Invalid protocol version");
+        System.exit(-1);
+      }
     }
   }
+  
   /**
    * causes the calling thread to sleep the specified amount of <b>seconds</b>
    * @param timeout the amount of seconds to sleep
