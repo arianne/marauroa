@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.51 2004/09/04 20:39:11 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.52 2004/09/04 21:10:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1210,7 +1210,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     stmt.execute(query);
 
     /* We get the stored id */
-    query = "select LAST_INSERTED_ID() as inserted_id from rpobject";
+    query = "select LAST_INSERT_ID() as inserted_id from rpobject";
     marauroad.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
     ResultSet result = stmt.executeQuery(query);
 

@@ -37,7 +37,7 @@ create table if not exists rpattribute
   name varchar(64) not null,
   value varchar(255),
   
-  primary key(object_id,zone_id,name)
+  primary key(object_id,name)
   )
   TYPE=INNODB;
 
