@@ -50,7 +50,7 @@ public class SimpleGameDataModel
   
   public void setColorAt(int row, int column,byte color)
   {
-    if(color==gameBoard[row][column])
+    if(color!=gameBoard[row][column])
     {
       gameBoard[row][column]=color;
       fireUpdate(row,column,color);
@@ -75,6 +75,28 @@ public class SimpleGameDataModel
   public static interface GameUpdateListener
   {
     public void updateReceived(int row, int column, byte color);
+  }
+  
+  public String toString()
+  {
+    StringBuffer sb = new StringBuffer("\n");
+    for (int i = 0; i < columns; i++)
+    {
+      for (int j = 0; j < rows; j++)
+      {
+        if(gameBoard[j][i]==-1)
+        {
+          sb.append('-');
+        }
+        else
+        {
+          sb.append(gameBoard[j][i]);
+        }
+      }
+      sb.append('\n');
+    }
+    sb.append('\n');
+    return(sb.toString());
   }
   
 }

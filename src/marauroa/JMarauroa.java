@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import marauroa.game.RPObject;
 import simplegame.SimpleGame;
 
 
@@ -36,11 +36,9 @@ public class JMarauroa
   
   private short clientId;
   private NetworkClientManager netMan;
+  private RPObject.ID characterID;
   
-  
-  
-  
-  
+
   public JMarauroa()
   {
     actionHandler = new ActionHandler();
@@ -311,7 +309,9 @@ public class JMarauroa
       
       if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
       {
-        addLog("Character choosen correctly\n");
+        MessageS2CChooseCharacterACK msg_ack = (MessageS2CChooseCharacterACK)msgReply;
+        characterID = msg_ack.getObjectID();
+        addLog("Character choosen correctly(id is "+characterID+")\n");
       }
       
       if(msgReply.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
@@ -450,7 +450,7 @@ public class JMarauroa
     
     private void letsplay()
     {
-      SimpleGame sg = new SimpleGame(netMan,JMarauroa.this);
+      SimpleGame sg = new SimpleGame(netMan,JMarauroa.this,characterID);
       sg.pack();
       sg.show();
       new Thread(sg,"Lets play thread...").start();

@@ -16,11 +16,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import marauroa.JMarauroa;
 import marauroa.game.RPAction;
+import marauroa.game.RPObject;
 import marauroa.net.Message;
 import marauroa.net.MessageC2SAction;
 import marauroa.net.MessageS2CPerception;
@@ -33,11 +33,13 @@ public class SimpleGame
   private NetworkClientManager netMan;
   private SimpleGameDataModel gdm;
   private JMarauroa marauroa;
+  private RPObject.ID characterID;
   
-  public SimpleGame(NetworkClientManager netman, JMarauroa marauroa)
+  public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
     netMan = netman;
     this.marauroa = marauroa;
+    this.characterID=characterID;
     gdm = new SimpleGameDataModel(3,3);
     initComponents();
     addWindowListener(new WindowAdapter()
@@ -79,7 +81,7 @@ public class SimpleGame
   
   public static void main(String argv[])
   {
-    SimpleGame sg = new SimpleGame(null,null);
+    SimpleGame sg = new SimpleGame(null,null,null);
     sg.pack();
     sg.show();
     sleep(2);
@@ -180,7 +182,7 @@ public class SimpleGame
         if(netMan!=null)
         {
           RPAction rpaction = new RPAction();
-          rpaction.put("object_id","4711");
+          rpaction.put("object_id", ""+characterID.getObjectID());
           rpaction.put("row",String.valueOf(row));
           rpaction.put("column",String.valueOf(column));
           MessageC2SAction msg = new MessageC2SAction(null,rpaction);
