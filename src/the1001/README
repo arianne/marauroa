@@ -196,6 +196,7 @@ This action is issue to request to participate on a Fight.
 It has no params
 It is replied with a "fight_granted" attribute in your player when you are allowed
 to enter the fight.
+* NOTE: Combats are now 1vs1
 
 
 Attack
@@ -221,12 +222,11 @@ It is replied as with the attribute combat_mode and with the value equal to dogd
 
 * Combat actions note
 On each of actions: attack, defend and dogde when you are damaged it is notified by
-the attribute damame_<attacker>=damage and your health value will be modified 
+the attribute damame=damage and your health value will be modified 
 respectively. All the actions will modify your attributes and skills accordingly.
 When health value reach 0 you are out of the battle, and the battle ends. Then the 
 AwardFame stage starts. Each player will give you and your rival a value of fame ranging
 from 0 to 100.
-
 
 AwardFame
 It is use to give fame to the fighters by the spectators. Each spectator will 
@@ -460,3 +460,51 @@ Just three points to notice:
 
 Ok, our mighty hero is now at the Arena watching "A-Bush" against "No MDW found".
 The combat is a really hard one... see it:
+
+"No MDW found" hits "A-Bush" with a powefull 15 points lose hit!.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="50"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="3"
+        num_defeat="1"  
+        mode="attack"   
+        damaged="15"
+        }
+      }
+    
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
+      }
+    }
+
+And
