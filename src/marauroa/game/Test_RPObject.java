@@ -1,4 +1,4 @@
-/* $Id: Test_RPObject.java,v 1.14 2004/04/11 11:05:55 arianne_rpg Exp $ */
+/* $Id: Test_RPObject.java,v 1.15 2004/04/12 09:26:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -228,6 +228,23 @@ public class Test_RPObject extends TestCase
     object.remove("fame");
     }
 
+  private void addRPObjectSlot(RPObject object) throws Exception
+    {
+    object.addSlot(new RPSlot("bag"));
+    
+    RPObject item=new RPObject();
+    item.put("id",21);
+    item.put("type","coin");
+    item.put("val",10);
+    
+    object.getSlot("bag").add(item);
+    }
+
+  private void deleteRPObjectSlot(RPObject object) throws Exception
+    {
+    object.removeSlot("!gladiators");
+    }
+
   public void testRPObjectDifferences_NoChanges()  
     {
     try
@@ -401,6 +418,118 @@ public class Test_RPObject extends TestCase
       
       assertEquals(4,added.size());
       assertEquals(2,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_addSlot()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addRPObjectSlot(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(4,added.size());
+      assertEquals(0,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_deleteSlot()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      deleteRPObjectSlot(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(0,added.size());
+      assertEquals(1,deleted.size());
+
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      }      
+    catch(Exception e)
+      {
+      e.printStackTrace();
+      fail("Failed to serialize object");
+      }
+    }
+
+  public void testRPObjectDifferences_everythingSlot()  
+    {
+    try
+      {
+      RPObject player=createRPObject();
+      
+      RPObject added=new RPObject();
+      RPObject deleted=new RPObject();
+            
+      player.getDifferences(added,deleted);    
+      assertTrue(added.size()>0);
+      assertTrue(deleted.size()==0);
+      
+      RPObject recovered_player=new RPObject();      
+      recovered_player.applyDifferences(added,deleted);
+      assertTrue(player.equals(recovered_player));  
+      
+      addRPObjectSlot(player);
+      deleteRPObjectSlot(player);
+
+      added=new RPObject();
+      deleted=new RPObject();
+
+      player.getDifferences(added,deleted);   
+      
+      assertEquals(4,added.size());
+      assertEquals(1,deleted.size());
 
       recovered_player.applyDifferences(added,deleted);
       assertTrue(player.equals(recovered_player));  
