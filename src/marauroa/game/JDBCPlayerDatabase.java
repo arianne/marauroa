@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.42 2004/05/26 05:53:13 root777 Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.43 2004/05/26 12:56:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -207,7 +207,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
         }
-      password = Util.getMd5Hash(password);
+        
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select id from player where username like '"+username+"'";
@@ -223,6 +223,9 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       else
         {
+        /* We store the hashed version of the password */
+        password = Util.getMd5Hash(password);
+        
         query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL,DEFAULT)";
         stmt.execute(query);
         }
@@ -382,9 +385,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
         }
-      password = Util.getMd5Hash(password);
+        
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
+
+      password = Util.getMd5Hash(password);
+
       String query = "select status from player where username like '"+username+"' and password like '"+password+"'";
       
       marauroad.trace("JDBCPlayerDatabase::verifyAccount","D",query);
