@@ -235,12 +235,13 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.40 Jun XX, 2004
+0.40 Jul 05, 2004
 - Added score to ghost to count players killed
 - Changed the calling order in RPAImanager
 - Added classes of RPObjects: RPClass
 - Improved the speed feeling on the game by a change on RPServerManager
 - Added per player synchronization
+- Fixed horrible bug at delta^2 perception system
 
 0.36 Jun 04, 2004
 - Database modified to stored hashed passwords
