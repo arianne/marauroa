@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.20 2004/11/12 15:39:16 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.21 2004/11/21 12:56:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,10 +71,8 @@ public class NetworkClientManager
         Message choosenMsg=((Message)processedMessages.get(0));
         int smallestTimestamp=choosenMsg.getMessageTimestamp();
 
-        Iterator messages=processedMessages.iterator();
-        while(messages.hasNext())
+        for(Message msg: processedMessages)
           {
-          Message msg=(Message)messages.next();
           if(msg.getMessageTimestamp()<smallestTimestamp)
             {
             choosenMsg=msg;
@@ -86,24 +84,21 @@ public class NetworkClientManager
         return choosenMsg;
         }
         
-      Iterator it=pendingPackets.entrySet().iterator();
-
-      while(it.hasNext())
+      for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
         {
-        Map.Entry entry=(Map.Entry)it.next();
-        PacketContainer message=(PacketContainer)entry.getValue();
+        PacketContainer message=it.next();
 
-        if(new Date().getTime()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
+        if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
           {
           marauroad.trace("NetworkClientManager::getMessage","D","deleted incompleted message after timedout");
-          pendingPackets.remove(new Byte(message.signature));
-          it = pendingPackets.entrySet().iterator();
+          it.remove();
+          continue;
           }
 
         if(message.remaining==0)
           {
           // delete the message from queue to prevent loop if it is a bad message
-          pendingPackets.remove(new Byte(message.signature));
+          it.remove();
 
           Message msg=msgFactory.getMessage(message.content,message.address);
 

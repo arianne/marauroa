@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.5 2004/06/15 15:53:28 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.6 2004/11/21 12:56:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,10 +68,9 @@ public class MessageS2CServerInfo extends Message
     out.write(contents);
     
     out.write(RPClass.size());    
-    Iterator it=RPClass.iterator();
-    while(it.hasNext())
+    for(Iterator<RPClass> it = RPClass.iterator(); it.hasNext();)
       {
-      out.write((RPClass)it.next());
+      out.write(it.next());
       }
     }
     

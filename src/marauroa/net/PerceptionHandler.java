@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.20 2004/11/18 20:42:51 root777 Exp $ */
+/* $Id: PerceptionHandler.java,v 1.21 2004/11/21 12:56:22 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import marauroa.*;
 public class PerceptionHandler
   {   
   private IPerceptionListener listener;
-  private List<Message> previousPerceptions;
+  private List<MessageS2CPerception> previousPerceptions;
   private int previousTimestamp;
   private boolean synced;
   
@@ -32,13 +32,13 @@ public class PerceptionHandler
     {
     this.listener=new DefaultPerceptionListener();
     synced=false;
-    previousPerceptions=new LinkedList<Message>();
+    previousPerceptions=new LinkedList<MessageS2CPerception>();
     }
 
   public PerceptionHandler(IPerceptionListener listener)
     {
     this.listener=listener;
-    previousPerceptions=new LinkedList<Message>();
+    previousPerceptions=new LinkedList<MessageS2CPerception>();
     previousTimestamp=-1;
     synced=false;
     }
@@ -90,10 +90,9 @@ public class PerceptionHandler
       {
       previousPerceptions.add(message);
       
-      Iterator it=previousPerceptions.iterator();
-      while(it.hasNext())
+      for(Iterator<MessageS2CPerception> it=previousPerceptions.iterator(); it.hasNext();)
         {
-        MessageS2CPerception previousmessage=(MessageS2CPerception ) it.next();
+        MessageS2CPerception previousmessage=it.next();
         if(previousTimestamp+1==previousmessage.getPerceptionTimestamp())
           {
           try
@@ -110,9 +109,7 @@ public class PerceptionHandler
             {
             listener.onException(e, message);
             }
-          
           it.remove();
-          it=previousPerceptions.iterator();
           }
         }
      
