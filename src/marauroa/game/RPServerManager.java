@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.55 2004/03/27 10:54:05 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.56 2004/03/27 10:57:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -266,12 +266,6 @@ class RPServerManager extends Thread
         {
         deltaPerceptionSend=0;
         }
-      // NOTE: If we use the Read/Write lock, it can happen a race condition between 
-      // unlock and lock that may result in a bad operation.
-      //
-      // playerContainer.getLock().releaseLock();
-      // /* Removing the players is a write operation */
-      // playerContainer.getLock().requestWriteLock();
 
       notifyTimedoutPlayers(playersToRemove);
       }      

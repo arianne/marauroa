@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.25 2004/03/25 22:20:43 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.26 2004/03/27 10:54:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,10 @@ public class PlayerEntryContainer
     public InetSocketAddress source;
     /** The time when the latest event was done in this player */
     public Date timestamp;
+
+    /** The time when the latest event was done in this player */
+    public Date timestampLastStored;
+
     /** The name of the choosen character */
     public String choosenCharacter;
     /** The name of the player */
@@ -172,6 +176,7 @@ public class PlayerEntryContainer
 
       entry.state=STATE_NULL;
       entry.timestamp=new Date();
+      entry.timestampLastStored=new Date();
       entry.source=source;
       entry.username=username;
       entry.choosenCharacter=null;
@@ -782,7 +787,39 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::updateTimestamp","<");
       }
     }
-  
+    
+  public boolean shouldStoredUpdate(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        long value=new Date().getTime()-entry.timestampLastStored.getTime();
+
+        if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)
+          {
+          entry.timestampLastStored=new Date();
+          return true;
+          }
+        else
+          {
+          return false;
+          }
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::getLastStoredUpdateTime","<");
+      }        
+    }
+    
   /** The method returns true if the clientid has timed out.
    *  @param clientid the runtime id of the player   *
    *  @return true if the player timed out.

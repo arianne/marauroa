@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.59 2004/03/27 10:54:04 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.60 2004/03/27 10:57:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,7 +73,7 @@ public class marauroad extends Thread
     {
     println("Marauroa           - An open source MORPG Framework -");
     println("Running on version @version@");
-    println("(C) 2003 Miguel Angel Blanch Lardin");
+    println("(C) 2003-2004 Miguel Angel Blanch Lardin");
     println();
     println("This program is free software; you can redistribute it and/or modify");
     println("it under the terms of the GNU General Public License as published by");

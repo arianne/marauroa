@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.27 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.28 2004/03/27 10:54:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,13 +68,13 @@ public class MarauroaRPZone implements RPZone
     {
     try 
       {
-      if(previous_turn.containsKey(new RPObject.ID(object)))
-        {
-        RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
-        perception.modified(object,previous);
-        previous_turn.remove(new RPObject.ID(object));      
-        }
-      else
+//      if(previous_turn.containsKey(new RPObject.ID(object)))
+//        {
+//        RPObject previous=(RPObject)previous_turn.get(new RPObject.ID(object));		
+//        perception.modified(object,previous);
+//        previous_turn.remove(new RPObject.ID(object));      
+//        }
+//      else
         {
         perception.added(object);
         }
