@@ -7,13 +7,13 @@ import java.util.*;
 import marauroa.net.*;
 import marauroa.game.*;
 
-class TestClient extends Thread
+public class nullClient extends Thread
   {
   private String username;
   private String password;
   private String character;
   
-  public TestClient(String u, String p, String c)
+  public nullClient(String u, String p, String c)
     {
     username=u;
     password=p;
@@ -63,12 +63,16 @@ class TestClient extends Thread
 
       msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
-      while(recieved!=4)
+      while(recieved!=5)
         {
         Message msg=null;
 
         while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CChooseCharacterACK)
+          {
+          ++recieved;
+          }
+        else if(msg instanceof MessageS2CMap)
           {
           ++recieved;
           }
@@ -88,6 +92,7 @@ class TestClient extends Thread
       Date timestamp=new Date();
       SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         
+      PerceptionHandler handler=new PerceptionHandler();
       while(cond)
         {
         Message msg=null;
@@ -99,36 +104,7 @@ class TestClient extends Thread
           netMan.addMessage(reply);
           
           MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-          if(msgPer.getTypePerception()==1 && outofsync)
-            {
-            outofsync=false;
-            previous_timestamp=msgPer.getPerceptionTimestamp()-1;
-            }
-          else if(outofsync==true)
-            {
-            System.out.println("|"+Long.toString(new Date().getTime())+"| Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-            }
-          
-          if(outofsync==false)
-            {
-            if(previous_timestamp+1!=msgPer.getPerceptionTimestamp())
-              {
-              System.out.println("We are out of sync. Waiting for sync perception");
-              System.out.println("Expected"+(previous_timestamp+1)+" but we got "+msgPer.getPerceptionTimestamp());
-              outofsync=true;
-              /* TODO: Try to regain sync by getting more messages in the hope of getting the out of order perception */                
-              }
-            else
-              {
-              timestamp.setTime(System.currentTimeMillis());
-              String ts = formatter.format(timestamp);
-
-              System.out.println(ts+" "+"Got Perception - "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-              out.println(ts+" "+msgPer.getTypePerception()+" - "+msgPer.getPerceptionTimestamp());
-              
-              previous_timestamp=msgPer.applyPerception(world_objects,previous_timestamp,null);          
-              }       
-            }
+          handler.apply(msgPer,world_objects);
           }
 
         StringBuffer world=new StringBuffer("World content: \n");
@@ -147,7 +123,7 @@ class TestClient extends Thread
 
       msgL.setClientID(clientid);
       netMan.addMessage(msgL);
-      while(recieved!=5)
+      while(recieved!=6)
         {
         Message msg=null;
 
@@ -175,15 +151,15 @@ class TestClient extends Thread
     {
     try
       {
-      int num=6;
-      TestClient test[]=new TestClient[num];
+      int num=1;
+      nullClient test[]=new nullClient[num];
       
-      test[0]=new TestClient("miguel","qwerty","miguel");
-      test[1]=new TestClient("prueba","qwerty","prueba");
-      test[2]=new TestClient("bot_8","nopass","bot_8");
-      test[3]=new TestClient("bot_9","nopass","bot_9");
-      test[4]=new TestClient("bot_10","nopass","bot_10");
-      test[5]=new TestClient("bot_11","nopass","bot_11");
+      test[0]=new nullClient("miguel","qwerty","miguel");
+//      test[1]=new nullClient("prueba","qwerty","prueba");
+//      test[2]=new nullClient("bot_8","nopass","bot_8");
+//      test[3]=new nullClient("bot_9","nopass","bot_9");
+//      test[4]=new nullClient("bot_10","nopass","bot_10");
+//      test[5]=new nullClient("bot_11","nopass","bot_11");
       
       for(int i=0;i<num;++i)
         {
