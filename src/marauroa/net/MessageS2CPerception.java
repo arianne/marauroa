@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.49 2004/06/01 16:16:54 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.50 2004/06/02 12:51:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,13 +166,11 @@ public class MessageS2CPerception extends Message
   
   private static byte[] precomputed_StaticPartPerception=null;
   private static long precomputed_StaticPartSavedBytes=0;
-  private static long precomputed_StaticPartSize=0;
   
   public static void clearPrecomputedPerception()
     {
     precomputed_StaticPartPerception=null;
     precomputed_StaticPartSavedBytes=0;
-    precomputed_StaticPartSize=0;
     }
   
   private byte[] getPrecomputedStaticPartPerception() throws IOException
@@ -189,7 +187,6 @@ public class MessageS2CPerception extends Message
       precomputed_StaticPartPerception=array.toByteArray();
       
       precomputed_StaticPartSavedBytes=out_stream.getBytesWritten()-precomputed_StaticPartPerception.length;
-      precomputed_StaticPartSize=out_stream.getBytesWritten();
       }
     
     Statistics.getStatistics().addBytesSaved(precomputed_StaticPartSavedBytes);
@@ -257,8 +254,6 @@ public class MessageS2CPerception extends Message
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    out.write((int)precomputed_StaticPartSize);
-    
     out.write(getPrecomputedStaticPartPerception());
     out.write(getDynamicPartPerception());      
     }
@@ -267,9 +262,6 @@ public class MessageS2CPerception extends Message
     {
     super.readObject(in);
 
-    /*NOTE: We don't need it. It is for the C side */
-    in.readInt();
-    
     ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
     InputSerializer ser=new InputSerializer(szlib);
