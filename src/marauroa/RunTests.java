@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.22 2003/12/09 15:15:13 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.23 2003/12/09 22:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,16 +20,66 @@ import java.io.*;
  */
 public class RunTests
   {  
+  private static class Killer extends Thread
+    {
+    private long timeout;
+    private boolean finishRequest;
+    
+    public Killer(long timeout)
+      {
+      this.timeout=timeout;
+      finishRequest=false;
+      start();
+      }
+    
+    public void run()
+      {
+      try
+        {
+        while(!finishRequest && timeout>0)
+          {
+          sleep(1000);
+          timeout-=1000;
+          } 
+        }
+      catch(Exception e)
+        {
+        }
+      
+      if(timeout<0)
+        {
+        System.err.println("ERROR: RunTests killed, please send the log files to:");
+        System.err.println("http://sourceforge.net/tracker/?func=add&group_id=66537&atid=514826");
+        System.exit(-1);
+        }
+      }
+    
+    public void finish()
+      {
+      finishRequest=true;
+      }
+    }
+    
   public static void main (String[] args)
     {
+    /** NOTE: On my machine it took 93000 milliseconds. */
+    final long TIMEOUT_KILL_APPLICATION=180000;
+    
     try
       {
+      Killer killer=new Killer(TIMEOUT_KILL_APPLICATION);
+      
+      Date start=new Date();
       String timestamp=Long.toString(new Date().getTime());
       
       runTest(suiteBase(),timestamp);
       runTest(suiteNet(),timestamp);
       runTest(suiteGame(),timestamp);
       runTest(suiteActive(),timestamp);      
+      Date end=new Date();
+      
+      System.err.println("Total time: "+(end.getTime()-start.getTime()));
+      killer.finish();
       }
     catch(Exception e) 
       {
