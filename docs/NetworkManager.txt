@@ -65,3 +65,8 @@ is addresses in the protocol itself.
 
 The read method is blocking, when you call the read method it returns a message 
 from the queue or blocks until one arrives if the queue is empty.
+
+That is the whole basic idea, the manager gets a bit more complex as a result of
+willing to support Server to Client messages that are bigger than one UDP package.
+The manager just sent it once, and don't confirm any of the messages. Please refer
+to UDP Packet Format for more info about it.

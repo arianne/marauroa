@@ -5,6 +5,14 @@ Author : Miguel Angel Blanch Lardin
 Created: 2003/12/06
 status : planning
 
+Why bother with it?
+Well, imagine that a player logouts when the perception is being build, it will
+be no longer accesible for the RP Manager, when it really expects the object to 
+be there. Or a removed player that is removed too by RP Manager. That is a really
+serious problem, as it will make the server to fail.
+
+So we need to synchonize game and RP manager.
+
 The idea is that they request to a central mutex access to the 
 PlayerEntryContainer, and that mutex is the one that decide how the access is 
 done.

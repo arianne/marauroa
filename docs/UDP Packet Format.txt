@@ -6,6 +6,11 @@ Created: 2003/08/26
 status : planning
 
 It is based on Messages transmited using UDP Packets.
+We have two types of streams, one that is Server to Client and another one
+that is Client to Server.
+
+UDP Client to Server communication stream
+-----------------------------------------
 Each message is selfcontained on a SINGLE UDP Packet, and there isn't any 
 mechanism to recovery from lost messages or repeated ones.
 
@@ -14,6 +19,30 @@ Each UDP Packet is composed of:
 - Type of Message  ( 1 byte           )
 - Client ID        ( 4 bytes          )
 - Rest of Message  ( up to 1494 bytes )
+
+UDP Server to Client communication stream
+-----------------------------------------
+Each message is contained in one or more UDP Packets, and the UDP Packet
+format is as follow:
+
+1st UDP Packet is composed of:
+- Total number of packets	( 1 byte 	   )
+- Position of this message	( 1 byte   	   )
+- Signature of the message	( 1 byte 	   ) 
+- Protocol version 		( 1 byte           )
+- Type of Message  		( 1 byte           )
+- Client ID        		( 4 bytes          )
+- Rest of Message  		( up to 1491 bytes )
+
+The rest of UDP Packets are composed of:
+- Total number of packets	( 1 byte 	   )
+- Position of this message	( 1 byte   	   )
+- Signature of the message	( 1 byte 	   ) 
+- Rest of Message  		( up to 1497 bytes )
+
+The main idea is to contain the serialized message inside several UDP Packets
+and then rebuild it on client. There is no kind of error recovery, or 
+retransmision.
 
 Messages are sent from server by simply serializing them.
 So the message itself contains the protocol version, the type of message and

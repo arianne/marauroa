@@ -35,6 +35,9 @@ Contents
 
 	e) ClientID generation.txt
 		Explains how the clientid are generated
+		
+	f) Synchronization between Game and RP Managers.txt
+		Explain why and how we do it.
 
 
 4) RP related

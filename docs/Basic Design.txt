@@ -88,6 +88,8 @@ forever
     {
     run action in RuleManager
     }
+  
+  Send Perceptions
     
   wait until turn is completed
   next turn

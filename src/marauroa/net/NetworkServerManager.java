@@ -217,6 +217,7 @@ public class NetworkServerManager
       marauroad.trace("NetworkServerManagerWrite::write",">");
  	  try
  	    {
+ 	    /* TODO: Looks like hardcoded, write it in a better way */
  	    if(keepRunning)
  	      {
  	      ByteArrayOutputStream out=new ByteArrayOutputStream();

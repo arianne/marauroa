@@ -21,7 +21,8 @@ public class NetworkClientManager
     public byte signature;
     public byte remaining;
     public byte[] content;
-    public InetSocketAddress address;
+    public InetSocketAddress address;    
+    public Date timestamp;
     }    
   
   private Map pendingPackets;
@@ -69,6 +70,12 @@ public class NetworkClientManager
           pendingPackets.remove(new Byte(message.signature));
           return msg;
           }
+        
+        if(new Date().getTime()-message.timestamp.getTime()>3000)
+          {
+          System.out.println("NetworkClientManager: deleted incompleted message after timedout");
+          pendingPackets.remove(new Byte(message.signature));
+          }
         }
       }
     catch(IOException e)
@@ -94,6 +101,7 @@ public class NetworkClientManager
       
         /* A multipart message. We try to read the rest now. 
          * We need to check on the list if the message exist and it exist we add this one. */
+ 	    /* TODO: Looks like hardcoded, write it in a better way */
         byte total=data[0];
         byte position=data[1];
         byte signature=data[2];
@@ -107,6 +115,7 @@ public class NetworkClientManager
           message.remaining=(byte)(total-1);
           message.address=(InetSocketAddress)packet.getSocketAddress();
           message.content=new byte[(NetConst.UDP_PACKET_SIZE-3)*total];
+          message.timestamp=new Date();
           
           System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);      
           pendingPackets.put(new Byte(signature),message);
