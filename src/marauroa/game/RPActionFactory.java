@@ -90,6 +90,11 @@ public class RPActionFactory
       int index = rp_action.actionType;
       os.write(index);
       rp_action.writeObject(os);
+      if(factoryArray.get(new Integer(index))==null)
+      {
+        //it is not registered yet, so register it
+        register(index,rp_action.getClass());
+      }
     }
     catch(Exception e)
     {
