@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.86 2004/05/23 12:30:41 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.87 2004/05/24 17:23:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -421,11 +421,13 @@ class RPServerManager extends Thread
     
   public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
     {
+    scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);
     }
   
   public List serializeMap(RPObject.ID id)
     {
+    scheduler.clearRPActions(id);
     return ruleProcessor.serializeMap(id);
     }
   

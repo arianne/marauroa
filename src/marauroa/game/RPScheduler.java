@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.14 2004/05/19 22:01:28 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.15 2004/05/24 17:23:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,6 +76,19 @@ public class RPScheduler
       {
       marauroad.trace("RPScheduler::addRPAction","<");
       }
+    }
+  
+  public synchronized void clearRPActions(RPObject.ID id)
+    {
+    if(nextTurn.containsKey(id))
+      {
+      nextTurn.remove(id);
+      }    
+
+    if(actualTurn.containsKey(id))
+      {
+      actualTurn.remove(id);
+      }    
     }
   
   /** For each action in the actual turn, make it to be run in the ruleProcessor
