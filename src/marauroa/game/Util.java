@@ -1,4 +1,4 @@
-/* $Id: Util.java,v 1.5 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: Util.java,v 1.6 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /** This class contains some methods which are taken from GNU crypto project */
 public class Util
@@ -27,7 +24,7 @@ public class Util
   private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
   
   //use WeakReference, so gc can remove MessageDigest instance
-  private static WeakReference md5DigestRef;
+  private static WeakReference<MessageDigest> md5DigestRef;
   
   /** Returns a md5 hash (as string) of input string
    */
@@ -98,12 +95,12 @@ public class Util
     throws NoSuchAlgorithmException
     {
     MessageDigest md = null;
-    if(md5DigestRef==null || (md=(MessageDigest)md5DigestRef.get())==null)
+    if(md5DigestRef==null || (md=md5DigestRef.get())==null)
       {
       md = MessageDigest.getInstance("MD5");
       md5DigestRef = new WeakReference<MessageDigest>(md);
       }
-    md = (MessageDigest)md5DigestRef.get();
+    md = md5DigestRef.get();
     md.reset();
     return(md);
     }

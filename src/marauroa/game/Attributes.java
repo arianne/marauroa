@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.48 2004/11/21 11:00:21 root777 Exp $ */
+/* $Id: Attributes.java,v 1.49 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,13 +29,10 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
   public Object copy()
     {
     Attributes attr=new Attributes(this.rpClass);
-    Iterator it=content.entrySet().iterator();
-
-    while(it.hasNext())
+    
+    for(Map.Entry<String,String> entry: content.entrySet())
       {
-      Map.Entry entry=(Map.Entry)it.next();
-
-      attr.put((String)entry.getKey(),(String)entry.getValue());
+      attr.put(entry.getKey(),entry.getValue());
       }    
     return attr;
     }
@@ -43,13 +40,10 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
   public Object copy(Attributes attr)
     {
     setRPClass(attr.rpClass);
-    Iterator it=attr.content.entrySet().iterator();
 
-    while(it.hasNext())
+    for(Map.Entry<String,String> entry: content.entrySet())
       {
-      Map.Entry entry=(Map.Entry)it.next();
-
-      put((String)entry.getKey(),(String)entry.getValue());
+      put(entry.getKey(),entry.getValue());
       }    
     return this;
     }
@@ -404,8 +398,6 @@ public class Attributes implements marauroa.net.Serializable, Iterable<String>
   public void setAddedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
     {
     rpClass=attr.rpClass;
-    Iterator it=attr.added.entrySet().iterator();
-    
     int i=0;
     for(Map.Entry<String,String> entry: attr.added.entrySet())
       {

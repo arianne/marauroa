@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.8 2004/09/17 18:45:39 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.9 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import marauroa.*;
 
 /** Interface for managing the objects in a RPZone. */
-public interface IRPZone 
+public interface IRPZone extends Iterable
   {
   /** An unique ID for this zone */
   public static class ID implements marauroa.net.Serializable
@@ -102,7 +102,7 @@ public interface IRPZone
   public void assignRPObjectID(RPObject object);
   
   /** Iterates over the elements of the zone */
-  public Iterator iterator();
+  public Iterator<RPObject> iterator();
   /** Returns the number of elements of the zone */
   public long size();
   

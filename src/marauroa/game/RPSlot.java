@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.34 2004/11/20 21:48:03 root777 Exp $ */
+/* $Id: RPSlot.java,v 1.35 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 import marauroa.TimeoutConf;
 import marauroa.marauroad;
 import org.w3c.dom.Document;
@@ -37,11 +38,9 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
 
   public void setAddedRPObject(RPSlot slot)
     {
-    Iterator it=slot.added.iterator();
     
-    while(it.hasNext())
+    for(RPObject object: slot.added)
       {
-      RPObject object=(RPObject)it.next();
       try
         {
         add((RPObject)object.copy());
@@ -57,11 +56,9 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
 
   public void setDeletedRPObject(RPSlot slot)
     {
-    Iterator it=slot.deleted.iterator();
     
-    while(it.hasNext())
+    for(RPObject object: slot.deleted)
       {
-      RPObject object=(RPObject)it.next();
       try
         {
         add((RPObject)object.copy());
@@ -106,11 +103,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
 
     slot.name=name;
 
-    Iterator it=objects.iterator();
-
-    while(it.hasNext())
+    for(RPObject object: objects)
       {
-      RPObject object=(RPObject)it.next();
       slot.add((RPObject)object.copy());
       }
     return slot;
@@ -133,12 +127,12 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
     {
     try
       {
-      Iterator it=objects.iterator();
+      Iterator<RPObject> it=objects.iterator();
       boolean found=false;
       
       while(!found && it.hasNext())
         {
-        RPObject data=(RPObject)it.next();
+        RPObject data=it.next();
         if(data.get("id").equals(object.get("id")))
           {
           it.remove();
@@ -164,12 +158,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
     {
     try
       {
-      Iterator it=objects.iterator();
-			
-      while(it.hasNext())
+      for(RPObject object: objects)
         {
-        RPObject object=(RPObject)it.next();
-
         if(id.equals(new RPObject.ID(object)))
           {
           return object;
@@ -200,21 +190,21 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
     {
     try
       {
-      Iterator it=objects.iterator();
+      Iterator<RPObject> it=objects.iterator();
 			
       while(it.hasNext())
         {
-        RPObject object=(RPObject)it.next();
+        RPObject object=it.next();
 
         if(id.equals(new RPObject.ID(object)))
           {
           /* HACK: This is a hack to avoid a problem that happens when on the 
            *  same turn an object is added and deleted, causing the client to confuse. */
           boolean found_in_added_list=false;
-          Iterator added_it=added.iterator();
+          Iterator<RPObject> added_it=added.iterator();
           while(!found_in_added_list && added_it.hasNext())
             {
-            RPObject added_object=(RPObject)added_it.next();
+            RPObject added_object=added_it.next();
             if(id.equals(new RPObject.ID(added_object)))
               {
               added_it.remove();
@@ -245,9 +235,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
     {
     Iterator it=objects.iterator();
             
-    while(it.hasNext())
+    for(RPObject object: objects)
       {
-      RPObject object=(RPObject)it.next();
       try
         {
         deleted.add(new RPObject(new RPObject.ID(object)));
@@ -265,12 +254,8 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
     {
     try
       {
-      Iterator it=objects.iterator();
-			
-      while(it.hasNext())
+      for(RPObject object: objects)
         {
-        RPObject object=(RPObject)it.next();
-
         if(id.equals(new RPObject.ID(object)))
           {
           return true;
@@ -293,7 +278,7 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
   /** Iterate over the objects of the slot */
   public Iterator<RPObject> iterator()
     {
-    return objects.iterator();
+    return Collections.unmodifiableList(objects).iterator();
     }
   
   /** Returns true if both objects are equal */
@@ -316,12 +301,9 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
 
     str.append("RPSlot named("+name+") with [");
 
-    Iterator it=iterator();
 
-    while(it.hasNext())
+    for(RPObject object: objects)
       {
-      RPObject object=(RPObject)it.next();
-
       str.append(object.toString());
       }
     str.append("]");
@@ -336,15 +318,10 @@ public class RPSlot implements marauroa.net.Serializable, Cloneable, Iterable<RP
   public void writeObject(marauroa.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
     {
     out.write(name);
-		
-    Iterator  it=objects.iterator();
-
     out.write((int)objects.size());
-    while(it.hasNext())
+    for(RPObject object: objects)
       {
-      RPObject entry=(RPObject)it.next();
-
-      entry.writeObject(out,fulldata);
+      object.writeObject(out,fulldata);
       }
     }
   

@@ -51,7 +51,7 @@ public class RPClass implements Serializable
         attributeIntegerMap.put(name,new Short(++lastCode));
         }
 
-      return ((Short)attributeIntegerMap.get(name)).shortValue();
+      return (attributeIntegerMap.get(name)).shortValue();
       }
       
     public AttributeDesc()
@@ -226,7 +226,7 @@ public class RPClass implements Serializable
     {
     if(attributes.containsKey(name))
       {
-      AttributeDesc desc=(AttributeDesc)attributes.get(name);
+      AttributeDesc desc=attributes.get(name);
       return desc.code;
       }
     
@@ -241,10 +241,8 @@ public class RPClass implements Serializable
   /** Returns the name of the attribute whose code is code for this rpclass */
   public String getName(short code) throws SyntaxException
     {
-    Iterator it=attributes.values().iterator();
-    while(it.hasNext())
+    for(AttributeDesc desc: attributes.values())
       {
-      AttributeDesc desc=(AttributeDesc)it.next();
       if(desc.code==code)
         {
         return desc.name;
@@ -264,7 +262,7 @@ public class RPClass implements Serializable
     {
     if(attributes.containsKey(name))
       {
-      AttributeDesc desc=(AttributeDesc)attributes.get(name);
+      AttributeDesc desc=attributes.get(name);
       return desc.type;
       }
     
@@ -281,7 +279,7 @@ public class RPClass implements Serializable
     {
     if(attributes.containsKey(name))
       {
-      AttributeDesc desc=(AttributeDesc)attributes.get(name);
+      AttributeDesc desc=attributes.get(name);
       return desc.visibility;
       }
     
@@ -326,7 +324,7 @@ public class RPClass implements Serializable
     {
     if(rpClassList.containsKey(name))
       {
-      return (RPClass)rpClassList.get(name);
+      return rpClassList.get(name);
       }
     
     /* TODO: Throw exception */
@@ -337,12 +335,8 @@ public class RPClass implements Serializable
     {
     RPObject object=new RPObject(id,this);
     
-    Iterator it=attributes.entrySet().iterator();
-    while(it.hasNext())
+    for(AttributeDesc desc: attributes.values())
       {
-      Map.Entry entry=(Map.Entry)it.next();
-      AttributeDesc desc=(AttributeDesc)entry.getValue();
-      
       if(!desc.name.equals("id"))      
         {
         if(desc.type==STRING)
@@ -374,10 +368,8 @@ public class RPClass implements Serializable
       out.write(parent.name);
       }
     
-    Iterator it=attributes.values().iterator();
-    while(it.hasNext())
+    for(AttributeDesc desc: attributes.values())
       {
-      AttributeDesc desc=(AttributeDesc)it.next();
       out.write(desc);      
       }
     }
@@ -403,7 +395,7 @@ public class RPClass implements Serializable
     }
     
   /** Iterates over the global list of rpclasses */
-  public static Iterator iterator()
+  public static Iterator<RPClass> iterator()
     {
     return rpClassList.values().iterator();
     }

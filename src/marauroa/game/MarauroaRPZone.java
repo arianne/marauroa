@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.66 2004/11/20 20:06:46 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.67 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -156,7 +156,7 @@ public class MarauroaRPZone implements IRPZone
     object.put("zoneid",zoneid.getID());
     }
     
-  public Iterator iterator()
+  public Iterator<RPObject> iterator()
     {
     return objects.values().iterator();
     }
@@ -170,10 +170,8 @@ public class MarauroaRPZone implements IRPZone
       {
       StringBuffer world=new StringBuffer("World content: \n");
       
-      Iterator world_it=objects.values().iterator();
-      while(world_it.hasNext())
+      for(RPObject object: objects.values())
         {
-        RPObject object=(RPObject)world_it.next();
         world.append("  "+object.toString()+"\n");
         }
       marauroad.trace("MarauroaRPZone::getPerception","D",world.toString());
@@ -185,12 +183,11 @@ public class MarauroaRPZone implements IRPZone
         {
         prebuildDeltaPerception=perception;
         
-        Iterator it=modified.values().iterator();
-        while(it.hasNext())
+        for(RPObject modified_obj: modified.values())
           {
           try
             {
-            prebuildDeltaPerception.modified(((RPObject)it.next()));
+            prebuildDeltaPerception.modified(modified_obj);
             }
           catch(Exception e)
             {
@@ -215,10 +212,9 @@ public class MarauroaRPZone implements IRPZone
   
   public void reset()
     {
-    Iterator it=objects.values().iterator();
-    while(it.hasNext())
+    for(RPObject object: objects.values())
       {
-      ((RPObject)it.next()).resetAddedAndDeleted();
+      object.resetAddedAndDeleted();
       }
     }
     
@@ -229,12 +225,8 @@ public class MarauroaRPZone implements IRPZone
   
   public void print(PrintStream out)
     {
-    Iterator it=iterator();
-        
-    while(it.hasNext())
+      for(RPObject object: objects.values())  
       {
-      RPObject object=(RPObject)it.next();
-
       out.println(object);
       }
     }

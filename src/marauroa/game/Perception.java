@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.7 2004/11/12 15:39:15 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.8 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,10 +81,9 @@ public class Perception
       {
       try
         {
-        Iterator it=addedList.iterator();
-        while(it.hasNext())
+        for(Iterator<RPObject> it=addedList.iterator(); it.hasNext();)
           {
-          RPObject added=(RPObject)it.next();
+          RPObject added=it.next();
           if(added.get("id").equals(object.get("id")))
             {
             it.remove();
@@ -124,10 +123,8 @@ public class Perception
     {
     try
       {
-      Iterator it=deletedList.iterator();
-      while(it.hasNext())
+      for(RPObject deleted: deletedList)
         {
-        RPObject deleted=(RPObject)it.next();
         if(deleted.get("id").equals(object.get("id")))
           {
           return true;
@@ -146,10 +143,8 @@ public class Perception
     {
     try
       {
-      Iterator it=addedList.iterator();
-      while(it.hasNext())
+      for(RPObject added: addedList)
         {
-        RPObject added=(RPObject)it.next();
         if(added.get("id").equals(object.get("id")))
           {
           return true;

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.55 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.56 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -573,10 +573,8 @@ public final class GameServerManager extends Thread
       
       /** Handle Transfer ACK here */  
       PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
-      Iterator it=msg.getContents().iterator();
-      while(it.hasNext())
+      for(TransferContent content: msg.getContents())
         {
-        TransferContent content=(TransferContent)it.next();
         if(content.ack==true)        
           {
           content=entry.getContent(content.name);          

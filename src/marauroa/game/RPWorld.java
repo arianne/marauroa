@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.3 2004/11/20 20:06:46 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.4 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,12 +38,12 @@ public class RPWorld
   
   public IRPZone getRPZone(IRPZone.ID zoneid)
     {
-    return (IRPZone)zones.get(zoneid);
+    return zones.get(zoneid);
     }
 
   public IRPZone getRPZone(RPObject.ID objectid)
     {
-    return (IRPZone)zones.get(new IRPZone.ID(objectid.getZoneID()));
+    return zones.get(new IRPZone.ID(objectid.getZoneID()));
     }
   
   public void add(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
@@ -58,7 +58,7 @@ public class RPWorld
       {
       if(object.has("zoneid"))
         {
-        IRPZone zone=(IRPZone)zones.get(new IRPZone.ID(object.get("zoneid")));
+        IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
         return zone;
         }        
@@ -77,11 +77,8 @@ public class RPWorld
   
   public void nextTurn()
     {
-    Iterator it=zones.values().iterator();
-    
-    while(it.hasNext())
+    for(IRPZone zone: zones.values())
       {
-      IRPZone zone=(IRPZone)it.next();
       zone.nextTurn();
       }
     }
@@ -90,11 +87,8 @@ public class RPWorld
     {
     int size=0;
     
-    Iterator it=zones.values().iterator();
-    
-    while(it.hasNext())
+    for(IRPZone zone: zones.values()) 
       {
-      IRPZone zone=(IRPZone)it.next();
       size+=zone.size();
       }
      

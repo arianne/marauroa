@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.113 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.114 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,10 +166,8 @@ public class RPServerManager extends Thread
   
   private void addIncubatorPlayers()
     {
-    Iterator it=incubator.iterator();
-    while(it.hasNext())
+    for(RPObject object: incubator)
       {
-      RPObject object=(RPObject)it.next();          
       try
         {
         marauroad.trace("RPServerManager::addIncubatorPlayers","D","Adding object("+object.get("id")+") from incubator");

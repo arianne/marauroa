@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.20 2004/11/19 20:30:06 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.21 2004/11/21 14:17:31 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,7 @@ public class RPScheduler
       marauroad.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
       if(nextTurn.containsKey(id))
         {
-        RPActionList list=(RPActionList)nextTurn.get(id);
+        RPActionList list=nextTurn.get(id);
 
         list.add(action);
         }
@@ -92,23 +92,17 @@ public class RPScheduler
     marauroad.trace("RPScheduler::visit",">");
     try
       {
-      Iterator it=actualTurn.entrySet().iterator();
-    
-      while(it.hasNext())
+      for(Map.Entry<RPObject.ID,RPActionList> entry: actualTurn.entrySet())
         {
-        Map.Entry val=(Map.Entry)it.next();
-        RPObject.ID id=(RPObject.ID)val.getKey();
-        RPActionList list=(RPActionList)val.getValue();
+        RPObject.ID id=entry.getKey();
+        RPActionList list=entry.getValue();
 
         ruleProcessor.approvedActions(id,list);
       
-        Iterator action_it=list.iterator();
-
-        while(action_it.hasNext())
+        for(RPAction action: list)
           {
           try
             {
-            RPAction action=(RPAction)action_it.next();
             RPAction.Status status=ruleProcessor.execute(id,action);
                         
             /* If state is incomplete add for next turn */
