@@ -3,11 +3,20 @@ package marauroa.net;
 import java.net.InetSocketAddress;
 import java.io.*;
   
+/** This message indicate the server that the client wants to login and send the
+ *  needed info: username and password to login to server.
+ *  @see marauroa.net.Message
+ */
 public class MessageC2SLogin extends Message
   {
   private String username;
   private String password;
   
+  /** Constructor with a TCP/IP source/destination of the message and the name
+   *  of the choosen character.
+   *  @param username the username of the user that wants to login
+   *  @param password the plain password of the user that wants to login
+   */
   MessageC2SLogin(InetSocketAddress source,String username, String password)
     {
     super(source);
@@ -17,17 +26,21 @@ public class MessageC2SLogin extends Message
     this.password=password;
     }  
   
-  String getUsername()
+  /** This method returns the username
+   *  @return the username */
+  public String getUsername()
     {
     return username;    
     }
     
-  String getPassword()
+  /** This method returns the password
+   *  @return the password */
+  public String getPassword()
     {
     return password;
     }
 
-  public void writeObject(marauroa.net.OutputSerializer out) throws IOException
+  public public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
     out.write(username);
