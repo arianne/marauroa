@@ -1,0 +1,19 @@
+Title  : Synchronization between Game and RP Managers
+Info   : Description of how we are going to synchronize them in the access to PlayerEntryContainer.
+Keyword: sync, mutex, reader, writer, concurrect
+Author : Miguel Angel Blanch Lardin
+Created: 2003/12/06
+status : planning
+
+The idea is that they request to a central mutex access to the 
+PlayerEntryContainer, and that mutex is the one that decide how the access is 
+done.
+
+We need to diference between two types of accesses, read access and write access.
+We can have without problems two readers accessing in parallel, but we can only
+have one write at the same time modifying the stuff.
+
+Whatever action we choose in GameManager they are Write actions, as the modify the 
+state of the PlayerContainer, but in RP we have two parts, one that build the perceptions
+that is read only and one that remove idle players that is write, so we must apply two 
+different locks there.

@@ -199,13 +199,16 @@ class RPServerManager extends Thread
   private void buildPerceptions()
     {
     marauroad.trace("RPServerManager::buildPerceptions",">");
+    List playersToRemove=new LinkedList();
     
     try
       {
+      playerContainer.getLock().requestReadLock();
+
       ++deltaPerceptionSend;
-      List playersToRemove=new LinkedList();
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
     
+      
       while(it.hasNext())
         {
         int clientid=it.next();
@@ -240,8 +243,13 @@ class RPServerManager extends Thread
           marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
           }
         }
-      
+
+      playerContainer.getLock().releaseLock();
+
+	  /* Removing the players is a write operation */
+      playerContainer.getLock().requestWriteLock();
       removeTimedoutPlayers(playersToRemove);
+      playerContainer.getLock().releaseLock();
       }      
     finally
       {

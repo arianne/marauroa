@@ -86,7 +86,9 @@ public class GameServerManager extends Thread
         Message msg=netMan.getMessage(5000);
        
         if(msg!=null)
-          {    
+          {
+          playerContainer.getLock().requestWriteLock();
+              
           switch(msg.getType()) 
             {
             case Message.TYPE_C2S_LOGIN:
@@ -113,6 +115,8 @@ public class GameServerManager extends Thread
               marauroad.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
               break;
             }
+            
+          playerContainer.getLock().releaseLock();
           }
         }
       }

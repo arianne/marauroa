@@ -3,7 +3,7 @@ package marauroa.game;
 import java.util.*;
 import java.net.*;
 
-import marauroa.marauroad;
+import marauroa.*;
 
 /** This class contains a list of the Runtime players existing in Marauroa, but it
  *  also links them with their representation in game and in database, so this is 
@@ -81,10 +81,6 @@ public class PlayerEntryContainer
       Map.Entry entry=(Map.Entry)entryIter.next();
       return ((Integer)entry.getKey()).intValue();
       }
-    
-    public void remove()
-      {
-      }
     }
   
   /** This method returns an iterator of the players in the container */  
@@ -97,6 +93,9 @@ public class PlayerEntryContainer
   private HashMap listPlayerEntries;
   /** A object representing the database */
   private PlayerDatabase playerDatabase;
+  /** A reader/writers lock for controlling the access */    
+  private RWLock lock;
+  
   private static PlayerEntryContainer playerEntryContainer;
   
   /** Constructor */
@@ -104,6 +103,8 @@ public class PlayerEntryContainer
     {
     /* Initialize the random number generator */
     rand.setSeed(new Date().getTime());
+    
+    lock=new RWLock();
     
     listPlayerEntries=new HashMap();
 
@@ -785,4 +786,11 @@ public class PlayerEntryContainer
       marauroad.trace("PlayerEntryContainer::getInetSocketAddress","<");
       } 
     }  
+    
+  /** This method returns the lock so that you can control how the resource is used 
+   *  @return the RWLock of the object */
+  public RWLock getLock()
+    {
+    return lock;
+    }
   }
