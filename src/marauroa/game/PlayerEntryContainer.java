@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.32 2004/04/17 12:10:04 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.33 2004/04/28 15:26:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,9 @@ public class PlayerEntryContainer
   {
   public static final byte STATE_NULL=0;
   public static final byte STATE_LOGIN_COMPLETE=1;
-  public static final byte STATE_GAME_BEGIN=2;
+  public static final byte STATE_GAME_LOADED=2;
+  public static final byte STATE_GAME_BEGIN=3;
+  
   /** A class to store all the object information to use in runtime and access database */
   static public class RuntimePlayerEntry
     {

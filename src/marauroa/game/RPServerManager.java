@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.71 2004/04/27 22:42:47 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.72 2004/04/28 15:26:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,6 +43,8 @@ class RPServerManager extends Thread
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
   
+  private List incubator;
+  
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
   public RPServerManager(NetworkServerManager netMan)
@@ -71,6 +73,8 @@ class RPServerManager extends Thread
       String duration =conf.get("rp_turnDuration");
 
       turnDuration = Long.parseLong(duration);
+      incubator=new LinkedList();
+      
       start();
       }
     catch(Exception e)
@@ -214,6 +218,29 @@ class RPServerManager extends Thread
     try
       {
       ++deltaPerceptionSend;
+      
+      if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+        {
+        Iterator it=incubator.iterator();
+        while(it.hasNext())
+          {
+          RPObject object=(RPObject)it.next();          
+          try
+            {
+            marauroad.trace("RPServerManager::buildPerceptions","D","Adding object("+object.get("id")+") from incubator");
+            if(!ruleProcessor.onInit(object))
+              {
+              marauroad.trace("RPServerManager::buildPerceptions","D","Can't add to game "+object.toString());
+              }
+            }
+          catch(Exception e) 
+            {
+            marauroad.trace("RPServerManager::buildPerceptions","X",e.getMessage());
+            }
+          }
+        
+        incubator.clear();
+        }
 
       PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
       
@@ -262,6 +289,13 @@ class RPServerManager extends Thread
             if(playerContainer.shouldStoredUpdate(clientid))
               {
               playersToUpdate.add(new Integer(clientid));
+              }
+            }
+          else
+            {
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION) 
+              {
+              playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
               }
             }
             
@@ -371,7 +405,8 @@ class RPServerManager extends Thread
 
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
-    return ruleProcessor.onInit(object);
+    incubator.add(object);
+    return true;
     }
     
   public boolean onExit(RPObject.ID id) throws RPZone.RPObjectNotFoundException
