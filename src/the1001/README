@@ -328,135 +328,144 @@ Rufus is a wise man and he decide to buy a above standard gladiator with his fam
 and just a simple sword. To do that he send a ACTION message to server with the info
 he saw at Heroes Shop object in the last perception.
 
-Heroes' shop
+Perception
   {
-  type="shop"
-  gladiators
+  Heroes' shop
     {
-    Gladiator
+    type="shop"
+    gladiators
       {
-      type="gladiator"
-      object_id="1122"
-      name="Ragnar"
-      rp_strengh="10"
-      rp_speed="4"
-      rp_size="10"
-      rp_breath="10"
-      rp_fame="70"
-      rp_attack="10"
-      rp_defend="10"
-      rp_evasion="4"
-      rp_health="100"
-      num_victory=0
-      num_defeat=0      
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="70"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0  
+        }
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1242"
+        name="Speedy Gonzalez"
+        rp_strengh="4"
+        rp_speed="10"
+        rp_size="5"
+        rp_breath="12"
+        rp_fame="70"
+        rp_attack="6"
+        rp_defend="5"
+        rp_evasion="14"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0        
+        }
       }
-    Gladiator
-      {
-      type="gladiator"
-      object_id="1242"
-      name="Speedy Gonzalez"
-      rp_strengh="4"
-      rp_speed="10"
-      rp_size="5"
-      rp_breath="12"
-      rp_fame="70"
-      rp_attack="6"
-      rp_defend="5"
-      rp_evasion="14"
-      rp_health="100"
-      num_victory=0
-      num_defeat=0      
-      }
-    }
     
-  items
-    {
-    Sword
+    items
       {
-      type="sword"
-      object_id="11672"
-      rp_attack="7"
-      rp_defend="3"
-      rp_price="30";
+      Sword
+        {
+        type="sword"
+        object_id="11672"
+        rp_attack="7"
+        rp_defend="3"
+        rp_price="30";
+        }
+      Shield
+        {
+        type="shield"
+        object_id="11673"
+        rp_attack="1"
+        rp_defend="10"
+        rp_price="70";
+        }
+      Spear
+        {
+        type="spear"
+        object_id="11674"
+        rp_attack="10"
+        rp_defend="0"
+        rp_price="10";
+        }        
       }
-    Shield
-      {
-      type="shield"
-      object_id="11673"
-      rp_attack="1"
-      rp_defend="10"
-      rp_price="70";
-      }
-    Spear
-      {
-      type="spear"
-      object_id="11674"
-      rp_attack="10"
-      rp_defend="0"
-      rp_price="10";
-      }      
     }
   }
 
+We ignored the empty slots for simplicity.
 So our mighty Rufus would send the next actions.
 
 Buy
   {
+  action_id="1231"
   shop_item="11672"
   }
   
 Buy
   {
+  action_id="1232"
   shop_item="1122"
   }
   
 See the order doesn't matter, as it will be stored into the player.
 On the next perception the wise Rufus will have his character as this:
 
-Character
-  {
-  type="character"
-  object_id="1"
-  name="Rufus Maximus"
-  fame="0"
-  
-  gladiators
+  Character
     {
-    Gladiator
-      {
-      type="gladiator"
-      object_id="1122"
-      name="Ragnar"
-      rp_strengh="10"
-      rp_speed="4"
-      rp_size="10"
-      rp_breath="10"
-      rp_fame="0"
-      rp_attack="10"
-      rp_defend="10"
-      rp_evasion="4"
-      rp_health="100"
-      num_victory=0
-      num_defeat=0      
-      }
-    }
+    type="character"
+    object_id="1"
+    name="Rufus Maximus"
+    fame="0"
+    action_1231="success"
+    action_1232="success"
     
-  backpack
-    {
-    Sword
+    gladiators
       {
-      type="sword"
-      object_id="15672"
-      rp_attack="7"
-      rp_defend="3"
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="Ragnar"
+        rp_strengh="10"
+        rp_speed="4"
+        rp_size="10"
+        rp_breath="10"
+        rp_fame="0"
+        rp_attack="10"
+        rp_defend="10"
+        rp_evasion="4"
+        rp_health="100"
+        num_victory=0
+        num_defeat=0      
+        }
+      }
+      
+    backpack
+      {
+      Sword
+        {
+        type="sword"
+        object_id="15672"
+        rp_attack="7"
+        rp_defend="3"
+        }
       }
     }
-  }
   
-Just three points to notice:
+Just a few points to notice:
 1) See how the rp_fame of Ragnar dropped from 70 to 0. You guessed it, it is the price.
 2) See that sword has a new different Object id.  
 3) rp_price was removed from the sword.
+4) See that the actions succedded.
 
 Ok, our mighty hero is now at the Arena watching "A-Bush" against "No MDW found".
 The combat is a really hard one... see it:
@@ -494,17 +503,85 @@ Perception (It is delta perception )
         damaged="15"
         }
       }
-    
-    backpack
+    }
+  }
+
+And now it is time for "A-Bush" to hit "No MDW found" back. There is no Turns, it
+is just casual that one hits after the other, really the concept of turn doesn't
+exist.
+
+Perception (It is delta perception )
+  {
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Anonymous Player"
+    fame="0"
+  
+    gladiators
       {
-      Sword
+      Gladiator
         {
-        type="sword"
-        object_id="15672"
-        rp_attack="7"
-        rp_defend="3"
+        type="gladiator"
+        object_id="1122"
+        name="A-Bush"
+        rp_strengh="10"
+        rp_speed="6"
+        rp_size="8"
+        rp_breath="9"
+        rp_fame="50"
+        rp_attack="20"
+        rp_defend="20"
+        rp_evasion="1"
+        rp_health="54"
+        num_victory="3"
+        num_defeat="1"  
+        mode="attack"   
         }
       }
     }
+    
+  Character
+    {
+    type="character"
+    object_id="3"
+    name="Another Anonymous Player"
+    fame="0"
+  
+    gladiators
+      {
+      Gladiator
+        {
+        type="gladiator"
+        object_id="1122"
+        name="No MDW found"
+        rp_strengh="3"
+        rp_speed="4"
+        rp_size="3"
+        rp_breath="2"
+        rp_fame="20"
+        rp_attack="7"
+        rp_defend="2"
+        rp_evasion="4"
+        rp_health="0"
+        num_victory="0"
+        num_defeat="1"  
+        mode="dogde"   
+        damage="37"
+        }
+      }
+    }
+  }
 
-And
+See it has reduced health on "No MDW found" to 0. So the combat ends and it is now
+turn for the spectators to issue a score.
+  
+TODO:
+
+Bugs:  
+- Determine a way of knowing to which Action an Action reply belongs
+- Modify documentation to show the above solution
+- Add as mandatory action_id attribute
+- Fill action_id attribute in server
+- Send action_id in Action ACK
