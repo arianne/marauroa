@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.31 2004/02/10 22:22:19 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.32 2004/02/25 18:49:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -207,6 +207,10 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         
         valid_id=new RPObject.ID(zone.create());
         slot_object.put(RPCode.var_object_id,valid_id.getObjectID());
+        if(slot_object.getInt(RPCode.var_fame)<0)
+          {
+          slot_object.put(RPCode.var_fame,0);
+          }
         }
       
       zone.add(object);
