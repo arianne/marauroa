@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.63 2004/04/15 18:35:59 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.64 2004/04/16 10:26:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -355,13 +355,13 @@ class RPServerManager extends Thread
       start=System.currentTimeMillis();
 
       playerContainer.getLock().requestWriteLock();
+        {
+        buildPerceptions();
 
-      buildPerceptions();
-
-      zone.nextTurn();      
-      scheduler.nextTurn();      
-      ruleProcessor.nextTurn();
-
+        zone.nextTurn();      
+        scheduler.nextTurn();      
+        ruleProcessor.nextTurn();
+        } 
       playerContainer.getLock().releaseLock();
       
       stats.setObjectsNow(zone.size());

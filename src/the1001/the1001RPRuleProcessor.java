@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.44 2004/04/15 16:47:54 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.45 2004/04/16 10:26:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,6 +186,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
           {
           object.remove((String)removeit.next());
           }
+          
         attrToDelete.clear();
         
         if(zone.has(new RPObject.ID(object)))

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.36 2004/04/15 15:53:27 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.37 2004/04/16 10:26:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -239,6 +239,7 @@ public class MarauroaRPZone implements RPZone
     {
     prebuildTotalPerception=null;
     prebuildDeltaPerception=null;
+    modified.clear();
 
     perception=new Perception(Perception.DELTA);
     }
