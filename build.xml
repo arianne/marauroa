@@ -17,6 +17,11 @@
   <property name="jarname" value="marauroa-${version}.jar"/>
   <property name="docs" value="javadocs"/>
 
+  <!-- set hier what should be build -->
+  <property name="build.the1001.client" value="true"/>
+  <property name="build.the1001.server" value="true"/> 
+  <property name="build.mapacman" value="true"/>
+
   <target name="init">
     <mkdir dir="${build}" />
     <mkdir dir="${images}" />
@@ -42,11 +47,50 @@
     <copy todir="${build}" file="${src}/marauroa_drop.sql"/>
   </target>
 
-  <target name="compile" depends="init,installation">
+  <target name="compile_marauroa" depends="init">
     <replaceregexp file="${src}/marauroa/marauroad.java"
                    match="final private static String VERSION=&quot;.*&quot;;"
                    replace="final private static String VERSION=&quot;${version}&quot;;"
-                   byline="true"/>                   
+                   byline="true"/>
+    <javac srcdir="${src}/marauroa" destdir="${build}" debug="true" debuglevel="source,lines">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="compile_the1001_client" depends="compile_the1001_server" if="build.the1001.client">
+    <javac srcdir="${src}/the1001/client" destdir="${build}" debug="true" debuglevel="source,lines">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="compile_the1001_server" depends="compile_marauroa" if="build.the1001.server">
+    <javac srcdir="${src}/the1001" destdir="${build}" debug="true" 
+           debuglevel="source,lines" exclude="${src}/the1001/client/**/*.java">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+
+  <target name="compile_mapacman" depends="compile_marauroa" if="build.mapacman">
+    <javac srcdir="${src}/mapacman" destdir="${build}" debug="true" debuglevel="source,lines">
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target 
+    name="compile_new" 
+    depends="init,installation,compile_marauroa,compile_the1001_server,compile_the1001_client,compile_mapacman">
+  </target>
+  
+  <target name="compile" depends="init,installation">
     <condition property="exclude.mapacman" value="**/mapacman/*.*">
       <not>
        <available file="${jython}"/>
