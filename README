@@ -141,6 +141,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.92 Apr XX, 2005
+- Change nextTurn method for beginTurn and nextTurn
+- Replaced onApprovedActions by onActionAdd for simpler action validation
+
 0.91 Mar 03, 2005
 - Added generateini application
 - Simplified README file
@@ -299,5 +303,5 @@ Changelog
 
 Legal
 -----
-Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2004
+Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2005
 arianne_rpg at users dot sourceforge dot net

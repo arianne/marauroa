@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.2 2005/03/07 19:36:50 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,12 +52,15 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
       }
     }
 
-  /** Pass the whole list of actions so that it can approve or deny the actions in it.
-   *  @param id the id of the object owner of the actions.
-   *  @param actionList the list of actions that the player wants to execute. */
-  public void approvedActions(RPObject.ID id, List<RPAction> actionList)
+  public boolean onActionAdd(RPAction action, List<RPAction> actionList)
     {
+    return true;
     }
+
+  public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList)
+    {
+    return true;
+    }  
 
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.
@@ -75,7 +78,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
       if(pythonRP.execute(id,action)==1)
         {
         status=RPAction.Status.SUCCESS;
-		}
+	    	}
       }
     catch(Exception e)
       {

@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.2 2005/03/04 23:39:19 arianne_rpg Exp $ */
+/* $Id: PacketValidator.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -150,7 +150,7 @@ public class PacketValidator
     }
   }
   /** creates a database connection
-   *
+   *  TODO: Refactor to use the available Database class
    */
   private Connection createDBConnection() throws Exception
   {

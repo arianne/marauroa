@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.2 2005/03/07 19:36:43 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,8 @@ public interface IRPRuleProcessor
    *  @param zone The zone where actions happens. */
   public void setContext(RPServerManager rpman,RPWorld world);
   
-  /** Pass the whole list of actions so that it can approve or deny the actions in it.
-   *  @param id the id of the object owner of the actions.
-   *  @param actionList the list of actions that the player wants to execute. */
-  public void approvedActions(RPObject.ID id, List<RPAction> actionList);
+  public boolean onActionAdd(RPAction action, List<RPAction> actionList);
+  public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList);
   
   /** Execute an action in the name of a player.
    *  @param id the id of the object owner of the actions.

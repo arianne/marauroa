@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.3 2005/03/12 17:23:15 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.4 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.common.*;
 import marauroa.common.game.*;
 
 
-public class MarauroaRPZone implements IRPZone
+public abstract class MarauroaRPZone implements IRPZone
   {
   protected ID zoneid;	
   protected Map<RPObject.ID,RPObject> objects;
@@ -55,22 +55,9 @@ public class MarauroaRPZone implements IRPZone
     return zoneid;
     }
   
-  public void onInit() throws Exception
-    {
-    }
-
-  public void onFinish() throws Exception
-    {
-    }
-
-  public void setEntryPoint(String entryPoint)
-    {
-    }
-  
-  public void placeObjectAtEntryPoint(RPObject object)
-    {    
-    }
-  
+  abstract public void onInit() throws Exception;
+  abstract public void onFinish() throws Exception;
+ 
   public void add(RPObject object) throws RPObjectInvalidException
     {
     try
@@ -110,7 +97,6 @@ public class MarauroaRPZone implements IRPZone
     if(objects.containsKey(id))
       {
       RPObject object=(RPObject)objects.remove(id);
-      /** TODO: NOTE: BUG: HACK: Define a consistent semantic */
       perception.removed((RPObject)object.copy());
 
       return object;
@@ -164,7 +150,6 @@ public class MarauroaRPZone implements IRPZone
       id=new RPObject.ID(++lastNonPermanentIdAssigned,zoneid);
       }
       
-    /** TODO: Ugly */
     object.put("id",id.getObjectID());
     object.put("zoneid",zoneid.getID());
     }

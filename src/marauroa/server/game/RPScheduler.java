@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.2 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,11 +35,11 @@ public class RPScheduler
     actualTurn=new HashMap<RPObject.ID,List<RPAction>>();
     nextTurn=new HashMap<RPObject.ID,List<RPAction>>();
     }
-  
+    
   /** Add an RPAction to the scheduler for the next turn
    *  @param action the RPAction
    *  @throws ActionInvalidException if the action lacks of sourceid attribute.*/
-  public synchronized void addRPAction(RPAction action) throws ActionInvalidException
+  public synchronized void addRPAction(RPAction action, IRPRuleProcessor ruleProcessor) throws ActionInvalidException
     {
     Logger.trace("RPScheduler::addRPAction",">");
     try
@@ -49,16 +49,20 @@ public class RPScheduler
       Logger.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
       if(nextTurn.containsKey(id))
         {
-        List<RPAction> list=nextTurn.get(id);
-
-        list.add(action);
+        List<RPAction> list=nextTurn.get(id);        
+        if(ruleProcessor.onActionAdd(action,list))
+          {
+          list.add(action);
+          }
         }
       else
         {
         List<RPAction> list=new LinkedList<RPAction>();
-        list.add(action);
-        
-        nextTurn.put(id,list);
+        if(ruleProcessor.onActionAdd(action,list))
+          {
+          list.add(action);        
+          nextTurn.put(id,list);
+          }
         }
       }
     catch(AttributeNotFoundException e)
@@ -73,7 +77,48 @@ public class RPScheduler
       }
     }
   
-  public synchronized void clearRPActions(RPObject.ID id)
+  /** Add an RPAction to the scheduler for the next turn
+   *  @param action the RPAction
+   *  @throws ActionInvalidException if the action lacks of sourceid attribute.*/
+  public synchronized void addIncompleteRPAction(RPAction action, IRPRuleProcessor ruleProcessor) throws ActionInvalidException
+    {
+    Logger.trace("RPScheduler::addRPAction",">");
+    try
+      {
+      RPObject.ID id=new RPObject.ID(action);
+
+      Logger.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
+      if(nextTurn.containsKey(id))
+        {
+        List<RPAction> list=nextTurn.get(id);        
+        if(ruleProcessor.onIncompleteActionAdd(action,list))
+          {
+          list.add(action);
+          }
+        }
+      else
+        {
+        List<RPAction> list=new LinkedList<RPAction>();
+        if(ruleProcessor.onIncompleteActionAdd(action,list))
+          {
+          list.add(action);        
+          nextTurn.put(id,list);
+          }
+        }
+      }
+    catch(AttributeNotFoundException e)
+      {
+      Logger.thrown("RPScheduler::addRPAction","X",e);
+      Logger.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
+      throw new ActionInvalidException(e.getAttribute());
+      }
+    finally
+      {
+      Logger.trace("RPScheduler::addRPAction","<");
+      }
+    }
+ 
+   public synchronized void clearRPActions(RPObject.ID id)
     {
     if(nextTurn.containsKey(id))
       {
@@ -97,9 +142,7 @@ public class RPScheduler
         {
         RPObject.ID id=entry.getKey();
         List<RPAction> list=entry.getValue();
-
-        ruleProcessor.approvedActions(id,list);
-      
+    
         for(RPAction action: list)
           {
           Logger.trace("RPScheduler::visit","D",action.toString());
@@ -110,7 +153,7 @@ public class RPScheduler
             /* If state is incomplete add for next turn */
             if(status.equals(RPAction.Status.INCOMPLETE))
               {
-              addRPAction(action);
+              addIncompleteRPAction(action,ruleProcessor);
               }
             }
           catch(Exception e)

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.1 2005/01/23 21:00:43 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,13 @@ public class RPObject extends Attributes
     {
     super(RPClass.getBaseRPObjectDefault());
     initialize();
+    }
+  
+  public RPObject(RPObject object)
+    {
+    super(RPClass.getBaseRPObjectDefault());
+    initialize();
+    copy(object);    
     }
 	
   /** Constructor
@@ -461,6 +468,23 @@ public class RPObject extends Attributes
       }
     return object;
     }
+ 
+  private void copy(RPObject object)
+    {
+    copy((Attributes)object);
+    
+    try
+      {
+      for(RPSlot slot: object.slots)
+        {
+        addSlot((RPSlot)slot.copy());
+        }
+      }
+    catch(SlotAlreadyAddedException e)
+      {
+      // Should never happen
+      }
+    } 
   
   /** Returns true if two objects are exactly equal */  
   public boolean equals(Object obj) 

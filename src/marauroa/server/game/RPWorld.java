@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.4 2005/03/12 17:23:15 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.5 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import java.util.*;
 import marauroa.common.*;
 import marauroa.common.game.*;
 
-public class RPWorld 
+public class RPWorld implements Iterable<IRPZone>
   {
   HashMap<IRPZone.ID,IRPZone> zones;
   PlayerEntryContainer playerContainer;
@@ -56,11 +56,6 @@ public class RPWorld
   
   public void add(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
     {
-    add(object, false);
-    }
-    
-  public void add(RPObject object,boolean entrypoint) throws NoRPZoneException, RPObjectInvalidException  
-    {
     try
       {
       if(object.has("zoneid"))
@@ -69,11 +64,6 @@ public class RPWorld
         zone.assignRPObjectID(object);
         zone.add(object);
         
-        if(entrypoint)
-          {
-          zone.placeObjectAtEntryPoint(object);
-          }
-
         /** NOTE: Document this hack */        
         if(object.has("clientid"))
           {
@@ -114,6 +104,11 @@ public class RPWorld
       {
       throw new NoRPZoneException();  
       }
+    }
+  
+  public Iterator<IRPZone> iterator()
+    {
+    return zones.values().iterator();
     }
   
   public void modify(RPObject object) throws NoRPZoneException  

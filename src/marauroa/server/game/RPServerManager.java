@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.12 2005/03/18 07:49:06 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.13 2005/04/03 11:34:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -137,7 +137,7 @@ public class RPServerManager extends Thread
         Logger.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
         }
         
-      scheduler.addRPAction(action);
+      scheduler.addRPAction(action,ruleProcessor);
       }
     finally
       {

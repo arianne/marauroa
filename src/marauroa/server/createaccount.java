@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.1 2005/01/23 21:00:45 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -83,7 +83,6 @@ public abstract class createaccount
 
   protected int run(String[] args)
     {
-    /** TODO: Factorize this method */
     int i=0;
 
     while(i!=args.length)

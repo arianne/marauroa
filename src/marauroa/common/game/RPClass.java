@@ -332,7 +332,6 @@ public class RPClass implements marauroa.common.net.Serializable
       return rpClassList.get(name);
       }
     
-    /* TODO: Throw exception */
     throw new SyntaxException();  
     }
   

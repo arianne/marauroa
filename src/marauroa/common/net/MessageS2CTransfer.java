@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,11 +13,13 @@
 package marauroa.common.net;
 
 import java.util.*;
+import java.util.zip.*;
 import java.net.*;
 import java.io.*;
 
 public class MessageS2CTransfer extends Message
   {
+  /** TODO: Compress all the data that we send */
   private List<TransferContent> contents;
   
   /** Constructor for allowing creation of an empty message */
@@ -50,26 +52,38 @@ public class MessageS2CTransfer extends Message
     {
     super.writeObject(out);
     
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+    OutputSerializer serializer=new OutputSerializer(out_stream);
+        
     int size=contents.size();
-    out.write(size);
+    serializer.write(size);
     
     for(TransferContent content: contents)
       {
-      content.writeFULL(out);
+      content.writeFULL(serializer);
       }    
+
+    out_stream.close();
+         
+    out.write(array.toByteArray());
     }
   
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, ClassNotFoundException
     {
     super.readObject(in);
     
-    int size=in.readInt();
+    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
+    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
+    InputSerializer serializer=new InputSerializer(szlib);
+
+    int size=serializer.readInt();
     contents=new LinkedList<TransferContent>();
       
     for(int i=0;i<size;i++)
       {
       TransferContent content=new TransferContent();
-      content.readFULL(in);
+      content.readFULL(serializer);
       contents.add(content);
       }
 

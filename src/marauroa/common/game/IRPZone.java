@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.4 2005/03/12 17:23:15 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.5 2005/04/03 11:34:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.common.game;
 import java.util.*;
 
 /** Interface for managing the objects in a RPZone. */
-public interface IRPZone extends Iterable
+public interface IRPZone extends Iterable<RPObject>
   {
   /** An unique ID for this zone */
   public static class ID implements marauroa.common.net.Serializable
@@ -114,10 +114,4 @@ public interface IRPZone extends Iterable
   public Perception getPerception(RPObject.ID id, byte type);
   /** This method is called to take zone to the next turn */
   public void nextTurn();
-  
-  /** This method set the point where the object will enter this zone **/
-  public void setEntryPoint(String entryPoint);
-
-  /** This method set the object to this zone entry point. **/
-  public void placeObjectAtEntryPoint(RPObject object);
   }
