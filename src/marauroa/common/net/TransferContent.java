@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.2 2005/01/26 09:38:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,7 @@ public class TransferContent
 
   public void writeREQ(marauroa.common.net.OutputSerializer out) throws IOException
     {
-    out.write(name);
+    out.write(name);    
     out.write(timestamp);
     out.write((byte)(cacheable?1:0));
     }
