@@ -48,18 +48,25 @@ public class RPSlot implements marauroa.net.Serializable
   
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException
     {
-    Iterator it=objects.iterator();
-    
-    while(it.hasNext())
+    try
       {
-      RPObject object=(RPObject)it.next();
-      if(id.equals(object))
-        {
-        return object;
-        }
-      }
+      Iterator it=objects.iterator();
     
-    throw new RPObjectNotFoundException();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(id.equals(new RPObject.ID(object)))
+          {
+          return object;
+          }
+        }
+
+      throw new RPObjectNotFoundException();
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      throw new RPObjectNotFoundException();
+      }    
     }
   
   public RPObject get() throws RPObjectNotFoundException
@@ -74,34 +81,50 @@ public class RPSlot implements marauroa.net.Serializable
     
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
-    Iterator it=objects.iterator();
-    
-    while(it.hasNext())
+    try
       {
-      RPObject object=(RPObject)it.next();
-      if(id.equals(object))
-        {
-        it.remove();
-        return object;
-        }
-      }
+      Iterator it=objects.iterator();
     
-    throw new RPObjectNotFoundException();
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(id.equals(new RPObject.ID(object)))
+          {
+          it.remove();
+          return object;
+          }
+        }
+
+      throw new RPObjectNotFoundException();
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      throw new RPObjectNotFoundException();
+      }    
     }
   
-  public boolean has(RPObject.ID id)
+  public boolean has(RPObject.ID id) 
     {
-    Iterator it=objects.iterator();
-    
-    while(it.hasNext())
+    try
       {
-      if(id.equals((RPObject)it.next()))
-        {
-        return true;
-        }
-      }
+      Iterator it=objects.iterator();
     
-    return false;
+      while(it.hasNext())
+        {
+        RPObject object=(RPObject)it.next();
+        if(id.equals(new RPObject.ID(object)))
+          {
+          return true;
+          }
+        }
+
+      return false;
+      }
+    catch(Attributes.AttributeNotFoundException e)
+      {
+      /* NOTE: This is a serious problem */
+      return false;
+      }    
     }
   
   public int size()
