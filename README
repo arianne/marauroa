@@ -39,7 +39,7 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.36 version 
+0.40 version 
 
 
 Status
@@ -65,7 +65,7 @@ Actually to compile Marauroa you need:
 In order to get it working with MySQL you also need:
 - MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
 
-Optionally you may want to add the next set of libraries:
+Optionally you may want to add the next set of libraries to get Python support:
 - Jython 2.1 http://www.jython.org/download.html
 
 And optionally if you want to build the java 3D gladiators client:
@@ -238,6 +238,8 @@ Changelog
 0.40 Jun XX, 2004
 - Added score to ghost to count players killed
 - Changed the calling order in RPAImanager
+- Added classes of RPObjects: RPClass
+- Improved the speed feeling on the game by a change on RPServerManager
 
 0.36 Jun 04, 2004
 - Database modified to stored hashed passwords
@@ -361,5 +363,5 @@ Changelog
 
 Legal
 -----
-Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003
+Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2004
 arianne_rpg at users dot sourceforge dot net

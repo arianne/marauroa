@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.100 2004/06/15 17:04:21 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.101 2004/06/20 17:54:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -450,22 +450,10 @@ public class RPServerManager extends Thread
   public void run()
     {
     marauroad.trace("RPServerManager::run",">");
-    long start=System.currentTimeMillis(),stop;
-    long delay=0;
+    long start=System.currentTimeMillis(),stop,delay;
     
     while(keepRunning)
       {
-      scheduler.visit(ruleProcessor);
-      playerContainer.getLock().requestWriteLock();
-        {
-        stop=System.currentTimeMillis(); 
-        delay=turnDuration-(stop-start);
-        aiMan.compute(delay<0?0:delay);
-
-        buildPerceptions();
-        }
-      playerContainer.getLock().releaseLock();
-            
       stop=System.currentTimeMillis();
       try
         {
@@ -480,9 +468,20 @@ public class RPServerManager extends Thread
 
       playerContainer.getLock().requestWriteLock();
         {
-        zone.nextTurn();
+        /** Get actions that players send */
         scheduler.nextTurn();
+        /** Execute them all */
+        scheduler.visit(ruleProcessor);
+        /** Execute AI stuff */
+        aiMan.compute(0);
+
+        /** Move zone to the next turn */
+        zone.nextTurn();
+        /** Compute game RP rules to move to the next turn */
         ruleProcessor.nextTurn();
+
+        /** Tell player what happened */
+        buildPerceptions();
         }
       playerContainer.getLock().releaseLock();
       
