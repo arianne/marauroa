@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.83 2004/05/16 10:37:41 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.84 2004/05/18 16:09:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import marauroa.*;
 class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
-  private final static int TOTAL_PERCEPTION_RELATION=100;
+  private final static int TOTAL_PERCEPTION_RELATION=33;
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
