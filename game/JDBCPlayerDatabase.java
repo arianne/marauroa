@@ -293,7 +293,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::verifyAccount","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::verifyAccount","X",sqle.getMessage());
       return false;
       }
     finally
@@ -302,13 +302,17 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
+  /** This method returns the list of Login events as a array of Strings
+   *  @param username is the name of the player 
+   *  @return an array of String containing the login events.
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
   public String[] getLoginEvent(String username) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::getLoginEvent",">");
 
-    String[] loginEvents = null;
     try
       {
+      String[] loginEvents = null;
       int id=getDatabasePlayerId(username);
       
       Statement stmt = connection.createStatement();
@@ -329,26 +333,34 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         
       loginEvents = new String[vector.size()];
       loginEvents = (String[])vector.toArray(loginEvents);
+  
+      return loginEvents;
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-    
-    marauroad.trace("JDBCPlayerDatabase::getLoginEvent","<");
-    return(loginEvents);
+    finally
+      {    
+      marauroad.trace("JDBCPlayerDatabase::getLoginEvent","<");
+      }
     }
   
+  /** This method returns true if the player has that character or false if it hasn't
+   *  @param username is the name of the player 
+   *  @param character is the name of the character
+   *  @return true if player has the character or false if it hasn't
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
   public boolean hasCharacter(String username, String character) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::hasCharacter",">");
 
-    boolean ret = false;
     try
       {
       int id=getDatabasePlayerId(username);
@@ -361,24 +373,33 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         if(result.getInt(1)!=0)
           {
-          ret = true;
+          return true;
           }
         }
+        
+      return false;
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::hasCharacter","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::hasCharacter","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-    
-    marauroad.trace("JDBCPlayerDatabase::hasCharacter","<");
-    return(ret);
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::hasCharacter","<");
+      }
     }
   
+  /** This method add a Login event to the player
+   *  @param username is the name of the player 
+   *  @param source the IP address of the player
+   *  @param correctLogin true if the login has been correct.
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database. */
   public void addLoginEvent(String username, InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException
     {
     marauroad.trace("JDBCPlayerDatabase::addLoginEvent",">");
@@ -395,17 +416,25 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X",sqle.getMessage());
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::addLoginEvent","<");
+      }
     }
   
+  /** This method add a character asociated to a player.
+   *  @param username is the name of the player
+   *  @param character is the name of the character that the username player wants to add.
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
+   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::addCharacter",">");
