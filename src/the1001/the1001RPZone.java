@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.28 2004/09/04 20:25:00 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.29 2004/09/04 20:47:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import org.w3c.dom.*;
 import java.util.*;
 import the1001.objects.*;
 
-public class the1001RPZone extends MarauroaDBRPZone
+public class the1001RPZone extends MarauroaRPZone
   {
   private RPObject heroesHouse;
   private RPObject arena;
