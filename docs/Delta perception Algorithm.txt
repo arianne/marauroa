@@ -1,0 +1,42 @@
+Title  : Delta perception algorithm
+Info   : Introduction to the way perceptions are sent from server to client.
+Keyword: Percetions, delta, modified, deleted.
+Author : Miguel Angel Blanch Lardin
+Created: 2003/11/23
+status : planning
+
+%% BEGIN %%
+
+The main idea behind the DPA is not to sent ALL the objects to client, but
+only those that has been modified.
+
+Imagine that we have 1000 objects, and only O1 and O505 are active objects that
+are modified each turn. ok?
+
+Traditional method:
+	- Get objects that our player should see ( 1000 objects )
+	- Send them to player ( 1000 objects )
+	- Next turn 
+	- Get objects that our player should see ( 1000 objects )
+	- Send them to player
+	- Next turn 
+	...
+	
+I hope you see the problem..., we are sending again objects that never changed.
+
+The delta perception algorithm:
+	- Get objects that our player should see ( 1000 objects )
+	- Reduce the list to the modified ones ( 1000 objects )
+	- Store also the objects that are not longer visible ( 0 objects )
+	- Send them to player ( 1000 objects )
+	- Next turn 
+	- Get objects that our player should see ( 1000 objects )
+	- Reduce the list to the modified ones ( 2 objects )
+	- Store also the objects that are not longer visible ( 0 objects )
+	- Send them to player ( 2 objects )
+	- Next turn 
+	...
+
+An area really related to DPA is RPZone
+
+%% END %%
