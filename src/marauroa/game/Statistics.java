@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.2 2004/07/12 19:33:18 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.3 2004/07/13 15:44:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,8 +46,8 @@ public class Statistics
       out.println("  <byte recv=\""+String.valueOf(bytesRecv)+"\" send=\""+String.valueOf(bytesSend)+"\" saved=\""+String.valueOf(bytesSavedByCompression)+"\"/>");
       out.println("  <message recv=\""+String.valueOf(messagesRecv)+"\" send=\""+String.valueOf(messagesSend)+"\" incorrect=\""+String.valueOf(messagesIncorrect)+"\"/>");
       out.println("  <player login=\""+String.valueOf(playersLogin)+"\" failed=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(playersTimeout)+"\"/>");
-      out.println("  <online players=\""+String.valueOf(playersOnline)+"\" objects=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(objectsNow)+"\"/>");
-      out.println("  <actions added=\""+String.valueOf(actionsAdded)+"\" invalid=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(actionsInvalid)+"\"/>");
+      out.println("  <online players=\""+String.valueOf(playersOnline)+"\" objects=\""+String.valueOf(objectsNow)+"\"/>");
+      out.println("  <action added=\""+String.valueOf(actionsAdded)+"\" invalid=\""+String.valueOf(actionsInvalid)+"\"/>");
       }
 
     public void add(GatheredVariables var)

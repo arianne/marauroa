@@ -252,7 +252,7 @@ public class nullClient extends Thread
 
       boolean cond=true;
       long ticks=System.currentTimeMillis();
-      long exit_time=((rand.nextInt()%600+30)*1000);
+      long exit_time=((rand.nextInt()%600+600)*1000);
         
       while(cond)
         {
