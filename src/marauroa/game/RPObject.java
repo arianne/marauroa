@@ -16,7 +16,7 @@ public class RPObject extends Attributes
     }
   
   /** An iterator for properly acceding all the Slots. */
-  public class SlotsIterator implements Iterator
+  public class SlotsIterator
     {
     int i;
     
@@ -35,7 +35,7 @@ public class RPObject extends Attributes
     
     /** This method returs the RPSlot and move the pointer to the next element
      *  @return an RPSlot */ 
-    public Object next() throws NoSuchElementException
+    public RPSlot next() throws NoSuchElementException
       {
       if(i==slots.length) 
         {
@@ -45,10 +45,6 @@ public class RPObject extends Attributes
       RPSlot obj=slots[i];
       ++i;
       return obj;
-      }
-    
-    public void remove()
-      {
       }
     }
   
@@ -172,7 +168,7 @@ public class RPObject extends Attributes
     throw new NoSlotFoundException();
     }
   
-  public Iterator slotsIterator()
+  public SlotsIterator slotsIterator()
     {
     return new SlotsIterator();
     }
@@ -183,7 +179,7 @@ public class RPObject extends Attributes
     tmp.append(super.toString());
     tmp.append(" and RPSlots ");
     
-    Iterator it=slotsIterator();
+    SlotsIterator it=slotsIterator();
     while(it.hasNext())
       {
       RPSlot slot=(RPSlot)it.next();
