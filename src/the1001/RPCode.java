@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.18 2004/01/01 23:34:00 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.19 2004/01/01 23:45:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -216,7 +216,7 @@ public class RPCode
   
   private static void computeDamageGladiators(RPObject gladiator1, RPObject gladiator2) throws Exception
     {
-    if(gladiator1.getInt("hp")<=0)
+    if((gladiator1.getInt("hp")<=0) || (gladiator2.getInt("hp")<=0))
       {
       /** Failed because the gladiator is dead */
       return;
@@ -245,28 +245,33 @@ public class RPCode
       damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("?damage",damage);
+      ruleProcessor.trackObject(gladiator2);
 
       damage=Math.abs(rand.nextInt()%gladiator2.getInt("attack"));
       gladiator1.put("hp",gladiator1.getInt("hp")-damage);
       gladiator1.put("?damage",damage);
+      ruleProcessor.trackObject(gladiator1);
       }
     else if(mode_g1.equals("rock") && mode_g2.equals("scissor"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("?damage",damage);
+      ruleProcessor.trackObject(gladiator2);
       }  
     else if(mode_g1.equals("paper") && mode_g2.equals("rock"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("?damage",damage);
+      ruleProcessor.trackObject(gladiator2);
       }  
     else if(mode_g1.equals("scissor") && mode_g2.equals("paper"))
       {
       int damage=Math.abs(rand.nextInt()%gladiator1.getInt("attack"));
       gladiator2.put("hp",gladiator2.getInt("hp")-damage);
       gladiator2.put("?damage",damage);
+      ruleProcessor.trackObject(gladiator2);
       }  
     }  
   }

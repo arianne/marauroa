@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.13 2004/01/01 12:41:14 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.14 2004/01/01 23:45:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,6 +76,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       /** We notify the player about the action result */
       RPObject player=zone.get(id);
       player.put("?"+action.get("action_id"), status.toString());
+      trackObject(player);
       zone.modify(id);
       
       return status;
@@ -138,6 +139,11 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       
     marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","<");
     }
+    
+  public void trackObject(RPObject object)
+    {
+    trackedObjects.add(object);
+    }
 
   public boolean onInit(RPObject object) throws RPZone.RPObjectInvalidException
     {
@@ -146,7 +152,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
       {
       object.put("?joined","");
       zone.add(object);
-      trackedObjects.add(object);
+      trackObject(object);
   
       return true;
       }
