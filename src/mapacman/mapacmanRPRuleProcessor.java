@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.8 2004/05/07 13:50:31 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.9 2004/05/11 22:11:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,6 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     {
     this.zone=(mapacmanRPZone)zone;
     interpreter.set("zone",this.zone);
-//    interpreter.set("ruleprocessor",this);
 
     PyInstance object=(PyInstance)interpreter.eval("RealPythonRP(zone)");
     pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
@@ -135,84 +134,6 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
   synchronized public byte[] serializeMap(RPObject.ID id)
     {
     return pythonRP.serializeMap().toByteArray();
-    }
-
-  public static void main(String[] args) throws Exception
-    {
-    try
-      {
-      long init=System.currentTimeMillis();
-      mapacmanRPRuleProcessor pacmanRP=new mapacmanRPRuleProcessor();
-
-      RPObject player=new RPObject();
-      player.put("type","player");
-      player.put("id",1);
-      player.put("name",1);
-      player.put("x",0);
-      player.put("y",0);
-      player.put("dir","N");
-      player.put("score",0);
-    
-      pacmanRP.setContext(new mapacmanRPZone());
-      pacmanRP.onInit(player);
-      
-      long start=System.currentTimeMillis();
-      for(int j=0;j<1;++j)
-        {
-        RPAction action=new RPAction();
-        action.put("source_id","1");
-        action.put("type","turn");
-        action.put("dir","S");
-        
-        pacmanRP.execute(new RPObject.ID(action),action);
-        //System.out.println(player);
-        }
-      
-      pacmanRP.nextTurn();
-      System.out.println(player);
-
-      pacmanRP.nextTurn();
-      System.out.println(player);
-
-      pacmanRP.nextTurn();
-      System.out.println(player);
-
-      pacmanRP.nextTurn();
-      System.out.println(player);
-
-      for(int j=0;j<1;++j)
-        {
-        RPAction action=new RPAction();
-        action.put("source_id","1");
-        action.put("type","turn");
-        action.put("dir","E");
-        
-        pacmanRP.execute(new RPObject.ID(action),action);
-        //System.out.println(player);
-        }
-        
-      pacmanRP.nextTurn();
-      System.out.println(player);
-
-      long stop=System.currentTimeMillis();
-      System.out.println("Python load: "+(start-init));
-      System.out.println("Python execute: "+(stop-start));
-      
-      byte[] map=pacmanRP.pythonRP.serializeMap().toByteArray();
-      
-      ByteArrayInputStream array=new ByteArrayInputStream(map);
-      marauroa.net.InputSerializer ser=new marauroa.net.InputSerializer(array);
-      
-      int size=ser.readInt();
-      for(int i=0;i<size;++i)
-        {
-        System.out.println(ser.readString());
-        }
-      }
-    catch(Exception e)
-      {
-      e.printStackTrace();
-      }
     }
   }
 

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.46 2004/05/10 11:57:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.47 2004/05/11 22:11:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -528,7 +528,8 @@ public final class GameServerManager extends Thread
         return;
         }
       
-      /** TODO: Notify PlayerEntryContainer that this player is out of Sync */  
+      /** Notify PlayerEntryContainer that this player is out of Sync */  
+      playerContainer.setOutOfSync(clientid,true);
       }
     catch(Exception e)
       {

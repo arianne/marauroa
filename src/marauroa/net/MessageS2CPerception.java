@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.42 2004/05/02 17:21:19 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.43 2004/05/11 22:11:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -240,7 +240,7 @@ public class MessageS2CPerception extends Message
     ByteCounterOutputStream out_stream = new ByteCounterOutputStream(new DeflaterOutputStream(compressed_array));
     OutputSerializer ser=new OutputSerializer(out_stream);
 
-    /** HACK: Join the dinamic part of the perception on a single block */
+    /** TODO: Join the dinamic part of the perception on a single block */
     out_stream.write(getPrecomputedStaticPartPerception());
     ser.write((int)timestampPerception);
     if(myRPObject==null)

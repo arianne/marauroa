@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.80 2004/05/10 11:57:05 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.81 2004/05/11 22:11:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -255,9 +255,10 @@ class RPServerManager extends Thread
             {
             marauroad.trace("RPServerManager::buildPerception","D","Changing state to BEGIN because we are to send a SYNC perception"); 
             playerContainer.changeRuntimeState(clientid,playerContainer.STATE_GAME_BEGIN);
+            playerContainer.setOutOfSync(clientid,false);
             }
             
-          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN)
+          if(playerContainer.getRuntimeState(clientid)==playerContainer.STATE_GAME_BEGIN && !playerContainer.isOutOfSync(clientid))
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
             RPZone.Perception perception;
@@ -300,6 +301,7 @@ class RPServerManager extends Thread
               playersToUpdate.add(new Integer(clientid));
               }
             }
+            
           if(playerContainer.timedout(clientid))
             {
             playersToRemove.add(new Integer(clientid));

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.35 2004/05/07 17:16:58 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.36 2004/05/11 22:11:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,6 +51,7 @@ public class PlayerEntryContainer
     
     /** A counter to detect dropped packets or bad order at client side */
     public int perception_counter;
+    public boolean perception_OutOfSync;
     public RPObject perception_previousRPObject;
     }
   
@@ -189,6 +190,7 @@ public class PlayerEntryContainer
       entry.choosenCharacter=null;
       entry.clientid=generateClientID(source);
       entry.perception_counter=0;
+      entry.perception_OutOfSync=true;
       
       listPlayerEntries.put(new Integer(entry.clientid),entry);
       return entry.clientid;
@@ -879,6 +881,50 @@ public class PlayerEntryContainer
     finally
       {
       marauroad.trace("PlayerEntryContainer::timedout","<");
+      }
+    }
+
+  public boolean isOutOfSync(int clientid) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::isOutOfSync",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        return entry.perception_OutOfSync;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::isOutOfSync","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::isOutOfSync","<");
+      }
+    }
+
+  public void setOutOfSync(int clientid, boolean status) throws NoSuchClientIDException
+    {
+    marauroad.trace("PlayerEntryContainer::setOutOfSync",">");
+    try
+      {
+      if(hasRuntimePlayer(clientid))
+        {
+        RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        entry.perception_OutOfSync=status;
+        }
+      else
+        {
+        marauroad.trace("PlayerEntryContainer::setOutOfSync","X","No such RunTimePlayer("+clientid+")");
+        throw new NoSuchClientIDException(clientid);
+        }
+      }
+    finally
+      {
+      marauroad.trace("PlayerEntryContainer::setOutOfSync","<");
       }
     }
     
