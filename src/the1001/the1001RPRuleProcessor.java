@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.23 2004/01/08 17:37:16 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.24 2004/01/17 17:43:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,6 +71,15 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
         int gladiator_id=action.getInt("gladiator_id");
         String fight_mode=action.get("fight_mode");
         status=RPCode.FightMode(id, new RPObject.ID(gladiator_id),fight_mode);
+        }
+      else if(action.get("type").equals("vote"))
+        {
+        String vote=action.get("vote");
+        status=RPCode.Vote(id, vote);
+        }
+      else
+        {
+        marauroad.trace("the1001RPRuleProcessor::execute","W","Action("+action.get("type")+") not supported");
         }
       
       /** We notify the player about the action result */
