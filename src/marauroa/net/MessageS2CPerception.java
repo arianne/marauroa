@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.23 2004/03/26 21:55:03 root777 Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.24 2004/03/27 11:05:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,10 +81,24 @@ public class MessageS2CPerception extends Message
     }
   
   /** This method returns the list of modified objects
-   *  @return List<RPObject> of modified objects */
+   *  @return List<RPObject> of added objects */
   public List getAddedRPObjects()
     {
     return addedRPObjects;
+    }
+
+  /** This method returns the list of modified objects
+   *  @return List<RPObject> of modified objects that has attributes added*/
+  public List getModifiedAddedRPObjects()
+    {
+    return modifiedAddedAttribsRPObjects;
+    }
+
+  /** This method returns the list of modified objects
+   *  @return List<RPObject> of modified objects that has attributes removed*/
+  public List getModifiedDeletedRPObjects()
+    {
+    return modifiedDeletedAttribsRPObjects;
     }
   
   /** This method returns the list of deleted objects
