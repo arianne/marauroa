@@ -1,4 +1,4 @@
-/* $Id: mapacmanRPRuleProcessor.java,v 1.6 2004/04/27 22:42:34 arianne_rpg Exp $ */
+/* $Id: mapacmanRPRuleProcessor.java,v 1.7 2004/04/29 14:16:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,9 +42,9 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
     {
     this.zone=(mapacmanRPZone)zone;
     interpreter.set("zone",this.zone);
-    interpreter.set("ruleprocessor",this);
+//    interpreter.set("ruleprocessor",this);
 
-    PyInstance object=(PyInstance)interpreter.eval("RealPythonRP()");
+    PyInstance object=(PyInstance)interpreter.eval("RealPythonRP(zone)");
     pythonRP=(PythonRP)object.__tojava__(PythonRP.class);
     }
     
@@ -144,7 +144,6 @@ public class mapacmanRPRuleProcessor implements RPRuleProcessor
       {
       long init=System.currentTimeMillis();
       mapacmanRPRuleProcessor pacmanRP=new mapacmanRPRuleProcessor();
-//      pacmanRP.interpreter.eval("mapacmanRPMap('map_definition.txt').get(0,0)");
 
       RPObject player=new RPObject();
       player.put("type","player");

@@ -17,22 +17,27 @@ class RealPythonRP(PythonRP):
     __removed_elements=[]
     __super_players=[]
     __online_players=[]
+    __zone=None
     
-    def __init__(self):
-        self.__map=mapacmanRPMap(pacman_mapfile)
+    def __init__(self,zone):
+        self.__zone=zone
+        self.__map=mapacmanRPMap(self,pacman_mapfile)
+        
+    def getZone(self):
+        return self.__zone    
 
     def execute(self, id, action):
         """ called to execute actions from player identified by id that wants
         to do action action """
       
         result=0
-        player=zone.get(id)
+        player=self.__zone.get(id)
         action_code=action.get("type")
 
         if action_code=="turn":
-            result=turn(player,self.__map,action.get("dir"))
+            result=self.turn(player,action.get("dir"))
         elif action_code=="chat":
-            result=chat(player,action.get("content"))
+            result=self.chat(player,action.get("content"))
         else:
             print "action not registered"
         
@@ -43,66 +48,124 @@ class RealPythonRP(PythonRP):
     
         return result
         
+    def move(self, player):
+        """ This methods try to move the player and return the new position """
+        x=player.getInt("x")
+        y=player.getInt("y")
+        dir=player.get("dir")
+    
+        if dir=='N' and (y-1)>=0 and self.__map.get(x,y-1)<>'*':
+            y=y-1
+            player.put("y",y)
+        elif dir=='W' and (x-1)>=0 and self.__map.get(x-1,y)<>'*':
+            x=x-1
+            player.put("x",x)
+        elif dir=='S' and (y+1)<self.__map.sizey() and self.__map.get(x,y+1)<>'*':
+            y=y+1
+            player.put("y",y)
+        elif dir=='E' and (x+1)<self.__map.sizex() and self.__map.get(x+1,y)<>'*':
+            x=x+1
+            player.put("x",x)
+            
+        return (x,y)
+
+    def canMove(self, player, dir):
+        """ This methods try to move the player and return the new position """
+        x=player.getInt("x")
+        y=player.getInt("y")
+    
+        if dir=='N' and (y-1)>=0 and self.__map.get(x,y-1)<>'*':
+            return 1
+        elif dir=='W' and (x-1)>=0 and self.__map.get(x-1,y)<>'*':
+            return 1
+        elif dir=='S' and (y+1)<self.__map.sizey() and self.__map.get(x,y+1)<>'*':
+            return 1
+        elif dir=='E' and (x+1)<self.__map.sizex() and self.__map.get(x+1,y)<>'*':
+            return 1
+        else:
+            return 0
+    
+    def turn(self, player, direction):
+        result=failed
+        if _directions.count(direction)==1 and self.canMove(player,direction):
+            player.put("dir",direction)
+            self.__zone.modify(player)
+            result=success
+        return result
+
+    def chat(self, player, content):
+        player.put("?text",content)
+        self.__zone.modify(player)
+        return success
+
     def __removeBall(self, ball, pos):
-        zone.remove(RPObject.ID(ball))
+        self.__zone.remove(RPObject.ID(ball))
         self.__map.removeZoneRPObject(pos)
-        element=TimecountElement(ball.getInt("!respawn"),ball)
+        element={'timeout':ball.getInt("!respawn"),'object':ball}
         self.__removed_elements.append(element)
     
     def __addBall(self, ball):
-        self.__map.addZoneRPObject(ball.object)
+        self.__map.addZoneRPObject(ball['timeout'])
         self.__removed_elements.remove(ball)
+    
+    def __movePlayer(self,player):
+        print 'You move in %s direction' % player.get("dir")
+        pos=self.move(player)
+        if self.__map.hasZoneRPObject(pos):
+            object_in_pos=self.__map.getZoneRPObject(pos)
+            if object_in_pos.get("type")=="ball":
+                self.__removeBall(object_in_pos,pos)
+                    
+                # Increment the score of the player
+                player.put("score",player.getInt("score")+1)
+                self.__zone.modify(player)
+            elif object_in_pos.get("type")=="superball":
+                self.__removeBall(object_in_pos,pos)
+                    
+                # Notify to remove the attribute on timeout
+                timeout=object_in_pos.getInt("!timeout")
+                player.put("super",timeout)
+                element={'timeout':timeout,'object':player}
+                self.__super_players.append(element)
+                self.__zone.modify(player)
+        
+
+    def __ghostCollisions(self, player):
+        pos=(player.getInt("x"),player.getInt("y"))
+        for player_in_pos in self.getPlayers(pos):
+            if player_in_pos.get("type")=="ghost":
+                if player.has("super"):
+                    # Eat the ghost
+                    pass
+                else:
+                    # kill the player
+                    pass
     
     def __foreachPlayer(self):
         for player in self.__online_players:
-            if(canMove(player,self.__map,player.get("dir"))):
-                print 'You move in %s direction' % player.get("dir")
-                pos=move(player,self.__map)
-                if self.__map.hasZoneRPObject(pos):
-                    object_in_pos=self.__map.getZoneRPObject(pos)
-                    if object_in_pos.get("type")=="ball":
-                        self.__removeBall(object_in_pos,pos)
-                    
-                        # Increment the score of the player
-                        player.put("score",player.getInt("score")+1)
-                        zone.modify(player)
-                    elif object_in_pos.get("type")=="superball":
-                        self.__removeBall(object_in_pos,pos)
-                    
-                        # Notify to remove the attribute on timeout
-                        timeout=object_in_pos.getInt("!timeout")
-                        player.put("super",timeout)
-                        element=TimecountElement(timeout,player)
-                        self.__super_players.append(element)
-                        zone.modify(player)
+            if(self.canMove(player,player.get("dir"))):
+                self.__movePlayer(player)
+                self.__ghostCollisions(player)
 
-                for player_in_pos in self.getPlayers(pos):
-                    if player_in_pos.get("type")=="ghost":
-                        if player.has("super"):
-                            # Eat the ghost
-                            pass
-                        else:
-                            # kill the player
-                            pass
             else:
                 print 'You CAN\'T move in %s direction' % player.get("dir")
     
     def nextTurn(self):
         """ execute actions needed to place this code on the next turn """
         for object in self.__removed_elements:
-            if object.timeout==0:
+            if object['timeout']==0:
                 self.__addBall(object)
             else:
-                object.timeout=object.timeout-1
+                object['timeout']=object['timeout']-1
 
         for object in self.__super_players:
-            if object.timeout==0:
-                object.object.remove("super")
+            if object['timeout']==0:
+                object['object'].remove("super")
                 self.__super_players.remove(object)
             else:
-                object.timeout=object.timeout-1
-                object.put("super",object.timeout)
-                zone.modify(object)
+                object['timeout']=object['timeout']-1
+                object['object'].put("super",object['timeout'])
+                self.__zone.modify(object['object'])
 
         self.__foreachPlayer()
         
@@ -120,7 +183,7 @@ class RealPythonRP(PythonRP):
         object.put("x",pos[0])
         object.put("y",pos[1])
         
-        zone.add(object)
+        self.__zone.add(object)
         self.__online_players.append(object)
         return 1
 
@@ -131,7 +194,7 @@ class RealPythonRP(PythonRP):
                 self.__online_players.remove(x)
                 break
             
-        zone.remove(objectid)
+        self.__zone.remove(objectid)
         return 1
 
     def onTimeout(self, objectid):
@@ -139,45 +202,86 @@ class RealPythonRP(PythonRP):
     
     def serializeMap(self):
         return self.__map.serializeMap()
-    
 
-class TimecountElement:
-    timeout=0
-    object=0
-    
-    def __init__(self,timeout,object):
-        self.timeout=timeout
-        self.object=object
+
+    def createPlayer(self, name):
+        """ This function create a player """
+        object=RPObject()
+        object.put("id",self.__zone.create().get("id"))
+        object.put("type","player");
+        object.put("name",name)
+        object.put("x",0)
+        object.put("y",0)
+        object.put("dir",randomDirection())
+        object.put("score",0)
+        return object;
+
+    def createGhost(self, name):
+        """ This function create a ghost """
+        object=RPObject()
+        object.put("id",self.__zone.create().get("id"))
+        object.put("type","ghost");
+        object.put("name",name)
+        object.put("x",0)
+        object.put("y",0)
+        object.put("dir",randomDirection())
+        return object;
+
+    def createBall(self, x,y):
+        """ This function create a Ball object that when eats by player increments
+        its score. """
+        object=RPObject()
+        object.put("id",self.__zone.create().get("id"));
+        object.put("type","ball");
+        object.put("x",x)
+        object.put("y",y)
+        object.put("!score",1)
+        object.put("!respawn",60)
+        return object;
+
+    def createSuperBall(self, x,y):
+        """ This function create a SuperBall object that when eats by player
+        make it to be able to eat and destroy the ghosts """
+        object=self.createBall(x,y)
+        object.put("type","superball");
+        object.put("!timeout",15)
+        return object;
+
     
 class mapacmanRPMap:
-    grid=[]
-    respawnPoints=[]
-    last_respawnPoints=0
-    objects_grid={}
+    __grid=[]
+    __zone=None
+    __respawnPoints=[]
+    __last_respawnPoints=0
+    __objects_grid={}
     
-    def __init__(self, sizex, sizey):
-        self.grid=[]
+    def __init__(self, pythonRP, sizex, sizey):
+        self.__grid=[]
+        self.__zone=pythonRP.getZone()
         for i in range(sizex):
             grid_line=''
             for j in range(sizey):
                 grid_line=grid_line+' '
-            self.grid.append(grid_line)
+            self.__grid.append(grid_line)
     
-    def __init__(self, filename):
+    def __init__(self, pythonRP, filename):
         f=open(filename,'r')
         line=f.readline()
+        
+        self.__zone=pythonRP.getZone()
+        
         i=0
         while line<>'':
             j=0
             for char in line[:-1]:
                 if char=='.':
-                    self.addZoneRPObject(createBall(j,i))
+                    self.addZoneRPObject(pythonRP.createBall(j,i))
                 elif char=='0':
-                    self.addZoneRPObject(createSuperBall(j,i))
+                    self.addZoneRPObject(pythonRP.createSuperBall(j,i))
                 j=j+1
                 
-            self.grid.append(line[:-1])
-            self.computeRespawnPoints(i,line)
+            self.__grid.append(line[:-1])
+            self.computeRespawnPoints(i,line[:-1])
             line=f.readline()
             i=i+1
     
@@ -185,101 +289,47 @@ class mapacmanRPMap:
         i=line.find('+')
         while i<>-1:
             pos=(i,y)
-            self.respawnPoints.append(pos)
+            self.__respawnPoints.append(pos)
             i=line.find('+',i+1)
     
     def get(self,x,y):
-        return (self.grid[y])[x]
+        return (self.__grid[y])[x]
     
     def hasZoneRPObject(self, pos):
-        return self.objects_grid.has_key(pos)
+        return self.__objects_grid.has_key(pos)
     
     def getZoneRPObject(self,pos):
-        return self.objects_grid[pos]
+        return self.__objects_grid[pos]
     
     def addZoneRPObject(self,object):
         x=object.getInt("x")
         y=object.getInt("y")
         
-        self.objects_grid[(x,y)]=object
-        zone.add(object)
+        self.__objects_grid[(x,y)]=object
+        self.__zone.add(object)
     
     def removeZoneRPObject(self,pos):
-        del self.objects_grid[pos]
+        del self.__objects_grid[pos]
 
     def sizey(self):
-        return len(self.grid)
+        return len(self.__grid)
     
     def sizex(self):
-        return len(self.grid[0])
+        return len(self.__grid[0])
     
     def getRandomRespawn(self):
-        self.last_respawnPoints=(self.last_respawnPoints+1)%(len(self.respawnPoints))
-        return self.respawnPoints[self.last_respawnPoints]
+        self.__last_respawnPoints=(self.__last_respawnPoints+1)%(len(self.__respawnPoints))
+        return self.__respawnPoints[self.__last_respawnPoints]
     
     def serializeMap(self):
         by=ByteArrayOutputStream()
         out=OutputSerializer(by)
-        out.write(int(len(self.grid)))
-        for item in self.grid:
+        out.write(int(len(self.__grid)))
+        for item in self.__grid:
             out.write(item)
         
         return by
         
-#
-# RPRuleProcessor method definitions
-#
-
-def move(player,map):
-    """ This methods try to move the player and return the new position """
-    x=player.getInt("x")
-    y=player.getInt("y")
-    dir=player.get("dir")
-    
-    if dir=='N' and (y-1)>=0 and map.get(x,y-1)<>'*':
-        y=y-1
-        player.put("y",y)
-    elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
-        x=x-1
-        player.put("x",x)
-    elif dir=='S' and (y+1)<map.sizey() and map.get(x,y+1)<>'*':
-        y=y+1
-        player.put("y",y)
-    elif dir=='E' and (x+1)<map.sizex() and map.get(x+1,y)<>'*':
-        x=x+1
-        player.put("x",x)
-        
-    return (x,y)
-
-def canMove(player,map,dir):
-    """ This methods try to move the player and return the new position """
-    x=player.getInt("x")
-    y=player.getInt("y")
-    
-    if dir=='N' and (y-1)>=0 and map.get(x,y-1)<>'*':
-        return 1
-    elif dir=='W' and (x-1)>=0 and map.get(x-1,y)<>'*':
-        return 1
-    elif dir=='S' and (y+1)<map.sizey() and map.get(x,y+1)<>'*':
-        return 1
-    elif dir=='E' and (x+1)<map.sizex() and map.get(x+1,y)<>'*':
-        return 1
-    else:
-        return 0
-    
-def turn(player, map, direction):
-    result=failed
-    if _directions.count(direction)==1 and canMove(player,map,direction):
-        player.put("dir",direction)
-        zone.modify(player)
-        result=success
-    return result
-
-def chat(player, content):
-    player.put("?text",content)
-    zone.modify(player)
-    return success
-
 #
 # A few constants to make things more beautiful
 #
@@ -294,50 +344,7 @@ def randomDirection():
 #
 #  RPObject python creation methods.
 #
-
-def createPlayer(name):
-    """ This function create a player """
-    object=RPObject()
-    object.put("id",zone.create().get("id"))
-    object.put("type","player");
-    object.put("name",name)
-    object.put("x",0)
-    object.put("y",0)
-    object.put("dir",randomDirection())
-    object.put("score",0)
-    return object;
-
-def createGhost(name):
-    """ This function create a ghost """
-    object=RPObject()
-    object.put("id",zone.create().get("id"))
-    object.put("type","ghost");
-    object.put("name",name)
-    object.put("x",0)
-    object.put("y",0)
-    object.put("dir",randomDirection())
-    return object;
-
-def createBall(x,y):
-    """ This function create a Ball object that when eats by player increments
-    its score. """
-    object=RPObject()
-    object.put("id",zone.create().get("id"));
-    object.put("type","ball");
-    object.put("x",x)
-    object.put("y",y)
-    object.put("!score",1)
-    object.put("!respawn",60)
-    return object;
-
-def createSuperBall(x,y):
-    """ This function create a SuperBall object that when eats by player
-    make it to be able to eat and destroy the ghosts """
-    object=createBall(x,y)
-    object.put("type","superball");
-    object.put("!timeout",15)
-    return object;
-    
+ 
 
 
 #
@@ -348,4 +355,3 @@ if __name__=='__main__':
     """ Test case here """
     pass
     
-
