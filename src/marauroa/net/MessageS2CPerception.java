@@ -6,6 +6,7 @@ import java.util.*;
 
 import marauroa.game.*;
 
+
 /** This message indicate the client the objects that the server has determined that
  *  this client is able to see.
  *
@@ -14,6 +15,7 @@ import marauroa.game.*;
  */
 public class MessageS2CPerception extends Message
   {  
+  private byte typePerception;
   private List modifiedRPObjects;
   private List deletedRPObjects;
   
@@ -21,6 +23,9 @@ public class MessageS2CPerception extends Message
   public MessageS2CPerception()
     {
     super(null);
+    
+    /** TODO: Make this choosable */
+    typePerception=RPZone.Perception.TOTAL;
     
     type=TYPE_S2C_PERCEPTION;
     }
@@ -36,6 +41,9 @@ public class MessageS2CPerception extends Message
     super(source);
     
     type=TYPE_S2C_PERCEPTION;
+
+    /** TODO: Make this choosable */
+    typePerception=RPZone.Perception.TOTAL;
     this.modifiedRPObjects=modifiedRPObjects;
     this.deletedRPObjects=deletedRPObjects;
     }  
@@ -44,13 +52,15 @@ public class MessageS2CPerception extends Message
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: (TODO)";
+    return "Message (S2C Perception) from ("+source.toString()+") CONTENTS: ("+modifiedRPObjects.size()+" modified objects and "+
+           deletedRPObjects.size()+" deleted objects)";
     }
       
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
     
+    out.write(typePerception);    
     out.write(modifiedRPObjects.size());
     
     Iterator it_mod=modifiedRPObjects.iterator();
@@ -72,6 +82,7 @@ public class MessageS2CPerception extends Message
     {
     super.readObject(in);
     
+    typePerception=in.readByte();
     modifiedRPObjects=new LinkedList();
     deletedRPObjects=new LinkedList();
     

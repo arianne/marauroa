@@ -12,8 +12,8 @@ mechanism to recovery from lost messages or repeated ones.
 Each UDP Packet is composed of:
 - Protocol version ( 1 byte           )
 - Type of Message  ( 1 byte           )
-- Client ID        ( 2 bytes          )
-- Rest of Message  ( up to 1496 bytes )
+- Client ID        ( 4 bytes          )
+- Rest of Message  ( up to 1494 bytes )
 
 Messages are sent from server by simply serializing them.
 So the message itself contains the protocol version, the type of message and

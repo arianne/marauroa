@@ -191,6 +191,7 @@ about changes in the objects that exist near it.
 The message is based on the idea explained in Delta perception document.
 
 The message is composed by:
+- A type that can be DELTA or TOTAL
 - A List of RPObject that contains modified object
 - A List of RPObject that contains deleted object
 
