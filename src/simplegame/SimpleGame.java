@@ -1,4 +1,4 @@
-/* $Id: SimpleGame.java,v 1.20 2003/12/13 14:43:24 root777 Exp $ */
+/* $Id: SimpleGame.java,v 1.21 2003/12/13 15:18:59 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.util.List;
+import javax.sound.midi.MetaEventListener;
+import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
@@ -48,7 +50,7 @@ import simplegame.objects.GameBoard;
 import sun.audio.AudioPlayer;
 
 public class SimpleGame
-  extends JFrame implements Runnable
+  extends JFrame implements Runnable, MetaEventListener
 {
   
   private NetworkClientManager netMan;
@@ -57,6 +59,8 @@ public class SimpleGame
   private int ownCharacterID;
   private int otherCharacterID;
   private static Sequencer player;
+  
+  private boolean continuing = true;
   
   public SimpleGame(NetworkClientManager netman, JMarauroa marauroa,RPObject.ID characterID)
   {
@@ -216,15 +220,6 @@ public class SimpleGame
     }
   }
   
-  private void playMidi()
-  {
-    InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
-    if(is_midi!=null)
-    {
-      playMidi(is_midi);
-    }
-  }
-  
   
   private static void sleep(long timeout)
   {
@@ -379,7 +374,7 @@ public class SimpleGame
     //          }},"midi player").start();
   }
   
-  public static void playMidi(final InputStream midistream)
+  public void playMidi()
   {
     new Thread(new Runnable()
                {
@@ -387,17 +382,19 @@ public class SimpleGame
           {
             try
             {
-              Sequence theSound = MidiSystem.getSequence(midistream);
               if(player==null)
               {
+                InputStream is_midi = getClass().getClassLoader().getResourceAsStream("sounds/1.mid");
+                Sequence theSound = MidiSystem.getSequence(is_midi);
                 player = MidiSystem.getSequencer();
                 player.open();
+                player.setSequence(theSound);
+                player.addMetaEventListener(SimpleGame.this);
               }
-              else
-              {
-                player.stop();
-              }
-              player.setSequence(theSound);
+              //              else
+              //              {
+              //                player.stop();
+              //              }
               player.start();
               //player.close();
             }
@@ -409,6 +406,30 @@ public class SimpleGame
   }
   
   
+  //implement metaEventListener
+  public void meta(MetaMessage event)
+  {
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("MIDI:"+String.valueOf(event.getType()));
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
+    if (event.getType() == 47)
+    {
+      System.out.println("song ended");
+      // Sequencer is done playing
+      if (continuing && player != null)
+      {
+        player.setTickPosition(0);
+        playMidi();
+      }
+    }
+  }
+  
 }
+
 
 
