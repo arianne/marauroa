@@ -1,4 +1,4 @@
-/* $Id: MessageS2CMap.java,v 1.6 2004/04/30 13:48:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CMap.java,v 1.7 2004/05/19 16:38:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,8 +12,9 @@
  ***************************************************************************/
 package marauroa.net;
 
-import java.io.*;
+import java.util.*;
 import java.net.*;
+import java.io.*;
 import marauroa.game.*;
 import marauroa.*;
 
@@ -25,15 +26,13 @@ import marauroa.*;
  */
 public class MessageS2CMap extends Message
   {
-  private byte[] mapByteArray;
+  private List mapObjects;
   
   /** Constructor for allowing creation of an empty message */
   public MessageS2CMap()
     {
     super(null);
     type=TYPE_S2C_MAP;
-    
-    mapByteArray=new byte[0];
     }
   
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -42,34 +41,53 @@ public class MessageS2CMap extends Message
    *  @param modifiedRPObjects the list of object that has been modified.
    *  @param deletedRPObjects the list of object that has been deleted since the last perception.
    */
-  public MessageS2CMap(InetSocketAddress source,byte[] mapByteArray)
+  public MessageS2CMap(InetSocketAddress source,List mapObjects)
     {
     super(source);
     type=TYPE_S2C_MAP;
     
-    this.mapByteArray=mapByteArray;
+    this.mapObjects=mapObjects;
     }
   
-  public byte[] getMapData()
+  public List getMapObjects()
     {
-    return mapByteArray;
+    return mapObjects;
     }
   
   public String toString()
     {
-    return "Message (S2C Map) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+mapByteArray.length+")";
+    return "Message (S2C Map) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+mapObjects.size()+")";
     }
 
   public void writeObject(marauroa.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    out.write(mapByteArray);
+
+    out.write((int)mapObjects.size());
+    Iterator it=mapObjects.iterator();
+    while(it.hasNext())
+      {
+      RPObject object=(RPObject)it.next();
+      out.write(object);
+      }
     }
   
   public void readObject(marauroa.net.InputSerializer in) throws IOException, ClassNotFoundException
     {
     super.readObject(in);
-    mapByteArray=in.readByteArray();
+    
+    int mapObjectsSize=in.readInt();
+    mapObjects=new LinkedList();
+    
+    if(mapObjectsSize>TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of an list of "+String.valueOf(mapObjectsSize)+" size");
+      }
+
+    for(int i=0;i<mapObjectsSize;++i)
+      {
+      mapObjects.add(in.readObject(new RPObject()));
+      }
 
     if(type!=TYPE_S2C_MAP)
       {

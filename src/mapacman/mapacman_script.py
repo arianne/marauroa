@@ -322,13 +322,8 @@ class mapacmanRPMap:
         return self.__respawnPoints[self.__last_respawnPoints]
     
     def serializeMap(self):
-        by=ByteArrayOutputStream()
-        out=OutputSerializer(by)
-        out.write(int(len(self.__grid)))
-        for item in self.__grid:
-            out.write(item)
-        
-        return by
+        #TODO: Send a list of RPObjects
+        return None
         
 #
 # A few constants to make things more beautiful

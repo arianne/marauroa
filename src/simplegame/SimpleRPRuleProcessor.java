@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.38 2004/04/24 12:12:44 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.39 2004/05/19 16:38:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package simplegame;
 
 import marauroa.game.*;
-import java.util.Iterator;
+import java.util.*;
 import marauroa.marauroad;
 import simplegame.actions.ChallengeAction;
 import simplegame.actions.ChallengeAnswer;
@@ -134,9 +134,9 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     return true;
     }
 
-  public byte[] serializeMap(RPObject.ID id)
+  public List serializeMap(RPObject.ID id)
     {
-    return null;
+    return new LinkedList();
     }
       
   private RPAction.Status getCharacterList(RPObject.ID id, RPAction action)

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.84 2004/05/18 16:09:18 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.85 2004/05/19 16:38:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -424,7 +424,7 @@ class RPServerManager extends Thread
     return ruleProcessor.onExit(id);
     }
   
-  public byte[] serializeMap(RPObject.ID id)
+  public List serializeMap(RPObject.ID id)
     {
     return ruleProcessor.serializeMap(id);
     }

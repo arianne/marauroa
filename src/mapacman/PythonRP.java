@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.2 2004/04/24 12:12:30 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.3 2004/05/19 16:38:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,8 @@ package mapacman;
 
 import marauroa.game.*;
 import java.io.*;
+import java.util.*;
+
 
 public class PythonRP
   {
@@ -45,7 +47,7 @@ public class PythonRP
     return false;
     }
   
-  public ByteArrayOutputStream serializeMap()
+  public List serializeMap()
     {
     return null;
     }

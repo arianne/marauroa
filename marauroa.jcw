@@ -8,9 +8,9 @@ LABEL := "marauroa"
 #[BeginProject]SOURCE := "\\marauroa.jcp" #[EndProject]
 
 ! Start Last Document Structure
-#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\mapacman\\mapacmanRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PythonRP.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CPerception.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CMap.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\mapacman\\client\\nullClient.java" #[EndFile]
 
 ! Start Breakpoint Structure
 #[BeginBreakpoint]SOURCE := "\\JMarauroa2.java" CLASS := "marauroa.JMarauroa2" VALUE := "81" CHECK := "1" #[EndBreakpoint]

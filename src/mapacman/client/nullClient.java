@@ -17,26 +17,9 @@ public class nullClient extends Thread
     int sizey;
     int sizex;
     
-    public ClientMap(byte[] mapData) throws Exception
+    public ClientMap(List mapData) throws Exception
       {
-      ByteArrayInputStream bi=new ByteArrayInputStream(mapData);
-      InputSerializer ser=new InputSerializer(bi);
-      
-      sizey=ser.readInt();
-      for(int i=0;i<sizey;++i)
-        {
-        String line=ser.readString();
-        if(i==0)
-          {
-          content=new char[sizey*line.length()];
-          sizex=line.length();
-          }
-          
-        for(int j=0;j<sizex;j++)
-          {
-          content[i*sizex+j]=line.charAt(j);
-          }
-        }
+      /** TODO: Intepret and apply the mapData */
       }
     
     public char get(int x,int y)
@@ -181,7 +164,7 @@ public class nullClient extends Thread
           }
         else if(msg instanceof MessageS2CMap)
           {
-          byte[] mapData=((MessageS2CMap)msg).getMapData();
+          List mapData=((MessageS2CMap)msg).getMapObjects();
           map_objects=new ClientMap(mapData);
           ++recieved;
           }
