@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.16 2003/12/15 16:38:08 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.18 2003/12/15 17:00:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class marauroad extends Thread
 	formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
 	
-  private setArguments(String[] args)
+  private static void setArguments(String[] args)
     {
     int i=0;
     
@@ -45,9 +45,9 @@ public class marauroad extends Thread
       {
       if(args[i].equals("-c"))
         {
-        Configuration.setConfigurationFile(args[i+1])
+        Configuration.setConfigurationFile(args[i+1]);
         }
-      else if(args[i].equals("-h")
+      else if(args[i].equals("-h"))
         {
         // TODO: Write help
         }
@@ -110,6 +110,7 @@ public class marauroad extends Thread
   public static void main (String[] args)
     {
     marauroad.trace("marauroad::main",">");
+    marauroad.setArguments(args);
     marauroad.getMarauroa().start();
     marauroad.trace("marauroad::main","<");
   }
