@@ -17,244 +17,244 @@ COMPILER := "<Default>"
 LABEL := "Root"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\testClient.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\JStatistics.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\Statistics.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\TimeoutConf.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\Test_RWLock.java" #[EndFile]
-#[BeginFile]SOURCE := "\\build.xml" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\RunTests.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\JMarauroa.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\Configuration.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\RWLock.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa_drop.sql" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa_init.sql" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa_drop.sql" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\createaccount.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\RWLock.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\Test_Configuration.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\Configuration.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\JMarauroa.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\marauroad.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\RunTests.java" #[EndFile]
+#[BeginFile]SOURCE := "\\build.xml" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\Test_RWLock.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\TimeoutConf.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\Statistics.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\JStatistics.java" #[EndFile]
+#[BeginFile]SOURCE := "\\testClient.java" #[EndFile]
 #[BeginFolder]
-LABEL := "game"
+LABEL := "mods"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabaseFactory.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MemoryPlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameDatabaseException.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Transaction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCTransaction.java" #[EndFile]
 #[BeginFolder]
-LABEL := "RP section"
+LABEL := "SimpleGame"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Attributes.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPSlot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPScheduler.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObject.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPActionList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModelIF.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGame.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModel.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\index.html" #[EndFile]
 #[BeginFolder]
-LABEL := "Test"
+LABEL := "actions"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_MarauroaRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPSlot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPObject.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_Attributes.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPScheduler.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAnswer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\MoveAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\GetCharacterListAction.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "objects"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\GameBoard.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\CharacterList.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "Test"
+LABEL := "1001"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_GameServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerEntryContainer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
-#[EndFolder]
-#[EndFolder]
+#[BeginFile]SOURCE := "\\src\\the1001\\RPCode.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\README" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\Test_RPCode.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\RunTests.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\Test_the1001.java" #[EndFile]
 #[BeginFolder]
-LABEL := "doc"
+LABEL := "objects"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\README" #[EndFile]
-#[BeginFile]SOURCE := "\\AUTHORS" #[EndFile]
-#[BeginFile]SOURCE := "\\BUGS" #[EndFile]
-#[BeginFile]SOURCE := "\\HISTORY" #[EndFile]
-#[BeginFolder]
-LABEL := "Tracker"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Item.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Gladiator.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Player.java" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "Basic"
+LABEL := "docs"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\docs\\Basic Design.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\docs\\Implementation walkthrough.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\docs\\1001 Description.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\docs\\Original Game Concept.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "Network"
+LABEL := "client"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModelListenerIF.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
 #[EndFolder]
-#[BeginFolder]
-LABEL := "Game"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\docs\\ClientID generation.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\JDBC Database HOWTO.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\PlayerContainer Explained.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Synchronization between Game and RP Managers.txt" #[EndFile]
-#[EndFolder]
-#[BeginFolder]
-LABEL := "RP"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\docs\\Object and Slots.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Actions and Objects.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Actions Explained.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Object Explained.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\RPManager.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Delta perception Algorithm.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Zones and Worlds.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\Action reply in Objects.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\docs\\How Perceptions and Actions work.txt" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]
 LABEL := "net"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\OutputSerializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkClientManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetConst.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageFactory.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Message.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\InputSerializer.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\Serializable.java" #[EndFile]
-#[BeginFolder]
-LABEL := "Types"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CInvalidMessage.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CServerInfo.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CPerception.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLogoutNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLogoutACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLoginNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLoginACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CChooseCharacterNACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CChooseCharacterACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CCharacterList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CActionACK.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SLogout.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SLogin.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SChooseCharacter.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SPerceptionACK.java" #[EndFile]
-#[EndFolder]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\InputSerializer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Message.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageFactory.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetConst.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkClientManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\NetworkServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\OutputSerializer.java" #[EndFile]
 #[BeginFolder]
 LABEL := "Test"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerShort.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerInt.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerByteArray.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerByte.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_Serializer.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_NetworkServerManager.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_Messages.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_MessageFactory.java" #[EndFile]
 #[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerString.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_MessageFactory.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_Messages.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_NetworkServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_Serializer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerByte.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerByteArray.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerInt.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\Test_SerializerShort.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "Types"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SPerceptionACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SChooseCharacter.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SLogin.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageC2SLogout.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CActionACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CCharacterList.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CChooseCharacterACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CChooseCharacterNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLoginACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLoginNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLogoutACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CLogoutNACK.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CPerception.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CServerInfo.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\net\\MessageS2CInvalidMessage.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "mods"
+LABEL := "doc"
 FILTER := ""
 
+#[BeginFile]SOURCE := "\\HISTORY" #[EndFile]
+#[BeginFile]SOURCE := "\\BUGS" #[EndFile]
+#[BeginFile]SOURCE := "\\AUTHORS" #[EndFile]
+#[BeginFile]SOURCE := "\\README" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\index.txt" #[EndFile]
 #[BeginFolder]
-LABEL := "1001"
+LABEL := "RP"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\the1001\\Test_the1001.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\RunTests.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\Test_RPCode.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\README" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\the1001RPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\RPCode.java" #[EndFile]
-#[BeginFolder]
-LABEL := "client"
-FILTER := ""
-
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\The1001Bot.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModelListenerIF.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\client\\GameDataModel.java" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\How Perceptions and Actions work.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Action reply in Objects.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Zones and Worlds.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Delta perception Algorithm.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\RPManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Object Explained.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Actions Explained.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Actions and Objects.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Object and Slots.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "docs"
+LABEL := "Game"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\the1001\\docs\\Original Game Concept.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\docs\\1001 Description.txt" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\docs\\Implementation walkthrough.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Synchronization between Game and RP Managers.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\PlayerContainer Explained.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\JDBC Database HOWTO.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\GameManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Database ER.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\ClientID generation.txt" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "objects"
+LABEL := "Network"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Player.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Gladiator.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\the1001\\objects\\Item.java" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\UDP Packet Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\NetworkManager.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Messages Types.txt" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "Basic"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\docs\\Error Log Format.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\docs\\Basic Design.txt" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "Tracker"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\docs\\BUGS.txt" #[EndFile]
+#[BeginFile]SOURCE := "\\TODO.txt" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "SimpleGame"
+LABEL := "game"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\simplegame\\index.html" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModel.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPZone.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleRPRuleProcessor.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGame.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\SimpleGameDataModelIF.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCTransaction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Transaction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameDatabaseException.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameConst.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\GameServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\JDBCPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MemoryPlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerDatabaseFactory.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\PlayerEntryContainer.java" #[EndFile]
 #[BeginFolder]
-LABEL := "objects"
+LABEL := "Test"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\CharacterList.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\objects\\GameBoard.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_JDBCRPObjectDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerEntryContainer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_PlayerDatabase.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_GameServerManager.java" #[EndFile]
 #[EndFolder]
 #[BeginFolder]
-LABEL := "actions"
+LABEL := "RP section"
 FILTER := ""
 
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\GetCharacterListAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\MoveAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAction.java" #[EndFile]
-#[BeginFile]SOURCE := "\\src\\simplegame\\actions\\ChallengeAnswer.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPActionList.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPObject.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPScheduler.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPSlot.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\RPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Attributes.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPRuleProcessor.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\MarauroaRPZone.java" #[EndFile]
+#[BeginFolder]
+LABEL := "Test"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPScheduler.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_Attributes.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPObject.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPZone.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPAction.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPSlot.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_RPServerManager.java" #[EndFile]
+#[BeginFile]SOURCE := "\\src\\marauroa\\game\\Test_MarauroaRPZone.java" #[EndFile]
 #[EndFolder]
 #[EndFolder]
 #[EndFolder]
