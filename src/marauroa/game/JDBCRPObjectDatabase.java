@@ -1,4 +1,4 @@
-/* $Id: JDBCRPObjectDatabase.java,v 1.9 2004/03/24 17:14:56 arianne_rpg Exp $ */
+/* $Id: JDBCRPObjectDatabase.java,v 1.10 2004/03/25 13:29:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,9 +21,9 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
   {
   /** connection info **/
   private Properties connInfo;
-  /** A connection to the JDBC database */
-  private JDBCTransaction transaction;
-  private static JDBCRPObjectDatabase playerDatabase=null;
+  
+  private static JDBCRPObjectDatabase rpObjectDatabase=null;
+
   public static String EscapeString(String text)
     {
     StringBuffer result=new StringBuffer();
@@ -79,11 +79,11 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     marauroad.trace("JDBCRPObjectDatabase::getDatabase",">");
     try
       {
-      if(playerDatabase==null)
+      if(rpObjectDatabase==null)
         {
-        playerDatabase=resetDatabaseConnection();
+        rpObjectDatabase=resetDatabaseConnection();
         }
-      return playerDatabase;
+      return rpObjectDatabase;
       }
     catch(Exception e)
       {
@@ -413,6 +413,7 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
         }
       }
     }
+
   private Random random;
   public RPObject.ID getValidRPObjectID(Transaction trans)
     {
@@ -465,8 +466,8 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
     try
       {
       Statement stmt = connection.createStatement();
-      String query = "create table if not exists  rpobject(id integer not null primary key, slot_id integer) TYPE=INNODB;";
 
+      String query = "create table if not exists  rpobject(id integer not null primary key, slot_id integer) TYPE=INNODB;";
       stmt.addBatch(query);
       query = "create table if not exists rpattribute(object_id integer not null, name varchar(64) not null, value varchar(255), primary key(object_id,name)) TYPE=INNODB;";
       stmt.addBatch(query);
@@ -495,10 +496,12 @@ public class JDBCRPObjectDatabase implements GameDatabaseException
       }
     }
   
+  private JDBCTransaction transaction;
+  
   public Transaction getTransaction()
     throws GameDatabaseException.GenericDatabaseException
     {
-    if (transaction==null || !transaction.isValid())
+    if(transaction==null || !transaction.isValid())
       {
       transaction=new JDBCTransaction(createConnection(connInfo));
       if(transaction==null || !transaction.isValid())
