@@ -434,6 +434,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player wants to add.
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
+   *  @throws CharacterAlreadyAddedException if that player-character exist in database.
    *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public void addCharacter(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterAlreadyAddedException, GenericDatabaseException
     {
@@ -456,16 +457,24 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
-      String query = "insert into characters values("+id+",'"+character+"',?)";
-      PreparedStatement prep_stmt = connection.prepareStatement(query);
-      prep_stmt.setBytes(1,baos.toByteArray());
+      if(hasCharacter(username,character))
+        {
+        marauroad.trace("JDBCPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
+        throw new CharacterAlreadyAddedException();
+        }
+      else
+        {
+        String query = "insert into characters values("+id+",'"+character+"',?)";
+        PreparedStatement prep_stmt = connection.prepareStatement(query);
+        prep_stmt.setBytes(1,baos.toByteArray());
   
-      prep_stmt.execute();
+        prep_stmt.execute();
+        }
       }
     catch(SQLException sqle)
       {
       marauroad.trace("JDBCPlayerDatabase::addCharacter","X",sqle.getMessage());
-      throw new CharacterAlreadyAddedException();
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
@@ -478,11 +487,12 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       }
     }
   
+  /** This method returns the number of Players that exist on database 
+   *  @return the number of players that exist on database */
   public int getPlayerCount()
     {
     marauroad.trace("JDBCPlayerDatabase::getPlayerCount",">");
 
-    int ret = 0;
     try
       {
       Statement stmt = connection.createStatement();
@@ -491,18 +501,34 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       ResultSet result = stmt.executeQuery(query);
       if(result.next())
         {
-        ret = result.getInt(1);
+        return result.getInt(1);
         }
+        
+      return 0;
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","X",sqle.getMessage());
+      return -1;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::getPlayerCount","<");
-    return(ret);
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::getPlayerCount","<");
+      }
     }
   
+  /** This method is the opposite of getRPObject, and store in Database the object for
+   *  an existing player and character.
+   *  The difference between setRPObject and addCharacter are that setRPObject update it
+   *  while addCharacter add it to database and fails if it already exists
+   *.
+   *  @param username is the name of the player
+   *  @param character is the name of the character that the username player wants to add.
+   *  @param object is the RPObject that represent this character in game.
+   *
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
+   *  @throws CharacterNotFoundException  if the player-character doesn't exist in database.
+   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public void setRPObject(String username, String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::setRPObject",">");
@@ -519,7 +545,7 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         }
       catch (IOException e)
         {
-        marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Error serializing character: "+e.getMessage());
+        marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Error serializing character: "+e.getMessage());
         throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
         }
         
@@ -531,22 +557,33 @@ public class JDBCPlayerDatabase implements PlayerDatabase
       } 
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::setRPObject","E",sqle.getMessage());
+      marauroad.trace("JDBCPlayerDatabase::setRPObject","X",sqle.getMessage());
+      throw new CharacterNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::setRPObject","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::setRPObject","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-
-    marauroad.trace("JDBCPlayerDatabase::setRPObject","<");
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::setRPObject","<");
+      }
     }
   
+  /** This method retrieves from Database the object for an existing player and character.
+   *.
+   *  @param username is the name of the player
+   *  @param character is the name of the character that the username player wants to add.
+   *  @return a RPObject that is the RPObject that represent this character in game.
+   *
+   *  @throws PlayerNotFoundException  if the player doesn't exist in database.
+   *  @throws CharacterNotFoundException  if the player-character doesn't exist in database.
+   *  @throws GenericDatabaseException if the character doesn't exist or it is not owned by the player. */
   public RPObject getRPObject(String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException
     {
     marauroad.trace("JDBCPlayerDatabase::getRPObject",">");
 
-    RPObject rp_object = null;
     try
       {
       int id=getDatabasePlayerId(username);
@@ -558,40 +595,37 @@ public class JDBCPlayerDatabase implements PlayerDatabase
         {
         ByteArrayInputStream bais = new ByteArrayInputStream(result.getBytes(1));
         InputSerializer is = new InputSerializer(bais);
-        rp_object = new RPObject();
-        try
-          {
-          rp_object.readObject(is);
-          }
-        catch (IOException e)
-          {
-          marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Error serializing character: "+e.getMessage());
-          throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
-          }          
-        catch (ClassNotFoundException e)
-          {
-          marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Error serializing character: "+e.getMessage());
-          throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
-          }
+
+        RPObject rp_object=new RPObject();
+        rp_object.readObject(is);
+         
+        return rp_object;
         }
       else
         {
-        marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Player("+username+") doesn't contains that character("+character+")");
+        marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Player("+username+") doesn't contains that character("+character+")");
         throw new CharacterNotFoundException();
         }
       }
     catch(SQLException sqle)
       {
-      marauroad.trace("JDBCPlayerDatabase::getRPObject","E",sqle.getMessage());      
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","X",sqle.getMessage());      
+      throw new PlayerNotFoundException();
       }
     catch(PlayerNotFoundException e)
       {
-      marauroad.trace("JDBCPlayerDatabase::getRPObject","E","Database doesn't contains that username("+username+")");
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Database doesn't contains that username("+username+")");
       throw e;
       }
-    
-    marauroad.trace("JDBCPlayerDatabase::getRPObject","<");
-    return(rp_object);
+    catch (Throwable e)
+      {
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","X","Error serializing character: "+e.getMessage());
+      throw new GenericDatabaseException("Error serializing character: "+e.getMessage());
+      }          
+    finally
+      {
+      marauroad.trace("JDBCPlayerDatabase::getRPObject","<");
+      }
     }
   
   
