@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.15 2004/04/24 12:12:31 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.16 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,7 +60,7 @@ public class MarauroaRPRuleProcessor implements RPRuleProcessor
 
   public byte[] serializeMap(RPObject.ID id)
     {
-    return null;
+    return new byte[0];
     }
       
   }

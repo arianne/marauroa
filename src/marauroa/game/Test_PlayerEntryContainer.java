@@ -1,4 +1,4 @@
-/* $Id: Test_PlayerEntryContainer.java,v 1.15 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: Test_PlayerEntryContainer.java,v 1.16 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,15 +41,18 @@ public class Test_PlayerEntryContainer extends TestCase
       }
     try
       {
+      if(!playerDatabase.hasPlayer(trans,"Test Player"))
+        {
       playerDatabase.addPlayer(trans,"Test Player","Test Password","test@marauroa.ath.cx");
       assertTrue(playerDatabase.hasPlayer(trans,"Test Player"));
       playerDatabase.verifyAccount(trans,"Test Player","Test Password");
       
       RPObject test=new RPObject();
 
-      test.put("id",1);
+      test.put("id",playerDatabase.getValidRPObjectID(trans).getObjectID());
       playerDatabase.addCharacter(trans,"Test Player", "Test Character",test);
       assertTrue(playerDatabase.hasCharacter(trans,"Test Player", "Test Character"));
+        }
       }
     catch(Exception e)
       {

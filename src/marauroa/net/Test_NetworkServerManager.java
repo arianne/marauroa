@@ -1,4 +1,4 @@
-/* $Id: Test_NetworkServerManager.java,v 1.12 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: Test_NetworkServerManager.java,v 1.13 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import java.util.*;
 
 public class Test_NetworkServerManager extends TestCase
   {
-  public static Test suite() 
+  public static Test suite()
     {
     return new TestSuite(Test_NetworkServerManager.class);
     }
@@ -33,7 +33,7 @@ public class Test_NetworkServerManager extends TestCase
 
     NetworkServerManager netManager=null;
     NetworkClientManager netClient=null;
-	
+    
     try
       {
       netManager=new NetworkServerManager();
@@ -44,8 +44,8 @@ public class Test_NetworkServerManager extends TestCase
       fail(e.getMessage());
       return;
       }
-    try 
-      {       
+    try
+      {
       assertNotNull(netManager);
       assertNotNull(netClient);
       
@@ -69,23 +69,23 @@ public class Test_NetworkServerManager extends TestCase
 
       int i=0;
 
-      while(result==null && i<10) 
+      while(result==null && i<10)
         {
         result=netClient.getMessage();
         ++i;
         }
       assertNotNull(result);
       assertEquals(realResult.getUsername(),"Test username");
-      assertEquals(realResult.getPassword(),"Test password");  
+      assertEquals(realResult.getPassword(),"Test password");
       
       RPZone.Perception perception=new RPZone.Perception (RPZone.Perception.SYNC);
       perception.addedList=createBigPerception();
-
+      MessageS2CPerception.clearPrecomputedPerception();
       msg=new MessageS2CPerception(clientAddress, perception);
       netManager.addMessage(msg);
       result=null;
       i=0;
-      while(result==null && i<10) 
+      while(result==null && i<10)
         {
         result=netClient.getMessage();
         ++i;
@@ -100,7 +100,7 @@ public class Test_NetworkServerManager extends TestCase
       {
       System.out.println(e);
       fail();
-      }      
+      }
     finally
       {
       netManager.finish();
@@ -112,7 +112,7 @@ public class Test_NetworkServerManager extends TestCase
     {
     List list=new LinkedList();
     
-    for(int i=0;i<40;++i)
+    for(int i=0;i<400;++i)
       {
       RPObject object=new RPObject();
 

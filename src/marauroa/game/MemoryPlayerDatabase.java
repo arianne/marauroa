@@ -1,4 +1,4 @@
-/* $Id: MemoryPlayerDatabase.java,v 1.9 2004/04/30 13:48:43 arianne_rpg Exp $ */
+/* $Id: MemoryPlayerDatabase.java,v 1.10 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -486,6 +486,12 @@ public class MemoryPlayerDatabase implements PlayerDatabase
       }
     }
   
+  public RPObject.ID getValidRPObjectID(Transaction trans)
+    {
+    /** FIXME: Hard to code and it is not useful */
+    return new RPObject.ID(new Random().nextInt());
+    }
+  
   /**
    *  @return always returns null
    *  @throws GenericDatabaseException never thrown
@@ -493,6 +499,6 @@ public class MemoryPlayerDatabase implements PlayerDatabase
   public Transaction getTransaction() throws GameDatabaseException.GenericDatabaseException
     {
     // the memory player database does not need transactions.
-    return null;
+    return new Transaction();
     }
   }

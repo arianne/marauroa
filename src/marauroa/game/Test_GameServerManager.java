@@ -1,4 +1,4 @@
-/* $Id: Test_GameServerManager.java,v 1.17 2004/04/03 17:40:31 arianne_rpg Exp $ */
+/* $Id: Test_GameServerManager.java,v 1.18 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,7 @@ public class Test_GameServerManager extends TestCase
 
       msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
-      while(recieved!=4)
+      while(recieved!=5)
         {
         Message msg=null;
 
@@ -139,6 +139,11 @@ public class Test_GameServerManager extends TestCase
         if(msg instanceof MessageS2CChooseCharacterACK)
           {
           assertTrue("Correct character parameters",true);
+          ++recieved;
+          }
+        else if(msg instanceof MessageS2CMap)
+          {
+          assertTrue("Correct Map recieved",true);
           ++recieved;
           }
         else if(msg instanceof MessageS2CPerception)
@@ -154,7 +159,7 @@ public class Test_GameServerManager extends TestCase
 
       msgL.setClientID(clientid);
       netMan.addMessage(msgL);
-      while(recieved!=5)
+      while(recieved!=6)
         {
         Message msg=null;
 
@@ -202,7 +207,7 @@ public class Test_GameServerManager extends TestCase
         {
         Message msg=null;
 
-        while(msg==null) msg=netMan.getMessage();          
+        while(msg==null) msg=netMan.getMessage();
         if(msg instanceof MessageS2CLoginNACK)
           {
           assertTrue("Correct login failure",true);
@@ -241,7 +246,7 @@ public class Test_GameServerManager extends TestCase
           }
         }
       netMan.addMessage(new MessageC2SLogin(address,"Test Player","Test Password"));
-      while(recieved!=5)
+      while(recieved!=7)
         {
         Message msg=null;
 
@@ -251,47 +256,27 @@ public class Test_GameServerManager extends TestCase
           assertTrue("Correct login",true);
           ++recieved;
           }
+        else if(msg instanceof MessageS2CCharacterList)
+          {
+          assertTrue("Recieved character list",true);
+          ++recieved;
+          }
+        else if(msg instanceof MessageS2CServerInfo)
+          {
+          assertTrue("Recieved server info",true);
+          ++recieved;
+          }
         else
           {
           fail("ERROR: Can login. Got "+msg.toString());
           }
         }
         
-      Message msgLSpoffer=new MessageC2SLogout(address);
-
-      msgLSpoffer.setClientID(clientid);
-      netManSpoffer.addMessage(msgLSpoffer);
-      if(msgLSpoffer!=null)
-        {
-        int i=0;
-        Message msg=null;
-
-        while(msg==null && i<10)
-          {
-          msg=netMan.getMessage();
-          ++i;
-          }
-        if(i!=10)
-          {
-          fail("ERROR: Can spof. Got "+msg.toString());
-          }
-        i=0;
-        while(msg==null && i<10)
-          {
-          msg=netManSpoffer.getMessage();
-          ++i;
-          }
-        if(i!=10)
-          {
-          fail("ERROR: Can spof. Got "+msg.toString());
-          }
-        }
-
       Message msgL=new MessageC2SLogout(address);
 
       msgL.setClientID(clientid);
       netMan.addMessage(msgL);
-      while(recieved!=6)
+      while(recieved!=8)
         {
         Message msg=null;
 

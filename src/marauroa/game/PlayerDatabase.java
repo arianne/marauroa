@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabase.java,v 1.10 2004/03/25 22:20:43 arianne_rpg Exp $ */
+/* $Id: PlayerDatabase.java,v 1.11 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,6 +100,7 @@ public interface PlayerDatabase extends GameDatabaseException
    *  @throws PlayerNotFoundException  if the player doesn't exist in database.
    *  @throws CharacterNotFoundException if the character doesn't exist or it is not owned by the player. */
   public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
+  public RPObject.ID getValidRPObjectID(Transaction trans);
   /**
    *  This method returns a valid connection
    *  @return a valid Transaction

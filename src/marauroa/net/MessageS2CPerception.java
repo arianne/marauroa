@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.41 2004/05/01 16:47:16 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.42 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -130,11 +130,11 @@ public class MessageS2CPerception extends Message
       deletedRPObjects.size()+" deleted objects)";
     }
   
-  private static byte[] precomputed_StaticPartPerception;
+  private static byte[] precomputed_StaticPartPerception=null;
   
   public static void clearPrecomputedPerception()
     {
-    precomputed_StaticPartPerception=null;    
+    precomputed_StaticPartPerception=null;
     }
   
   private byte[] getPrecomputedStaticPartPerception() throws IOException
@@ -143,7 +143,7 @@ public class MessageS2CPerception extends Message
       {
       ByteArrayOutputStream array=new ByteArrayOutputStream();
       OutputSerializer serializer=new OutputSerializer(array);
-      computeStaticPartPerception(serializer);    
+      computeStaticPartPerception(serializer);
       
       precomputed_StaticPartPerception=array.toByteArray();
       }
@@ -194,7 +194,7 @@ public class MessageS2CPerception extends Message
     {
     super.writeObject(out);
     
-    if(marauroad.loggable("MessageS2CPerception::writeObject","D"))     
+    if(marauroad.loggable("MessageS2CPerception::writeObject","D"))
       {
       Iterator it;
       
@@ -242,7 +242,7 @@ public class MessageS2CPerception extends Message
 
     /** HACK: Join the dinamic part of the perception on a single block */
     out_stream.write(getPrecomputedStaticPartPerception());
-    ser.write((int)timestampPerception);    
+    ser.write((int)timestampPerception);
     if(myRPObject==null)
       {
       ser.write((byte)0);
@@ -286,7 +286,7 @@ public class MessageS2CPerception extends Message
     for(int i=0;i<added;++i)
       {
       addedRPObjects.add(ser.readObject(new RPObject()));
-      }    
+      }
 
     int modAdded=ser.readInt();
     

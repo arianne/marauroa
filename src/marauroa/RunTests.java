@@ -1,4 +1,4 @@
-/* $Id: RunTests.java,v 1.43 2004/04/30 12:24:59 arianne_rpg Exp $ */
+/* $Id: RunTests.java,v 1.44 2004/05/02 17:21:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import java.io.*;
  * TestSuite that runs all the sample tests
  */
 public class RunTests
-  {  
+  {
   private static class Killer extends Thread
     {
     private long timeout;
@@ -40,7 +40,7 @@ public class RunTests
           {
           sleep(1000);
           timeout-=1000;
-          } 
+          }
         }
       catch(Exception e)
         {
@@ -74,8 +74,8 @@ public class RunTests
       wasSuccessful&=runTest(suiteBase(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteNet(),timestamp).wasSuccessful();
       wasSuccessful&=runTest(suiteGame(),timestamp).wasSuccessful();
-      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();      
-      wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
+      wasSuccessful&=runTest(suiteActive(),timestamp).wasSuccessful();
+      //wasSuccessful&=runTest(suiteOneTest(),timestamp).wasSuccessful();
 
       Date end=new Date();
       
@@ -88,7 +88,7 @@ public class RunTests
         }
       killer.finish();
       }
-    catch(Exception e) 
+    catch(Exception e)
       {
       }
     }
@@ -147,7 +147,7 @@ public class RunTests
 
   public static Test suiteNet ( )
     {
-    TestSuite suite= new TestSuite("Network marauroa Tests");    
+    TestSuite suite= new TestSuite("Network marauroa Tests");
 
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerByte.class));
     suite.addTest(new TestSuite(marauroa.net.Test_SerializerShort.class));
@@ -192,5 +192,5 @@ public class RunTests
     suite.addTest(new TestSuite(marauroa.game.Test_RPServerManager.class));
     return suite;
     }
-  }  
+  }
 

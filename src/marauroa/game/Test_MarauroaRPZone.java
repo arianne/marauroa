@@ -1,4 +1,4 @@
-/* $Id: Test_MarauroaRPZone.java,v 1.9 2004/04/12 19:03:03 arianne_rpg Exp $ */
+/* $Id: Test_MarauroaRPZone.java,v 1.10 2004/05/02 17:21:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,11 +18,11 @@ import java.util.*;
 
 public class Test_MarauroaRPZone extends TestCase
   {
-  public static Test suite ( ) 
+  public static Test suite ( )
     {
     return new TestSuite(Test_MarauroaRPZone.class);
     }
-	
+    
   public void testRPZone()
     {
     marauroad.trace("Test_MarauroaRPZone::testRPZone",">");
@@ -45,7 +45,7 @@ public class Test_MarauroaRPZone extends TestCase
 
       assertTrue(it.hasNext());
       result=(RPObject)it.next();
-      assertEquals(result,SonGoku);      
+      assertEquals(result,SonGoku);
       assertFalse(it.hasNext());
       }
     catch(Exception e)
@@ -84,9 +84,10 @@ public class Test_MarauroaRPZone extends TestCase
       assertEquals(perception.size(),0);
       zone.nextTurn();
       zone.get(new RPObject.ID(SonGoku));
+      SonGoku.put("name","A new SonGoku");
       zone.modify(SonGoku);
       perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.DELTA);
-      assertEquals(perception.size(),1);
+      assertEquals(perception.size(),0);
       zone.nextTurn();
       perception=zone.getPerception(new RPObject.ID(SonGoku),RPZone.Perception.SYNC);
       assertEquals(perception.size(),1);
