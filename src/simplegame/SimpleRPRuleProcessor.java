@@ -16,14 +16,10 @@ import simplegame.objects.GameBoard;
 public class SimpleRPRuleProcessor implements RPRuleProcessor
 {
   private SimpleRPZone zone;
-  private RPObject.ID lastPlayerID;
-  private byte color;
   
   public SimpleRPRuleProcessor()
   {
     marauroad.trace("SimpleRPRuleProcessor::<init>",">");
-    lastPlayerID = null;
-    color = 0;
     marauroad.trace("SimpleRPRuleProcessor::<init>","<");
   }
   
@@ -106,9 +102,11 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     {
       RPObject rp_player = zone.get(id);
       GameBoard gb;
+      int last_id = -1;
       try
       {
         gb = (GameBoard)rp_player.getSlot("hand").get(0);
+        last_id = gb.getLastPlayerID();
       }
       catch (RPObject.NoSlotFoundException e)
       {
@@ -123,7 +121,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         {
         }
       }
-      if(id.equals(lastPlayerID))
+      if(id.getObjectID()==last_id)
       {
         marauroad.trace("SimpleRPRuleProcessor::execute","D","Player "+id +" already did a move, ignore this action.");
       }
@@ -134,7 +132,6 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
         if(gb.getRPCharacterAt(row,column)==-1)
         {
           gb.setRPCharacterAt(row,column,id.getObjectID());
-          lastPlayerID = id;
           status = RPAction.STATUS_SUCCESS;
           marauroad.trace("SimpleRPRuleProcessor::makeMove","D",zone.toString());
 //          int winner_id  = gb.getWinner();
@@ -142,7 +139,7 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
 //          {
 //            //TODO
 //            RPObject rp_winner = zone.get(null);
-////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","The winner is "+winner);
+////            marauroad.trace("SimpleRPRuleProcessor::makeMove","D","And the winner is "+winner);
 //          }
         }
         else

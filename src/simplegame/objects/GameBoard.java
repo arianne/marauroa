@@ -21,6 +21,22 @@ public class GameBoard
     put("l_id",-1);
   }
   
+  public int getLastPlayerID()
+  {
+    int ret = -1;
+    try
+    {
+      ret = Integer.parseInt(get("l_id"));
+    }
+    catch (NumberFormatException e)
+    {
+    }
+    catch (Attributes.AttributeNotFoundException e)
+    {
+    }
+    return(ret);
+  }
+  
   public int getSize()
   {
     return(getSize(this));
@@ -51,6 +67,7 @@ public class GameBoard
     catch (Attributes.AttributeNotFoundException e)
     {
       put(row+"X"+column,characterID);
+      put("l_id",characterID);
     }
   }
   

@@ -44,6 +44,7 @@ public class SimpleGame
     netMan = netman;
     this.marauroa = marauroa;
     this.ownCharacterID=characterID;
+    otherCharacterID = new RPObject.ID(4711);
     gdm = new SimpleGameDataModel(3);
     initComponents();
     addWindowListener(new WindowAdapter()
@@ -84,7 +85,6 @@ public class SimpleGame
                   try
                   {
                     RPObject gb = obj.getSlot("hand").get(0);
-                    gb.get("");
                     int size = Integer.parseInt(gb.get("size"));
                     for (int k = 0; k < size; k++)
                     {
