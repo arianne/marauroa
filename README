@@ -15,13 +15,13 @@ Marauroa
 Marauroa is a implementation, using Java, of Arianne, but we are also 
 extending some of the concepts implemented in Arianne to improve it.
 
-Marauroa wants to be a massive multiplayer role playing game that you can 
-access through your internet connection. It is a virtual world, and you have
+Marauroa wants to be a multiplayer role playing game that you can access
+through your internet connection. It is a virtual world, and you have
 an unprecedented degree of freedom to shape your own destiny. Social 
 interaction, combat, or just hanging out with friends will all be parts of 
 your experience.
 
-Marauroa is also a Massively Multiplayer Engine, that you can use to build 
+Marauroa is also a Multiplayer Onlince Engine, that you can use to build 
 you own online games using Marauroa as a Content Management system.
 
 You can find the latest version of Marauroa at: 
@@ -31,20 +31,19 @@ Marauroa is a GPL project.
 
 Version
 -------
-0.22 version 
+0.23 version 
+
 
 Status
 ------
 Marauroa is playable.
-It is now running a server that implements the FULL protocol and that is
-able to connect to a MySQL database, also features the RP Engine in its 
-first state.
 
-Version 0.11 contains a very simple game: Tic-tac-toe, implemented 
+Version >0.11 contains a very simple game: Tic-tac-toe, implemented 
 using the Marauroa engine.
 
-Version 0.20 contains a simple Gladiators game using also the Marauroa engine.
+Version >0.20 contains a simple Gladiators game using also the Marauroa engine.
 You need arianne's Gladiator client in order to be able to play.
+
 
 Requirements
 ------------
@@ -55,7 +54,6 @@ Actually to compile Marauroa you need:
 
 In order to get it working with MySQL you also need:
 - MySQL Connector/J ( http://www.mysql.com/downloads/api-jdbc-stable.html )
-
 
 
 Build
@@ -86,7 +84,7 @@ Use the BAT files to run it:
 - marauroad [-c configurationFile] is the server 
 - JMarauroa is the client
 
-Edit marauroa.ini to use JDBC Database.
+Edit marauroad.ini to use JDBC Database.
 Please refer to docs/JDBC Database HOWTO.txt
 
 Read simpleGame/README about how to play it.
@@ -94,6 +92,11 @@ Read the1001/READMA about how to run Gladiators
 
 Changelog
 ---------
+0.23	Feb 15,	2004
+- Added chat
+- Added statistics
+- Fixed synchronization bug.
+
 0.22 	Feb 06, 2004
 - Fixed JDBC problem with accounts
 - Fixed stupid problem on createaccount
