@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.22 2004/05/15 15:06:16 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.23 2004/05/27 22:44:11 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,7 @@ public final class NetworkServerManager
   private boolean isfinished;
   /** A List of Message objects: List<Message> */
   private List messages;
+  private List banList;
   private MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
@@ -41,6 +42,10 @@ public final class NetworkServerManager
     marauroad.trace("NetworkServerManager",">");
     try
       {
+      
+      /* read ban list from configuration */
+      initBanList();
+      
       /* Create the socket and set a timeout of 1 second */
       socket=new DatagramSocket(NetConst.marauroa_PORT);
       socket.setSoTimeout(1000);
@@ -62,7 +67,17 @@ public final class NetworkServerManager
       marauroad.trace("NetworkServerManager","<");
       }
     }
-  
+  /** This method adds a new netmask which is banned */
+  public InetAddressMask addBan(InetAddressMask bannedMask)
+    {
+      if(banList==null)
+      {
+        banList=new ArrayList();
+      }
+      banList.add(bannedMask);
+      return(bannedMask);
+    }
+    
   /** This method notify the thread to finish it execution */
   public void finish()
     {
@@ -176,23 +191,30 @@ public final class NetworkServerManager
         try
           {
           socket.receive(packet);
-          marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
+	  boolean banned = checkBanned(packet);
+          marauroad.trace("NetworkServerManagerRead::run","D","Received UDP Packet");	  	  
           /*** Statistics ***/
           stats.addBytesRecv(packet.getLength());
           stats.addMessageRecv();
-          
-          try
-            {
-            Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
-            marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
-            messages.add(msg);
-            newMessageArrived();
-            }
-          catch(MessageFactory.InvalidVersionException e)
-            {
-            MessageS2CInvalidMessage msg=new MessageS2CInvalidMessage((InetSocketAddress)packet.getSocketAddress(),"Invalid client version: Update client");
-            addMessage(msg);
-            }
+          if(!banned)
+	    {
+            try
+              {
+              Message msg=msgFactory.getMessage(packet.getData(),(InetSocketAddress)packet.getSocketAddress());
+              marauroad.trace("NetworkServerManagerRead::run","D","Received message: "+msg.toString());
+              messages.add(msg);
+              newMessageArrived();
+              }
+            catch(MessageFactory.InvalidVersionException e)
+              {
+              MessageS2CInvalidMessage msg=new MessageS2CInvalidMessage((InetSocketAddress)packet.getSocketAddress(),"Invalid client version: Update client");
+              addMessage(msg);
+              }
+	    }
+	    else
+	    {
+	      marauroad.trace("NetworkServerManagerRead::run","D","UDP Packet discarded - client is banned.");
+	    }
           }
         catch(java.net.SocketTimeoutException e)
           {
@@ -293,5 +315,79 @@ public final class NetworkServerManager
         marauroad.trace("NetworkServerManagerWrite::write","<");
         }
       }
+    }
+    
+    /** reads ban list from configuration 
+    * the ban list looks like: 192.168.100.100/255.255.255.0;192.168.90.100/255.255.255.0
+    */
+    private void initBanList()
+    {
+      marauroad.trace("NetworkServerManager::initBanList",">");
+      try
+      {
+        Configuration conf = Configuration.getConfiguration();
+        String str_banlist = conf.get("banlist");
+	if(str_banlist!=null&&!"".equals(str_banlist))
+	{
+	  String bans[] = str_banlist.split(";");	
+	  banList = new ArrayList(bans.length);
+	  for(int i=0; i<bans.length; i++)
+	  {
+	    String address_mask_pair [] = bans[i].split("\\/");
+	    InetAddressMask iam = null;
+	    if(address_mask_pair.length==2)
+	    {
+	    
+	      iam = new InetAddressMask(address_mask_pair[0].trim(),address_mask_pair[1].trim());
+	    }
+	    else if (address_mask_pair.length==1)
+	    {
+	      //single host
+	      iam = new InetAddressMask(address_mask_pair[0].trim(),"255.255.255.255");
+	    }
+	    else
+	    {
+	      marauroad.trace("NetworkServerManager::initBanList","D","Ignoring invalid entry "+bans[i]);
+	    }
+	    if(iam!=null)
+	    {
+	      marauroad.trace("NetworkServerManager::initBanList","D","Adding new ban entry: "+iam);
+	      banList.add(iam);
+	    }
+	  }
+	}
+      }
+      catch(Exception e)
+      {
+        marauroad.trace("NetworkServerManager::initBanList","X","Error initializing ban list :"+e.getMessage());      
+      }
+      finally
+      {
+        marauroad.trace("NetworkServerManager::initBanList","<");
+      }
+    }
+    
+    /** returns true if the source ip is banned */
+    private boolean checkBanned(DatagramPacket packet)
+    {
+      boolean banned = false;
+      try
+      {
+        marauroad.trace("NetworkServerManager::checkBanned",">");
+        for(int i=0; !banned && banList!=null && i<banList.size() ; i++)
+        {
+          banned = ((InetAddressMask)banList.get(i)).matches(packet.getAddress());
+	  if(banned)
+	  {
+	    String msg = "packet from "+ packet.getAddress()+" is banned by "+banList.get(i);
+	    marauroad.trace("NetworkServerManager::checkBanned","D",msg);
+	  }
+        }
+      }
+      finally
+      {
+        marauroad.trace("NetworkServerManager::checkBanned","<");
+      }
+      return(banned);
     }
   }
