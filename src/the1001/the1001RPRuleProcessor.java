@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.21 2004/01/08 13:55:25 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.22 2004/01/08 14:14:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,6 +84,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     catch(Exception e)
       {
       marauroad.trace("the1001RPRuleProcessor::execute","X",e.getMessage());
+      e.printStackTrace(System.out);
       return RPAction.STATUS_FAIL;      
       }      
     finally
@@ -120,6 +121,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     catch(Exception e)
       {
       marauroad.trace("the1001RPRuleProcessor::nextTurn","X",e.getMessage());
+      e.printStackTrace(System.out);
       }
         
     marauroad.trace("the1001RPRuleProcessor::nextTurn","<");
@@ -161,6 +163,7 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     catch(Exception e)
       {
       marauroad.trace("the1001RPRuleProcessor::removeOneTurnAttributes","X",e.getMessage());
+      e.printStackTrace(System.out);
       }
     
     trackedObjects.clear();

@@ -1,4 +1,4 @@
-/* $Id: Test_the1001.java,v 1.8 2004/01/08 13:52:20 arianne_rpg Exp $ */
+/* $Id: Test_the1001.java,v 1.9 2004/01/08 14:14:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,6 +198,7 @@ public class Test_the1001 extends TestCase
       }
     catch(Exception e)
       {
+      e.printStackTrace(System.out);
       fail(e.getMessage());
       }
     finally

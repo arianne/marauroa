@@ -1,4 +1,4 @@
-/* $Id: the1001RPZone.java,v 1.9 2004/01/01 11:05:23 arianne_rpg Exp $ */
+/* $Id: the1001RPZone.java,v 1.10 2004/01/08 14:14:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,7 +59,7 @@ public class the1001RPZone extends MarauroaRPZone
     catch(Exception e)
       {
       marauroad.trace("the1001RPZone::the1001RPZone","!","Can't initialize world: "+e.getMessage());
-      e.printStackTrace();
+      e.printStackTrace(System.out);
       System.exit(-1);      
       }
     finally

@@ -1,4 +1,4 @@
-/* $Id: Test_RPCode.java,v 1.20 2004/01/08 13:31:34 arianne_rpg Exp $ */
+/* $Id: Test_RPCode.java,v 1.21 2004/01/08 14:14:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,7 +87,8 @@ public class Test_RPCode extends TestCase
       }
     catch(Exception e)
       {
-      fail();
+      e.printStackTrace(System.out);
+      fail(e.getMessage());
       }
     finally
       {     
@@ -128,6 +129,7 @@ public class Test_RPCode extends TestCase
       }
     catch(Exception e)
       {
+      e.printStackTrace(System.out);
       fail(e.getMessage());
       }
     finally
@@ -200,6 +202,7 @@ public class Test_RPCode extends TestCase
       }
     catch(Exception e)
       {
+      e.printStackTrace(System.out);
       fail(e.getMessage());
       }
     finally
@@ -311,6 +314,7 @@ public class Test_RPCode extends TestCase
       }
     catch(Exception e)
       {
+      e.printStackTrace(System.out);
       fail(e.getMessage());
       }
     finally

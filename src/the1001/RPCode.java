@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.36 2004/01/08 13:52:20 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.37 2004/01/08 14:14:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,6 +175,7 @@ public class RPCode
     catch(Exception e)
       {
       marauroad.trace("RPCode::RemoveWaitingPlayer","X",e.getMessage());
+      e.printStackTrace(System.out);
       return false;
       }
     finally
@@ -315,6 +316,7 @@ public class RPCode
     catch(Exception e)
       {
       marauroad.trace("RPCode::ResolveFight","X",e.getMessage());
+      e.printStackTrace(System.out);
       }
     finally
       {
@@ -496,6 +498,7 @@ public class RPCode
     catch(Exception e)
       {
       marauroad.trace("RPCode::RequestFame","X",e.getMessage());
+      e.printStackTrace(System.out);
       }
     finally
       {
