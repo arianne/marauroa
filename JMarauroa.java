@@ -30,6 +30,7 @@ public class JMarauroa
   private final static String ACTION_CMD_DISCONNECT = "disconnect";
   private final static String ACTION_CMD_EXIT = "exit";
   private final static String ACTION_CMD_ABOUT = "about";
+  private final static String ACTION_CMD_PLAY = "play";
   
   
   private JTextArea reportsTextArea;
@@ -245,6 +246,13 @@ public class JMarauroa
     mnu_item_disconnect.setMnemonic('D');
     mnu_server.add(mnu_item_disconnect);
     
+    JMenuItem mnu_item_letsplay = new JMenuItem("Let us play!");
+    mnu_item_letsplay.setAccelerator(KeyStroke.getKeyStroke("control P"));
+    mnu_item_letsplay.addActionListener(actionHandler);
+    mnu_item_letsplay.setActionCommand(ACTION_CMD_PLAY);
+    mnu_item_letsplay.setMnemonic('P');
+    mnu_server.add(mnu_item_letsplay);
+    
     JMenuItem mnu_item_exit = new JMenuItem("Exit");
     mnu_item_exit.setAccelerator(KeyStroke.getKeyStroke("control X"));
     mnu_item_exit.addActionListener(actionHandler);
@@ -327,7 +335,7 @@ public class JMarauroa
   /**
    * adds a message into reportPane
    */
-  private void addLog(String msg)
+  public void addLog(String msg)
   {
     logDate.setTime(System.currentTimeMillis());
     String line = formatter.format(logDate) + msg;
@@ -453,6 +461,14 @@ public class JMarauroa
       currentEvent = null;
     }
     
+    private void letsplay()
+    {
+      SimpleGame sg = new SimpleGame(netMan,JMarauroa.this);
+      sg.pack();
+      sg.show();
+      new Thread(sg).run();
+    }
+    
     private void interruptCurrentAction()
     {
       //      if(currentEvent!=null)
@@ -489,6 +505,10 @@ public class JMarauroa
           {
             //about
             about();
+          }
+          else if(ACTION_CMD_PLAY.equals(action_cmd))
+          {
+            letsplay();
           }
           else
           {
