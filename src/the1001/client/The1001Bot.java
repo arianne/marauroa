@@ -1,4 +1,4 @@
-/* $Id: The1001Bot.java,v 1.9 2004/03/12 09:01:30 arianne_rpg Exp $ */
+/* $Id: The1001Bot.java,v 1.10 2004/03/13 14:32:26 root777 Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,398 +41,398 @@ public class The1001Bot
   private static Random random=new Random();
   private static String rndMsg[]=
   {
-    "What are the goals for this release of Marauroa?","","","",
-      "Why is Marauroa using Java?","","","","",
-      "Is there any estimation of when it will be released?","","","","",""
+		"What are the goals for this release of Marauroa?","","","",
+			"Why is Marauroa using Java?","","","","",
+			"Is there any estimation of when it will be released?","","","","",""
   };
   
   
   
   private The1001Bot(NetworkClientManager netman)
   {
-    netMan = netman;
-    gm = new GameDataModel(netMan);
+		netMan = netman;
+		gm = new GameDataModel(netMan);
   }
   
   
   
   /**
-   * adds a message into reportPane
-   */
+	 * adds a message into reportPane
+	 */
   private void addChatMessage(String name,String msg)
   {
-    String text = name+":"+msg;
-    System.out.println(text);
+		String text = name+":"+msg;
+		System.out.println(text);
   }
   
   public void run()
   {
-    int time_out_max_count = 20;
-    int timeout_count = 0;
-    continueGamePlay = true;
-    boolean iamfighting = false;
-    try
-    {
-      while(continueGamePlay)
-      {
-        if(netMan!=null)
-        {
-          Message msg = netMan.getMessage();
-          if(msg!=null && msg instanceof MessageS2CPerception)
-          {
-            System.out.println("---------------------------------------------");
-            timeout_count = 0;
-            MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
-            replyMsg.setClientID(msg.getClientID());
-            netMan.addMessage(replyMsg);
-            
-            MessageS2CPerception perception = (MessageS2CPerception)msg;
-            RPObject my_object = perception.getMyRPObject();
-            if(my_object!=null)
-            {
-              String name = my_object.get(RPCode.var_name);
-              String fame = my_object.get(RPCode.var_fame);
-              System.out.println("Me Name: " +name);
-              System.out.println("Me Fame: " +fame);
-              gm.setOwnCharacter(my_object);
-              if(my_object.hasSlot(RPCode.var_myGladiators))
-              {
-                for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
-                {
-                  RPObject my_glad = (RPObject)iter.next();
-                  gm.addMyGladiator(my_glad);
-                  
-                  name = my_glad.get(RPCode.var_name);
-                  String karma = my_glad.get(RPCode.var_karma);
-                  String hp = my_glad.get(RPCode.var_hp);
-                  String victories = my_glad.get(RPCode.var_num_victory);
-                  String defeats = my_glad.get(RPCode.var_num_defeat);
-                  
-                  System.out.println("My G Name     : " +name);
-                  System.out.println("My G Karma    : " +karma);
-                  System.out.println("My G Health   : " +hp);
-                  System.out.println("My G Victories: " +victories);
-                  System.out.println("My G Defeats  : " +defeats);
-                }
-              }
-              else
-              {
-                RPObject glads_in_shop[] = gm.getShopGladiators();
-                if(glads_in_shop.length>0)
-                {
-                  RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
-                  gm.buyGladiator(first_avail_glad.get(RPCode.var_object_id));
-                }
-              }
-            }
-            List modified_objects = perception.getModifiedRPObjects();
-            for (int i = 0; i < modified_objects.size(); i++)
-            {
-              RPObject obj = (RPObject)modified_objects.get(i);
-              if("arena".equals(obj.get("type")))
-              {
-                gm.setArena(obj);
-                String name = obj.get("name");
-                String status = obj.get("status");
-                gm.setStatus(status);
-                if(RPCode.var_waiting.equals(status))
-                {
-                  iamfighting = false;
-                  System.out.println("Arena waiting...");
-                  if(Math.random()>0.1)
-                  {
-                    gm.requestFight();
-                    System.out.println("Requesting fight...");
-                  }
-                  
-                }
-                else if(RPCode.var_request_fame.equals(status))
-                {
-                  iamfighting = false;
-                  System.out.println("Vote!!!");
-                  gm.vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
-                }
-                else if(RPCode.var_fighting.equals(status))
-                {
-                  System.out.println("Fighting!!!");
-                  if(Math.random()>0.9 && !iamfighting)
-                  {
-                    gm.requestFight();
-                    System.out.println("Requesting fight...");
-                  }
-                }
-                if(Math.random()>0.95)
-                {
-                  gm.sendMessage(rndMsg[Math.abs(random.nextInt()%rndMsg.length)]);
-                }
-                //                gm.setWaiting("waiting".equalsIgnoreCase(status));
-                marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
-                try
-                {
-                  RPSlot slot = obj.getSlot("!gladiators");
-                  RPObject[] old_fighters = gm.getFighters();
-                  RPObject[] new_fighters = new RPObject[slot.size()];
-                  int k = 0;
-                  HashSet hs = new HashSet();
-                  for (Iterator iter = slot.iterator(); iter.hasNext() ; )
-                  {
-                    RPObject gladiator = (RPObject)iter.next();
-                    if("gladiator".equalsIgnoreCase(gladiator.get("type")))
-                    {
-                      //gm.addFighter(gladiator);
-                      new_fighters[k++]=gladiator;
-                      hs.add(gladiator.get(RPCode.var_object_id));
-                      name = gladiator.get(RPCode.var_name);
-                      String karma = gladiator.get(RPCode.var_karma);
-                      String hp = gladiator.get(RPCode.var_hp);
-                      String victories = gladiator.get(RPCode.var_num_victory);
-                      String defeats = gladiator.get(RPCode.var_num_defeat);
-                      System.out.println("G Name     : " +name);
-                      System.out.println("G Karma    : " +karma);
-                      System.out.println("G Health   : " +hp);
-                      System.out.println("G Victories: " +victories);
-                      System.out.println("G Defeats  : " +defeats);
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena");
-                    }
-                  }
-                  for (int x = 0; x < old_fighters.length; x++)
-                  {
-                    if(!hs.contains(old_fighters[x].get(RPCode.var_object_id)))
-                    {
-                      gm.deleteFighter(old_fighters[x]);
-                    }
-                  }
-                  
-                  RPObject own_gl  = gm.getFirstOwnGladiator();
-                  for (int x = 0; x < new_fighters.length; x++)
-                  {
-                    gm.addFighter(new_fighters[x]);
-                    if(own_gl!=null)
-                    {
-                      String own_gl_id = own_gl.get(RPCode.var_object_id);
-                      if(own_gl_id.equals(new_fighters[x].get(RPCode.var_object_id)))
-                      {
-                        iamfighting = true;
-                        if(new_fighters[x].has(RPCode.var_hp))
-                        {
-                          int hp     = new_fighters[x].getInt(RPCode.var_hp);
-                          System.out.println("Health : "+hp);
-                        }
-                        if(new_fighters[x].has(RPCode.var_damage))
-                        {
-                          int damage = new_fighters[x].getInt(RPCode.var_damage);
-                          if (damage>0)
-                          {
-                            System.out.println("AUCHH!! damage: "+damage);
-                          }
-                        }
-                        String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
-                        gm.setFightMode(fight_mode);
-                        System.out.println("Fight mode set to "+fight_mode);
-                      }
-                    }
-                  }
-                }
-                catch (RPObject.NoSlotFoundException e)
-                {
-                  marauroad.trace("The1001Bot::messageLoop","X","Arena has no slot gladiators");
-                }
-              }
-              else if("character".equals(obj.get("type")))
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
-                gm.addSpectator(obj);
-                String name = obj.get(RPCode.var_name);
-                String fame = obj.get(RPCode.var_fame);
-                System.out.println("C Name: " +name);
-                System.out.println("C Fame: " +fame);
-                if(obj.has(RPCode.var_text))
-                {
-                  String text = obj.get(RPCode.var_text);
-                  if(!"".equals(text))
-                  {
-                    addChatMessage(name,text);
-                  }
-                }
-              }
-              else if("shop".equals(obj.get("type")))
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
-                if(obj.hasSlot("!gladiators"))
-                {
-                  RPSlot slot = obj.getSlot("!gladiators");
-                  Iterator iter = slot.iterator();
-                  while(iter.hasNext())
-                  {
-                    RPObject shop_object = (RPObject)iter.next();
-                    if("gladiator".equals(shop_object.get(RPCode.var_type)))
-                    {
-                      gm.addShopGladiator(shop_object);
-                    }
-                    else
-                    {
-                      marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
-                    }
-                  }
-                }
-              }
-              else
-              {
-                marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
-              }
-            }
-            
-            List deleted_objects = perception.getDeletedRPObjects();
-            for (int i = 0; i < deleted_objects.size(); i++)
-            {
-              RPObject obj = (RPObject)deleted_objects.get(i);
-              gm.deleteSpectator(obj);
-              gm.deleteFighter(obj);
-            }
-          }
-          else
-          {
-            timeout_count++;
-            if(timeout_count>=time_out_max_count)
-            {
-              System.out.println("TIMEOUT. EXIT.");
-              System.exit(1);
-            }
-//            System.out.println("TIMEOUT. SLEEPING.");
-            sleep(1);
-          }
-        }
-        else
-        {
-          sleep(5);
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
-      e.printStackTrace();
-    }
+		int time_out_max_count = 20;
+		int timeout_count = 0;
+		continueGamePlay = true;
+		boolean iamfighting = false;
+		try
+		{
+			while(continueGamePlay)
+			{
+				if(netMan!=null)
+				{
+					Message msg = netMan.getMessage();
+					if(msg!=null && msg instanceof MessageS2CPerception)
+					{
+						System.out.println("---------------------------------------------");
+						timeout_count = 0;
+						MessageC2SPerceptionACK replyMsg=new MessageC2SPerceptionACK(msg.getAddress());
+						replyMsg.setClientID(msg.getClientID());
+						netMan.addMessage(replyMsg);
+						
+						MessageS2CPerception perception = (MessageS2CPerception)msg;
+						RPObject my_object = perception.getMyRPObject();
+						if(my_object!=null)
+						{
+							String name = my_object.get(RPCode.var_name);
+							String fame = my_object.get(RPCode.var_fame);
+							System.out.println("Me Name: " +name);
+							System.out.println("Me Fame: " +fame);
+							gm.setOwnCharacter(my_object);
+							if(my_object.hasSlot(RPCode.var_myGladiators))
+							{
+								for (Iterator iter = my_object.getSlot(RPCode.var_myGladiators).iterator(); iter.hasNext(); )
+								{
+									RPObject my_glad = (RPObject)iter.next();
+									gm.addMyGladiator(my_glad);
+									
+									name = my_glad.get(RPCode.var_name);
+									String karma = my_glad.get(RPCode.var_karma);
+									String hp = my_glad.get(RPCode.var_hp);
+									String victories = my_glad.get(RPCode.var_num_victory);
+									String defeats = my_glad.get(RPCode.var_num_defeat);
+									
+									System.out.println("My G Name     : " +name);
+									System.out.println("My G Karma    : " +karma);
+									System.out.println("My G Health   : " +hp);
+									System.out.println("My G Victories: " +victories);
+									System.out.println("My G Defeats  : " +defeats);
+								}
+							}
+							else
+							{
+								RPObject glads_in_shop[] = gm.getShopGladiators();
+								if(glads_in_shop.length>0)
+								{
+									RPObject first_avail_glad = glads_in_shop[Math.abs(random.nextInt()%glads_in_shop.length)];
+									gm.buyGladiator(first_avail_glad.get(RPCode.var_object_id));
+								}
+							}
+						}
+						List modified_objects = perception.getModifiedRPObjects();
+						for (int i = 0; i < modified_objects.size(); i++)
+						{
+							RPObject obj = (RPObject)modified_objects.get(i);
+							if("arena".equals(obj.get("type")))
+							{
+								gm.setArena(obj);
+								String name = obj.get("name");
+								String status = obj.get("status");
+								gm.setStatus(status);
+								if(RPCode.var_waiting.equals(status))
+								{
+									iamfighting = false;
+									System.out.println("Arena waiting...");
+									if(Math.random()>0.1)
+									{
+										gm.requestFight();
+										System.out.println("Requesting fight...");
+									}
+									
+								}
+								else if(RPCode.var_request_fame.equals(status))
+								{
+									iamfighting = false;
+									System.out.println("Vote!!!");
+									gm.vote(Math.random()>0.5?RPCode.var_voted_up:"VOTE_DOWN");
+								}
+								else if(RPCode.var_fighting.equals(status))
+								{
+									System.out.println("Fighting!!!");
+									if(Math.random()>0.9 && !iamfighting)
+									{
+										gm.requestFight();
+										System.out.println("Requesting fight...");
+									}
+								}
+								if(Math.random()>0.95)
+								{
+									gm.sendMessage(rndMsg[Math.abs(random.nextInt()%rndMsg.length)]);
+								}
+								//                gm.setWaiting("waiting".equalsIgnoreCase(status));
+								marauroad.trace("The1001Bot::messageLoop","D","Arena: " + name + " [" + status+"]" +obj);
+								try
+								{
+									RPSlot slot = obj.getSlot(RPCode.var_gladiators);
+									RPObject[] old_fighters = gm.getFighters();
+									RPObject[] new_fighters = new RPObject[slot.size()];
+									int k = 0;
+									HashSet hs = new HashSet();
+									for (Iterator iter = slot.iterator(); iter.hasNext() ; )
+									{
+										RPObject gladiator = (RPObject)iter.next();
+										if("gladiator".equalsIgnoreCase(gladiator.get("type")))
+										{
+											//gm.addFighter(gladiator);
+											new_fighters[k++]=gladiator;
+											hs.add(gladiator.get(RPCode.var_object_id));
+											name = gladiator.get(RPCode.var_name);
+											String karma = gladiator.get(RPCode.var_karma);
+											String hp = gladiator.get(RPCode.var_hp);
+											String victories = gladiator.get(RPCode.var_num_victory);
+											String defeats = gladiator.get(RPCode.var_num_defeat);
+											System.out.println("G Name     : " +name);
+											System.out.println("G Karma    : " +karma);
+											System.out.println("G Health   : " +hp);
+											System.out.println("G Victories: " +victories);
+											System.out.println("G Defeats  : " +defeats);
+										}
+										else
+										{
+											marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in arena");
+										}
+									}
+									for (int x = 0; x < old_fighters.length; x++)
+									{
+										if(!hs.contains(old_fighters[x].get(RPCode.var_object_id)))
+										{
+											gm.deleteFighter(old_fighters[x]);
+										}
+									}
+									
+									RPObject own_gl  = gm.getFirstOwnGladiator();
+									for (int x = 0; x < new_fighters.length; x++)
+									{
+										gm.addFighter(new_fighters[x]);
+										if(own_gl!=null)
+										{
+											String own_gl_id = own_gl.get(RPCode.var_object_id);
+											if(own_gl_id.equals(new_fighters[x].get(RPCode.var_object_id)))
+											{
+												iamfighting = true;
+												if(new_fighters[x].has(RPCode.var_hp))
+												{
+													int hp     = new_fighters[x].getInt(RPCode.var_hp);
+													System.out.println("Health : "+hp);
+												}
+												if(new_fighters[x].has(RPCode.var_damage))
+												{
+													int damage = new_fighters[x].getInt(RPCode.var_damage);
+													if (damage>0)
+													{
+														System.out.println("AUCHH!! damage: "+damage);
+													}
+												}
+												String fight_mode = Math.random()>0.5?RPCode.var_scissor:(Math.random()>0.5?RPCode.var_paper:RPCode.var_rock);
+												gm.setFightMode(fight_mode);
+												System.out.println("Fight mode set to "+fight_mode);
+											}
+										}
+									}
+								}
+								catch (RPObject.NoSlotFoundException e)
+								{
+									marauroad.trace("The1001Bot::messageLoop","X","Arena has no slot gladiators");
+								}
+							}
+							else if("character".equals(obj.get("type")))
+							{
+								marauroad.trace("The1001Bot::messageLoop","D","character: "+obj);
+								gm.addSpectator(obj);
+								String name = obj.get(RPCode.var_name);
+								String fame = obj.get(RPCode.var_fame);
+								System.out.println("C Name: " +name);
+								System.out.println("C Fame: " +fame);
+								if(obj.has(RPCode.var_text))
+								{
+									String text = obj.get(RPCode.var_text);
+									if(!"".equals(text))
+									{
+										addChatMessage(name,text);
+									}
+								}
+							}
+							else if("shop".equals(obj.get("type")))
+							{
+								marauroad.trace("The1001Bot::messageLoop","D","Shop: "+obj);
+								if(obj.hasSlot("!gladiators"))
+								{
+									RPSlot slot = obj.getSlot("!gladiators");
+									Iterator iter = slot.iterator();
+									while(iter.hasNext())
+									{
+										RPObject shop_object = (RPObject)iter.next();
+										if("gladiator".equals(shop_object.get(RPCode.var_type)))
+										{
+											gm.addShopGladiator(shop_object);
+										}
+										else
+										{
+											marauroad.trace("The1001Bot::messageLoop","D","Uknown object in shop "+shop_object);
+										}
+									}
+								}
+							}
+							else
+							{
+								marauroad.trace("The1001Bot::messageLoop","D","Ignored wrong object in perception"+obj);
+							}
+						}
+						
+						List deleted_objects = perception.getDeletedRPObjects();
+						for (int i = 0; i < deleted_objects.size(); i++)
+						{
+							RPObject obj = (RPObject)deleted_objects.get(i);
+							gm.deleteSpectator(obj);
+							gm.deleteFighter(obj);
+						}
+					}
+					else
+					{
+						timeout_count++;
+						if(timeout_count>=time_out_max_count)
+						{
+							System.out.println("TIMEOUT. EXIT.");
+							System.exit(1);
+						}
+						//            System.out.println("TIMEOUT. SLEEPING.");
+						sleep(1);
+					}
+				}
+				else
+				{
+					sleep(5);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			marauroad.trace("The1001Bot::messageLoop","X",e.getMessage());
+			e.printStackTrace();
+		}
   }
   
   /**
-   * causes the calling thread to sleep the specified amount of <b>seconds</b>
-   * @param timeout the amount of seconds to sleep
-   **/
+	 * causes the calling thread to sleep the specified amount of <b>seconds</b>
+	 * @param timeout the amount of seconds to sleep
+	 **/
   private static void sleep(long timeout)
   {
-    try
-    {
-      Thread.sleep(timeout*1000);
-    }
-    catch (InterruptedException e)
-    {
-    }
+		try
+		{
+			Thread.sleep(timeout*1000);
+		}
+		catch (InterruptedException e)
+		{
+		}
   }
   
   
   
   /**
-   *
-   */
+	 *
+	 */
   public static void main(String[] args)
   {
-    if(args.length!=3)
-    {
-      System.out.println("Usage: java -classpath <cp> the1001.client.The1001Bot server user password");
-    }
-    connectAndChooseCharacter(args[0],args[1],args[2]);
+		if(args.length!=3)
+		{
+			System.out.println("Usage: java -classpath <cp> the1001.client.The1001Bot server user password");
+		}
+		connectAndChooseCharacter(args[0],args[1],args[2]);
   }
   
   private static void connectAndChooseCharacter(String hostname, String user, String pwd)
   {
-    NetworkClientManager net_man;
-    int client_id = -1;
-    try
-    {
-      net_man=new NetworkClientManager(hostname);
-      MessageC2SLogin msg=new MessageC2SLogin(null,user,pwd);
-      net_man.addMessage(msg);
-      boolean complete=false;
-      int recieved=0;
-      String[] characters=null;
-      String[] serverInfo=null;
-      client_id=-1;
-      
-      while(!complete && recieved<20)
-      {
-        Message message=net_man.getMessage();
-        if(message==null) continue;
-        marauroad.trace("The1001Bot::connectAndChooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_LOGIN_ACK + ", receivied "+message.getType());
-        switch(message.getType())
-        {
-          case Message.TYPE_S2C_LOGIN_NACK:
-            complete=true;
-            break;
-          case Message.TYPE_S2C_LOGIN_ACK: //10
-            client_id=message.getClientID();
-            ++recieved;
-            break;
-          case Message.TYPE_S2C_CHARACTERLIST: //2
-            characters=((MessageS2CCharacterList)message).getCharacters();
-            ++recieved;
-            break;
-          case Message.TYPE_S2C_SERVERINFO: //7
-            serverInfo=((MessageS2CServerInfo)message).getContents();
-            ++recieved;
-            break;
-        }
-        complete = complete || ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
-      }
-      marauroad.trace("The1001Bot::connectAndChooseCharacter","D","characters: "+characters);
-      if(characters!=null && characters.length>0)
-      {
-        chooseCharacter(net_man, client_id, characters[0]);
-      }
-      else
-      {
-        JOptionPane.showMessageDialog(null,"No characters received from server - wrong username/password?");
-        System.exit(-1);
-      }
-    }
-    catch(SocketException e)
-    {
-      marauroad.trace("The1001Bot::connectAndChooseCharacter","X",e.getMessage());
-    }
+		NetworkClientManager net_man;
+		int client_id = -1;
+		try
+		{
+			net_man=new NetworkClientManager(hostname);
+			MessageC2SLogin msg=new MessageC2SLogin(null,user,pwd);
+			net_man.addMessage(msg);
+			boolean complete=false;
+			int recieved=0;
+			String[] characters=null;
+			String[] serverInfo=null;
+			client_id=-1;
+			
+			while(!complete && recieved<20)
+			{
+				Message message=net_man.getMessage();
+				if(message==null) continue;
+				marauroad.trace("The1001Bot::connectAndChooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_LOGIN_ACK + ", receivied "+message.getType());
+				switch(message.getType())
+				{
+				case Message.TYPE_S2C_LOGIN_NACK:
+					complete=true;
+					break;
+				case Message.TYPE_S2C_LOGIN_ACK: //10
+					client_id=message.getClientID();
+					++recieved;
+					break;
+				case Message.TYPE_S2C_CHARACTERLIST: //2
+					characters=((MessageS2CCharacterList)message).getCharacters();
+					++recieved;
+					break;
+				case Message.TYPE_S2C_SERVERINFO: //7
+					serverInfo=((MessageS2CServerInfo)message).getContents();
+					++recieved;
+					break;
+				}
+				complete = complete || ((serverInfo!=null) && (characters!=null) && (client_id!=-1));
+			}
+			marauroad.trace("The1001Bot::connectAndChooseCharacter","D","characters: "+characters);
+			if(characters!=null && characters.length>0)
+			{
+				chooseCharacter(net_man, client_id, characters[0]);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"No characters received from server - wrong username/password?");
+				System.exit(-1);
+			}
+		}
+		catch(SocketException e)
+		{
+			marauroad.trace("The1001Bot::connectAndChooseCharacter","X",e.getMessage());
+		}
   }
   
   private static void chooseCharacter(NetworkClientManager netman, int client_id, String character)
   {
-    Message msg=new MessageC2SChooseCharacter(null,character);
-    msg.setClientID(client_id);
-    
-    netman.addMessage(msg);
-    
-    Message message=null;
-    boolean complete=false;
-    int recieved=0;
-    while(!complete && recieved<20)
-    {
-      
-      message=netman.getMessage();
-      if(message==null) continue;
-      recieved++;
-      marauroad.trace("The1001Bot::chooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_CHOOSECHARACTER_ACK + ", receivied "+message.getType());
-      if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
-      {
-        The1001Bot game = new The1001Bot(netman);
-        new Thread(game,"Game thread...").start();
-        complete = true;
-      }
-      else if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
-      {
-        marauroad.trace("The1001Bot::chooseCharacter","E","server nacks the character, exiting...");
-        System.exit(-1);
-      }
-    }
+		Message msg=new MessageC2SChooseCharacter(null,character);
+		msg.setClientID(client_id);
+		
+		netman.addMessage(msg);
+		
+		Message message=null;
+		boolean complete=false;
+		int recieved=0;
+		while(!complete && recieved<20)
+		{
+			
+			message=netman.getMessage();
+			if(message==null) continue;
+			recieved++;
+			marauroad.trace("The1001Bot::chooseCharacter","D","new message, waiting for "+Message.TYPE_S2C_CHOOSECHARACTER_ACK + ", receivied "+message.getType());
+			if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_ACK)
+			{
+				The1001Bot game = new The1001Bot(netman);
+				new Thread(game,"Game thread...").start();
+				complete = true;
+			}
+			else if(message.getType()==Message.TYPE_S2C_CHOOSECHARACTER_NACK)
+			{
+				marauroad.trace("The1001Bot::chooseCharacter","E","server nacks the character, exiting...");
+				System.exit(-1);
+			}
+		}
   }
   
   
