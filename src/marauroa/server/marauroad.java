@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.6 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.7 2005/03/06 21:32:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -119,7 +119,7 @@ public class marauroad extends Thread
     catch(Exception e) 
       {
       Logger.trace("marauroad::run","X","Error registering statistics bean, continuing anyway.");
-      e.printStackTrace();
+      Logger.thrown("marauroad::run","X",e);
       }
 
 

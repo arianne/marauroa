@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.5 2005/03/04 23:39:19 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.6 2005/03/06 21:32:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 public class Logger
   {
-  private static String[] allowed={"Stendhal","RPServerManager","RPWorld","MessageS2CPerception"};
+  private static String[] allowed={"Stendhal","RPServerManager"};
   private static String[] rejected={};
   
   private static Logger logger;

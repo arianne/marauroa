@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.3 2005/02/17 15:15:21 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.4 2005/03/06 21:32:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.common.game.*;
 
 public abstract class ariannexp
   {
+  public final static long TIMEOUT=4000;
   private NetworkClientManager netMan;
   private int clientid;
   private List<Message> messages;
@@ -40,14 +41,23 @@ public abstract class ariannexp
     Logger.trace("ariannexp::connect","<");
     }
   
-  private Message getMessage() throws InvalidVersionException
+  private Message getMessage() throws InvalidVersionException,ariannexpTimeoutException
     {
     Message msg=null;
-    while(msg==null) msg=netMan.getMessage();    
+    long delta=System.currentTimeMillis();
+    
+    while(msg==null)
+      {
+      msg=netMan.getMessage();    
+      if(System.currentTimeMillis()-delta>TIMEOUT)
+        {
+        throw new ariannexpTimeoutException();
+        }
+      }
     return msg;     
     }
   
-  public boolean login(String username, String password)
+  public boolean login(String username, String password) throws ariannexpTimeoutException
     {
     Logger.trace("ariannexp::login",">");
     try
@@ -102,7 +112,7 @@ public abstract class ariannexp
       }
     }
   
-  public boolean chooseCharacter(String character)
+  public boolean chooseCharacter(String character) throws ariannexpTimeoutException
     {
     Logger.trace("ariannexp::chooseCharacter",">");
     try
@@ -149,11 +159,19 @@ public abstract class ariannexp
   
   public void send(RPAction action)
     {
-    send(action, false);
+    try
+      {
+      send(action, false);
+      }
+    catch(ariannexpTimeoutException e)
+      {
+      /** This will never happen */
+      }
     }
   
-  public void send(RPAction action, boolean block)
+  public void send(RPAction action, boolean block) throws ariannexpTimeoutException
     {
+    /** TODO: Useless we need to return something or disable blocking */
     Logger.trace("ariannexp::send",">");
     try
       {
@@ -226,6 +244,11 @@ public abstract class ariannexp
       {
       Logger.thrown("ariannexp::logout","X",e);
       onError(1,"Invalid client version to connect to this server.");
+      return false;
+      }
+    catch(ariannexpTimeoutException e)
+      {
+      onError(1,"ariannexp can't connect to server. Server down?");
       return false;
       }
     finally
