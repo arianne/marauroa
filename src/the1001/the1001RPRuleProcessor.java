@@ -1,4 +1,4 @@
-/* $Id: the1001RPRuleProcessor.java,v 1.16 2004/01/06 23:51:43 arianne_rpg Exp $ */
+/* $Id: the1001RPRuleProcessor.java,v 1.17 2004/01/07 10:55:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,11 +174,13 @@ public class the1001RPRuleProcessor implements RPRuleProcessor
     
   public boolean onExit(RPObject.ID id)
     {
+    RPCode.RemoveWaitingPlayer(id);
     return true;
     }
     
   public boolean onTimeout(RPObject.ID id)
     {
+    RPCode.RemoveWaitingPlayer(id);
     return true;
     }
   }

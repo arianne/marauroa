@@ -1,4 +1,4 @@
-/* $Id: RPCode.java,v 1.23 2004/01/06 23:51:43 arianne_rpg Exp $ */
+/* $Id: RPCode.java,v 1.24 2004/01/07 10:55:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,6 +103,36 @@ public class RPCode
     finally
       {
       marauroad.trace("RPCode::RequestFight","<");
+      }
+    }
+  
+  public static boolean RemoveWaitingPlayer(RPObject.ID player_id)
+    {
+    marauroad.trace("RPCode::RemoveWaitingPlayer",">");
+   
+    try
+      {
+      the1001RPZone zone=ruleProcessor.getRPZone();     
+      RPObject arena=zone.getArena();
+      RPObject player=zone.get(player_id);
+      
+      if(player.has("requested"))
+        {
+        arena.put("waiting",arena.getInt("waiting")-1);
+        arena.remove("requested");
+        return true;
+        }
+      
+      return false;
+      }
+    catch(Exception e)
+      {
+      marauroad.trace("RPCode::RemoveWaitingPlayer","X",e.getMessage());
+      return false;
+      }
+    finally
+      {
+      marauroad.trace("RPCode::RemoveWaitingPlayer","<");
       }
     }
 
