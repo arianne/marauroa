@@ -68,7 +68,7 @@ The save and run Ant.
 cd /foo/bar/marauroa
 ant jar
 
-You will have a marauroa-0.03.jar file in the lib folder.
+You will have a marauroa-<version>.jar file in the lib folder.
 
 
 Running
@@ -83,6 +83,10 @@ Please refer to docs/JDBC Database HOWTO.txt
 
 Changelog
 ---------
+0.10 	Dic XX, 2003
+- Added ServerInfo message
+
+
 0.03	Dic 09, 2003
 - Delta Perception
 - Full RPZone and RuleProcessor
