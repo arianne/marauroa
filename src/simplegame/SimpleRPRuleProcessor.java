@@ -1,4 +1,4 @@
-/* $Id: SimpleRPRuleProcessor.java,v 1.30 2003/12/20 09:55:35 arianne_rpg Exp $ */
+/* $Id: SimpleRPRuleProcessor.java,v 1.31 2003/12/20 10:22:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,45 +127,43 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     RPAction.Status status = RPAction.STATUS_FAIL;
     try
     {
-      RPObject rp_player = zone.get(id);
-      Iterator iter = zone.iterator();
-      if(iter!=null)
+    RPObject rp_player = zone.get(id);
+    RPSlot ear = ensureSlot(rp_player,"ear");        
+    CharacterList clist = new CharacterList();
+    
+    Iterator iter = zone.iterator();
+    while(iter.hasNext())
       {
-        
-        RPSlot playerlist = ensureSlot(rp_player,"ear");
-        
-        CharacterList clist = new CharacterList();
-        while(iter.hasNext())
+      RPObject object = (RPObject)iter.next();
+      int oid = Integer.parseInt(object.get("object_id"));
+      if(oid!=id.getObjectID())
         {
-          RPObject object = (RPObject)iter.next();
-          int oid = Integer.parseInt(object.get("object_id"));
-          if(oid!=id.getObjectID())
+        String name = object.get("name");
+        String pl_status = "idle";
+            
+        try
           {
-            String name = object.get("name");
-            String pl_status = "idle";
-            
-            try
-              {
-              if(object.hasSlot("hand") && object.getSlot("hand").size()>0)            
-                {
-                pl_status="busy";              
-                }
-              }
-            catch(RPObject.NoSlotFoundException e)
-              {
-              /** Bad thing */
-              }
-            
-            clist.addCharacter(oid,object.get("name"),pl_status);
+          if(object.hasSlot("hand") && object.getSlot("hand").size()>0)            
+            {
+            pl_status="busy";              
+            }
           }
+        catch(RPObject.NoSlotFoundException e)
+          {
+          /** Bad thing */
+          }
+            
+        clist.addCharacter(oid,object.get("name"),pl_status);
         }
-        playerlist.clear();
-        playerlist.add(clist);
       }
+    
+    ear.clear();
+    ear.add(clist);
+    status = RPAction.STATUS_SUCCESS;
     }
     finally
     {
-      marauroad.trace("SimpleRPRuleProcessor::getCharacterList",">");
+    marauroad.trace("SimpleRPRuleProcessor::getCharacterList","<");
     }
     return(status);
   }
@@ -181,16 +179,23 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     {
       marauroad.trace("SimpleRPRuleProcessor::challenge","D","Action: " +action);
       RPObject rp_player = zone.get(id);
-      int challenged_id = ((ChallengeAction)action).getWhom();
+      ChallengeAction challengeAction=new ChallengeAction(action);
+      int challenged_id = challengeAction.getWhom();
       RPObject player_challenged = zone.get(new RPObject.ID(challenged_id));
-      RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
+     
       RPSlot slot = ensureSlot(rp_player,"ear");
       slot.clear();
+      
       //it is enough just to send id/name...
       CharacterList clist = new CharacterList();
       clist.addCharacter(Integer.parseInt(rp_player.get("object_id")),rp_player.get("name"),"wurst");
+      RPSlot challenge_slot = ensureSlot(player_challenged, "challenge");
       challenge_slot.add(clist);
       status = RPAction.STATUS_SUCCESS;
+    }
+    catch(Exception e)
+    {
+       e.printStackTrace(); 
     }
     finally
     {
@@ -209,8 +214,9 @@ public class SimpleRPRuleProcessor implements RPRuleProcessor
     try
     {
       RPObject rp_player = zone.get(id);
-      int oppenent_id = ((ChallengeAnswer)action).getWhom();
-      boolean accepted = ((ChallengeAnswer)action).isAccepted();
+      ChallengeAnswer challengerAnswer=new ChallengeAnswer(action);
+      int oppenent_id = challengerAnswer.getWhom();
+      boolean accepted = challengerAnswer.isAccepted();
       if(accepted)
       {
         RPObject player_challenged = zone.get(new RPObject.ID(oppenent_id));

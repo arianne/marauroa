@@ -1,4 +1,4 @@
-/* $Id: ChallengeAnswer.java,v 1.5 2003/12/20 09:55:35 arianne_rpg Exp $ */
+/* $Id: ChallengeAnswer.java,v 1.6 2003/12/20 10:22:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,8 +12,9 @@
  ***************************************************************************/
 package simplegame.actions;
 
-import marauroa.game.Attributes;
+import marauroa.game.*;
 import marauroa.marauroad;
+import java.util.*;
 
 public class ChallengeAnswer extends ChallengeAction
 {
@@ -23,7 +24,19 @@ public class ChallengeAnswer extends ChallengeAction
   {
     put("type",ACTION_CHALLENGE_ANSWER);
   }
-  
+
+  public ChallengeAnswer(RPAction action) throws Attributes.AttributeNotFoundException
+  {
+    Iterator it=action.iterator();
+    while(it.hasNext())
+      {
+      String attr=(String)it.next();
+      put(attr,action.get(attr));
+      }
+
+    put("type",ACTION_CHALLENGE_ANSWER);
+  }
+
   public void setAccept(boolean accepted)
   {
     put("accept",Boolean.toString(accepted));

@@ -1,4 +1,4 @@
-/* $Id: ChallengeAction.java,v 1.7 2003/12/17 16:05:29 arianne_rpg Exp $ */
+/* $Id: ChallengeAction.java,v 1.8 2003/12/20 10:22:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package simplegame.actions;
 
 import marauroa.game.Attributes;
 import marauroa.game.RPAction;
+import java.util.*;
 
 public class ChallengeAction extends RPAction
   {
@@ -23,6 +24,19 @@ public class ChallengeAction extends RPAction
     {
     put("type",ACTION_CHALLENGE);
     }
+
+  public ChallengeAction(RPAction action) throws Attributes.AttributeNotFoundException
+    {
+    Iterator it=action.iterator();
+    while(it.hasNext())
+      {
+      String attr=(String)it.next();
+      put(attr,action.get(attr));
+      }
+
+    put("type",ACTION_CHALLENGE);
+    }
+  
   
   //Who is challenge
   public void setWho(int charID)
