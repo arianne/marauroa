@@ -41,7 +41,7 @@ public class MarauroaRPZone implements RPZone
     {
     perception.modified(get(id));
     }
-    
+
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
     {
     if(objects.containsKey(id))

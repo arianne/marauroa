@@ -108,7 +108,7 @@ class RPServerManager extends Thread
       marauroad.trace("RPServerManager::addRPAction","<");
       }
     }
-  
+    
   public void addRPObject(RPObject object) throws RPZone.RPObjectInvalidException
     {
     marauroad.trace("RPServerManager::addRPObject",">");
@@ -120,6 +120,20 @@ class RPServerManager extends Thread
     finally
       {
       marauroad.trace("RPServerManager::addRPObject","<");
+      }
+    }
+  
+  public void modifyRPObject(RPObject.ID id) throws RPZone.RPObjectNotFoundException
+    {
+    marauroad.trace("RPServerManager::modifyRPObject",">");
+    try
+      {
+      marauroad.trace("RPServerManager::modifyRPObject","D","Modified object: "+id);
+      zone.modify(id);
+      }
+    finally
+      {
+      marauroad.trace("RPServerManager::modifyRPObject","<");
       }
     }
   
