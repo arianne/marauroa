@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.52 2004/03/26 16:27:34 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.53 2004/03/26 17:01:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,8 @@ import marauroa.*;
 class RPServerManager extends Thread
   {
   /** We send 1 TOTAL perception each TOTAL_PERCEPTION_RELATION DELTA perceptions */
-  private final static int TOTAL_PERCEPTION_RELATION=15;
+  private final static int TOTAL_PERCEPTION_RELATION=60;
+  
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
@@ -217,8 +218,9 @@ class RPServerManager extends Thread
             {
             InetSocketAddress source=playerContainer.getInetSocketAddress(clientid);
             RPZone.Perception perception;
+            RPObject object=zone.get(playerContainer.getRPObjectID(clientid));
 
-            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION)
+            if(deltaPerceptionSend>TOTAL_PERCEPTION_RELATION || object.has("?joined"))
               {
               marauroad.trace("RPServerManager::buildPerceptions","D","Perception TOTAL for player ("+playerContainer.getRPObjectID(clientid).toString()+")");
               perception=zone.getPerception(playerContainer.getRPObjectID(clientid),RPZone.Perception.TOTAL);
@@ -231,7 +233,7 @@ class RPServerManager extends Thread
             
             MessageS2CPerception messages2cPerception=new MessageS2CPerception(source, perception);
 
-            messages2cPerception.setMyRPObject(zone.get(playerContainer.getRPObjectID(clientid)));
+            messages2cPerception.setMyRPObject(object);
             messages2cPerception.setClientID(clientid);
             netMan.addMessage(messages2cPerception);            
             }
@@ -324,7 +326,6 @@ class RPServerManager extends Thread
     while(keepRunning)
       {
       scheduler.visit(ruleProcessor);      
-      buildPerceptions();
       try
         {
         Thread.sleep(turnDuration);
@@ -332,6 +333,8 @@ class RPServerManager extends Thread
       catch(InterruptedException e)
         {
         }
+      buildPerceptions();
+
       zone.nextTurn();      
       scheduler.nextTurn();      
       ruleProcessor.nextTurn();
