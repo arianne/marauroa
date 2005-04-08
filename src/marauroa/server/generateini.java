@@ -150,7 +150,7 @@ public class generateini
       return;
       }
 
-    System.out.println("Using \""+udpport+"\" as database user password");
+    System.out.println("Using \""+udpport+"\" as UDP port for Marauroa");
     System.out.println();
 
     /** Choose RP Content that will be used */    
@@ -159,7 +159,7 @@ public class generateini
     System.out.println("- stendhal");
     System.out.println("- mapacman");
     System.out.println("- the1001");
-    System.out.println("If you write your own game, just write it name here.");
+    System.out.println("If you write your own game, just write its name here.");
     System.out.println ("You will be asked for more info.");
     System.out.println();
     

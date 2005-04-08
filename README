@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.93
+Version 0.94
 
 
 Status
@@ -141,7 +141,11 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.93 Apr XX, 2005
+0.94 Apr XX, 2005
+- Fixed createaccount to use a parameter based .ini instead of hardcoded configuration file.
+- Fixed cosmetic issues at generateini
+
+0.93 Apr 08, 2005
 - Added VERY_LONG_STRING data type
 - PacketValidator will now correctly create the missing SQL tables.
 - Logger allowed and rejected are now set at configuration file

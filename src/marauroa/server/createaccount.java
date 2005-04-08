@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.3 2005/04/08 12:31:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,6 +84,7 @@ public abstract class createaccount
   protected int run(String[] args)
     {
     int i=0;
+    String iniFile = "marauroa.ini";
 
     while(i!=args.length)
       {
@@ -97,6 +98,11 @@ public abstract class createaccount
           }
         }
       
+      if(args[i].equals("-i")) 
+        {
+	      iniFile=args[i+1];
+        }
+        
       if(args[i].equals("-h"))
         {
         System.out.println("createaccount application for Marauroa");
@@ -104,6 +110,8 @@ public abstract class createaccount
           {
           System.out.println(item.param+" to use/add "+item.name);
           }
+        
+        System.out.println("-i"+" to to define .ini file");
           
         System.exit(0);
         }
@@ -116,6 +124,7 @@ public abstract class createaccount
       
     try
       {
+      Configuration.setConfigurationFile(iniFile);
       Configuration conf=Configuration.getConfiguration();
       String webfolder=conf.get("server_logs_directory");
 

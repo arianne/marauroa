@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.12 2005/04/08 11:42:47 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.13 2005/04/08 12:31:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,7 @@ public class marauroad extends Thread
     {
     int i=0;
     Logger.initialize();
+    boolean doLog = false;
     
     while(i!=args.length)
       {
@@ -58,7 +59,7 @@ public class marauroad extends Thread
         }
       else if(args[i].equals("-l"))
         {
-        Logger.initialize("logs","server_log_");
+		    doLog=true;
         }
       else if(args[i].equals("-h"))
         {
@@ -74,6 +75,22 @@ public class marauroad extends Thread
         System.exit(0);
         }
       ++i;
+      }
+      
+    if(doLog) 
+      {
+      String logs_directory=null;
+	    try 
+	      {
+        logs_directory=Configuration.getConfiguration().get("server_logs_directory");
+        Logger.initialize(logs_directory,"server_log_");
+	      }
+	    catch(Exception e) 
+	      {
+        Logger.println("ERROR: Can't find initialize Log to log output: "+logs_directory);
+        Logger.println("Server must abort.");
+        System.exit(1);
+        }
       }
     }
     
