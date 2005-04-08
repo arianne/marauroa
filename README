@@ -146,6 +146,7 @@ Changelog
 - PacketValidator will now correctly create the missing SQL tables.
 - Logger allowed and rejected are now set at configuration file
 - Fixed a problem at ariannexp related to ignoring some packets in some conditions.
+- Downgraded to single thread NetworkServerManager because a bug that made it to use 100% CPU usage
 
 0.92 Apr 05, 2005
 - Change nextTurn method for beginTurn and nextTurn

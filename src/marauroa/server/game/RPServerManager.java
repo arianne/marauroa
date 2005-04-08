@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.13 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.14 2005/04/08 11:38:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -451,7 +451,9 @@ public class RPServerManager extends Thread
             buildPerceptions();
         
             /** wait until all messages are sent away **/
+            /** NOTE: Disabled while NetworkServerManager is fixed.
             netMan.flushMessages();
+            */
 
             /** Move zone to the next turn */
             world.nextTurn();
