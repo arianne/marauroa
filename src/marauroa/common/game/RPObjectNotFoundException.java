@@ -1,6 +1,6 @@
 package marauroa.common.game;
 
-public class RPObjectNotFoundException extends Exception
+public class RPObjectNotFoundException extends RuntimeException
   {
   public RPObjectNotFoundException(RPObject.ID id)
     {

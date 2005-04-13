@@ -1,6 +1,6 @@
 package marauroa.common.game;
 
-public class AttributeNotFoundException extends Exception
+public class AttributeNotFoundException extends RuntimeException
   {
   private String attribute;
   public AttributeNotFoundException(String attrib)

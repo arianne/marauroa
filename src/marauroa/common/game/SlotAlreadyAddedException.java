@@ -1,6 +1,6 @@
 package marauroa.common.game;
 
-public class SlotAlreadyAddedException extends Exception
+public class SlotAlreadyAddedException extends RuntimeException
   {
   public SlotAlreadyAddedException(String slot)
     {

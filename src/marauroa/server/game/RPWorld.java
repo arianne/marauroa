@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.6 2005/04/06 15:34:59 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.7 2005/04/13 14:49:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -143,6 +143,9 @@ public class RPWorld implements Iterable<IRPZone>
       oldzone.remove(object.getID());
             
       object.put("zoneid",newzoneid.getID());
+      
+      //TODO: Change objects in slots too 
+      
       add(object);    
       }
     catch(Exception e)

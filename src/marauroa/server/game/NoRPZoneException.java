@@ -1,6 +1,6 @@
 package marauroa.server.game;
 
-public class NoRPZoneException extends Exception 
+public class NoRPZoneException extends RuntimeException 
   {
   public NoRPZoneException()
     {

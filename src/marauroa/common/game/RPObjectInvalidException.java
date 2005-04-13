@@ -1,6 +1,6 @@
 package marauroa.common.game;
 
-public class RPObjectInvalidException extends Exception
+public class RPObjectInvalidException extends RuntimeException
   {
   public RPObjectInvalidException(String attribute)
     {

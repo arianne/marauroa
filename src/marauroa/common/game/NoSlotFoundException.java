@@ -1,6 +1,6 @@
 package marauroa.common.game;
 
-public class NoSlotFoundException extends Exception
+public class NoSlotFoundException extends RuntimeException
   {
   public NoSlotFoundException(String slot)
     {
