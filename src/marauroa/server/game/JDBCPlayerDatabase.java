@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.2 2005/02/19 11:44:34 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.3 2005/04/13 14:49:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -903,7 +903,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
   private Connection createConnection(Properties props) throws GenericDatabaseException
     {
-    Logger.trace("JDBCRPObjectDatabase::createConnection",">");
+    Logger.trace("JDBCPlayerDatabase::createConnection",">");
     try
       {
       Class.forName((String)props.get("jdbc_class")).newInstance();
@@ -920,12 +920,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch (Exception e)
       {
-      Logger.thrown("JDBCRPObjectDatabase::createConnection","X",e);
+      Logger.thrown("JDBCPlayerDatabase::createConnection","X",e);
       throw new GenericDatabaseException(e.getMessage());
       }
     finally
       {
-      Logger.trace("JDBCRPObjectDatabase::createConnection","<");
+      Logger.trace("JDBCPlayerDatabase::createConnection","<");
       }
     }
   
@@ -994,7 +994,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Statement stmt = connection.createStatement();
       String query = "select object_id from rpobject where slot_id=0";
 
-      Logger.trace("JDBCRPObjectDatabase::hasRPObject","D",query);      
+      Logger.trace("JDBCPlayerDatabase::hasRPObject","D",query);      
       ResultSet result = stmt.executeQuery(query);
       return new RPObjectIterator(result);
       }
@@ -1018,7 +1018,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Statement stmt = connection.createStatement();
       String query = "select count(*) as amount from rpobject where object_id="+id;
 
-      Logger.trace("JDBCRPObjectDatabase::hasRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::hasRPObject","D",query);
       
       ResultSet result = stmt.executeQuery(query);
       
@@ -1034,7 +1034,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(SQLException e)
       {
-      Logger.thrown("JDBCRPObjectDatabase::hasRPObject","X",e);
+      Logger.thrown("JDBCPlayerDatabase::hasRPObject","X",e);
       return false;
       }
     finally
@@ -1066,7 +1066,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(Exception e)
       {
-      Logger.thrown("JDBCRPObjectDatabase::loadRPObject","X",e);
+      Logger.thrown("JDBCPlayerDatabase::loadRPObject","X",e);
       throw e;
       }
     finally
@@ -1080,7 +1080,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query="select name,value from rpattribute where object_id="+object_id+";";
-    Logger.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+    Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
     
     ResultSet result = stmt.executeQuery(query);
 
@@ -1092,7 +1092,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
       
     query = "select name,slot_id from rpslot where object_id="+object_id+";";
-    Logger.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+    Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
     result = stmt.executeQuery(query);
     while(result.next())
       {
@@ -1103,7 +1103,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       int slot_id=result.getInt("slot_id");
       
       query = "select object_id from rpobject where slot_id="+slot_id+";";
-      Logger.trace("JDBCRPObjectDatabase::loadRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
       ResultSet resultSlot = connection.createStatement().executeQuery(query);
       
       while(resultSlot.next())
@@ -1134,7 +1134,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(SQLException e)
       {
-      Logger.thrown("JDBCRPObjectDatabase::deleteRPObject","X",e);
+      Logger.thrown("JDBCPlayerDatabase::deleteRPObject","X",e);
       throw e;
       }
     finally
@@ -1148,8 +1148,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Statement stmt = connection.createStatement();
     String query=null;
     
-    query = "select rpslot.object_id from rpobject,rpslot where rpobject.object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
-    Logger.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    query = "select rpobject.object_id from rpobject, rpslot where rpslot.object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
+    //query = "select rpslot.object_id from rpobject,rpslot where rpobject.object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
+    Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     
     ResultSet result = stmt.executeQuery(query);
 
@@ -1159,13 +1160,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
       
     query = "delete from rpslot where object_id="+id+";";
-    Logger.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     query = "delete from rpattribute where object_id="+id+";";
-    Logger.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     query = "delete from rpobject where object_id="+id+";";
-    Logger.trace("JDBCRPObjectDatabase::deleteRPObject","D",query);
+    Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     }
   
@@ -1217,13 +1218,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       object_id=object.getInt("#db_id");
       
       query="insert into rpobject values("+object_id+","+slot_id+")";
-      Logger.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
       }
     else
       {
       query="insert into rpobject values(NULL,"+slot_id+")";
-      Logger.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
 
       /* We get the stored id */
@@ -1247,7 +1248,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       String value=object.get(attrib);
       
       query = "insert into rpattribute values("+object_id+",'"+EscapeString(attrib)+"','"+EscapeString(value)+"');";
-      Logger.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
       }
     
@@ -1256,10 +1257,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       RPSlot slot= sit.next();
       
       query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
-      Logger.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
       query = "select slot_id from rpslot where object_id="+object_id+" and name like '"+EscapeString(slot.getName())+"';";
-      Logger.trace("JDBCRPObjectDatabase::storeRPObject","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
 
       int object_slot_id;
       ResultSet slot_result = stmt.executeQuery(query);
