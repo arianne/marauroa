@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutNACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CLogoutNACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,16 +23,14 @@ public class MessageS2CLogoutNACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CLogoutNACK()
     {
-    super(null);
-    type=TYPE_S2C_LOGOUT_NACK;
+    super(MessageType.S2C_LOGOUT_NACK,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
   public MessageS2CLogoutNACK(InetSocketAddress source)
     {
-    super(source);
-    type=TYPE_S2C_LOGOUT_NACK;
+    super(MessageType.S2C_LOGOUT_NACK,source);
     }  
 
   /** This method returns a String that represent the object 
@@ -50,7 +48,7 @@ public class MessageS2CLogoutNACK extends Message
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=TYPE_S2C_LOGOUT_NACK)
+    if(type!=MessageType.S2C_LOGOUT_NACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

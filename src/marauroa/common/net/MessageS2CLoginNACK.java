@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,8 +38,7 @@ public class MessageS2CLoginNACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CLoginNACK()
     {
-    super(null);
-    type=TYPE_S2C_LOGIN_NACK;
+    super(MessageType.S2C_LOGIN_NACK,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message
@@ -47,8 +46,7 @@ public class MessageS2CLoginNACK extends Message
    *  @param resolution the reason to deny the login */
   public MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
     {
-    super(source);
-    type=TYPE_S2C_LOGIN_NACK;
+    super(MessageType.S2C_LOGIN_NACK,source);
     reason=resolution;
     }
 
@@ -83,7 +81,7 @@ public class MessageS2CLoginNACK extends Message
     {
     super.readObject(in);
     reason=in.readByte();
-    if(type!=TYPE_S2C_LOGIN_NACK)
+    if(type!=MessageType.S2C_LOGIN_NACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SOutOfSync.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageC2SOutOfSync.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,7 @@ public class MessageC2SOutOfSync extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageC2SOutOfSync()
     {
-    super(null);
-    type=TYPE_C2S_OUTOFSYNC;
+    super(MessageType.C2S_OUTOFSYNC,null);
     }
     
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -32,8 +31,7 @@ public class MessageC2SOutOfSync extends Message
    */
   public MessageC2SOutOfSync(InetSocketAddress source)
     {
-    super(source);
-    type=TYPE_C2S_OUTOFSYNC;
+    super(MessageType.C2S_OUTOFSYNC,source);
     }  
   
   /** This method returns a String that represent the object 
@@ -51,7 +49,7 @@ public class MessageC2SOutOfSync extends Message
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=TYPE_C2S_OUTOFSYNC)
+    if(type!=MessageType.C2S_OUTOFSYNC)
       {
       throw new java.lang.ClassNotFoundException();
       }

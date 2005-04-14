@@ -1,6 +1,7 @@
 package marauroa.server;
 
 import java.io.*;
+import marauroa.common.crypto.RSAKey;
 
 public class generateini 
   {
@@ -296,6 +297,30 @@ public class generateini
     System.out.println("Using path \""+statistics_path+"\" for statistics generation");
     System.out.println();
 
+    System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create (512): ");
+    String keySize="";
+    try
+      {
+      keySize=input.readLine();
+      }
+    catch(IOException e)
+      {
+      System.exit(1);
+      }
+    
+    if(keySize.equals("") || Integer.valueOf(keySize) <= 0)
+      {      
+      keySize="512";
+      }
+
+    System.out.println("Using key of " + keySize + " bits.");
+    System.out.println("Please wait while the key is generated.");
+
+    RSAKey key = RSAKey.generateKey(Integer.valueOf(keySize));
+    
+    System.out.println();
+
+
     System.out.println("COMPLETE---");
     System.out.println("Generating \""+filename+"\" file");
     try
@@ -326,6 +351,8 @@ public class generateini
       output.println("server_logs_directory="+logs_path);
       output.println("server_logs_allowed=");
       output.println("server_logs_rejected=");
+      output.println();
+      key.print(output);
       output.close();
       }
     catch(FileNotFoundException e)

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,8 +26,7 @@ public class MessageS2CInvalidMessage extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CInvalidMessage()
     {
-    super(null);
-    type=TYPE_S2C_INVALIDMESSAGE;
+    super(MessageType.S2C_INVALIDMESSAGE,null);
     reason="";
     }
 
@@ -39,8 +38,7 @@ public class MessageS2CInvalidMessage extends Message
    */
   public MessageS2CInvalidMessage(InetSocketAddress source,String reason)
     {
-    super(source);
-    type=TYPE_S2C_INVALIDMESSAGE;
+    super(MessageType.S2C_INVALIDMESSAGE,source);
     this.reason=reason;
     }  
   
@@ -69,7 +67,7 @@ public class MessageS2CInvalidMessage extends Message
     super.readObject(in);
     reason=in.readString();
 
-    if(type!=TYPE_S2C_INVALIDMESSAGE)
+    if(type!=MessageType.S2C_INVALIDMESSAGE)
       {
       throw new java.lang.ClassNotFoundException();
       }

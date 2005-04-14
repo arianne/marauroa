@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,14 +23,12 @@ public class MessageC2STransferACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageC2STransferACK()
     {
-    super(null);
-    type=TYPE_C2S_TRANSFER_ACK;
+    super(MessageType.C2S_TRANSFER_ACK,null);
     }
   
   public MessageC2STransferACK(InetSocketAddress source,List<TransferContent> content)
     {
-    super(source);
-    type=TYPE_C2S_TRANSFER_ACK;
+    super(MessageType.C2S_TRANSFER_ACK,source);
     
     this.contents=content;
     }
@@ -72,7 +70,7 @@ public class MessageC2STransferACK extends Message
       contents.add(content);
       }
 
-    if(type!=TYPE_C2S_TRANSFER_ACK)
+    if(type!=MessageType.C2S_TRANSFER_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

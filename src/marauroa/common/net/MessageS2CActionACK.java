@@ -1,4 +1,4 @@
-/* $Id: MessageS2CActionACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CActionACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,17 +24,15 @@ public class MessageS2CActionACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CActionACK()
     {
-    super(null);
-    type=TYPE_S2C_ACTION_ACK;
+    super(MessageType.S2C_ACTION_ACK,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
   public MessageS2CActionACK(InetSocketAddress source, int actionId)
     {
-    super(source);
+    super(MessageType.S2C_ACTION_ACK,source);
     this.actionId=actionId;
-    type=TYPE_S2C_ACTION_ACK;
     }  
   
   public int getActionID()
@@ -59,7 +57,7 @@ public class MessageS2CActionACK extends Message
     {
     super.readObject(in);    
     actionId=in.readInt();
-    if(type!=TYPE_S2C_ACTION_ACK)
+    if(type!=MessageType.S2C_ACTION_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

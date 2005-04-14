@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.4 2005/03/18 07:49:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.5 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.io.*;
 import marauroa.server.net.*;
 import marauroa.common.*;
 import marauroa.common.net.*;
+import marauroa.common.crypto.*;
 import marauroa.common.game.*;
 import marauroa.server.*;
 
@@ -29,6 +30,7 @@ public final class GameServerManager extends Thread
   private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
   private Statistics stats;
+  private RSAKey key;
   
   /** The thread will be running while keepRunning is true */
   private boolean keepRunning;
@@ -37,11 +39,12 @@ public final class GameServerManager extends Thread
   
   /** Constructor that initialize also the RPManager
    *  @param netMan a NetworkServerManager instance. */
-  public GameServerManager(NetworkServerManager netMan, RPServerManager rpMan) throws Exception
+  public GameServerManager(RSAKey key, NetworkServerManager netMan, RPServerManager rpMan) throws Exception
     {
     super("GameServerManager");
     Logger.trace("GameServerManager",">");
     keepRunning=true;
+    this.key = key;
     this.netMan=netMan;
     this.rpMan=rpMan;
     playerContainer=PlayerEntryContainer.getContainer();
@@ -82,31 +85,31 @@ public final class GameServerManager extends Thread
           playerContainer.getLock().requestWriteLock();
           switch(msg.getType())
             {
-            case Message.TYPE_C2S_LOGIN:
+            case C2S_LOGIN:
               Logger.trace("GameServerManager::run","D","Processing C2S Login Message");
               processLoginEvent((MessageC2SLogin)msg);
               break;
-            case Message.TYPE_C2S_CHOOSECHARACTER:
+            case C2S_CHOOSECHARACTER:
               Logger.trace("GameServerManager::run","D","Processing C2S Choose Character Message");
               processChooseCharacterEvent((MessageC2SChooseCharacter)msg);
               break;
-            case Message.TYPE_C2S_LOGOUT:
+            case C2S_LOGOUT:
               Logger.trace("GameServerManager::run","D","Processing C2S Logout Message");
               processLogoutEvent((MessageC2SLogout)msg);
               break;
-            case Message.TYPE_C2S_ACTION:
+            case C2S_ACTION:
               Logger.trace("GameServerManager::run","D","Processing C2S Action Message");
               processActionEvent((MessageC2SAction)msg);
               break;
-            case Message.TYPE_C2S_PERCEPTION_ACK:
+            case C2S_PERCEPTION_ACK:
               Logger.trace("GameServerManager::run","D","Processing C2S Perception ACK Message");
               processPerceptionACKEvent((MessageC2SPerceptionACK)msg);
               break;
-            case Message.TYPE_C2S_OUTOFSYNC:
+            case C2S_OUTOFSYNC:
               Logger.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
               processOutOfSyncEvent((MessageC2SOutOfSync)msg);
               break;
-            case Message.TYPE_C2S_TRANSFER_ACK:
+            case C2S_TRANSFER_ACK:
               Logger.trace("GameServerManager::run","D","Processing C2S Transfer ACK Message");
               processTransferACK((MessageC2STransferACK)msg);
               break;

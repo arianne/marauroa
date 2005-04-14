@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,8 +26,7 @@ public class MessageS2CServerInfo extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CServerInfo()
     {
-    super(null);
-    type=TYPE_S2C_SERVERINFO;
+    super(MessageType.S2C_SERVERINFO,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message 
@@ -37,8 +36,7 @@ public class MessageS2CServerInfo extends Message
    */
   public MessageS2CServerInfo(InetSocketAddress source,String[] contents)
     {    
-    super(source);
-    type=TYPE_S2C_SERVERINFO;
+    super(MessageType.S2C_SERVERINFO,source);
     this.contents=contents;
     }  
   
@@ -103,7 +101,7 @@ public class MessageS2CServerInfo extends Message
       in.readObject(new RPClass());
       }
     
-    if(type!=TYPE_S2C_SERVERINFO)
+    if(type!=MessageType.S2C_SERVERINFO)
       {
       throw new java.lang.ClassNotFoundException();
       }

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageC2SLoginSendNameAndPassword.java,v 1.1 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,40 +15,56 @@ package marauroa.common.net;
 import java.net.InetSocketAddress;
 import java.io.*;
   
-/** This message indicate the client that the server has accepted its login Message
+/** This message indicate the server that the client wants to login and send the
+ *  needed info: username and password to login to server.
  *  @see marauroa.common.net.Message
  */
-public class MessageS2CLoginACK extends Message
+public class MessageC2SLoginSendNameAndPassword extends MessageSendByteArray
   {
+  private String username;
   /** Constructor for allowing creation of an empty message */
-  public MessageS2CLoginACK()
+  public MessageC2SLoginSendNameAndPassword()
     {
-    super(MessageType.S2C_LOGIN_ACK,null);
+    super(MessageType.C2S_LOGIN_SENDNAMEANDPASSWORD);
     }
 
-  /** Constructor with a TCP/IP source/destination of the message 
-   *  @param source The TCP/IP address associated to this message */
-  public MessageS2CLoginACK(InetSocketAddress source)
+  /** Constructor with a TCP/IP source/destination of the message and the name
+   *  of the choosen character.
+   *  @param source The TCP/IP address associated to this message
+   *  @param username the username of the user that wants to login
+   *  @param password the plain password of the user that wants to login
+   */
+  public MessageC2SLoginSendNameAndPassword(InetSocketAddress source,String username, byte[] password)
     {
-    super(MessageType.S2C_LOGIN_ACK,source);
+    super(MessageType.C2S_LOGIN_SENDNAMEANDPASSWORD,source,password);
+    this.username=username;
     }  
-
+  
+  /** This method returns the username
+   *  @return the username */
+  public String getUsername()
+    {
+    return username;    
+    }
+    
   /** This method returns a String that represent the object 
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Login ACK) from ("+source.getAddress().getHostAddress()+") CONTENTS: ()";
+    return "Message (C2S Login) from ("+source.getAddress().getHostAddress()+") CONTENTS: (username:"+username+"\tpassword:"+byteArrayToString()+")";
     }
       
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
+    out.write(username);
     }
     
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=MessageType.S2C_LOGIN_ACK)
+    username=in.readString();
+    if(type!=MessageType.C2S_LOGIN_SENDNAMEANDPASSWORD)
       {
       throw new java.lang.ClassNotFoundException();
       }

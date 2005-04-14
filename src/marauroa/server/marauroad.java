@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.13 2005/04/08 12:31:23 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.14 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,10 @@ package marauroa.server;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
+import java.math.BigInteger;
 
 import marauroa.common.*;
+import marauroa.common.crypto.*;
 import marauroa.server.game.*;
 
 //java management stuff
@@ -259,7 +261,10 @@ public class marauroad extends Thread
 
     try
       {
-      gameMan= new marauroa.server.game.GameServerManager(netMan,rpMan);
+      RSAKey key = new RSAKey(	new BigInteger(Configuration.getConfiguration().get("n")),
+      				new BigInteger(Configuration.getConfiguration().get("d")),
+				new BigInteger(Configuration.getConfiguration().get("e")));
+      gameMan= new marauroa.server.game.GameServerManager(key,netMan,rpMan);
       }
     catch(Exception e)
       {

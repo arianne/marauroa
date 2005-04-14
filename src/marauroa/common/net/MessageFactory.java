@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,32 +45,38 @@ public class MessageFactory
   private void register()
     {
     Logger.trace("MessageFactory::register",">");
-    register(Message.TYPE_C2S_ACTION,MessageC2SAction.class);
-    register(Message.TYPE_C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
-    register(Message.TYPE_C2S_LOGIN,MessageC2SLogin.class);
-    register(Message.TYPE_C2S_LOGOUT,MessageC2SLogout.class);
-    register(Message.TYPE_S2C_ACTION_ACK,MessageS2CActionACK.class);
-    register(Message.TYPE_S2C_CHARACTERLIST,MessageS2CCharacterList.class);
-    register(Message.TYPE_S2C_CHOOSECHARACTER_ACK,MessageS2CChooseCharacterACK.class);
-    register(Message.TYPE_S2C_CHOOSECHARACTER_NACK,MessageS2CChooseCharacterNACK.class);
-    register(Message.TYPE_S2C_LOGIN_ACK,MessageS2CLoginACK.class);
-    register(Message.TYPE_S2C_LOGIN_NACK,MessageS2CLoginNACK.class);
-    register(Message.TYPE_S2C_LOGOUT_ACK,MessageS2CLogoutACK.class);
-    register(Message.TYPE_S2C_LOGOUT_NACK,MessageS2CLogoutNACK.class);
-    register(Message.TYPE_S2C_PERCEPTION,MessageS2CPerception.class);
-    register(Message.TYPE_C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
-    register(Message.TYPE_C2S_OUTOFSYNC,MessageC2SOutOfSync.class);
-    register(Message.TYPE_S2C_SERVERINFO,MessageS2CServerInfo.class);
-    register(Message.TYPE_S2C_INVALIDMESSAGE,MessageS2CInvalidMessage.class);
-    register(Message.TYPE_S2C_TRANSFER_REQ,MessageS2CTransferREQ.class);
-    register(Message.TYPE_C2S_TRANSFER_ACK,MessageC2STransferACK.class);
-    register(Message.TYPE_S2C_TRANSFER,MessageS2CTransfer.class);
+    register(Message.MessageType.C2S_ACTION,MessageC2SAction.class);
+    register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
+    register(Message.MessageType.C2S_LOGIN,MessageC2SLogin.class);
+    register(Message.MessageType.C2S_LOGOUT,MessageC2SLogout.class);
+    register(Message.MessageType.S2C_ACTION_ACK,MessageS2CActionACK.class);
+    register(Message.MessageType.S2C_CHARACTERLIST,MessageS2CCharacterList.class);
+    register(Message.MessageType.S2C_CHOOSECHARACTER_ACK,MessageS2CChooseCharacterACK.class);
+    register(Message.MessageType.S2C_CHOOSECHARACTER_NACK,MessageS2CChooseCharacterNACK.class);
+    register(Message.MessageType.S2C_LOGIN_ACK,MessageS2CLoginACK.class);
+    register(Message.MessageType.S2C_LOGIN_NACK,MessageS2CLoginNACK.class);
+    register(Message.MessageType.S2C_LOGOUT_ACK,MessageS2CLogoutACK.class);
+    register(Message.MessageType.S2C_LOGOUT_NACK,MessageS2CLogoutNACK.class);
+    register(Message.MessageType.S2C_PERCEPTION,MessageS2CPerception.class);
+    register(Message.MessageType.C2S_PERCEPTION_ACK,MessageC2SPerceptionACK.class);
+    register(Message.MessageType.C2S_OUTOFSYNC,MessageC2SOutOfSync.class);
+    register(Message.MessageType.S2C_SERVERINFO,MessageS2CServerInfo.class);
+    register(Message.MessageType.S2C_INVALIDMESSAGE,MessageS2CInvalidMessage.class);
+    register(Message.MessageType.S2C_TRANSFER_REQ,MessageS2CTransferREQ.class);
+    register(Message.MessageType.C2S_TRANSFER_ACK,MessageC2STransferACK.class);
+    register(Message.MessageType.S2C_TRANSFER,MessageS2CTransfer.class);
+    register(Message.MessageType.C2S_LOGIN_REQUESTKEY,MessageC2SLoginRequestKey.class);
+    register(Message.MessageType.C2S_LOGIN_SENDNAMEANDPASSWORD,MessageC2SLoginSendNameAndPassword.class);
+    register(Message.MessageType.C2S_LOGIN_SENDNONCE,MessageC2SLoginSendNonce.class);
+    register(Message.MessageType.S2C_LOGIN_SENDKEY,MessageS2CLoginSendKey.class);
+    register(Message.MessageType.S2C_LOGIN_SENDNONCE,MessageS2CLoginSendNonce.class);
+    register(Message.MessageType.C2S_LOGIN_SENDPROMISE,MessageC2SLoginSendPromise.class);
     Logger.trace("MessageFactory::register","<");
     }
       
-  private void register(int index,Class messageClass)
+  private void register(Message.MessageType index,Class messageClass)
     {
-    factoryArray.put(new Integer(index),messageClass);
+    factoryArray.put(new Integer(index.ordinal()),messageClass);
     }
     
   /** Returns a object of the right class from a stream of serialized data.

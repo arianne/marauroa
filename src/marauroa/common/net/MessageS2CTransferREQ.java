@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,14 +23,12 @@ public class MessageS2CTransferREQ extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CTransferREQ()
     {
-    super(null);
-    type=TYPE_S2C_TRANSFER_REQ;
+    super(MessageType.S2C_TRANSFER_REQ,null);
     }
   
   public MessageS2CTransferREQ(InetSocketAddress source,List<TransferContent> contents)
     {
-    super(source);
-    type=TYPE_S2C_TRANSFER_REQ;
+    super(MessageType.S2C_TRANSFER_REQ,source);
     
     this.contents=contents;
     }
@@ -72,7 +70,7 @@ public class MessageS2CTransferREQ extends Message
       contents.add(content);
       }
 
-    if(type!=TYPE_S2C_TRANSFER_REQ)
+    if(type!=MessageType.S2C_TRANSFER_REQ)
       {
       throw new java.lang.ClassNotFoundException();
       }

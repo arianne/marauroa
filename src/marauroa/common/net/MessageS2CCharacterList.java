@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,7 @@ public class MessageS2CCharacterList extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CCharacterList()
     {
-    super(null);
-    type=TYPE_S2C_CHARACTERLIST;
+    super(MessageType.S2C_CHARACTERLIST,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -34,8 +33,7 @@ public class MessageS2CCharacterList extends Message
    */
   public MessageS2CCharacterList(InetSocketAddress source,String[] characters)
     {    
-    super(source);
-    type=TYPE_S2C_CHARACTERLIST;
+    super(MessageType.S2C_CHARACTERLIST,source);
     this.characters=characters;
     }  
   
@@ -69,7 +67,7 @@ public class MessageS2CCharacterList extends Message
     {
     super.readObject(in);
     characters=in.readStringArray();
-    if(type!=TYPE_S2C_CHARACTERLIST)
+    if(type!=MessageType.S2C_CHARACTERLIST)
       {
       throw new java.lang.ClassNotFoundException();
       }

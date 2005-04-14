@@ -1,4 +1,4 @@
-/* $Id: MessageC2SPerceptionACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageC2SPerceptionACK.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,16 +23,14 @@ public class MessageC2SPerceptionACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageC2SPerceptionACK()
     {
-    super(null);
-    type=TYPE_C2S_PERCEPTION_ACK;
+    super(MessageType.C2S_PERCEPTION_ACK,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
   public MessageC2SPerceptionACK(InetSocketAddress source)
     {
-    super(source);
-    type=TYPE_C2S_PERCEPTION_ACK;
+    super(MessageType.C2S_PERCEPTION_ACK,source);
     }  
 
   /** This method returns a String that represent the object 
@@ -50,7 +48,7 @@ public class MessageC2SPerceptionACK extends Message
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=TYPE_C2S_PERCEPTION_ACK)
+    if(type!=MessageType.C2S_PERCEPTION_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

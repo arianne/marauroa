@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageC2SLoginRequestKey.java,v 1.1 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,46 +15,37 @@ package marauroa.common.net;
 import java.net.InetSocketAddress;
 import java.io.*;
   
-/** This message indicate the client that the server has accepted its login Message
+/** This message indicate the client want the server to send his public RSA key.
  *  @see marauroa.common.net.Message
  */
-public class MessageS2CLoginACK extends Message
+public class MessageC2SLoginRequestKey extends Message
   {
   /** Constructor for allowing creation of an empty message */
-  public MessageS2CLoginACK()
+  public MessageC2SLoginRequestKey()
     {
-    super(MessageType.S2C_LOGIN_ACK,null);
+    super(MessageType.C2S_LOGIN_REQUESTKEY,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message 
    *  @param source The TCP/IP address associated to this message */
-  public MessageS2CLoginACK(InetSocketAddress source)
+  public MessageC2SLoginRequestKey(InetSocketAddress source)
     {
-    super(MessageType.S2C_LOGIN_ACK,source);
+    super(MessageType.C2S_LOGIN_REQUESTKEY,source);
     }  
 
   /** This method returns a String that represent the object 
    *  @return a string representing the object.*/
   public String toString()
     {
-    return "Message (S2C Login ACK) from ("+source.getAddress().getHostAddress()+") CONTENTS: ()";
+    return "Message (C2S Login Request Key) from ("+source.getAddress().getHostAddress()+") CONTENTS: ()";
     }
       
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
-    {
-    super.writeObject(out);
-    }
-    
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=MessageType.S2C_LOGIN_ACK)
+    if(type!=MessageType.C2S_LOGIN_REQUESTKEY)
       {
       throw new java.lang.ClassNotFoundException();
       }
     }    
   }
-
-
-;  
-

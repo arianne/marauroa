@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,16 +24,14 @@ public class MessageS2CChooseCharacterACK extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CChooseCharacterACK()
     {
-    super(null);
-    type=TYPE_S2C_CHOOSECHARACTER_ACK;
+    super(MessageType.S2C_CHOOSECHARACTER_ACK,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
   public MessageS2CChooseCharacterACK(InetSocketAddress source)
     {
-    super(source);
-    type=TYPE_S2C_CHOOSECHARACTER_ACK;
+    super(MessageType.S2C_CHOOSECHARACTER_ACK,source);
     }
    
   /** This method returns a String that represent the object
@@ -52,7 +50,7 @@ public class MessageS2CChooseCharacterACK extends Message
     {
     super.readObject(in);
 
-    if(type!=TYPE_S2C_CHOOSECHARACTER_ACK)
+    if(type!=MessageType.S2C_CHOOSECHARACTER_ACK)
       {
       throw new java.lang.ClassNotFoundException();
       }

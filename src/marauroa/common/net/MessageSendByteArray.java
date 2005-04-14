@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.1 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,46 +15,63 @@ package marauroa.common.net;
 import java.net.InetSocketAddress;
 import java.io.*;
   
-/** This message indicate the client that the server has accepted its login Message
+/** This message is a generic message that send a byte array.
  *  @see marauroa.common.net.Message
  */
-public class MessageS2CLoginACK extends Message
+public class MessageSendByteArray extends Message
   {
+  private byte[] hash;
   /** Constructor for allowing creation of an empty message */
-  public MessageS2CLoginACK()
+  public MessageSendByteArray(MessageType type)
     {
-    super(MessageType.S2C_LOGIN_ACK,null);
+    super(type, null);
     }
 
-  /** Constructor with a TCP/IP source/destination of the message 
-   *  @param source The TCP/IP address associated to this message */
-  public MessageS2CLoginACK(InetSocketAddress source)
+  /** Constructor with a TCP/IP source/destination of the message and the
+   *  byte array to send.
+   *  @param source The TCP/IP address associated to this message
+   *  @param hash The byte array you want to send.
+   */
+  public MessageSendByteArray(MessageType type,InetSocketAddress source,byte[] hash)
     {
-    super(MessageType.S2C_LOGIN_ACK,source);
+    super(type,source);
+    this.hash=hash;
     }  
-
-  /** This method returns a String that represent the object 
-   *  @return a string representing the object.*/
-  public String toString()
+  
+  /** This method returns the byte array.
+   *  @return the byte array */
+  public byte[] getHash()
     {
-    return "Message (S2C Login ACK) from ("+source.getAddress().getHostAddress()+") CONTENTS: ()";
+    return hash;
     }
-      
+    
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
+    out.write(hash);
     }
     
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    if(type!=MessageType.S2C_LOGIN_ACK)
-      {
-      throw new java.lang.ClassNotFoundException();
-      }
+    hash=in.readByteArray();
     }    
+
+  public String byteArrayToString() 
+    {
+    String res="0x";
+    String t;
+    for(int i=0;i<hash.length;i++) 
+      {
+      int b = ((int) hash[i]) & 0xFF;
+      t = (new Integer(b)).toString();
+      if(t.length() == 1) 
+        {
+	t = "0" + t;
+        }
+      res += t;
+
+      }
+    return res;
+    }
   }
-
-
-;  
-

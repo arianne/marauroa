@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.3 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,14 +25,12 @@ public class MessageS2CTransfer extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CTransfer()
     {
-    super(null);
-    type=TYPE_S2C_TRANSFER;
+    super(MessageType.S2C_TRANSFER,null);
     }
   
   public MessageS2CTransfer(InetSocketAddress source,TransferContent content)
     {
-    super(source);
-    type=TYPE_S2C_TRANSFER;
+    super(MessageType.S2C_TRANSFER,source);
     
     this.contents=new LinkedList<TransferContent>();
     contents.add(content);
@@ -87,7 +85,7 @@ public class MessageS2CTransfer extends Message
       contents.add(content);
       }
 
-    if(type!=TYPE_S2C_TRANSFER)
+    if(type!=MessageType.S2C_TRANSFER)
       {
       throw new java.lang.ClassNotFoundException();
       }

@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,38 +22,46 @@ public class Message implements Serializable
   {
   public final static byte CLIENTID_INVALID=-1;
   
-  public final static byte TYPE_INVALID=-1;
-  public final static byte TYPE_C2S_LOGIN=1;
-  public final static byte TYPE_S2C_LOGIN_ACK=10;
-  public final static byte TYPE_S2C_LOGIN_NACK=11;
-  public final static byte TYPE_S2C_CHARACTERLIST=2;
-  public final static byte TYPE_C2S_CHOOSECHARACTER=3;
-  public final static byte TYPE_S2C_CHOOSECHARACTER_ACK=30;
-  public final static byte TYPE_S2C_CHOOSECHARACTER_NACK=31;
-  public final static byte TYPE_C2S_LOGOUT=4;
-  public final static byte TYPE_S2C_LOGOUT_ACK=40;
-  public final static byte TYPE_S2C_LOGOUT_NACK=41;
-  public final static byte TYPE_C2S_ACTION=5;
-  public final static byte TYPE_S2C_ACTION_ACK=50;
-  public final static byte TYPE_S2C_PERCEPTION=6;
-  public final static byte TYPE_C2S_PERCEPTION_ACK=61;
-  public final static byte TYPE_C2S_OUTOFSYNC=62;  
-  public final static byte TYPE_S2C_SERVERINFO=7;  
-  public final static byte TYPE_S2C_INVALIDMESSAGE=8;
-  public final static byte TYPE_S2C_TRANSFER_REQ=9;
-  public final static byte TYPE_C2S_TRANSFER_ACK=91;
-  public final static byte TYPE_S2C_TRANSFER=90;
+  public enum MessageType 
+    {
+    C2S_ACTION,
+    C2S_CHOOSECHARACTER,
+    C2S_LOGIN,
+    C2S_LOGIN_REQUESTKEY,
+    C2S_LOGIN_SENDNAMEANDPASSWORD,
+    C2S_LOGIN_SENDNONCE,
+    C2S_LOGIN_SENDPROMISE,
+    C2S_LOGOUT,
+    C2S_OUTOFSYNC,
+    C2S_PERCEPTION_ACK,
+    C2S_TRANSFER_ACK,
+    S2C_ACTION_ACK,
+    S2C_CHARACTERLIST,
+    S2C_CHOOSECHARACTER_ACK,
+    S2C_CHOOSECHARACTER_NACK,
+    S2C_INVALIDMESSAGE,
+    S2C_LOGIN_ACK,
+    S2C_LOGIN_NACK,
+    S2C_LOGIN_SENDKEY,
+    S2C_LOGIN_SENDNONCE,
+    S2C_LOGOUT_ACK,
+    S2C_LOGOUT_NACK,
+    S2C_PERCEPTION,
+    S2C_SERVERINFO,
+    S2C_TRANSFER,
+    S2C_TRANSFER_REQ,
+    }
 
-  protected byte type;
+  protected  MessageType type;
   protected int clientid;
   protected int timestampMessage;
   
   protected InetSocketAddress source;
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
-  public Message(InetSocketAddress source)
+  public Message(MessageType type, InetSocketAddress source)
     {
-    this.type=TYPE_INVALID;
+    this.type=type;
     this.clientid=CLIENTID_INVALID;
     this.source=source;
     timestampMessage=(int)(System.currentTimeMillis());
@@ -75,7 +83,7 @@ public class Message implements Serializable
 
   /** Returns the type of the message
    *  @return the type of the message  */
-  public byte getType()
+  public MessageType getType()
     {
     return type;
     }
@@ -106,7 +114,7 @@ public class Message implements Serializable
   public void writeObject(OutputSerializer out) throws IOException
     {
     out.write(NetConst.NETWORK_PROTOCOL_VERSION);
-    out.write(type);
+    out.write((byte)type.ordinal());
     out.write(clientid);
     out.write(timestampMessage);
     }
@@ -121,7 +129,7 @@ public class Message implements Serializable
       throw new IOException();
       }
       
-    type=in.readByte();
+    type=MessageType.values()[in.readByte()];
     clientid=in.readInt();
     timestampMessage=in.readInt();
     }  

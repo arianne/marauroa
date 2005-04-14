@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.5 2005/03/02 15:54:01 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.6 2005/04/14 09:59:07 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,8 +44,7 @@ public class MessageS2CPerception extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageS2CPerception()
     {
-    super(null);
-    type=TYPE_S2C_PERCEPTION;
+    super(MessageType.S2C_PERCEPTION,null);
     
     myRPObject=new RPObject();
     }
@@ -58,8 +57,7 @@ public class MessageS2CPerception extends Message
    */
   public MessageS2CPerception(InetSocketAddress source,Perception perception)
     {
-    super(source);
-    type=TYPE_S2C_PERCEPTION;
+    super(MessageType.S2C_PERCEPTION,source);
     
     typePerception=perception.type;
     zoneid=perception.zoneid;

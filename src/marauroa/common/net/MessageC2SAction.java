@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,8 +25,7 @@ public class MessageC2SAction extends Message
   /** Constructor for allowing creation of an empty message */
   public MessageC2SAction()
     {
-    super(null);
-    type=TYPE_C2S_ACTION;
+    super(MessageType.C2S_ACTION,null);
     }
 
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -36,8 +35,7 @@ public class MessageC2SAction extends Message
    */
   public MessageC2SAction(InetSocketAddress source,RPAction action)
     {
-    super(source);
-    type=TYPE_C2S_ACTION;
+    super(MessageType.C2S_ACTION,source);
     this.action=action;
     }
   
@@ -65,7 +63,7 @@ public class MessageC2SAction extends Message
     {
     super.readObject(in);
     action=(RPAction)in.readObject(new RPAction());
-    if(type!=TYPE_C2S_ACTION)
+    if(type!=MessageType.C2S_ACTION)
       {
       throw new java.lang.ClassNotFoundException();
       }

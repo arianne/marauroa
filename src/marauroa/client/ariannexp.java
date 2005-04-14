@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.6 2005/04/06 15:34:58 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.7 2005/04/14 09:59:05 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,35 +97,31 @@ public abstract class ariannexp
           msg=getMessage();
           }        
         
-        if(msg instanceof MessageS2CLoginACK)
-          {
-          Logger.trace("ariannexp::login","D","Login correct");
-          clientid=msg.getClientID();
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CCharacterList)
-          {
-          Logger.trace("ariannexp::login","D","Recieved Character list");
-          String[] characters=((MessageS2CCharacterList)msg).getCharacters();
-          onAvailableCharacters(characters);
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CServerInfo)
-          {
-          Logger.trace("ariannexp::login","D","Recieved Server info");
-          String[] info=((MessageS2CServerInfo)msg).getContents();
-          onServerInfo(info);
-          ++recieved;
-          }
-        else if(msg instanceof MessageS2CLoginNACK)
-          {
-          Logger.trace("ariannexp::login","D","Login failed");
-          return false;
-          }
-        else
-          {
-          messages.add(msg);
-          }
+	switch(msg.getType())
+	  {
+	    case S2C_LOGIN_ACK:
+	      Logger.trace("ariannexp::login","D","Login correct");
+	      clientid=msg.getClientID();
+	      ++recieved;
+	      break;
+	    case S2C_CHARACTERLIST:
+              Logger.trace("ariannexp::login","D","Recieved Character list");
+              String[] characters=((MessageS2CCharacterList)msg).getCharacters();
+              onAvailableCharacters(characters);
+              ++recieved;
+	      break;
+	    case S2C_SERVERINFO:
+              Logger.trace("ariannexp::login","D","Recieved Server info");
+              String[] info=((MessageS2CServerInfo)msg).getContents();
+              onServerInfo(info);
+              ++recieved;
+	      break;
+	    case S2C_LOGIN_NACK:
+              Logger.trace("ariannexp::login","D","Login failed");
+              return false;
+	    default:
+              messages.add(msg);
+	  }
         }
       
       return true;
@@ -159,20 +155,17 @@ public abstract class ariannexp
       while(recieved!=1)
         {
         Message msg=getMessage();
-        if(msg instanceof MessageS2CChooseCharacterACK)
-          {
-          Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
-          return true;
-          }
-        else if(msg instanceof MessageS2CChooseCharacterNACK)
-          {
-          Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
-          return false;
-          }
-        else
-          {
-          messages.add(msg);
-          }        
+	switch(msg.getType())
+	  {
+	    case S2C_CHOOSECHARACTER_ACK:
+              Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
+              return true;
+	    case S2C_CHOOSECHARACTER_NACK:
+              Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
+              return false;
+	    default:
+	      messages.add(msg);
+	  }
         }
       
       return false;
@@ -219,15 +212,15 @@ public abstract class ariannexp
         while(recieved!=1)
           {
           Message msg=getMessage();
-          if(msg instanceof MessageS2CActionACK)
-            {
-            recieved++;
-            }
-          else
-            {
-            messages.add(msg);
-            }        
-          }        
+	  switch(msg.getType()) 
+	    {
+	      case S2C_ACTION_ACK:
+	        recieved++;
+	        break;
+	      default:
+	        messages.add(msg);
+	    }
+	  }
         }
       }
     catch(InvalidVersionException e)
@@ -258,21 +251,18 @@ public abstract class ariannexp
       while(recieved!=1)
         {
         Message msg=getMessage();
-        if(msg instanceof MessageS2CLogoutACK)
-          {
-          Logger.trace("ariannexp::logout","D","Logout ACK");
-          return true;
-          }
-        else if(msg instanceof MessageS2CLogoutNACK)
-          {
-          Logger.trace("ariannexp::logout","D","Logout NACK");
-          return false;
-          }
-        else
-          {
-          messages.add(msg);
-          }        
-        }
+	switch(msg.getType())
+	  {
+	    case S2C_LOGOUT_ACK:
+              Logger.trace("ariannexp::logout","D","Logout ACK");
+              return true;
+	    case S2C_LOGOUT_NACK:
+              Logger.trace("ariannexp::logout","D","Logout NACK");
+              return false;
+	    default:
+              messages.add(msg);
+	  }
+	}
       
       return false;
       }
@@ -308,33 +298,44 @@ public abstract class ariannexp
       
       for(Message msg: messages)    
         {
-        if(msg instanceof MessageS2CPerception)
-          {
-          Logger.trace("ariannexp::loop","D","Processing Message Perception");
-          MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
-          reply.setClientID(clientid);
-          netMan.addMessage(reply);
+	switch(msg.getType()) 
+	  {
+	    case S2C_PERCEPTION:
+	        {
+                Logger.trace("ariannexp::loop","D","Processing Message Perception");
+                MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+                reply.setClientID(clientid);
+                netMan.addMessage(reply);
           
-          MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-          onPerception(msgPer);
-          }
-        else if(msg instanceof MessageS2CTransferREQ)        
-          {
-          Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
-          List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
+                MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+                onPerception(msgPer);
 
-          items=onTransferREQ(items);
+	        break;
+		}
+
+	    case S2C_TRANSFER_REQ:
+		{
+                Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
+                List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
+
+                items=onTransferREQ(items);
           
-          MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
-          reply.setClientID(clientid);
-          netMan.addMessage(reply);
-          }
-        else if(msg instanceof MessageS2CTransfer)        
-          {
-          Logger.trace("ariannexp::loop","D","Processing Content Transfer");
-          List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
-          onTransfer(items);
-          }
+                MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
+                reply.setClientID(clientid);
+                netMan.addMessage(reply);
+
+	        break;
+		}
+
+	    case S2C_TRANSFER:
+		{
+                Logger.trace("ariannexp::loop","D","Processing Content Transfer");
+                List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
+                onTransfer(items);
+	      
+	        break;
+		}
+	  }
         }
       
       messages.clear();
