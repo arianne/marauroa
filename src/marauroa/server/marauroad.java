@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.14 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: marauroad.java,v 1.15 2005/04/15 08:50:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -261,9 +261,9 @@ public class marauroad extends Thread
 
     try
       {
-      RSAKey key = new RSAKey(	new BigInteger(Configuration.getConfiguration().get("n")),
-      				new BigInteger(Configuration.getConfiguration().get("d")),
-				new BigInteger(Configuration.getConfiguration().get("e")));
+      RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
+      new BigInteger(Configuration.getConfiguration().get("d")),
+			new BigInteger(Configuration.getConfiguration().get("e")));
       gameMan= new marauroa.server.game.GameServerManager(key,netMan,rpMan);
       }
     catch(Exception e)

@@ -146,6 +146,7 @@ Changelog
 - Fixed cosmetic issues at generateini
 - Fixed exception classes
 - Fixed a bug at JDBCPlayerDatabase that didn't allowed RPObjects to be removed correctly.
+- Added secure login procedure
 
 0.93 Apr 08, 2005
 - Added VERY_LONG_STRING data type

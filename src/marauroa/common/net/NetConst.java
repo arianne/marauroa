@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.2 2005/04/15 07:06:52 quisar Exp $ */
+/* $Id: NetConst.java,v 1.3 2005/04/15 08:50:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,7 +70,7 @@ public class NetConst
    * 16 - Added Transfer Content
    *    - Added zone in perception
    * 17 - Secured login */
-  final static public byte NETWORK_PROTOCOL_VERSION=16;
+  final static public byte NETWORK_PROTOCOL_VERSION=17;
 
   final static public long PACKET_TIMEOUT_VALUE=5000;
   }
