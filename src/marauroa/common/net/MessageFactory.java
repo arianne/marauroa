@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
+/* $Id: MessageFactory.java,v 1.3 2005/04/15 07:06:52 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,13 +24,13 @@ public class MessageFactory
   {
   private static Map<Integer,Class> factoryArray;
   private static MessageFactory messageFactory;
-  
+
   private MessageFactory()
     {
     factoryArray=new HashMap<Integer,Class>();
     register();
     }
-  
+
   /** This method returns an instance of MessageFactory
    *  @return A shared instance of MessageFactory */
   public static MessageFactory getFactory()
@@ -41,13 +41,12 @@ public class MessageFactory
       }
     return messageFactory;
     }
-    
+
   private void register()
     {
     Logger.trace("MessageFactory::register",">");
     register(Message.MessageType.C2S_ACTION,MessageC2SAction.class);
     register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
-    register(Message.MessageType.C2S_LOGIN,MessageC2SLogin.class);
     register(Message.MessageType.C2S_LOGOUT,MessageC2SLogout.class);
     register(Message.MessageType.S2C_ACTION_ACK,MessageS2CActionACK.class);
     register(Message.MessageType.S2C_CHARACTERLIST,MessageS2CCharacterList.class);
@@ -66,24 +65,23 @@ public class MessageFactory
     register(Message.MessageType.C2S_TRANSFER_ACK,MessageC2STransferACK.class);
     register(Message.MessageType.S2C_TRANSFER,MessageS2CTransfer.class);
     register(Message.MessageType.C2S_LOGIN_REQUESTKEY,MessageC2SLoginRequestKey.class);
-    register(Message.MessageType.C2S_LOGIN_SENDNAMEANDPASSWORD,MessageC2SLoginSendNameAndPassword.class);
-    register(Message.MessageType.C2S_LOGIN_SENDNONCE,MessageC2SLoginSendNonce.class);
+    register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD,MessageC2SLoginSendNonceNameAndPassword.class);
     register(Message.MessageType.S2C_LOGIN_SENDKEY,MessageS2CLoginSendKey.class);
     register(Message.MessageType.S2C_LOGIN_SENDNONCE,MessageS2CLoginSendNonce.class);
     register(Message.MessageType.C2S_LOGIN_SENDPROMISE,MessageC2SLoginSendPromise.class);
     Logger.trace("MessageFactory::register","<");
     }
-      
+
   private void register(Message.MessageType index,Class messageClass)
     {
     factoryArray.put(new Integer(index.ordinal()),messageClass);
     }
-    
+
   /** Returns a object of the right class from a stream of serialized data.
    @param data the serialized data
    @param source the source of the message needed to build the object.
-   @return a message of the right class   
-   @throws IOException in case of problems with the message 
+   @return a message of the right class
+   @throws IOException in case of problems with the message
    @throws InvalidVersionException if the message version doesn't match */
   public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
     {
@@ -100,7 +98,7 @@ public class MessageFactory
             Message tmp=(Message) messageType.newInstance();
             ByteArrayInputStream in=new ByteArrayInputStream(data);
             InputSerializer s=new InputSerializer(in);
-    
+
             tmp.readObject(s);
             tmp.setAddress(source);
             Logger.trace("MessageFactory::getMessage","<");

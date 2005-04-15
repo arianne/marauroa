@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.1 2005/01/23 21:00:47 arianne_rpg Exp $ */
+/* $Id: InetAddressMask.java,v 1.2 2005/04/15 07:06:55 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.server.net;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import marauroa.server.game.Util;
 
 /** This class is a mask that determines if a IPv4 address match with the mask.
  *  It works only for IPv4 addresses */
@@ -23,7 +22,7 @@ public class InetAddressMask
   {
   private byte address[];
   private byte mask[];
-  
+
   /**
    * address in form aaa.bbb.ccc.ddd
    * mask    in form aaa.bbb.ccc.ddd
@@ -32,7 +31,7 @@ public class InetAddressMask
     {
     this(string2bytes(address),string2bytes(mask));
     }
-  
+
   public InetAddressMask(byte address[], byte mask[])
     {
     this.address = address;
@@ -42,7 +41,7 @@ public class InetAddressMask
     address[2]=(byte)(address[2]&mask[2]);
     address[3]=(byte)(address[3]&mask[3]);
     }
-  
+
   public boolean matches(InetAddress another_address)
     {
     byte ob[] = another_address.getAddress();
@@ -50,7 +49,7 @@ public class InetAddressMask
     ob[1]=(byte)(ob[1]&mask[1]);
     ob[2]=(byte)(ob[2]&mask[2]);
     ob[3]=(byte)(ob[3]&mask[3]);
-    
+
     boolean ret = true;
     ret = ret && (ob[3]^address[3]) == 0;
     ret = ret && (ob[2]^address[2]) == 0;
@@ -60,10 +59,10 @@ public class InetAddressMask
     //this can be rewritten later to
     //ret = (ob[3]^address[3]) == 0 && (ob[2]^address[2]) == 0 && (ob[1]^address[1]) == 0 && (ob[0]^address[0]) == 0;
     //which must be performanter - but no one knows one what part exactly was false and what part was true...
-    
+
     return(ret);
     }
-  
+
   public String toString()
     {
     try
@@ -72,7 +71,7 @@ public class InetAddressMask
       }
     catch (UnknownHostException e) {return("");}
     }
-  
+
   /**
    * converts string in form aaa.bbb.ccc.ddd into byte array[]{aaa,bbb,ccc,ddd}
    */
@@ -81,12 +80,12 @@ public class InetAddressMask
     String [] str_bytes = ipv4Address.split("\\.");
     byte addr[] = new byte[4];
     addr[0]=addr[1]=addr[2]=addr[3]=0;
-    
+
     for (int i = 0; i < str_bytes.length && i<4; i++)
       {
       addr[i]=(byte)Integer.parseInt(str_bytes[i]);
       }
-      
+
     return(addr);
     }
   }

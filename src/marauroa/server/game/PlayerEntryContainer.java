@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.3 2005/03/02 09:06:13 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.4 2005/04/15 07:06:54 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,28 +19,47 @@ import marauroa.common.*;
 import marauroa.common.net.*;
 import marauroa.common.game.*;
 import marauroa.server.*;
+import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.RSAKey;
 
 /** This class contains a list of the Runtime players existing in Marauroa, but it
  *  also links them with their representation in game and in database, so this is
  *  the point to manage them all. */
 public class PlayerEntryContainer
   {
-  public static final byte STATE_NULL=0;
-  public static final byte STATE_LOGIN_COMPLETE=1;
-  public static final byte STATE_GAME_BEGIN=2;
-  
+    enum ClientStats {
+      NULL,
+      LOGIN_COMPLETE,
+      GAME_BEGIN,
+    }
+
   /** A class to store all the object information to use in runtime and access database */
   static public class RuntimePlayerEntry
     {
+    static public class SecuredLoginInfo
+      {
+        byte[] clientNonceHash;
+        byte[] serverNonce;
+        byte[] clientNonce;
+        String userName;
+        byte[] password;
+        RSAKey key;
+
+        SecuredLoginInfo(RSAKey key) {
+          this.key = key;
+        }
+      }
     /** The runtime clientid */
     public int clientid;
     /** The state in which this player is */
-    public byte state;
+    public ClientStats state;
     /** The initial address of this player */
     public InetSocketAddress source;
     /** The time when the latest event was done in this player */
     public long timestamp;
-    
+    /** The login Info. It is created after the first login message and destroyed after the login is finished. */
+    public SecuredLoginInfo loginInformations;
+
     public boolean isTimedout()
       {
       long value=System.currentTimeMillis()-timestamp;
@@ -75,10 +94,10 @@ public class PlayerEntryContainer
         database_storedRPObject=(RPObject)object.copy();
         result=true;
         }
-      
+
       Logger.trace("PlayerEntryContainer::getLastStoredUpdateTime","<");
       return result;
-      }        
+      }
 
     /** The name of the choosen character */
     public String choosenCharacter;
@@ -86,16 +105,16 @@ public class PlayerEntryContainer
     public String username;
     /** The rp object of the player */
     public RPObject.ID characterid;
-    
+
 
     /** A counter to detect dropped packets or bad order at client side */
     public int perception_counter;
-    
+
     public int getPerceptionTimestamp()
       {
       return perception_counter++;
       }
-      
+
     /** It is true if client notified us that it got out of sync */
     public boolean perception_OutOfSync;
     /** It is the lastest version of our RPObject sent, so if it is the same
@@ -109,27 +128,27 @@ public class PlayerEntryContainer
       if(perception_previousRPObject==null || !perception_previousRPObject.equals(perception_actualRPObject))
         {
         perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
-        result=true;          
-        }      
+        result=true;
+        }
 
       return result;
       }
-    
+
     /** Contains the content that is going to be transfered to client */
     List<TransferContent> contentToTransfer;
-    
+
     public void clearContent()
       {
       contentToTransfer=null;
       }
-      
+
     public TransferContent getContent(String name)
       {
       if(contentToTransfer==null)
         {
         return null;
         }
-      
+
       for(TransferContent item: contentToTransfer)
         {
         if(item.name.equals(name))
@@ -137,10 +156,10 @@ public class PlayerEntryContainer
           return item;
           }
         }
-      
+
       return null;
       }
-    
+
     public String toString()
       {
       StringBuffer st=new StringBuffer("PlayerEntry(");
@@ -149,11 +168,11 @@ public class PlayerEntryContainer
       st.append(clientid+",");
       st.append(state+",");
       st.append(username+")");
-      
+
       return st.toString();
       }
     }
-  
+
 
   /** This class is a iterator over the player in PlayerEntryContainer */
   static public class ClientIDIterator
@@ -164,14 +183,14 @@ public class PlayerEntryContainer
       {
       entryIter = iter;
       }
-    
+
     /** This method returns true if there are still most elements.
      *  @return true if there are more elements. */
     public boolean hasNext()
       {
       return(entryIter.hasNext());
       }
-    
+
     /** This method returs the clientid and move the pointer to the next element
      *  @return an clientid */
     public int next()
@@ -180,26 +199,26 @@ public class PlayerEntryContainer
 
       return ((Integer)entry.getKey()).intValue();
       }
-    
+
     public void remove()
       {
       entryIter.remove();
       }
     }
-    
+
   /** This method returns an iterator of the players in the container */
   public ClientIDIterator iterator()
     {
     return new ClientIDIterator(listPlayerEntries.entrySet().iterator());
     }
-    
+
   /** A HashMap<clientid,RuntimePlayerEntry to store RuntimePlayerEntry objects */
   private HashMap<Integer,RuntimePlayerEntry> listPlayerEntries;
-  
+
   /** A object representing the database */
   private IPlayerDatabase playerDatabase;
-  private Transaction transaction;  
-  
+  private Transaction transaction;
+
   /** A reader/writers lock for controlling the access */
   private RWLock lock;
 
@@ -225,7 +244,7 @@ public class PlayerEntryContainer
       throw e;
       }
     }
-  
+
   /** This method returns an instance of PlayerEntryContainer
    *  @return A shared instance of PlayerEntryContainer */
   public static PlayerEntryContainer getContainer() throws Exception
@@ -236,7 +255,7 @@ public class PlayerEntryContainer
       }
     return playerEntryContainer;
     }
-  
+
   /** This method returns true if exist a player with that clientid.
    *  @param clientid a player runtime id
    *  @return true if player exist or false otherwise. */
@@ -252,7 +271,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::hasRuntimePlayer","<");
       }
     }
-  
+
   /** This method creates a new instance of RuntimePlayerEntry and add it.
    *  @param username the name of the player
    *  @param source the IP address of the player.
@@ -264,7 +283,7 @@ public class PlayerEntryContainer
       {
       RuntimePlayerEntry entry=new RuntimePlayerEntry();
 
-      entry.state=STATE_NULL;
+      entry.state=ClientStats.NULL;
       entry.timestamp=System.currentTimeMillis();
       entry.timestampLastStored=System.currentTimeMillis();
       entry.source=source;
@@ -273,7 +292,7 @@ public class PlayerEntryContainer
       entry.clientid=generateClientID(source);
       entry.perception_counter=0;
       entry.perception_OutOfSync=true;
-      
+
       listPlayerEntries.put(new Integer(entry.clientid),entry);
       return entry.clientid;
       }
@@ -282,7 +301,39 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::addRuntimePlayer","<");
       }
     }
-  
+
+    /** This method creates a new instance of RuntimePlayerEntry and add it.
+     *  @param username the name of the player
+     *  @param source the IP address of the player.
+     *  @return the clientid for that runtimeplayer */
+    public int addRuntimePlayer(RSAKey key, byte[] clientNonceHash, InetSocketAddress source)
+      {
+      Logger.trace("PlayerEntryContainer::addRuntimePlayer",">");
+      try
+        {
+        RuntimePlayerEntry entry=new RuntimePlayerEntry();
+
+        entry.state=ClientStats.NULL;
+        entry.timestamp=System.currentTimeMillis();
+        entry.timestampLastStored=System.currentTimeMillis();
+        entry.source=source;
+        entry.username=null;
+        entry.choosenCharacter=null;
+        entry.clientid=generateClientID(source);
+        entry.perception_counter=0;
+        entry.perception_OutOfSync=true;
+        entry.loginInformations = new RuntimePlayerEntry.SecuredLoginInfo(key);
+        entry.loginInformations.clientNonceHash = clientNonceHash;
+
+        listPlayerEntries.put(new Integer(entry.clientid),entry);
+        return entry.clientid;
+        }
+      finally
+        {
+        Logger.trace("PlayerEntryContainer::addRuntimePlayer","<");
+        }
+      }
+
   /** This method remove the entry if it exists.
    *  @param clientid is the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
@@ -306,7 +357,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::removeRuntimePlayer","<");
       }
     }
-  
+
   /** This method returns true if the clientid and the source address match.
    *  @param clientid the runtime id of the player
    *  @param source the IP address of the player.
@@ -339,31 +390,26 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::verifyRuntimePlayer","<");
       }
     }
-    
-  /** This method returns true if the username/password match with any of the accounts in
-   *  database or false if none of them match.
-   *  @param username is the name of the player
-   *  @param password is the string used to verify access.
-   *  @return true if username/password is correct, false otherwise. */
-  public boolean verifyAccount(String username, String password) throws GenericDatabaseException
-    {
-    Logger.trace("PlayerEntryContainer::verifyAccount",">");
-    try
-      {
-      return playerDatabase.verifyAccount(transaction,username,password);
+
+    /** This method returns true if the information is a correct login informations, and if there is a correct entry in the database.
+     *  @return true if informations are correct, false otherwise. */
+    public boolean verifyAccount(RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException {
+      Logger.trace("PlayerEntryContainer::verifyAccount",">");
+      try {
+        return playerDatabase.verifyAccount(transaction,informations);
       }
-    catch(Exception e)
+      catch(Exception e)
       {
-      transaction=playerDatabase.getTransaction();
-      Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
-      throw new GenericDatabaseException(e.getMessage());
+        transaction=playerDatabase.getTransaction();
+        Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
+        throw new GenericDatabaseException(e.getMessage());
       }
-    finally
+      finally
       {
-      Logger.trace("PlayerEntryContainer::verifyAccount","<");
+        Logger.trace("PlayerEntryContainer::verifyAccount","<");
       }
     }
-  
+
   /** This method add a Login event to the player
    *  @param clientid the runtime id of the player
    *  @param source the IP address of the player
@@ -390,7 +436,7 @@ public class PlayerEntryContainer
       {
       transaction.rollback();
       transaction=playerDatabase.getTransaction();
-      
+
       Logger.thrown("PlayerEntryContainer::addLoginEvent","X",e);
       throw new GenericDatabaseException(e.getMessage());
       }
@@ -399,7 +445,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::addLoginEvent","<");
       }
     }
-  
+
   /** This method returns the list of Login events as a array of Strings
    *  @param clientid the runtime id of the player
    *  @return an array of String containing the login events.
@@ -442,7 +488,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getLoginEvent","<");
       }
     }
-  
+
   /** This method returns true if the PlayerContainer has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
@@ -452,13 +498,13 @@ public class PlayerEntryContainer
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
-      
+
       while(it.hasNext())
         {
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
-        
-        if(playerEntry.username.equals(username))
+
+        if(playerEntry.username != null && playerEntry.username.equals(username))
           {
           return true;
           }
@@ -470,7 +516,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::hasPlayer","<");
       }
     }
-  
+
   /** This method returns true if the playerentryContainer has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
@@ -480,12 +526,12 @@ public class PlayerEntryContainer
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
-      
+
       while(it.hasNext())
         {
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
-        
+
         if(playerEntry.username.equals(username))
           {
           return playerEntry.clientid;
@@ -505,20 +551,20 @@ public class PlayerEntryContainer
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
-      
+
       while(it.hasNext())
         {
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
 
         Logger.trace("PlayerEntryContainer::getClientidPlayer","D",playerEntry.toString());
-        
-        if(playerEntry.state==STATE_GAME_BEGIN && playerEntry.characterid.equals(id))
+
+        if(playerEntry.state==ClientStats.GAME_BEGIN && playerEntry.characterid.equals(id))
           {
           return playerEntry.clientid;
           }
         }
-        
+
       return -1;
       }
     finally
@@ -526,7 +572,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getClientidPlayer","<");
       }
     }
-  
+
   /** This method returns true if the player has that character or false if it hasn't
    *  @param clientid the runtime id of the player
    *  @param character is the name of the character
@@ -571,7 +617,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::hasCharacter","<");
       }
     }
-  
+
   /** This method assign the character to the playerEntry.
    *  @param clientid the runtime id of the player
    *  @param character is the name of the character
@@ -599,7 +645,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::setChoosenCharacter","<");
       }
     }
-  
+
   /** This method returns the lis of character that the player pointed by username has.
    *  @param clientid the runtime id of the player
    *  @return an array of String with the characters
@@ -643,7 +689,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getCharacterList","<");
       }
     }
-  
+
   /** This method retrieves from Database the object for an existing player and character.
    *  @param clientid the runtime id of the player
    *  @param character is the name of the character that the username player wants to add.
@@ -700,7 +746,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getRPObject","<");
       }
     }
-  
+
   /** This method is the opposite of getRPObject, and store in Database the object for
    *  an existing player and character.
    *  The difference between setRPObject and addCharacter are that setRPObject update it
@@ -761,7 +807,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::setRPObject","<");
       }
     }
-  
+
   private static Random rand=new Random();
   private int generateClientID(InetSocketAddress source)
     {
@@ -773,12 +819,12 @@ public class PlayerEntryContainer
       }
     return clientid;
     }
-  
+
   protected int size()
     {
     return listPlayerEntries.size();
     }
-  
+
   /** This method returns the lock so that you can control how the resource is used
    *  @return the RWLock of the object */
   public RWLock getLock()
@@ -807,39 +853,39 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::get","<");
       }
     }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-   
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /** This method returns a byte that indicate the state of the player from the 3 possible options:
    *  - STATE_NULL
    *  - STATE_LOGIN_COMPLETE
    *  - STATE_GAME_BEGIN
    *  @param clientid the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
-  public byte getRuntimeState(int clientid) throws NoSuchClientIDException
+  public ClientStats getRuntimeState(int clientid) throws NoSuchClientIDException
     {
     Logger.trace("PlayerEntryContainer::getRuntimeState",">");
     try
@@ -861,7 +907,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getRuntimeState","<");
       }
     }
-  
+
   /** This method set the state of the player from the 3 possible options:
    *  - STATE_NULL
    *  - STATE_LOGIN_COMPLETE
@@ -869,7 +915,7 @@ public class PlayerEntryContainer
    *  @param clientid the runtime id of the player
    *  @param newState the new state to which we move.
    *  @throws NoSuchClientIDException if clientid is not found */
-  public byte changeRuntimeState(int clientid,byte newState) throws NoSuchClientIDException
+  public ClientStats changeRuntimeState(int clientid,ClientStats newState) throws NoSuchClientIDException
     {
     Logger.trace("PlayerEntryContainer::changeRuntimeState",">");
     try
@@ -877,7 +923,7 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        byte oldState=entry.state;
+        ClientStats oldState=entry.state;
 
         entry.state=newState;
         return oldState;
@@ -893,8 +939,8 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::changeRuntimeState","<");
       }
     }
-  
-  
+
+
   /** This method returns the RPObject.ID of the object the player whose clientid is clientid owns.
    *  @param clientid the runtime id of the player
    *  @return the RPObject.ID of the object that this player uses.
@@ -928,7 +974,7 @@ public class PlayerEntryContainer
   /** This method set the RPObject.ID of the object the player whose clientid is clientid owns.
    *  @param clientid the runtime id of the player
    *  @param id the RPObject.ID id of the player
-   *   
+   *
    *  @throws NoSuchClientIDException if clientid is not found
    *  @throws NoSuchCharacterException if character is not found
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
@@ -980,7 +1026,7 @@ public class PlayerEntryContainer
       Logger.trace("PlayerEntryContainer::getUsername","<");
       }
     }
-  
+
   /** The method returns the IP address of the player represented by clientid
    *  @param clientid the runtime id of the player   *
    *  @throws NoSuchClientIDException if clientid is not found */

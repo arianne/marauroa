@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.4 2005/04/13 14:52:04 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.5 2005/04/15 07:06:54 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,8 @@ import java.util.*;
 import marauroa.server.*;
 import marauroa.common.*;
 import marauroa.common.game.*;
+import marauroa.common.crypto.Hash;
+import java.math.BigInteger;
 
 
 /** This is JDBC interface to the database.
@@ -42,7 +44,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       return "Login "+(correct?"SUCESSFULL":"FAILED")+" at "+time.toString()+" from "+address;
       }
     }
-    
+
   public boolean validString(String string)
     {
     if(string.indexOf('\\')!=-1) return false;
@@ -54,7 +56,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     if(string.indexOf('#')!=-1) return false;
     return true;
     }
-    
+
   private static IPlayerDatabase playerDatabase=null;
 
   /** connection info **/
@@ -68,7 +70,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     this.connInfo=connInfo;
     runDBScript("marauroa/server/marauroa_init.sql");
     }
-  
+
   private static IPlayerDatabase resetDatabaseConnection() throws Exception
     {
     Configuration conf=Configuration.getConfiguration();
@@ -80,7 +82,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     props.put("jdbc_pwd",conf.get("jdbc_pwd"));
     return new JDBCPlayerDatabase(props);
     }
-  
+
   /** This method returns an instance of PlayerDatabase
    *  @return A shared instance of PlayerDatabase */
   public static IPlayerDatabase getDatabase() throws NoDatabaseConfException
@@ -104,7 +106,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::getDatabase","<");
       }
     }
-  
+
   /** This method returns true if the database has the player pointed by username
    *  @param username the name of the player we are asking if it exists.
    *  @return true if player exists or false otherwise. */
@@ -117,7 +119,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
-      
+
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) as amount from  player where username like '"+username+"'";
@@ -145,7 +147,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::hasPlayer","<");
       }
     }
-  
+
   /** This method returns the lis of character that the player pointed by username has.
    *  @param username the name of the player from which we are requesting the list of characters.
    *  @return an array of String with the characters
@@ -159,7 +161,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
-      
+
       String[] characters = null;
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
@@ -195,64 +197,54 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::getCharacterList","<");
       }
     }
-  
-  /** This method add the player to database with username and password as identificator.
-   *  @param username is the name of the player
-   *  @param password is a string used to verify access.
-   *  @exception PlayerAlreadyAddedExceptio if the player is already in database */
-  public void addPlayer(Transaction trans, String username, String password, String email) throws PlayerAlreadyAddedException, GenericDatabaseException
-    {
-    Logger.trace("JDBCPlayerDatabase::addPlayer",">");
-    try
-      {
-      if(!validString(username) || !validString(password) || !validString(email) )
-        {
-        throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
-        }
-        
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-      Statement stmt = connection.createStatement();
-      String query = "select id from player where username like '"+username+"'";
 
-      Logger.trace("JDBCPlayerDatabase::addPlayer","D",query);
-
-      ResultSet result = stmt.executeQuery(query);
-
-      if(result.next())
+    /** This method add the player to database with username and password as identificator.
+     *  @param username is the name of the player
+     *  @param password is a string used to verify access.
+     *  @exception PlayerAlreadyAddedExceptio if the player is already in database */
+    public void addPlayer(Transaction trans, String username, byte[] password, String email) throws PlayerAlreadyAddedException, GenericDatabaseException
+      {
+      Logger.trace("JDBCPlayerDatabase::addPlayer",">");
+      try
         {
-        Logger.trace("JDBCPlayerDatabase::addPlayer","W","Database already contains that username("+username+")");
-        throw new PlayerAlreadyAddedException(username);
+        if(!validString(username) || !validString(email) )
+          {
+          throw new SQLException("Trying to use invalid characters username':"+username+"' and email:'"+email+"'");
+          }
+
+        Connection connection = ((JDBCTransaction)trans).getConnection();
+        Statement stmt = connection.createStatement();
+        String query = "select id from player where username like '"+username+"'";
+
+        Logger.trace("JDBCPlayerDatabase::addPlayer","D",query);
+
+        ResultSet result = stmt.executeQuery(query);
+
+        if(result.next())
+          {
+          Logger.trace("JDBCPlayerDatabase::addPlayer","W","Database already contains that username("+username+")");
+          throw new PlayerAlreadyAddedException(username);
+          }
+        else
+          {
+          /* We store the hashed version of the password */
+          password = Hash.hash(password);
+
+          query = "insert into player values(NULL,'"+username+"','"+ Hash.toHexString(password)+"','"+email+"',NULL,DEFAULT)";
+          stmt.execute(query);
+          }
         }
-      else
+      catch(SQLException sqle)
         {
-        /* We store the hashed version of the password */
-        password = Util.getMd5Hash(password);
-        
-        query = "insert into player values(NULL,'"+username+"','"+password+"','"+email+"',NULL,DEFAULT)";
-        stmt.execute(query);
+        Logger.thrown("JDBCPlayerDatabase::addPlayer","X",sqle);
+        throw new GenericDatabaseException(sqle.getMessage());
+        }
+      finally
+        {
+        Logger.trace("JDBCPlayerDatabase::addPlayer","<");
         }
       }
-    catch(SQLException sqle)
-      {
-      Logger.thrown("JDBCPlayerDatabase::addPlayer","X",sqle);
-      throw new GenericDatabaseException(sqle.getMessage());
-      }
-    catch(java.io.UnsupportedEncodingException ex)//should never be thrown here, as UTF-8 is normally supported
-      {
-       Logger.thrown("JDBCPlayerDatabase::addPlayer","X",ex);
-       throw new GenericDatabaseException(ex.getMessage());
-      }
-    catch(java.security.NoSuchAlgorithmException ex)//should never be thrown here, as md5 is normally supported
-      {
-       Logger.thrown("JDBCPlayerDatabase::addPlayer","X",ex);
-       throw new GenericDatabaseException(ex.getMessage());
-      }
-    finally
-      {
-      Logger.trace("JDBCPlayerDatabase::addPlayer","<");
-      }
-    }
-  
+
   /** This method remove the player with usernae from database.
    *  @param username is the name of the player
    *  @exception PlayerNotFoundException if the player doesn't exist in database. */
@@ -265,12 +257,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
-      
+
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "delete from player where id="+id;
-      
+
       /* BUG: Remove the RPObject too */
 
       stmt.execute(query);
@@ -295,7 +287,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::removePlayer","<");
       }
     }
-  
+
   /** This method removes a character asociated with a player.
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player owns.
@@ -310,15 +302,15 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
-      
+
       int id=getDatabasePlayerId(trans,username);
-      
+
       if(!hasCharacter(trans,username,character))
         {
         Logger.trace("JDBCPlayerDatabase::removeCharacter","X","Database doesn't contains that username("+username+")-character("+character+")");
         throw new CharacterNotFoundException(username);
         }
-      
+
       /** BUG: Remove the RPObject too */
 
       Connection connection = ((JDBCTransaction)trans).getConnection();
@@ -376,57 +368,65 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::setAccountStatus","<");
       }
     }
-  
-  /** This method returns true if the username/password match with any of the accounts in
-   *  database or false if none of them match.
-   *  @param username is the name of the player
-   *  @param password is the string used to verify access.
-   *  @return true if username/password is correct, false otherwise. */
-  public boolean verifyAccount(Transaction trans, String username, String password) throws GenericDatabaseException
+
+    public boolean verifyAccount(Transaction trans, PlayerEntryContainer.RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException
     {
-    Logger.trace("JDBCPlayerDatabase::verifyAccount",">");
-    try
-      {
-      if(!validString(username) || !validString(password))
-        {
-        throw new SQLException("Trying to use invalid characters username':"+username+"' and password:'"+password+"'");
+      Logger.trace("JDBCPlayerDatabase::verifyAccount",">");
+      try {
+        if(Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+          return false;
         }
-        
+        byte[] b1 = informations.key.decodeByteArray(informations.password);
+        byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
+        if(b2 == null) {
+          return false;
+        }
+        byte[] password = Hash.xor(b1, b2);
+        if(password == null) {
+          return false;
+        }
+
+        if(!validString(informations.userName))
+        {
+          throw new SQLException("Trying to use invalid characters username':"+informations.userName+"'");
+        }
+
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      password = Util.getMd5Hash(password);
-      String query = "select status from player where username like '"+username+"' and password like '"+password+"'";      
+      String hexPassword = Hash.toHexString(Hash.hash(password));
+      String query = "select status from player where username like '"+informations.userName+"' and password like '"+hexPassword+"'";
       Logger.trace("JDBCPlayerDatabase::verifyAccount","D",query);
       ResultSet result = stmt.executeQuery(query);
 
       if(result.next())
-        {
+      {
         String account_status = result.getString("status");
-        
+
         if("active".equals(account_status))
-          {
+        {
           return true;
-          }
+        }
         else
-          {
+        {
           Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
           return false;
-          }
         }
-        
-      return false;
       }
+
+      return false;
+    }
     catch(Exception e)
-      {
+    {
       Logger.thrown("JDBCPlayerDatabase::verifyAccount","X",e);
       throw new GenericDatabaseException(e.getMessage());
-      }
-    finally
-      {
-      Logger.trace("JDBCPlayerDatabase::verifyAccount","<");
-      }
     }
-  
+    finally
+    {
+      Logger.trace("JDBCPlayerDatabase::verifyAccount","<");
+    }
+  }
+
+
   /** This method returns the list of Login events as a array of Strings
    *  @param username is the name of the player
    *  @return an array of String containing the login events.
@@ -440,18 +440,18 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
-      
+
       String[] loginEvents = null;
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select address,timedate,result from loginEvent where player_id="+id+" order by timedate limit 5";
-      
+
       Logger.trace("JDBCPlayerDatabase::getLoginEvent","D",query);
 
       ResultSet result = stmt.executeQuery(query);
       Vector<String> vector = new Vector<String>();
-      
+
       while(result.next())
         {
         LoginEvent login_event = new LoginEvent();
@@ -461,7 +461,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         login_event.correct = result.getInt("result")!=0;
         vector.add(login_event.toString());
         }
-        
+
       loginEvents = new String[vector.size()];
       loginEvents = (String[])vector.toArray(loginEvents);
       return loginEvents;
@@ -482,7 +482,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::getLoginEvent","<");
       }
     }
-  
+
   /** This method returns true if the player has that character or false if it hasn't
    *  @param username is the name of the player
    *  @param character is the name of the character
@@ -497,12 +497,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
-      
+
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) as amount from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
-      
+
       Logger.trace("JDBCPlayerDatabase::hasCharacter","D",query);
 
       ResultSet result = stmt.executeQuery(query);
@@ -532,7 +532,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::hasCharacter","<");
       }
     }
-  
+
   /** This method add a Login event to the player
    *  @param username is the name of the player
    *  @param source the IP address of the player
@@ -547,7 +547,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
         }
-      
+
       int id=-1;
       try
         {
@@ -556,7 +556,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       catch(PlayerNotFoundException e)
         {
         }
-      
+
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "insert into loginEvent values("+id+",'"+source.getAddress().getHostAddress()+"',NULL,"+(correctLogin?1:0)+")";
@@ -572,7 +572,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::addLoginEvent","<");
       }
     }
-  
+
   /** This method add a character asociated to a player.
    *  @param username is the name of the player
    *  @param character is the name of the character that the username player wants to add.
@@ -588,7 +588,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
-        
+
       if(hasCharacter(trans,username,character))
         {
         Logger.trace("JDBCPlayerDatabase::addCharacter","X","Database does contains that username("+username+")-character("+character+")");
@@ -598,10 +598,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         Connection connection = ((JDBCTransaction)trans).getConnection();
         Statement stmt = connection.createStatement();
-        
+
         int id=getDatabasePlayerId(trans,username);
         int object_id=storeRPObject(trans,object);
-        
+
         String query = "insert into characters values("+id+",'"+character+"',"+object_id+")";
         stmt.execute(query);
         }
@@ -617,7 +617,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::addCharacter","<");
       }
     }
-  
+
   /** This method returns the number of Players that exist on database
    *  @return the number of players that exist on database */
   public int getPlayerCount(Transaction trans) throws GenericDatabaseException
@@ -628,7 +628,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) as amount from player";
-      
+
       Logger.trace("JDBCPlayerDatabase::getPlayerCount","D",query);
 
       ResultSet result = stmt.executeQuery(query);
@@ -649,7 +649,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::getPlayerCount","<");
       }
     }
-  
+
   /** This method is the opposite of getRPObject, and store in Database the object for
    *  an existing player and character.
    *  The difference between setRPObject and addCharacter are that setRPObject update it
@@ -671,12 +671,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
-      
+
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) from characters where charname like '"+character+"'";
-      
+
       Logger.trace("JDBCPlayerDatabase::setRPObject","D",query);
 
       ResultSet result = stmt.executeQuery(query);
@@ -689,7 +689,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           throw new CharacterNotFoundException(username);
           }
         }
-      
+
       storeRPObject(getTransaction(),object);
       }
     catch(SQLException sqle)
@@ -708,7 +708,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::setRPObject","<");
       }
     }
-  
+
   /** This method retrieves from Database the object for an existing player and character.
    *.
    *  @param username is the name of the player
@@ -727,7 +727,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
-      
+
       int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
@@ -739,7 +739,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        int object_id=result.getInt("object_id");        
+        int object_id=result.getInt("object_id");
         return loadRPObject(getTransaction(),object_id);
         }
       else
@@ -775,18 +775,18 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::getRPObject","<");
       }
     }
-  
+
   private int getDatabasePlayerId(Transaction trans, String username) throws PlayerNotFoundException, SQLException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt=connection.createStatement();
     int id;
-    
+
     if(!validString(username))
       {
       throw new SQLException("Trying to use invalid characters at username:'"+username+"'");
       }
-    
+
     String query = "select id from player where username like '"+username+"'";
 
     Logger.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
@@ -803,7 +803,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     return(id);
     }
-  
+
   private boolean reInitDB() throws GenericDatabaseException
     {
     Logger.trace("JDBCPlayerDatabase::reInitDB",">");
@@ -821,7 +821,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::reInitDB","<");
       }
     }
-  
+
   private boolean runDBScript(String file) throws GenericDatabaseException
     {
     Logger.trace("JDBCPlayerDatabase::runDBScript",">");
@@ -836,7 +836,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Statement stmt = con.createStatement();
       InputStream init_file=getClass().getClassLoader().getResourceAsStream(file);
       in= new BufferedReader(new InputStreamReader(init_file));
-      
+
       String line;
       StringBuffer is=new StringBuffer();
       while((line=in.readLine())!=null)
@@ -850,7 +850,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           is=new StringBuffer();
           }
         }
-      
+
       int ret_array[] = stmt.executeBatch();
 
       for (int i = 0; i < ret_array.length; i++)
@@ -880,14 +880,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       catch(IOException e)
         {
-        }      
-        
+        }
+
       Logger.trace("JDBCPlayerDatabase::runDBScript","<");
       }
     }
-  
+
   private JDBCTransaction transaction;
-  
+
   public Transaction getTransaction() throws GenericDatabaseException
     {
     if(transaction==null || !transaction.isValid())
@@ -907,7 +907,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     try
       {
       Class.forName((String)props.get("jdbc_class")).newInstance();
-      
+
       Properties connInfo = new Properties();
 
       connInfo.put("user", props.get("jdbc_user"));
@@ -928,12 +928,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::createConnection","<");
       }
     }
-  
+
 
   public static String EscapeString(String text)
     {
     StringBuffer result=new StringBuffer();
-    
+
     for(int i=0;i<text.length();++i)
       {
       if(text.charAt(i)=='\'' || text.charAt(i)=='\"' || text.charAt(i)=='\\')
@@ -944,11 +944,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     return result.toString();
     }
-  
+
   public static String UnescapeString(String text)
     {
     StringBuffer result=new StringBuffer();
-    
+
     for(int i=0;i<text.length();++i)
       {
       if(text.charAt(i)!='\\' || (text.charAt(i)=='\\' && text.charAt(((i-1)>0?i-1:0))=='\\'))
@@ -958,7 +958,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     return result.toString();
     }
-  
+
   public static class RPObjectIterator
     {
     private ResultSet set;
@@ -966,7 +966,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       this.set=set;
       }
-    
+
     public boolean hasNext()
       {
       try
@@ -978,13 +978,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         return false;
         }
       }
-    
+
     public int next() throws SQLException
       {
       return set.getInt("object_id");
       }
     }
-    
+
   public RPObjectIterator iterator(Transaction trans)
     {
     Logger.trace("JDBCPlayerDatabase::iterator",">");
@@ -994,7 +994,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Statement stmt = connection.createStatement();
       String query = "select object_id from rpobject where slot_id=0";
 
-      Logger.trace("JDBCPlayerDatabase::hasRPObject","D",query);      
+      Logger.trace("JDBCPlayerDatabase::hasRPObject","D",query);
       ResultSet result = stmt.executeQuery(query);
       return new RPObjectIterator(result);
       }
@@ -1019,9 +1019,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       String query = "select count(*) as amount from rpobject where object_id="+id;
 
       Logger.trace("JDBCPlayerDatabase::hasRPObject","D",query);
-      
+
       ResultSet result = stmt.executeQuery(query);
-      
+
       if(result.next())
         {
         if(result.getInt("amount")!=0)
@@ -1029,7 +1029,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           return true;
           }
         }
-        
+
       return false;
       }
     catch(SQLException e)
@@ -1042,8 +1042,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::hasRPObject","<");
       }
     }
-  
-  
+
+
   public RPObject loadRPObject(Transaction trans, int id) throws Exception
     {
     Logger.trace("JDBCPlayerDatabase::loadRPObject",">");
@@ -1054,7 +1054,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       if(hasRPObject(trans,id))
         {
         RPObject object=new RPObject();
-        
+
         loadRPObject(trans,object,id);
 
         return object;
@@ -1074,14 +1074,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::loadRPObject","<");
       }
     }
-  
+
   private void loadRPObject(Transaction trans, RPObject object,int object_id) throws SQLException, SlotAlreadyAddedException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
     String query="select name,value from rpattribute where object_id="+object_id+";";
     Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
-    
+
     ResultSet result = stmt.executeQuery(query);
 
     while(result.next())
@@ -1090,7 +1090,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       String value=UnescapeString(result.getString("value"));
       object.put(name, value);
       }
-      
+
     query = "select name,slot_id from rpslot where object_id="+object_id+";";
     Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
     result = stmt.executeQuery(query);
@@ -1099,13 +1099,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       RPSlot slot=new RPSlot(UnescapeString(result.getString("name")));
 
       object.addSlot(slot);
-      
+
       int slot_id=result.getInt("slot_id");
-      
+
       query = "select object_id from rpobject where slot_id="+slot_id+";";
       Logger.trace("JDBCPlayerDatabase::loadRPObject","D",query);
       ResultSet resultSlot = connection.createStatement().executeQuery(query);
-      
+
       while(resultSlot.next())
         {
         RPObject slotObject=new RPObject();
@@ -1115,7 +1115,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       }
     }
-  
+
   public void deleteRPObject(Transaction trans, int id) throws SQLException
     {
     Logger.trace("JDBCPlayerDatabase::deleteRPObject",">");
@@ -1142,22 +1142,22 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::deleteRPObject","<");
       }
     }
-  
+
   private void deleteRPObject(Connection connection, int id) throws SQLException
     {
     Statement stmt = connection.createStatement();
     String query=null;
-    
+
     query = "select rpobject.object_id from rpobject, rpslot where rpslot.object_id="+id+" and rpobject.slot_id=rpslot.slot_id;";
     Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
-    
+
     ResultSet result = stmt.executeQuery(query);
 
     while(result.next())
       {
       deleteRPObject(connection,result.getInt(1));
       }
-      
+
     query = "delete from rpslot where object_id="+id+";";
     Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     stmt.execute(query);
@@ -1168,22 +1168,22 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Logger.trace("JDBCPlayerDatabase::deleteRPObject","D",query);
     stmt.execute(query);
     }
-  
+
   public int storeRPObject(Transaction trans, RPObject object) throws SQLException
     {
     Logger.trace("JDBCPlayerDatabase::storeRPObject",">");
     Connection connection = ((JDBCTransaction)trans).getConnection();
-    
+
     try
       {
       if(object.has("#db_id"))
         {
         int object_id=object.getInt("#db_id");
-                
+
         if(hasRPObject(trans,object_id))
           {
           deleteRPObject(trans,object_id);
-          }        
+          }
         }
 
       return storeRPObject(trans,object,0);
@@ -1203,19 +1203,19 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Logger.trace("JDBCPlayerDatabase::storeRPObject","<");
       }
     }
-  
+
   private int storeRPObject(Transaction trans, RPObject object, int slot_id) throws SQLException, AttributeNotFoundException
     {
     Connection connection = ((JDBCTransaction)trans).getConnection();
     Statement stmt = connection.createStatement();
-    
+
     String query;
     int object_id;
-    
+
     if(object.has("#db_id"))
       {
       object_id=object.getInt("#db_id");
-      
+
       query="insert into rpobject values("+object_id+","+slot_id+")";
       Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
@@ -1233,10 +1233,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       result.next();
       object_id=result.getInt("inserted_id");
-    
-      /** We update the object to contain the database reference, so we can know in 
+
+      /** We update the object to contain the database reference, so we can know in
        *  the future if this object was stored on database. */
-      object.put("#db_id",object_id);        
+      object.put("#db_id",object_id);
       }
 
     Iterator it=object.iterator();
@@ -1245,16 +1245,16 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       String attrib=(String) it.next();
       String value=object.get(attrib);
-      
+
       query = "insert into rpattribute values("+object_id+",'"+EscapeString(attrib)+"','"+EscapeString(value)+"');";
       Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
       }
-    
+
     for(Iterator<RPSlot> sit=object.slotsIterator(); sit.hasNext();)
       {
       RPSlot slot= sit.next();
-      
+
       query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
       Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       stmt.execute(query);
@@ -1272,7 +1272,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Not able to select RPSlot("+slot.getName()+") that have just been inserted");
         }
-      
+
       Iterator oit=slot.iterator();
 
       while(oit.hasNext())
@@ -1282,7 +1282,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         storeRPObject(trans,objectInSlot,object_slot_id);
         }
       }
-    
+
     return object_id;
     }
 
@@ -1293,7 +1293,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      
+
       String query = "insert into statistics values(NULL,"+
         var.bytesSend+","+
         var.bytesRecv+","+

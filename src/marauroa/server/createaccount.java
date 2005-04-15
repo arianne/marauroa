@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.3 2005/04/08 12:31:23 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.4 2005/04/15 07:06:53 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.util.*;
 import java.io.*;
 import marauroa.server.game.*;
 import marauroa.common.game.*;
+import marauroa.common.crypto.Hash;
 
 /** This is the base class to extend in order to create an account.
  *  The class provide a few methods of which you inherit and implement. */
@@ -31,8 +32,8 @@ public abstract class createaccount
     public String value;
     public int min;
     public int max;
-    
-    
+
+
     public Information(String param, String name)
       {
       this.param=param;
@@ -50,19 +51,19 @@ public abstract class createaccount
       this.max=max;
       }
     }
-    
+
   protected List<Information> information;
-  
+
   public createaccount()
     {
     information= new LinkedList<Information>();
-    
+
     information.add(new Information("-u","username",4,20));
     information.add(new Information("-p","password",4,256));
     information.add(new Information("-e","email"));
     information.add(new Information("-c","character",4,20));
     }
-  
+
   protected String get(String name) throws AttributeNotFoundException
     {
     for(Information item: information)
@@ -72,13 +73,13 @@ public abstract class createaccount
         return item.value;
         }
       }
-    
+
     throw new AttributeNotFoundException(name);
     }
 
-  /** Implement this method on the subclass in order to create an object that will be 
+  /** Implement this method on the subclass in order to create an object that will be
    *  inserted into the database by the createaccount class. You are given a playerDatabase
-   *  instance so that you can get valid rpobjects' ids */    
+   *  instance so that you can get valid rpobjects' ids */
   public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
 
   protected int run(String[] args)
@@ -97,12 +98,12 @@ public abstract class createaccount
           break;
           }
         }
-      
-      if(args[i].equals("-i")) 
+
+      if(args[i].equals("-i"))
         {
 	      iniFile=args[i+1];
         }
-        
+
       if(args[i].equals("-h"))
         {
         System.out.println("createaccount application for Marauroa");
@@ -110,18 +111,18 @@ public abstract class createaccount
           {
           System.out.println(item.param+" to use/add "+item.name);
           }
-        
+
         System.out.println("-i"+" to to define .ini file");
-          
+
         System.exit(0);
         }
-        
+
       ++i;
       }
-    
+
     Transaction trans=null;
     PrintWriter out=null;
-      
+
     try
       {
       Configuration.setConfigurationFile(iniFile);
@@ -130,19 +131,19 @@ public abstract class createaccount
 
       out=new PrintWriter(new FileOutputStream(webfolder+"/createaccount_log.txt",true));
       out.println(new Date().toString()+": Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
-      
+
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       trans=playerDatabase.getTransaction();
-      
+
       out.println("Checking for null/empty string");
       for(Information item: information)
         {
         if(item.value.equals(""))
-          {        
+          {
           out.println("String is empty or null: "+item.name);
           return 1;
           }
-        }      
+        }
 
       out.println("Checking for valid string");
       for(Information item: information)
@@ -170,12 +171,12 @@ public abstract class createaccount
         out.println("ERROR: Player exists");
         return 4;
         }
-        
+
       out.println("Adding player");
-      playerDatabase.addPlayer(trans,get("username"),get("password"),get("email"));
+      playerDatabase.addPlayer(trans,get("username"),Hash.hash(get("password")),get("email"));
 
       RPObject object=populatePlayerRPObject(playerDatabase);
-      
+
       playerDatabase.addCharacter(trans, get("username"),get("character"),object);
       out.println("Correctly created");
       trans.commit();
@@ -186,7 +187,7 @@ public abstract class createaccount
         {
         out.println("Failed: "+e.getMessage());
         e.printStackTrace(out);
-      
+
         try
           {
           trans.rollback();
@@ -206,7 +207,7 @@ public abstract class createaccount
         out.close();
         }
       }
-      
+
     return 0;
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.14 2005/04/08 11:38:27 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.15 2005/04/15 07:06:54 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class RPServerManager extends Thread
   /** The time elapsed between 2 turns. */
   private long turnDuration;
   /** The number of the turn that we are executing now */
-  private int turn;  
+  private int turn;
   /** The scheduler needed to organize actions */
   private RPScheduler scheduler;
   /** The ruleProcessor that the scheduler will use to execute the actions */
@@ -47,7 +47,7 @@ public class RPServerManager extends Thread
   private PlayerEntryContainer playerContainer;
 
   private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
-  
+
   /** Constructor
    *  @param netMan the NetworkServerManager so that we can send message */
   public RPServerManager(NetworkServerManager netMan) throws Exception
@@ -62,23 +62,23 @@ public class RPServerManager extends Thread
       scheduler=new RPScheduler();
       contentsToTransfer=new HashMap<RPObject.ID, List<TransferContent>>();
       playerContainer=PlayerEntryContainer.getContainer();
-      this.netMan=netMan;      
-      
+      this.netMan=netMan;
+
       Configuration conf=Configuration.getConfiguration();
       Class worldClass=Class.forName(conf.get("rp_RPWorldClass"));
-      world=(RPWorld)worldClass.newInstance();      
+      world=(RPWorld)worldClass.newInstance();
       world.setPlayerContainer(playerContainer);
-      world.onInit();      
-      
+      world.onInit();
+
       Class ruleProcessorClass=Class.forName(conf.get("rp_RPRuleProcessorClass"));
       ruleProcessor=(IRPRuleProcessor)ruleProcessorClass.newInstance();
       ruleProcessor.setContext(this,world);
-      
+
       String duration=conf.get("rp_turnDuration");
 
       turnDuration=Long.parseLong(duration);
       turn=0;
-      
+
       start();
       }
     catch(Exception e)
@@ -92,12 +92,12 @@ public class RPServerManager extends Thread
       Logger.trace("RPServerManager","<");
       }
     }
-  
+
   public int getTurn()
     {
     return turn;
     }
-  
+
   /** This method finish the thread that run the RPServerManager */
   public void finish()
     {
@@ -113,7 +113,7 @@ public class RPServerManager extends Thread
         {
         }
       }
-    
+
     try
       {
       world.onFinish();
@@ -122,10 +122,10 @@ public class RPServerManager extends Thread
       {
       Logger.thrown("RPServerManager::finish","X",e);
       }
-    
+
     Logger.trace("RPServerManager::finish","<");
     }
-  
+
   /** Adds an action for the next turn */
   public void addRPAction(RPAction action) throws ActionInvalidException
     {
@@ -136,7 +136,7 @@ public class RPServerManager extends Thread
         {
         Logger.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
         }
-        
+
       scheduler.addRPAction(action,ruleProcessor);
       }
     finally
@@ -144,7 +144,7 @@ public class RPServerManager extends Thread
       Logger.trace("RPServerManager::addRPAction","<");
       }
     }
-  
+
   /** Returns an object of the world */
   public RPObject getRPObject(RPObject.ID id) throws RPObjectNotFoundException
     {
@@ -159,13 +159,13 @@ public class RPServerManager extends Thread
       Logger.trace("RPServerManager::getRPObject","<");
       }
     }
-    
+
   private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry entry)
     {
     Perception perception=null;
 
     IRPZone zone=world.getRPZone(entry.characterid);
-    
+
     if(entry.perception_OutOfSync==false)
       {
       Logger.trace("RPServerManager::getPlayerPerception","D","Perception DELTA for player ("+entry.characterid.toString()+")");
@@ -180,13 +180,13 @@ public class RPServerManager extends Thread
 
     return perception;
     }
-    
+
   private void sendPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry entry,Perception perception, RPObject object)
     {
     if(perception!=null)
       {
       MessageS2CPerception messages2cPerception=new MessageS2CPerception(entry.source, perception);
-      
+
       if(perception.type==Perception.SYNC || entry.isPerceptionModifiedRPObject(object))
         {
         messages2cPerception.setMyRPObject(object);
@@ -195,49 +195,49 @@ public class RPServerManager extends Thread
         {
         messages2cPerception.setMyRPObject(null);
         }
-          
+
       messages2cPerception.setClientID(entry.clientid);
       messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
-       
+
       netMan.addMessage(messages2cPerception);
       }
     }
-    
+
   private void buildPerceptions()
     {
     Logger.trace("RPServerManager::buildPerceptions",">");
 
     List<Integer> playersToRemove=new LinkedList<Integer>();
     List<Integer> playersToUpdate=new LinkedList<Integer>();
-	
+
 	/** We reset the cache at Perceptions */
     MessageS2CPerception.clearPrecomputedPerception();
-    
+
     PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
-      
+
     while(it.hasNext())
       {
       int clientid=it.next();
-  
+
       try
         {
         PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
-        
-        if(entry.state==playerContainer.STATE_GAME_BEGIN)
+
+        if(entry.state==PlayerEntryContainer.ClientStats.GAME_BEGIN)
           {
           Perception perception=getPlayerPerception(entry);
           IRPZone zone=world.getRPZone(entry.characterid);
           RPObject object=zone.get(entry.characterid);
-          
+
           sendPlayerPerception(entry,perception,object);
-           
+
           /** We check if we need to update player in the database */
           if(entry.shouldStoredUpdate(object))
             {
             playersToUpdate.add(new Integer(clientid));
             }
           }
-            
+
         if(entry.isTimedout())
           {
           playersToRemove.add(new Integer(clientid));
@@ -250,7 +250,7 @@ public class RPServerManager extends Thread
         playersToRemove.add(new Integer(clientid));
         }
       }
-        
+
     notifyUpdatesOnPlayer(playersToUpdate);
     notifyTimedoutPlayers(playersToRemove);
 
@@ -267,7 +267,7 @@ public class RPServerManager extends Thread
       while(it_notified.hasNext())
         {
         int clientid=((Integer)it_notified.next()).intValue();
-        
+
         try
           {
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
@@ -302,11 +302,11 @@ public class RPServerManager extends Thread
       while(it_notified.hasNext())
         {
         int clientid=((Integer)it_notified.next()).intValue();
-        
+
         try
           {
           stats.addPlayerTimeout(playerContainer.getUsername(clientid),clientid);
-          
+
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
           if(id==null)
             {
@@ -351,14 +351,14 @@ public class RPServerManager extends Thread
     {
     return ruleProcessor.onInit(object);
     }
-    
+
   /** This method is called when a player leave to the game */
   public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException
     {
     scheduler.clearRPActions(id);
     return ruleProcessor.onExit(id);
     }
-  
+
   private void deliverTransferContent()
     {
     synchronized(contentsToTransfer)
@@ -368,15 +368,15 @@ public class RPServerManager extends Thread
         try
           {
           List<TransferContent> content=contentsToTransfer.get(id);
-          
+
           int clientid=playerContainer.getClientidPlayer(id);
           PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
-          
+
           entry.contentToTransfer=content;
-        
+
           MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
           mes.setClientID(entry.clientid);
-         
+
           netMan.addMessage(mes);
           }
         catch(NoSuchClientIDException e)
@@ -384,12 +384,12 @@ public class RPServerManager extends Thread
           Logger.thrown("RPServerManager::deliverTransferContent","X",e);
           }
         }
-          
+
       contentsToTransfer.clear();
       }
     }
-  
-  
+
+
   /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
@@ -406,10 +406,10 @@ public class RPServerManager extends Thread
     {
     List<TransferContent> list=new LinkedList<TransferContent>();
     list.add(content);
-    
+
     transferContent(id, list);
     }
-  
+
   public void run()
     {
     try
@@ -430,7 +430,7 @@ public class RPServerManager extends Thread
           {
           }
         start=System.currentTimeMillis();
-  
+
         try
           {
           playerContainer.getLock().requestWriteLock();
@@ -443,13 +443,13 @@ public class RPServerManager extends Thread
 
             /** Compute game RP rules to move to the next turn */
             ruleProcessor.endTurn();
- 
+
             /** Send content that is waiting to players */
             deliverTransferContent();
-        
+
             /** Tell player what happened */
             buildPerceptions();
-        
+
             /** wait until all messages are sent away **/
             /** NOTE: Disabled while NetworkServerManager is fixed.
             netMan.flushMessages();
@@ -457,9 +457,9 @@ public class RPServerManager extends Thread
 
             /** Move zone to the next turn */
             world.nextTurn();
-            
+
             turn++;
-            
+
             ruleProcessor.beginTurn();
             }
           }
@@ -467,7 +467,7 @@ public class RPServerManager extends Thread
           {
           playerContainer.getLock().releaseLock();
           }
-          
+
         stats.setObjectsNow(world.size());
         }
       }
@@ -480,6 +480,6 @@ public class RPServerManager extends Thread
       {
       isfinished=true;
       Logger.trace("RPServerManager::run","<");
-      }    
+      }
     }
   }

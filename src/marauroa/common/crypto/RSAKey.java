@@ -3,19 +3,8 @@ package marauroa.common.crypto;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.io.PrintWriter;
+import java.io.PrintStream;
 
-/**
- * <p>Title: </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2005</p>
- *
- * <p>Company: </p>
- *
- * @author not attributable
- * @version 1.0
- */
 public class RSAKey extends RSAPublicKey {
   private BigInteger d;
 
@@ -25,6 +14,11 @@ public class RSAKey extends RSAPublicKey {
   }
 
   public void print(PrintWriter out) {
+    super.print(out);
+    out.println("d = " + d);
+  }
+
+  public void print(PrintStream out) {
     super.print(out);
     out.println("d = " + d);
   }
@@ -50,8 +44,8 @@ public class RSAKey extends RSAPublicKey {
       System.exit(1);
     }
 
-    if(nonce[0] >= 128) {
-      nonce[0] += 128;
+    if(nonce[0] >= 0) {
+      nonce[0] -= 128;
     }
 
     p = new BigInteger(1,nonce);
@@ -115,6 +109,10 @@ public class RSAKey extends RSAPublicKey {
 
   public BigInteger decode(BigInteger message) {
     return message.modPow(d,n);
+  }
+
+  public byte[] decodeByteArray(byte[] message) {
+    return Hash.BigIntToBytes(decode(new BigInteger(message)));
   }
 
   public BigInteger sign(BigInteger message) {

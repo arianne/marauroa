@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
+/* $Id: Message.java,v 1.3 2005/04/15 07:06:51 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,15 +21,13 @@ import java.io.*;
 public class Message implements Serializable
   {
   public final static byte CLIENTID_INVALID=-1;
-  
-  public enum MessageType 
+
+  public enum MessageType
     {
     C2S_ACTION,
     C2S_CHOOSECHARACTER,
-    C2S_LOGIN,
     C2S_LOGIN_REQUESTKEY,
-    C2S_LOGIN_SENDNAMEANDPASSWORD,
-    C2S_LOGIN_SENDNONCE,
+    C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
     C2S_LOGIN_SENDPROMISE,
     C2S_LOGOUT,
     C2S_OUTOFSYNC,
@@ -55,7 +53,7 @@ public class Message implements Serializable
   protected  MessageType type;
   protected int clientid;
   protected int timestampMessage;
-  
+
   protected InetSocketAddress source;
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message */
@@ -73,9 +71,9 @@ public class Message implements Serializable
     {
     this.source=source;
     }
-    
-  /** Returns the TCP/IP address associatted with this message 
-   *  @return the TCP/IP address associatted with this message*/  
+
+  /** Returns the TCP/IP address associatted with this message
+   *  @return the TCP/IP address associatted with this message*/
   public InetSocketAddress getAddress()
     {
     return source;
@@ -87,29 +85,29 @@ public class Message implements Serializable
     {
     return type;
     }
-    
+
   /** Set the clientID so that we can identify the client to which the
    message is target, as only IP is easy to Fake
-   @param clientid a int that reprents the client id. */    
+   @param clientid a int that reprents the client id. */
   public void setClientID(int clientid)
     {
     this.clientid=clientid;
     }
-  
+
   /** Returns the clientID of the Message.
    @return the ClientID */
   public int getClientID()
     {
     return clientid;
     }
-    
+
   /** Returns the timestamp of the message. Usually milliseconds */
   public int getMessageTimestamp()
     {
     return timestampMessage;
     }
 
-  /** Serialize the object into an ObjectOutput 
+  /** Serialize the object into an ObjectOutput
    *  @exception IOException if the serializations fails */
   public void writeObject(OutputSerializer out) throws IOException
     {
@@ -118,9 +116,9 @@ public class Message implements Serializable
     out.write(clientid);
     out.write(timestampMessage);
     }
-    
-  /** Serialize the object from an ObjectInput 
-   *  @exception IOException if the serializations fails 
+
+  /** Serialize the object from an ObjectInput
+   *  @exception IOException if the serializations fails
    *  @exception java.lang.ClassNotFoundException if the serialized class doesn't exist. */
   public void readObject(InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
@@ -128,9 +126,9 @@ public class Message implements Serializable
       {
       throw new IOException();
       }
-      
+
     type=MessageType.values()[in.readByte()];
     clientid=in.readInt();
     timestampMessage=in.readInt();
-    }  
+    }
   }

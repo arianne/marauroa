@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.7 2005/04/14 09:59:06 quisar Exp $ */
+/* $Id: NetworkClientManager.java,v 1.8 2005/04/15 07:06:37 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ public class NetworkClientManager
   private InetSocketAddress address;
   private int clientid;
   private MessageFactory msgFactory;
-  
+
   static private class PacketContainer
     {
     public byte signature;
@@ -36,10 +36,10 @@ public class NetworkClientManager
     public InetSocketAddress address;
     public Date timestamp;
     }
-    
+
   private Map<Byte,PacketContainer> pendingPackets;
   private List<Message> processedMessages;
-  
+
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
    to recieve new messages from the network. */
   public NetworkClientManager(String host, int port) throws SocketException
@@ -51,18 +51,18 @@ public class NetworkClientManager
     socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
     socket.setTrafficClass(0x08|0x10);
     socket.setReceiveBufferSize(128*1024);
-      
+
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
     processedMessages=new LinkedList<Message>();
     Logger.trace("NetworkClientManager::NetworkClientManager","<");
     }
-    
+
   public InetSocketAddress getAddress()
     {
     return address;
     }
-    
+
   /** This method notify the thread to finish it execution */
   public void finish()
     {
@@ -70,7 +70,7 @@ public class NetworkClientManager
     socket.close();
     Logger.trace("NetworkClientManager::finish","<");
     }
-    
+
   private Message getOldestProcessedMessage()
     {
     Message choosenMsg=((Message)processedMessages.get(0));
@@ -84,14 +84,14 @@ public class NetworkClientManager
         smallestTimestamp=msg.getMessageTimestamp();
         }
       }
-    
+
     Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",processedMessages.size()+" message available");
     Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",choosenMsg.toString());
-    
-    processedMessages.remove(choosenMsg);      
+
+    processedMessages.remove(choosenMsg);
     return choosenMsg;
     }
-  
+
   private void processPendingPackets() throws IOException, InvalidVersionException
     {
     for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
@@ -114,18 +114,18 @@ public class NetworkClientManager
 
         Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
         Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
-        if(msg.getType()==Message.MessageType.S2C_LOGIN_ACK)
+        if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
           {
           clientid=msg.getClientID();
           }
-            
+
         processedMessages.add(msg);
         // NOTE: Break??? Why not run all the array...
         break;
         }
       }
     }
-  
+
   final static private int PACKET_SIGNATURE_SIZE=3;
   final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
 
@@ -149,7 +149,7 @@ public class NetworkClientManager
       message.content=new byte[CONTENT_PACKET_SIZE*total];
       message.timestamp=new Date();
       System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-3);
-      
+
       pendingPackets.put(new Byte(signature),message);
       }
     else
@@ -167,7 +167,7 @@ public class NetworkClientManager
         }
       }
     }
-    
+
   /** This method returns a message if it is available or null
    *  @return a Message*/
   public Message getMessage() throws InvalidVersionException
@@ -179,7 +179,7 @@ public class NetworkClientManager
         {
         return getOldestProcessedMessage();
         }
-      
+
       processPendingPackets();
       }
     catch(InvalidVersionException e)
@@ -192,13 +192,13 @@ public class NetworkClientManager
       /* Report the exception */
       Logger.thrown("NetworkClientManager::getMessage","X",e);
       }
-        
+
     try
       {
       byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
       DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
       int i=0;
-        
+
       /** We want to avoid this to block the whole client recieving messages */
       while(i<TimeoutConf.CLIENT_NETWORK_NUM_READ)
         {
@@ -225,7 +225,7 @@ public class NetworkClientManager
 
     return null;
     }
-    
+
   /** This method add a message to be delivered to the client the message is pointed to.
    *  @param msg the message to ve delivered. */
   public synchronized void addMessage(Message msg)
@@ -236,16 +236,16 @@ public class NetworkClientManager
       /* We enforce the remote endpoint */
       msg.setAddress(address);
       msg.setClientID(clientid);
-            
+
       ByteArrayOutputStream out=new ByteArrayOutputStream();
       OutputSerializer s=new OutputSerializer(out);
-            
+
       Logger.trace("NetworkClientManager::addMessage","D","send message("+msg.getType()+") from "+msg.getClientID());
       s.write(msg);
-            
+
       byte[] buffer=out.toByteArray();
       DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
-            
+
       socket.send(pkt);
       }
     catch(IOException e)

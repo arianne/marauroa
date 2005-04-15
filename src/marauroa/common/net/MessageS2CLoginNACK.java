@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.3 2005/04/15 07:06:52 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,18 +22,23 @@ import java.io.*;
 
 public class MessageS2CLoginNACK extends Message
   {
-  public final static byte UNKNOWN_REASON=0;
-  public final static byte USERNAME_WRONG=1;
-  public final static byte SERVER_IS_FULL=2;
+    public enum Reasons {
+      UNKNOWN_REASON,
+      USERNAME_WRONG,
+      SERVER_IS_FULL,
+      PROTOCOL_MISMATCH,
+      INVALID_NONCE,
+    }
 
   static private String[] text=
       {
     "Unknown reason",
     "Username/Password incorrect.",
     "Server is full.",
-    "marauroa.common.network Protocol invalid version: Running "+Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION)
+    "marauroa.common.network Protocol invalid version: Running "+Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+    "The hash you sent does not correspond to the nonce you sent."
     };
-  private byte reason;
+  private Reasons reason;
 
   /** Constructor for allowing creation of an empty message */
   public MessageS2CLoginNACK()
@@ -44,7 +49,7 @@ public class MessageS2CLoginNACK extends Message
   /** Constructor with a TCP/IP source/destination of the message
    *  @param source The TCP/IP address associated to this message
    *  @param resolution the reason to deny the login */
-  public MessageS2CLoginNACK(InetSocketAddress source, byte resolution)
+  public MessageS2CLoginNACK(InetSocketAddress source, Reasons resolution)
     {
     super(MessageType.S2C_LOGIN_NACK,source);
     reason=resolution;
@@ -52,7 +57,7 @@ public class MessageS2CLoginNACK extends Message
 
   /** This method returns the resolution of the login event
    *  @return a byte representing the resolution given.*/
-  public byte getResolutionCode()
+  public Reasons getResolutionCode()
     {
     return reason;
     }
@@ -61,7 +66,7 @@ public class MessageS2CLoginNACK extends Message
    *  @return a string representing the resolution.*/
   public String getResolution()
     {
-    return text[reason];
+    return text[reason.ordinal()];
     }
 
   /** This method returns a String that represent the object
@@ -74,13 +79,13 @@ public class MessageS2CLoginNACK extends Message
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    out.write(reason);
+    out.write((byte)reason.ordinal());
     }
 
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    reason=in.readByte();
+    reason=Reasons.values()[in.readByte()];
     if(type!=MessageType.S2C_LOGIN_NACK)
       {
       throw new java.lang.ClassNotFoundException();

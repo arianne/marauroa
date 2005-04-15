@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.7 2005/04/14 09:59:05 quisar Exp $ */
+/* $Id: ariannexp.java,v 1.8 2005/04/15 07:04:58 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,19 +13,21 @@
 package marauroa.client;
 
 import java.util.*;
+import java.math.BigInteger;
 
 import marauroa.client.net.*;
 import marauroa.common.*;
 import marauroa.common.net.*;
 import marauroa.common.game.*;
+import marauroa.common.crypto.RSAPublicKey;
+import marauroa.common.crypto.Hash;
 
 public abstract class ariannexp
   {
   public final static long TIMEOUT=10000;
   private NetworkClientManager netMan;
-  private int clientid;
   private List<Message> messages;
-  
+
   /** Constructor.
    *  @param logging ariannexp will write to a file if this is true. */
   public ariannexp(boolean logging)
@@ -38,41 +40,41 @@ public abstract class ariannexp
       {
       Logger.initialize();
       }
-    
+
     Logger.trace("ariannexp::ariannexp",">");
     messages=new LinkedList<Message>();
     Logger.trace("ariannexp::ariannexp","<");
     }
-  
+
   /** Call this method to connect to server.
-   *  This method just configure the connection, it doesn't send anything 
+   *  This method just configure the connection, it doesn't send anything
    *  @param host server host name
    *  @param port server port number  */
   public void connect(String host, int port) throws java.net.SocketException
-    {    
+    {
     Logger.trace("ariannexp::connect",">");
     netMan=new NetworkClientManager(host,port);
     Logger.trace("ariannexp::connect","<");
     }
-  
+
   private Message getMessage() throws InvalidVersionException,ariannexpTimeoutException
     {
     Message msg=null;
     long delta=System.currentTimeMillis();
-    
+
     while(msg==null)
       {
-      msg=netMan.getMessage();    
-      
+      msg=netMan.getMessage();
+
       if(msg==null && System.currentTimeMillis()-delta>TIMEOUT)
         {
         throw new ariannexpTimeoutException();
         }
       }
-      
-    return msg;     
+
+    return msg;
     }
-  
+
   /** Login to server using the given username and password.
    *  @param username Player username
    *  @param password Player password
@@ -82,61 +84,82 @@ public abstract class ariannexp
     Logger.trace("ariannexp::login",">");
     try
       {
-      netMan.addMessage(new MessageC2SLogin(netMan.getAddress(),username,password));
-      int recieved=0;
-      
-      while(recieved!=3)
-        {
-        Message msg;
-        if(messages.size()>0)
+        int received = 0;
+        RSAPublicKey key = null;
+        byte[] clientNonce = null;
+        byte[] serverNonce = null;
+        netMan.addMessage(new MessageC2SLoginRequestKey());
+
+        while(received < 3) {
+          Message msg;
+          if(messages.size()>0)
           {
-          msg=messages.remove(0);
+            msg=messages.remove(0);
           }
-        else
+          else
           {
-          msg=getMessage();
-          }        
-        
-	switch(msg.getType())
-	  {
-	    case S2C_LOGIN_ACK:
-	      Logger.trace("ariannexp::login","D","Login correct");
-	      clientid=msg.getClientID();
-	      ++recieved;
-	      break;
-	    case S2C_CHARACTERLIST:
+            msg=getMessage();
+          }
+          switch(msg.getType())
+          {
+            case S2C_LOGIN_SENDKEY:
+              key = ((MessageS2CLoginSendKey)msg).getKey();
+              clientNonce = Hash.random(Hash.hashLength());
+              netMan.addMessage(new MessageC2SLoginSendPromise(msg.getAddress(), Hash.hash(clientNonce)));
+              break;
+            case S2C_LOGIN_SENDNONCE:
+              if(serverNonce != null) {
+                return false;
+              }
+              serverNonce = ((MessageS2CLoginSendNonce)msg).getHash();
+              byte[] b1 = Hash.xor(clientNonce, serverNonce);
+              if(b1 == null) {
+                return false;
+              }
+              byte[] b2 = Hash.xor(b1, Hash.hash(password));
+              if(b2 == null) {
+                return false;
+              }
+              byte[] cryptedPassword = key.encodeByteArray(b2);
+              netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(msg.getAddress(),
+                    clientNonce, username, cryptedPassword));
+              break;
+            case S2C_LOGIN_ACK:
+              Logger.trace("ariannexp::login" , "D" , "Login correct");
+              received++;
+              break;
+            case S2C_CHARACTERLIST:
               Logger.trace("ariannexp::login","D","Recieved Character list");
               String[] characters=((MessageS2CCharacterList)msg).getCharacters();
               onAvailableCharacters(characters);
-              ++recieved;
-	      break;
-	    case S2C_SERVERINFO:
+              received++;
+              break;
+            case S2C_SERVERINFO:
               Logger.trace("ariannexp::login","D","Recieved Server info");
               String[] info=((MessageS2CServerInfo)msg).getContents();
               onServerInfo(info);
-              ++recieved;
-	      break;
-	    case S2C_LOGIN_NACK:
+              received++;
+              break;
+            case S2C_LOGIN_NACK:
               Logger.trace("ariannexp::login","D","Login failed");
               return false;
-	    default:
+            default:
               messages.add(msg);
-	  }
+          }
         }
-      
-      return true;
+        return true;
       }
-    catch(InvalidVersionException e)
+      catch(InvalidVersionException e)
       {
-      onError(1,"Invalid client version to connect to this server.");
-      return false;
+        onError(1,"Invalid client version to connect to this server.");
+        return false;
       }
-    finally
+      finally
       {
-      Logger.trace("ariannexp::login","<");
+        Logger.trace("ariannexp::login","<");
       }
     }
-  
+
   /** After login allows you to choose a character to play
    *  @param character name of the character we want to play with.
    *  @return true if choosing character is successful. */
@@ -147,7 +170,6 @@ public abstract class ariannexp
       {
       Message msgCC=new MessageC2SChooseCharacter(netMan.getAddress(),character);
 
-      msgCC.setClientID(clientid);
       netMan.addMessage(msgCC);
 
       int recieved=0;
@@ -167,7 +189,7 @@ public abstract class ariannexp
 	      messages.add(msg);
 	  }
         }
-      
+
       return false;
       }
     catch(InvalidVersionException e)
@@ -181,7 +203,7 @@ public abstract class ariannexp
       Logger.trace("ariannexp::chooseCharacter","<");
       }
     }
-  
+
   /** Sends a RPAction to server */
   public void send(RPAction action)
     {
@@ -194,7 +216,7 @@ public abstract class ariannexp
       /** This will never happen */
       }
     }
-  
+
   /** Sends a RPAction to server and blocks until server confirms it. */
   public void send(RPAction action, boolean block) throws ariannexpTimeoutException
     {
@@ -203,16 +225,15 @@ public abstract class ariannexp
     try
       {
       MessageC2SAction msgAction=new MessageC2SAction(netMan.getAddress(),action);
-      msgAction.setClientID(clientid);
       netMan.addMessage(msgAction);
-      
+
       if(block)
         {
         int recieved=0;
         while(recieved!=1)
           {
           Message msg=getMessage();
-	  switch(msg.getType()) 
+	  switch(msg.getType())
 	    {
 	      case S2C_ACTION_ACK:
 	        recieved++;
@@ -233,18 +254,17 @@ public abstract class ariannexp
       Logger.trace("ariannexp::send","<");
       }
     }
-  
+
   /** Request logout of server
    *  @return true if we have successfully logout. */
   public boolean logout()
     {
     Logger.trace("ariannexp::logout",">");
-    
+
     try
       {
       Message msgL=new MessageC2SLogout(netMan.getAddress());
 
-      msgL.setClientID(clientid);
       netMan.addMessage(msgL);
       int recieved=0;
 
@@ -263,7 +283,7 @@ public abstract class ariannexp
               messages.add(msg);
 	  }
 	}
-      
+
       return false;
       }
     catch(InvalidVersionException e)
@@ -282,12 +302,12 @@ public abstract class ariannexp
       Logger.trace("ariannexp::logout","<");
       }
     }
-  
+
   /** Call this method to get and apply messages */
   public void loop(int delta)
     {
     Logger.trace("ariannexp::loop",">");
-    
+
     try
       {
       Message newmsg=netMan.getMessage();
@@ -295,18 +315,17 @@ public abstract class ariannexp
         {
         messages.add(newmsg);
         }
-      
-      for(Message msg: messages)    
+
+      for(Message msg: messages)
         {
-	switch(msg.getType()) 
+	switch(msg.getType())
 	  {
 	    case S2C_PERCEPTION:
 	        {
                 Logger.trace("ariannexp::loop","D","Processing Message Perception");
                 MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
-                reply.setClientID(clientid);
                 netMan.addMessage(reply);
-          
+
                 MessageS2CPerception msgPer=(MessageS2CPerception)msg;
                 onPerception(msgPer);
 
@@ -319,9 +338,8 @@ public abstract class ariannexp
                 List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
 
                 items=onTransferREQ(items);
-          
+
                 MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
-                reply.setClientID(clientid);
                 netMan.addMessage(reply);
 
 	        break;
@@ -332,16 +350,16 @@ public abstract class ariannexp
                 Logger.trace("ariannexp::loop","D","Processing Content Transfer");
                 List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
                 onTransfer(items);
-	      
+
 	        break;
 		}
 	  }
         }
-      
+
       messages.clear();
       }
     catch(InvalidVersionException e)
-      {      
+      {
       Logger.thrown("ariannexp::loop","X",e);
       onError(1,"Invalid client version to connect to this server.");
       }
@@ -358,7 +376,7 @@ public abstract class ariannexp
   /** It is called when we get a transfer of content */
   abstract protected void onTransfer(List<TransferContent> items);
   /** It is called when we get the list of characters */
-  abstract protected void onAvailableCharacters(String[] characters);  
+  abstract protected void onAvailableCharacters(String[] characters);
   /** It is called when we get the list of server information strings */
   abstract protected void onServerInfo(String[] info);
   /** It is called on error conditions so you can improve the handling of the error */

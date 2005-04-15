@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendNonce.java,v 1.1 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CLoginSendNonce.java,v 1.2 2005/04/15 07:06:52 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,10 +11,11 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.common.net;
-  
+
 import java.net.InetSocketAddress;
 import java.io.*;
-  
+import marauroa.common.crypto.Hash;
+
 /** This message indicate the server that the client wants to login and send the
  *  needed info: username and password to login to server.
  *  @see marauroa.common.net.Message
@@ -35,11 +36,11 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray
   public MessageS2CLoginSendNonce(InetSocketAddress source,byte[] hash)
     {
     super(MessageType.S2C_LOGIN_SENDNONCE,source, hash);
-    }  
-  
+    }
+
   public String toString()
     {
-    return "Message (S2C Login Send Nonce) from ("+source.getAddress().getHostAddress()+") CONTENTS: (hash:" + byteArrayToString() +")";
+    return "Message (S2C Login Send Nonce) from ("+source.getAddress().getHostAddress()+") CONTENTS: (nonce:" + Hash.toHexString(hash) +")";
     }
 
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
