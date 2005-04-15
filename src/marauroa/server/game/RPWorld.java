@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.7 2005/04/13 14:49:45 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.8 2005/04/15 08:00:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,6 +64,21 @@ public class RPWorld implements Iterable<IRPZone>
         {
         IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
         zone.assignRPObjectID(object);
+      
+        // Changing too the objects inside the slots 
+        Iterator<RPSlot> it=object.slotsIterator();
+        while(it.hasNext())
+          {
+          RPSlot slot=it.next();
+          String zoneid=object.get("zoneid");
+        
+          for(RPObject item: slot)
+            {
+            item.put("zoneid",zoneid);
+            zone.assignRPObjectID(item);
+            }
+          }
+          
         zone.add(object);
         
         /** NOTE: Document this hack */        
@@ -143,8 +158,6 @@ public class RPWorld implements Iterable<IRPZone>
       oldzone.remove(object.getID());
             
       object.put("zoneid",newzoneid.getID());
-      
-      //TODO: Change objects in slots too 
       
       add(object);    
       }
