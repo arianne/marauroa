@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.8 2005/04/15 08:00:47 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.9 2005/04/16 10:29:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,6 +106,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
+      Logger.thrown("RPWorld::get","X",e);
       throw new NoRPZoneException();  
       }
     }
@@ -119,6 +120,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
+      Logger.thrown("RPWorld::remove","X",e);
       throw new NoRPZoneException();  
       }
     }

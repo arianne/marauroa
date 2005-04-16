@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.3 2005/03/12 17:23:14 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.4 2005/04/16 10:29:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,7 @@ public class TimeoutConf
   
   /** This indicate that the player is totally dead and must be removed.
    *  Should be related to Turn Duration, around 4-10 times bigger at least.  */
-  final public static int GAMESERVER_PLAYER_TIMEOUT=600000;
+  final public static int GAMESERVER_PLAYER_TIMEOUT=60000;
   /** This indicate that how often the player is stored on database.*/
   final public static int GAMESERVER_PLAYER_STORE_LAPSUS=3600000;
   

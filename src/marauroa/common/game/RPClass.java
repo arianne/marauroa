@@ -32,7 +32,7 @@ public class RPClass implements marauroa.common.net.Serializable
   /** an boolean attribute that either is present or not. */
   final public static byte FLAG=8;
 
-  static public class SyntaxException extends java.io.IOException
+  static public class SyntaxException extends RuntimeException
     {
     public SyntaxException()
       {
