@@ -1,18 +1,4 @@
 <?PHP
-/************************************************************************************************
- ***
- *** CONFIGURATION: Modify values to meet your system
- ***
- *************************************************************************************************/
-
-/** Location of the java virtual machine */
-$route_to_javavm='C:/j2sdk1.4.2_05/bin/javaw';
-
-/** Classpath location */
-$classpath='mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.41.jar';
-
-/** Name of the createaccount class */
-$createAccount_class='mapacman.mapacmancreateaccount';
 
 /************************************************************************************************
  *** CODE:
@@ -20,6 +6,9 @@ $createAccount_class='mapacman.mapacmancreateaccount';
  *** My recomendation is that you do it at runtime. 
  ***
  *************************************************************************************************/
+global $xml;
+
+echo '<div id="account_form">';
 
 $created_char=false;
 if(isset($HTTP_POST_VARS['cmd']))
@@ -30,8 +19,7 @@ if(isset($HTTP_POST_VARS['cmd']))
     ((!isset($HTTP_POST_VARS['username'])) OR ereg("\"",$HTTP_POST_VARS['username'])) OR
     ((!isset($HTTP_POST_VARS['password'])) OR ereg("\"",$HTTP_POST_VARS['password'])))
     {
-    echo 'Don\'t be a <i>bad guy</i>. This is a free game<p>';    
-    echo '<p>';
+    echo '<p>Please don\'t mess about here. This is a free game</p>';    
     }
   else
     {
@@ -39,12 +27,11 @@ if(isset($HTTP_POST_VARS['cmd']))
     $result=ValidateMail($HTTP_POST_VARS['email']);
     if($result[0]==false)
       {
-      echo 'You need to provide a valid email address. We want to limit the server to one account per person.<p>';    
-      echo '<p>';
+      echo '<p>You need to provide a valid email address. We want to limit the server to one account per person.</p>';    
       }
 
     /* Create the account. */
-    $cmdline='"'.$route_to_javavm.' -cp "'.$classpath.'" '.$createAccount_class;
+    $cmdline='"'.$xml['serversite'][0]['accountcreationinfo'][0]['routetojavaVM'][0].' -cp "'.$xml['serversite'][0]['accountcreationinfo'][0]['classpath'][0].'" '.$xml['serversite'][0]['accountcreationinfo'][0]['createAccountclass'][0];
     $cmdline=$cmdline.' -u "'.$HTTP_POST_VARS['username'].'"';
     $cmdline=$cmdline.' -p "'.$HTTP_POST_VARS['password'].'"';
     $cmdline=$cmdline.' -c "'.$HTTP_POST_VARS['username'].'"';
@@ -55,82 +42,42 @@ if(isset($HTTP_POST_VARS['cmd']))
 
     if($return==1)
       {
-      echo '<font color="#FF0000">You forgot to set a value. Check again form</font>';
-	  echo '<p>';
+      echo '<p class="warning">You forgot to set a value. Check again form</p>';
       }
     else if($return==2)
       {
-      echo '<font color="#FF0000">Ahh!, you a bad guy? No account created. Check the characters used.</font>';
-	  echo '<p>';
+      echo '<p class="warning">Ahh!, you trying to mess about? No account created. Check the characters used.</p>';
       }
     else if($return==3)
       {
-      echo '<font color="#FF0000">Ahh!, No account created. Check the size of your strings used.</font>';
-	  echo '<p>';
+      echo '<p class="warning">Ahh!, No account created. Check the size of your strings used.</p>';
       }
     else if($return==4)
       {
-      echo '<font color="#FF0000">Bad luck! Player does exists. Try another username.</font>';
-	  echo '<p>';
+      echo '<p class="warning">Bad luck! Player already exists. Try another username.</p>';
       }
     else if($return==0)
       {
-      echo '<b><font color="#0000FF">Account created.</font></b><p>'.
-           'Write this down, so you don\'t forget it<br>'.
+      echo '<p><b>Account created.</b></p>'.
+           '<p>Write this information down, so you don\'t forget it:<br>'.
            '<b>Server IP</b>: marauroa.ath.cx<br>'.      
            '<b>Username</b>: '.htmlspecialchars($HTTP_POST_VARS['username'], ENT_QUOTES).'<br>'.
            '<b>Password</b>: '.htmlspecialchars($HTTP_POST_VARS['password'], ENT_QUOTES).'<br>'.
-           '<b>Character name</b>: '.htmlspecialchars($HTTP_POST_VARS['username'], ENT_QUOTES).'<p>'.
+           '<b>Character name</b>: '.htmlspecialchars($HTTP_POST_VARS['username'], ENT_QUOTES).'</p>'.
            '';
            
 	  $created_char=true;
       }
     else
       {
-      echo '<font color="#FF0000">Something bad happened.</font>';
-	  echo '<p>';
+      echo '<p class="warning">Something bad happened.</p>';
       }
     } 
   }
 
 if($created_char==false)
   {
-echo '<h1>Create account for free</h1>';  
-echo 'You need an account in order to play mapacman. You can create a free account here.';
-echo '<table><tr><td>';
-echo '<form name="accountForm" method="POST" action="">'.
-	 '<input type="hidden" name="cmd" value="newaccount"/>'.
-	 '<table width="90%">'.
-	 '<tr><td width="30%">Real name: </td><td><input type="text" name="realname" size="60" maxlength="60"/>'.
-         '<font size="2">'.
-         '( <a href="" onClick="return popitup(\'help.php?id=1\')">?</a> )</td></tr>'.
-         '</font>'.
-	 '<tr><td>Email <i>(*)</i>: </td><td><input type="text" name="email" size="60" maxlength="60"/>'.
-         '<font size="2">'.
-         '( <a href="" onClick="return popitup(\'help.php?id=2\')">?</a> )</td></tr>'.
-         '</font>'.
-	 '</table>'.
-	 '<p>Username is not modifiable once choosen, so choose wisely.<br>'.
-	 '<table width="90%">'.
-	 '<tr><td width="30%">Username: </td><td><input type="text" name="username" size="20" maxlength="20"/>'.
-         '<font size="2">'.
-         '( <a href="" onClick="return popitup(\'help.php?id=3\')">?</a> )</td></tr>'.
-         '</font>'.
-	 '<tr><td>Password: </td><td><input type="password" size="20" name="password"/>'.
-         '<font size="2">'.         
-         '( <a href="" onClick="return popitup(\'help.php?id=4\')">?</a> )</td></tr>'.
-         '</font>'.
-	 '</table>'.
-	 '<p><input type="submit" value="Create account"/>'.
-         '<font size="2">'.   
-         '( <a href="" onClick="return popitup(\'help.php?id=8\')">?</a> )'.
-         '</font>'.
-	 '</form>';
-	 
-echo '<i>(*)</i>You need to write an email where we can contact you if it is requiered. You can\'t leave the field empty.'.
-	 ' <b>Please also limit yourself to one account per person</b>.';
-
-echo '</td></tr></table>';
-
+		WriteAccountForm($xml);
   }
+echo '</div>';
 ?>

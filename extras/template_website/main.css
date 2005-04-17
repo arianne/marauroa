@@ -1,0 +1,414 @@
+/***************************************************************************
+ *                      (C) Copyright 2005 - Arianne Website               *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+ 
+/************************************/
+/* DIVs of main page sections       */ 
+ 
+#pageheader {}
+#pagemain {}
+#pagefooter { 
+    clear: both; 
+    }
+
+/************************************/
+/* Base Tags                        */
+
+body { 
+    font-family: Arial, Helvetica, Geneva, Sans-serif; 
+    background-color:#000; 
+    margin:0; padding:0; 
+    font-size:75%;
+    color:#F90;
+    clear:none;
+    }
+
+.center { text-align: center; }
+.right { text-align: right; }
+.left { text-align: left; }
+.inline {display: inline; }
+.clearright {clear:right;}
+.clearboth {clear:both;}
+.code{ font-family: courier, monospaced; }
+.update_image { 
+    position:relative; 
+    left:10px;
+    }
+
+p{ 
+    font-family: Arial, Helvetica, Geneva, Sans-Serif;
+    }
+p.abstract{ 
+    font-family: Arial, Helvetica, Geneva, Sans-Serif;
+    }
+p.footer{ 
+    font-size: 8pt; text-align: center;
+    }
+    
+table { 
+    width: 100%; 
+    vertical-align:top;
+    }
+    
+img { 
+    border-style:solid;
+    border-width:1px; 
+    border-color: #000000;
+    }
+
+strong{ font-weight: bold;}
+
+a:link{color: #334dd1;}
+a:visited{color: #334dd1;}
+a.navi{ color: #000000; text-decoration: none;}
+a.navi:hover{ color: #D6B917; text-decoration: none;}
+a.naviLight{ color: #FFFFFF; text-decoration: none;}
+a.naviLight:hover{ color: #CACCFA; text-decoration: none;}
+a.footer{ text-decoration: none; color: #000000;}
+a.footer:hover{ text-decoration: underline; color: #000000;}
+
+a.help { font-size: 10pt; text-decoration: none; color: #334dd1;}
+
+H1{
+    font-family: Arial,Helvetica,Geneva,Sans-Serif; 
+    font-size: 16pt; 
+    font-weight: lighter; 
+    }
+    
+H2{
+    font-family: Arial,Helvetica,Geneva,Sans-Serif; 
+    font-size: 14pt; 
+    font-weight: lighter; 
+    }
+H3{
+    font-family: Arial,Helvetica,Geneva,Sans-Serif; 
+    font-size: 13pt; 
+    font-weight: lighter; 
+    }
+H4{
+    font-family: Arial,Helvetica,Geneva,Sans-Serif; 
+    font-size: 12pt; 
+    font-weight: lighter; 
+    }
+
+ul{ font-family: Arial, Helvetica, Geneva, Sans-Serif; }
+li{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+
+blockquote{ font-family: Arial, Helvetica, Geneva, Sans-Serif;}
+
+/************************************/
+/* Server Status Text               */  
+    
+.server_up { display:inline; color:green; font-size:120%; font-weight:bold; }
+.server_down { display:inline; color:red; font-size:120%; font-weight:bold; }}
+
+/************************************/
+/* Title section DIV                */
+#title_section { }
+#title_section .title { display: none; background:url('titletext.jpg') }
+#title_section img {border: 0px; margin:10px;}
+#title_section img.left { float:left; padding-top:20px;}
+#title_section img.right { float:right; padding-top:20px; padding-right:30px; }
+#title_section p {
+    text-align:center; 
+    vertical-align:middle; 
+    margin-left:400px; margin-right:200px; margin-top:20px; 
+    padding-top:50px; padding-bottom:30px; 
+    font-size:120%;
+    font-weight:bold;
+    }
+
+
+/************************************/
+/* The news bar DIV tags           */
+
+#news_bar a { color: #FFFFFF; text-decoration: none; font-weight:bold; }
+#news_bar img { 
+    padding:0px; margin:0px;     
+    border-width:1px; 
+    border-color: black; 
+    border-style:solid;
+    }
+#news_bar ul {list-style:none; border: 2px; border-style:dotted; background:#595959; text-align:center; margin-top:0px; margin-left:15px; padding-top:10px; padding:0;}
+#news_bar li {list-style-position:outside; padding:0;}
+#news_bar li.text { padding-top:10px; text-align:left; padding-left:16px; }
+#news_bar { float: right; width: 250px;  padding:0; clear:none; }
+
+#news_bar ul li.menu_title img {
+    border:none;
+    }
+
+/************************************/
+/* Page content (DIV right of left menu ) */
+#pagecontent { padding:0; clear:none; margin-left:20px; margin-right: 250px;}
+#pagecontent div.description  {    
+    position: relative;
+    list-style:none; 
+    margin:0; 
+    padding:0; 
+    text-align:left; 
+    width:99%; 
+}
+#pagecontent div.game_image img { 
+	position:relative;
+    float:right; 
+    margin:5px; 
+    clear:right;
+    border-width:1px; 
+    border-color: black;
+    border-style:solid; 
+    }
+    
+/************************************/
+/* the account options  */
+#account_form .warning { color:red; font-size:120%; }  
+
+/************************************/
+/* the optional screenshots */
+/************************************/
+/* Standard List for placing a few screenshots in pages*/
+
+#screenshots ul img { border-width: 1px; border-color:black; width:125px; height:100px;}
+#screenshots ul { list-style:none; margin:0; padding:0; text-align:center;}
+#screenshots ul li {display:inline; padding-left:20px;}
+#screenshots ul li p { }
+
+/************************************/
+/* screenshots.php page render tags */
+
+.screenshots_entry ul { 
+    list-style:none; 
+    margin:0; 
+    padding:0; 
+    text-align:center;
+    }
+
+.screenshots_entry ul li.thumbnail {
+    display:inline;
+    padding: 5px;
+    height:120px;
+    }
+    
+.screenshots_entry ul li.thumbnail img {
+    width:125px;
+    height:100px;
+    }
+    
+.screenshots_entry ul li.thumbnail a {
+    text-decoration: none;  
+    }
+
+.screenshots_entry ul li.thumbnail p { 
+    text-align:center;
+    display:inline;
+    width:125px;
+    margin:0px;
+    position:relative;
+    bottom:3px;
+}
+.screenshots_entry p.archive {
+    text-align:center;
+    width:99%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+/************************************/
+/* news.php page render tags        */
+
+ul.newslist { 
+    position: relative;
+    list-style:none; 
+    margin:0; 
+    padding:0; 
+    text-align:left; 
+    width:99%; 
+    }
+    
+ul.newslist li { 
+    padding:10px; 
+    margin-bottom:20px; 
+    margin-right:20px; 
+    background-color: #AAA; 
+
+    }
+
+.newsitem p.itemdate { 
+    color:#000066; 
+    text-align:right; 
+    float:right; 
+    position:relative; 
+    right:10px; 
+    margin-top:-37px;
+    }
+.newsitem h3 {
+    color:black;
+    border-bottom-width:1px; 
+    border-bottom-style:solid; 
+    border-bottom-color:#000; 
+    }
+
+.newsitem img { 
+    float:right; 
+    margin:5px; 
+    clear:right;
+    border-width:1px; 
+    border-color: black;
+    border-style:solid; 
+    }
+.newsitem .newscontent_image {
+    padding-left:20px; 
+    padding-top:10px; 
+    margin-top:-10px; 
+    margin-right:300px;
+    }
+.newsitem .newscontent_noimage {
+    padding-left:20px; 
+    padding-top:10px; 
+    margin-top:-10px; 
+    margin-right:20px;
+    }
+
+/************************************/
+/* download.php page render tags    */
+
+.download { 
+    margin-bottom:20px; 
+    display:block; 
+    }
+.download a { 
+    text-decoration:underline; 
+    color:blue; 
+    margin-right: 10px; 
+    font-size:120%;
+    }
+.download h3 { 
+    color: black; 
+    margin:0; 
+    padding:0; }
+.download h1 a { 
+    text-decoration:none; 
+    }
+.download ul { 
+    list-style:none; 
+    margin:0; 
+    padding:0; 
+    text-align:left; 
+    border:none;
+    }
+.download li {
+    border-width: 1px; 
+    border-color: black;
+    border-style:solid; 
+    padding-bottom:10px;
+    margin-bottom:5px;
+    }
+.download li.gamepage {
+    border:none; 
+    padding-bottom:20px;
+    }
+.download ul.OS_images { 
+    list-style:none; 
+    border:none; 
+    background-color: #999; 
+    position:relative;
+    }
+.download ul.OS_images li { 
+    border:none; 
+    }
+.download ul.OS_images img {
+    border-width: 1px; 
+    border-color: black; 
+    border-style:solid; 
+    }
+.download ul.dependancy li {
+    border:none; 
+    }
+.download img { 
+    margin:10px; 
+    border-width: 1px;
+    border-color: black; 
+    border-style:solid; 
+    }
+.download img.download_screenshot { 
+    margin:10px; 
+    border-color:black; 
+    border-width: 1px; 
+    float:right; 
+    clear:right; 
+    position: relative; 
+    }
+.download div.filedesc {
+    width:430px; 
+    left: 220px; 
+    background-color:#999; 
+    margin-right:auto; 
+    margin-left:auto; 
+    border:none;
+    }
+
+
+/************************************/
+/* our menu bar list standard class */
+
+ul.menubar
+{
+    clear:none;
+    text-align: center;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 0;
+    margin-top: 0;
+    /* cancels gap caused by top padding in Opera 7.54 */
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #595959;
+    color: white;
+    width: 99%;
+    font-family: Arial,Helvetica,sans-serif;
+    line-height: 18px;
+    /* fixes Firefox 0.9.3 */
+}
+
+ul.menubar li
+{
+    display: inline;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 5px;
+    /* matches link padding except for left and right */
+    padding-top: 5px;
+}
+
+ul.menubar li a
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    color: white;
+    text-decoration: none;
+    border-right: 1px solid #fff;
+}
+
+ul.menubar li a:hover
+{
+    background-color: #FF9900;
+    color: white;
+}
+
+ul.menubar li a:visited
+{
+    color: white;
+    text-decoration: none;
+}  
+
+/************************************/  

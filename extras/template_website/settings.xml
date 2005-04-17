@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- This is the name of your server, it will appear in the web broser title -->
+<serversite name="Welcome To TITLE">
+
+	<!-- This is the url of the CSS file for this site -->
+	<CSSfile>main.css</CSSfile>
+	
+	<!-- This is the title of the game your server hosts -->
+	<title>TITLE</title>
+	
+	<!-- This url of the favorite or bookmark icon -->
+	<favicon></favicon>
+	
+	<!-- This is the main logo image of the game or server -->
+	<gamelogo>title.png</gamelogo>
+	
+	<!-- Server statistics information. The path to the actual data,
+	and whether to enable text and/or graphical output to the site. 
+	Also server state info, where server is up or down
+	-->
+	<serverdata>
+		<!-- Path to Server Stats XML file -->
+		<path>server_stats.xml</path>
+		<!-- Enable Text output? -->
+		<text enable="1"></text>
+		<!-- Enable Graphic output? -->
+		<graphic enable="1"></graphic>
+		
+		<!-- Server state - Reads from server XML file wether server is up -->
+		<serverstate enable="1">
+	  		<down><![CDATA[ 
+	  		Server is <span class="server_down">DOWN</span>. Maintenance work.
+	  		]]></down>
+	  		<up><![CDATA[ 
+	  		Server is <span class="server_up">up</span>. Go and play!
+	  		]]></up>
+		</serverstate>
+	</serverdata>
+	
+	<!-- Password and username for database 
+	In particular for loading the Top 20 info -->
+	<dbhostname>localhost</dbhostname>
+	<dbusername>user</dbusername>
+	<dbpassword>pass</dbpassword>
+	<dbname>databasename</dbname>
+	
+	<!-- If you require help (?) to appear on your site please set 
+	enable to 1 and enter the file name of the help definisions -->
+	<help enable="1">help.php</help>
+	
+	<!-- Game & Site description! You may use HTML tags -->
+	<description><text><![CDATA[ 
+	
+	<p>Description</p>
+	
+	]]></text>
+	<image>sheep.png</image>
+	</description>
+	
+	<!-- Site Footer. You may use HTML tags -->	
+	<footer enable="1">
+	<text>
+	<![CDATA[
+	
+	<p class="footer">&copy; 2004 Miguel Angel Blanch Lardin</p>
+	
+	]]>
+	</text>
+	</footer>
+	
+	<!-- The following info points the Form data to the account creation system of 
+	the server -->
+	<accountcreationinfo>
+		<!-- Location of the java virtual machine -->
+		<routetojavaVM><![CDATA[
+		C:/j2sdk1.4.2_05/bin/javaw
+		]]></routetojavaVM>
+		
+		<!-- Classpath location  -->
+		<classpath><![CDATA[
+		mysql-connector-java-3.0.9-stable-bin.jar;marauroa-0.41.jar
+		]]></classpath>
+		
+		<!-- Name of the createaccount class -->
+		<createAccountclass><![CDATA[
+		mapacman.mapacmancreateaccount
+		]]></createAccountclass>
+	</accountcreationinfo>
+	
+	<!-- Server News can be displayed along the right of the screen if you require -->
+	<newsbar enable="1">
+		<path>news.xml</path>
+		<maxitems>5</maxitems>
+	</newsbar>	
+	
+	<!-- enable or disable section which gives a link to your main 
+	download area defined by filelocation -->
+	<downloads enable="1">
+		<filelocation><![CDATA[
+		http://google.com/find_my_file_please!
+		]]></filelocation>
+	</downloads>
+	
+	<!-- Top 20 info 
+	Top 20 query, specify what MySQL query to run to get the data -->
+	<top20 enable="0">
+		<title>Top 20!</title>
+		<query><![CDATA[ 
+		select s.value,r.value from rpattribute r, rpattribute s where r.name="score" and s.name="name" and s.object_id=r.object_id order by cast(r.value as signed) desc limit 15;		
+		]]></query>
+	</top20>
+	
+	<screenshots enable="1">
+		<image>img1.jpg</image>
+		<image>img2.jpg</image>
+		<image>img3.jpg</image>
+	</screenshots>
+
+</serversite>

@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<news>
+  <!--
+  Here is the Standard format for a news item in this doc:
+  
+  <item>
+    <title></title>
+    <date></date>
+    <content>
+      <![CDATA[]]>
+      </content>
+  </item>
+  -->
+  
+  <item>
+    <title>First News</title>
+    <date>17/04/05</date>
+    <content>
+      <![CDATA[
+      This is a piece of info Yayayayaya!
+      ]]>
+      </content>
+  </item>
+  <item>
+    <title>Second News</title>
+    <date>17/04/05</date>
+    <content>
+      <![CDATA[
+      Another piece of info
+      ]]>
+      </content>
+  </item>
+</news>
