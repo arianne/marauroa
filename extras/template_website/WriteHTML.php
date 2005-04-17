@@ -155,8 +155,8 @@ function WriteNewsBar($xml)
   
 function WritePageContent($xml)
  {
-	echo '<div class="description"><h1>What is '.$xml['serversite'][0]['title'][0].'?</h1>'.$xml['serversite'][0]['description'][0]['text'][0]; 
-	echo '<div class="game_image"><img src="'.$xml['serversite'][0]['description'][0]['image'][0].'"></div></div>'; 	 	 
+	echo '<div class="game_image"><img src="'.$xml['serversite'][0]['description'][0]['image'][0].'"></div></div>'; 
+	echo '<div class="description"><h1>What is '.$xml['serversite'][0]['title'][0].'?</h1>'.$xml['serversite'][0]['description'][0]['text'][0];  	 
  }
 
 function WriteFooter($xml)
