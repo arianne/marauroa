@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.4 2005/04/06 15:35:00 arianne_rpg Exp $ */
+/* $Id: PacketValidator.java,v 1.5 2005/04/17 14:03:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -124,7 +124,6 @@ public class PacketValidator
         }
         
       Logger.trace("PacketValidator::loadBannedIPNetworkListFromDB","D","loaded "+ban_list_tmp.size() + " entries from ban table");
-      connection.close();
       }
     catch(Exception e)
       { 
