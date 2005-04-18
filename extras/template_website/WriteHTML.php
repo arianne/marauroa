@@ -253,7 +253,7 @@ function WriteTextServerStats($xml)
   echo '<tr class="data"><td>'.$content["ACTION"]["ADDED"].'</td><td>'.$content["ACTION"]["INVALID"].'</td><td></td></tr>';
 
   echo '<tr><td>&nbsp;</td></tr>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Online load</b></td><td/></tr>';
+  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Online load</b></td></tr>';
   echo '<tr class="subtitle"><td>Players</td><td>Objects</td><td></td></tr>';
   echo '<tr class="data"><td>'.$content["ONLINE"]["PLAYERS"].'</td><td>'.$content["ONLINE"]["OBJECTS"].'</td><td></td></tr>';
 
