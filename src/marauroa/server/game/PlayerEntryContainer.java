@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.4 2005/04/15 07:06:54 quisar Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.5 2005/04/18 08:37:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,10 +27,11 @@ import marauroa.common.crypto.RSAKey;
  *  the point to manage them all. */
 public class PlayerEntryContainer
   {
-    enum ClientStats {
-      NULL,
-      LOGIN_COMPLETE,
-      GAME_BEGIN,
+  enum ClientStats 
+    {
+    NULL,
+    LOGIN_COMPLETE,
+    GAME_BEGIN,
     }
 
   /** A class to store all the object information to use in runtime and access database */
@@ -38,17 +39,19 @@ public class PlayerEntryContainer
     {
     static public class SecuredLoginInfo
       {
-        byte[] clientNonceHash;
-        byte[] serverNonce;
-        byte[] clientNonce;
-        String userName;
-        byte[] password;
-        RSAKey key;
+      byte[] clientNonceHash;
+      byte[] serverNonce;
+      byte[] clientNonce;
+      String userName;
+      byte[] password;
+      RSAKey key;
 
-        SecuredLoginInfo(RSAKey key) {
-          this.key = key;
+      SecuredLoginInfo(RSAKey key) 
+        {
+        this.key = key;
         }
       }
+      
     /** The runtime clientid */
     public int clientid;
     /** The state in which this player is */
@@ -817,6 +820,7 @@ public class PlayerEntryContainer
       {
       clientid=rand.nextInt();
       }
+      
     return clientid;
     }
 
