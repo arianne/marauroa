@@ -189,13 +189,13 @@ echo '</td></tr>';
 echo '</table>'.
 	 '<p>Username is not modifiable once choosen, so choose wisely.</p>'.
 	 '<table>'.
-	 '<tr><td>Username: </td><td><input type="text" name="username" size="20" maxlength="20">';
+	 '<tr><td><b>Username</b>: </td><td><input type="text" name="username" size="20" maxlength="20">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
 	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=3\')">?</a> )';
  	 }
 echo '</td></tr>';
-echo '<tr><td>Password: </td><td><input type="password" size="20" name="password">';
+echo '<tr><td><b>Password</b>: </td><td><input type="password" size="20" name="password">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
 	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=4\')">?</a> )';
