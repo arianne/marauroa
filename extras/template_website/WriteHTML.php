@@ -79,7 +79,7 @@ function WriteRenderScreenshots($xml)
 	echo '<ul>';
   	foreach($xml['serversite'][0]['screenshots'][0]['image'] as $key=>$item)
     {
-		echo '<li><img src="'.$item.'"></li>';
+		echo '<li><img src="'.$item.'" alt="Screenshot"></li>';
 	}
 	echo '</ul>';
 	
@@ -155,58 +155,62 @@ function WriteNewsBar($xml)
   
 function WritePageContent($xml)
  {
-	echo '<div class="game_image"><img src="'.$xml['serversite'][0]['description'][0]['image'][0].'"></div></div>'; 
-	echo '<div class="description"><h1>What is '.$xml['serversite'][0]['title'][0].'?</h1>'.$xml['serversite'][0]['description'][0]['text'][0];  	 
+	echo '<div class="game_image"><img src="'.$xml['serversite'][0]['description'][0]['image'][0].'" alt="Game Image"></div>'; 
+	echo '<div class="description"><h1>What is '.$xml['serversite'][0]['title'][0].'?</h1>'.$xml['serversite'][0]['description'][0]['text'][0].'</div>';  	 
  }
 
 function WriteFooter($xml)
   {
 	  if( $xml['serversite'][0]['footer']['0 attr']['enable'] == "1" )
-	  	echo '<p>'.$xml['serversite'][0]['footer'][0]['text'][0].'</p>';
+	  	echo $xml['serversite'][0]['footer'][0]['text'][0];
   }
   
 function WriteAccountForm($xml)
   {
 	echo '<h1>Create an Account for free</h1>';  
-    echo 'You need an account in order to play '.$xml['serversite'][0]['title'][0];
-    echo '. You can create a free account here.';
+    echo '<p>You need an account in order to play '.$xml['serversite'][0]['title'][0];
+    echo '. You can create a free account here.</p>';
 
 echo '<form name="accountForm" method="POST" action="">'.
-	 '<input type="hidden" name="cmd" value="newaccount"/>'.
+	 '<input type="hidden" name="cmd" value="newaccount">'.
 	 '<table>'.
-	 '<tr><td>Real name: </td><td><input type="text" name="realname" size="60" maxlength="60"/>';
+	 '<tr><td><b>Real name</b>: </td><td><input type="text" name="realname" size="60" maxlength="60">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
-	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=1\')">?</a> )</td></tr>';
+	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=1\')">?</a> )';
  	 }
-echo '<tr><td>Email <i>(*)</i>: </td><td><input type="text" name="email" size="60" maxlength="60"/>';
+echo '</td></tr>';
+echo '<tr><td><b>Email</b> <i>(*)</i>: </td><td><input type="text" name="email" size="60" maxlength="60">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
-	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=2\')">?</a> )</td></tr>';
+	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=2\')">?</a> )';
  	 }
+echo '</td></tr>';
 echo '</table>'.
-	 '<p>Username is not modifiable once choosen, so choose wisely.<br>'.
+	 '<p>Username is not modifiable once choosen, so choose wisely.</p>'.
 	 '<table>'.
-	 '<tr><td>Username: </td><td><input type="text" name="username" size="20" maxlength="20"/>';
+	 '<tr><td>Username: </td><td><input type="text" name="username" size="20" maxlength="20">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
-	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=3\')">?</a> )</td></tr>';
+	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=3\')">?</a> )';
  	 }
-echo '<tr><td>Password: </td><td><input type="password" size="20" name="password"/>';
+echo '</td></tr>';
+echo '<tr><td>Password: </td><td><input type="password" size="20" name="password">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
-	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=4\')">?</a> )</td></tr>';
+	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=4\')">?</a> )';
  	 }
+echo '</td></tr>';
 echo '</table>'.
-	 '<p><input type="submit" value="Create account"/>';
+	 '<p><input type="submit" value="Create account">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable'] == "1")
 	 {
-	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=5\')">?</a> )</td></tr>';
- 	 }
-echo '</form>';
+	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=5\')">?</a> )';
+	 }
+echo '</p></form>';
 	 
-echo '<i>(*)</i>You need to enter a valid email address in case we need to contant you. You can\'t leave the field empty.'.
-	 ' <b>Please, limit yourself to one account per person</b>.';
+echo '<p><i>(*)</i>You need to enter a valid email address in case we need to contant you. You can\'t leave the field empty.'.
+	 ' <b>Please, limit yourself to one account per person</b>.</p>';
 }
 
 function WriteDownloads($xml)
@@ -226,32 +230,32 @@ function WriteTextServerStats($xml)
   parseXMLFile($xml['serversite'][0]['serverdata'][0]['path'][0],"stats_startElement","stats_endElement");
   
   echo '<div id="textstat"><h1>Detailed statistics</h1>';
-  echo '<p>This server uptime is '.$content["UPTIME"]["VALUE"].'</p>';
+  echo '<p class="uptime">This server uptime is '.$content["UPTIME"]["VALUE"].' seconds</p>';
 
   echo '<table>';
   echo '<tr class="maintitle"><td align="center" colspan="3"><b>Bytes managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>GZIP saved</td><tr>';
+  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>GZIP saved</td></tr>';
   echo '<tr class="data"><td>'.$content["BYTE"]["RECV"].'</td><td>'.$content["BYTE"]["SEND"].'</td><td>'.$content["BYTE"]["SAVED"].'</td></tr>';
 
-  echo '<tr><td>&nbsp;<td/><td/></tr>';
+  echo '<tr><td>&nbsp;</td></tr>';
   echo '<tr class="maintitle"><td align="center" colspan="3"><b>Messages managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>Incorrect</td><tr>';
+  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>Incorrect</td></tr>';
   echo '<tr class="data"><td>'.$content["MESSAGE"]["RECV"].'</td><td>'.$content["MESSAGE"]["SEND"].'</td><td>'.$content["MESSAGE"]["INCORRECT"].'</td></tr>';
 
-  echo '<tr><td>&nbsp;<td/><td/></tr>';
+  echo '<tr><td>&nbsp;</td></tr>';
   echo '<tr class="maintitle"><td align="center" colspan="3"><b>Players managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Logins</td><td>Logouts</td><td>Timeouts</td><tr>';
+  echo '<tr class="subtitle"><td>Logins</td><td>Logouts</td><td>Timeouts</td></tr>';
   echo '<tr class="data"><td>'.$content["PLAYER"]["LOGIN"].'</td><td>'.$content["PLAYER"]["LOGOUT"].'</td><td>'.$content["PLAYER"]["TIMEOUT"].'</td></tr>';
 
-  echo '<tr><td>&nbsp;<td/><td/></tr>';
+  echo '<tr><td>&nbsp;</td></tr>';
   echo '<tr class="maintitle"><td align="center" colspan="3"><b>Actions managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Handled</td><td>Rejected</td><td/><tr>';
-  echo '<tr class="data"><td>'.$content["ACTION"]["ADDED"].'</td><td>'.$content["ACTION"]["INVALID"].'</td><td/>';
+  echo '<tr class="subtitle"><td>Handled</td><td>Rejected</td><td></td></tr>';
+  echo '<tr class="data"><td>'.$content["ACTION"]["ADDED"].'</td><td>'.$content["ACTION"]["INVALID"].'</td><td></td></tr>';
 
-  echo '<tr><td>&nbsp;<td/><td/></tr>';
+  echo '<tr><td>&nbsp;</td></tr>';
   echo '<tr class="maintitle"><td align="center" colspan="3"><b>Online load</b></td><td/></tr>';
-  echo '<tr class="subtitle"><td>Players</td><td>Objects</td><td/><tr>';
-  echo '<tr class="data"><td>'.$content["ONLINE"]["PLAYERS"].'</td><td>'.$content["ONLINE"]["OBJECTS"].'</td><td/>';
+  echo '<tr class="subtitle"><td>Players</td><td>Objects</td><td></td></tr>';
+  echo '<tr class="data"><td>'.$content["ONLINE"]["PLAYERS"].'</td><td>'.$content["ONLINE"]["OBJECTS"].'</td><td></td></tr>';
 
   echo '</table></div>';
 	  
@@ -261,12 +265,12 @@ function WriteGraphicServerStats($xml)
   echo '<div id="graphicstat"><h1>Last 24 hours graphical representation</h1>';
   echo '<table>';
   echo '  <tr>';
-  echo '    <td>KBytes send per hour during the last 24 hours<br><img src="query/BS_3600.png"></td>';
-  echo '    <td>KBytes recieved hour during the last 24 hours<br><img src="query/BR_3600.png"></td>';
+  echo '    <td>KBytes send per hour during the last 24 hours<br><img src="query/BS_3600.png" alt="Statistic"></td>';
+  echo '    <td>KBytes recieved hour during the last 24 hours<br><img src="query/BR_3600.png" alt="Statistic"></td>';
   echo '  </tr>';
   echo '  <tr>';
-  echo '    <td>Player Online per hour during the last 24 hours<br><img src="query/PO_60.png"></td>';
-  echo '    <td>Daily accounts created during last 15 days<br><img src="query/AC_24_7.png"></td>';
+  echo '    <td>Player Online per hour during the last 24 hours<br><img src="query/PO_60.png" alt="Statistic"></td>';
+  echo '    <td>Daily accounts created during last 15 days<br><img src="query/AC_24_7.png" alt="Statistic"></td>';
   echo '  </tr>';
   echo '</table></div>';
 	  

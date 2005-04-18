@@ -39,7 +39,7 @@ WriteHeader($xml);
 
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
-  <script language="JavaScript">
+  <script language="JavaScript" type="text/javascript">
 	var newwindow = '';
 
 	function popitup(url)
@@ -70,7 +70,7 @@ WriteTitleSection($xml);
 </div>
 <!-- Page Title End -->
 
-<div id="clearboth">&nbsp;</div>
+<div class="clearboth">&nbsp;</div>
 
 <!-- News Bar Start -->
 <?php 
@@ -92,7 +92,7 @@ WritePageContent($xml);
 ?>
 
 
-<div id="clearboth">&nbsp;</div>
+<div class="clearleft">&nbsp;</div>
 
 <?php
 global $xml;
