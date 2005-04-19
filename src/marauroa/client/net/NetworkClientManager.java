@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.8 2005/04/15 07:06:37 quisar Exp $ */
+/* $Id: NetworkClientManager.java,v 1.9 2005/04/19 12:18:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -114,6 +114,7 @@ public class NetworkClientManager
 
         Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
         Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
+        
         if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
           {
           clientid=msg.getClientID();

@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.8 2005/04/15 07:04:58 quisar Exp $ */
+/* $Id: ariannexp.java,v 1.9 2005/04/19 12:17:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,79 +84,94 @@ public abstract class ariannexp
     Logger.trace("ariannexp::login",">");
     try
       {
-        int received = 0;
-        RSAPublicKey key = null;
-        byte[] clientNonce = null;
-        byte[] serverNonce = null;
-        netMan.addMessage(new MessageC2SLoginRequestKey());
+      int received = 0;
+      RSAPublicKey key = null;
+      byte[] clientNonce = null;
+      byte[] serverNonce = null;
+      
+      netMan.addMessage(new MessageC2SLoginRequestKey());
 
-        while(received < 3) {
-          Message msg;
-          if(messages.size()>0)
+      while(received < 3) 
+        {
+        Message msg;
+        if(messages.size()>0)
           {
-            msg=messages.remove(0);
+          msg=messages.remove(0);
           }
-          else
+        else
           {
-            msg=getMessage();
+          msg=getMessage();
           }
-          switch(msg.getType())
+       
+        switch(msg.getType())
           {
-            case S2C_LOGIN_SENDKEY:
-              key = ((MessageS2CLoginSendKey)msg).getKey();
-              clientNonce = Hash.random(Hash.hashLength());
-              netMan.addMessage(new MessageC2SLoginSendPromise(msg.getAddress(), Hash.hash(clientNonce)));
-              break;
-            case S2C_LOGIN_SENDNONCE:
-              if(serverNonce != null) {
-                return false;
-              }
-              serverNonce = ((MessageS2CLoginSendNonce)msg).getHash();
-              byte[] b1 = Hash.xor(clientNonce, serverNonce);
-              if(b1 == null) {
-                return false;
-              }
-              byte[] b2 = Hash.xor(b1, Hash.hash(password));
-              if(b2 == null) {
-                return false;
-              }
-              byte[] cryptedPassword = key.encodeByteArray(b2);
-              netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(msg.getAddress(),
-                    clientNonce, username, cryptedPassword));
-              break;
-            case S2C_LOGIN_ACK:
-              Logger.trace("ariannexp::login" , "D" , "Login correct");
-              received++;
-              break;
-            case S2C_CHARACTERLIST:
-              Logger.trace("ariannexp::login","D","Recieved Character list");
-              String[] characters=((MessageS2CCharacterList)msg).getCharacters();
-              onAvailableCharacters(characters);
-              received++;
-              break;
-            case S2C_SERVERINFO:
-              Logger.trace("ariannexp::login","D","Recieved Server info");
-              String[] info=((MessageS2CServerInfo)msg).getContents();
-              onServerInfo(info);
-              received++;
-              break;
-            case S2C_LOGIN_NACK:
-              Logger.trace("ariannexp::login","D","Login failed");
+          case S2C_LOGIN_SENDKEY:
+            {
+            Logger.trace("ariannexp::login" , "D" , "Recieved Key");
+            key = ((MessageS2CLoginSendKey)msg).getKey();
+            
+            clientNonce = Hash.random(Hash.hashLength());
+            netMan.addMessage(new MessageC2SLoginSendPromise(msg.getAddress(), Hash.hash(clientNonce)));
+            break;
+            }
+          case S2C_LOGIN_SENDNONCE:
+            {
+            Logger.trace("ariannexp::login" , "D" , "Recieved Server Nonce");
+            if(serverNonce != null) 
+              {
               return false;
-            default:
-              messages.add(msg);
+              }
+              
+            serverNonce = ((MessageS2CLoginSendNonce)msg).getHash();
+            byte[] b1 = Hash.xor(clientNonce, serverNonce);
+            if(b1 == null) 
+              {
+              return false;
+              }
+              
+            byte[] b2 = Hash.xor(b1, Hash.hash(password));
+            if(b2 == null) 
+              {
+              return false;
+              }
+              
+            byte[] cryptedPassword = key.encodeByteArray(b2);
+            netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(msg.getAddress(), clientNonce, username, cryptedPassword));
+            break;
+            }
+          case S2C_LOGIN_ACK:
+            Logger.trace("ariannexp::login" , "D" , "Login correct");
+            received++;
+            break;
+          case S2C_CHARACTERLIST:
+            Logger.trace("ariannexp::login","D","Recieved Character list");
+            String[] characters=((MessageS2CCharacterList)msg).getCharacters();
+            onAvailableCharacters(characters);
+            received++;
+            break;
+          case S2C_SERVERINFO:
+            Logger.trace("ariannexp::login","D","Recieved Server info");
+            String[] info=((MessageS2CServerInfo)msg).getContents();
+            onServerInfo(info);
+            received++;
+            break;
+          case S2C_LOGIN_NACK:
+            Logger.trace("ariannexp::login","D","Login failed");
+            return false;
+          default:
+            messages.add(msg);
           }
         }
         return true;
       }
-      catch(InvalidVersionException e)
+    catch(InvalidVersionException e)
       {
-        onError(1,"Invalid client version to connect to this server.");
-        return false;
+      onError(1,"Invalid client version to connect to this server.");
+      return false;
       }
-      finally
+    finally
       {
-        Logger.trace("ariannexp::login","<");
+      Logger.trace("ariannexp::login","<");
       }
     }
 
@@ -177,17 +192,17 @@ public abstract class ariannexp
       while(recieved!=1)
         {
         Message msg=getMessage();
-	switch(msg.getType())
-	  {
-	    case S2C_CHOOSECHARACTER_ACK:
-              Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
-              return true;
-	    case S2C_CHOOSECHARACTER_NACK:
-              Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
-              return false;
-	    default:
-	      messages.add(msg);
-	  }
+        switch(msg.getType())
+          {
+          case S2C_CHOOSECHARACTER_ACK:
+            Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
+            return true;
+          case S2C_CHOOSECHARACTER_NACK:
+            Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
+            return false;
+          default:
+            messages.add(msg);
+          }
         }
 
       return false;
@@ -233,15 +248,15 @@ public abstract class ariannexp
         while(recieved!=1)
           {
           Message msg=getMessage();
-	  switch(msg.getType())
-	    {
-	      case S2C_ACTION_ACK:
-	        recieved++;
-	        break;
-	      default:
-	        messages.add(msg);
-	    }
-	  }
+          switch(msg.getType())
+            {
+              case S2C_ACTION_ACK:
+                recieved++;
+                break;
+              default:
+                messages.add(msg);
+            }
+          }
         }
       }
     catch(InvalidVersionException e)
@@ -271,18 +286,18 @@ public abstract class ariannexp
       while(recieved!=1)
         {
         Message msg=getMessage();
-	switch(msg.getType())
-	  {
-	    case S2C_LOGOUT_ACK:
-              Logger.trace("ariannexp::logout","D","Logout ACK");
-              return true;
-	    case S2C_LOGOUT_NACK:
-              Logger.trace("ariannexp::logout","D","Logout NACK");
-              return false;
-	    default:
-              messages.add(msg);
-	  }
-	}
+        switch(msg.getType())
+          {
+          case S2C_LOGOUT_ACK:
+            Logger.trace("ariannexp::logout","D","Logout ACK");
+            return true;
+          case S2C_LOGOUT_NACK:
+            Logger.trace("ariannexp::logout","D","Logout NACK");
+            return false;
+          default:
+            messages.add(msg);
+          }
+        }
 
       return false;
       }
@@ -318,42 +333,42 @@ public abstract class ariannexp
 
       for(Message msg: messages)
         {
-	switch(msg.getType())
-	  {
-	    case S2C_PERCEPTION:
-	        {
-                Logger.trace("ariannexp::loop","D","Processing Message Perception");
-                MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
-                netMan.addMessage(reply);
+        switch(msg.getType())
+          {
+          case S2C_PERCEPTION:
+            {
+            Logger.trace("ariannexp::loop","D","Processing Message Perception");
+            MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
+            netMan.addMessage(reply);
 
-                MessageS2CPerception msgPer=(MessageS2CPerception)msg;
-                onPerception(msgPer);
+            MessageS2CPerception msgPer=(MessageS2CPerception)msg;
+            onPerception(msgPer);
 
-	        break;
-		}
+            break;
+            }
+      
+          case S2C_TRANSFER_REQ:
+            {
+            Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
+            List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
 
-	    case S2C_TRANSFER_REQ:
-		{
-                Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
-                List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
+            items=onTransferREQ(items);
 
-                items=onTransferREQ(items);
+            MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
+            netMan.addMessage(reply);
 
-                MessageC2STransferACK reply=new MessageC2STransferACK(msg.getAddress(),items);
-                netMan.addMessage(reply);
-
-	        break;
-		}
-
-	    case S2C_TRANSFER:
-		{
-                Logger.trace("ariannexp::loop","D","Processing Content Transfer");
-                List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
-                onTransfer(items);
-
-	        break;
-		}
-	  }
+            break;
+            }
+      
+          case S2C_TRANSFER:
+            {
+            Logger.trace("ariannexp::loop","D","Processing Content Transfer");
+            List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
+            onTransfer(items);
+      
+            break;
+            }
+          }
         }
 
       messages.clear();
