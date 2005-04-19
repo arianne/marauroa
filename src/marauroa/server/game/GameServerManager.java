@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.9 2005/04/19 12:19:25 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.8 2005/04/19 12:18:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -450,7 +450,7 @@ public final class GameServerManager extends Thread
       if(playerContainer.size()==GameConst.MAX_NUMBER_PLAYERS)
         {
         /* Error: Too many clients logged on the server. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Server is full, Client("+msg.getAddress().toString()+") can't login");
+        Logger.trace("GameServerManager::processLoginEvent","W","Server is full, Client("+msg.getAddress().toString()+") can't login");
   
         /* Notify player of the event. */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
@@ -491,7 +491,7 @@ public final class GameServerManager extends Thread
       if(!playerContainer.hasRuntimePlayer(clientid)) 
         {
         /* Error player did not send his promise. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") has not sent his promise yet");
+        Logger.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") has not sent his promise yet");
         return;
         }
         
@@ -499,7 +499,7 @@ public final class GameServerManager extends Thread
       if(player.state != PlayerEntryContainer.ClientStats.NULL) 
         {
         /* Error: Player is not at the right stage to send those informations. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") is not at the right stage of identification");
+        Logger.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") is not at the right stage of identification");
         return;
         }
       
@@ -516,7 +516,7 @@ public final class GameServerManager extends Thread
 
       if(!playerContainer.verifyAccount(player.loginInformations)) 
         {
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Incorrect username/password");
+        Logger.trace("GameServerManager::processLoginEvent","W","Incorrect username/password");
         stats.addPlayerInvalidLogin(msgLogin.getUsername());
         playerContainer.addLoginEvent(msgLogin.getUsername(),msg.getAddress(),false);
 
@@ -530,7 +530,7 @@ public final class GameServerManager extends Thread
       if(playerContainer.hasPlayer(msgLogin.getUsername())) 
         {
         /* Warning: Player is already logged. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
+        Logger.trace("GameServerManager::processLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
         int clientoldid=playerContainer.getClientidPlayer(msgLogin.getUsername());
 
         if(playerContainer.getRuntimeState(clientoldid)==PlayerEntryContainer.ClientStats.GAME_BEGIN)
@@ -546,13 +546,13 @@ public final class GameServerManager extends Thread
           }
         else
           {
-          Logger.trace("GameServerManager::processSecuredLoginEvent","D","Player trying to logout without choosing character");
+          Logger.trace("GameServerManager::processLoginEvent","D","Player trying to logout without choosing character");
           }
           
         playerContainer.removeRuntimePlayer(clientid);
         }
 
-      Logger.trace("GameServerManager::processSecuredLoginEvent","D","Correct username/password");
+      Logger.trace("GameServerManager::processLoginEvent","D","Correct username/password");
       
       /* Correct: The login is correct */
       player.username = player.loginInformations.userName;
