@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.5 2005/04/15 07:06:54 quisar Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.6 2005/04/20 18:58:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -370,27 +370,39 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     }
 
     public boolean verifyAccount(Transaction trans, PlayerEntryContainer.RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException
-    {
+      {
       Logger.trace("JDBCPlayerDatabase::verifyAccount",">");
-      try {
-        if(Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+      try 
+        {
+        if(Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) 
+          {
+          Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Diferent hashs for client Nonce");
           return false;
-        }
+          }
+          
         byte[] b1 = informations.key.decodeByteArray(informations.password);
         byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
-        if(b2 == null) {
+        if(b2 == null)   
+          {
+          Logger.trace("JDBCPlayerDatabase::verifyAccount","D","B2 is null");
           return false;
-        }
+          }
+          
         byte[] password = Hash.xor(b1, b2);
-        if(password == null) {
+        if(password == null) 
+          {
+          Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Password is null");
           return false;
-        }
+          }
 
         if(!validString(informations.userName))
-        {
+          {
           throw new SQLException("Trying to use invalid characters username':"+informations.userName+"'");
-        }
+          }
 
+      // NOTE: HACK: TODO: Review transaction system.
+      // This commit is needed to "update" the connection... VERY strange thing...
+      trans.commit();
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String hexPassword = Hash.toHexString(Hash.hash(password));
@@ -399,32 +411,44 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       ResultSet result = stmt.executeQuery(query);
 
       if(result.next())
-      {
+        {
         String account_status = result.getString("status");
 
         if("active".equals(account_status))
-        {
+          {
           return true;
-        }
+          }
         else
-        {
+          {
           Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Username/password is ok, but account is in status {"+account_status+"}");
           return false;
+          }
         }
-      }
+      else
+        {
+        Connection connection1 = ((JDBCTransaction)trans).getConnection();
+        Statement stmt1 = connection1.createStatement();
+        String query1 = "select * from player;";
+        Logger.trace("JDBCPlayerDatabase::verifyAccount","D",query1);
+        ResultSet result1 = stmt1.executeQuery(query1);
+        while(result1.next())
+          {
+          Logger.trace("JDBCPlayerDatabase::verifyAccount","D",result1.getString("id")+"\t"+result1.getString("username")+"\t"+result1.getString("password"));
+          }
+        }
 
       return false;
-    }
+      }
     catch(Exception e)
-    {
+      {
       Logger.thrown("JDBCPlayerDatabase::verifyAccount","X",e);
       throw new GenericDatabaseException(e.getMessage());
-    }
+      }
     finally
-    {
+      {
       Logger.trace("JDBCPlayerDatabase::verifyAccount","<");
+      }
     }
-  }
 
 
   /** This method returns the list of Login events as a array of Strings
@@ -892,12 +916,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     {
     if(transaction==null || !transaction.isValid())
       {
+      Logger.trace("JDBCPlayerDatabase::getTransaction","D","Creating a new transaction with a new connection");
       transaction=new JDBCTransaction(createConnection(connInfo));
       if(transaction==null || !transaction.isValid())
         {
         throw new GenericDatabaseException("can't create connection");
         }
       }
+      
     return(transaction);
     }
 

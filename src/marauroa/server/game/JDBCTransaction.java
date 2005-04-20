@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.2 2005/04/20 18:58:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ public class JDBCTransaction extends Transaction
     {
     try
       {
+      Logger.trace("JDBCTransaction::commit","D","Commiting");
       connection.commit();
       }
     catch(SQLException e)
@@ -60,6 +61,7 @@ public class JDBCTransaction extends Transaction
     {
     try
       {
+      Logger.trace("JDBCTransaction::rollback","D","Rollback");
       connection.rollback();
       }
     catch(SQLException e)
