@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.4 2005/04/15 07:06:53 quisar Exp $ */
+/* $Id: createaccount.java,v 1.5 2005/04/25 12:42:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -134,6 +134,8 @@ public abstract class createaccount
 
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       trans=playerDatabase.getTransaction();
+      
+      trans.begin();
 
       out.println("Checking for null/empty string");
       for(Information item: information)
@@ -179,6 +181,7 @@ public abstract class createaccount
 
       playerDatabase.addCharacter(trans, get("username"),get("character"),object);
       out.println("Correctly created");
+      
       trans.commit();
       }
     catch(Exception e)

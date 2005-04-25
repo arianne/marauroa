@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.6 2005/04/20 18:58:05 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.7 2005/04/25 12:44:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -394,26 +394,26 @@ public class PlayerEntryContainer
       }
     }
 
-    /** This method returns true if the information is a correct login informations, and if there is a correct entry in the database.
-     *  @return true if informations are correct, false otherwise. */
-    public boolean verifyAccount(RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException 
+  /** This method returns true if the information is a correct login informations, and if there is a correct entry in the database.
+   *  @return true if informations are correct, false otherwise. */
+  public boolean verifyAccount(RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException 
+    {
+    Logger.trace("PlayerEntryContainer::verifyAccount",">");
+    try 
       {
-      Logger.trace("PlayerEntryContainer::verifyAccount",">");
-      try 
-        {
-        return playerDatabase.verifyAccount(transaction,informations);
-        }
-      catch(Exception e)
-        {
-        transaction=playerDatabase.getTransaction();
-        Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
-        throw new GenericDatabaseException(e.getMessage());
-        }
-      finally
-        {
-        Logger.trace("PlayerEntryContainer::verifyAccount","<");
-        }
+      return playerDatabase.verifyAccount(transaction,informations);
       }
+    catch(Exception e)
+      {
+      transaction=playerDatabase.getTransaction();      
+      Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
+      throw new GenericDatabaseException(e.getMessage());
+      }
+    finally
+      {
+      Logger.trace("PlayerEntryContainer::verifyAccount","<");
+      }
+    }
 
   /** This method add a Login event to the player
    *  @param clientid the runtime id of the player
@@ -427,6 +427,7 @@ public class PlayerEntryContainer
     Logger.trace("PlayerEntryContainer::addLoginEvent",">");
     try
       {
+      transaction.begin();
       playerDatabase.addLoginEvent(transaction,username,source,correctLogin);
       transaction.commit();
       }
@@ -768,8 +769,10 @@ public class PlayerEntryContainer
     try
       {
       if(hasRuntimePlayer(clientid))
-        {
+        {        
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
+        
+        transaction.begin();
 
         playerDatabase.setRPObject(transaction,entry.username,entry.choosenCharacter,object);
         entry.characterid=new RPObject.ID(object);

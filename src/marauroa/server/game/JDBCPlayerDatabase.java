@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.6 2005/04/20 18:58:05 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.7 2005/04/25 12:44:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -400,9 +400,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           throw new SQLException("Trying to use invalid characters username':"+informations.userName+"'");
           }
 
-      // NOTE: HACK: TODO: Review transaction system.
-      // This commit is needed to "update" the connection... VERY strange thing...
-      trans.commit();
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String hexPassword = Hash.toHexString(Hash.hash(password));
@@ -632,6 +629,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(Exception sqle)
       {
+      // TODO: NOTE: HACK: IMHO it should be rolledback at the caller.
       trans.rollback();
       Logger.thrown("JDBCPlayerDatabase::addCharacter","X",sqle);
       throw new GenericDatabaseException(username);
@@ -941,7 +939,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       connInfo.put("charSet", "UTF-8");
 
       Connection conn = DriverManager.getConnection((String)props.get("jdbc_url"), connInfo);
+
       conn.setAutoCommit(false);
+      conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
       return conn;
       }
     catch (Exception e)

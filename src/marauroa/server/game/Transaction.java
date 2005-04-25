@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.2 2005/04/25 12:44:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,12 @@ package marauroa.server.game;
  * JDBCPlayerDatabase needs an instance of JDBCTransaction in order to work properly
  */
 public class Transaction
-  {  
+  {
+  /** Starts a transaction */  
+  public void begin() throws TransactionException
+    {
+    }
+    
   /** commits the changes made to backstore.
    * @exception TransactionException if the underlaying backstore throws an Exception   */
   public void commit() throws TransactionException
