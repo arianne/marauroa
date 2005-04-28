@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.3 2005/04/25 12:44:14 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.4 2005/04/28 19:01:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class JDBCTransaction extends Transaction
     try
       {
       Statement stmt=connection.createStatement();
-      stmt.executeQuery("start transaction;");
+      stmt.execute("start transaction;");
       }
     catch(SQLException e)
       {
