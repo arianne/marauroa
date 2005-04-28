@@ -141,8 +141,11 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.95 Apr XX, 2005
-- Fixed a bug related to connection being closed.
+0.95 Apr 28, 2005
+- Fixed a bug related to database connection being closed.
+- Fixed an exception at Secure login.
+- Fixed a bug because of Transaction model at MySQL (http://dev.mysql.com/doc/mysql/en/innodb-consistent-read-example.html)
+- Added outOfsync method to ariannexp
 
 0.94 Apr 17, 2005
 - Fixed createaccount to use a parameter based .ini instead of hardcoded configuration file.
