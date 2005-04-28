@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.9 2005/04/19 12:17:46 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.10 2005/04/28 13:47:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,6 +73,14 @@ public abstract class ariannexp
       }
 
     return msg;
+    }
+  
+  public void resync()
+    {
+    Logger.trace("ariannexp::resync",">");
+    MessageC2SOutOfSync msg=new MessageC2SOutOfSync();
+    netMan.addMessage(msg);
+    Logger.trace("ariannexp::resync","<");
     }
 
   /** Login to server using the given username and password.

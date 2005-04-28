@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.15 2005/04/15 07:06:54 quisar Exp $ */
+/* $Id: RPServerManager.java,v 1.16 2005/04/28 13:47:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -424,6 +424,11 @@ public class RPServerManager extends Thread
           {
           Logger.trace("RPServerManager::run","D","Turn time elapsed: "+Long.toString(stop-start));
           delay=turnDuration-(stop-start);
+          if(delay<0)
+            {
+            Logger.trace("RPServerManager::run","W","Turn duration overflow by "+(-delay)+" ms");
+            }
+            
           Thread.sleep(delay<0?0:delay);
           }
         catch(InterruptedException e)
