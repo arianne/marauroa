@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.16 2005/04/28 13:47:35 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.17 2005/05/04 20:48:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,9 @@ public class RPServerManager extends Thread
   /** The PlayerEntryContainer so that we know where to send perceptions */
   private PlayerEntryContainer playerContainer;
 
+  private List<Integer> playersToRemove;
+
+
   private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
 
   /** Constructor
@@ -62,6 +65,7 @@ public class RPServerManager extends Thread
       scheduler=new RPScheduler();
       contentsToTransfer=new HashMap<RPObject.ID, List<TransferContent>>();
       playerContainer=PlayerEntryContainer.getContainer();
+      playersToRemove=new LinkedList<Integer>();
       this.netMan=netMan;
 
       Configuration conf=Configuration.getConfiguration();
@@ -207,14 +211,14 @@ public class RPServerManager extends Thread
     {
     Logger.trace("RPServerManager::buildPerceptions",">");
 
-    List<Integer> playersToRemove=new LinkedList<Integer>();
     List<Integer> playersToUpdate=new LinkedList<Integer>();
+    playersToRemove.clear();
 
-	/** We reset the cache at Perceptions */
+    /** We reset the cache at Perceptions */
     MessageS2CPerception.clearPrecomputedPerception();
 
     PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
-
+    
     while(it.hasNext())
       {
       int clientid=it.next();
@@ -252,7 +256,6 @@ public class RPServerManager extends Thread
       }
 
     notifyUpdatesOnPlayer(playersToUpdate);
-    notifyTimedoutPlayers(playersToRemove);
 
     Logger.trace("RPServerManager::buildPerceptions","<");
     }
@@ -463,6 +466,9 @@ public class RPServerManager extends Thread
             /** Move zone to the next turn */
             world.nextTurn();
 
+            /** Remove timeout players */
+            notifyTimedoutPlayers(playersToRemove);
+            
             turn++;
 
             ruleProcessor.beginTurn();

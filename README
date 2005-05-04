@@ -141,6 +141,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.96 May XX, 2005
+- Fixed a bug that make clients not to notice of timeout players
+
 0.95 Apr 28, 2005
 - Fixed a bug related to database connection being closed.
 - Fixed an exception at Secure login.
