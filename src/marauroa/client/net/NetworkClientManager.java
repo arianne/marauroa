@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.9 2005/04/19 12:18:44 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.10 2005/05/10 14:06:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,8 +85,11 @@ public class NetworkClientManager
         }
       }
 
-    Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",processedMessages.size()+" message available");
-    Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",choosenMsg.toString());
+    if(Logger.loggable("NetworkClientManager::getOldestProcessedMessage","D"))
+      {
+      Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",processedMessages.size()+" message available");
+      Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",choosenMsg.toString());
+      }
 
     processedMessages.remove(choosenMsg);
     return choosenMsg;
@@ -112,8 +115,11 @@ public class NetworkClientManager
 
         Message msg=msgFactory.getMessage(message.content,message.address);
 
-        Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
-        Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
+        if(Logger.loggable("NetworkClientManager::processPendingPackets","D"))
+          {
+          Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
+          Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
+          }
         
         if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
           {
