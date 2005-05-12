@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.4 2005/04/06 15:34:59 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.5 2005/05/12 19:34:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,9 @@ public interface IRPRuleProcessor
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
   public void setContext(RPServerManager rpman,RPWorld world);
+
+  /** Returns true if the version of the game is compatible */
+  public boolean checkGameVersion(String game, String version);
   
   /** This method is called *before* adding an action by RPScheduler so you can 
    *  choose not to allow the action to be added by returning false */

@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.96
+Version 0.97
 
 
 Status
@@ -141,6 +141,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.97 May XX, 2005
+- Added client version check at Server
+
 0.96 May 12, 2005
 - Fixed a bug that make clients not to notice of timeout players
 - Improved speed by making conditional logging on NetworkClientManager

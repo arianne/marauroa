@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.3 2005/04/15 07:06:52 quisar Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.4 2005/05/12 19:34:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,15 +26,17 @@ public class MessageS2CLoginNACK extends Message
       UNKNOWN_REASON,
       USERNAME_WRONG,
       SERVER_IS_FULL,
+      GAME_MISMATCH,
       PROTOCOL_MISMATCH,
       INVALID_NONCE,
     }
 
   static private String[] text=
-      {
+    {
     "Unknown reason",
     "Username/Password incorrect.",
     "Server is full.",
+    "Server is running an incompatible version of game. Update client",
     "marauroa.common.network Protocol invalid version: Running "+Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
     "The hash you sent does not correspond to the nonce you sent."
     };

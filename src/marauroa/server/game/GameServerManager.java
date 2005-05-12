@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.10 2005/04/20 18:58:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.11 2005/05/12 19:34:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -435,9 +435,24 @@ public final class GameServerManager extends Thread
     {
     Logger.trace("GameServerManager::processLoginRequestKey" , ">");
     
-    MessageS2CLoginSendKey msgLoginSendKey=new MessageS2CLoginSendKey(msg.getAddress(),key);
-    msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
-    netMan.addMessage(msgLoginSendKey);
+    MessageC2SLoginRequestKey msgRequest=(MessageC2SLoginRequestKey)msg;
+    if(rpMan.checkGameVersion(msgRequest.getGame(),msgRequest.getVersion()))
+      {
+      MessageS2CLoginSendKey msgLoginSendKey=new MessageS2CLoginSendKey(msg.getAddress(),key);
+      msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+      netMan.addMessage(msgLoginSendKey);
+      }
+    else
+      {
+      /* Error: Incompatible game version. Update client */
+      Logger.trace("GameServerManager::processLoginRequestKey","W","Server is running an incompatible game version. Client("+msg.getAddress().toString()+") can't login");
+
+      /* Notify player of the event. */
+      MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
+
+      netMan.addMessage(msgLoginNACK);
+      }
+    
     
     Logger.trace("GameServerManager::processLoginRequestKey" , "<");
     }

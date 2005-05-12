@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.4 2005/05/12 19:34:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,11 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     {
     this.world=world;
     this.rpman=rpman;
+    }
+
+  public boolean checkGameVersion(String game, String version)
+    {
+    return false;
     }
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)

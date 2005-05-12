@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.10 2005/04/28 13:47:34 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.11 2005/05/12 19:34:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,7 +97,7 @@ public abstract class ariannexp
       byte[] clientNonce = null;
       byte[] serverNonce = null;
       
-      netMan.addMessage(new MessageC2SLoginRequestKey());
+      netMan.addMessage(new MessageC2SLoginRequestKey(null,getGameName(),getVersionNumber()));
 
       while(received < 3) 
         {
@@ -164,7 +164,9 @@ public abstract class ariannexp
             received++;
             break;
           case S2C_LOGIN_NACK:
-            Logger.trace("ariannexp::login","D","Login failed");
+            MessageS2CLoginNACK msgNACK=(MessageS2CLoginNACK)msg;
+            Logger.trace("ariannexp::login","D","Login failed. Reason: "+msgNACK.getResolution());
+            event=msgNACK.getResolution();
             return false;
           default:
             messages.add(msg);
@@ -181,6 +183,12 @@ public abstract class ariannexp
       {
       Logger.trace("ariannexp::login","<");
       }
+    }
+  
+  private String event;
+  public String getEvent()
+    {
+    return event;
     }
 
   /** After login allows you to choose a character to play
@@ -391,7 +399,7 @@ public abstract class ariannexp
       Logger.trace("ariannexp::loop","<");
       }
     }
-
+   
   /** It is called when a perception arrives so you can choose how to apply the perception */
   abstract protected void onPerception(MessageS2CPerception message);
   /** It is called on a transfer request so you can choose what items to approve or reject */
@@ -404,5 +412,8 @@ public abstract class ariannexp
   abstract protected void onServerInfo(String[] info);
   /** It is called on error conditions so you can improve the handling of the error */
   abstract protected void onError(int code, String reason);
+
+  abstract protected String getGameName();
+  abstract protected String getVersionNumber();
   }
 

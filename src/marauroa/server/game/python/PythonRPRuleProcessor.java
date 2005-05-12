@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.3 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.4 2005/05/12 19:34:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,8 @@ import marauroa.common.*;
 import marauroa.common.game.*;
 import marauroa.server.game.*;
 
+/** FIXME: TODO: Update this class. It is now broken.
+ *  Document how to use it. */
 public class PythonRPRuleProcessor implements IRPRuleProcessor
   {
   private GameScript gameScript;
@@ -50,6 +52,12 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
       Logger.thrown("PythonRPRuleProcessor::setContext","!",e);
       //@@@@@ System.exit(-1);
       }
+    }
+
+
+  public boolean checkGameVersion(String game, String version)
+    {
+    return false;
     }
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)
