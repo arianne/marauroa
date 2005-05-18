@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.9 2005/04/16 10:29:38 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.10 2005/05/18 18:14:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,6 +103,20 @@ public class RPWorld implements Iterable<IRPZone>
       {
       IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
       return zone.get(id);
+      }
+    catch(Exception e)
+      {
+      Logger.thrown("RPWorld::get","X",e);
+      throw new NoRPZoneException();  
+      }
+    }
+
+  public boolean has(RPObject.ID id) throws NoRPZoneException, RPObjectInvalidException  
+    {
+    try
+      {
+      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
+      return zone.has(id);
       }
     catch(Exception e)
       {
