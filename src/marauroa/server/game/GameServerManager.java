@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.12 2005/05/21 10:07:41 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.13 2005/05/21 10:18:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -683,6 +683,9 @@ public final class GameServerManager extends Thread
         if(content.ack==true)
           {
           Logger.trace("GameServerManager::processTransferACK","D","Trying transfer content "+content);
+          stats.add("Transfer content",1);
+          stats.add("Tranfer content size",content.data.length);
+          
           content=entry.getContent(content.name);
           if(content!=null)
             {
@@ -695,6 +698,10 @@ public final class GameServerManager extends Thread
             {
             Logger.trace("GameServerManager::processTransferACK","D","CAN'T transfer content "+content);
             }
+          }
+        else
+          {
+          stats.add("Transfer content cache",1);
           }
         }
 
