@@ -2,7 +2,7 @@ create table if not exists player
   (
   id integer auto_increment not null,
   username varchar(32) not null,
-  password varchar(256) not null,
+  password varchar(255) not null,
   
   email varchar(64) not null,
   timedate timestamp,

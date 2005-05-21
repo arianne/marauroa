@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.3 2005/04/15 07:06:52 quisar Exp $ */
+/* $Id: MessageFactory.java,v 1.4 2005/05/21 20:10:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,7 +118,7 @@ public class MessageFactory
         }
       else
         {
-        Logger.trace("MessageFactory::getMessage","X","Message has incorrect protocol version");
+        Logger.trace("MessageFactory::getMessage","X","Message has incorrect protocol version("+data[0]+") expected ("+NetConst.NETWORK_PROTOCOL_VERSION+")");
         throw new InvalidVersionException(data[0]);
         }
       }
