@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.11 2005/05/12 19:34:36 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.12 2005/05/21 15:39:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -176,6 +176,7 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
+      event="Invalid client version to connect to this server.";
       onError(1,"Invalid client version to connect to this server.");
       return false;
       }

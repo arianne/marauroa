@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.4 2005/05/21 10:07:41 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.5 2005/05/21 15:39:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -168,6 +168,7 @@ public class Statistics implements StatisticsMBean
         
         database.addStatisticsEvent(transaction,now);
         now.clear();
+        init();
         }
       
       PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="0.97"/>
+  <property name="version" value="1.00"/>
   <property name="src" value="src"/>
   <property name="extras" value="extras"/>
   <property name="build" value="build"/>
