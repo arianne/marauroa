@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.3 2005/03/04 23:32:25 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.4 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,64 +16,85 @@ import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 
+import marauroa.common.*;
 import marauroa.server.*;
 
 /** This class encapsulate everything related to the statistics recollection and
  *  storage. */
 public class Statistics implements StatisticsMBean
   {
-  public static class GatheredVariables
+  static class Variables implements Iterable<String>
     {
-    public long bytesRecv=0;
-    public long bytesSend=0;
+    Map<String,Integer> content;
     
-    public long messagesRecv=0;
-    public long messagesSend=0;
-    public long messagesIncorrect=0;
+    public Variables()
+      {
+      content=new HashMap<String,Integer>();
+      }
+      
+    public void clear()
+      {
+      content.clear();
+      }
+      
+    public void put(String type, int value)
+      {
+      content.put(type,value);
+      }
     
-    public long playersLogin=0;
-    public long playersInvalidLogin=0;
-    public long playersLogout=0;
-    public long playersTimeout=0;
-    public long playersOnline=0;
+    public void add(String type, int value)
+      {
+      if(!content.containsKey(type))
+        {
+        put(type,value);
+        }
+      else
+        {
+        content.put(type,content.get(type)+value);
+        }        
+      }  
+    
+    public int get(String type)
+      {
+      return content.get(type);
+      }
+    
+    public Iterator<String> iterator()
+      {
+      return content.keySet().iterator();
+      }
+    
+    public void add(Variables var)
+      {
+      for(String type: var)
+        {
+        add(type,var.get(type));
+        }
+      }
 
-    public long objectsNow=0;
-    public long actionsAdded=0;
-    public long actionsInvalid=0;
-    
     public void print(PrintWriter out, double diff)
       {
-      out.println("  <byte recv=\""+String.valueOf(bytesRecv)+"\" send=\""+String.valueOf(bytesSend)+"\"/>");
-      out.println("  <message recv=\""+String.valueOf(messagesRecv)+"\" send=\""+String.valueOf(messagesSend)+"\" incorrect=\""+String.valueOf(messagesIncorrect)+"\"/>");
-      out.println("  <player login=\""+String.valueOf(playersLogin)+"\" failed=\""+String.valueOf(playersInvalidLogin)+"\" logout=\""+String.valueOf(playersLogout)+"\" timeout=\""+String.valueOf(playersTimeout)+"\"/>");
-      out.println("  <online players=\""+String.valueOf(playersOnline)+"\" objects=\""+String.valueOf(objectsNow)+"\"/>");
-      out.println("  <action added=\""+String.valueOf(actionsAdded)+"\" invalid=\""+String.valueOf(actionsInvalid)+"\"/>");
+      for(String type: content.keySet())
+        {
+        out.println("<attrib name=\""+type+"\" value=\""+content.get(type)+"\" />");
+        }
       }
 
-    public void add(GatheredVariables var)
+    public void print(PrintStream out, double diff)
       {
-      bytesRecv=var.bytesRecv+bytesRecv;
-      bytesSend=var.bytesSend+bytesSend;
-      messagesRecv=var.messagesRecv+messagesRecv;
-      messagesSend=var.messagesSend+messagesSend;
-      messagesIncorrect=var.messagesIncorrect+messagesIncorrect;
-      playersLogin=var.playersLogin+playersLogin;
-      playersInvalidLogin=var.playersInvalidLogin+playersInvalidLogin;
-      playersTimeout=var.playersTimeout+playersTimeout;
-      playersLogout=var.playersLogout+playersLogout;
-      playersOnline=var.playersOnline;
-      objectsNow=var.objectsNow;
-      actionsAdded=var.actionsAdded+actionsAdded;
-      actionsInvalid=var.actionsInvalid+actionsInvalid;
+      out.println("Statistics: "+content.size());
+      for(String type: content.keySet())
+        {
+        out.println("<attrib name=\""+type+"\" value=\""+content.get(type)+"\" />");
+        }
       }
     }
-
+    
+  Variables now;
+  Variables sinceStart;
+  
   private Date startTime;
 
-  private GatheredVariables nowVar;
-  private GatheredVariables allTimeVar;
-  private GatheredVariables meanMinuteVar;
-  
   private PrintWriter eventfile;
   private Date timestamp;
   private Date lastStatisticsEventAdded;
@@ -87,9 +108,22 @@ public class Statistics implements StatisticsMBean
     
     lastStatisticsEventAdded=new Date();
     
-    nowVar=new GatheredVariables();
-    allTimeVar=new GatheredVariables();
-    meanMinuteVar=new GatheredVariables();
+    now=new Variables();
+    sinceStart=new Variables();
+    
+    init();
+    }
+  
+  private void init()
+    {
+    /** we need these for JDBC Database */
+    set("Players online",0);
+    add("Players login",0);
+    add("Players logout",0);
+    add("Players timeout",0);
+
+    add("Bytes send",0);
+    add("Bytes recv",0);    
     }
     
   private static Statistics stats;
@@ -100,84 +134,21 @@ public class Statistics implements StatisticsMBean
       {
       stats=new Statistics();
       }
+      
     return stats;
     }
   
-  public void addBytesRecv(long bytes)
-    {
-    nowVar.bytesRecv+=bytes;
+  public void set(String type, int value)
+    {    
+    now.put(type,value);
     }
   
-  public void addBytesSend(long bytes)
+  public void add(String type, int value)
     {
-    nowVar.bytesSend+=bytes;
+    now.add(type,value);
+    sinceStart.add(type,value);
     }
-  
-  public void addMessageRecv()
-    {
-    ++nowVar.messagesRecv;
-    }
-  
-  public void addMessageSend()
-    {
-    ++nowVar.messagesSend;
-    }
-  
-  public void addMessageIncorrect()
-    {
-    ++nowVar.messagesIncorrect;
-    }
-  
-  public void addPlayerLogin(String username, int id)
-    {
-    ++nowVar.playersLogin;
-    }
-  
-  public void addPlayerLogout(String username, int id)
-    {
-    ++nowVar.playersLogout;
-    }
-  
-  public void addPlayerInvalidLogin(String username)
-    {
-    ++nowVar.playersInvalidLogin;
-    }
-
-  public void addPlayerTimeout(String username, int id)
-    {
-    ++nowVar.playersTimeout;
-    }
-  
-  public void setOnlinePlayers(long online)
-    {
-    nowVar.playersOnline=online;
-    }
-  
-  public void setObjectsNow(long now)
-    {
-    nowVar.objectsNow=now;
-    }
-
-  public void addActionsAdded(String action, int id)
-    {
-    ++nowVar.actionsAdded;
-    }
-  
-  public void addActionsAdded(String action, int id, String text)
-    {
-    ++nowVar.actionsAdded;
-    }
-  
-  public void addActionsInvalid()
-    {
-    ++nowVar.actionsInvalid;
-    }
-  
-  public GatheredVariables getVariables()
-    {
-    return(nowVar);
-    }
-  
+    
   public void print()
     {
     try
@@ -185,12 +156,8 @@ public class Statistics implements StatisticsMBean
       Configuration conf=Configuration.getConfiguration();
       String webfolder=conf.get("server_stats_directory");
       
-      PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
-      
-      allTimeVar.add(nowVar);
-      meanMinuteVar.add(nowVar);
       
       if((actualTime.getTime()-lastStatisticsEventAdded.getTime())>60000)
         {
@@ -199,86 +166,25 @@ public class Statistics implements StatisticsMBean
         JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
         Transaction transaction=database.getTransaction();
         
-        database.addStatisticsEvent(transaction,meanMinuteVar);
-        meanMinuteVar=new GatheredVariables();
+        database.addStatisticsEvent(transaction,now);
+        now.clear();
         }
       
-      out.println("<statistics time=\""+Long.toString(actualTime.getTime()/1000)+"\">");
-      out.println("  <uptime value=\""+String.valueOf(diff)+"\"/>");
-      allTimeVar.print(out,diff);
+      PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));
+      out.println("<statistics time=\""+(actualTime.getTime()/1000)+"\">");
+      out.println("  <uptime value=\""+diff+"\"/>");
+      sinceStart.print(out,diff);
       out.println("</statistics>");
       out.close();
-      
-      nowVar=new GatheredVariables();
       }
     catch(Exception e)
       {
+      Logger.thrown("Statistics::print","X",e);
       }
     }
 
-  public long getBytesRecv()
+  public long get(String type)
     {
-    return allTimeVar==null?-1:allTimeVar.bytesRecv;
+    return sinceStart==null?-1:sinceStart.get(type);
     }
-
-  public long getBytesSend()
-    {
-    return allTimeVar==null?-1:allTimeVar.bytesSend;
-    }
-
-  public long getMessagesRecv()
-    {
-    return allTimeVar==null?-1:allTimeVar.messagesRecv;
-    }
-
-  public long getMessagesSend()
-    {
-    return allTimeVar==null?-1:allTimeVar.messagesSend;
-    }
-
-  public long getMessagesIncorrect()
-    {
-    return allTimeVar==null?-1:allTimeVar.messagesIncorrect;
-    }
-
-  public long getPlayersLogin()
-    {
-    return allTimeVar==null?-1:allTimeVar.playersLogin;
-    }
-
-  public long getPlayersInvalidLogin()
-    {
-    return allTimeVar==null?-1:allTimeVar.playersInvalidLogin;
-    }
-
-  public long getPlayersLogout()
-    {
-    return allTimeVar==null?-1:allTimeVar.playersLogout;
-    }
-
-  public long getPlayersTimeout()
-    {
-    return allTimeVar==null?-1:allTimeVar.playersTimeout;
-    }
-
-  public long getPlayersOnline()
-    {
-    return allTimeVar==null?-1:allTimeVar.playersOnline;
-    }
-
-  public long getObjectsNow()
-    {
-    return allTimeVar==null?-1:allTimeVar.objectsNow;
-    }
-
-  public long getActionsAdded() 
-    {
-    return allTimeVar==null?-1:allTimeVar.actionsAdded;
-    }
-
-  public long getActionsInvalid()
-    {
-    return allTimeVar==null?-1:allTimeVar.actionsInvalid;
-    }
-
   }

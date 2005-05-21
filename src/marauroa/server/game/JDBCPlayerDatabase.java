@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.7 2005/04/25 12:44:14 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.8 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1313,7 +1313,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     return object_id;
     }
 
-  public void addStatisticsEvent(Transaction trans, Statistics.GatheredVariables var) throws GenericDatabaseException
+  public void addStatisticsEvent(Transaction trans, Statistics.Variables var) throws GenericDatabaseException
     {
     Logger.trace("JDBCPlayerDatabase::addStatisticsEvent",">");
     try
@@ -1322,12 +1322,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Statement stmt = connection.createStatement();
 
       String query = "insert into statistics values(NULL,"+
-        var.bytesSend+","+
-        var.bytesRecv+","+
-        var.playersLogin+","+
-        var.playersLogout+","+
-        var.playersTimeout+","+
-        var.playersOnline+")";
+        var.get("Bytes send")+","+
+        var.get("Bytes recv")+","+
+        var.get("Players login")+","+
+        var.get("Players logout")+","+
+        var.get("Players timeout")+","+
+        var.get("Players online")+")";
       stmt.execute(query);
       }
     catch(SQLException sqle)

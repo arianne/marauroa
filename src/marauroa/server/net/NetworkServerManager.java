@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.8 2005/04/08 11:38:28 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.9 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -191,8 +191,8 @@ public final class NetworkServerManager
           Logger.trace("NetworkServerManagerRead::run","D","Received UDP Packet");
           
           /*** Statistics ***/
-          stats.addBytesRecv(packet.getLength());
-          stats.addMessageRecv();
+          stats.add("Bytes recv",packet.getLength());
+          stats.add("Message recv",1);
           
           if(!packetValidator.checkBanned(packet))
             {
@@ -205,6 +205,7 @@ public final class NetworkServerManager
               }
             catch(InvalidVersionException e)
               {
+              stats.add("Message invalid version",1);
               MessageS2CInvalidMessage msg=new MessageS2CInvalidMessage((InetSocketAddress)packet.getSocketAddress(),"Invalid client version: Update client");
               addMessage(msg);
               }
@@ -221,7 +222,7 @@ public final class NetworkServerManager
           }
         catch(IOException e)
           {
-          stats.addMessageIncorrect();
+          stats.add("Message incorrect",1);
           /* Report the exception */
           Logger.trace("NetworkServerManagerRead::run","X",e.getMessage());
           }
@@ -269,8 +270,8 @@ public final class NetworkServerManager
           /*** Statistics ***/
           used_signature=++last_signature;
 
-          stats.addBytesSend(buffer.length);
-          stats.addMessageSend();
+          stats.add("Bytes send",buffer.length);
+          stats.add("Message send",1);
           
           Logger.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
           int totalNumberOfPackets=(buffer.length/CONTENT_PACKET_SIZE)+1;

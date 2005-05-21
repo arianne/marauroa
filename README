@@ -141,8 +141,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.97 May XX, 2005
+0.97 May 20, 2005
 - Added client version check at Server
+- Added has method to RPWorld class
+- Refactored Statistics system
 
 0.96 May 12, 2005
 - Fixed a bug that make clients not to notice of timeout players

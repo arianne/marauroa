@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.18 2005/05/12 19:34:37 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.19 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -232,7 +232,7 @@ public class RPServerManager extends Thread
         {
         PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
 
-        if(entry.state==PlayerEntryContainer.ClientStats.GAME_BEGIN)
+        if(entry.state==PlayerEntryContainer.ClientState.GAME_BEGIN)
           {
           Perception perception=getPlayerPerception(entry);
           IRPZone zone=world.getRPZone(entry.characterid);
@@ -313,7 +313,7 @@ public class RPServerManager extends Thread
 
         try
           {
-          stats.addPlayerTimeout(playerContainer.getUsername(clientid),clientid);
+          stats.add("Players timeout",1);
 
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
           if(id==null)
@@ -484,7 +484,7 @@ public class RPServerManager extends Thread
           playerContainer.getLock().releaseLock();
           }
 
-        stats.setObjectsNow(world.size());
+        stats.set("Objects now",world.size());
         }
       }
     catch(Throwable e)

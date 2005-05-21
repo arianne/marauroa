@@ -1,4 +1,4 @@
-/* $Id: StatisticsMBean.java,v 1.1 2005/03/02 22:21:59 root777 Exp $ */
+/* $Id: StatisticsMBean.java,v 1.2 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,21 +13,6 @@
 package marauroa.server.game;
 /** statistics interface for the java management bean **/
 public interface StatisticsMBean
-{
-  public long getBytesRecv();
-  public long getBytesSend();
-
-  public long getMessagesRecv();
-  public long getMessagesSend();
-  public long getMessagesIncorrect();
-
-  public long getPlayersLogin();
-  public long getPlayersInvalidLogin();
-  public long getPlayersLogout();
-  public long getPlayersTimeout();
-  public long getPlayersOnline();
-
-  public long getObjectsNow();
-  public long getActionsAdded();
-  public long getActionsInvalid();
-}
+  {
+  public long get(String type);
+  }

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.7 2005/04/25 12:44:14 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.8 2005/05/21 10:07:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ import marauroa.common.crypto.RSAKey;
  *  the point to manage them all. */
 public class PlayerEntryContainer
   {
-  enum ClientStats 
+  enum ClientState 
     {
     NULL,
     LOGIN_COMPLETE,
@@ -55,7 +55,7 @@ public class PlayerEntryContainer
     /** The runtime clientid */
     public int clientid;
     /** The state in which this player is */
-    public ClientStats state;
+    public ClientState state;
     /** The initial address of this player */
     public InetSocketAddress source;
     /** The time when the latest event was done in this player */
@@ -286,7 +286,7 @@ public class PlayerEntryContainer
       {
       RuntimePlayerEntry entry=new RuntimePlayerEntry();
 
-      entry.state=ClientStats.NULL;
+      entry.state=ClientState.NULL;
       entry.timestamp=System.currentTimeMillis();
       entry.timestampLastStored=System.currentTimeMillis();
       entry.source=source;
@@ -316,7 +316,7 @@ public class PlayerEntryContainer
         {
         RuntimePlayerEntry entry=new RuntimePlayerEntry();
 
-        entry.state=ClientStats.NULL;
+        entry.state=ClientState.NULL;
         entry.timestamp=System.currentTimeMillis();
         entry.timestampLastStored=System.currentTimeMillis();
         entry.source=source;
@@ -565,7 +565,7 @@ public class PlayerEntryContainer
 
         Logger.trace("PlayerEntryContainer::getClientidPlayer","D",playerEntry.toString());
 
-        if(playerEntry.state==ClientStats.GAME_BEGIN && playerEntry.characterid.equals(id))
+        if(playerEntry.state==ClientState.GAME_BEGIN && playerEntry.characterid.equals(id))
           {
           return playerEntry.clientid;
           }
@@ -894,7 +894,7 @@ public class PlayerEntryContainer
    *  - STATE_GAME_BEGIN
    *  @param clientid the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
-  public ClientStats getRuntimeState(int clientid) throws NoSuchClientIDException
+  public ClientState getRuntimeState(int clientid) throws NoSuchClientIDException
     {
     Logger.trace("PlayerEntryContainer::getRuntimeState",">");
     try
@@ -924,7 +924,7 @@ public class PlayerEntryContainer
    *  @param clientid the runtime id of the player
    *  @param newState the new state to which we move.
    *  @throws NoSuchClientIDException if clientid is not found */
-  public ClientStats changeRuntimeState(int clientid,ClientStats newState) throws NoSuchClientIDException
+  public ClientState changeRuntimeState(int clientid,ClientState newState) throws NoSuchClientIDException
     {
     Logger.trace("PlayerEntryContainer::changeRuntimeState",">");
     try
@@ -932,7 +932,7 @@ public class PlayerEntryContainer
       if(hasRuntimePlayer(clientid))
         {
         RuntimePlayerEntry entry=(RuntimePlayerEntry)listPlayerEntries.get(new Integer(clientid));
-        ClientStats oldState=entry.state;
+        ClientState oldState=entry.state;
 
         entry.state=newState;
         return oldState;
