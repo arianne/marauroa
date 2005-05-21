@@ -1,6 +1,9 @@
 <?php
 include_once('xml.php');
 
+$depth=array();
+$content=array();
+
 function parseXMLFile($file, $startElementFunc, $endElementFunc)
   {
   global $depth, $content;
@@ -125,7 +128,7 @@ function WriteNewsBar($xml)
   foreach($news['news'][0]['item'] as $key=>$item)
     {
     if($maxNewsItems==0) break;
-    if(!$all) $maxNewsItems--;
+    $maxNewsItems--;
 
 
     echo '<li><div class="newsitem"><h3>'.$item['title'][0].'</h3><p class="itemdate">'.$item['date'][0].'</p>';
@@ -189,13 +192,13 @@ echo '</td></tr>';
 echo '</table>'.
 	 '<p>Username is not modifiable once choosen, so choose wisely.</p>'.
 	 '<table>'.
-	 '<tr><td><b>Username</b>: </td><td><input type="text" name="username" size="20" maxlength="20">';
+	 '<tr><td>Username: </td><td><input type="text" name="username" size="20" maxlength="20">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
 	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=3\')">?</a> )';
  	 }
 echo '</td></tr>';
-echo '<tr><td><b>Password</b>: </td><td><input type="password" size="20" name="password">';
+echo '<tr><td>Password: </td><td><input type="password" size="20" name="password">';
 	 if ($xml['serversite'][0]['help']['0 attr']['enable']  == "1")
 	 {
 	 	echo '( <a class="help" href="" onClick="return popitup(\''.$xml['serversite'][0]['help'][0].'?id=4\')">?</a> )';
@@ -223,43 +226,65 @@ function WriteDownloads($xml)
 
   }
   
+function getVariable($xmlStats, $type)
+  {
+  foreach($xmlStats['statistics'][0]['attrib'] as $i=>$j)
+    {
+    if(is_array($j))
+      {
+      if($j['name']==$type)
+        {
+        return $j['value'];
+        }
+      }
+    }
+  
+  return 0;
+  }
+  
 function WriteTextServerStats($xml)
   {
-  global $content;
-  
-  parseXMLFile($xml['serversite'][0]['serverdata'][0]['path'][0],"stats_startElement","stats_endElement");
-  
+  $content=implode("",file($xml['serversite'][0]['serverdata'][0]['path'][0]));
+  $xmlStats = XML_unserialize($content);
+
   echo '<div id="textstat"><h1>Detailed statistics</h1>';
-  echo '<p class="uptime">This server uptime is '.$content["UPTIME"]["VALUE"].' seconds</p>';
+  echo '<p class="uptime">This server uptime is '.$xmlStats['statistics'][0]['uptime']['0 attr']['value'].' seconds</p>';
 
   echo '<table>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Bytes managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>GZIP saved</td></tr>';
-  echo '<tr class="data"><td>'.$content["BYTE"]["RECV"].'</td><td>'.$content["BYTE"]["SEND"].'</td><td>'.$content["BYTE"]["SAVED"].'</td></tr>';
+  echo '<tr class="maintitle"><td align="center" colspan="4"><b>Bytes managed</b></td></tr>';
+  echo '<tr class="subtitle"><td colspan="2">Recieved</td><td colspan="2">Send</td></tr>';
+  echo '<tr class="data"><td colspan="2">'.getVariable($xmlStats,"Bytes recv").'</td><td colspan="2">'.getVariable($xmlStats,"Bytes send").'</td></tr>';
 
   echo '<tr><td>&nbsp;</td></tr>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Messages managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>Incorrect</td></tr>';
-  echo '<tr class="data"><td>'.$content["MESSAGE"]["RECV"].'</td><td>'.$content["MESSAGE"]["SEND"].'</td><td>'.$content["MESSAGE"]["INCORRECT"].'</td></tr>';
+  echo '<tr class="maintitle"><td align="center" colspan="4"><b>Messages managed</b></td></tr>';
+  echo '<tr class="subtitle"><td>Recieved</td><td>Send</td><td>Invalid version</td><td>Incorrect</td></tr>';
+  echo '<tr class="data"><td>'.getVariable($xmlStats,"Message recv").'</td><td>'.getVariable($xmlStats,"Message send").'</td><td>'.getVariable($xmlStats,"Message invalid version").'</td><td>'.getVariable($xmlStats,"Message incorrect").'</td></tr>';
 
   echo '<tr><td>&nbsp;</td></tr>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Players managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Logins</td><td>Logouts</td><td>Timeouts</td></tr>';
-  echo '<tr class="data"><td>'.$content["PLAYER"]["LOGIN"].'</td><td>'.$content["PLAYER"]["LOGOUT"].'</td><td>'.$content["PLAYER"]["TIMEOUT"].'</td></tr>';
+  echo '<tr class="maintitle"><td align="center" colspan="4"><b>Players managed</b></td></tr>';
+  echo '<tr class="subtitle"><td>Logins</td><td>Logins failed</td><td>Logouts</td><td>Timeouts</td></tr>';
+  echo '<tr class="data"><td>'.getVariable($xmlStats,"Players login").'</td><td>'.getVariable($xmlStats,"Players invalid login").'</td><td>'.getVariable($xmlStats,"Players logout").'</td><td>'.getVariable($xmlStats,"Players timeout").'</td></tr>';
 
   echo '<tr><td>&nbsp;</td></tr>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Actions managed</b></td></tr>';
-  echo '<tr class="subtitle"><td>Handled</td><td>Rejected</td><td></td></tr>';
-  echo '<tr class="data"><td>'.$content["ACTION"]["ADDED"].'</td><td>'.$content["ACTION"]["INVALID"].'</td><td></td></tr>';
-
-  echo '<tr><td>&nbsp;</td></tr>';
-  echo '<tr class="maintitle"><td align="center" colspan="3"><b>Online load</b></td></tr>';
-  echo '<tr class="subtitle"><td>Players</td><td>Objects</td><td></td></tr>';
-  echo '<tr class="data"><td>'.$content["ONLINE"]["PLAYERS"].'</td><td>'.$content["ONLINE"]["OBJECTS"].'</td><td></td></tr>';
+  echo '<tr class="maintitle"><td align="center" colspan="4"><b>Actions managed</b></td></tr>';
+  echo '<tr class="subtitle"><td>Managed</td><td>Chat</td><td>Move</td><td>Attack</td></tr>';
+  echo '<tr class="data"><td>'.getVariable($xmlStats,"Actions added").'</td><td>'.getVariable($xmlStats,"Actions chat").'</td><td>'.getVariable($xmlStats,"Actions move").'</td><td>'.getVariable($xmlStats,"Actions attack").'</td></tr>';
 
   echo '</table></div>';
-	  
+
+  echo '<div id="textstat"><h1>Killed statistics</h1>';
+  echo '<table>';
+  echo '<tr class="maintitle"><td align="center" colspan="4"><b>Creatures killed</b></td></tr>';
+  echo '<tr class="subtitle"><td colspan="2">Creature</td><td colspan="2">Amount</td></tr>';
+  $creatures=array("sheep","rat","caverat","orc");
+  foreach($creatures as $creature)
+    {    
+    $amount=getVariable($xmlStats,"Killed ".$creature);
+    echo '<tr class="data"><td colspan="2">'.$creature.'</td><td colspan="2">'.$amount.'</td></tr>';
+    }
+  echo '</table></div>';
   }
+  
 function WriteGraphicServerStats($xml)
   {
   echo '<div id="graphicstat"><h1>Last 24 hours graphical representation</h1>';
