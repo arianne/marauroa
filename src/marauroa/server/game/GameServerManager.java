@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.14 2005/05/21 11:42:54 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.15 2005/05/21 20:16:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -685,12 +685,13 @@ public final class GameServerManager extends Thread
         if(content.ack==true)
           {
           Logger.trace("GameServerManager::processTransferACK","D","Trying transfer content "+content);
-          stats.add("Transfer content",1);
-          stats.add("Tranfer content size",content.data.length);
           
           content=entry.getContent(content.name);
           if(content!=null)
             {
+            stats.add("Transfer content",1);
+            stats.add("Tranfer content size",content.data.length);
+            
             Logger.trace("GameServerManager::processTransferACK","D","Transfering content "+content);
             MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
             msgTransfer.setClientID(clientid);
