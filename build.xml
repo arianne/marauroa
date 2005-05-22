@@ -84,7 +84,6 @@
     <copy todir="marauroa-${version}" file="${lib}/${jarname}"/>
     <copy todir="marauroa-${version}" file="${connectorJ}"/>
     <copy todir="marauroa-${version}" file="${jython}"/>
-    <copy todir="marauroa-${version}" file="${lib}/marauroa.ini"/>
     <copy todir="marauroa-${version}" file="AUTHORS"/>
     <copy todir="marauroa-${version}" file="BUGS"/>
     <copy todir="marauroa-${version}" file="COPYING"/>
