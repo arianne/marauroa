@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.12 2005/05/21 15:39:22 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.13 2005/05/24 18:44:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -267,11 +267,11 @@ public abstract class ariannexp
           Message msg=getMessage();
           switch(msg.getType())
             {
-              case S2C_ACTION_ACK:
-                recieved++;
-                break;
-              default:
-                messages.add(msg);
+            case S2C_ACTION_ACK:
+              recieved++;
+              break;
+            default:
+              messages.add(msg);
             }
           }
         }
