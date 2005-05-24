@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.4 2005/05/12 19:34:36 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.5 2005/05/24 12:50:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,7 +70,8 @@ public class NetConst
    * 16 - Added Transfer Content
    *    - Added zone in perception
    * 17 - Secured login
-   * 18 - Game name and version C2S and S2C on Login messages */
+   * 18 - Game name and version C2S and S2C on Login messages
+   * 19 - Added Perception Delta^2 MyRPObject */
   final static public byte NETWORK_PROTOCOL_VERSION=18;
 
   final static public long PACKET_TIMEOUT_VALUE=5000;
