@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.5 2005/04/06 15:34:58 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.6 2005/05/24 07:15:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -315,6 +315,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           }
         catch(RPClass.SyntaxException e)
           {
+          Logger.trace("Attributes::writeObject","X","Attribute "+key+" not found");
+          Logger.thrown("Attributes::writeObject","X",e);
           code=-1;        
           }
         
@@ -425,6 +427,20 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       }
     }
  
+  public void clearVisible()
+    {
+    Iterator<Map.Entry<String,String>> it=content.entrySet().iterator();
+    while(it.hasNext())
+      {
+      Map.Entry<String,String> entry=it.next();
+      
+      if(rpClass.getVisibility(entry.getKey())==RPClass.VISIBLE && !entry.getKey().equals("id"))
+        {
+        it.remove();
+        }
+      }
+    }
+
   public void resetAddedAndDeletedAttributes()
     {
     added.clear();

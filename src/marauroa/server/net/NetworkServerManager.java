@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.9 2005/05/21 10:07:41 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.10 2005/05/24 07:15:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -273,7 +273,7 @@ public final class NetworkServerManager
           stats.add("Bytes send",buffer.length);
           stats.add("Message send",1);
           
-          Logger.trace("NetworkServerManagerWrite::write","D","Message size in bytes: "+buffer.length);
+          Logger.trace("NetworkServerManagerWrite::write","D","Message("+msg.getType()+") size in bytes: "+buffer.length);
           int totalNumberOfPackets=(buffer.length/CONTENT_PACKET_SIZE)+1;
           int bytesRemaining=buffer.length;
           

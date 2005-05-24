@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.2 2005/04/03 11:34:41 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.3 2005/05/24 07:15:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -303,6 +303,19 @@ public class RPObject extends Attributes
       {
       return -1;
       }    
+    }
+  
+  public void clearVisible()
+    {
+    super.clearVisible();
+    
+    for(RPSlot slot: slots)
+      {
+      for(RPObject object: slot)
+        {
+        object.clearVisible();
+        }
+      }
     }
   
   // TODO: Refactor this method. Looks like it claims for bugs!"

@@ -118,8 +118,8 @@ public class RPClass implements marauroa.common.net.Serializable
 
     add("id",INT);
     add("clientid",INT,HIDDEN);
+    add("zoneid",STRING,HIDDEN);
     add("#db_id",INT,HIDDEN);
-    add("zoneid",STRING);
     add("type",STRING);    
     
     rpClassList.put(type,this);

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.6 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.7 2005/05/24 07:15:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,7 +199,9 @@ public class MessageS2CPerception extends Message
     Logger.trace("MessageS2CPerception::readObject()","D",added + " added objects..");
     for(int i=0;i<added;++i)
       {
-      addedRPObjects.add((RPObject)ser.readObject(new RPObject()));
+      RPObject object=(RPObject)ser.readObject(new RPObject());
+      object.put("zoneid",zoneid.getID());
+      addedRPObjects.add(object);
       }
 
     int modAdded=ser.readInt();
@@ -211,7 +213,9 @@ public class MessageS2CPerception extends Message
     Logger.trace("MessageS2CPerception::readObject()","D",modAdded + " modified Added objects..");
     for(int i=0;i<modAdded;++i)
       {
-      modifiedAddedAttribsRPObjects.add((RPObject)ser.readObject(new RPObject()));
+      RPObject object=(RPObject)ser.readObject(new RPObject());
+      object.put("zoneid",zoneid.getID());
+      modifiedAddedAttribsRPObjects.add(object);
       }
 
     int modDeleted=ser.readInt();
@@ -223,7 +227,9 @@ public class MessageS2CPerception extends Message
     Logger.trace("MessageS2CPerception::readObject()","D",modDeleted + " modified Deleted objects..");
     for(int i=0;i<modDeleted;++i)
       {
-      modifiedDeletedAttribsRPObjects.add((RPObject)ser.readObject(new RPObject()));
+      RPObject object=(RPObject)ser.readObject(new RPObject());
+      object.put("zoneid",zoneid.getID());
+      modifiedDeletedAttribsRPObjects.add(object);
       }
 
     int del=ser.readInt();
@@ -235,7 +241,9 @@ public class MessageS2CPerception extends Message
     Logger.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
-      deletedRPObjects.add((RPObject)ser.readObject(new RPObject()));
+      RPObject object=(RPObject)ser.readObject(new RPObject());
+      object.put("zoneid",zoneid.getID());
+      deletedRPObjects.add(object);
       }
     
     

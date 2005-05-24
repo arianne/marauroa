@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 0.97
+Version 1.00
 
 
 Status
@@ -141,6 +141,11 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+0.98 Jun XX, 2005
+- Fixed a bug at Perception system that shows objects of other zones.
+- Reduced Perception size.
+- Send only hidden attributes on player
+
 0.97 May 20, 2005
 - Added client version check at Server
 - Added has method to RPWorld class

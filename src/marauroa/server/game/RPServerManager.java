@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.20 2005/05/21 10:18:51 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.21 2005/05/24 07:15:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,9 +198,12 @@ public class RPServerManager extends Thread
       
       stats.add("Perceptions "+(perception.type==0?"DELTA":"SYNC"),1);
 
-      if(perception.type==Perception.SYNC || entry.isPerceptionModifiedRPObject(object))
+      RPObject copy=(RPObject)object.copy();
+      copy.clearVisible();
+      
+      if(perception.type==Perception.SYNC || entry.isPerceptionModifiedRPObject(copy))
         {
-        messages2cPerception.setMyRPObject(object);
+        messages2cPerception.setMyRPObject(copy);
         }
       else
         {
