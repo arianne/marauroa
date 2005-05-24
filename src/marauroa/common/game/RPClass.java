@@ -34,11 +34,17 @@ public class RPClass implements marauroa.common.net.Serializable
 
   static public class SyntaxException extends RuntimeException
     {
-    public SyntaxException()
+    public SyntaxException(String offendingAttribute)
       {
-      super();
+      super("attribute "+offendingAttribute+" isn't defined.");
+      }
+
+    public SyntaxException(short offendingAttribute)
+      {
+      super("attribute code "+offendingAttribute+" isn't defined.");
       }
     }
+    
   static private class AttributeDesc implements marauroa.common.net.Serializable
     {
     private static short lastCode=0;
@@ -242,7 +248,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getCode(name);
       }
     
-    throw new SyntaxException();  
+    throw new SyntaxException(name);  
     }
 
   /** Returns the name of the attribute whose code is code for this rpclass */
@@ -261,7 +267,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getName(code);
       }
 
-    throw new SyntaxException();  
+    throw new SyntaxException(code);  
     }
   
   /** Returns the type of the attribute whose name is name for this rpclass */
@@ -278,7 +284,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getType(name);
       }
 
-    throw new SyntaxException();  
+    throw new SyntaxException(name);  
     }
 
   /** Returns the visibility of the attribute whose name is name for this rpclass */
@@ -295,7 +301,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getVisibility(name);
       }
 
-    throw new SyntaxException();  
+    throw new SyntaxException(name);  
     }
 
   /** Returns true if the attribute whose name is name exists for this rpclass */
@@ -334,7 +340,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return rpClassList.get(name);
       }
     
-    throw new SyntaxException();  
+    throw new SyntaxException(name);  
     }
   
   public RPObject getInstance(RPObject.ID id)
