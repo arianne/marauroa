@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.5 2005/05/24 12:50:22 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.6 2005/05/29 22:23:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,9 +13,6 @@
 package marauroa.common.net;
 
 import marauroa.common.*;
-
-/** FIXME: BUG: TODO: Remove reference to Server package */
-import marauroa.server.Configuration;
 
 /** This class host several constants related to the network configuration of
  *  Marauroa */

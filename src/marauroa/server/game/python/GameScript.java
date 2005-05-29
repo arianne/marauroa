@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.2 2005/05/29 22:06:16 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.3 2005/05/29 22:24:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import org.python.core.*;
 
 import marauroa.server.*;
 import marauroa.server.game.*;
+import marauroa.common.*;
 import marauroa.common.game.*;
 
 /** This class is a wrapper for calling python in a better way. */

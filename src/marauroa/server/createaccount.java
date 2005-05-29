@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.5 2005/04/25 12:42:57 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.6 2005/05/29 22:24:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.server.game.*;
+import marauroa.common.*;
 import marauroa.common.game.*;
 import marauroa.common.crypto.Hash;
 
