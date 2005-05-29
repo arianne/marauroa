@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.15 2005/05/21 20:16:37 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.16 2005/05/29 22:06:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,6 +68,28 @@ public final class GameServerManager extends Thread
         {
         }
       }
+    
+    PlayerEntryContainer.ClientIDIterator it=playerContainer.iterator();
+    while(it.hasNext())
+      {
+      try
+        {
+        int clientid=it.next();
+        RPObject.ID id=playerContainer.getRPObjectID(clientid);
+        RPObject object=rpMan.getRPObject(id);
+
+        if(rpMan.onExit(id))
+          {
+          /* NOTE: Set the Object so that it is stored in Database */
+          playerContainer.setRPObject(clientid,object);
+          }
+        }
+      catch(Exception e)
+        {
+        Logger.thrown("GameServerManager::finish","X",e);
+        }
+      }
+    
     Logger.trace("GameServerManager::finish","<");
     }
 
@@ -568,7 +590,7 @@ public final class GameServerManager extends Thread
           Logger.trace("GameServerManager::processSecuredLoginEvent","D","Player trying to logout without choosing character");
           }
           
-        playerContainer.removeRuntimePlayer(clientid);
+        playerContainer.removeRuntimePlayer(clientoldid);
         }
 
       Logger.trace("GameServerManager::processSecuredLoginEvent","D","Correct username/password");

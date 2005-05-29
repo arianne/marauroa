@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.6 2005/05/24 07:15:06 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.7 2005/05/29 22:06:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,7 +139,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
   /** This method set the value of an attribute
    *  @param attribute the attribute to be set.
    *  @param value the value we want to set. */
-  public void put(String attribute, List value)
+  public void put(String attribute, List<String> value)
     {
     put(attribute,Attributes.ListToString(value));
     }
@@ -249,32 +249,59 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     return tmp.toString();
     }
 	
-  private static String ListToString(List list)
+  private static String ListToString(List<String> list)
     {
     StringBuffer buffer=new StringBuffer("[");
 
     for(Iterator it=list.iterator(); it.hasNext();)
       {
-      buffer.append(it.next());
+      String value=(String)it.next();
+      
+      buffer.append(value);
       if(it.hasNext())
         {
-        buffer.append(":");
+        buffer.append("\t");
         }
       }
+      
     buffer.append("]");
     return buffer.toString();
     }
 	
   private static List<String> StringToList(String list)
     {
-    String[] array=list.substring(1,list.length()-1).split(":");
+    String[] array=list.substring(1,list.length()-1).split("\t");
     List<String> result=new LinkedList<String>();
 
     for(int i=0;i<array.length;++i)
       {
       result.add(array[i]);
       }
+      
     return result;
+    }
+  
+  public static void main(String[] args)
+    {
+    List<String> list=new LinkedList<String>();
+    list.add("hola\\");
+    list.add("mundo:");
+    list.add("asd:cas");
+    
+    for(String ite: list)
+      {
+      System.out.println (ite);
+      }
+
+    System.out.println (ListToString(list));
+
+    System.out.println ();
+    
+    for(String ite: StringToList(ListToString(list)))
+      {
+      System.out.println (ite);
+      }
+      
     }
 	
   public Iterator<String> iterator()

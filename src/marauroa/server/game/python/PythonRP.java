@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.2 2005/03/07 19:36:45 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.3 2005/05/29 22:06:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,21 @@ public class PythonRP
     rpMan.transferContent(id, content);
     }
       
+  public boolean checkGameVersion(String game, String version)
+    {
+    return true;
+    }
+
+  public boolean onActionAdd(RPAction action, List<RPAction> actionList)
+    {
+    return true;
+    }
+
+  public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList)
+    {
+    return true;
+    }
+
   public int execute(RPObject.ID id, RPAction action)
     {
     return 0;

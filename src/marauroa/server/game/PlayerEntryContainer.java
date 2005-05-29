@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.8 2005/05/21 10:07:41 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.9 2005/05/29 22:06:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -538,7 +538,7 @@ public class PlayerEntryContainer
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
 
-        if(playerEntry.username.equals(username))
+        if(playerEntry.username!=null && playerEntry.username.equals(username))
           {
           return playerEntry.clientid;
           }

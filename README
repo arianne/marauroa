@@ -141,10 +141,13 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-0.98 Jun XX, 2005
+1.00 May 30, 2005
 - Fixed a bug at Perception system that shows objects of other zones.
 - Reduced Perception size.
 - Send only hidden attributes on player
+- Fix a bug on a disconnected player that login again
+- Store connected players on server shutdown
+- Updated Python wrapper
 
 0.97 May 20, 2005
 - Added client version check at Server

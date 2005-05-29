@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.4 2005/05/12 19:34:37 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.5 2005/05/29 22:06:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,6 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     {
     }
 
-
   /** Set the context where the actions are executed.
    *  @param zone The zone where actions happens. */
   public void setContext(RPServerManager rpman, RPWorld world)
@@ -50,24 +49,23 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
     catch(Exception e)
       {
       Logger.thrown("PythonRPRuleProcessor::setContext","!",e);
-      //@@@@@ System.exit(-1);
       }
     }
 
 
   public boolean checkGameVersion(String game, String version)
     {
-    return false;
+    return pythonRP.checkGameVersion(game,version);
     }
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)
     {
-    return true;
+    return pythonRP.onActionAdd(action,actionList);
     }
 
   public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList)
     {
-    return true;
+    return pythonRP.onIncompleteActionAdd(action,actionList);
     }  
 
   /** Execute an action in the name of a player.

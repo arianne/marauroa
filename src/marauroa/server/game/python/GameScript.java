@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.1 2005/01/23 21:00:47 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.2 2005/05/29 22:06:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ class GameScript
   public PythonWorld getWorld() throws Exception
     {    
     String pythonZoneClass=conf.get("python_script_world_class");
-    PyInstance object=(PyInstance)interpreter.eval(pythonZoneClass+"(gamescript__world)");
+    PyInstance object=(PyInstance)interpreter.eval(pythonZoneClass+"()");
     return (PythonWorld)object.__tojava__(PythonWorld.class);
     }
     
