@@ -1,4 +1,4 @@
-package marauroa.server;
+package marauroa.common;
 
 public class PropertyNotFoundException extends Exception
   {

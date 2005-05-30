@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.1 2005/01/23 21:00:45 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.1 2005/05/30 08:13:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,12 +10,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server;
+package marauroa.common;
 
 import java.util.*;
 import java.io.*;
-
-import marauroa.common.*;
 
 /** This class is a basic configuration file manager */
 public class Configuration
