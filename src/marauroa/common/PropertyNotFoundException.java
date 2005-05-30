@@ -1,6 +1,6 @@
 package marauroa.common;
 
-public class PropertyNotFoundException extends Exception
+public class PropertyNotFoundException extends RuntimeException
   {
   public PropertyNotFoundException(String property)
     {

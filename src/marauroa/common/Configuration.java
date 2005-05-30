@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.1 2005/05/30 08:13:38 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.2 2005/05/30 14:53:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,7 @@ public class Configuration
 
       InputStream is = new FileInputStream(configurationFile);
       properties.load(is);
+      is.close();
       }
     catch(FileNotFoundException e)
       {
@@ -93,12 +94,33 @@ public class Configuration
         Logger.trace("Configuration::get","X","Property ["+property+"] not found");
         throw new PropertyNotFoundException(property);
         }
+        
       Logger.trace("Configuration::get","D","Property ["+property+"]="+result);
       return result;
       }
     finally
       {
       Logger.trace("Configuration::get","<");
+      }
+    }
+
+  public boolean has(String property)
+    {
+    Logger.trace("Configuration::has",">");
+    try
+      {
+      String result=properties.getProperty(property);
+    
+      if(result==null)
+        {
+        return false;
+        }
+        
+      return true;
+      }
+    finally
+      {
+      Logger.trace("Configuration::has","<");
       }
     }
     
@@ -112,6 +134,20 @@ public class Configuration
       {
       Logger.trace("Configuration::set","D","Property ["+property+"]="+value);
       properties.put(property,value);
+
+      OutputStream os = new FileOutputStream(configurationFile);
+      properties.store(os,null);
+      os.close();
+      }
+    catch(FileNotFoundException e)
+      {
+      Logger.trace("Configuration","X","Configuration file not found: "+configurationFile);
+      Logger.thrown("Configuration","X",e);
+      }
+    catch(IOException e)
+      {
+      Logger.trace("Configuration","X","Error storing Configuration file");
+      Logger.thrown("Configuration","X",e);
       }
     finally
       {
