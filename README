@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.00
+Version 1.01
 
 
 Status
@@ -141,6 +141,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.01 Jun XX, 2005
+- Added storable/volatile attributes 
+- Added attributes to RPSlot objects.
+
 1.00 May 30, 2005
 - Fixed a bug at Perception system that shows objects of other zones.
 - Reduced Perception size.
