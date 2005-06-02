@@ -12,11 +12,11 @@ public class RPClass implements marauroa.common.net.Serializable
   /** The attribute is visible */
   final public static byte VISIBLE = 0;
   /** The attribute is invisible and so only server related */
-  final public static byte HIDDEN = 1 << 1;
+  final public static byte HIDDEN = 1 << 0;
   /** The attribute should be stored in the database */
   final public static byte STORABLE = 0;
   /** The attribute should not be stored in the database */
-  final public static byte VOLATILE = 1 << 2;
+  final public static byte VOLATILE = 1 << 1;
 
   /* Type */
   /** a string */
