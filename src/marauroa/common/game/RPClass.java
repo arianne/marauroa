@@ -127,7 +127,7 @@ public class RPClass implements marauroa.common.net.Serializable
     attributes=new HashMap<String,AttributeDesc>();
 
     add("id",INT);
-    add("clientid",INT,HIDDEN);
+    add("clientid",INT,(byte)(HIDDEN|VOLATILE));
     add("zoneid",STRING,HIDDEN);
     add("#db_id",INT,HIDDEN);
     add("type",STRING);

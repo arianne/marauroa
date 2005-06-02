@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.8 2005/05/21 10:07:41 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.9 2005/06/02 10:27:37 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -372,24 +372,24 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     public boolean verifyAccount(Transaction trans, PlayerEntryContainer.RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException
       {
       Logger.trace("JDBCPlayerDatabase::verifyAccount",">");
-      try 
+      try
         {
-        if(Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) 
+        if(Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0)
           {
           Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Diferent hashs for client Nonce");
           return false;
           }
-          
+
         byte[] b1 = informations.key.decodeByteArray(informations.password);
         byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
-        if(b2 == null)   
+        if(b2 == null)
           {
           Logger.trace("JDBCPlayerDatabase::verifyAccount","D","B2 is null");
           return false;
           }
-          
+
         byte[] password = Hash.xor(b1, b2);
-        if(password == null) 
+        if(password == null)
           {
           Logger.trace("JDBCPlayerDatabase::verifyAccount","D","Password is null");
           return false;
@@ -921,7 +921,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         throw new GenericDatabaseException("can't create connection");
         }
       }
-      
+
     return(transaction);
     }
 
@@ -1267,15 +1267,19 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
 
     Iterator it=object.iterator();
+    RPClass rpClass = RPClass.getRPClass(object.get("type"));
 
     while(it.hasNext())
       {
       String attrib=(String) it.next();
-      String value=object.get(attrib);
+      if(rpClass.isStorable(attrib))
+        {
+        String value = object.get(attrib);
 
-      query = "insert into rpattribute values("+object_id+",'"+EscapeString(attrib)+"','"+EscapeString(value)+"');";
-      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
-      stmt.execute(query);
+        query = "insert into rpattribute values(" + object_id + ",'" + EscapeString(attrib) + "','" + EscapeString(value) + "');";
+        Logger.trace("JDBCPlayerDatabase::storeRPObject" , "D" , query);
+        stmt.execute(query);
+        }
       }
 
     for(Iterator<RPSlot> sit=object.slotsIterator(); sit.hasNext();)
