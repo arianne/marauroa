@@ -141,9 +141,11 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.01 Jun XX, 2005
+1.02
+- Compressed Server info message so we save bandwidth.
+
+1.01 Jun 05, 2005
 - Added storable/volatile attributes 
-- Added attributes to RPSlot objects.
 
 1.00 May 30, 2005
 - Fixed a bug at Perception system that shows objects of other zones.

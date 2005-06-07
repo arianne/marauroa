@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.3 2005/06/07 16:56:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 import marauroa.common.game.*;
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.zip.*;
 import java.io.*;
 
 /** The CharacterListMessage is sent from server to client to inform client about
@@ -63,7 +64,12 @@ public class MessageS2CServerInfo extends Message
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
     super.writeObject(out);
-    out.write(contents);
+    
+    ByteArrayOutputStream array=new ByteArrayOutputStream();
+    DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+    OutputSerializer serializer=new OutputSerializer(out_stream);
+        
+    serializer.write(contents);
     int size = RPClass.size();
 
     //sort out the default rp class if it is there
@@ -74,31 +80,38 @@ public class MessageS2CServerInfo extends Message
         {
         size--;
         break;
-//        System.out.println("RpClass:<"+rp_class.getName()+">");
-//        System.out.println("--size: "+size);
         }
       }
      
-    out.write(size);    
+    serializer.write(size);    
     for(Iterator<RPClass> it = RPClass.iterator(); it.hasNext();)
       {
       RPClass rp_class = it.next();
       if(!"".equals(rp_class.getName())) //sort out default class if it is there
         {
-        out.write(rp_class);
+        serializer.write(rp_class);
         }
       }
+
+    out_stream.close();
+         
+    out.write(array.toByteArray());
     }
     
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
-    contents=in.readStringArray();
     
-    int size=in.readInt();
+    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
+    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
+    InputSerializer serializer=new InputSerializer(szlib);
+
+    contents=serializer.readStringArray();
+    
+    int size=serializer.readInt();
     for(int i=0;i<size;++i)
       {
-      in.readObject(new RPClass());
+      serializer.readObject(new RPClass());
       }
     
     if(type!=MessageType.S2C_SERVERINFO)

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.21 2005/05/24 07:15:09 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.22 2005/06/07 16:56:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -394,6 +394,7 @@ public class RPServerManager extends Thread
           }
         catch(NoSuchClientIDException e)
           {
+          Logger.trace("RPServerManager::deliverTransferContent","X","Unable to find client id for player: "+id);
           Logger.thrown("RPServerManager::deliverTransferContent","X",e);
           }
         }

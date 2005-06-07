@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.16 2005/05/29 22:06:15 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.17 2005/06/07 16:56:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,10 +174,10 @@ public final class GameServerManager extends Thread
         {
         config=Configuration.getConfiguration();
         //just check if mandatory properties are set
-      config.get("server_typeGame");
-      config.get("server_name");
-      config.get("server_version");
-      config.get("server_contact");
+        config.get("server_typeGame");
+        config.get("server_name");
+        config.get("server_version");
+        config.get("server_contact");
         }
       catch(Exception e)
         {
