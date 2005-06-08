@@ -143,6 +143,7 @@ Changelog
 ---------
 1.02
 - Compressed Server info message so we save bandwidth.
+- Changed statistics from int to long
 
 1.01 Jun 05, 2005
 - Added storable/volatile attributes 

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.5 2005/05/21 15:39:23 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.6 2005/06/08 08:42:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,11 +25,11 @@ public class Statistics implements StatisticsMBean
   {
   static class Variables implements Iterable<String>
     {
-    Map<String,Integer> content;
+    Map<String,Long> content;
     
     public Variables()
       {
-      content=new HashMap<String,Integer>();
+      content=new HashMap<String,Long>();
       }
       
     public void clear()
@@ -37,12 +37,12 @@ public class Statistics implements StatisticsMBean
       content.clear();
       }
       
-    public void put(String type, int value)
+    public void put(String type, long value)
       {
       content.put(type,value);
       }
     
-    public void add(String type, int value)
+    public void add(String type, long value)
       {
       if(!content.containsKey(type))
         {
@@ -54,7 +54,7 @@ public class Statistics implements StatisticsMBean
         }        
       }  
     
-    public int get(String type)
+    public long get(String type)
       {
       return content.get(type);
       }

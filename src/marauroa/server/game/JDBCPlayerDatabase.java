@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.9 2005/06/02 10:27:37 quisar Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.10 2005/06/08 08:42:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1267,7 +1267,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
 
     Iterator it=object.iterator();
-    RPClass rpClass = RPClass.getRPClass(object.get("type"));
+    RPClass rpClass = object.getRPClass();
 
     while(it.hasNext())
       {
