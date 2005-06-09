@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.01
+Version 1.02
 
 
 Status
@@ -141,7 +141,7 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.02 Jun XX, 2005
+1.02 Jun 09, 2005
 - Compressed Server info message so we save bandwidth.
 - Changed statistics from int to long
 - Fixed a bug at JDBCPlayerDatabase.storeRPObject
