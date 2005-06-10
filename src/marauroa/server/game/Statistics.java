@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.7 2005/06/10 16:07:40 quisar Exp $ */
+/* $Id: Statistics.java,v 1.8 2005/06/10 16:17:08 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -142,6 +142,7 @@ public class Statistics implements StatisticsMBean
   public void set(String type, int value)
     {
     now.put(type,value);
+    sinceStart.put(type,value);
     }
 
   public void add(String type, int value)
