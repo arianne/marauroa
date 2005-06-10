@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.6 2005/06/08 08:42:14 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.7 2005/06/10 16:07:40 quisar Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,22 +26,22 @@ public class Statistics implements StatisticsMBean
   static class Variables implements Iterable<String>
     {
     Map<String,Long> content;
-    
+
     public Variables()
       {
       content=new HashMap<String,Long>();
       }
-      
+
     public void clear()
       {
       content.clear();
       }
-      
+
     public void put(String type, long value)
       {
       content.put(type,value);
       }
-    
+
     public void add(String type, long value)
       {
       if(!content.containsKey(type))
@@ -51,19 +51,19 @@ public class Statistics implements StatisticsMBean
       else
         {
         content.put(type,content.get(type)+value);
-        }        
-      }  
-    
+        }
+      }
+
     public long get(String type)
       {
       return content.get(type);
       }
-    
+
     public Iterator<String> iterator()
       {
       return content.keySet().iterator();
       }
-    
+
     public void add(Variables var)
       {
       for(String type: var)
@@ -89,31 +89,31 @@ public class Statistics implements StatisticsMBean
         }
       }
     }
-    
+
   Variables now;
   Variables sinceStart;
-  
+
   private Date startTime;
 
   private PrintWriter eventfile;
   private Date timestamp;
   private Date lastStatisticsEventAdded;
   private SimpleDateFormat formatter;
-    
+
   private Statistics()
     {
     timestamp=new Date();
     formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     startTime=new Date();
-    
+
     lastStatisticsEventAdded=new Date();
-    
+
     now=new Variables();
     sinceStart=new Variables();
-    
+
     init();
     }
-  
+
   private void init()
     {
     /** we need these for JDBC Database */
@@ -121,56 +121,57 @@ public class Statistics implements StatisticsMBean
     add("Players login",0);
     add("Players logout",0);
     add("Players timeout",0);
+    add("Players logged",0);
 
     add("Bytes send",0);
-    add("Bytes recv",0);    
+    add("Bytes recv",0);
     }
-    
+
   private static Statistics stats;
-  
+
   public static Statistics getStatistics()
     {
     if(stats==null)
       {
       stats=new Statistics();
       }
-      
+
     return stats;
     }
-  
+
   public void set(String type, int value)
-    {    
+    {
     now.put(type,value);
     }
-  
+
   public void add(String type, int value)
     {
     now.add(type,value);
     sinceStart.add(type,value);
     }
-    
+
   public void print()
     {
     try
       {
       Configuration conf=Configuration.getConfiguration();
       String webfolder=conf.get("server_stats_directory");
-      
+
       Date actualTime=new Date();
       double diff=(actualTime.getTime()-startTime.getTime())/1000;
-      
+
       if((actualTime.getTime()-lastStatisticsEventAdded.getTime())>60000)
         {
         lastStatisticsEventAdded=new Date();
-        
+
         JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
         Transaction transaction=database.getTransaction();
-        
+
         database.addStatisticsEvent(transaction,now);
         now.clear();
         init();
         }
-      
+
       PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));
       out.println("<statistics time=\""+(actualTime.getTime()/1000)+"\">");
       out.println("  <uptime value=\""+diff+"\"/>");
