@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.10 2005/06/08 08:42:14 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.11 2005/06/19 16:04:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1217,11 +1217,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(AttributeNotFoundException e)
       {
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","X",object.toString());
       Logger.thrown("JDBCPlayerDatabase::storeRPObject","X",e);
       throw new SQLException(e.getMessage());
       }
     catch(SQLException e)
       {
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","X",object.toString());
       Logger.thrown("JDBCPlayerDatabase::storeRPObject","X",e);
       throw e;
       }
