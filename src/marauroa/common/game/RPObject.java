@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.3 2005/05/24 07:15:07 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.4 2005/06/27 16:59:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -417,7 +417,7 @@ public class RPObject extends Attributes
           /** for each of the objects, delete it*/
           for(RPObject object: slot)
             {
-            if(object.size()==1)
+            if(object.size()==2) /** id and zoneid */
               {
               getSlot(slot.getName()).remove(new ID(object));
               }

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.17 2005/06/07 16:56:19 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.18 2005/06/27 16:59:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -442,6 +442,8 @@ public final class GameServerManager extends Thread
         Logger.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
         return;
         }
+      
+      /** TODO: Compute client lag here */
 
       PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
       entry.timestamp=System.currentTimeMillis();

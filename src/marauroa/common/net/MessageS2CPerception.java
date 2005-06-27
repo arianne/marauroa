@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.7 2005/05/24 07:15:07 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.8 2005/06/27 16:59:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,7 +174,22 @@ public class MessageS2CPerception extends Message
     out.write(getPrecomputedStaticPartPerception());
     out.write(getDynamicPartPerception());      
     }
-  
+    
+  private void setZoneid(RPObject object,String zoneid)
+    {
+    object.put("zoneid",zoneid);
+    
+    Iterator<RPSlot> it=object.slotsIterator();
+    while(it.hasNext())
+      {
+      RPSlot slot=it.next();
+      for(RPObject son: slot)
+        {
+        setZoneid(son,zoneid);
+        }
+      }    
+    }
+    
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
     {
     super.readObject(in);
@@ -200,7 +215,7 @@ public class MessageS2CPerception extends Message
     for(int i=0;i<added;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
-      object.put("zoneid",zoneid.getID());
+      setZoneid(object,zoneid.getID());
       addedRPObjects.add(object);
       }
 
@@ -214,7 +229,7 @@ public class MessageS2CPerception extends Message
     for(int i=0;i<modAdded;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
-      object.put("zoneid",zoneid.getID());
+      setZoneid(object,zoneid.getID());
       modifiedAddedAttribsRPObjects.add(object);
       }
 
@@ -228,7 +243,7 @@ public class MessageS2CPerception extends Message
     for(int i=0;i<modDeleted;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
-      object.put("zoneid",zoneid.getID());
+      setZoneid(object,zoneid.getID());
       modifiedDeletedAttribsRPObjects.add(object);
       }
 
@@ -242,7 +257,7 @@ public class MessageS2CPerception extends Message
     for(int i=0;i<del;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
-      object.put("zoneid",zoneid.getID());
+      setZoneid(object,zoneid.getID());
       deletedRPObjects.add(object);
       }
     
