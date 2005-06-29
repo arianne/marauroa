@@ -143,6 +143,8 @@ Changelog
 ---------
 1.03 Jun XX, 2005
 - Fixed a bug in RPObject.applyDifferences
+- Fixed a bug at slots
+- Added isContained method to RPObject
 
 1.02 Jun 09, 2005
 - Compressed Server info message so we save bandwidth.

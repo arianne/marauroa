@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.3 2005/05/24 12:50:17 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.4 2005/06/29 08:12:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,6 +116,28 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     return name;
     }
   
+  public void assignValidID(RPObject object)
+    {
+    int i=objects.size();
+    
+    boolean exists=false;
+    do
+      {
+      for(RPObject obj: objects)
+        {
+        if(obj.getInt("id")==i)
+          {
+          exists=true;
+          }
+        }
+      
+      if(exists) i++;
+      }   
+    while(exists);
+    
+    object.put("id",i);
+    }
+  
   /** Add an object to the slot */
   public void add(RPObject object)
     {
@@ -138,8 +160,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         {
         added.add(object);      
         }
-  
+
       objects.add(object);
+      object.setContainer(this);
       }
     catch(AttributeNotFoundException e)
       {

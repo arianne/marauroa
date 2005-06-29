@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.4 2005/06/27 16:59:50 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.5 2005/06/29 08:12:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,10 +22,10 @@ public class RPObject extends Attributes
   {
   private List<RPSlot> added;
   private List<RPSlot> deleted;
-
+  
   /** a List<RPSlot> of slots */
   private List<RPSlot> slots;
-  
+  private RPSlot container;  
   
   public final static ID INVALID_ID=new ID(-1,"");
   
@@ -74,6 +74,7 @@ public class RPObject extends Attributes
     slots=new LinkedList<RPSlot>();
     added=new LinkedList<RPSlot>();
     deleted=new LinkedList<RPSlot>();
+    container=null;
     }
   
   /** Returns an ID object representing the id of this object */
@@ -86,6 +87,21 @@ public class RPObject extends Attributes
   public boolean isEmpty()
     {
     return super.isEmpty() && slots.isEmpty();
+    }
+    
+  public boolean isContained()
+    {
+    return container!=null;    
+    }
+  
+  public void setContainer(RPSlot object)
+    {
+    container=object;  
+    }
+  
+  public RPSlot getContainer()
+    {
+    return container;
     }
   
   public void resetAddedAndDeleted()
