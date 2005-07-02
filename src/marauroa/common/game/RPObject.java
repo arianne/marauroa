@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.5 2005/06/29 08:12:03 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.6 2005/07/02 22:03:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,8 +49,7 @@ public class RPObject extends Attributes
     {
     super(RPClass.getBaseRPObjectDefault());
     initialize();
-    put("id",id.getObjectID());
-    put("zoneid",id.getZoneID());
+    setID(id);
     }
     
   public RPObject(RPClass rpclass)
@@ -65,8 +64,7 @@ public class RPObject extends Attributes
     {
     super(rpclass);
     initialize();
-    put("id",id.getObjectID());
-    put("zoneid",id.getZoneID());
+    setID(id);
     }
   
   private void initialize()
@@ -81,6 +79,12 @@ public class RPObject extends Attributes
   public RPObject.ID getID() throws AttributeNotFoundException
     {
     return new ID(this);
+    }
+  
+  public void setID(RPObject.ID id)
+    {
+    put("id",id.getObjectID());
+    put("zoneid",id.getZoneID());
     }
 	
   /** Returns true if the object is empty */

@@ -141,7 +141,7 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.03 Jun XX, 2005
+1.03 Jul 02, 2005
 - Fixed a bug in RPObject.applyDifferences
 - Fixed a bug at slots
 - Added isContained method to RPObject
