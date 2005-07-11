@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.11 2005/06/19 16:04:15 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.12 2005/07/11 12:20:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1196,7 +1196,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     stmt.execute(query);
     }
 
-  public int storeRPObject(Transaction trans, RPObject object) throws SQLException
+  public synchronized int storeRPObject(Transaction trans, RPObject object) throws SQLException
     {
     Logger.trace("JDBCPlayerDatabase::storeRPObject",">");
     Connection connection = ((JDBCTransaction)trans).getConnection();
@@ -1257,7 +1257,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       /* We get the stored id */
       query = "select LAST_INSERT_ID() as inserted_id from rpobject";
-      Logger.trace("JDBCPlayerDatabase::getDatabasePlayerId","D",query);
+      Logger.trace("JDBCPlayerDatabase::storeRPObject","D",query);
       ResultSet result = stmt.executeQuery(query);
 
       result.next();

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.8 2005/06/27 16:59:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.9 2005/07/11 12:20:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -160,6 +160,9 @@ public class MessageS2CPerception extends Message
       perception_string.append("    "+object.toString()+"\n");
       }
 
+    perception_string.append("\n  my object: \n");
+    perception_string.append("    "+(myRPObject==null?null:myRPObject.toString())+"\n");
+
     return perception_string.toString();
     }
   
@@ -273,6 +276,7 @@ public class MessageS2CPerception extends Message
     if(modifiedMyRPObject==1)
       {
       myRPObject=(RPObject)ser.readObject(myRPObject);
+      setZoneid(myRPObject,zoneid.getID());
       }
     else
       {
