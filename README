@@ -54,6 +54,7 @@ Requeriments
 To actually compile Marauroa you will need:
 - Java SDK 1.5 http://java.sun.com
 - Ant 1.6 http://ant.apache.org
+- Log4j http://logging.apache.org/log4j/
 
 Optionally:
 - Jython 2.1 http://www.jython.org/download.html
