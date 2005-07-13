@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.25 2005/07/02 22:03:55 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.26 2005/07/13 20:20:27 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,31 +12,42 @@
  ***************************************************************************/
 package marauroa.server;
 
+// marauroa stuff
+import java.io.FileNotFoundException;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+import marauroa.common.crypto.RSAKey;
+import marauroa.server.game.GameServerManager;
+import marauroa.server.game.RPServerManager;
+import marauroa.server.game.Statistics;
+// java misc
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.io.*;
 import java.math.BigInteger;
-
-import marauroa.common.*;
-import marauroa.common.crypto.*;
-import marauroa.server.game.*;
-
 //java management stuff
-import javax.management.*;
-import java.lang.management.*;
+import java.lang.management.ManagementFactory;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import marauroa.server.net.NetworkServerManager;
+// Logger
+//import org.apache.log4j.Logger;
+
 
 /** the launcher of the whole Marauroa Server. */
 public class marauroad extends Thread
   {
+  /** the logger instance. */
+  private static final org.apache.log4j.Logger logger = Log4J.getLogger(marauroad.class);
+
   final private static boolean DEBUG=true;
   final private static String VERSION="1.03";
   
   private static marauroad marauroa;
 
-  private marauroa.server.net.NetworkServerManager netMan;
-  private marauroa.server.game.GameServerManager gameMan;
-  private marauroa.server.game.RPServerManager rpMan;
-  
+  private NetworkServerManager netMan;
+  private GameServerManager gameMan;
+  private RPServerManager rpMan;
+
   private static void setArguments(String[] args)
     {
     int i=0;
@@ -54,8 +65,7 @@ public class marauroad extends Thread
           }
         catch(Exception e)
           {
-          Logger.println("ERROR: Can't find configuraciont file: "+args[i+1]);
-          Logger.println("Server must abort.");
+          logger.fatal("Can't find configuration file: "+args[i+1],e);
           System.exit(1);
           }
         }
@@ -65,15 +75,15 @@ public class marauroad extends Thread
         }
       else if(args[i].equals("-h"))
         {
-        Logger.println("Marauroa - an open source multiplayer online framework for game development -");
-        Logger.println("Running on version "+VERSION);
-        Logger.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
-        Logger.println();
-        Logger.println("usage: [-c gamefile] [-l]");        
-        Logger.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
-        Logger.println("\t    different location to the file.");
-        Logger.println("\t-l: to make the server log the output into a file");
-        Logger.println("\t-h: print this help message");        
+        System.out.println("Marauroa - an open source multiplayer online framework for game development -");
+        System.out.println("Running on version "+VERSION);
+        System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
+        System.out.println();
+        System.out.println("usage: [-c gamefile] [-l]");        
+        System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+        System.out.println("\t    different location to the file.");
+        System.out.println("\t-l: to make the server log the output into a file");
+        System.out.println("\t-h: print this help message");        
         System.exit(0);
         }
       ++i;
@@ -89,13 +99,12 @@ public class marauroad extends Thread
 	      }
 	    catch(Exception e) 
 	      {
-        Logger.println("ERROR: Can't find initialize Log to log output: "+logs_directory);
-        Logger.println("Server must abort.");
+        logger.fatal("Can't find initialize Log to log output: "+logs_directory+"\n"+
+                     "Server must abort.");
         System.exit(1);
         }
       }
     }
-    
   private static void setAllowedAndRejected(Configuration conf)
     {
     try
@@ -130,28 +139,30 @@ public class marauroad extends Thread
       {
       }
     }
-    
+
   public static void main (String[] args)
     {
-    Logger.println("Marauroa - arianne's open source multiplayer online framework for game development -");
-    Logger.println("Running on version "+VERSION);
-    Logger.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
-    Logger.println();
-    Logger.println("This program is free software; you can redistribute it and/or modify");
-    Logger.println("it under the terms of the GNU General Public License as published by");
-    Logger.println("the Free Software Foundation; either version 2 of the License, or");
-    Logger.println("(at your option) any later version.");
-    Logger.println();
-    Logger.println("This program is distributed in the hope that it will be useful,");
-    Logger.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-    Logger.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-    Logger.println("GNU General Public License for more details.");
-    Logger.println();
-    Logger.println("You should have received a copy of the GNU General Public License");
-    Logger.println("along with this program; if not, write to the Free Software");
-    Logger.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+    System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
+    System.out.println("Running on version "+VERSION);
+    System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
+    System.out.println();
+    System.out.println("This program is free software; you can redistribute it and/or modify");
+    System.out.println("it under the terms of the GNU General Public License as published by");
+    System.out.println("the Free Software Foundation; either version 2 of the License, or");
+    System.out.println("(at your option) any later version.");
+    System.out.println();
+    System.out.println("This program is distributed in the hope that it will be useful,");
+    System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+    System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+    System.out.println("GNU General Public License for more details.");
+    System.out.println();
+    System.out.println("You should have received a copy of the GNU General Public License");
+    System.out.println("along with this program; if not, write to the Free Software");
+    System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
     
-    Logger.trace("marauroad::main",">");
+    // Initialize Loggging
+    Log4J.init();
+    
     try
       {
       marauroad.setArguments(args);
@@ -160,15 +171,13 @@ public class marauroad extends Thread
       }
     catch(FileNotFoundException e)
       {
-      Logger.thrown("marauroad::main","X",e);
+      logger.error("file not found: "+e.getMessage(),e);
       }
-      
-    Logger.trace("marauroad::main","<");    
     }
  
   public synchronized void run()
     {
-    Logger.trace("marauroad::run",">");
+    logger.debug("marauroad thread started");
 
     try 
       {
@@ -178,19 +187,24 @@ public class marauroad extends Thread
       // Uniquely identify the MBeans and register them with the platform MBeanServer 
       ObjectName statName = new ObjectName("marauroad:name=Statistics");
       mbs.registerMBean(statBean, statName);
-      Logger.trace("marauroad::run","D","Statistics bean registered.");
+      logger.debug("Statistics bean registered.");
       } 
     catch(Exception e) 
       {
-      Logger.trace("marauroad::run","X","Error registering statistics bean, continuing anyway.");
-      Logger.thrown("marauroad::run","X",e);
+      logger.error("cannot register statistics bean, continuing anyway.",e);
       }
 
 
     boolean finish=false;
     marauroad instance=marauroad.getMarauroa();
 
-    instance.init();
+    if (!instance.init())
+    {
+      // initialize failed
+      System.exit(-1);
+    }
+
+    logger.info("marauroa is up and running...");
     while(!finish)
       {
       try
@@ -205,7 +219,7 @@ public class marauroad extends Thread
       }
       
     instance.finish();
-    Logger.trace("marauroad::run","<");
+    logger.debug("exiting marauroad thread");
     }
 
   private marauroad()
@@ -223,40 +237,39 @@ public class marauroad extends Thread
     return marauroa;
     }
   
-  public void init()
+  /** initializes the game. returns true when all is ok, else false (this may terminate the server). */
+  public boolean init()
     {
-    Logger.trace("marauroad::init",">");
+    logger.debug("staring initialize");
     try
       {
       netMan=new marauroa.server.net.NetworkServerManager();
       }
     catch(Exception e)
       {
-      Logger.trace("marauroad::init","!","Marauroa can't create NetworkServerManager.");
-      Logger.trace("marauroad::init","!","Reasons:");
-      Logger.trace("marauroad::init","!","- You are already running a copy of Marauroa on the same UDP port");
-      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
-      Logger.trace("marauroad::init","!","- You haven't create database");
-      Logger.trace("marauroad::init","!","- You have invalid username and password to connnect to database");
-      Logger.trace("marauroad::init","!","Exception report");
-      Logger.thrown("marauroad::init","!",e);
-      System.exit(-1);
+      logger.fatal(
+              "Marauroa can't create NetworkServerManager.\n"+
+              "Reasons:\n"+
+              "- You are already running a copy of Marauroa on the same UDP port\n"+
+              "- You haven't specified a valid configuration file\n"+
+              "- You haven't create database\n"+
+              "- You have invalid username and password to connnect to database\n",e);
+      return false;
       }
       
     try
       {
-      rpMan= new marauroa.server.game.RPServerManager(netMan);
+      rpMan = new RPServerManager(netMan);
       }
     catch(Exception e)
       {
-      Logger.trace("marauroad::init","!","Marauroa can't create RPServerManager.");
-      Logger.trace("marauroad::init","!","Reasons:");
-      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
-      Logger.trace("marauroad::init","!","- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.");
-      Logger.trace("marauroad::init","!","- There may be an error in the Game startup method.");
-      Logger.trace("marauroad::init","!","Exception report");
-      Logger.thrown("marauroad::init","!",e);
-      System.exit(-1);
+      logger.fatal(
+              "Marauroa can't create RPServerManager.\n"+
+              "Reasons:\n"+
+              "- You haven't specified a valid configuration file\n"+
+              "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"+
+              "- There may be an error in the Game startup method.\n",e);
+      return false;
       }
 
     try
@@ -264,37 +277,35 @@ public class marauroad extends Thread
       RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
       new BigInteger(Configuration.getConfiguration().get("d")),
 			new BigInteger(Configuration.getConfiguration().get("e")));
-      gameMan= new marauroa.server.game.GameServerManager(key,netMan,rpMan);
+      gameMan = new GameServerManager(key,netMan,rpMan);
       }
     catch(Exception e)
       {
-      Logger.trace("marauroad::init","!","Marauroa can't create GameServerManager.");
-      Logger.trace("marauroad::init","!","Reasons:");
-      Logger.trace("marauroad::init","!","- You haven't specified a valid configuration file");
-      Logger.trace("marauroad::init","!","- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.");
-      Logger.trace("marauroad::init","!","Exception report");
-      Logger.thrown("marauroad::init","!",e);
-      System.exit(-1);
+      logger.fatal("Marauroa can't create GameServerManager.\n"+
+      "Reasons:\n"+
+      "- You haven't specified a valid configuration file\n"+
+      "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n"
+      ,e);
+      return false;
       }
       
     Runtime.getRuntime().addShutdownHook(new Thread()
       {
       public void run()
         {
-        Logger.trace("marauroad::init","!","User requesting shutdown");
+        logger.info("User requesting shutdown");
         finish();
-        Logger.trace("marauroad::init","!","Shutdown completed. See you later");
+        logger.info("Shutdown completed. See you later");
         }
       });
 
-    Logger.trace("marauroad::init","<");
+    logger.debug("initialize finished");
+    return true;
     }
     
   public void finish()
     {
-    Logger.trace("marauroad::finish",">");
     netMan.finish();
     gameMan.finish();
-    Logger.trace("marauroad::finish","<");
     }
   }
