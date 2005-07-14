@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.5 2005/04/17 14:03:34 arianne_rpg Exp $ */
+/* $Id: PacketValidator.java,v 1.6 2005/07/14 18:46:38 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,15 +12,21 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import java.net.*;
-import java.util.*;
-import java.io.*;
-import java.math.*;
-import java.sql.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import marauroa.common.Log4J;
+import marauroa.server.game.IPlayerDatabase;
+import marauroa.server.game.JDBCPlayerDatabase;
+import marauroa.server.game.JDBCTransaction;
+import org.apache.log4j.Logger;
 
-import marauroa.common.*;
-import marauroa.server.*;
-import marauroa.server.game.*;
+
 
 /** The PacketValidator validates the ariving packets,
  *  (currently it can only check if the address is banned,
@@ -29,6 +35,9 @@ import marauroa.server.game.*;
  */
 public class PacketValidator
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PacketValidator.class);
+
   private InetAddressMask[] banList;
   
   /* timestamp of last reload */
@@ -41,20 +50,13 @@ public class PacketValidator
    to recieve new messages from the network. */
   public PacketValidator()
     {
-    Logger.trace("PacketValidator",">");
+    Log4J.startMethod(logger, "PacketValidator");
     
     /* at most each 5 minutes */
     reloadAfter=5*60*1000;
-    
-    try
-      {
-      /* read ban list from configuration */
-      loadBannedIPNetworkListFromDB();
-      }
-    finally
-      {
-      Logger.trace("PacketValidator","<");
-      }
+    /* read ban list from configuration */
+    loadBannedIPNetworkListFromDB();
+    Log4J.finishMethod(logger, "PacketValidator");
     }
   
   /** returns true if the source ip is banned */
@@ -69,42 +71,36 @@ public class PacketValidator
   public synchronized boolean checkBanned(InetAddress address)
     {
     boolean banned = false;
-    Logger.trace("PacketValidator::checkBanned",">");
+    Log4J.startMethod(logger, "checkBanned");
     checkReload();
     if(banList!=null)
       {
-      try
-        {
         for(int i=0; i<banList.length; i++)
           {
           InetAddressMask iam=banList[i];
           if(iam.matches(address))
             {
-            Logger.trace("PacketValidator::checkBanned","D","Address "+ address+" is banned by "+iam);
+            logger.debug("Address "+ address+" is banned by "+iam);
             banned=true;
             break;
             }
           }
-        }
-      finally
-        {
-        Logger.trace("PacketValidator::checkBanned","<");
-        }
       }
 
-    return(banned);
+    Log4J.finishMethod(logger, "checkBanned");
+    return banned;
     }
   
   /** loads and initializes the ban list from a database */
   public synchronized void loadBannedIPNetworkListFromDB()
     {
-    Logger.trace("PacketValidator::loadBannedIPNetworkListFromDB",">");
+    Log4J.startMethod(logger, "loadBannedIPNetworkListFromDB");
     try
       {
-      IPlayerDatabase db=JDBCPlayerDatabase.getDatabase();
+      IPlayerDatabase db = JDBCPlayerDatabase.getDatabase();
 
       /* read ban list from DB */
-      Connection connection = ((JDBCTransaction)db.getTransaction()).getConnection();
+      Connection connection = ((JDBCTransaction) db.getTransaction()).getConnection();
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("select address,mask from banlist");
       banList=null;
@@ -122,36 +118,36 @@ public class PacketValidator
         banList = new InetAddressMask[ban_list_tmp.size()];
         banList = (InetAddressMask[])ban_list_tmp.toArray(banList);
         }
+      
+      // free database resources
+      rs.close();
+      stmt.close();
         
-      Logger.trace("PacketValidator::loadBannedIPNetworkListFromDB","D","loaded "+ban_list_tmp.size() + " entries from ban table");
+      logger.debug("loaded "+ban_list_tmp.size() + " entries from ban table");
+      }
+    catch(SQLException sqle)
+      {
+      logger.error("cannot read banned networks database table",sqle);
       }
     catch(Exception e)
-      { 
-      Logger.thrown("PacketValidator::loadBannedIPNetworkListFromDB","X",e);
-      }
-    finally
       {
-      lastLoadTS = System.currentTimeMillis();
-      Logger.trace("PacketValidator::loadBannedIPNetworkListFromDB","<");
+      logger.error("error while reading banned networks",e);
       }
+
+      lastLoadTS = System.currentTimeMillis();
+      Log4J.finishMethod(logger, "loadBannedIPNetworkListFromDB");
     }
   
-  /** checks if reload is neccesary and performs it
-   *
+  /** 
+   * checks if reload is necessary and performs it
    */
   public synchronized void checkReload()
     {
-    Logger.trace("PacketValidator::checkReload",">");
-    try
+    Log4J.startMethod(logger, "checkReload");
+    if (System.currentTimeMillis()-lastLoadTS>=reloadAfter)
       {
-      if (System.currentTimeMillis()-lastLoadTS>=reloadAfter)
-        {
-        loadBannedIPNetworkListFromDB();
-        }
+      loadBannedIPNetworkListFromDB();
       }
-    finally
-      {
-      Logger.trace("PacketValidator::checkReload","<");
-      }
+    Log4J.finishMethod(logger, "checkReload");
     }
   }

@@ -56,9 +56,34 @@ public class Log4J
    * returns a logger for the given class. Use this function instead of
    * <code>Logger.getLogger(clazz);</code>. If the logging mechanism changes
    * it will be done here and not in every class using a logger.
+   *
+   * @param clazz the Class requesting a logger
+   * @return the logger instance
    */
   public static Logger getLogger(Class clazz)
   {
     return Logger.getLogger(clazz);
+  }
+
+  /**
+   * generates a debug event with the starting method in the detail message
+   *
+   * @param logger the logger of the class the method is located
+   * @param method name of the method
+   */
+  public static void startMethod(Logger logger, String method)
+  {
+    logger.debug(method+" started (+)");
+  }
+  
+  /**
+   * generates a debug event with the finishing method in the detail message
+   *
+   * @param logger the logger of the class the method is located
+   * @param method name of the method
+   */
+  public static void finishMethod(Logger logger, String method)
+  {
+    logger.debug(method+" finished (-)");
   }
 }

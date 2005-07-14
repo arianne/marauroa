@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.18 2005/06/27 16:59:51 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.19 2005/07/14 18:47:33 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,20 +12,28 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import java.io.*;
-import marauroa.server.net.*;
-import marauroa.common.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import marauroa.common.PropertyNotFoundException;
+import marauroa.common.TimeoutConf;
+import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.RSAKey;
+import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
 import marauroa.common.net.*;
-import marauroa.common.crypto.*;
-import marauroa.common.game.*;
-import marauroa.server.*;
-
+import marauroa.server.net.NetworkServerManager;
+import org.apache.log4j.Logger;
 
 /** The GameServerManager is a active entity of the marauroa.game package,
  *  it is in charge of processing all the messages and modify PlayerEntry Container accordingly. */
 public final class GameServerManager extends Thread
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(GameServerManager.class);
+  
   private NetworkServerManager netMan;
   private RPServerManager rpMan;
   private PlayerEntryContainer playerContainer;
@@ -42,7 +50,7 @@ public final class GameServerManager extends Thread
   public GameServerManager(RSAKey key, NetworkServerManager netMan, RPServerManager rpMan) throws Exception
     {
     super("GameServerManager");
-    Logger.trace("GameServerManager",">");
+    Log4J.startMethod(logger,"GameServerManager");
     keepRunning=true;
     this.key = key;
     this.netMan=netMan;
@@ -50,12 +58,12 @@ public final class GameServerManager extends Thread
     playerContainer=PlayerEntryContainer.getContainer();
     stats=Statistics.getStatistics();
     start();
-    Logger.trace("GameServerManager","<");
+    Log4J.finishMethod(logger,"GameServerManager");
     }
 
   public void finish()
     {
-    Logger.trace("GameServerManager::finish",">");
+    Log4J.startMethod(logger,"finish");
     rpMan.finish();
     keepRunning=false;
     while(isfinished==false)
@@ -86,16 +94,16 @@ public final class GameServerManager extends Thread
         }
       catch(Exception e)
         {
-        Logger.thrown("GameServerManager::finish","X",e);
+        logger.error("GameServerManager::finish",e);
         }
       }
     
-    Logger.trace("GameServerManager::finish","<");
+    Log4J.finishMethod(logger,"finish");
     }
 
   public void run()
     {
-    Logger.trace("GameServerManager::run",">");
+    Log4J.startMethod(logger,"run");
     try
       {
       while(keepRunning)
@@ -108,43 +116,43 @@ public final class GameServerManager extends Thread
           switch(msg.getType())
             {
             case C2S_LOGIN_REQUESTKEY:
-              Logger.trace("GameServerManager::run","D","Processing C2S Login Request Key Message");
+              logger.debug("Processing C2S Login Request Key Message");
               processLoginRequestKey(msg);
               break;
             case C2S_LOGIN_SENDPROMISE:
-              Logger.trace("GameServerManager::run","D","Processing C2S Login Send Promise Message");
+              logger.debug("Processing C2S Login Send Promise Message");
               processLoginSendPromise(msg);
               break;
             case C2S_LOGIN_SENDNONCENAMEANDPASSWORD:
-              Logger.trace("GameServerManager::run","D","Processing C2S Secured Login Message");
+              logger.debug("Processing C2S Secured Login Message");
               processSecuredLoginEvent(msg);
               break;
             case C2S_CHOOSECHARACTER:
-              Logger.trace("GameServerManager::run","D","Processing C2S Choose Character Message");
+              logger.debug("Processing C2S Choose Character Message");
               processChooseCharacterEvent((MessageC2SChooseCharacter)msg);
               break;
             case C2S_LOGOUT:
-              Logger.trace("GameServerManager::run","D","Processing C2S Logout Message");
+              logger.debug("Processing C2S Logout Message");
               processLogoutEvent((MessageC2SLogout)msg);
               break;
             case C2S_ACTION:
-              Logger.trace("GameServerManager::run","D","Processing C2S Action Message");
+              logger.debug("Processing C2S Action Message");
               processActionEvent((MessageC2SAction)msg);
               break;
             case C2S_PERCEPTION_ACK:
-              Logger.trace("GameServerManager::run","D","Processing C2S Perception ACK Message");
+              logger.debug("Processing C2S Perception ACK Message");
               processPerceptionACKEvent((MessageC2SPerceptionACK)msg);
               break;
             case C2S_OUTOFSYNC:
-              Logger.trace("GameServerManager::run","D","Processing C2S Out Of Sync Message");
+              logger.debug("Processing C2S Out Of Sync Message");
               processOutOfSyncEvent((MessageC2SOutOfSync)msg);
               break;
             case C2S_TRANSFER_ACK:
-              Logger.trace("GameServerManager::run","D","Processing C2S Transfer ACK Message");
+              logger.debug("Processing C2S Transfer ACK Message");
               processTransferACK((MessageC2STransferACK)msg);
               break;
             default:
-              Logger.trace("GameServerManager::run","W","Unknown Message["+msg.getType()+"]");
+              logger.debug("Unknown Message["+msg.getType()+"]");
               break;
             }
           playerContainer.getLock().releaseLock();
@@ -154,96 +162,64 @@ public final class GameServerManager extends Thread
       }
     catch(Throwable e)
       {
-      Logger.trace("GameServerManager::run", "!", "Unhandled exception, server will shut down.");
-      Logger.thrown("GameServerManager::run", "!", e);
+      logger.fatal("Unhandled exception, server will shut down.",e);
       }
-    finally
-      {
-      isfinished=true;
-      Logger.trace("GameServerManager::run","<");
-      }
+
+    isfinished=true;
+    Log4J.finishMethod(logger,"run");
     }
 
-  private static class ServerInfo
-    {
-    static Configuration config;
-    static
+  /**
+   * This checks if the message is valid to trigger the event. 
+   * The player has to:
+   * <ul>
+   *  <li>Be known to the Server (logged in)</li>
+   *  <li>Completed the login procedure</li>
+   *  <li>Must have the correct IP<->clientid relation </li>
+   * </ul>
+   *
+   * @param msg the message to check
+   * @return true, the event is valid, else false
+   */
+  private boolean isValidEvent(Message msg, PlayerEntryContainer.ClientState state) throws NoSuchClientIDException
+  {
+    int clientid = msg.getClientID();
+    if(!playerContainer.hasRuntimePlayer(clientid))
       {
-      Logger.trace("GameServerManager::ServerInfo::(static)",">");
-      try
-        {
-        config=Configuration.getConfiguration();
-        //just check if mandatory properties are set
-        config.get("server_typeGame");
-        config.get("server_name");
-        config.get("server_version");
-        config.get("server_contact");
-        }
-      catch(Exception e)
-        {
-        Logger.trace("GameServerManager::ServerInfo::(static)","!","ABORT: Unable to load Server info");
-        Logger.thrown("GameServerManager::ServerInfo::(static)","X",e);
-        }
-      finally
-        {
-        Logger.trace("GameServerManager::ServerInfo::(static)","<");
-        }
+      /* Error: Player didn't login. */
+      logger.debug("Client("+msg.getAddress().toString()+") has not login yet");
+      return false;
       }
-
-    public static String[] get()
+    if(playerContainer.getRuntimeState(clientid) != state)
       {
-      List<String> l_result = new ArrayList<String>();
-
-      Enumeration props = config.propertyNames();
-      while(props.hasMoreElements())
-        {
-        String prop_name = String.valueOf(props.nextElement());
-        if(prop_name.startsWith("server_"))
-        {
-        try
-          {
-          l_result.add(config.get(prop_name));
-          }
-        catch(PropertyNotFoundException pnfe)
-          {
-          //cant be. only in multithreaded emvironment possible
-          Logger.trace("GameServerManager::ServerInfo::get","!","Property "+prop_name+" is not set???");
-          }
-        }
-        }
-      String[] result = new String[l_result.size()];
-      return (String[])l_result.toArray(result);
+      /* Error: Player has not completed login yet, or he/she has logout already. */
+      logger.debug("Client("+msg.getAddress().toString()+") is not in the required state ("+state+")");
+      return false;
       }
-    }
-
+    if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
+      {
+      /* Error: Player has not correct IP<->clientid relation */
+      logger.debug("Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
+      return false;
+      }
+    return true;
+  }
+  
+  
   private void processChooseCharacterEvent(MessageC2SChooseCharacter msg)
     {
-    Logger.trace("GameServerManager::processChooseCharacterEvent",">");
+    Log4J.startMethod(logger,"processChooseCharacterEvent");
     try
       {
       int clientid=msg.getClientID();
 
-      if(!playerContainer.hasRuntimePlayer(clientid))
-        {
-        /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.LOGIN_COMPLETE))
         return;
-        }
-      if(playerContainer.getRuntimeState(clientid)!=PlayerEntryContainer.ClientState.LOGIN_COMPLETE)
-        {
-        /* Error: Player has not completed login yet, or he/she has logout already. */
-        Logger.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") has not complete login yet");
-        return;
-        }
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processChooseCharacterEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
+
       if(playerContainer.hasCharacter(clientid,msg.getCharacter()))
         {
-        Logger.trace("GameServerManager::processChooseCharacterEvent","D","Client("+msg.getAddress().toString()+") has character("+msg.getCharacter()+")");
+        logger.debug("Client("+msg.getAddress().toString()+") has character("+msg.getCharacter()+")");
         /* We set the character in the runtime info */
         playerContainer.setChoosenCharacter(clientid,msg.getCharacter());
 
@@ -263,7 +239,7 @@ public final class GameServerManager extends Thread
         }
       else
         {
-        Logger.trace("GameServerManager::processChooseCharacterEvent","W","Client("+msg.getAddress().toString()+") hasn't character("+msg.getCharacter()+")");
+        logger.debug("Client("+msg.getAddress().toString()+") hasn't character("+msg.getCharacter()+")");
         playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.ClientState.LOGIN_COMPLETE);
 
         /* Error: There is no such character */
@@ -275,17 +251,17 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("GameServerManager::processChooseCharacterEvent","X",e);
+      logger.error("error when processing character event",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processChooseCharacterEvent","<");
+      Log4J.finishMethod(logger,"processChooseCharacterEvent");
       }
     }
 
   private void processLogoutEvent(MessageC2SLogout msg)
     {
-    Logger.trace("GameServerManager::processLogoutEvent",">");
+    Log4J.startMethod(logger,"processLogoutEvent");
     try
       {
       int clientid=msg.getClientID();
@@ -293,13 +269,13 @@ public final class GameServerManager extends Thread
       if(!playerContainer.hasRuntimePlayer(clientid))
         {
         /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processLogoutEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+        logger.debug("Client("+msg.getAddress().toString()+") has not login yet");
         return;
         }
       if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
         {
         /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processLogoutEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
+        logger.debug("Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
         return;
         }
       if(playerContainer.getRuntimeState(clientid)==PlayerEntryContainer.ClientState.GAME_BEGIN)
@@ -317,13 +293,12 @@ public final class GameServerManager extends Thread
           }
         catch(Exception e)
           {
-          Logger.trace("GameServerManager::processLogoutEvent","X","Exception while storing character: "+e.getMessage());
-          Logger.thrown("GameServerManager::processLogoutEvent","X",e);
+          logger.error("Exception while storing character",e);
           }
         }
       else
         {
-        Logger.trace("GameServerManager::processLogoutEvent","D","Player trying to logout without choosing character");
+        logger.debug("Player trying to logout without choosing character");
         }
 
       stats.add("Players logout",1);
@@ -337,40 +312,25 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("GameServerManager::processLogoutEvent","X",e);
+      logger.error("error while processing LogoutEvent",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processLogoutEvent","<");
+      Log4J.finishMethod(logger,"processLogoutEvent");
       }
     }
 
   static int lastActionIdGenerated=0;
   private void processActionEvent(MessageC2SAction msg)
     {
-    Logger.trace("GameServerManager::processActionEvent",">");
+    Log4J.startMethod(logger,"processActionEvent");
     try
       {
       int clientid=msg.getClientID();
 
-      if(!playerContainer.hasRuntimePlayer(clientid))
-        {
-        /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processActionEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
         return;
-        }
-      if(playerContainer.getRuntimeState(clientid)!=PlayerEntryContainer.ClientState.GAME_BEGIN)
-        {
-        /* Error: Player has not choose a character yey. */
-        Logger.trace("GameServerManager::processActionEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-        return;
-        }
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processActionEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
 
       /* Send the action to RP Manager */
       RPAction action=msg.getRPAction();
@@ -409,39 +369,24 @@ public final class GameServerManager extends Thread
     catch(Exception e)
       {
       stats.add("Actions invalid",1);
-      Logger.thrown("GameServerManager::processActionEvent","X",e);
+      logger.error("error while processing ActionEvent",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processActionEvent","<");
+      Log4J.finishMethod(logger,"processActionEvent");
       }
     }
 
   private void processPerceptionACKEvent(MessageC2SPerceptionACK msg)
     {
-    Logger.trace("GameServerManager::processPerceptionACKEvent",">");
+    Log4J.startMethod(logger,"processPerceptionACKEvent");
     try
       {
       int clientid=msg.getClientID();
 
-      if(!playerContainer.hasRuntimePlayer(clientid))
-        {
-        /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
         return;
-        }
-      if(playerContainer.getRuntimeState(clientid)!=PlayerEntryContainer.ClientState.GAME_BEGIN)
-        {
-        /* Error: Player has not choose a character yey. */
-        Logger.trace("GameServerManager::processPerceptionACKEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-        return;
-        }
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processPerceptionACKEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
       
       /** TODO: Compute client lag here */
 
@@ -450,17 +395,17 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("GameServerManager::processPerceptionACKEvent","X",e);
+      logger.error("error while processing processPerceptionACKEvent",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processPerceptionACKEvent","<");
+      Log4J.finishMethod(logger,"processPerceptionACKEvent");
       }
     }
 
   private void processLoginRequestKey(Message msg)
     {
-    Logger.trace("GameServerManager::processLoginRequestKey" , ">");
+    Log4J.startMethod(logger,"processLoginRequestKey");
     
     MessageC2SLoginRequestKey msgRequest=(MessageC2SLoginRequestKey)msg;
     if(rpMan.checkGameVersion(msgRequest.getGame(),msgRequest.getVersion()))
@@ -472,7 +417,7 @@ public final class GameServerManager extends Thread
     else
       {
       /* Error: Incompatible game version. Update client */
-      Logger.trace("GameServerManager::processLoginRequestKey","W","Server is running an incompatible game version. Client("+msg.getAddress().toString()+") can't login");
+      logger.debug("Server is running an incompatible game version. Client("+msg.getAddress().toString()+") can't login");
 
       /* Notify player of the event. */
       MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
@@ -481,18 +426,18 @@ public final class GameServerManager extends Thread
       }
     
     
-    Logger.trace("GameServerManager::processLoginRequestKey" , "<");
+    Log4J.finishMethod(logger,"processLoginRequestKey");
     }
 
   private void processLoginSendPromise(Message msg)
     {
-    Logger.trace("GameServerManager::processLoginSendPromise" , ">");
+    Log4J.startMethod(logger,"processLoginSendPromise");
     try
       {
       if(playerContainer.size()==GameConst.MAX_NUMBER_PLAYERS)
         {
         /* Error: Too many clients logged on the server. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Server is full, Client("+msg.getAddress().toString()+") can't login");
+        logger.debug("Server is full, Client("+msg.getAddress().toString()+") can't login");
   
         /* Notify player of the event. */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
@@ -515,50 +460,32 @@ public final class GameServerManager extends Thread
       }
     catch(NoSuchClientIDException e)
       {
-      Logger.thrown("GameServerManager::processLoginSendPromise","X",e);
+      logger.error("client not found",e);
       }
 
-    Logger.trace("GameServerManager::processLoginSendPromise" , "<");
+    Log4J.finishMethod(logger,"processLoginSendPromise");
     }
     
   private void processSecuredLoginEvent(Message msg)
     {    
-    Logger.trace("GameServerManager::processSecuredLoginEvent" , ">");
+    Log4J.startMethod(logger,"processSecuredLoginEvent");
     try 
       {
       MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword)msg;
       
-      /** NOTE: We need to avoid that another player sends a fake login to login a player. */
-      int clientid = msg.getClientID();
-      if(!playerContainer.hasRuntimePlayer(clientid)) 
-        {
-        /* Error player did not send his promise. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") has not sent his promise yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.NULL))
         return;
-        }
-        
-      PlayerEntryContainer.RuntimePlayerEntry player = playerContainer.get(clientid);
-      if(player.state != PlayerEntryContainer.ClientState.NULL) 
-        {
-        /* Error: Player is not at the right stage to send those informations. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") is not at the right stage of identification");
-        return;
-        }
       
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processChooseCharacterEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
-        
+      int clientid = msg.getClientID();
+      PlayerEntryContainer.RuntimePlayerEntry player = playerContainer.get(clientid);
       player.loginInformations.clientNonce = msgLogin.getHash();
       player.loginInformations.userName = msgLogin.getUsername();
       player.loginInformations.password = msgLogin.getPassword();
 
       if(!playerContainer.verifyAccount(player.loginInformations)) 
         {
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Incorrect username/password");
+        logger.info("Incorrect username/password for player "+msgLogin.getUsername());
         stats.add("Players invalid login",1);
         playerContainer.addLoginEvent(msgLogin.getUsername(),msg.getAddress(),false);
 
@@ -573,7 +500,7 @@ public final class GameServerManager extends Thread
       if(playerContainer.hasPlayer(msgLogin.getUsername())) 
         {
         /* Warning: Player is already logged. */
-        Logger.trace("GameServerManager::processSecuredLoginEvent","W","Client("+msg.getAddress().toString()+") trying to login twice");
+        logger.warn("Client("+msg.getAddress().toString()+") trying to login twice");
         int clientoldid=playerContainer.getClientidPlayer(msgLogin.getUsername());
 
         if(playerContainer.getRuntimeState(clientoldid)==PlayerEntryContainer.ClientState.GAME_BEGIN)
@@ -589,13 +516,13 @@ public final class GameServerManager extends Thread
           }
         else
           {
-          Logger.trace("GameServerManager::processSecuredLoginEvent","D","Player trying to logout without choosing character");
+          logger.info("Player trying to logout without choosing character");
           }
           
         playerContainer.removeRuntimePlayer(clientoldid);
         }
 
-      Logger.trace("GameServerManager::processSecuredLoginEvent","D","Correct username/password");
+      logger.debug("Correct username/password");
       
       /* Correct: The login is correct */
       player.username = player.loginInformations.userName;
@@ -627,40 +554,24 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e) 
       {
-      Logger.trace("GameServerManager::processSecuredLoginEvent","X",e.getMessage());
-      Logger.thrown("GameServerManager::processSecuredLoginEvent","X",e);
+      logger.error("error while processing SecuredLoginEvent",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processSecuredLoginEvent" , "<");
+      Log4J.finishMethod(logger,"processSecuredLoginEvent");
       }
     }
 
   private void processOutOfSyncEvent(MessageC2SOutOfSync msg)
     {
-    Logger.trace("GameServerManager::processOutOfSyncEvent",">");
+    Log4J.startMethod(logger,"processOutOfSyncEvent");
     try
       {
       int clientid=msg.getClientID();
 
-      if(!playerContainer.hasRuntimePlayer(clientid))
-        {
-        /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processOutOfSyncEvent","W","Client("+msg.getAddress().toString()+") has not login yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
         return;
-        }
-      if(playerContainer.getRuntimeState(clientid)!=PlayerEntryContainer.ClientState.GAME_BEGIN)
-        {
-        /* Error: Player has not choose a character yey. */
-        Logger.trace("GameServerManager::processOutOfSyncEvent","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-        return;
-        }
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processOutOfSyncEvent","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
 
       /** Notify PlayerEntryContainer that this player is out of Sync */
       PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
@@ -668,39 +579,24 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("GameServerManager::processOutOfSyncEvent","X",e);
+      logger.error("error while processing OutOfSyncEvent",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processOutOfSyncEvent","<");
+      Log4J.finishMethod(logger,"processOutOfSyncEvent");
       }
     }
 
   private void processTransferACK(MessageC2STransferACK msg)
     {
-    Logger.trace("GameServerManager::processTransferACK",">");
+    Log4J.startMethod(logger,"processTransferACK");
     try
       {
       int clientid=msg.getClientID();
 
-      if(!playerContainer.hasRuntimePlayer(clientid))
-        {
-        /* Error: Player didn't login. */
-        Logger.trace("GameServerManager::processTransferACK","W","Client("+msg.getAddress().toString()+") has not login yet");
+      // verify event
+      if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
         return;
-        }
-      if(playerContainer.getRuntimeState(clientid)!=PlayerEntryContainer.ClientState.GAME_BEGIN)
-        {
-        /* Error: Player has not choose a character yey. */
-        Logger.trace("GameServerManager::processTransferACK","W","Client("+msg.getAddress().toString()+") has not chose a character yet");
-        return;
-        }
-      if(!playerContainer.verifyRuntimePlayer(clientid,msg.getAddress()))
-        {
-        /* Error: Player has not correct IP<->clientid relation */
-        Logger.trace("GameServerManager::processTransferACK","E","Client("+msg.getAddress().toString()+") has not correct IP<->clientid relation");
-        return;
-        }
 
       /** Handle Transfer ACK here */
       PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(clientid);
@@ -708,7 +604,7 @@ public final class GameServerManager extends Thread
         {
         if(content.ack==true)
           {
-          Logger.trace("GameServerManager::processTransferACK","D","Trying transfer content "+content);
+          logger.debug("Trying transfer content "+content);
           
           content=entry.getContent(content.name);
           if(content!=null)
@@ -716,14 +612,14 @@ public final class GameServerManager extends Thread
             stats.add("Transfer content",1);
             stats.add("Tranfer content size",content.data.length);
             
-            Logger.trace("GameServerManager::processTransferACK","D","Transfering content "+content);
+            logger.debug("Transfering content "+content);
             MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
             msgTransfer.setClientID(clientid);
             netMan.addMessage(msgTransfer);
             }
           else
             {
-            Logger.trace("GameServerManager::processTransferACK","D","CAN'T transfer content "+content);
+            logger.debug("CAN'T transfer content "+content);
             }
           }
         else
@@ -736,11 +632,61 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("GameServerManager::processTransferACK","X",e);
+      logger.error("error while processing TransferACK",e);
       }
     finally
       {
-      Logger.trace("GameServerManager::processTransferACK","<");
+      Log4J.finishMethod(logger,"processTransferACK");
       }
     }
+  
+  /** */
+  private static class ServerInfo
+    {
+    static Configuration config;
+    static
+      {
+      Log4J.startMethod(logger,"ServerInfo[static]");
+      try
+        {
+        config=Configuration.getConfiguration();
+        //just check if mandatory properties are set
+        config.get("server_typeGame");
+        config.get("server_name");
+        config.get("server_version");
+        config.get("server_contact");
+        }
+      catch(Exception e)
+        {
+        logger.error("ABORT: Unable to load Server info",e);
+        }
+      Log4J.finishMethod(logger,"ServerInfo[static]");
+      }
+
+    public static String[] get()
+      {
+      List<String> l_result = new ArrayList<String>();
+
+      Enumeration props = config.propertyNames();
+      while(props.hasMoreElements())
+        {
+        String prop_name = String.valueOf(props.nextElement());
+        if(prop_name.startsWith("server_"))
+          {
+          try
+            {
+            l_result.add(config.get(prop_name));
+            }
+          catch(PropertyNotFoundException pnfe)
+            {
+            //cant be. only in multithreaded emvironment possible
+            logger.debug("Property "+prop_name+" is not set???");
+            }
+          }
+        }
+      String[] result = new String[l_result.size()];
+      return (String[])l_result.toArray(result);
+      }
+    }
+  
   }

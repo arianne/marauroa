@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.2 2005/03/01 07:21:09 root777 Exp $ */
+/* $Id: RWLock.java,v 1.3 2005/07/14 18:46:38 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,9 @@
  ***************************************************************************/
 package marauroa.server;
 
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
+
 /** This class is a Reader/Writters lock 
  *  A Reader Writer Lock is a synchronization mechanism allowing access to data.
  *  It allows multiple threads to read the data simultaneously, but only one 
@@ -21,6 +24,9 @@ package marauroa.server;
  *  and writing.*/
 public class RWLock
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RWLock.class);
+
   private volatile int givenLocks;
   private volatile int waitingWriters;
   private Object mutex;
@@ -43,9 +49,9 @@ public class RWLock
           mutex.wait(100);
           }
         }
-      catch(java.lang.InterruptedException e)
+      catch(InterruptedException ie)
         {
-        System.out.println(e);
+        logger.debug("interrupted while requesting a read lock",ie);
         }
       givenLocks++;
       }
@@ -63,9 +69,9 @@ public class RWLock
           mutex.wait(100);
           }
         }
-      catch(java.lang.InterruptedException e)
+      catch(InterruptedException ie)
         {
-        System.out.println(e);
+        logger.debug("interrupted while requesting a write lock",ie);
         }
       waitingWriters--;
       givenLocks = -1;

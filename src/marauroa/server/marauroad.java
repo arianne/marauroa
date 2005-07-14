@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.26 2005/07/13 20:20:27 mtotz Exp $ */
+/* $Id: marauroad.java,v 1.27 2005/07/14 18:46:38 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -293,9 +293,10 @@ public class marauroad extends Thread
       {
       public void run()
         {
-        logger.info("User requesting shutdown");
+        // Note: Log4J ist shutdown already at this point
+        System.out.println("User requesting shutdown");
         finish();
-        logger.info("Shutdown completed. See you later");
+        System.out.println("Shutdown completed. See you later");
         }
       });
 
