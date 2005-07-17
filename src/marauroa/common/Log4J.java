@@ -6,6 +6,7 @@
 
 package marauroa.common;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -31,24 +32,23 @@ public class Log4J
   public static void init()
   {
     InputStream propsFile = Log4J.class.getClassLoader().getResourceAsStream(LOG4J_PROPERTIES );
-    
-    if (propsFile == null)
-    {
-      System.err.println("Cannot find "+LOG4J_PROPERTIES+" in classpath. Using default properties.");
-      PropertyConfigurator.configure(DEFAULT_PROPERTIES);
-    }
-    else
+    try
     {
       Properties props = new Properties();
-      try
+      if (propsFile == null)
+      {
+        System.err.println("Cannot find "+LOG4J_PROPERTIES+" in classpath. Using default properties.");
+        props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes()));
+      }
+      else
       {
         props.load(propsFile);
-        PropertyConfigurator.configure(props);
       }
-      catch (IOException ioe)
-      {
-        System.err.println("cannot read property-file "+LOG4J_PROPERTIES+" because "+ioe.getMessage());
-      }
+      PropertyConfigurator.configure(props);
+    }
+    catch (IOException ioe)
+    {
+      System.err.println("cannot read property-file "+LOG4J_PROPERTIES+" because "+ioe.getMessage());
     }
   }
   
