@@ -33,6 +33,7 @@
   <target name="installation" depends="init">
     <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
     <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
+    <copy todir="${build}/marauroa/" file="${src}/marauroa/log4j.properties"/>
   </target>
 
   <target name="compile" depends="installation">
