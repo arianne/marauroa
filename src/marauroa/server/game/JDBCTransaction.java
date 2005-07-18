@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.4 2005/04/28 19:01:32 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.5 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,11 +13,18 @@
 
 package marauroa.server.game;
 
-import java.sql.*;
-import marauroa.common.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
+
 
 public class JDBCTransaction extends Transaction
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(JDBCTransaction.class);
+
   private Connection connection;
   public JDBCTransaction(Connection connection)
     {
@@ -53,7 +60,7 @@ public class JDBCTransaction extends Transaction
       }
     catch(SQLException e)
       {
-      throw new TransactionException(e.getMessage());
+      throw new TransactionException(e.getMessage(),e);
       }
     }
   
@@ -61,12 +68,12 @@ public class JDBCTransaction extends Transaction
     {
     try
       {
-      Logger.trace("JDBCTransaction::commit","D","Commiting");
+      logger.debug("Commiting");
       connection.commit();
       }
     catch(SQLException e)
       {
-      throw new TransactionException(e.getMessage());
+      throw new TransactionException(e.getMessage(),e);
       }
     }
   
@@ -74,13 +81,13 @@ public class JDBCTransaction extends Transaction
     {
     try
       {
-      Logger.trace("JDBCTransaction::rollback","D","Rollback");
+      logger.debug("Rollback");
       connection.rollback();
       }
     catch(SQLException e)
       {
       //throw new TransactionException(e.getMessage());
-      Logger.thrown("JDBCTransaction::rollback","!",e);
+      logger.error("rollback failed",e);
       }
     }
   
@@ -97,20 +104,20 @@ public class JDBCTransaction extends Transaction
           Statement stmt = connection.createStatement();
           String query = "show tables";
 
-          Logger.trace("JDBCTransaction::isValid","D",query);
+          logger.debug("isValid ("+query+")");
           stmt.executeQuery(query);
           valid = true;
           }
         else
           {
-          Logger.trace("JDBCTransaction::isValid","D","Invalid, already closed.");
+          logger.error("connection invalid, already closed.");
           }
         }
       catch(SQLException sqle)
         {
-        Logger.thrown("JDBCTransaction::isValid","X",sqle);
+        logger.error("cannot validate connection",sqle);
         }
       }
-    return(valid);
+    return valid;
     }
   }

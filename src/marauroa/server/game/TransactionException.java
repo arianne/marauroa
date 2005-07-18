@@ -6,5 +6,8 @@ public class TransactionException extends Exception
     {
     super(msg);
     }
+  TransactionException(String msg, Throwable cause)
+    {
+    super(msg, cause);
+    }
   }
-	

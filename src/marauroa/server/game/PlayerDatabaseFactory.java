@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.2 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,18 +12,22 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import marauroa.common.*;
-import marauroa.server.*;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
 
-/** MessageFactory is the class that is in charge of creating the correct object
- *  for the database choosed in the configuration file. */
+
+/** utility class for choosing the right player databese. */
 public class PlayerDatabaseFactory
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PlayerDatabaseFactory.class);
+
   /** This method returns an instance of PlayerDatabase choosen using the Configuration file.
    *  @return A shared instance of PlayerDatabase */
   public static IPlayerDatabase getDatabase() throws NoDatabaseConfException
     {
-    Logger.trace("PlayerDatabaseFactory::getDatabase",">");
+    Log4J.startMethod(logger,"getDatabase");
     try
       {
       Configuration conf=Configuration.getConfiguration();
@@ -33,12 +37,12 @@ public class PlayerDatabaseFactory
       }
     catch(Exception e)
       {
-      Logger.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new NoDatabaseConfException();      
+      logger.debug("cannot get player databese",e);
+      throw new NoDatabaseConfException(e);
       }
     finally
       {     
-      Logger.trace("PlayerDatabaseFactory::getDatabase","<");
+      Log4J.finishMethod(logger,"getDatabase");
       }
     }
 
@@ -47,26 +51,26 @@ public class PlayerDatabaseFactory
    *  @return A shared instance of PlayerDatabase */
   public static IPlayerDatabase getDatabase(String database_type) throws NoDatabaseConfException
     {
-    Logger.trace("PlayerDatabaseFactory::getDatabase",">");
+    Log4J.startMethod(logger,"getDatabase("+database_type+")");
     try
       {
       if(database_type.equals("JDBCPlayerDatabase"))
         {
-        Logger.trace("PlayerDatabaseFactory::getDatabase","D","Choosen JDBCPlayerDatabase");
+        logger.debug("loading JDBCPlayerDatabase");
         return JDBCPlayerDatabase.getDatabase();
         }
 
-      Logger.trace("PlayerDatabaseFactory::getDatabase","X","No PlayerDatabase choosen");
+      logger.warn("No PlayerDatabase choosen");
       throw new NoDatabaseConfException();
       }
     catch(Exception e)
       {
-      Logger.thrown("PlayerDatabaseFactory::getDatabase","X",e);
-      throw new NoDatabaseConfException();      
+      logger.error("cannot get player database",e);
+      throw new NoDatabaseConfException(e);
       }
     finally
       {     
-      Logger.trace("PlayerDatabaseFactory::getDatabase","<");
+      Log4J.finishMethod(logger,"getDatabase("+database_type+")");
       }
     }
   }  

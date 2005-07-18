@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.23 2005/06/27 16:59:51 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.24 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,20 +12,35 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import marauroa.server.*;
-import marauroa.server.net.*;
-import marauroa.common.*;
-import marauroa.common.net.*;
-import marauroa.common.game.*;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import marauroa.common.game.IRPZone;
+import marauroa.common.game.Perception;
+import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.net.MessageS2CPerception;
+import marauroa.common.net.MessageS2CTransferREQ;
+import marauroa.common.net.TransferContent;
+import marauroa.server.net.NetworkServerManager;
+
+import org.apache.log4j.Logger;
+
 
 /** This class is responsible for adding actions to scheduler, and to build and
  *  sent perceptions */
 public class RPServerManager extends Thread
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPServerManager.class);
+  
   /** The thread will be running while keepRunning is true */
   private volatile boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
@@ -56,7 +71,7 @@ public class RPServerManager extends Thread
   public RPServerManager(NetworkServerManager netMan) throws Exception
     {
     super("RPServerManager");
-    Logger.trace("RPServerManager",">");
+    Log4J.startMethod(logger, "RPServerManager");
     try
       {
       stats=Statistics.getStatistics();
@@ -87,13 +102,12 @@ public class RPServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("RPServerManager","X",e);
-      Logger.trace("RPServerManager","!","ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances");
+      logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",e);
       throw e;
       }
     finally
       {
-      Logger.trace("RPServerManager","<");
+      Log4J.finishMethod(logger, "RPServerManager");
       }
     }
 
@@ -105,7 +119,7 @@ public class RPServerManager extends Thread
   /** This method finish the thread that run the RPServerManager */
   public void finish()
     {
-    Logger.trace("RPServerManager::finish",">");
+    Log4J.startMethod(logger, "finish");
     keepRunning=false;
     while(isfinished==false)
       {
@@ -124,35 +138,35 @@ public class RPServerManager extends Thread
       }
     catch(Exception e)
       {
-      Logger.thrown("RPServerManager::finish","X",e);
+      logger.error("error while finishing RPServerManager",e);
       }
 
-    Logger.trace("RPServerManager::finish","<");
+    Log4J.finishMethod(logger, "finish");
     }
 
   /** Adds an action for the next turn */
   public void addRPAction(RPAction action) throws ActionInvalidException
     {
-    Logger.trace("RPServerManager::addRPAction",">");
+    Log4J.startMethod(logger, "addRPAction");
     try
       {
-      if(Logger.loggable("RPServerManager::addRPAction","D"))
+      if(logger.isDebugEnabled())
         {
-        Logger.trace("RPServerManager::addRPAction","D","Added action: "+action.toString());
+        logger.debug("Added action: "+action);
         }
 
       scheduler.addRPAction(action,ruleProcessor);
       }
     finally
       {
-      Logger.trace("RPServerManager::addRPAction","<");
+      Log4J.finishMethod(logger, "addRPAction");
       }
     }
 
   /** Returns an object of the world */
   public RPObject getRPObject(RPObject.ID id) throws RPObjectNotFoundException
     {
-    Logger.trace("RPServerManager::getRPObject",">");
+    Log4J.startMethod(logger, "getRPObject");
     try
       {
       IRPZone zone=world.getRPZone(id);
@@ -160,7 +174,7 @@ public class RPServerManager extends Thread
       }
     finally
       {
-      Logger.trace("RPServerManager::getRPObject","<");
+      Log4J.finishMethod(logger, "getRPObject");
       }
     }
   
@@ -177,13 +191,13 @@ public class RPServerManager extends Thread
 
     if(entry.perception_OutOfSync==false)
       {
-      Logger.trace("RPServerManager::getPlayerPerception","D","Perception DELTA for player ("+entry.characterid.toString()+")");
+      logger.debug("Perception DELTA for player ("+entry.characterid+")");
       perception=zone.getPerception(entry.characterid,Perception.DELTA);
       }
     else
       {
       entry.perception_OutOfSync=false;
-      Logger.trace("RPServerManager::getPlayerPerception","D","Perception SYNC for player ("+entry.characterid.toString()+")");
+      logger.debug("Perception SYNC for player ("+entry.characterid+")");
       perception=zone.getPerception(entry.characterid,Perception.SYNC);
       }
 
@@ -219,7 +233,7 @@ public class RPServerManager extends Thread
 
   private void buildPerceptions()
     {
-    Logger.trace("RPServerManager::buildPerceptions",">");
+    Log4J.startMethod(logger, "buildPerceptions");
 
     List<Integer> playersToUpdate=new LinkedList<Integer>();
     playersToRemove.clear();
@@ -259,20 +273,19 @@ public class RPServerManager extends Thread
         }
       catch(Exception e)
         {
-        Logger.thrown("RPServerManager::buildPerceptions","X",e);
-        Logger.trace("RPServerManager::buildPerceptions","X","Removing player("+clientid+") because it caused a Exception while contacting it");
+        logger.error("Removing player("+clientid+") because it caused a Exception while contacting it",e);
         playersToRemove.add(new Integer(clientid));
         }
       }
 
     notifyUpdatesOnPlayer(playersToUpdate);
 
-    Logger.trace("RPServerManager::buildPerceptions","<");
+    Log4J.finishMethod(logger, "buildPerceptions");
     }
 
   private void notifyUpdatesOnPlayer(List playersToNotify)
     {
-    Logger.trace("RPServerManager::notifyUpdatesOnPlayer",">");
+    Log4J.startMethod(logger, "notifyUpdatesOnPlayer");
     try
       {
       Iterator it_notified=playersToNotify.iterator();
@@ -290,24 +303,23 @@ public class RPServerManager extends Thread
           }
         catch(Exception e)
           {
-          Logger.thrown("RPServerManager::notifyUpdatesOnPlayer","X",e);
-          Logger.trace("RPServerManager::notifyUpdatesOnPlayer","X","Can't update the player("+clientid+")");
+          logger.error("Can't update the player("+clientid+")",e);
           }
         }
       }
     catch(Exception e)
       {
-      Logger.thrown("RPServerManager::notifyUpdatesOnPlayer","X",e);
+      logger.error("error while notifyUpdatesOnPlayer",e);
       }
     finally
       {
-      Logger.trace("RPServerManager::notifyUpdatesOnPlayer","<");
+      Log4J.finishMethod(logger, "notifyUpdatesOnPlayer");
       }
     }
 
   private void notifyTimedoutPlayers(List playersToNotify)
     {
-    Logger.trace("RPServerManager::notifyTimedoutPlayers",">");
+    Log4J.startMethod(logger, "notifyTimedoutPlayers");
     try
       {
       Iterator it_notified=playersToNotify.iterator();
@@ -323,7 +335,7 @@ public class RPServerManager extends Thread
           RPObject.ID id=playerContainer.getRPObjectID(clientid);
           if(id==null)
             {
-            Logger.trace("RPServerManager::notifyTimedoutPlayers","W","Can't notify a player("+clientid+") that timedout because it never completed login");
+            logger.debug("Can't notify a player("+clientid+") that timedout because it never completed login");
             }
           else
             {
@@ -338,24 +350,22 @@ public class RPServerManager extends Thread
           }
         catch(Exception e)
           {
-          Logger.thrown("RPServerManager::notifyTimedoutPlayers","X",e);
-          Logger.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player("+clientid+") that timedout");
+          logger.error("Can't notify a player("+clientid+") that timedout");
           }
         finally
           {
           playerContainer.removeRuntimePlayer(clientid);
-          Logger.trace("RPServerManager::notifyTimedoutPlayers","D","Notified player ("+clientid+")");
+          logger.debug("Notified player ("+clientid+")");
           }
         }
       }
     catch(Exception e)
       {
-      Logger.thrown("RPServerManager::notifyTimedoutPlayers","X",e);
-      Logger.trace("RPServerManager::notifyTimedoutPlayers","X","Can't notify a player(-not available-) that timedout");
+      logger.error("Can't notify a player(-not available-) that timedout",e);
       }
     finally
       {
-      Logger.trace("RPServerManager::notifyTimedoutPlayers","<");
+      Log4J.finishMethod(logger, "notifyTimedoutPlayers");
       }
     }
 
@@ -394,8 +404,7 @@ public class RPServerManager extends Thread
           }
         catch(NoSuchClientIDException e)
           {
-          Logger.trace("RPServerManager::deliverTransferContent","X","Unable to find client id for player: "+id);
-          Logger.thrown("RPServerManager::deliverTransferContent","X",e);
+          logger.error("Unable to find client id for player: "+id,e);
           }
         }
 
@@ -407,12 +416,12 @@ public class RPServerManager extends Thread
   /** This method is triggered to send content to the clients */
   public void transferContent(RPObject.ID id, List<TransferContent> content)
     {
-    Logger.trace("RPServerManager::transferContent",">");
+    Log4J.startMethod(logger, "transferContent");
     synchronized(contentsToTransfer)
       {
       contentsToTransfer.put(id,content);
       }
-    Logger.trace("RPServerManager::transferContent","<");
+    Log4J.finishMethod(logger, "transferContent");
     }
 
   /** This method is triggered to send content to the clients */
@@ -428,7 +437,7 @@ public class RPServerManager extends Thread
     {
     try
       {
-      Logger.trace("RPServerManager::run",">");
+      Log4J.startMethod(logger, "run");
       long start=System.currentTimeMillis(),stop,delay;
 
       while(keepRunning)
@@ -436,15 +445,15 @@ public class RPServerManager extends Thread
         stop=System.currentTimeMillis();
         try
           {
-          Logger.trace("RPServerManager::run","D","Turn time elapsed: "+Long.toString(stop-start));
+          logger.info("Turn time elapsed: "+(stop-start));
           delay=turnDuration-(stop-start);
           if(delay<0)
             {
-            Logger.trace("RPServerManager::run","W","Turn duration overflow by "+(-delay)+" ms");
+            logger.warn("Turn duration overflow by "+(-delay)+" ms");
             }
           else if(delay>turnDuration)
             {
-            Logger.trace("RPServerManager::run","X","Delay bigger than Turn duration.");
+            logger.error("Delay bigger than Turn duration. [delay: "+delay+"] [turnDuration:"+turnDuration+"]");
             delay=0;
             }
             
@@ -500,13 +509,12 @@ public class RPServerManager extends Thread
       }
     catch(Throwable e)
       {
-      Logger.trace("RPServerManager::run", "!", "Unhandled exception, server will shut down.");
-      Logger.thrown("RPServerManager::run", "!", e);
+      logger.fatal("Unhandled exception, server will shut down.",e);
       }
     finally
       {
       isfinished=true;
-      Logger.trace("RPServerManager::run","<");
+      Log4J.finishMethod(logger, "run");
       }
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.5 2005/05/24 07:15:09 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.6 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,15 +12,28 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import java.io.*;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Random;
+import marauroa.common.Log4J;
+import marauroa.common.game.AttributeNotFoundException;
+import marauroa.common.game.IRPZone;
+import marauroa.common.game.Perception;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.RPObjectNotFoundException;
+import org.apache.log4j.Logger;
 
-import marauroa.common.*;
-import marauroa.common.game.*;
-
-
+/** default implementation of <code>IRPZone</code> */
 public abstract class MarauroaRPZone implements IRPZone
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(MarauroaRPZone.class);
+
   protected ID zoneid;	
   protected Map<RPObject.ID,RPObject> objects;
   
@@ -168,7 +181,7 @@ public abstract class MarauroaRPZone implements IRPZone
  
   public Perception getPerception(RPObject.ID id, byte type)
     {
-    if((prebuildDeltaPerception==null || prebuildTotalPerception==null) && Logger.loggable("MarauroaRPZone::getPerception","D"))
+    if ((prebuildDeltaPerception==null || prebuildTotalPerception==null) && logger.isDebugEnabled())
       {
       StringBuffer world=new StringBuffer("World content: \n");
       
@@ -176,7 +189,7 @@ public abstract class MarauroaRPZone implements IRPZone
         {
         world.append("  "+object.toString()+"\n");
         }
-      Logger.trace("MarauroaRPZone::getPerception","D",world.toString());
+      logger.debug("getPerception(), "+world.toString());
       }
 
     if(type==Perception.DELTA)
@@ -193,7 +206,7 @@ public abstract class MarauroaRPZone implements IRPZone
             }
           catch(Exception e)
             {
-            Logger.thrown("MarauroaRPZone::getPerception","X",e);
+            logger.error("cannot add object to modified list (object is: ["+modified_obj+"])",e);
             }
           }
         }

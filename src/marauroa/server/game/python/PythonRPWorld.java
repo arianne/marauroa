@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.1 2005/01/23 21:00:47 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.2 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,14 +12,16 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
-import marauroa.*;
-import java.util.*;
+import marauroa.common.Log4J;
+import marauroa.server.game.RPWorld;
+import org.apache.log4j.Logger;
 
-import marauroa.common.*;
-import marauroa.server.game.*;
 
 public class PythonRPWorld extends RPWorld
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PythonRPWorld.class);
+
   private GameScript gameScript;
   private PythonWorld pythonWorld;
 
@@ -27,7 +29,7 @@ public class PythonRPWorld extends RPWorld
     {
     super();
 
-    Logger.trace("PythonRPWorld::PythonRPWorld",">");
+    Log4J.startMethod(logger, "PythonRPWorld");
 
     try
       {
@@ -37,11 +39,10 @@ public class PythonRPWorld extends RPWorld
       }
     catch(Exception e)
       {
-      Logger.thrown("PythonRPWorld::PythonRPWorld","!",e);
-      //@@@@@ System.exit(-1);
+      logger.error("cannot initialize PythonRPWorld()",e);
       }
 
-    Logger.trace("PythonRPWorld::PythonRPWorld","<");
+    Log4J.finishMethod(logger, "PythonRPWorld");
     }
   
   public void onInit() throws Exception

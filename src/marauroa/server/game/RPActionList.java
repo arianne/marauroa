@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.1 2005/01/23 21:00:46 arianne_rpg Exp $ */
+/* $Id: RPActionList.java,v 1.2 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,8 @@ package marauroa.server.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collections;
+import marauroa.common.game.RPAction;
 
-import marauroa.common.game.*;
 
 
 /** This class represents a list of RPActions and uses a LinkedList as backstore. **/

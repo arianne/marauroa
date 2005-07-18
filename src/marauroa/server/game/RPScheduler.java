@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.2 2005/04/03 11:34:42 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.3 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,15 +12,24 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import marauroa.common.*;
-import marauroa.common.game.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import marauroa.common.Log4J;
+import marauroa.common.game.AttributeNotFoundException;
+import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
+import org.apache.log4j.Logger;
 
 /** This class represents a scheduler to deliver action by turns, so every action
  *  added to the scheduler is executed on the next turn.
  *  Each object can cast as many actions as it wants. */
 public class RPScheduler
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPScheduler.class);
+
   /** a HashMap<RPObject.ID,RPActionList> of entries for this turn */
   private HashMap<RPObject.ID,List<RPAction>> actualTurn;
   /** a HashMap<RPObject.ID,RPActionList> of entries for next turn */
@@ -41,12 +50,12 @@ public class RPScheduler
    *  @throws ActionInvalidException if the action lacks of sourceid attribute.*/
   public synchronized void addRPAction(RPAction action, IRPRuleProcessor ruleProcessor) throws ActionInvalidException
     {
-    Logger.trace("RPScheduler::addRPAction",">");
+    Log4J.startMethod(logger,"addRPAction");
     try
       {
       RPObject.ID id=new RPObject.ID(action);
 
-      Logger.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
+      logger.debug("Add RPAction("+action+") from RPObject("+id+")");
       if(nextTurn.containsKey(id))
         {
         List<RPAction> list=nextTurn.get(id);        
@@ -67,13 +76,12 @@ public class RPScheduler
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("RPScheduler::addRPAction","X",e);
-      Logger.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
+      logger.error("cannot add action to RPScheduler, Action("+action+") is missing a required attributes",e);
       throw new ActionInvalidException(e.getAttribute());
       }
     finally
       {
-      Logger.trace("RPScheduler::addRPAction","<");
+      Log4J.finishMethod(logger,"addRPAction");
       }
     }
   
@@ -82,12 +90,12 @@ public class RPScheduler
    *  @throws ActionInvalidException if the action lacks of sourceid attribute.*/
   public synchronized void addIncompleteRPAction(RPAction action, IRPRuleProcessor ruleProcessor) throws ActionInvalidException
     {
-    Logger.trace("RPScheduler::addRPAction",">");
+    Log4J.startMethod(logger,"addIncompleteRPAction");
     try
       {
       RPObject.ID id=new RPObject.ID(action);
 
-      Logger.trace("RPScheduler::addRPAction","D","Add RPAction("+action+") from RPObject("+id+")");
+      logger.debug("Add RPAction("+action+") from RPObject("+id+")");
       if(nextTurn.containsKey(id))
         {
         List<RPAction> list=nextTurn.get(id);        
@@ -108,13 +116,12 @@ public class RPScheduler
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("RPScheduler::addRPAction","X",e);
-      Logger.trace("RPScheduler::addRPAction","X","Action("+action+") has not requiered attributes");
+      logger.error("cannot add action to RPScheduler, Action("+action+") is missing a required attributes",e);
       throw new ActionInvalidException(e.getAttribute());
       }
     finally
       {
-      Logger.trace("RPScheduler::addRPAction","<");
+      Log4J.finishMethod(logger,"addIncompleteRPAction");
       }
     }
  
@@ -135,7 +142,7 @@ public class RPScheduler
    *  Depending on the result the action needs to be added for next turn. */
   public void visit(IRPRuleProcessor ruleProcessor)
     {
-    Logger.trace("RPScheduler::visit",">");
+    Log4J.startMethod(logger,"visit");
     try
       {
       for(Map.Entry<RPObject.ID,List<RPAction>> entry: actualTurn.entrySet())
@@ -145,7 +152,7 @@ public class RPScheduler
     
         for(RPAction action: list)
           {
-          Logger.trace("RPScheduler::visit","D",action.toString());
+          logger.debug("visit action "+action);
           try
             {
             RPAction.Status status=ruleProcessor.execute(id,action);
@@ -158,18 +165,18 @@ public class RPScheduler
             }
           catch(Exception e)
             {
-            Logger.thrown("RPScheduler::visit","X",e);
+            logger.error("error in visit()",e);
             }
           }
         }
       }
     catch(Exception e)
       {
-      Logger.thrown("RPScheduler::visit","X",e);
+      logger.error("error in visit",e);
       }
     finally
       {
-      Logger.trace("RPScheduler::visit","<");
+      Log4J.finishMethod(logger,"visit");
       }
     }
   
@@ -177,7 +184,7 @@ public class RPScheduler
    *  actual turn */
   public synchronized void nextTurn()
     {
-    Logger.trace("RPScheduler::nextTurn",">");
+    Log4J.startMethod(logger,"nextTurn");
     ++turn;
     
     /* we cross-exchange the two turns and erase the contents of the next turn */
@@ -186,6 +193,6 @@ public class RPScheduler
     nextTurn=tmp;
     nextTurn.clear();
     
-    Logger.trace("RPScheduler::nextTurn","<");
+    Log4J.finishMethod(logger,"nextTurn");
     }
   }

@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.10 2005/05/18 18:14:49 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.11 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,12 +12,21 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import marauroa.common.*;
-import marauroa.common.game.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import marauroa.common.Log4J;
+import marauroa.common.game.IRPZone;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.game.RPSlot;
+import org.apache.log4j.Logger;
 
 public class RPWorld implements Iterable<IRPZone>
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPWorld.class);
+
   HashMap<IRPZone.ID,IRPZone> zones;
   PlayerEntryContainer playerContainer;
     
@@ -92,7 +101,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      Logger.thrown("RPWorld::add","X",e);
+      logger.warn("error add object to world",e);
       throw new NoRPZoneException();  
       }
     }
@@ -106,7 +115,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      Logger.thrown("RPWorld::get","X",e);
+      logger.error("error getting object ["+id+"]",e);
       throw new NoRPZoneException();  
       }
     }
@@ -120,7 +129,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      Logger.thrown("RPWorld::get","X",e);
+      logger.error("error while checking if world has object ["+id+"]",e);
       throw new NoRPZoneException();  
       }
     }
@@ -134,7 +143,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      Logger.thrown("RPWorld::remove","X",e);
+      logger.error("error while removing object ["+id+"]",e);
       throw new NoRPZoneException();  
       }
     }
@@ -160,7 +169,7 @@ public class RPWorld implements Iterable<IRPZone>
     
   public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) throws NoRPZoneException
     {
-    Logger.trace("RPWorld::changeZone",">");
+    Log4J.startMethod(logger, "changeZone");
     try
       {
       if(newzoneid.equals(oldzoneid))
@@ -179,12 +188,12 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      Logger.thrown("RPWorld::changeZone","X",e);
+      logger.error("error changing Zone",e);
       throw new NoRPZoneException();
       }
     finally
       {
-      Logger.trace("RPWorld::changeZone","<");
+      Log4J.finishMethod(logger, "changeZone");
       }
     }  
 
@@ -195,13 +204,13 @@ public class RPWorld implements Iterable<IRPZone>
   
   public void nextTurn()
     {
-    Logger.trace("RPWorld::nextTurn",">");
+    Log4J.startMethod(logger, "nextTurn");
     for(IRPZone zone: zones.values())
       {
       zone.nextTurn();
       }
       
-    Logger.trace("RPWorld::nextTurn","<");
+    Log4J.finishMethod(logger, "nextTurn");
     }
   
   public int size()

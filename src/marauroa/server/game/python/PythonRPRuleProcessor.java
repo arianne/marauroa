@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.5 2005/05/29 22:06:16 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.6 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,20 +12,26 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
+import java.io.FileNotFoundException;
+import java.util.List;
+import marauroa.common.Log4J;
+import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectInvalidException;
+import marauroa.server.game.IRPRuleProcessor;
+import marauroa.server.game.RPServerManager;
+import marauroa.server.game.RPWorld;
+import org.apache.log4j.Logger;
 import org.python.util.PythonInterpreter;
-import org.python.core.*;
 
-import java.util.*;
-import java.io.*;
-
-import marauroa.common.*;
-import marauroa.common.game.*;
-import marauroa.server.game.*;
 
 /** FIXME: TODO: Update this class. It is now broken.
  *  Document how to use it. */
 public class PythonRPRuleProcessor implements IRPRuleProcessor
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PythonRPRuleProcessor.class);
+
   private GameScript gameScript;
   private PythonRP pythonRP;
   private RPServerManager rpman; 
@@ -48,7 +54,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
       }
     catch(Exception e)
       {
-      Logger.thrown("PythonRPRuleProcessor::setContext","!",e);
+      logger.error("error while setting context",e);
       }
     }
 
@@ -75,7 +81,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
    *      refer to Actions Explained for more info. */
   public RPAction.Status execute(RPObject.ID id, RPAction action)
     {
-    Logger.trace("PythonRPRuleProcessor::execute",">");
+    Log4J.startMethod(logger, "execute");
 
     RPAction.Status status=RPAction.Status.FAIL;
 
@@ -84,15 +90,15 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
       if(pythonRP.execute(id,action)==1)
         {
         status=RPAction.Status.SUCCESS;
-	    	}
+	}
       }
     catch(Exception e)
       {
-      Logger.thrown("PythonRPRuleProcessor::execute","X",e);
+      logger.error("error in execute()",e);
       }
     finally
       {
-      Logger.trace("PythonRPRuleProcessor::execute","<");
+      Log4J.finishMethod(logger, "execute");
       }
 
     return status;
@@ -101,64 +107,64 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
   /** Notify it when a new turn happens */
   synchronized public void endTurn()
     {
-    Logger.trace("PythonRPRuleProcessor::nextTurn",">");
+    Log4J.startMethod(logger, "endTurn");
     pythonRP.endTurn();
-    Logger.trace("PythonRPRuleProcessor::nextTurn","<");
+    Log4J.finishMethod(logger, "endTurn");
     }
 
   synchronized public void beginTurn()
     {
-    Logger.trace("PythonRPRuleProcessor::nextTurn",">");
+    Log4J.startMethod(logger, "beginTurn");
     pythonRP.beginTurn();
-    Logger.trace("PythonRPRuleProcessor::nextTurn","<");
+    Log4J.finishMethod(logger, "beginTurn");
     }
 
   synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException
     {
-    Logger.trace("PythonRPRuleProcessor::onInit",">");
+    Log4J.startMethod(logger, "onInit");
     try
       {
       return pythonRP.onInit(object);
       }
     finally
       {
-      Logger.trace("PythonRPRuleProcessor::onInit","<");
+      Log4J.finishMethod(logger, "onInit");
       }
     }
 
   synchronized public boolean onExit(RPObject.ID id)
     {
-    Logger.trace("PythonRPRuleProcessor::onExit",">");
+    Log4J.startMethod(logger, "onExit");
     try
       {
       return pythonRP.onExit(id);
       }
     catch(Exception e)
       {
-      Logger.thrown("PythonRPRuleProcessor::onExit","X",e);
+      logger.error("onExit() returned with an exeption",e);
       return true;
       }
     finally
       {
-      Logger.trace("PythonRPRuleProcessor::onExit","<");
+      Log4J.finishMethod(logger, "onExit");
       }
     }
 
   synchronized public boolean onTimeout(RPObject.ID id)
     {
-    Logger.trace("PythonRPRuleProcessor::onTimeout",">");
+    Log4J.startMethod(logger, "onTimeout");
     try
       {
       return pythonRP.onTimeout(id);
       }
     catch(Exception e)
       {
-      Logger.thrown("PythonRPRuleProcessor::onTimeout","X",e);
+      logger.error("onTimeout() returned with an exeption",e);
       return true;
       }
     finally
       {
-      Logger.trace("PythonRPRuleProcessor::onTimeout","<");
+      Log4J.startMethod(logger, "onTimeout");
       }
     }
   }

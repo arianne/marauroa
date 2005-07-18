@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.9 2005/05/29 22:06:15 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.10 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,21 +12,30 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import java.net.*;
-
-import marauroa.common.*;
-import marauroa.common.net.*;
-import marauroa.common.game.*;
-import marauroa.server.*;
-import marauroa.common.crypto.Hash;
+import java.net.InetSocketAddress;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.game.AttributeNotFoundException;
+import marauroa.common.game.RPObject;
+import marauroa.common.net.TransferContent;
+import marauroa.server.RWLock;
+import org.apache.log4j.Logger;
 
 /** This class contains a list of the Runtime players existing in Marauroa, but it
  *  also links them with their representation in game and in database, so this is
  *  the point to manage them all. */
 public class PlayerEntryContainer
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
+
   enum ClientState 
     {
     NULL,
@@ -82,8 +91,9 @@ public class PlayerEntryContainer
 
     public boolean shouldStoredUpdate(RPObject object)
       {
+      Log4J.startMethod(logger, "shouldStoredUpdate");
+
       boolean result=false;
-      Logger.trace("RuntimePlayerEntry::shouldStoredUpdate",">");
       long value=System.currentTimeMillis()-timestampLastStored;
       if(database_storedRPObject==null)
         {
@@ -98,7 +108,7 @@ public class PlayerEntryContainer
         result=true;
         }
 
-      Logger.trace("PlayerEntryContainer::getLastStoredUpdateTime","<");
+      Log4J.finishMethod(logger, "shouldStoredUpdate");
       return result;
       }
 
@@ -242,8 +252,7 @@ public class PlayerEntryContainer
       }
     catch(Exception e)
       {
-      Logger.thrown("PlayerEntryContainer","X", e);
-      Logger.trace("PlayerEntryContainer","!","ABORT: marauroad can't allocate database");
+      logger.warn("ABORT: marauroad can't allocate database");
       throw e;
       }
     }
@@ -259,19 +268,19 @@ public class PlayerEntryContainer
     return playerEntryContainer;
     }
 
-  /** This method returns true if exist a player with that clientid.
+  /** This method returns true if a player exist with that clientid.
    *  @param clientid a player runtime id
    *  @return true if player exist or false otherwise. */
   public boolean hasRuntimePlayer(int clientid)
     {
-    Logger.trace("PlayerEntryContainer::hasRuntimePlayer",">");
+    Log4J.startMethod(logger,"hasRuntimePlayer");
     try
       {
       return listPlayerEntries.containsKey(new Integer(clientid));
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::hasRuntimePlayer","<");
+      Log4J.finishMethod(logger,"hasRuntimePlayer");
       }
     }
 
@@ -281,7 +290,7 @@ public class PlayerEntryContainer
    *  @return the clientid for that runtimeplayer */
   public int addRuntimePlayer(String username, InetSocketAddress source)
     {
-    Logger.trace("PlayerEntryContainer::addRuntimePlayer",">");
+    Log4J.startMethod(logger,"addRuntimePlayer");
     try
       {
       RuntimePlayerEntry entry=new RuntimePlayerEntry();
@@ -301,48 +310,48 @@ public class PlayerEntryContainer
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::addRuntimePlayer","<");
+      Log4J.finishMethod(logger,"addRuntimePlayer");
       }
     }
 
-    /** This method creates a new instance of RuntimePlayerEntry and add it.
-     *  @param username the name of the player
-     *  @param source the IP address of the player.
-     *  @return the clientid for that runtimeplayer */
-    public int addRuntimePlayer(RSAKey key, byte[] clientNonceHash, InetSocketAddress source)
+  /** This method creates a new instance of RuntimePlayerEntry and add it.
+   *  @param username the name of the player
+   *  @param source the IP address of the player.
+   *  @return the clientid for that runtimeplayer */
+  public int addRuntimePlayer(RSAKey key, byte[] clientNonceHash, InetSocketAddress source)
+    {
+    Log4J.startMethod(logger,"addRuntimePlayer");
+    try
       {
-      Logger.trace("PlayerEntryContainer::addRuntimePlayer",">");
-      try
-        {
-        RuntimePlayerEntry entry=new RuntimePlayerEntry();
+      RuntimePlayerEntry entry=new RuntimePlayerEntry();
 
-        entry.state=ClientState.NULL;
-        entry.timestamp=System.currentTimeMillis();
-        entry.timestampLastStored=System.currentTimeMillis();
-        entry.source=source;
-        entry.username=null;
-        entry.choosenCharacter=null;
-        entry.clientid=generateClientID(source);
-        entry.perception_counter=0;
-        entry.perception_OutOfSync=true;
-        entry.loginInformations = new RuntimePlayerEntry.SecuredLoginInfo(key);
-        entry.loginInformations.clientNonceHash = clientNonceHash;
+      entry.state=ClientState.NULL;
+      entry.timestamp=System.currentTimeMillis();
+      entry.timestampLastStored=System.currentTimeMillis();
+      entry.source=source;
+      entry.username=null;
+      entry.choosenCharacter=null;
+      entry.clientid=generateClientID(source);
+      entry.perception_counter=0;
+      entry.perception_OutOfSync=true;
+      entry.loginInformations = new RuntimePlayerEntry.SecuredLoginInfo(key);
+      entry.loginInformations.clientNonceHash = clientNonceHash;
 
-        listPlayerEntries.put(new Integer(entry.clientid),entry);
-        return entry.clientid;
-        }
-      finally
-        {
-        Logger.trace("PlayerEntryContainer::addRuntimePlayer","<");
-        }
+      listPlayerEntries.put(new Integer(entry.clientid),entry);
+      return entry.clientid;
       }
+    finally
+      {
+      Log4J.finishMethod(logger,"addRuntimePlayer");
+      }
+    }
 
   /** This method remove the entry if it exists.
    *  @param clientid is the runtime id of the player
    *  @throws NoSuchClientIDException if clientid is not found */
   public void removeRuntimePlayer(int clientid) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::removeRuntimePlayer",">");
+    Log4J.startMethod(logger,"removeRuntimePlayer");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -351,13 +360,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::removeRuntimePlayer","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::removeRuntimePlayer","<");
+      Log4J.finishMethod(logger,"removeRuntimePlayer");
       }
     }
 
@@ -367,7 +376,7 @@ public class PlayerEntryContainer
    *  @return true if they match or false otherwise */
   public boolean verifyRuntimePlayer(int clientid, InetSocketAddress source)
     {
-    Logger.trace("PlayerEntryContainer::verifyRuntimePlayer",">");
+    Log4J.startMethod(logger,"verifyRuntimePlayer");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -390,7 +399,7 @@ public class PlayerEntryContainer
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::verifyRuntimePlayer","<");
+      Log4J.finishMethod(logger,"verifyRuntimePlayer");
       }
     }
 
@@ -398,7 +407,7 @@ public class PlayerEntryContainer
    *  @return true if informations are correct, false otherwise. */
   public boolean verifyAccount(RuntimePlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException 
     {
-    Logger.trace("PlayerEntryContainer::verifyAccount",">");
+    Log4J.startMethod(logger,"verifyAccount");
     try 
       {
       return playerDatabase.verifyAccount(transaction,informations);
@@ -406,12 +415,12 @@ public class PlayerEntryContainer
     catch(Exception e)
       {
       transaction=playerDatabase.getTransaction();      
-      Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
-      throw new GenericDatabaseException(e.getMessage());
+      logger.warn("error verifying account",e);
+      throw new GenericDatabaseException(e);
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::verifyAccount","<");
+      Log4J.finishMethod(logger,"verifyAccount");
       }
     }
 
@@ -424,7 +433,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public void addLoginEvent(String username, InetSocketAddress source, boolean correctLogin) throws NoSuchClientIDException, NoSuchPlayerException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::addLoginEvent",">");
+    Log4J.startMethod(logger,"addLoginEvent");
     try
       {
       transaction.begin();
@@ -434,8 +443,7 @@ public class PlayerEntryContainer
     catch(PlayerNotFoundException e)
       {
       transaction.rollback();
-      Logger.thrown("PlayerEntryContainer::addLoginEvent","X",e);
-      Logger.trace("PlayerEntryContainer::addLoginEvent","X","No such Player("+username+")");
+      logger.warn("No such Player("+username+")");
       throw new NoSuchPlayerException(username);
       }
     catch(Exception e)
@@ -443,12 +451,12 @@ public class PlayerEntryContainer
       transaction.rollback();
       transaction=playerDatabase.getTransaction();
 
-      Logger.thrown("PlayerEntryContainer::addLoginEvent","X",e);
-      throw new GenericDatabaseException(e.getMessage());
+      logger.warn("error adding LoginEvent",e);
+      throw new GenericDatabaseException(e);
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::addLoginEvent","<");
+      Log4J.finishMethod(logger,"addLoginEvent");
       }
     }
 
@@ -459,7 +467,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public String[] getLoginEvent(int clientid) throws NoSuchClientIDException, NoSuchPlayerException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::getLoginEvent",">");
+    Log4J.startMethod(logger,"getLoginEvent");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -472,26 +480,25 @@ public class PlayerEntryContainer
           }
         catch(PlayerNotFoundException e)
           {
-          Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
-          Logger.trace("PlayerEntryContainer::getLoginEvent","X","No such Player(unknown)");
-          throw new NoSuchPlayerException("- not available -");
+          logger.warn("No such Player("+clientid+")",e);
+          throw new NoSuchPlayerException("[clientid:"+clientid+"]");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          Logger.thrown("PlayerEntryContainer::getLoginEvent","X",e);
-          throw new GenericDatabaseException(e.getMessage());
+          logger.warn("error getting LoginEvent",e);
+          throw new GenericDatabaseException(e);
           }
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getLoginEvent","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getLoginEvent","<");
+      Log4J.finishMethod(logger,"getLoginEvent");
       }
     }
 
@@ -500,7 +507,7 @@ public class PlayerEntryContainer
    *  @return true if player exists or false otherwise. */
   public boolean hasPlayer(String username)
     {
-    Logger.trace("PlayerEntryContainer::hasPlayer",">");
+    Log4J.startMethod(logger,"hasPlayer");
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
@@ -519,7 +526,7 @@ public class PlayerEntryContainer
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::hasPlayer","<");
+      Log4J.finishMethod(logger,"hasPlayer");
       }
     }
 
@@ -528,7 +535,7 @@ public class PlayerEntryContainer
    *  @return true if player exists or false otherwise. */
   public int getClientidPlayer(String username)
     {
-    Logger.trace("PlayerEntryContainer::getClientidPlayer",">");
+    Log4J.startMethod(logger,"getClientidPlayer");
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
@@ -547,13 +554,13 @@ public class PlayerEntryContainer
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getClientidPlayer","<");
+      Log4J.finishMethod(logger,"getClientidPlayer");
       }
     }
 
   public int getClientidPlayer(RPObject.ID id)
     {
-    Logger.trace("PlayerEntryContainer::getClientidPlayer",">");
+    Log4J.startMethod(logger,"getClientidPlayer");
     try
       {
       Iterator it=listPlayerEntries.entrySet().iterator();
@@ -563,7 +570,7 @@ public class PlayerEntryContainer
         Map.Entry entry=(Map.Entry)it.next();
         RuntimePlayerEntry playerEntry=(RuntimePlayerEntry)entry.getValue();
 
-        Logger.trace("PlayerEntryContainer::getClientidPlayer","D",playerEntry.toString());
+        logger.debug("getClientidPlayer ["+playerEntry+"]");
 
         if(playerEntry.state==ClientState.GAME_BEGIN && playerEntry.characterid.equals(id))
           {
@@ -575,7 +582,7 @@ public class PlayerEntryContainer
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getClientidPlayer","<");
+      Log4J.finishMethod(logger,"getClientidPlayer");
       }
     }
 
@@ -588,7 +595,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public boolean hasCharacter(int clientid,String character) throws NoSuchClientIDException, NoSuchPlayerException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::hasCharacter",">");
+    Log4J.startMethod(logger,"hasCharacter");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -601,26 +608,25 @@ public class PlayerEntryContainer
           }
         catch(PlayerNotFoundException e)
           {
-          Logger.thrown("PlayerEntryContainer::hasCharacter","X",e);
-          Logger.trace("PlayerEntryContainer::hasCharacter","X","No such Player(-not available-)");
-          throw new NoSuchPlayerException("- not available -");
+          logger.debug("No such Player("+clientid+")",e);
+          throw new NoSuchPlayerException("[clientid: "+clientid+"]");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          Logger.thrown("PlayerEntryContainer::hasCharacter","X",e);
-          throw new GenericDatabaseException(e.getMessage());
+          logger.warn("error while checking if client "+clientid+" has Character "+character,e);
+          throw new GenericDatabaseException(e);
           }
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::hasCharacter","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::hasCharacter","<");
+      Log4J.finishMethod(logger,"hasCharacter");
       }
     }
 
@@ -631,7 +637,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public void setChoosenCharacter(int clientid,String character) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::setChoosenCharacter",">");
+    Log4J.startMethod(logger,"setChoosenCharacter");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -642,13 +648,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::setChoosenCharacter","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::setChoosenCharacter","<");
+      Log4J.finishMethod(logger,"setChoosenCharacter");
       }
     }
 
@@ -660,7 +666,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public String[] getCharacterList(int clientid) throws NoSuchClientIDException, NoSuchPlayerException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::getCharacterList",">");
+    Log4J.startMethod(logger,"getCharacterList");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -673,26 +679,25 @@ public class PlayerEntryContainer
           }
         catch(PlayerNotFoundException e)
           {
-          Logger.thrown("PlayerEntryContainer::getCharacterList","X",e);
-          Logger.trace("PlayerEntryContainer::getCharacterList","X","No such Player(unknown)");
-          throw new NoSuchPlayerException("- not available -");
+          logger.debug("No such Player("+clientid+")",e);
+          throw new NoSuchPlayerException("[clientid:"+clientid+"]");
           }
         catch(Exception e)
           {
           transaction=playerDatabase.getTransaction();
-          Logger.thrown("PlayerEntryContainer::getCharacterList","X",e);
-          throw new GenericDatabaseException(e.getMessage());
+          logger.warn("error getting CharacterList",e);
+          throw new GenericDatabaseException(e);
           }
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getCharacterList","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getCharacterList","<");
+      Log4J.finishMethod(logger,"getCharacterList");
       }
     }
 
@@ -706,7 +711,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerException  if the player doesn't exist in database. */
   public RPObject getRPObject(int clientid, String character) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::getRPObject",">");
+    Log4J.startMethod(logger,"getRPObject");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -719,37 +724,35 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getRPObject","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     catch(PlayerNotFoundException e)
       {
-      Logger.thrown("PlayerEntryContainer::getRPObject","X",e);
-      Logger.trace("PlayerEntryContainer::getRPObject","X","No such Player(unknown)");
-      throw new NoSuchPlayerException("- not available -");
+      logger.debug("No such Player("+clientid+")",e);
+      throw new NoSuchPlayerException("[clientid"+clientid+"]");
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("PlayerEntryContainer::getRPObject","X",e);
-      throw new NoSuchPlayerException("- not available -");
+      logger.error("error getting attribute "+e.getAttribute(),e);
+      throw new NoSuchPlayerException("[clientid:"+clientid+", character:"+character+"]");
       }
     catch(CharacterNotFoundException e)
       {
-      Logger.thrown("PlayerEntryContainer::getRPObject","X",e);
-      Logger.trace("PlayerEntryContainer::getRPObject","X","No such Character(unknown)");
+      logger.error("No such Character("+clientid+"/"+character+")",e);
       throw new NoSuchCharacterException(character);
       }
     catch(Exception e)
       {
       transaction=playerDatabase.getTransaction();
 
-      Logger.thrown("PlayerEntryContainer::getRPObject","X",e);
-      throw new GenericDatabaseException(e.getMessage());
+      logger.warn("error getting RPObject",e);
+      throw new GenericDatabaseException(e);
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getRPObject","<");
+      Log4J.finishMethod(logger,"getRPObject");
       }
     }
 
@@ -765,7 +768,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public void setRPObject(int clientid, RPObject object) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException, GenericDatabaseException
     {
-    Logger.trace("PlayerEntryContainer::setRPObject",">");
+    Log4J.startMethod(logger,"setRPObject");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -780,39 +783,37 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::setRPObject","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     catch(PlayerNotFoundException e)
       {
       transaction.rollback();
-      Logger.thrown("PlayerEntryContainer::setRPObject","X",e);
-      Logger.trace("PlayerEntryContainer::setRPObject","X","No such Player(unknown)");
-      throw new NoSuchPlayerException("- not available -");
+      logger.error("No such Player("+clientid+")",e);
+      throw new NoSuchPlayerException("("+clientid+")");
       }
     catch(AttributeNotFoundException e)
       {
       transaction.rollback();
-      Logger.thrown("PlayerEntryContainer::setRPObject","X",e);
+      logger.error("error while setting RPObject",e);
       throw new NoSuchPlayerException("- not available -");
       }
     catch(CharacterNotFoundException e)
       {
       transaction.rollback();
-      Logger.thrown("PlayerEntryContainer::setRPObject","X",e);
-      Logger.trace("PlayerEntryContainer::setRPObject","X","No such Character(unknown)");
+      logger.debug("No such Character(unknown)",e);
       throw new NoSuchCharacterException("- not available -");
       }
     catch(Exception e)
       {
       transaction.rollback();
-      Logger.thrown("PlayerEntryContainer::setRPObject","X",e);
-      throw new GenericDatabaseException(e.getMessage());
+      logger.warn("error setting RPObject",e);
+      throw new GenericDatabaseException(e);
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::setRPObject","<");
+      Log4J.finishMethod(logger,"setRPObject");
       }
     }
 
@@ -844,7 +845,7 @@ public class PlayerEntryContainer
   /** This method exposes directly the player info, so you can save valuable time. */
   public RuntimePlayerEntry get(int clientid) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::get",">");
+    Log4J.startMethod(logger,"get");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -853,40 +854,15 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::get","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::get","<");
+      Log4J.finishMethod(logger,"get");
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /** This method returns a byte that indicate the state of the player from the 3 possible options:
    *  - STATE_NULL
@@ -896,7 +872,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public ClientState getRuntimeState(int clientid) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::getRuntimeState",">");
+    Log4J.startMethod(logger,"getRuntimeState");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -907,13 +883,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getRuntimeState","<");
+      Log4J.finishMethod(logger,"getRuntimeState");
       }
     }
 
@@ -926,7 +902,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public ClientState changeRuntimeState(int clientid,ClientState newState) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::changeRuntimeState",">");
+    Log4J.startMethod(logger,"changeRuntimeState");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -939,13 +915,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::changeRuntimeState","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::changeRuntimeState","<");
+      Log4J.finishMethod(logger,"changeRuntimeState");
       }
     }
 
@@ -959,7 +935,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public RPObject.ID getRPObjectID(int clientid) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
-    Logger.trace("PlayerEntryContainer::getRPObjectID",">");
+    Log4J.startMethod(logger,"getRPObjectID");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -970,13 +946,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getRPObjectID","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getRPObjectID","<");
+      Log4J.finishMethod(logger,"getRPObjectID");
       }
     }
 
@@ -989,7 +965,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchPlayerFoundException  if the player doesn't exist in database. */
   public void setRPObjectID(int clientid, RPObject.ID id) throws NoSuchClientIDException, NoSuchPlayerException, NoSuchCharacterException
     {
-    Logger.trace("PlayerEntryContainer::setRPObjectID",">");
+    Log4J.startMethod(logger,"setRPObjectID");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -1000,13 +976,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::setRPObjectID","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::setRPObjectID","<");
+      Log4J.finishMethod(logger,"setRPObjectID");
       }
     }
 
@@ -1015,7 +991,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public String getUsername(int clientid) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::getUsername",">");
+    Log4J.startMethod(logger,"getUsername");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -1026,13 +1002,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getUsername","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getUsername","<");
+      Log4J.finishMethod(logger,"getUsername");
       }
     }
 
@@ -1041,7 +1017,7 @@ public class PlayerEntryContainer
    *  @throws NoSuchClientIDException if clientid is not found */
   public InetSocketAddress getInetSocketAddress(int clientid) throws NoSuchClientIDException
     {
-    Logger.trace("PlayerEntryContainer::getInetSocketAddress",">");
+    Log4J.startMethod(logger,"InetSocketAddress ");
     try
       {
       if(hasRuntimePlayer(clientid))
@@ -1052,13 +1028,13 @@ public class PlayerEntryContainer
         }
       else
         {
-        Logger.trace("PlayerEntryContainer::getInetSocketAddress","X","No such RunTimePlayer("+clientid+")");
+        logger.debug("No such RunTimePlayer("+clientid+")");
         throw new NoSuchClientIDException(clientid);
         }
       }
     finally
       {
-      Logger.trace("PlayerEntryContainer::getInetSocketAddress","<");
+      Log4J.finishMethod(logger,"InetSocketAddress ");
       }
     }
   }

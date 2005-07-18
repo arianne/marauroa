@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.8 2005/06/10 16:17:08 quisar Exp $ */
+/* $Id: Statistics.java,v 1.9 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,17 +12,28 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import marauroa.common.*;
-import marauroa.server.*;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+
+import org.apache.log4j.Logger;
+
 
 /** This class encapsulate everything related to the statistics recollection and
  *  storage. */
 public class Statistics implements StatisticsMBean
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(Statistics.class);
+  
   static class Variables implements Iterable<String>
     {
     Map<String,Long> content;
@@ -182,7 +193,7 @@ public class Statistics implements StatisticsMBean
       }
     catch(Exception e)
       {
-      Logger.thrown("Statistics::print","X",e);
+      logger.error("error while printing statistics",e);
       }
     }
 

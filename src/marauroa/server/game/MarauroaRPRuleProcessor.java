@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.4 2005/05/12 19:34:37 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.5 2005/07/18 20:52:41 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,9 +12,14 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.util.*;
-import marauroa.common.game.*;
+import java.util.List;
+import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.RPObjectNotFoundException;
 
+
+/** Default implementation for <code>IRPRuleProcessor</code> */
 public class MarauroaRPRuleProcessor implements IRPRuleProcessor
   {
   private RPWorld world;
