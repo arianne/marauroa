@@ -26,6 +26,7 @@ public class Log4J
                 "log4j.rootLogger=INFO, Console\n"+
                 "log4j.appender.Console=org.apache.log4j.ConsoleAppender\n"+
                 "log4j.appender.Console.layout=org.apache.log4j.PatternLayout\n"+
+                "log4j.appender.Console.threshold=INFO\n"+
                 "log4j.appender.Console.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n\n";
 
   /** initializes log4j with the log4j.properties file. */
