@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.13 2005/05/24 18:44:03 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.14 2005/07/19 20:55:38 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,19 +11,22 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.client;
+import java.util.LinkedList;
+import java.util.List;
+import marauroa.client.net.NetworkClientManager;
+import marauroa.common.Log4J;
 
-import java.util.*;
-import java.math.BigInteger;
-
-import marauroa.client.net.*;
-import marauroa.common.*;
-import marauroa.common.net.*;
-import marauroa.common.game.*;
 import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.crypto.Hash;
+import marauroa.common.game.RPAction;
+import marauroa.common.net.*;
+import org.apache.log4j.Logger;
 
 public abstract class ariannexp
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(ariannexp.class);
+  
   public final static long TIMEOUT=10000;
   private NetworkClientManager netMan;
   private List<Message> messages;
@@ -32,18 +35,17 @@ public abstract class ariannexp
    *  @param logging ariannexp will write to a file if this is true. */
   public ariannexp(boolean logging)
     {
-    if(logging)
-      {
-      Logger.initialize("base","client_log");
-      }
-    else
-      {
-      Logger.initialize();
-      }
+//    if(logging)
+//      {
+//      Logger.initialize("base","client_log");
+//      }
+//    else
+//      {
+//      Logger.initialize();
+//      }
+    Log4J.init();
 
-    Logger.trace("ariannexp::ariannexp",">");
     messages=new LinkedList<Message>();
-    Logger.trace("ariannexp::ariannexp","<");
     }
 
   /** Call this method to connect to server.
@@ -52,9 +54,9 @@ public abstract class ariannexp
    *  @param port server port number  */
   public void connect(String host, int port) throws java.net.SocketException
     {
-    Logger.trace("ariannexp::connect",">");
+    Log4J.startMethod(logger, "connect");
     netMan=new NetworkClientManager(host,port);
-    Logger.trace("ariannexp::connect","<");
+    Log4J.finishMethod(logger, "connect");
     }
 
   private Message getMessage() throws InvalidVersionException,ariannexpTimeoutException
@@ -77,10 +79,10 @@ public abstract class ariannexp
   
   public void resync()
     {
-    Logger.trace("ariannexp::resync",">");
+    Log4J.startMethod(logger, "resync");
     MessageC2SOutOfSync msg=new MessageC2SOutOfSync();
     netMan.addMessage(msg);
-    Logger.trace("ariannexp::resync","<");
+    Log4J.startMethod(logger, "resync");
     }
 
   /** Login to server using the given username and password.
@@ -89,7 +91,7 @@ public abstract class ariannexp
    *  @return true if login is successful. */
   public boolean login(String username, String password) throws ariannexpTimeoutException
     {
-    Logger.trace("ariannexp::login",">");
+    Log4J.startMethod(logger, "login");
     try
       {
       int received = 0;
@@ -115,7 +117,7 @@ public abstract class ariannexp
           {
           case S2C_LOGIN_SENDKEY:
             {
-            Logger.trace("ariannexp::login" , "D" , "Recieved Key");
+            logger.debug("Recieved Key");
             key = ((MessageS2CLoginSendKey)msg).getKey();
             
             clientNonce = Hash.random(Hash.hashLength());
@@ -124,7 +126,7 @@ public abstract class ariannexp
             }
           case S2C_LOGIN_SENDNONCE:
             {
-            Logger.trace("ariannexp::login" , "D" , "Recieved Server Nonce");
+            logger.debug("Recieved Server Nonce");
             if(serverNonce != null) 
               {
               return false;
@@ -148,24 +150,24 @@ public abstract class ariannexp
             break;
             }
           case S2C_LOGIN_ACK:
-            Logger.trace("ariannexp::login" , "D" , "Login correct");
+            logger.debug("Login correct");
             received++;
             break;
           case S2C_CHARACTERLIST:
-            Logger.trace("ariannexp::login","D","Recieved Character list");
+            logger.debug("Recieved Character list");
             String[] characters=((MessageS2CCharacterList)msg).getCharacters();
             onAvailableCharacters(characters);
             received++;
             break;
           case S2C_SERVERINFO:
-            Logger.trace("ariannexp::login","D","Recieved Server info");
+            logger.debug("Recieved Server info");
             String[] info=((MessageS2CServerInfo)msg).getContents();
             onServerInfo(info);
             received++;
             break;
           case S2C_LOGIN_NACK:
             MessageS2CLoginNACK msgNACK=(MessageS2CLoginNACK)msg;
-            Logger.trace("ariannexp::login","D","Login failed. Reason: "+msgNACK.getResolution());
+            logger.debug("Login failed. Reason: "+msgNACK.getResolution());
             event=msgNACK.getResolution();
             return false;
           default:
@@ -182,7 +184,7 @@ public abstract class ariannexp
       }
     finally
       {
-      Logger.trace("ariannexp::login","<");
+      Log4J.startMethod(logger, "login");
       }
     }
   
@@ -197,7 +199,7 @@ public abstract class ariannexp
    *  @return true if choosing character is successful. */
   public boolean chooseCharacter(String character) throws ariannexpTimeoutException
     {
-    Logger.trace("ariannexp::chooseCharacter",">");
+    Log4J.startMethod(logger, "chooseCharacter");
     try
       {
       Message msgCC=new MessageC2SChooseCharacter(netMan.getAddress(),character);
@@ -212,10 +214,10 @@ public abstract class ariannexp
         switch(msg.getType())
           {
           case S2C_CHOOSECHARACTER_ACK:
-            Logger.trace("ariannexp::chooseCharacter","D","Choose Character ACK");
+            logger.debug("Choose Character ACK");
             return true;
           case S2C_CHOOSECHARACTER_NACK:
-            Logger.trace("ariannexp::chooseCharacter","D","Choose Character NACK");
+            logger.debug("Choose Character NACK");
             return false;
           default:
             messages.add(msg);
@@ -226,13 +228,13 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
-      Logger.thrown("ariannexp::chooseCharacter","X",e);
+      logger.error("Invalid client version to connect to this server.",e);
       onError(1,"Invalid client version to connect to this server.");
       return false;
       }
     finally
       {
-      Logger.trace("ariannexp::chooseCharacter","<");
+      Log4J.finishMethod(logger, "chooseCharacter");
       }
     }
 
@@ -253,7 +255,7 @@ public abstract class ariannexp
   public void send(RPAction action, boolean block) throws ariannexpTimeoutException
     {
     /** TODO: Useless we need to return something or disable blocking */
-    Logger.trace("ariannexp::send",">");
+    Log4J.startMethod(logger, "send");
     try
       {
       MessageC2SAction msgAction=new MessageC2SAction(netMan.getAddress(),action);
@@ -278,12 +280,12 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
-      Logger.thrown("ariannexp::send","X",e);
+      logger.error("Invalid client version to connect to this server.",e);
       onError(1,"Invalid client version to connect to this server.");
       }
     finally
       {
-      Logger.trace("ariannexp::send","<");
+      Log4J.finishMethod(logger, "send");
       }
     }
 
@@ -291,7 +293,7 @@ public abstract class ariannexp
    *  @return true if we have successfully logout. */
   public boolean logout()
     {
-    Logger.trace("ariannexp::logout",">");
+    Log4J.startMethod(logger, "logout");
 
     try
       {
@@ -306,10 +308,10 @@ public abstract class ariannexp
         switch(msg.getType())
           {
           case S2C_LOGOUT_ACK:
-            Logger.trace("ariannexp::logout","D","Logout ACK");
+            logger.debug("Logout ACK");
             return true;
           case S2C_LOGOUT_NACK:
-            Logger.trace("ariannexp::logout","D","Logout NACK");
+            logger.debug("Logout NACK");
             return false;
           default:
             messages.add(msg);
@@ -320,7 +322,7 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
-      Logger.thrown("ariannexp::logout","X",e);
+      logger.error("Invalid client version to connect to this server.",e);
       onError(1,"Invalid client version to connect to this server.");
       return false;
       }
@@ -331,14 +333,14 @@ public abstract class ariannexp
       }
     finally
       {
-      Logger.trace("ariannexp::logout","<");
+      Log4J.finishMethod(logger, "logout");
       }
     }
 
   /** Call this method to get and apply messages */
   public void loop(int delta)
     {
-    Logger.trace("ariannexp::loop",">");
+    Log4J.startMethod(logger, "loop");
 
     try
       {
@@ -354,7 +356,7 @@ public abstract class ariannexp
           {
           case S2C_PERCEPTION:
             {
-            Logger.trace("ariannexp::loop","D","Processing Message Perception");
+            logger.debug("Processing Message Perception");
             MessageC2SPerceptionACK reply=new MessageC2SPerceptionACK(msg.getAddress());
             netMan.addMessage(reply);
 
@@ -366,7 +368,7 @@ public abstract class ariannexp
       
           case S2C_TRANSFER_REQ:
             {
-            Logger.trace("ariannexp::loop","D","Processing Content Transfer Request");
+            logger.debug("Processing Content Transfer Request");
             List<TransferContent> items=((MessageS2CTransferREQ)msg).getContents();
 
             items=onTransferREQ(items);
@@ -379,7 +381,7 @@ public abstract class ariannexp
       
           case S2C_TRANSFER:
             {
-            Logger.trace("ariannexp::loop","D","Processing Content Transfer");
+            logger.debug("Processing Content Transfer");
             List<TransferContent> items=((MessageS2CTransfer)msg).getContents();
             onTransfer(items);
       
@@ -392,12 +394,12 @@ public abstract class ariannexp
       }
     catch(InvalidVersionException e)
       {
-      Logger.thrown("ariannexp::loop","X",e);
+      logger.error("Invalid client version to connect to this server.",e);
       onError(1,"Invalid client version to connect to this server.");
       }
     finally
       {
-      Logger.trace("ariannexp::loop","<");
+      Log4J.finishMethod(logger, "loop");
       }
     }
    

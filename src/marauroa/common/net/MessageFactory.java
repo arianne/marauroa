@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.4 2005/05/21 20:10:46 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.5 2005/07/19 20:56:43 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,16 +12,22 @@
  ***************************************************************************/
 package marauroa.common.net;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.io.*;
-import java.util.*;
-
-import marauroa.common.*;
+import java.util.HashMap;
+import java.util.Map;
+import marauroa.common.Log4J;
+import marauroa.common.game.Attributes;
+import org.apache.log4j.Logger;
 
 /** MessageFactory is the class that is in charge of building the messages from
  *  the stream of bytes. */
 public class MessageFactory
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(Attributes.class);
+  
   private static Map<Integer,Class> factoryArray;
   private static MessageFactory messageFactory;
 
@@ -44,7 +50,7 @@ public class MessageFactory
 
   private void register()
     {
-    Logger.trace("MessageFactory::register",">");
+    Log4J.startMethod(logger,"register");
     register(Message.MessageType.C2S_ACTION,MessageC2SAction.class);
     register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
     register(Message.MessageType.C2S_LOGOUT,MessageC2SLogout.class);
@@ -69,7 +75,7 @@ public class MessageFactory
     register(Message.MessageType.S2C_LOGIN_SENDKEY,MessageS2CLoginSendKey.class);
     register(Message.MessageType.S2C_LOGIN_SENDNONCE,MessageS2CLoginSendNonce.class);
     register(Message.MessageType.C2S_LOGIN_SENDPROMISE,MessageC2SLoginSendPromise.class);
-    Logger.trace("MessageFactory::register","<");
+    Log4J.finishMethod(logger,"register");
     }
 
   private void register(Message.MessageType index,Class messageClass)
@@ -85,7 +91,7 @@ public class MessageFactory
    @throws InvalidVersionException if the message version doesn't match */
   public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
     {
-    Logger.trace("MessageFactory::getMessage",">");
+    Log4J.startMethod(logger,"getMessage");
     try
       {
       if(data[0]==NetConst.NETWORK_PROTOCOL_VERSION)
@@ -101,30 +107,29 @@ public class MessageFactory
 
             tmp.readObject(s);
             tmp.setAddress(source);
-            Logger.trace("MessageFactory::getMessage","<");
             return tmp;
             }
           catch(Exception e)
             {
-            Logger.thrown("MessageFactory::getMessage","X",e);
+            logger.error("error in getMessage",e);
             throw new IOException(e.getMessage());
             }
           }
         else
           {
-          Logger.trace("MessageFactory::getMessage","X","Message type ["+data[1]+"] is not registered in the MessageFactory");
+          logger.warn("Message type ["+data[1]+"] is not registered in the MessageFactory");
           throw new IOException("Message type ["+data[1]+"] is not registered in the MessageFactory");
           }
         }
       else
         {
-        Logger.trace("MessageFactory::getMessage","X","Message has incorrect protocol version("+data[0]+") expected ("+NetConst.NETWORK_PROTOCOL_VERSION+")");
+        logger.warn("Message has incorrect protocol version("+data[0]+") expected ("+NetConst.NETWORK_PROTOCOL_VERSION+")");
         throw new InvalidVersionException(data[0]);
         }
       }
     finally
       {
-      Logger.trace("MessageFactory::getMessage","<");
+      Log4J.finishMethod(logger,"getMessage");
       }
     }
   }

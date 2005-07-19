@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.2 2005/02/20 17:18:41 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.3 2005/07/19 20:56:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,18 +12,27 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import marauroa.common.game.*;
-import marauroa.common.net.*;
-import marauroa.common.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import marauroa.common.Log4J;
+import marauroa.common.game.Perception;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.net.MessageS2CPerception;
+import org.apache.log4j.Logger;
+import org.apache.log4j.NDC;
+
 
 /** The PerceptionHandler class is in charge of applying correctly the perceptions
  *  to the world. You should always use this class because it is a complex task that
  *  is easy to do in the wrong way. */
 public class PerceptionHandler
   {   
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(PerceptionHandler.class);
+  
   private IPerceptionListener listener;
   private List<MessageS2CPerception> previousPerceptions;
   private int previousTimestamp;
@@ -159,7 +168,7 @@ public class PerceptionHandler
       }
     catch(Exception e)
       {
-      Logger.trace("MessageS2CPerception::applyPerceptionAddedRPObjects","X",e.getMessage());
+      logger.error("error in applyPerceptionAddedRPObjects",e);
       throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
@@ -179,7 +188,7 @@ public class PerceptionHandler
       }
     catch(Exception e)
       {
-      Logger.trace("MessageS2CPerception::applyPerceptionDeletedRPObjects","X",e.getMessage());
+      logger.error("error in applyPerceptionDeletedRPObjects",e);
       throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
@@ -210,16 +219,20 @@ public class PerceptionHandler
       }
     catch(RPObjectNotFoundException e)
       {
-      System.out.println(world);
-      e.printStackTrace();
-      Logger.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
+//      System.out.println(world);
+//      e.printStackTrace();
+      NDC.push("world is ["+world.toString()+"]");
+      logger.error("error in applyModifiedRPObjects",e);
+      NDC.pop();
       throw e;
       }
     catch(Exception e)
       {
-      System.out.println(world);
-      e.printStackTrace();
-      Logger.trace("MessageS2CPerception::applyModifiedRPObjects","X",e.getMessage());
+//      System.out.println(world);
+//      e.printStackTrace();
+      NDC.push("world is ["+world.toString()+"]");
+      logger.error("error in applyModifiedRPObjects",e);
+      NDC.pop();
       throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }
@@ -244,8 +257,7 @@ public class PerceptionHandler
       }
     catch(Exception e)
       {
-      e.printStackTrace();
-      Logger.trace("MessageS2CPerception::applyPerceptionMyRPObject","X",e.getMessage());
+      logger.error("error in applyPerceptionMyRPObject",e);
       throw new RPObjectNotFoundException(RPObject.INVALID_ID);
       }
     }

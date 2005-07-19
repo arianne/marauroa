@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.10 2005/05/10 14:06:46 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.11 2005/07/19 20:56:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,17 +12,27 @@
  ***************************************************************************/
 package marauroa.client.net;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import java.net.*;
 import java.util.*;
-import java.io.*;
 
-import marauroa.common.*;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.net.*;
+
+import org.apache.log4j.Logger;
+
+
 
 /** The NetworkClientManager is in charge of sending and recieving the packages
  *  from the network. */
 public class NetworkClientManager
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(NetworkClientManager.class);
+  
   private DatagramSocket socket;
   private InetSocketAddress address;
   private int clientid;
@@ -44,7 +54,7 @@ public class NetworkClientManager
    to recieve new messages from the network. */
   public NetworkClientManager(String host, int port) throws SocketException
     {
-    Logger.trace("NetworkClientManager::NetworkClientManager",">");
+    Log4J.startMethod(logger,"NetworkClientManager");
     clientid=0;
     address=new InetSocketAddress(host,port);
     socket=new DatagramSocket();
@@ -55,7 +65,7 @@ public class NetworkClientManager
     msgFactory=MessageFactory.getFactory();
     pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
     processedMessages=new LinkedList<Message>();
-    Logger.trace("NetworkClientManager::NetworkClientManager","<");
+    Log4J.finishMethod(logger,"NetworkClientManager");
     }
 
   public InetSocketAddress getAddress()
@@ -66,9 +76,9 @@ public class NetworkClientManager
   /** This method notify the thread to finish it execution */
   public void finish()
     {
-    Logger.trace("NetworkClientManager::finish",">");
+    Log4J.startMethod(logger,"finish");
     socket.close();
-    Logger.trace("NetworkClientManager::finish","<");
+    Log4J.finishMethod(logger,"finish");
     }
 
   private Message getOldestProcessedMessage()
@@ -85,10 +95,9 @@ public class NetworkClientManager
         }
       }
 
-    if(Logger.loggable("NetworkClientManager::getOldestProcessedMessage","D"))
+    if(logger.isDebugEnabled())
       {
-      Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",processedMessages.size()+" message available");
-      Logger.trace("NetworkClientManager::getOldestProcessedMessage","D",choosenMsg.toString());
+      logger.debug(processedMessages.size()+" messages available, chosed msg is "+choosenMsg.toString());
       }
 
     processedMessages.remove(choosenMsg);
@@ -103,7 +112,7 @@ public class NetworkClientManager
 
       if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
         {
-        Logger.trace("NetworkClientManager::processPendingPackets","D","deleted incompleted message after timedout");
+        logger.debug("deleted incompleted message after timedout");
         it.remove();
         continue;
         }
@@ -115,10 +124,9 @@ public class NetworkClientManager
 
         Message msg=msgFactory.getMessage(message.content,message.address);
 
-        if(Logger.loggable("NetworkClientManager::processPendingPackets","D"))
+        if(logger.isDebugEnabled())
           {
-          Logger.trace("NetworkClientManager::processPendingPackets","D","receive message(type="+msg.getType()+") from "+msg.getClientID());
-          Logger.trace("NetworkClientManager::processPendingPackets","D",msg.toString());
+          logger.debug("receive message(type="+msg.getType()+") from "+msg.getClientID()+" full ["+msg+"]");
           }
         
         if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
@@ -144,7 +152,7 @@ public class NetworkClientManager
     byte position=data[1];
     byte signature=data[2];
 
-    Logger.trace("NetworkClientManager::storePacket","D","receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
+    logger.debug("receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
     if(!pendingPackets.containsKey(new Byte(signature)))
       {
       /** This is the first packet */
@@ -166,7 +174,7 @@ public class NetworkClientManager
       --message.remaining;
       if(message.remaining<0)
         {
-        Logger.trace("NetworkClientManager::storePacket","D","ERROR: We confused the messages("+message.signature+")");
+        logger.error("ERROR: We confused the messages("+message.signature+")");
         }
       else
         {
@@ -179,7 +187,7 @@ public class NetworkClientManager
    *  @return a Message*/
   public Message getMessage() throws InvalidVersionException
     {
-    Logger.trace("NetworkClientManager::getMessage",">");
+    Log4J.startMethod(logger,"getMessage");
     try
       {
       if(processedMessages.size()>0)
@@ -191,13 +199,13 @@ public class NetworkClientManager
       }
     catch(InvalidVersionException e)
       {
-      Logger.thrown("NetworkClientManager::getMessage","X",e);
+      logger.warn("got getMessage with invalid version",e);
       throw e;
       }
     catch(Exception e)
       {
       /* Report the exception */
-      Logger.thrown("NetworkClientManager::getMessage","X",e);
+      logger.error("error getting Message",e);
       }
 
     try
@@ -223,11 +231,11 @@ public class NetworkClientManager
     catch(IOException e)
       {
       /* Report the exception */
-      Logger.thrown("NetworkClientManager::getMessage","X",e);
+      logger.error("error getting Message",e);
       }
     finally
       {
-      Logger.trace("NetworkClientManager::getMessage","<");
+      Log4J.finishMethod(logger,"getMessage");
       }
 
     return null;
@@ -237,7 +245,7 @@ public class NetworkClientManager
    *  @param msg the message to ve delivered. */
   public synchronized void addMessage(Message msg)
     {
-    Logger.trace("NetworkClientManager::addMessage",">");
+    Log4J.startMethod(logger,"addMessage");
     try
       {
       /* We enforce the remote endpoint */
@@ -247,7 +255,7 @@ public class NetworkClientManager
       ByteArrayOutputStream out=new ByteArrayOutputStream();
       OutputSerializer s=new OutputSerializer(out);
 
-      Logger.trace("NetworkClientManager::addMessage","D","send message("+msg.getType()+") from "+msg.getClientID());
+      logger.debug("send message("+msg.getType()+") from "+msg.getClientID());
       s.write(msg);
 
       byte[] buffer=out.toByteArray();
@@ -258,11 +266,11 @@ public class NetworkClientManager
     catch(IOException e)
       {
       /* Report the exception */
-      Logger.thrown("NetworkClientManager::addMessage","X",e);
+      logger.error("error while adding Message",e);
       }
     finally
       {
-      Logger.trace("NetworkClientManager::addMessage","<");
+      Log4J.finishMethod(logger,"addMessage");
       }
     }
   }

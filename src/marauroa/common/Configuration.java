@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.2 2005/05/30 14:53:16 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.3 2005/07/19 20:56:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,12 +12,21 @@
  ***************************************************************************/
 package marauroa.common;
 
-import java.util.*;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Properties;
 
 /** This class is a basic configuration file manager */
 public class Configuration
   {
+  /** the logger instance. */
+  private static final org.apache.log4j.Logger logger = Log4J.getLogger(Configuration.class);
+  
   private static String configurationFile="marauroa.ini";
   private Properties properties;
   private static Configuration configuration=null;
@@ -32,7 +41,7 @@ public class Configuration
   
   private Configuration() throws FileNotFoundException
     {
-    Logger.trace("Configuration",">");
+    Log4J.startMethod(logger,"Configuration");
     try
       {
       properties=new Properties();
@@ -43,19 +52,17 @@ public class Configuration
       }
     catch(FileNotFoundException e)
       {
-      Logger.trace("Configuration","X","Configuration file not found: "+configurationFile);
-      Logger.thrown("Configuration","X",e);
+      logger.warn("Configuration file not found: "+configurationFile,e);
       throw e;
       }
     catch(IOException e)
       {
-      Logger.trace("Configuration","X","Error loading Configuration file");
-      Logger.thrown("Configuration","X",e);
+      logger.warn("Error loading Configuration file",e);
       throw new FileNotFoundException(configurationFile);
       }
     finally
       {
-      Logger.trace("Configuration","<");
+      Log4J.finishMethod(logger,"Configuration");
       }
     }
   
@@ -63,7 +70,7 @@ public class Configuration
    *  @return a shared instance of Configuration */
   public static Configuration getConfiguration() throws FileNotFoundException
     {
-    Logger.trace("Configuration::getConfiguration",">");
+    Log4J.startMethod(logger,"getConfiguration");
     try
       {
       if(configuration==null)
@@ -74,7 +81,7 @@ public class Configuration
       }
     finally
       {
-      Logger.trace("Configuration::getConfiguration","<");
+      Log4J.finishMethod(logger,"getConfiguration");
       }
     }
     
@@ -84,29 +91,29 @@ public class Configuration
    *  @exception PropertyNotFound if the property is not found. */
   public String get(String property) throws PropertyNotFoundException
     {
-    Logger.trace("Configuration::get",">");
+    Log4J.startMethod(logger,"get");
     try
       {
       String result=properties.getProperty(property);
     
       if(result==null)
         {
-        Logger.trace("Configuration::get","X","Property ["+property+"] not found");
+        logger.debug("Property ["+property+"] not found");
         throw new PropertyNotFoundException(property);
         }
         
-      Logger.trace("Configuration::get","D","Property ["+property+"]="+result);
+      logger.debug("Property ["+property+"]="+result);
       return result;
       }
     finally
       {
-      Logger.trace("Configuration::get","<");
+      Log4J.finishMethod(logger,"get");
       }
     }
 
   public boolean has(String property)
     {
-    Logger.trace("Configuration::has",">");
+    Log4J.startMethod(logger,"has");
     try
       {
       String result=properties.getProperty(property);
@@ -120,7 +127,7 @@ public class Configuration
       }
     finally
       {
-      Logger.trace("Configuration::has","<");
+      Log4J.finishMethod(logger,"has");
       }
     }
     
@@ -129,10 +136,10 @@ public class Configuration
    *  @param value the value to set */
   public void set(String property, String value)
     {
-    Logger.trace("Configuration::set",">");
+    Log4J.startMethod(logger,"set");
     try
       {
-      Logger.trace("Configuration::set","D","Property ["+property+"]="+value);
+      logger.debug("Property ["+property+"]="+value);
       properties.put(property,value);
 
       OutputStream os = new FileOutputStream(configurationFile);
@@ -141,17 +148,15 @@ public class Configuration
       }
     catch(FileNotFoundException e)
       {
-      Logger.trace("Configuration","X","Configuration file not found: "+configurationFile);
-      Logger.thrown("Configuration","X",e);
+      logger.error("Configuration file not found: "+configurationFile,e);
       }
     catch(IOException e)
       {
-      Logger.trace("Configuration","X","Error storing Configuration file");
-      Logger.thrown("Configuration","X",e);
+      logger.error("Error storing Configuration file",e);
       }
     finally
       {
-      Logger.trace("Configuration::set","<");
+      Log4J.finishMethod(logger,"set");
       }
     }
   

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.9 2005/07/11 12:20:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.10 2005/07/19 20:56:43 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,26 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.zip.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.DeflaterOutputStream;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
+import marauroa.common.game.Attributes;
+import marauroa.common.game.IRPZone;
+import marauroa.common.game.Perception;
+import marauroa.common.game.RPObject;
+import marauroa.common.game.RPSlot;
+import marauroa.common.net.Message.MessageType;
+import org.apache.log4j.Logger;
 
-import marauroa.common.*;
-import marauroa.common.game.*;
 
 /** This message indicate the client the objects that the server has determined that
  *  this client is able to see.
@@ -28,6 +41,9 @@ import marauroa.common.game.*;
  */
 public class MessageS2CPerception extends Message
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(MessageS2CPerception.class);
+  
   private byte typePerception;
     
   private int timestampPerception;
@@ -168,9 +184,9 @@ public class MessageS2CPerception extends Message
   
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
     {
-    if(Logger.loggable("MessageS2CPerception::writeObject","D"))
+    if(logger.isDebugEnabled())
       {
-      Logger.trace("MessageS2CPerception::writeObject","D",this.toString());
+      logger.debug("writing Object: ["+this+"]");
       }
       
     super.writeObject(out);
@@ -214,7 +230,7 @@ public class MessageS2CPerception extends Message
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(added)+" size");
       }
-    Logger.trace("MessageS2CPerception::readObject()","D",added + " added objects..");
+    logger.debug(added+"added objects.");
     for(int i=0;i<added;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
@@ -228,7 +244,7 @@ public class MessageS2CPerception extends Message
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(modAdded)+" size");
       }
-    Logger.trace("MessageS2CPerception::readObject()","D",modAdded + " modified Added objects..");
+    logger.debug(modAdded + " modified Added objects..");
     for(int i=0;i<modAdded;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
@@ -242,7 +258,7 @@ public class MessageS2CPerception extends Message
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(modDeleted)+" size");
       }
-    Logger.trace("MessageS2CPerception::readObject()","D",modDeleted + " modified Deleted objects..");
+    logger.debug(modDeleted + " modified Deleted objects..");
     for(int i=0;i<modDeleted;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
@@ -256,7 +272,7 @@ public class MessageS2CPerception extends Message
       {
       throw new IOException("Illegal request of an list of "+String.valueOf(del)+" size");
       }
-    Logger.trace("MessageS2CPerception::readObject()","D",del + " deleted objects..");
+    logger.debug(del + " deleted objects..");
     for(int i=0;i<del;++i)
       {
       RPObject object=(RPObject)ser.readObject(new RPObject());
@@ -271,7 +287,7 @@ public class MessageS2CPerception extends Message
 
     timestampPerception=ser.readInt();
 
-    Logger.trace("MessageS2CPerception::readObject()","D","My RPObject");
+    logger.debug("read My RPObject");
     byte modifiedMyRPObject=ser.readByte();
     if(modifiedMyRPObject==1)
       {
@@ -347,7 +363,7 @@ public class MessageS2CPerception extends Message
       
       if(!cachedContent.containsKey(key))
         {
-        Logger.trace("MessageS2CPerception::CachedCompressedPerception::get()","D","Perception not found in cache");
+        logger.debug("Perception not found in cache");
         ByteArrayOutputStream array=new ByteArrayOutputStream();
         DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
         OutputSerializer serializer=new OutputSerializer(out_stream);
@@ -361,7 +377,7 @@ public class MessageS2CPerception extends Message
         }
       else
         {
-        Logger.trace("MessageS2CPerception::CachedCompressedPerception::get()","D","Perception FOUND in cache");
+        logger.debug("Perception FOUND in cache");
         }
     
       return (byte[])cachedContent.get(key);

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.8 2005/06/02 08:32:00 quisar Exp $ */
+/* $Id: Attributes.java,v 1.9 2005/07/19 20:56:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,12 +13,22 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.*;
-import marauroa.common.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
+import org.apache.log4j.Logger;
+
 
 /** This class hosts a list of Attributes stored as pairs String=String */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String>
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(Attributes.class);
+  
   private Map<String,String> added;
   private Map<String,String> deleted;
 
@@ -108,7 +118,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       catch(RPClass.SyntaxException e)
         {
         /* NOTE: Can't ever happen */
-        Logger.trace("Attributes::Put","!","Syntax error: "+e.getMessage());
+        logger.error("cannot put attribute ["+attribute+"] value: ["+value+"], Syntax error",e);
         }
       }
 
@@ -342,8 +352,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           }
         catch(RPClass.SyntaxException e)
           {
-          Logger.trace("Attributes::writeObject","X","Attribute "+key+" not found");
-          Logger.thrown("Attributes::writeObject","X",e);
+          logger.error("cannot writeObject, Attribute ["+key+"] not found",e);
           code=-1;
           }
 

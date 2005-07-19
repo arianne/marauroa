@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.7 2005/06/07 16:56:19 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.8 2005/07/19 20:56:43 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,31 +12,35 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import marauroa.common.*;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
 
 /** This class host several constants related to the network configuration of
  *  Marauroa */
 public class NetConst
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(NetConst.class);
+  
   /** Port that will use the server for listen to incomming packets */
   static public int marauroa_PORT;
 
   static
     {
-    Logger.trace("NetConst::(static)",">");
+    Log4J.startMethod(logger,"NetConst [static]");
     try
       {
-      Configuration conf=Configuration.getConfiguration();
+      Configuration conf = Configuration.getConfiguration();
 
       marauroa_PORT=Integer.parseInt(conf.get("marauroa_PORT"));
       }
     catch(Exception e)
       {
       marauroa_PORT=3214;
-      Logger.trace("NetConst::(static)","X","Using default port "+  marauroa_PORT   +" : "+e.getMessage());
-      Logger.thrown("NetConst::(static)","X",e);
+      logger.warn("Using default port "+  marauroa_PORT,e);
       }
-    Logger.trace("NetConst::(static)","<");
+    Log4J.finishMethod(logger,"NetConst [static]");
     }
 
   /** Maximum size in bytes of the UDP packet. */
