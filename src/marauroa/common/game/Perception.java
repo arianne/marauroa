@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.1 2005/02/20 17:18:44 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.2 2005/07/21 19:34:09 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,18 @@
  ***************************************************************************/
 package marauroa.common.game;
 
-import java.util.*;
-import marauroa.common.*;
-
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
 
 /** The Perception class provides a encapsultated way of managing perceptions */
 public class Perception
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(Perception.class);
+
   /** A Delta perception sends only changes */  
   final public static byte DELTA=0;
   /** A sync perception sends the whole world */
@@ -95,7 +100,7 @@ public class Perception
         }
       catch(AttributeNotFoundException e)
         {
-        Logger.thrown("RPZone::Perception::removed","X",e);
+        logger.error("error removing an object ",e);
         }        
       }
 

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.6 2005/07/02 22:03:55 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.7 2005/07/21 19:34:09 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,13 +13,19 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.*;
-
-import marauroa.common.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
+import org.apache.log4j.Logger;
 
 /** This class implements an Object. Please refer to "Objects Explained" document */
 public class RPObject extends Attributes
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPObject.class);
+
   private List<RPSlot> added;
   private List<RPSlot> deleted;
   
@@ -140,7 +146,7 @@ public class RPObject extends Attributes
         }
       catch(Exception e)
         {
-        Logger.thrown("RPObject::setAddedRPSlot","X",e);
+        logger.error("error in setAddedRPSlot",e);
         }
       }       
     
@@ -157,7 +163,7 @@ public class RPObject extends Attributes
         }
       catch(Exception e)
         {
-        Logger.thrown("RPObject::setDeletedRPSlot","X",e);
+        logger.error("error in setDeletedRPSlot",e);
         }
       }       
     

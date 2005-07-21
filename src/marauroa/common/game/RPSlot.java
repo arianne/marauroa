@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.4 2005/06/29 08:12:03 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.5 2005/07/21 19:34:09 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,14 +13,20 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.*;
-
-import marauroa.server.*;
-import marauroa.common.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
+import org.apache.log4j.Logger;
 
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject>
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPSlot.class);
+
   private List<RPObject> added;
   private List<RPObject> deleted;
   
@@ -41,7 +47,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         }
       catch(Exception e)
         {
-        Logger.thrown("RPObject::setAddedRPSlot","X",e);
+        logger.error("error in setAddedRPSlot",e);
         }
       }       
     
@@ -59,7 +65,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         }
       catch(Exception e)
         {
-        Logger.thrown("RPObject::setAddedRPSlot","X",e);
+        logger.error("error in setDeletedRPObject",e);
         }
       }       
     
@@ -166,7 +172,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("RPSlot::add","X",e);
+      logger.error("error adding object",e);
       }
     }
   
@@ -186,7 +192,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("RPSlot::get","X",e);
+      logger.warn("error getting object",e);
       throw new RPObjectNotFoundException(id);
       }
     }
@@ -231,7 +237,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       }
     catch(AttributeNotFoundException e)
       {
-      Logger.thrown("RPSlot::remove","X",e);
+      logger.warn("error removing object",e);
       throw new RPObjectNotFoundException(id);
       }
     }
