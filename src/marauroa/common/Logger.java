@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.10 2005/04/06 15:34:58 arianne_rpg Exp $ */
+/* $Id: Logger.java,v 1.11 2005/08/02 19:49:31 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 
+/**
+ * a logger
+ * @deprecated use Log4J instead
+ */
 public class Logger
   {
   private static String[] allowed={};
