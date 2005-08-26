@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.6 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.7 2005/08/26 16:06:37 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,11 @@ public abstract class MarauroaRPZone implements IRPZone
   
   private Map<RPObject.ID,RPObject> modified;
   private Perception perception;
+  private Perception prebuildDeltaPerception=null;
+  private Perception prebuildTotalPerception=null;
 
+  private static int lastNonPermanentIdAssigned=0;
+  
   private static Random rand=new Random();
 
   public MarauroaRPZone()
@@ -146,8 +150,6 @@ public abstract class MarauroaRPZone implements IRPZone
       }
     }
   
-  static private int lastNonPermanentIdAssigned=0;
-  
   public RPObject create()
     {
     RPObject.ID id=new RPObject.ID(++lastNonPermanentIdAssigned,zoneid);
@@ -175,9 +177,6 @@ public abstract class MarauroaRPZone implements IRPZone
     {
     return objects.values().iterator();
     }
-  
-  private Perception prebuildDeltaPerception=null;
-  private Perception prebuildTotalPerception=null;
  
   public Perception getPerception(RPObject.ID id, byte type)
     {
