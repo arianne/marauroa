@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.3 2005/06/07 16:56:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.4 2005/08/26 16:10:53 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,16 @@
  ***************************************************************************/
 package marauroa.common.net;
   
-import marauroa.common.game.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.*;
-import java.util.zip.*;
-import java.io.*;
+import java.util.Iterator;
+import java.util.zip.DeflaterOutputStream;
+import marauroa.common.game.RPClass;
+import marauroa.common.net.Message.MessageType;
 
-/** The CharacterListMessage is sent from server to client to inform client about
+/** The ServerInfo message is sent from server to client to inform client about
  *  any relevant info the server has to transmit. They are in the form of 
  *  <attribute>=<value> */  
 public class MessageS2CServerInfo extends Message
