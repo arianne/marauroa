@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.7 2005/07/21 19:34:09 mtotz Exp $ */
+/* $Id: RPObject.java,v 1.8 2005/08/26 16:14:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -559,33 +559,39 @@ public class RPObject extends Attributes
     private String zoneid;
     
     /** Constructor
-     *  @param oid the object id */
-    public ID(int oid,String zid)
+     * @param objectid the object id
+     * @param zone the zone
+     */
+    public ID(int objectid,String zone)
       {
-      id=oid;
-      zoneid=zid;
+      this.id     = objectid;
+      this.zoneid = zone;
       }
 		
+    /** Constructor
+     * @param objectid the object id
+     * @param zoneid the zone-id
+     */
+    public ID(int objectid,IRPZone.ID zoneid)
+      {
+      this.id     = objectid;
+      this.zoneid = zoneid.getID();
+      }
+    
     /** Constructor
      *  @param attr an RPObject containing object_id attribute */
     public ID(RPObject attr) throws AttributeNotFoundException
       {
-      id=attr.getInt("id");
-      zoneid=attr.get("zoneid");
+      this.id     = attr.getInt("id");
+      this.zoneid = attr.get("zoneid");
       }
 		
     /** Constructor
      *  @param attr an RPAction containing sourceid attribute */
     public ID(RPAction attr) throws AttributeNotFoundException
       {
-      id=attr.getInt("sourceid");
-      zoneid=attr.get("zoneid");
-      }
-
-    public ID(int oid,IRPZone.ID zid)
-      {
-      id=oid;
-      zoneid=zid.getID();
+      this.id     = attr.getInt("sourceid");
+      this.zoneid = attr.get("zoneid");
       }
         
     /** This method returns the object id
@@ -618,7 +624,7 @@ public class RPObject extends Attributes
     /** We need it for HashMap */
     public int hashCode()
       {
-      return id*zoneid.hashCode();
+      return id * 1500 + zoneid.hashCode();
       }
 		
     /** This method returns a String that represent the object

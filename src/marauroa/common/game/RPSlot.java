@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.5 2005/07/21 19:34:09 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.6 2005/08/26 16:14:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
   private List<RPObject> added;
   private List<RPObject> deleted;
+
+  private String name;
+  /** A List<RPObject> of objects */
+  private List<RPObject> objects;
   
   public void resetAddedAndDeletedRPObjects()
     {
@@ -71,11 +75,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     
     slot.deleted.clear();
     }
-
-   
-  private String name;
-  /** A List<RPObject> of objects */
-  private List<RPObject> objects;
   
   public RPSlot()
     {
