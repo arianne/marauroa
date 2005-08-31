@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.11 2005/08/02 19:49:31 mtotz Exp $ */
+/* $Id: Logger.java,v 1.12 2005/08/31 11:29:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.*;
 
 /**
  * a logger
- * @deprecated use Log4J instead
+ * @Deprecated use Log4J instead
  */
 public class Logger
   {
