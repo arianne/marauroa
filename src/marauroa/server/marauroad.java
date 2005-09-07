@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.28 2005/07/21 19:34:10 mtotz Exp $ */
+/* $Id: marauroad.java,v 1.29 2005/09/07 12:39:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,10 +28,6 @@ import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import marauroa.server.net.NetworkServerManager;
-// Logger
-//import org.apache.log4j.Logger;
-
-//import marauroa.common.Logger;
 
 
 
@@ -53,8 +49,6 @@ public class marauroad extends Thread
   private static void setArguments(String[] args)
     {
     int i=0;
-//    Logger.initialize();
-//    boolean doLog = false;
     
     while(i!=args.length)
       {
@@ -71,10 +65,6 @@ public class marauroad extends Thread
           System.exit(1);
           }
         }
-//      else if(args[i].equals("-l"))
-//        {
-//          doLog=true;
-//        }
       else if(args[i].equals("-h"))
         {
         System.out.println("Marauroa - an open source multiplayer online framework for game development -");
@@ -84,64 +74,13 @@ public class marauroad extends Thread
         System.out.println("usage: [-c gamefile] [-l]");        
         System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
         System.out.println("\t    different location to the file.");
-        System.out.println("\t-l: to make the server log the output into a file");
         System.out.println("\t-h: print this help message");        
         System.exit(0);
         }
       ++i;
       }
-      
-//    if(doLog) 
-//      {
-//      String logs_directory=null;
-//	    try 
-//	      {
-//        logs_directory=Configuration.getConfiguration().get("server_logs_directory");
-//        Logger.initialize(logs_directory,"server_log_");
-//	      }
-//	    catch(Exception e) 
-//	      {
-//        logger.fatal("Can't find initialize Log to log output: "+logs_directory+"\n"+
-//                     "Server must abort.");
-//        System.exit(1);
-//        }
-//      }
     }
   
-//  private static void setAllowedAndRejected(Configuration conf)
-//    {
-//    try
-//      {
-//      boolean setAllowed=true;
-//      
-//      String[] allow=conf.get("server_logs_allowed").split("\\;");
-//      for(String i: allow)
-//        {
-//        if(i.equals("")) setAllowed=false;
-//        }
-//        
-//      if(setAllowed) Logger.setAllowed(allow);
-//      }
-//    catch(Exception e)
-//      {
-//      }
-//
-//    try
-//      {
-//      boolean setRejected=true;
-//      
-//      String[] rejected=conf.get("server_logs_rejected").split("\\;");
-//      for(String i: rejected)
-//        {
-//        if(i.equals("")) setRejected=false;
-//        }
-//        
-//      if(setRejected) Logger.setRejected(rejected);
-//      }
-//    catch(Exception e)
-//      {
-//      }
-//    }
 
   public static void main (String[] args)
     {
@@ -165,17 +104,9 @@ public class marauroad extends Thread
     
     // Initialize Loggging
     Log4J.init();
-    
-//    try
-//      {
-      marauroad.setArguments(args);
-//      marauroad.setAllowedAndRejected(Configuration.getConfiguration());
-      marauroad.getMarauroa().start();
-//      }
-//    catch(FileNotFoundException e)
-//      {
-//      logger.error("file not found: "+e.getMessage(),e);
-//      }
+    marauroad.setArguments(args);
+
+    marauroad.getMarauroa().start();
     }
  
   public synchronized void run()

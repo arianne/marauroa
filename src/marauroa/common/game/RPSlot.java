@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.6 2005/08/26 16:14:42 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.7 2005/09/07 12:39:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,6 +141,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     while(exists);
     
     object.put("id",i);
+    object.put("zoneid",""); // TODO: Remove this and allow zoneless id in objects
     }
   
   /** Add an object to the slot */

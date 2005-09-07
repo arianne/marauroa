@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.3 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: RPScheduler.java,v 1.4 2005/09/07 12:39:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,11 +145,13 @@ public class RPScheduler
     Log4J.startMethod(logger,"visit");
     try
       {
+      logger.info(actualTurn.size()+" players running actions");
       for(Map.Entry<RPObject.ID,List<RPAction>> entry: actualTurn.entrySet())
         {
         RPObject.ID id=entry.getKey();
         List<RPAction> list=entry.getValue();
     
+        logger.info(list.size()+" actions to visit for "+id);
         for(RPAction action: list)
           {
           logger.debug("visit action "+action);
