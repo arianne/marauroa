@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.14 2005/07/19 20:55:38 mtotz Exp $ */
+/* $Id: ariannexp.java,v 1.15 2005/09/11 22:43:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,17 +33,9 @@ public abstract class ariannexp
 
   /** Constructor.
    *  @param logging ariannexp will write to a file if this is true. */
-  public ariannexp(boolean logging)
+  public ariannexp(String loggingProperties)
     {
-//    if(logging)
-//      {
-//      Logger.initialize("base","client_log");
-//      }
-//    else
-//      {
-//      Logger.initialize();
-//      }
-    Log4J.init();
+    Log4J.init(loggingProperties);
 
     messages=new LinkedList<Message>();
     }
