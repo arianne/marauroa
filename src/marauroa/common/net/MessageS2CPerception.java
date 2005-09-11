@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.11 2005/08/26 16:10:53 mtotz Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.12 2005/09/11 11:09:21 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,9 +26,9 @@ import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-import marauroa.common.game.Attributes;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
+import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.common.net.Message.MessageType;
@@ -53,6 +55,8 @@ public class MessageS2CPerception extends Message
   private List<RPObject> modifiedAddedAttribsRPObjects;
   private List<RPObject> modifiedDeletedAttribsRPObjects;
   private List<RPObject> deletedRPObjects;
+  private Map<String, Short> attributes;
+  private Collection<RPClass>  rpClasses;
   private RPObject myRPObject;
   
   private static CachedCompressedPerception cache=CachedCompressedPerception.get();
@@ -61,7 +65,7 @@ public class MessageS2CPerception extends Message
   public MessageS2CPerception()
     {
     super(MessageType.S2C_PERCEPTION,null);
-    
+
     myRPObject=new RPObject();
     }
   
@@ -81,6 +85,8 @@ public class MessageS2CPerception extends Message
     modifiedAddedAttribsRPObjects   = perception.modifiedAddedAttribsList;
     modifiedDeletedAttribsRPObjects = perception.modifiedDeletedAttribsList;
     deletedRPObjects                = perception.deletedList;
+    attributes                      = perception.attributes;
+    rpClasses                       = perception.rpClasses;
     
     myRPObject=new RPObject();
     }
@@ -144,40 +150,75 @@ public class MessageS2CPerception extends Message
     return deletedRPObjects;
     }
   
+  /**
+   * returns the list of updated attributes.
+   */
+  public Map<String, Short> getAttributes()
+  {
+    return attributes;
+  }
+  
   /** This method returns a String that represent the object
    *  @return a string representing the object.*/
   public String toString()
     {
-    StringBuffer perception_string=new StringBuffer();
+    StringBuilder perception_string=new StringBuilder();
     perception_string.append("Type: "+typePerception+" Timestamp: "+timestampPerception+") contents: ");
 
     perception_string.append("\n  zoneid: "+zoneid+"\n");
+    
+    if (attributes != null)
+      {
+      perception_string.append("\n  "+attributes.size()+" attributes:\n");
+      for(String name: attributes.keySet())
+        {
+        perception_string.append("    "+name+":"+attributes.get(name)+"\n");
+        }
+      }
+    else
+      {
+      perception_string.append("\n  no attributes\n");
+      }
+
+    if (rpClasses != null)
+      {
+      perception_string.append("\n  "+rpClasses.size()+" RPClass'es:\n");
+      for(RPClass clazz: rpClasses)
+        {
+        perception_string.append("    "+clazz.getName()+"\n");
+        }
+      }
+    else
+      {
+      perception_string.append("\n  no RPClass'es\n");
+      }
+    
     perception_string.append("\n  added: \n");
     for(RPObject object: addedRPObjects)
       {
-      perception_string.append("    "+object.toString()+"\n");
+      perception_string.append("    "+object+"\n");
       }
 
     perception_string.append("\n  modified added: \n");
     for(RPObject object: modifiedAddedAttribsRPObjects)
       {
-      perception_string.append("    "+object.toString()+"\n");
+      perception_string.append("    "+object+"\n");
       }
 
     perception_string.append("\n  modified deleted: \n");
     for(RPObject object: modifiedDeletedAttribsRPObjects)
       {
-      perception_string.append("    "+object.toString()+"\n");
+      perception_string.append("    "+object+"\n");
       }
     
     perception_string.append("\n  deleted: \n");
     for(RPObject object: deletedRPObjects)
       {
-      perception_string.append("    "+object.toString()+"\n");
+      perception_string.append("    "+object+"\n");
       }
 
     perception_string.append("\n  my object: \n");
-    perception_string.append("    "+(myRPObject==null?null:myRPObject.toString())+"\n");
+    perception_string.append("    "+myRPObject+"\n");
 
     return perception_string.toString();
     }
@@ -206,7 +247,7 @@ public class MessageS2CPerception extends Message
         {
         setZoneid(son,zoneid);
         }
-      }    
+      }
     }
     
   public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
@@ -219,11 +260,46 @@ public class MessageS2CPerception extends Message
     
     typePerception=ser.readByte();
     zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(""));
+    
     addedRPObjects=new LinkedList<RPObject>();
     deletedRPObjects=new LinkedList<RPObject>();
     modifiedAddedAttribsRPObjects=new LinkedList<RPObject>();
     modifiedDeletedAttribsRPObjects=new LinkedList<RPObject>();
+    attributes = new HashMap<String, Short>();
+    rpClasses = new ArrayList<RPClass>();
     
+    // read all attributes (if any)
+    int count = ser.readInt();
+    
+    if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of attribute-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
+      }
+    logger.debug(count + " attributes");
+    for(int i = 0; i < count; i++)
+      {
+      String name = ser.readString();
+      short id = ser.readShort();
+      attributes.put(name, id);
+      }
+    // be sure the classes and attributes are applied before reading any objects
+    RPClass.updateAttributes(attributes);
+
+    // read all RPClass'es (if any)
+    count = ser.readInt();
+    
+    if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
+      {
+      throw new IOException("Illegal request of rpclass-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
+      }
+    logger.debug(count + " rpclass'es");
+    for(int i = 0; i < count; i++)
+      {
+      RPClass rpclass = new RPClass();
+      ser.readObject(rpclass);
+      rpClasses.add(rpclass);
+      }
+
     int added=ser.readInt();
     
     if(added>TimeoutConf.MAX_ARRAY_ELEMENTS)
@@ -279,8 +355,7 @@ public class MessageS2CPerception extends Message
       setZoneid(object,zoneid.getID());
       deletedRPObjects.add(object);
       }
-    
-    
+
     /** Dynamic part */  
     array=new ByteArrayInputStream(in.readByteArray());
     ser=new InputSerializer(array);
@@ -369,7 +444,6 @@ public class MessageS2CPerception extends Message
         OutputSerializer serializer=new OutputSerializer(out_stream);
         
         perception.computeStaticPartPerception(serializer);
-        
         out_stream.close();
         byte[] content=array.toByteArray();
         
@@ -418,6 +492,35 @@ public class MessageS2CPerception extends Message
     ser.write((byte)typePerception);
     ser.write(zoneid);
     
+    // Write Attributes
+    if (attributes != null)
+      {
+      ser.write( attributes.size() );
+      for(String name : attributes.keySet())
+        {
+        ser.write(name);
+        ser.write(attributes.get(name).shortValue());
+        }
+      }
+    else
+      {
+      ser.write( (int) 0 );
+      }
+
+    // Write RPClasses
+    if (rpClasses != null)
+      {
+      ser.write( rpClasses.size() );
+      for(RPClass clazz: rpClasses)
+        {
+        ser.write(clazz);
+        }
+      }
+    else
+      {
+      ser.write( (int) 0 );
+      }
+
     ser.write((int)addedRPObjects.size());
     for(RPObject object: addedRPObjects)
       {

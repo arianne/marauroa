@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.24 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: RPServerManager.java,v 1.25 2005/09/11 11:09:21 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -183,22 +183,22 @@ public class RPServerManager extends Thread
     return ruleProcessor.checkGameVersion(game,version);
     }
 
-  private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry entry)
+  private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry playerEntry)
     {
     Perception perception=null;
 
-    IRPZone zone=world.getRPZone(entry.characterid);
+    IRPZone zone=world.getRPZone(playerEntry.characterid);
 
-    if(entry.perception_OutOfSync==false)
+    if(playerEntry.perception_OutOfSync==false)
       {
-      logger.debug("Perception DELTA for player ("+entry.characterid+")");
-      perception=zone.getPerception(entry.characterid,Perception.DELTA);
+      logger.debug("Perception DELTA for player ("+playerEntry.characterid+")");
+      perception=zone.getPerception(playerEntry.characterid,Perception.DELTA);
       }
     else
       {
-      entry.perception_OutOfSync=false;
-      logger.debug("Perception SYNC for player ("+entry.characterid+")");
-      perception=zone.getPerception(entry.characterid,Perception.SYNC);
+      playerEntry.perception_OutOfSync=false;
+      logger.debug("Perception SYNC for player ("+playerEntry.characterid+")");
+      perception=zone.getPerception(playerEntry.characterid,Perception.SYNC);
       }
 
     return perception;

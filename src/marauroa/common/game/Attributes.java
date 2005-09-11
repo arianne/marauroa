@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.9 2005/07/19 20:56:42 mtotz Exp $ */
+/* $Id: Attributes.java,v 1.10 2005/09/11 11:09:21 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -362,42 +362,37 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           {
           out.write(key);
           }
-
-        if(rpClass.getType(key)==RPClass.VERY_LONG_STRING)
+        
+        switch (rpClass.getType(key))
           {
-          out.write(entry.getValue());
-          }
-        else if(rpClass.getType(key)==RPClass.LONG_STRING)
-          {
-          out.write65536LongString(entry.getValue());
-          }
-        else if(rpClass.getType(key)==RPClass.STRING)
-          {
-          out.write255LongString(entry.getValue());
-          }
-        else if(rpClass.getType(key)==RPClass.FLOAT)
-          {
-          out.write(Float.parseFloat(entry.getValue()));
-          }
-        else if(rpClass.getType(key)==RPClass.INT)
-          {
-          out.write(Integer.parseInt(entry.getValue()));
-          }
-        else if(rpClass.getType(key)==RPClass.SHORT)
-          {
-          out.write(Short.parseShort(entry.getValue()));
-          }
-        else if(rpClass.getType(key)==RPClass.BYTE)
-          {
-          out.write(Byte.parseByte(entry.getValue()));
-          }
-        else if(rpClass.getType(key)==RPClass.FLAG)
-          {
-          /* It is empty because it is a flag and so, it is already present. */
-          }
-        else
-          {
+          case RPClass.VERY_LONG_STRING:
+            out.write(entry.getValue());
+            break;
+          case RPClass.LONG_STRING:
+            out.write65536LongString(entry.getValue());
+            break;
+          case RPClass.STRING:
+            out.write255LongString(entry.getValue());
+            break;
+          case RPClass.FLOAT:
+            out.write(Float.parseFloat(entry.getValue()));
+            break;
+          case RPClass.INT:
+            out.write(Integer.parseInt(entry.getValue()));
+            break;
+          case RPClass.SHORT:
+            out.write(Short.parseShort(entry.getValue()));
+            break;
+          case RPClass.BYTE:
+            out.write(Byte.parseByte(entry.getValue()));
+            break;
+          case RPClass.FLAG:
+            /* It is empty because it is a flag and so, it is already present. */
+            break;
+          default:
           /* NOTE: Must never happen */
+          logger.fatal("got unknown attribute type "+rpClass.getType(key));
+          break;
           }
         }
       }

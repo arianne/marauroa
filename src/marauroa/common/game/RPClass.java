@@ -1,13 +1,18 @@
 package marauroa.common.game;
 
 import java.util.*;
-import marauroa.common.*;
+import marauroa.common.Log4J;
+import org.apache.log4j.Logger;
+
 
 /** The RPClass class implements a container of attributes with its code, name,
  *  type and visibility. It adds support for strict type definition and class
  *  hierarchy */
 public class RPClass implements marauroa.common.net.Serializable
   {
+  /** the logger instance. */
+  private static final Logger logger = Log4J.getLogger(RPClass.class);
+  
   /* Visibility */
   /** The attribute is visible */
   final public static byte VISIBLE = 0;
@@ -49,14 +54,11 @@ public class RPClass implements marauroa.common.net.Serializable
       }
     }
 
-  static private class AttributeDesc implements marauroa.common.net.Serializable
+  private static class AttributeDesc implements marauroa.common.net.Serializable
     {
     private static short lastCode=0;
-    private static Map<String,Short> attributeIntegerMap;
-    static
-      {
-      attributeIntegerMap=new HashMap<String,Short>();
-      }
+    private static Map<String,Short> attributeIntegerMap=new HashMap<String,Short>();
+
 
     private static short getValidCode(String name)
       {
@@ -102,16 +104,49 @@ public class RPClass implements marauroa.common.net.Serializable
       }
     }
 
-  private static Map<String,RPClass> rpClassList;
-
-  static
-    {
-    rpClassList=new LinkedHashMap<String,RPClass>();
-    }
+  private static Map<String,RPClass> rpClassList=new LinkedHashMap<String,RPClass>();
 
   private String name;
   private RPClass parent;
   private Map<String,AttributeDesc> attributes;
+  
+  /** returns all currently known RPClass'es */
+  public static Collection<RPClass> getAllRPClasses()
+  {
+    return Collections.unmodifiableCollection(rpClassList.values());
+  }
+
+  /** updates the attributes list */
+  public static synchronized void updateAttributes(Map<String, Short> attributes)
+  {
+    // iterate over all (new) attributes
+    for (String name : attributes.keySet())
+    {
+      // do we have this attribute already?
+      if (!AttributeDesc.attributeIntegerMap.containsKey(name))
+      {
+        // no, add it
+        AttributeDesc.attributeIntegerMap.put(name, attributes.get(name));
+        System.out.println("added "+name+", "+attributes.get(name));
+      }
+      else
+      {
+        // yes, check if the unique id is equal
+        if (attributes.get(name).shortValue() != AttributeDesc.attributeIntegerMap.get(name).shortValue())
+        {
+          // not equal...notify logger
+          logger.error("attribute "+name+" failure. client id: "+AttributeDesc.attributeIntegerMap.get(name)+
+                       " server id: "+attributes.get(name));
+        }
+      }
+    }
+  }
+
+  /** returns all currently known Attributes an Object can have*/
+  public static Map<String, Short> getAllAttributes()
+  {
+    return Collections.unmodifiableMap(AttributeDesc.attributeIntegerMap);
+  }
 
   public RPClass()
     {
@@ -252,7 +287,8 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getCode(name);
       }
 
-    throw new SyntaxException(name);
+    //throw new SyntaxException(name);
+    return AttributeDesc.getValidCode(name);
     }
 
   /** Returns the name of the attribute whose code is code for this rpclass */
@@ -271,6 +307,16 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getName(code);
       }
 
+    // maybe its an annonymous attribute
+    Map <String, Short> map = AttributeDesc.attributeIntegerMap;
+    for (String name : map.keySet())
+    {
+      if (map.get(name).shortValue() == code)
+      {
+        return name;
+      }
+    }
+    
     throw new SyntaxException(code);
     }
 
@@ -288,7 +334,8 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getType(name);
       }
 
-    throw new SyntaxException(name);
+    return STRING;
+    //throw new SyntaxException(name);
     }
 
   /** Returns the flags of the attribute whose name is name for this rpclass */
@@ -305,7 +352,8 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getFlags(name);
       }
 
-    throw new SyntaxException(name);
+    //throw new SyntaxException(name);
+    return RPClass.VISIBLE | RPClass.VOLATILE;
     }
 
   /** Return the visibility of the attribute whose name is name for this rpclass */

@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.7 2005/08/26 16:06:37 mtotz Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.8 2005/09/11 11:09:21 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
+import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
@@ -218,6 +219,8 @@ public abstract class MarauroaRPZone implements IRPZone
         {
         prebuildTotalPerception=new Perception(Perception.SYNC,getID());
         prebuildTotalPerception.addedList=new ArrayList<RPObject>(objects.values());
+        prebuildTotalPerception.rpClasses = RPClass.getAllRPClasses();
+        prebuildTotalPerception.attributes = RPClass.getAllAttributes();
         }
         
       return prebuildTotalPerception;
