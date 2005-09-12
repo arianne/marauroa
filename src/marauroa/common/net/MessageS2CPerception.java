@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.12 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.13 2005/09/12 19:31:22 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
+import marauroa.common.Utility;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPClass;
@@ -33,6 +35,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.common.net.Message.MessageType;
 import org.apache.log4j.Logger;
+import org.apache.log4j.NDC;
 
 
 /** This message indicate the client the objects that the server has determined that
@@ -254,106 +257,120 @@ public class MessageS2CPerception extends Message
     {
     super.readObject(in);
 
-    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
+    byte[] byteArray = in.readByteArray();
+    ByteArrayInputStream array=new ByteArrayInputStream(byteArray);
     java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
     InputSerializer ser=new InputSerializer(szlib);
     
-    typePerception=ser.readByte();
-    zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(""));
-    
-    addedRPObjects=new LinkedList<RPObject>();
-    deletedRPObjects=new LinkedList<RPObject>();
-    modifiedAddedAttribsRPObjects=new LinkedList<RPObject>();
-    modifiedDeletedAttribsRPObjects=new LinkedList<RPObject>();
-    attributes = new HashMap<String, Short>();
-    rpClasses = new ArrayList<RPClass>();
-    
-    // read all attributes (if any)
-    int count = ser.readInt();
-    
-    if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
+    try
       {
-      throw new IOException("Illegal request of attribute-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
-      }
-    logger.debug(count + " attributes");
-    for(int i = 0; i < count; i++)
-      {
-      String name = ser.readString();
-      short id = ser.readShort();
-      attributes.put(name, id);
-      }
-    // be sure the classes and attributes are applied before reading any objects
-    RPClass.updateAttributes(attributes);
+      typePerception=ser.readByte();
+      zoneid=(IRPZone.ID)ser.readObject(new IRPZone.ID(""));
 
-    // read all RPClass'es (if any)
-    count = ser.readInt();
-    
-    if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of rpclass-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
-      }
-    logger.debug(count + " rpclass'es");
-    for(int i = 0; i < count; i++)
-      {
-      RPClass rpclass = new RPClass();
-      ser.readObject(rpclass);
-      rpClasses.add(rpclass);
-      }
+      addedRPObjects=new LinkedList<RPObject>();
+      deletedRPObjects=new LinkedList<RPObject>();
+      modifiedAddedAttribsRPObjects=new LinkedList<RPObject>();
+      modifiedDeletedAttribsRPObjects=new LinkedList<RPObject>();
+      attributes = new HashMap<String, Short>();
+      rpClasses = new ArrayList<RPClass>();
 
-    int added=ser.readInt();
-    
-    if(added>TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of an list of "+String.valueOf(added)+" size");
-      }
-    logger.debug(added+"added objects.");
-    for(int i=0;i<added;++i)
-      {
-      RPObject object=(RPObject)ser.readObject(new RPObject());
-      setZoneid(object,zoneid.getID());
-      addedRPObjects.add(object);
-      }
+      // read all attributes (if any)
+      int count = ser.readInt();
 
-    int modAdded=ser.readInt();
-    
-    if(modAdded>TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of an list of "+String.valueOf(modAdded)+" size");
-      }
-    logger.debug(modAdded + " modified Added objects..");
-    for(int i=0;i<modAdded;++i)
-      {
-      RPObject object=(RPObject)ser.readObject(new RPObject());
-      setZoneid(object,zoneid.getID());
-      modifiedAddedAttribsRPObjects.add(object);
-      }
+      if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of attribute-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
+        }
+      logger.debug(count + " attributes");
+      for(int i = 0; i < count; i++)
+        {
+        String name = ser.readString();
+        short id = ser.readShort();
+        attributes.put(name, id);
+        }
+      // be sure the classes and attributes are applied before reading any objects
+      RPClass.updateAttributes(attributes);
 
-    int modDeleted=ser.readInt();
-    
-    if(modDeleted>TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of an list of "+String.valueOf(modDeleted)+" size");
-      }
-    logger.debug(modDeleted + " modified Deleted objects..");
-    for(int i=0;i<modDeleted;++i)
-      {
-      RPObject object=(RPObject)ser.readObject(new RPObject());
-      setZoneid(object,zoneid.getID());
-      modifiedDeletedAttribsRPObjects.add(object);
-      }
+      // read all RPClass'es (if any)
+      count = ser.readInt();
 
-    int del=ser.readInt();
-    
-    if(del>TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of an list of "+String.valueOf(del)+" size");
+      if (count > TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of rpclass-list of "+count+" size (max is "+TimeoutConf.MAX_ARRAY_ELEMENTS+")");
+        }
+      logger.debug(count + " rpclass'es");
+      for(int i = 0; i < count; i++)
+        {
+        RPClass rpclass = new RPClass();
+        ser.readObject(rpclass);
+        rpClasses.add(rpclass);
+        }
+
+      int added=ser.readInt();
+
+      if(added>TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of an list of "+String.valueOf(added)+" size");
+        }
+      logger.debug(added+"added objects.");
+      for(int i=0;i<added;++i)
+        {
+        RPObject object=(RPObject)ser.readObject(new RPObject());
+        setZoneid(object,zoneid.getID());
+        addedRPObjects.add(object);
+        }
+
+      int modAdded=ser.readInt();
+
+      if(modAdded>TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of an list of "+String.valueOf(modAdded)+" size");
+        }
+      logger.debug(modAdded + " modified Added objects..");
+      for(int i=0;i<modAdded;++i)
+        {
+        RPObject object=(RPObject)ser.readObject(new RPObject());
+        setZoneid(object,zoneid.getID());
+        modifiedAddedAttribsRPObjects.add(object);
+        }
+
+      int modDeleted=ser.readInt();
+
+      if(modDeleted>TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of an list of "+String.valueOf(modDeleted)+" size");
+        }
+      logger.debug(modDeleted + " modified Deleted objects..");
+      for(int i=0;i<modDeleted;++i)
+        {
+        RPObject object=(RPObject)ser.readObject(new RPObject());
+        setZoneid(object,zoneid.getID());
+        modifiedDeletedAttribsRPObjects.add(object);
+        }
+
+      int del=ser.readInt();
+
+      if(del>TimeoutConf.MAX_ARRAY_ELEMENTS)
+        {
+        throw new IOException("Illegal request of an list of "+String.valueOf(del)+" size");
+        }
+      logger.debug(del + " deleted objects..");
+      for(int i=0;i<del;++i)
+        {
+        RPObject object=(RPObject)ser.readObject(new RPObject());
+        setZoneid(object,zoneid.getID());
+        deletedRPObjects.add(object);
+        }
       }
-    logger.debug(del + " deleted objects..");
-    for(int i=0;i<del;++i)
+    catch (IOException ioe)
       {
-      RPObject object=(RPObject)ser.readObject(new RPObject());
-      setZoneid(object,zoneid.getID());
-      deletedRPObjects.add(object);
+      InputStream stream = new java.util.zip.InflaterInputStream(new ByteArrayInputStream(byteArray),new java.util.zip.Inflater());
+      NDC.push("message is ["+this+"]\n");
+      NDC.push("message dump is [\n"+Utility.dumpInputStream(stream )+"\n]\n");
+      logger.error("error in getMessage",ioe);
+      NDC.pop();
+      NDC.pop();
+      return;
       }
 
     /** Dynamic part */  
@@ -495,11 +512,11 @@ public class MessageS2CPerception extends Message
     // Write Attributes
     if (attributes != null)
       {
-      ser.write( attributes.size() );
+      ser.write( (int) attributes.size() );
       for(String name : attributes.keySet())
         {
         ser.write(name);
-        ser.write(attributes.get(name).shortValue());
+        ser.write( (short) attributes.get(name).shortValue());
         }
       }
     else
@@ -510,7 +527,7 @@ public class MessageS2CPerception extends Message
     // Write RPClasses
     if (rpClasses != null)
       {
-      ser.write( rpClasses.size() );
+      ser.write( (int) rpClasses.size() );
       for(RPClass clazz: rpClasses)
         {
         ser.write(clazz);

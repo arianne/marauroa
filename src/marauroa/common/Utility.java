@@ -37,12 +37,16 @@ public class Utility
   /** creates a nice hex-dump of the byte array */
   public static String dumpByteArray(byte[] byteArray)
   {
+    return dumpInputStream(new ByteArrayInputStream(byteArray));
+  }
+
+  /** creates a nice hex-dump of the byte array */
+  public static String dumpInputStream(InputStream byteStream)
+  {
+    StringBuilder result = new StringBuilder();
     try
     {
-      InputStream byteStream = new ByteArrayInputStream(byteArray);
-
       int index = 0;
-      StringBuilder result = new StringBuilder();
       StringBuilder chars = new StringBuilder();
 
       int theByte = byteStream.read();
@@ -79,7 +83,7 @@ public class Utility
     }
     catch (Exception e)
     {
-      return "Exception: "+e.getMessage();
+      return result.toString()+"\nException: "+e.getMessage();
     }
   }
 }

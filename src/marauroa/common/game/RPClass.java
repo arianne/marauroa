@@ -353,7 +353,14 @@ public class RPClass implements marauroa.common.net.Serializable
       }
 
     //throw new SyntaxException(name);
-    return RPClass.VISIBLE | RPClass.VOLATILE;
+    if(name.charAt(0) == '!')
+      {
+      return RPClass.HIDDEN;
+      }
+    else
+      {
+      return RPClass.VISIBLE;
+      }
     }
 
   /** Return the visibility of the attribute whose name is name for this rpclass */
