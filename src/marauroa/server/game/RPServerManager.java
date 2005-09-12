@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.25 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: RPServerManager.java,v 1.26 2005/09/12 10:54:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -438,15 +438,15 @@ public class RPServerManager extends Thread
     try
       {
       Log4J.startMethod(logger, "run");
-      long start=System.currentTimeMillis(),stop,delay;
+      long start=System.nanoTime(),stop,delay;
 
       while(keepRunning)
         {
-        stop=System.currentTimeMillis();
+        stop=System.nanoTime();
         try
           {
-          logger.info("Turn time elapsed: "+(stop-start));
-          delay=turnDuration-(stop-start);
+          logger.info("Turn time elapsed: "+((stop-start)/1000000.0));
+          delay=turnDuration-((stop-start)/1000000);
           if(delay<0)
             {
             logger.warn("Turn duration overflow by "+(-delay)+" ms");
@@ -462,7 +462,7 @@ public class RPServerManager extends Thread
         catch(InterruptedException e)
           {
           }
-        start=System.currentTimeMillis();
+        start=System.nanoTime();
 
         try
           {
