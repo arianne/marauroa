@@ -59,7 +59,6 @@ public class RPClass implements marauroa.common.net.Serializable
     private static short lastCode=0;
     private static Map<String,Short> attributeIntegerMap=new HashMap<String,Short>();
 
-
     private static short getValidCode(String name)
       {
       if(!attributeIntegerMap.containsKey(name))
@@ -110,44 +109,6 @@ public class RPClass implements marauroa.common.net.Serializable
   private RPClass parent;
   private Map<String,AttributeDesc> attributes;
   
-  /** returns all currently known RPClass'es */
-  public static Collection<RPClass> getAllRPClasses()
-  {
-    return Collections.unmodifiableCollection(rpClassList.values());
-  }
-
-  /** updates the attributes list */
-  public static synchronized void updateAttributes(Map<String, Short> attributes)
-  {
-    // iterate over all (new) attributes
-    for (String name : attributes.keySet())
-    {
-      // do we have this attribute already?
-      if (!AttributeDesc.attributeIntegerMap.containsKey(name))
-      {
-        // no, add it
-        AttributeDesc.attributeIntegerMap.put(name, attributes.get(name));
-        System.out.println("added "+name+", "+attributes.get(name));
-      }
-      else
-      {
-        // yes, check if the unique id is equal
-        if (attributes.get(name).shortValue() != AttributeDesc.attributeIntegerMap.get(name).shortValue())
-        {
-          // not equal...notify logger
-          logger.error("attribute "+name+" failure. client id: "+AttributeDesc.attributeIntegerMap.get(name)+
-                       " server id: "+attributes.get(name));
-        }
-      }
-    }
-  }
-
-  /** returns all currently known Attributes an Object can have*/
-  public static Map<String, Short> getAllAttributes()
-  {
-    return Collections.unmodifiableMap(AttributeDesc.attributeIntegerMap);
-  }
-
   public RPClass()
     {
     parent=null;
@@ -287,8 +248,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getCode(name);
       }
 
-    //throw new SyntaxException(name);
-    return AttributeDesc.getValidCode(name);
+    throw new SyntaxException(name);
     }
 
   /** Returns the name of the attribute whose code is code for this rpclass */
@@ -307,16 +267,6 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getName(code);
       }
 
-    // maybe its an annonymous attribute
-    Map <String, Short> map = AttributeDesc.attributeIntegerMap;
-    for (String name : map.keySet())
-    {
-      if (map.get(name).shortValue() == code)
-      {
-        return name;
-      }
-    }
-    
     throw new SyntaxException(code);
     }
 
@@ -334,8 +284,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getType(name);
       }
 
-    return STRING;
-    //throw new SyntaxException(name);
+    throw new SyntaxException(name);
     }
 
   /** Returns the flags of the attribute whose name is name for this rpclass */
@@ -352,15 +301,7 @@ public class RPClass implements marauroa.common.net.Serializable
       return parent.getFlags(name);
       }
 
-    //throw new SyntaxException(name);
-    if(name.charAt(0) == '!')
-      {
-      return RPClass.HIDDEN;
-      }
-    else
-      {
-      return RPClass.VISIBLE;
-      }
+    throw new SyntaxException(name);
     }
 
   /** Return the visibility of the attribute whose name is name for this rpclass */

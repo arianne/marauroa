@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.8 2005/09/12 19:31:22 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.9 2005/09/16 23:18:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   private List<RPObject> deleted;
 
   private String name;
+  /** This slot is linked to an object: its owner. */
+  private RPObject owner;
   /** A List<RPObject> of objects */
   private List<RPObject> objects;
   
@@ -76,15 +78,27 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     slot.deleted.clear();
     }
   
+  void setOwner(RPObject object)
+    {
+    owner=object;
+    }
+  
+  RPObject getOwner()
+    {
+    return owner;
+    }
+  
   public RPSlot()
     {
     name="";
     initialize();
+    owner=null;
     }
   
   public RPSlot(String name)
     {
     this.name=name;
+    owner=null;
     initialize();
     }
   
@@ -168,7 +182,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         }
 
       objects.add(object);
-      object.setContainer(this);
+      
+      object.setContainer(owner,this);
       }
     catch(AttributeNotFoundException e)
       {
@@ -226,11 +241,13 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
           if(!found_in_added_list)
             {
-            //deleted.add(new RPObject(new RPObject.ID(object)));
-            deleted.add((RPObject) object.copy());
+            deleted.add(new RPObject(new RPObject.ID(object)));
             }
             
           it.remove();
+          
+          object.setContainer(null,null);
+          
           return object;
           }
         }
@@ -251,6 +268,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       try
         {
         deleted.add(new RPObject(new RPObject.ID(object)));
+        object.setContainer(null,null);
         }
       catch(AttributeNotFoundException e)
         {

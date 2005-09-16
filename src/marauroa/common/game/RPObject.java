@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.9 2005/09/12 19:31:22 mtotz Exp $ */
+/* $Id: RPObject.java,v 1.10 2005/09/16 23:18:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,9 @@ public class RPObject extends Attributes
   
   /** a List<RPSlot> of slots */
   private List<RPSlot> slots;
-  private RPSlot container;  
+  
+  private RPObject container;  
+  private RPSlot containerSlot;  
   
   public final static ID INVALID_ID=new ID(-1,"");
   
@@ -104,14 +106,20 @@ public class RPObject extends Attributes
     return container!=null;    
     }
   
-  public void setContainer(RPSlot object)
+  void setContainer(RPObject object, RPSlot slot)  // Package only access ... if only Java would have friendly declarations...
     {
     container=object;  
+    containerSlot=slot;  
     }
   
-  public RPSlot getContainer()
+  public RPObject getContainer()
     {
     return container;
+    }
+
+  public RPSlot getContainerSlot()
+    {
+    return containerSlot;
     }
   
   public void resetAddedAndDeleted()
@@ -192,6 +200,8 @@ public class RPObject extends Attributes
     {
     if(!hasSlot(slot.getName()))
       {
+      slot.setOwner(this);
+      
       added.add(slot);
       slots.add(slot);
       }
@@ -443,16 +453,16 @@ public class RPObject extends Attributes
           /** for each of the objects, delete it*/
           for(RPObject object: slot)
             {
-//            if(object.size()==2) /** id and zoneid */
-//              {
-              getSlot(slot.getName()).remove(object.getID());
-//              }
-//            else
-//              {
-//              RPObject actualObject=getSlot(slot.getName()).get(object.getID());
-//
-//              actualObject.applyDifferences(null,object);
-//              }
+            if(object.size()==2) /** id and zoneid */
+              {
+              getSlot(slot.getName()).remove(new ID(object));
+              }
+            else
+              {
+              RPObject actualObject=getSlot(slot.getName()).get(new ID(object));
+
+              actualObject.applyDifferences(null,object);
+              }
             }
           }
         }        
@@ -474,9 +484,9 @@ public class RPObject extends Attributes
         /** for each of the objects, add it*/
         for(RPObject object: slot)
           {
-          if(getSlot(slot.getName()).has(object.getID()))
+          if(getSlot(slot.getName()).has(new ID(object)))
             {
-            getSlot(slot.getName()).get(object.getID()).applyDifferences(object,null);
+            getSlot(slot.getName()).get(new ID(object)).applyDifferences(object,null);
             }
           else
             {

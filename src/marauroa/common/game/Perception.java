@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.4 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: Perception.java,v 1.5 2005/09/16 23:18:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,11 +12,9 @@
  ***************************************************************************/
 package marauroa.common.game;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import marauroa.common.Log4J;
 import org.apache.log4j.Logger;
 
@@ -37,10 +35,6 @@ public class Perception
   public List<RPObject> modifiedAddedAttribsList;
   public List<RPObject> modifiedDeletedAttribsList;
   public List<RPObject> deletedList;
-  /** maps rpclass-attributes to a unique short int */
-  public Map<String, Short> attributes;
-  /** all rpclasses */
-  public Collection<RPClass>  rpClasses;
 
   public Perception(byte type, IRPZone.ID zoneid)
     {
@@ -50,8 +44,6 @@ public class Perception
     modifiedAddedAttribsList   = new LinkedList<RPObject>();
     modifiedDeletedAttribsList = new LinkedList<RPObject>();
     deletedList                = new LinkedList<RPObject>();
-    rpClasses                  = null;
-    attributes                 = null;
     }
   
   /** This method adds an added object to the world */

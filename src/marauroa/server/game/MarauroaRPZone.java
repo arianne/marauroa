@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.8 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.9 2005/09/16 23:18:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,8 +219,6 @@ public abstract class MarauroaRPZone implements IRPZone
         {
         prebuildTotalPerception=new Perception(Perception.SYNC,getID());
         prebuildTotalPerception.addedList=new ArrayList<RPObject>(objects.values());
-        prebuildTotalPerception.rpClasses = RPClass.getAllRPClasses();
-        prebuildTotalPerception.attributes = RPClass.getAllAttributes();
         }
         
       return prebuildTotalPerception;
