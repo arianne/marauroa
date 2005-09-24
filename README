@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.03
+Version 1.10
 
 
 Status
@@ -142,6 +142,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.10 Sep 24, 2005
+- Added log4j as logging platform
+- Fixed isContained, getContainer methods.
+
 1.03 Jul 02, 2005
 - Fixed a bug in RPObject.applyDifferences
 - Fixed a bug at slots

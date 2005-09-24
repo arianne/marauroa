@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="1.03"/>
+  <property name="version" value="1.10"/>
   <property name="src" value="src"/>
   <property name="extras" value="extras"/>
   <property name="build" value="build"/>
@@ -10,7 +10,7 @@
   <!-- EDIT HERE TO CONFIGURE YOUR JAR FILE NAMES -->
   <property name="connectorJ_jar" value="mysql-connector.jar"/>
   <property name="jython_jar" value="jython.jar"/>
-  <property name="log4j_jar" value="log4j-1.2.11.jar"/>
+  <property name="log4j_jar" value="log4j.jar"/>
   <!-- [END] -->
   
   <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
@@ -35,7 +35,7 @@
   <target name="installation" depends="init">
     <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
     <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
-    <copy todir="${build}/marauroa/" file="${src}/marauroa/log4j.properties"/>
+    <copy todir="${build}/" file="${src}/marauroa/log4j.properties"/>
   </target>
 
   <target name="compile" depends="installation">
@@ -74,19 +74,22 @@
 
   <target name="jar" depends="compile">
     <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>    
+    <copy tofile="${lib}/marauroa.jar" file="${lib}/${jarname}"/> <!-- A link would be better but... -->
     <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
   </target>
 
   <target name="release_binary" depends="jar">
     <replaceregexp file="${extras}/marauroad.bat    "
                    match="set LOCALCLASSPATH=.*"
-                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar}"
+                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar};${log4j_jar}"
                    byline="true"/>
     <mkdir dir="marauroa-${version}"/>
+    <copy todir="marauroa-${version}" file="${src}/marauroa/log4j.properties"/>
     <copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>
     <copy todir="marauroa-${version}" file="${lib}/${jarname}"/>
     <copy todir="marauroa-${version}" file="${connectorJ}"/>
     <copy todir="marauroa-${version}" file="${jython}"/>
+    <copy todir="marauroa-${version}" file="${log4j}"/>
     <copy todir="marauroa-${version}" file="AUTHORS"/>
     <copy todir="marauroa-${version}" file="BUGS"/>
     <copy todir="marauroa-${version}" file="COPYING"/>

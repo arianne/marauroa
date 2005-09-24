@@ -20,7 +20,7 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class Log4J
 {
-  private static final String LOG4J_PROPERTIES = "marauroa/log4j.properties";
+  private static final String LOG4J_PROPERTIES = "log4j.properties";
   /** default properties */
   private static final String DEFAULT_PROPERTIES =
                 "log4j.rootLogger=INFO, Console\n"+
