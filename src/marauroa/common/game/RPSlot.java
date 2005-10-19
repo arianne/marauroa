@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.9 2005/09/16 23:18:57 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.10 2005/10/19 18:11:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   private List<RPObject> deleted;
 
   private String name;
+  
+  /** The capacity of the slot */
+  private int capacity;
+  
   /** This slot is linked to an object: its owner. */
   private RPObject owner;
   /** A List<RPObject> of objects */
@@ -91,13 +95,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   public RPSlot()
     {
     name="";
-    initialize();
+    capacity=-1;
     owner=null;
+
+    initialize();
     }
   
   public RPSlot(String name)
     {
     this.name=name;
+    capacity=-1;
     owner=null;
     initialize();
     }
@@ -115,6 +122,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     RPSlot slot=new RPSlot();
 
     slot.name=name;
+    slot.capacity=capacity;
 
     for(RPObject object: objects)
       {
@@ -140,8 +148,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     int i=objects.size();
     
     boolean exists=false;
+    
     do
       {
+      exists=false;
+      
       for(RPObject obj: objects)
         {
         if(obj.getInt("id")==i)
@@ -302,6 +313,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   public int size()
     {
     return objects.size();
+    }
+  
+  public void setCapacity(int capacity)
+    {
+    this.capacity=capacity;
+    }
+  
+  public boolean isFull()
+    {
+    return size()==capacity;
     }
 
   /** Iterate over the objects of the slot */
