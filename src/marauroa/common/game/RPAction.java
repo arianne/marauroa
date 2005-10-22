@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.1 2005/01/23 21:00:42 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.2 2005/10/22 18:15:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,4 +39,12 @@ public class RPAction extends Attributes
     {
     super(RPClass.getBaseRPActionDefault());
     }  
+
+  public Object copy()
+    {
+    RPAction action=new RPAction();
+    
+    action.copy((Attributes)this);
+    return action;
+    }
   }

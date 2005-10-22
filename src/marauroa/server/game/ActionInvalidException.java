@@ -1,6 +1,6 @@
 package marauroa.server.game;
 
-class ActionInvalidException extends Exception
+public class ActionInvalidException extends Exception
   {
   ActionInvalidException(String attribute)
     {
