@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.10 2005/09/16 23:18:57 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.11 2005/10/22 21:15:01 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -254,6 +255,14 @@ public class RPObject extends Attributes
   public Iterator<RPSlot> slotsIterator()
     {
     return slots.iterator();
+    }
+
+  /** Returns an unmodifyable list of the slots
+   *  @return a list of the slots
+   */
+  public List<RPSlot> slots()
+    {
+    return Collections.unmodifiableList(slots);
     }
   
   /** This method returns a String that represent the object
