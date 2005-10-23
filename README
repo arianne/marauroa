@@ -142,8 +142,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.11 Oct XX, 2005
+1.11 Oct 23, 2005
 - Added capacity to slots
+- Fixed a bug at RPSlot.assignValidID that blocked server
 
 1.10 Sep 24, 2005
 - Added log4j as logging platform
