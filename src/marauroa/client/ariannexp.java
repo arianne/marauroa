@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.16 2005/10/25 18:17:01 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.17 2005/10/25 18:19:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,8 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.client;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import marauroa.client.net.NetworkClientManager;
 import marauroa.common.Log4J;
 

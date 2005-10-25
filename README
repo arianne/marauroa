@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.11
+Version 1.20
 
 
 Status
@@ -42,9 +42,11 @@ Marauroa is NOT playable.
 
 Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 
-Version > 0.33 support mapacman: a multiplayer pacman game using the Python rules.
+Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
 
-Version > 0.20 support a simple Gladiators game using the Marauroa engine.
+Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
+
+Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab game package in order to be able to play it.
 
@@ -142,6 +144,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.20 Nov XX, 2005
+- Fixed ConcurrentModificationException at ariannexp.loop
+
 1.11 Oct 23, 2005
 - Added capacity to slots
 - Fixed a bug at RPSlot.assignValidID that blocked server
