@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.15 2005/09/11 22:43:13 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.16 2005/10/25 18:17:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -383,6 +383,10 @@ public abstract class ariannexp
         }
 
       messages.clear();
+      }
+    catch(ConcurrentModificationException e)
+      {
+      logger.warn(e);
       }
     catch(InvalidVersionException e)
       {
