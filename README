@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.20
+Version 1.12
 
 
 Status
@@ -144,7 +144,7 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.20 Nov XX, 2005
+1.12 Oct 26, 2005
 - Fixed ConcurrentModificationException at ariannexp.loop
 - Ported createaccount to Log4J logging system
 
