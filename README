@@ -146,6 +146,7 @@ Changelog
 ---------
 1.20 Nov XX, 2005
 - Fixed ConcurrentModificationException at ariannexp.loop
+- Ported createaccount to Log4J logging system
 
 1.11 Oct 23, 2005
 - Added capacity to slots

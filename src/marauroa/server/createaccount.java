@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.6 2005/05/29 22:24:24 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.7 2005/10/26 14:11:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,14 +16,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.server.game.*;
-import marauroa.common.*;
+import marauroa.common.Log4J;
+import marauroa.common.Configuration;
 import marauroa.common.game.*;
 import marauroa.common.crypto.Hash;
+import org.apache.log4j.Logger;
 
 /** This is the base class to extend in order to create an account.
  *  The class provide a few methods of which you inherit and implement. */
 public abstract class createaccount
   {
+  private static final Logger logger=Log4J.getLogger(createaccount.class);
+
   /** This class store some basic information about the type of param, its name
    *  it default value and the allowed size ( > min and < max ) */
   public static class Information
@@ -95,7 +99,7 @@ public abstract class createaccount
         if(args[i].equals(item.param))
           {
           item.value=args[i+1];
-          System.out.println(item.name+"="+item.value);
+          logger.info(item.name+"="+item.value);
           break;
           }
         }
@@ -107,13 +111,13 @@ public abstract class createaccount
 
       if(args[i].equals("-h"))
         {
-        System.out.println("createaccount application for Marauroa");
+        logger.info("createaccount application for Marauroa");
         for(Information item: information)
           {
-          System.out.println(item.param+" to use/add "+item.name);
+          logger.info(item.param+" to use/add "+item.name);
           }
 
-        System.out.println("-i"+" to to define .ini file");
+        logger.info("-i"+" to to define .ini file");
 
         System.exit(0);
         }
@@ -128,60 +132,58 @@ public abstract class createaccount
       {
       Configuration.setConfigurationFile(iniFile);
       Configuration conf=Configuration.getConfiguration();
-      String webfolder=conf.get("server_logs_directory");
 
-      out=new PrintWriter(new FileOutputStream(webfolder+"/createaccount_log.txt",true));
-      out.println(new Date().toString()+": Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
+      logger.info("Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
 
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");
       trans=playerDatabase.getTransaction();
       
       trans.begin();
 
-      out.println("Checking for null/empty string");
+      logger.info("Checking for null/empty string");
       for(Information item: information)
         {
         if(item.value.equals(""))
           {
-          out.println("String is empty or null: "+item.name);
+          logger.info("String is empty or null: "+item.name);
           return 1;
           }
         }
 
-      out.println("Checking for valid string");
+      logger.info("Checking for valid string");
       for(Information item: information)
         {
         if(!playerDatabase.validString(item.value))
           {
-          out.println("String not valid: "+item.name);
+          logger.info("String not valid: "+item.name);
           return 2;
           }
         }
 
-      out.println("Checking string size");
+      logger.info("Checking string size");
       for(Information item: information)
         {
         if(item.value.length()>item.max || item.value.length()<item.min)
           {
-          out.println("String size not valid: "+item.name);
+          logger.info("String size not valid: "+item.name);
           return 3;
           }
         }
 
-      out.println("Checking if player exists");
+      logger.info("Checking if player exists");
       if(playerDatabase.hasPlayer(trans, get("username")))
         {
-        out.println("ERROR: Player exists");
+        logger.info("ERROR: Player exists");
         return 4;
         }
 
-      out.println("Adding player");
+      logger.info("Adding player");
       playerDatabase.addPlayer(trans,get("username"),Hash.hash(get("password")),get("email"));
 
       RPObject object=populatePlayerRPObject(playerDatabase);
 
       playerDatabase.addCharacter(trans, get("username"),get("character"),object);
-      out.println("Correctly created");
+      logger.info("Correctly created");
       
       trans.commit();
       }
@@ -189,7 +191,7 @@ public abstract class createaccount
       {
       if(out!=null)
         {
-        out.println("Failed: "+e.getMessage());
+        logger.warn("Failed: "+e.getMessage());
         e.printStackTrace(out);
 
         try
@@ -198,18 +200,10 @@ public abstract class createaccount
           }
         catch(Exception ae)
           {
-          out.println("Failed Rollback: "+ae.getMessage());
+          logger.fatal("Failed Rollback: "+ae.getMessage());
           }
         }
       return 5;
-      }
-    finally
-      {
-      if(out!=null)
-        {
-        out.flush();
-        out.close();
-        }
       }
 
     return 0;
