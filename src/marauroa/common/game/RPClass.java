@@ -16,12 +16,14 @@ public class RPClass implements marauroa.common.net.Serializable
   /* Visibility */
   /** The attribute is visible */
   final public static byte VISIBLE = 0;
+  /** The attribute is only visible for owner of the object */
+  final public static byte PRIVATE = 1 << 0;
   /** The attribute is invisible and so only server related */
-  final public static byte HIDDEN = 1 << 0;
+  final public static byte HIDDEN = 1 << 1;  
   /** The attribute should be stored in the database */
   final public static byte STORABLE = 0;
   /** The attribute should not be stored in the database */
-  final public static byte VOLATILE = 1 << 1;
+  final public static byte VOLATILE = 1 << 2;
 
   /* Type */
   /** a string */
@@ -308,7 +310,19 @@ public class RPClass implements marauroa.common.net.Serializable
   public boolean isVisible(String name)
     {
      byte b = getFlags(name);
-     return ((b & RPClass.HIDDEN) == 0);
+     return ((b & (RPClass.HIDDEN|RPClass.PRIVATE)) == 0);
+    }
+
+  public boolean isPrivate(String name)
+    {
+     byte b = getFlags(name);
+     return ((b & RPClass.PRIVATE) == RPClass.PRIVATE);
+    }
+
+  public boolean isHidden(String name)
+    {
+     byte b = getFlags(name);
+     return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
     }
 
   /** Return the storability of the attribute whose name is name for this rpclass */

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.10 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: Attributes.java,v 1.11 2005/10/27 18:43:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -291,29 +291,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     return result;
     }
 
-  public static void main(String[] args)
-    {
-    List<String> list=new LinkedList<String>();
-    list.add("hola\\");
-    list.add("mundo:");
-    list.add("asd:cas");
-
-    for(String ite: list)
-      {
-      System.out.println (ite);
-      }
-
-    System.out.println (ListToString(list));
-
-    System.out.println ();
-
-    for(String ite: StringToList(ListToString(list)))
-      {
-      System.out.println (ite);
-      }
-
-    }
-
   public Iterator<String> iterator()
     {
     return content.keySet().iterator();
@@ -330,8 +307,15 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
     for(String key: content.keySet())
       {
-      if(fulldata==false && (!rpClass.isVisible(key)))
+      if(fulldata==false && (rpClass.isVisible(key)==false)) 
         {
+        //If this attribute is Hidden or private and full data is false
+        --size;
+        }
+      else if(fulldata==true && rpClass.isHidden(key)) 
+        {
+        //If this attribute is Hidden and full data is true.
+        //This way we hide some attribute to player.
         --size;
         }
       }
@@ -342,7 +326,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       {
       String key=entry.getKey();
 
-      if(fulldata==true || (rpClass.isVisible(key)))
+      if((fulldata==true && !rpClass.isHidden(key)) || (rpClass.isVisible(key)))
         {
         short code=-1;
 

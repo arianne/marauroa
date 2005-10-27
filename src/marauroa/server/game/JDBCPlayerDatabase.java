@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.13 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.14 2005/10/27 18:43:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -244,7 +244,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         /* We store the hashed version of the password */
         password = Hash.hash(password);
 
-        query = "insert into player values(NULL,'"+username+"','"+ Hash.toHexString(password)+"','"+email+"',NULL,DEFAULT)";
+        query = "insert into player(id,username,password,email,timedate,status) values(NULL,'"+username+"','"+ Hash.toHexString(password)+"','"+email+"',NULL,DEFAULT)";
         stmt.execute(query);
         }
       }
@@ -575,7 +575,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "insert into loginEvent values("+id+",'"+source.getAddress().getHostAddress()+"',NULL,"+(correctLogin?1:0)+")";
+      String query = "insert into loginEvent(player_id,address,timedate,result) values("+id+",'"+source.getAddress().getHostAddress()+"',NULL,"+(correctLogin?1:0)+")";
       stmt.execute(query);
       }
     catch(SQLException sqle)
@@ -618,7 +618,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         int id=getDatabasePlayerId(trans,username);
         int object_id=storeRPObject(trans,object);
 
-        String query = "insert into characters values("+id+",'"+character+"',"+object_id+")";
+        String query = "insert into characters(player_id,charname,object_id) values("+id+",'"+character+"',"+object_id+")";
         stmt.execute(query);
         }
       }
@@ -1109,12 +1109,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       object.put(name, value);
       }
 
-    query = "select name,slot_id from rpslot where object_id="+object_id+";";
+    query = "select name,capacity, slot_id from rpslot where object_id="+object_id+";";
     logger.debug("loadRPObject is executing query "+query);
     result = stmt.executeQuery(query);
     while(result.next())
       {
       RPSlot slot=new RPSlot(UnescapeString(result.getString("name")));
+      slot.setCapacity(result.getInt("capacity"));
 
       object.addSlot(slot);
 
@@ -1234,13 +1235,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       object_id=object.getInt("#db_id");
 
-      query="insert into rpobject values("+object_id+","+slot_id+")";
+      query="insert into rpobject(object_id,slot_id) values("+object_id+","+slot_id+")";
       logger.debug("storeRPObject is executing query "+query);
       stmt.execute(query);
       }
     else
       {
-      query="insert into rpobject values(NULL,"+slot_id+")";
+      query="insert into rpobject(object_id,slot_id) values(NULL,"+slot_id+")";
       logger.debug("storeRPObject is executing query "+query);
       stmt.execute(query);
 
@@ -1267,7 +1268,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         String value = object.get(attrib);
 
-        query = "insert into rpattribute values(" + object_id + ",'" + EscapeString(attrib) + "','" + EscapeString(value) + "');";
+        query = "insert into rpattribute(object_id,name,value) values(" + object_id + ",'" + EscapeString(attrib) + "','" + EscapeString(value) + "');";
         logger.debug("storeRPObject is executing query "+query);
         stmt.execute(query);
         }
@@ -1277,7 +1278,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       RPSlot slot= sit.next();
 
-      query = "insert into rpslot values("+object_id+",'"+EscapeString(slot.getName())+"',NULL);";
+      query = "insert into rpslot(object_id,name,capacity,slot_id) values("+object_id+",'"+EscapeString(slot.getName())+"',"+slot.getCapacity()+",NULL);";
       logger.debug("storeRPObject is executing query "+query);
       stmt.execute(query);
       query = "select slot_id from rpslot where object_id="+object_id+" and name like '"+EscapeString(slot.getName())+"';";
@@ -1316,7 +1317,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
 
-      String query = "insert into statistics values(NULL,"+
+      String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) values(NULL,"+
         var.get("Bytes send")+","+
         var.get("Bytes recv")+","+
         var.get("Players login")+","+

@@ -45,7 +45,8 @@ create table if not exists rpslot
   (
   object_id integer not null,
   name varchar(64) not null,
-  slot_id integer auto_increment not null,
+  capacity integer,
+  slot_id integer auto_increment not null,  
   
   primary key(slot_id)
   )
