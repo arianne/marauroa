@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.11 2005/10/27 18:43:00 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.12 2005/10/28 12:20:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -377,7 +377,27 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	
   public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
     {
-    out.write(name);
+    short code=-1;
+
+    try
+      {
+      RPClass rpClass=owner.getRPClass();
+      code=rpClass.getRPSlotCode(name);
+      }
+    catch(RPClass.SyntaxException e)
+      {
+      logger.error("cannot writeObject, RPSlot ["+name+"] not found",e);
+      code=-1;
+      }
+
+    out.write(code);
+
+    if(code==-1)
+      {
+      out.write(name);
+      }
+
+
     out.write((byte)capacity);
     out.write((int)objects.size());
     for(RPObject object: objects)
@@ -388,7 +408,17 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   
   public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
     {
-    name = in.readString();
+    short code=in.readShort();
+    if(code==-1)
+      {
+      name=in.readString();
+      }
+    else
+      {
+      RPClass rpClass=owner.getRPClass();
+      name=rpClass.getRPSlotName(code);
+      }
+
 
     capacity=in.readByte();
     if(capacity>TimeoutConf.MAX_ARRAY_ELEMENTS)

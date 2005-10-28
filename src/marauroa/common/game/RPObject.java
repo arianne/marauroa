@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.11 2005/10/22 21:15:01 mtotz Exp $ */
+/* $Id: RPObject.java,v 1.12 2005/10/28 12:20:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -289,19 +289,29 @@ public class RPObject extends Attributes
   public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
     {
     super.writeObject(out,fulldata);
+    
+    RPClass rpClass=getRPClass();
 		
     int size=slots.size();
     for(RPSlot slot: slots)
       {
-      if(fulldata==false && slot.getName().charAt(0)=='!')
+      if(fulldata==false && (rpClass.isRPSlotVisible(slot.getName())==false)) 
         {
+        //If this attribute is Hidden or private and full data is false
+        --size;
+        }
+      else if(fulldata==true && rpClass.isRPSlotHidden(slot.getName())) 
+        {
+        //If this attribute is Hidden and full data is true.
+        //This way we hide some attribute to player.
         --size;
         }
       }
+
     out.write(size);
     for(RPSlot slot: slots)
       {
-      if(fulldata==true || slot.getName().charAt(0)!='!')
+      if((fulldata==true && !rpClass.isRPSlotHidden(slot.getName())) || (rpClass.isRPSlotVisible(slot.getName())))
         {
         slot.writeObject(out,fulldata);
         }              
@@ -323,7 +333,10 @@ public class RPObject extends Attributes
     
     for(int i=0;i<size;++i)
       {
-      slots.add((RPSlot)in.readObject(new RPSlot()));
+      RPSlot slot=new RPSlot();
+      slot.setOwner(this);
+      
+      slots.add((RPSlot)in.readObject(slot));
       }
     }
 
