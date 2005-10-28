@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.11 2005/10/27 18:43:00 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.12 2005/10/28 18:43:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -194,7 +194,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       }
     }
 
-  public List getList(String attribute) throws AttributeNotFoundException
+  public List<String> getList(String attribute) throws AttributeNotFoundException
     {
     if(content.containsKey(attribute))
       {

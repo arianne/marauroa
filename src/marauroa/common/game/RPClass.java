@@ -216,7 +216,7 @@ public class RPClass implements marauroa.common.net.Serializable
 
   public boolean addRPSlot(String name, int capacity, byte flags)
     {
-    RPSlotDesc desc=new RPSlotDesc(name, (byte)capacity, VISIBLE);
+    RPSlotDesc desc=new RPSlotDesc(name, (byte)capacity, flags);
     slots.put(name,desc);
     
     return true;
