@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.11 2005/07/19 20:56:42 mtotz Exp $ */
+/* $Id: NetworkClientManager.java,v 1.12 2005/10/28 22:20:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,7 +59,9 @@ public class NetworkClientManager
     address=new InetSocketAddress(host,port);
     socket=new DatagramSocket();
     socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
-    socket.setTrafficClass(0x08|0x10);
+    // This line mades Mac OS X to throw an exception so, let's comment it.
+    // It suggest the UDP stack to deliver this packet with maximum performance.
+    //socket.setTrafficClass(0x08|0x10);
     socket.setReceiveBufferSize(128*1024);
 
     msgFactory=MessageFactory.getFactory();
