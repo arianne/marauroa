@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.32 2005/10/26 14:32:37 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.33 2005/10/30 22:37:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -228,14 +228,30 @@ public class marauroad extends Thread
       public void run()
         {
         // Note: Log4J ist shutdown already at this point
-        System.out.println("User requesting shutdown");
+        logger.warn("User requesting shutdown");
+        printStackTrace();
         finish();
-        System.out.println("Shutdown completed. See you later");
+        logger.warn("Shutdown completed. See you later");
         }
       });
 
     logger.debug("initialize finished");
     return true;
+    }
+  
+  private void printStackTrace()
+    {
+    Map<Thread, StackTraceElement[]> threads=Thread.getAllStackTraces();
+    
+    for(Thread thread:threads.keySet())
+      {
+      logger.info("Thread: "+thread.getName());
+      
+      for(StackTraceElement line: thread.getStackTrace())
+        {
+        logger.info("  "+line);
+        }
+      }
     }
     
   public void finish()
