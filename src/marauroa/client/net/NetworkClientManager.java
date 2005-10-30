@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.12 2005/10/28 22:20:58 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.13 2005/10/30 11:03:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,11 +95,6 @@ public class NetworkClientManager
         choosenMsg=msg;
         smallestTimestamp=msg.getMessageTimestamp();
         }
-      }
-
-    if(logger.isDebugEnabled())
-      {
-      logger.debug(processedMessages.size()+" messages available, chosed msg is "+choosenMsg.toString());
       }
 
     processedMessages.remove(choosenMsg);
