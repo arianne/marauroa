@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.33 2005/10/30 22:37:52 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.34 2005/10/30 22:39:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,8 @@ import marauroa.server.game.Statistics;
 // java misc
 import java.text.SimpleDateFormat;
 import java.math.BigInteger;
+import java.util.Map;
+
 //java management stuff
 import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
