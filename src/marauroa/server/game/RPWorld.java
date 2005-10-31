@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.11 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: RPWorld.java,v 1.12 2005/10/31 22:47:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,6 +55,11 @@ public class RPWorld implements Iterable<IRPZone>
     zones.put(zone.getID(),zone);
     }
   
+  public boolean hasRPZone(IRPZone.ID zoneid)
+    {
+    return zones.containsKey(zoneid);
+    }
+    
   public IRPZone getRPZone(IRPZone.ID zoneid)
     {
     return zones.get(zoneid);
