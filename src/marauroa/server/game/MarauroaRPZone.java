@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.9 2005/09/16 23:18:57 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.10 2005/11/01 10:09:28 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,14 +19,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
-import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
+
 import org.apache.log4j.Logger;
 
 /** default implementation of <code>IRPZone</code> */

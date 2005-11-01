@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.6 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.7 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,11 +22,12 @@ import marauroa.server.game.IRPRuleProcessor;
 import marauroa.server.game.RPServerManager;
 import marauroa.server.game.RPWorld;
 import org.apache.log4j.Logger;
-import org.python.util.PythonInterpreter;
+
 
 
 /** FIXME: TODO: Update this class. It is now broken.
  *  Document how to use it. */
+@SuppressWarnings("unused")
 public class PythonRPRuleProcessor implements IRPRuleProcessor
   {
   /** the logger instance. */
@@ -34,6 +35,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor
 
   private GameScript gameScript;
   private PythonRP pythonRP;
+  
   private RPServerManager rpman; 
 
   public PythonRPRuleProcessor() throws FileNotFoundException

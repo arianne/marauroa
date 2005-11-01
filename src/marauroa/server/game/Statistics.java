@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.9 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: Statistics.java,v 1.10 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.server.game;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -106,15 +106,10 @@ public class Statistics implements StatisticsMBean
 
   private Date startTime;
 
-  private PrintWriter eventfile;
-  private Date timestamp;
   private Date lastStatisticsEventAdded;
-  private SimpleDateFormat formatter;
 
   private Statistics()
     {
-    timestamp=new Date();
-    formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     startTime=new Date();
 
     lastStatisticsEventAdded=new Date();

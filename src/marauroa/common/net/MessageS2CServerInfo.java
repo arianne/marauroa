@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.4 2005/08/26 16:10:53 mtotz Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.5 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 import marauroa.common.game.RPClass;
-import marauroa.common.net.Message.MessageType;
 
 /** The ServerInfo message is sent from server to client to inform client about
  *  any relevant info the server has to transmit. They are in the form of 

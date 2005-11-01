@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.7 2005/10/26 14:11:01 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.8 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 import marauroa.server.game.*;
@@ -131,8 +130,6 @@ public abstract class createaccount
     try
       {
       Configuration.setConfigurationFile(iniFile);
-      Configuration conf=Configuration.getConfiguration();
-
       logger.info("Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
 
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase("JDBCPlayerDatabase");

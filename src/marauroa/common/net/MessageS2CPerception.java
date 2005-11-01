@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.14 2005/09/16 23:18:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.15 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,23 +17,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
+
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
-import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
-import marauroa.common.net.Message.MessageType;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 

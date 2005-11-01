@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.12 2005/10/31 22:47:31 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.13 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -182,7 +182,8 @@ public class RPWorld implements Iterable<IRPZone>
         return;
         }
       
-      IRPZone newzone=getRPZone(newzoneid);
+      // newzone is never used?
+      //IRPZone newzone=getRPZone(newzoneid);
       IRPZone oldzone=getRPZone(oldzoneid);
       
       oldzone.remove(object.getID());

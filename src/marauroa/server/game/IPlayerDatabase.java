@@ -1,4 +1,4 @@
-/* $Id: IPlayerDatabase.java,v 1.2 2005/04/15 07:06:54 quisar Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.3 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server.game;
 
 import java.net.InetSocketAddress;
-import java.sql.Connection;
 import marauroa.common.game.*;
 
 

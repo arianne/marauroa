@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.3 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.common.net;
   
 import java.net.InetSocketAddress;
 import java.io.*;
-import marauroa.common.game.*;
   
 /** This message indicate the client that the server has accepted its ChooseCharacter Message
  *  @see marauroa.common.net.Message

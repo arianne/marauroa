@@ -2,6 +2,8 @@ package marauroa.server.game;
 
 public class GenericDatabaseException extends Exception
   {
+  private static final long serialVersionUID = -2764012454573117520L;
+
   public GenericDatabaseException(Throwable cause)
     {
     super(cause);

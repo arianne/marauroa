@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.14 2005/10/27 18:43:00 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.15 2005/11/01 10:09:28 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -515,7 +515,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
 
-      int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) as amount from  player,characters where username like '"+username+"' and charname like '"+character+"' and player.id=characters.player_id";
@@ -537,11 +536,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       logger.warn("error while checking if player "+username+" has character "+character,sqle);
       throw new GenericDatabaseException(sqle);
-      }
-    catch(PlayerNotFoundException e)
-      {
-      logger.warn("Database doesn't contain username("+username+")", e);
-      throw e;
       }
     finally
       {
@@ -689,7 +683,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         throw new SQLException("Trying to use invalid characters username':"+username+"' and character:'"+character+"'");
         }
 
-      int id=getDatabasePlayerId(trans,username);
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
       String query = "select count(*) from characters where charname like '"+character+"'";
@@ -817,6 +810,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     return(id);
     }
 
+  @SuppressWarnings("unused")
   private boolean reInitDB() throws GenericDatabaseException
     {
     Log4J.startMethod(logger, "reInitDB");
@@ -1067,8 +1061,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     Log4J.startMethod(logger, "loadRPObject");
     try
       {
-      Connection connection = ((JDBCTransaction)trans).getConnection();
-
       if(hasRPObject(trans,id))
         {
         RPObject object=new RPObject();
@@ -1191,7 +1183,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
   public synchronized int storeRPObject(Transaction trans, RPObject object) throws SQLException
     {
     Log4J.startMethod(logger, "storeRPObject");
-    Connection connection = ((JDBCTransaction)trans).getConnection();
 
     try
       {

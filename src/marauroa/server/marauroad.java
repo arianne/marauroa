@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.34 2005/10/30 22:39:08 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.35 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server;
 
 // marauroa stuff
-import java.io.FileNotFoundException;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
@@ -21,7 +20,6 @@ import marauroa.server.game.GameServerManager;
 import marauroa.server.game.RPServerManager;
 import marauroa.server.game.Statistics;
 // java misc
-import java.text.SimpleDateFormat;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -39,8 +37,8 @@ public class marauroad extends Thread
   /** the logger instance. */
   private static final org.apache.log4j.Logger logger = Log4J.getLogger(marauroad.class);
 
-  final private static boolean DEBUG=true;
-  final private static String VERSION="1.12";
+//  private static final boolean DEBUG=true;
+  private static final String VERSION="1.12";
   
   private static marauroad marauroa;
 

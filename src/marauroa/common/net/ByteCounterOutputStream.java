@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.1 2005/01/23 21:00:44 arianne_rpg Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.2 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
 *                      (C) Copyright 2003 - Marauroa                      *
 ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.net;
   
 import java.io.*;
-import java.net.*;
   
 /** This class just counts the bytes written into underlaying outputstream */
 public class ByteCounterOutputStream extends OutputStream

@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.3 2005/04/06 15:34:59 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.4 2005/11/01 10:09:29 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.net;
 
 import java.io.*;
-import marauroa.*;
 
 import marauroa.common.*;
 

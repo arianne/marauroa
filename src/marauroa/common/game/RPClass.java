@@ -1,8 +1,8 @@
 package marauroa.common.game;
 
 import java.util.*;
-import marauroa.common.*;
-import org.apache.log4j.Logger;
+
+
 
 
 /** The RPClass class implements a container of attributes with its code, name,
@@ -10,9 +10,6 @@ import org.apache.log4j.Logger;
  *  hierarchy */
 public class RPClass implements marauroa.common.net.Serializable
   {
-  /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(RPClass.class);
-  
   /* Visibility */
   /** The attribute is visible */
   final public static byte VISIBLE = 0;
@@ -45,6 +42,8 @@ public class RPClass implements marauroa.common.net.Serializable
 
   static public class SyntaxException extends RuntimeException
     {
+    private static final long serialVersionUID = 3724525088825394097L;
+
     public SyntaxException(String offendingAttribute)
       {
       super("attribute "+offendingAttribute+" isn't defined.");
