@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.35 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: marauroad.java,v 1.36 2005/11/01 17:47:12 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -245,12 +245,14 @@ public class marauroad extends Thread
     
     for(Thread thread:threads.keySet())
       {
-      logger.info("Thread: "+thread.getName());
+      StringBuilder buf = new StringBuilder(); 
+      buf.append("Thread: ").append(thread.getName()).append('\n');
       
       for(StackTraceElement line: thread.getStackTrace())
         {
-        logger.info("  "+line);
+        buf.append("  ").append(line).append('\n');
         }
+      logger.info(buf.toString());
       }
     }
     
