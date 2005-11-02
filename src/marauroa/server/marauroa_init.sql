@@ -73,7 +73,7 @@ create table if not exists statistics
   players_login integer,
   players_logout integer,
   players_timeout integer,
-  players_online integer,
+  players_online integer
   );
   
 create table if not exists banlist
