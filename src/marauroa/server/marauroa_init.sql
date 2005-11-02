@@ -57,7 +57,9 @@ create table if not exists loginEvent
   (
   player_id integer not null,
   address varchar(64),
+
   timedate timestamp,
+
   result tinyint
   );
 
@@ -72,8 +74,6 @@ create table if not exists statistics
   players_logout integer,
   players_timeout integer,
   players_online integer,
-  
-  PRIMARY KEY(timedate)
   );
   
 create table if not exists banlist

@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.15 2005/11/01 10:09:28 mtotz Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.16 2005/11/02 15:47:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1319,7 +1319,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
     catch(SQLException sqle)
       {
-      logger.warn("error adding LoginEvent",sqle);
+      logger.warn("error adding statistics event",sqle);
       throw new GenericDatabaseException(sqle);
       }
     finally

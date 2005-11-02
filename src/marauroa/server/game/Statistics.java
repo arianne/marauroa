@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.10 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: Statistics.java,v 1.11 2005/11/02 15:47:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,12 +169,14 @@ public class Statistics implements StatisticsMBean
 
       if((actualTime.getTime()-lastStatisticsEventAdded.getTime())>60000)
         {
-        lastStatisticsEventAdded=new Date();
+        lastStatisticsEventAdded=actualTime;
 
         JDBCPlayerDatabase database=(JDBCPlayerDatabase)JDBCPlayerDatabase.getDatabase();
         Transaction transaction=database.getTransaction();
 
         database.addStatisticsEvent(transaction,now);
+        transaction.commit();
+        
         now.clear();
         init();
         }
