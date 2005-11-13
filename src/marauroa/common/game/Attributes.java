@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.12 2005/10/28 18:43:49 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.13 2005/11/13 14:53:38 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -291,6 +291,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     return result;
     }
 
+  /** returns an iterator over the attribute names */
   public Iterator<String> iterator()
     {
     return content.keySet().iterator();
