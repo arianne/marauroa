@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.26 2005/09/12 10:54:27 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.27 2005/11/13 14:58:42 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -438,14 +438,16 @@ public class RPServerManager extends Thread
     try
       {
       Log4J.startMethod(logger, "run");
-      long start=System.nanoTime(),stop,delay;
+      long start = System.nanoTime();
+      long stop;
+      long delay;
 
       while(keepRunning)
         {
         stop=System.nanoTime();
         try
           {
-          logger.info("Turn time elapsed: "+((stop-start)/1000000.0));
+          logger.info("Turn time elapsed: "+((stop-start)/1000)+" microsecs");
           delay=turnDuration-((stop-start)/1000000);
           if(delay<0)
             {
@@ -456,8 +458,12 @@ public class RPServerManager extends Thread
             logger.error("Delay bigger than Turn duration. [delay: "+delay+"] [turnDuration:"+turnDuration+"]");
             delay=0;
             }
-            
-          Thread.sleep(delay<0?0:delay);
+          
+          // only sleep when the turn delay is > 0
+          if (delay > 0)
+            {
+            Thread.sleep(delay);
+            }
           }
         catch(InterruptedException e)
           {
