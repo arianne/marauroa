@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.13 2005/11/12 11:14:57 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.14 2005/11/16 12:30:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -214,7 +214,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       {
       for(RPObject object: objects)
         {
-        if(id.equals(new RPObject.ID(object)))
+//        if(id.equals(new RPObject.ID(object)))
+        /** We compare only the id, as the zone is really irrelevant */
+        if(id.getObjectID()==object.getID().getObjectID())
           {
           return object;
           }
@@ -239,7 +241,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         {
         RPObject object=it.next();
 
-        if(id.equals(new RPObject.ID(object)))
+        /** We compare only the id, as the zone is really irrelevant */
+        if(id.getObjectID()==object.getID().getObjectID())
           {
           /* HACK: This is a hack to avoid a problem that happens when on the 
            *  same turn an object is added and deleted, causing the client to confuse. */
