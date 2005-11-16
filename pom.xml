@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>arianne</groupId>
+  <artifactId>marauroa</artifactId>
+
+  <packaging>jar</packaging>
+  <version>1.12</version>
+  <name>marauroa project file</name>
+  <url>http://arianne.sourceforge.net/?arianne_url=servers/server_marauroa</url>
+  
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>3.1.11</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jython</groupId>
+      <artifactId>jython</artifactId>
+      <version>2.1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <directory>target</directory>
+    <outputDirectory>target/classes</outputDirectory>
+    <finalName>${artifactId}-${version}</finalName>
+    <sourceDirectory>src</sourceDirectory>
+    
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <source>1.5</source>
+	          <target>1.5</target>
+	        </configuration>
+	    </plugin>
+	  </plugins>    
+    
+  </build>  
+  
+</project>
