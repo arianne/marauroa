@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.14 2005/11/16 12:30:13 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.15 2005/11/16 16:06:08 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -168,7 +168,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     object.put("id",i);
     object.put("zoneid",""); // TODO: Remove this and allow zoneless id in objects
     }
-  
+
   /** Add an object to the slot */
   public void add(RPObject object)
     {
@@ -210,28 +210,39 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   /** Gets the object from the slot */
   public RPObject get(RPObject.ID id) throws RPObjectNotFoundException
     {
+    return get(id.getObjectID());
+    }
+
+  /** Gets the object from the slot */
+  public RPObject get(int objectId) throws RPObjectNotFoundException
+    {
     try
       {
       for(RPObject object: objects)
         {
-//        if(id.equals(new RPObject.ID(object)))
-        /** We compare only the id, as the zone is really irrelevant */
-        if(id.getObjectID()==object.getID().getObjectID())
+        // We compare only the id, as the zone is really irrelevant
+        if(object.getID().getObjectID() == objectId)
           {
           return object;
           }
         }
-      throw new RPObjectNotFoundException(id);
+      throw new RPObjectNotFoundException(new RPObject.ID(objectId,""));
       }
     catch(AttributeNotFoundException e)
       {
       logger.warn("error getting object",e);
-      throw new RPObjectNotFoundException(id);
+      throw new RPObjectNotFoundException(new RPObject.ID(objectId,""));
       }
     }
   
   /** This method removes the object from the slot */
   public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException
+    {
+    return remove(id.getObjectID());
+    }
+
+  /** This method removes the object from the slot */
+  public RPObject remove(int objectId) throws RPObjectNotFoundException
     {
     try
       {
@@ -242,7 +253,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         RPObject object=it.next();
 
         /** We compare only the id, as the zone is really irrelevant */
-        if(id.getObjectID()==object.getID().getObjectID())
+        if(object.getID().getObjectID() == objectId)
           {
           /* HACK: This is a hack to avoid a problem that happens when on the 
            *  same turn an object is added and deleted, causing the client to confuse. */
@@ -251,7 +262,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
           while(!found_in_added_list && added_it.hasNext())
             {
             RPObject added_object=added_it.next();
-            if(id.equals(added_object.getID()))
+            if(objectId == added_object.getID().getObjectID())
               {
               added_it.remove();
               found_in_added_list=true;
@@ -270,12 +281,12 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
           return object;
           }
         }
-      throw new RPObjectNotFoundException(id);
+      throw new RPObjectNotFoundException(new RPObject.ID(objectId,""));
       }
     catch(AttributeNotFoundException e)
       {
       logger.warn("error removing object",e);
-      throw new RPObjectNotFoundException(id);
+      throw new RPObjectNotFoundException(new RPObject.ID(objectId,""));
       }
     }
   
