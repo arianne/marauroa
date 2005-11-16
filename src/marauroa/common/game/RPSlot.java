@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.15 2005/11/16 16:06:08 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.16 2005/11/16 18:28:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -214,7 +214,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     }
 
   /** Gets the object from the slot */
-  public RPObject get(int objectId) throws RPObjectNotFoundException
+  private RPObject get(int objectId) throws RPObjectNotFoundException
     {
     try
       {
@@ -242,7 +242,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     }
 
   /** This method removes the object from the slot */
-  public RPObject remove(int objectId) throws RPObjectNotFoundException
+  private RPObject remove(int objectId) throws RPObjectNotFoundException
     {
     try
       {
