@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.12 2005/10/28 12:20:17 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.13 2005/12/13 19:32:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -369,9 +369,12 @@ public class RPObject extends Attributes
     
     for(RPSlot slot: slots)
       {
-      for(RPObject object: slot)
+      if(getRPClass().isRPSlotVisible(slot.getName()))
         {
-        object.clearVisible();
+        for(RPObject object: slot)
+          {
+          object.clearVisible();
+          }
         }
       }
     }
