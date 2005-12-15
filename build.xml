@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="1.12"/>
+  <property name="version" value="1.20"/>
   <property name="src" value="src"/>
   <property name="extras" value="extras"/>
   <property name="build" value="build"/>
@@ -78,7 +78,7 @@
     <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
   </target>
 
-  <target name="release_binary" depends="jar">
+  <target name="dist_binary" depends="jar">
     <replaceregexp file="${extras}/marauroad.bat    "
                    match="set LOCALCLASSPATH=.*"
                    replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar};${log4j_jar}"
@@ -100,7 +100,7 @@
     <delete dir="marauroa-${version}"/>
   </target>
 
-  <target name="release_source" depends="clean">
+  <target name="dist_source" depends="clean">
     <mkdir dir="marauroa-${version}"/>
     <copy todir="marauroa-${version}/src">
     	<fileset dir="src"/>
@@ -124,5 +124,5 @@
     <delete dir="marauroa-${version}"/>
   </target>
 
-  <target name="release" depends="release_binary,release_source"/>
+  <target name="dist" depends="dist_binary,dist_source"/>
 </project>
