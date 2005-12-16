@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.5 2005/05/04 20:48:05 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.6 2005/12/16 18:39:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,8 +30,8 @@ public class TimeoutConf
   /** This indicate that how often the player is stored on database.*/
   final public static int GAMESERVER_PLAYER_STORE_LAPSUS=3600000;
   
-  /** Maximum size of bytes on a message (128KB) */
-  final public static int MAX_BYTE_ARRAY_ELEMENTS=128*1024;
-  /** Maximum size of elements on a array (65536) */
-  final public static int MAX_ARRAY_ELEMENTS=64*1024;
+  /** Maximum size of bytes on a message (256KB) */
+  final public static int MAX_BYTE_ARRAY_ELEMENTS=256*1024;
+  /** Maximum size of elements on a array (256K) */
+  final public static int MAX_ARRAY_ELEMENTS=256*1024;
   }
