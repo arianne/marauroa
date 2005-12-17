@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.13 2005/11/13 14:53:38 mtotz Exp $ */
+/* $Id: Attributes.java,v 1.14 2005/12/17 23:03:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -347,37 +347,45 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           {
           out.write(key);
           }
-        
-        switch (rpClass.getType(key))
+
+        try
           {
-          case RPClass.VERY_LONG_STRING:
-            out.write(entry.getValue());
+          switch (rpClass.getType(key))
+            {
+            case RPClass.VERY_LONG_STRING:
+              out.write(entry.getValue());
+              break;
+            case RPClass.LONG_STRING:
+              out.write65536LongString(entry.getValue());
+              break;
+            case RPClass.STRING:
+              out.write255LongString(entry.getValue());
+              break;
+            case RPClass.FLOAT:
+              out.write(Float.parseFloat(entry.getValue()));
+              break;
+            case RPClass.INT:
+              out.write(Integer.parseInt(entry.getValue()));
+              break;
+            case RPClass.SHORT:
+              out.write(Short.parseShort(entry.getValue()));
+              break;
+            case RPClass.BYTE:
+              out.write(Byte.parseByte(entry.getValue()));
+              break;
+            case RPClass.FLAG:
+              /* It is empty because it is a flag and so, it is already present. */
+              break;
+            default:
+            /* NOTE: Must never happen */
+            logger.fatal("got unknown attribute type "+rpClass.getType(key));
             break;
-          case RPClass.LONG_STRING:
-            out.write65536LongString(entry.getValue());
-            break;
-          case RPClass.STRING:
-            out.write255LongString(entry.getValue());
-            break;
-          case RPClass.FLOAT:
-            out.write(Float.parseFloat(entry.getValue()));
-            break;
-          case RPClass.INT:
-            out.write(Integer.parseInt(entry.getValue()));
-            break;
-          case RPClass.SHORT:
-            out.write(Short.parseShort(entry.getValue()));
-            break;
-          case RPClass.BYTE:
-            out.write(Byte.parseByte(entry.getValue()));
-            break;
-          case RPClass.FLAG:
-            /* It is empty because it is a flag and so, it is already present. */
-            break;
-          default:
-          /* NOTE: Must never happen */
-          logger.fatal("got unknown attribute type "+rpClass.getType(key));
-          break;
+            }
+          }
+        catch(Exception e)
+          {
+          String className=(rpClass!=null?rpClass.getName():null);
+          logger.error("Attribute "+key+" ["+className+"] caused an exception",e);
           }
         }
       }
