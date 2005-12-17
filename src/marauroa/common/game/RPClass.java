@@ -158,7 +158,7 @@ public class RPClass implements marauroa.common.net.Serializable
 
         public int getRPSlotCapacity(String name)
           {
-          return 1;
+          return -1;
           }
 
         public byte getRPSlotFlags(String name)

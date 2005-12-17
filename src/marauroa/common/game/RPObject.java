@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.13 2005/12/13 19:32:58 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.14 2005/12/17 21:22:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,6 +202,8 @@ public class RPObject extends Attributes
     if(!hasSlot(slot.getName()))
       {
       slot.setOwner(this);
+      
+      slot.setCapacity(getRPClass().getRPSlotCapacity(slot.getName()));      
       
       added.add(slot);
       slots.add(slot);
