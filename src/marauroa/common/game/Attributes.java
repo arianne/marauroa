@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.14 2005/12/17 23:03:17 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.15 2005/12/17 23:13:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -386,6 +386,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
           {
           String className=(rpClass!=null?rpClass.getName():null);
           logger.error("Attribute "+key+" ["+className+"] caused an exception",e);
+          throw new java.io.IOException(e.getMessage());
           }
         }
       }
