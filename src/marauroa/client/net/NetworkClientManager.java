@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.15 2005/12/18 15:21:46 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.16 2005/12/18 19:53:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -178,7 +178,7 @@ public class NetworkClientManager
      * We need to check on the list if the message exist and it exist we add this one. */
     byte total=data[0];
     byte position=data[1];
-    short signature=(short)(data[2]+data[3]<<8);
+    short signature=(short)(data[2]+(data[3]<<8));
 
     logger.debug("receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
     if(!pendingPackets.containsKey(new Short(signature)))
