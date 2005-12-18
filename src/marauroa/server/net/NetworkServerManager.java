@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.11 2005/07/14 18:46:38 mtotz Exp $ */
+/* $Id: NetworkServerManager.java,v 1.12 2005/12/18 11:48:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import marauroa.common.Log4J;
+import marauroa.common.CRC;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
@@ -259,7 +260,7 @@ public final class NetworkServerManager
           int used_signature;
   
           /*** Statistics ***/
-          used_signature=++last_signature;
+          used_signature=(byte)CRC.cmpCRC(buffer); //++last_signature;
 
           stats.add("Bytes send",buffer.length);
           stats.add("Message send",1);

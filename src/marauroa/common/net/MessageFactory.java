@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.6 2005/09/11 11:09:21 mtotz Exp $ */
+/* $Id: MessageFactory.java,v 1.7 2005/12/18 11:48:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,6 +131,7 @@ public class MessageFactory
       else
         {
         logger.warn("Message has incorrect protocol version("+data[0]+") expected ("+NetConst.NETWORK_PROTOCOL_VERSION+")");
+        logger.debug("Message is: "+Utility.dumpByteArray(data));
         throw new InvalidVersionException(data[0]);
         }
       }
