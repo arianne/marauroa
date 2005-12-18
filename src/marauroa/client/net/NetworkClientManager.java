@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.14 2005/12/18 13:18:54 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.15 2005/12/18 15:21:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,10 +41,41 @@ public class NetworkClientManager
   static private class PacketContainer
     {
     public short signature;
-    public byte remaining;
+    public boolean[] remaining;
     public byte[] content;
     public InetSocketAddress address;
     public Date timestamp;
+    
+    public PacketContainer(short signature, int total)
+      {
+      this.signature=signature;
+      remaining=new boolean[total];
+      content=new byte[CONTENT_PACKET_SIZE*total];
+      Arrays.fill(remaining, false);
+      }
+    
+    public void recieved(int pos)
+      {
+      remaining[pos]=true;
+      }
+
+    public boolean isRecieved(int pos)
+      {
+      return remaining[pos];
+      }
+    
+    public boolean isComplete()
+      {
+      for(boolean test: remaining)
+        {
+        if(test==false)
+          {
+          return false;
+          }
+        }
+      
+      return true;
+      }
     }
 
   private Map<Short,PacketContainer> pendingPackets;
@@ -114,7 +145,7 @@ public class NetworkClientManager
         continue;
         }
 
-      if(message.remaining==0)
+      if(message.isComplete())
         {
         // delete the message from queue to prevent loop if it is a bad message
         it.remove();
@@ -123,7 +154,7 @@ public class NetworkClientManager
 
         if(logger.isDebugEnabled())
           {
-          logger.debug("receive message(type="+msg.getType()+") from "+msg.getClientID()+" full ["+msg+"]");
+          logger.debug("build message(type="+msg.getType()+") from packet("+message.signature+") from "+msg.getClientID()+" full ["+msg+"]");
           }
         
         if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
@@ -153,13 +184,12 @@ public class NetworkClientManager
     if(!pendingPackets.containsKey(new Short(signature)))
       {
       /** This is the first packet */
-      PacketContainer message=new PacketContainer();
+      PacketContainer message=new PacketContainer(signature,total);
 
-      message.signature=signature;
-      message.remaining=(byte)(total-1);
       message.address=address;
-      message.content=new byte[CONTENT_PACKET_SIZE*total];
       message.timestamp=new Date();
+
+      message.recieved(position);
       System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-PACKET_SIGNATURE_SIZE);
 
       pendingPackets.put(new Short(signature),message);
@@ -168,15 +198,8 @@ public class NetworkClientManager
       {
       PacketContainer message=(PacketContainer)pendingPackets.get(new Short(signature));
 
-      --message.remaining;
-      if(message.remaining<0)
-        {
-        logger.error("ERROR: We confused the messages("+message.signature+")");
-        }
-      else
-        {
-        System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
-        }
+      message.recieved(position);
+      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
       }
     }
 
