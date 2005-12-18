@@ -144,13 +144,16 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.20 Nov XX, 2005
+1.20 Dec 21, 2005
 - Added capacity to RPSlot
 - Changed serialization form of RPSlot
 - Incompatible with previous releases
 - Added invisible attributes and private attributes
 - Added RPSlot to RPClass definition
 - Added invisible rpslots and private rpslots
+- Changed way of signing messages
+- Changed protocol version.
+- Improved logger output to handle RPClass syntax problems.
 
 1.12 Oct 26, 2005
 - Fixed ConcurrentModificationException at ariannexp.loop
