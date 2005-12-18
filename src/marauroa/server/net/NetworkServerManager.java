@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.12 2005/12/18 11:48:11 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.13 2005/12/18 13:18:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -244,7 +244,7 @@ public final class NetworkServerManager
       return out.toByteArray();
       }
     
-    final private int PACKET_SIGNATURE_SIZE=3;
+    final private int PACKET_SIGNATURE_SIZE=4;
     final private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
       
     /** Method that execute the writting */
@@ -257,10 +257,10 @@ public final class NetworkServerManager
         if(keepRunning)
           {
           byte[] buffer=serializeMessage(msg);
-          int used_signature;
+          short used_signature;
   
           /*** Statistics ***/
-          used_signature=(byte)CRC.cmpCRC(buffer); //++last_signature;
+          used_signature=CRC.cmpCRC(buffer); //++last_signature;
 
           stats.add("Bytes send",buffer.length);
           stats.add("Message send",1);
@@ -287,7 +287,8 @@ public final class NetworkServerManager
               
             data[0]=(byte)totalNumberOfPackets;
             data[1]=(byte)i;
-            data[2]=(byte)used_signature;
+            data[2]=(byte)(used_signature&255);
+            data[3]=(byte)((used_signature>>8)&255);
             
             System.arraycopy(buffer,CONTENT_PACKET_SIZE*i,data,PACKET_SIGNATURE_SIZE,packetSize);
 

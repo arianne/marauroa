@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.10 2005/10/28 12:20:17 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.11 2005/12/18 13:18:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,8 +75,9 @@ public class NetConst
    * 19 - Added Perception Delta^2 MyRPObject
    * 20 - Compressed server info message.
    * 21 - Added capacity to RPSlot
-   *    - Changed the RPClass serialization scheme */
-  final static public byte NETWORK_PROTOCOL_VERSION=21;
+   *    - Changed the RPClass serialization scheme
+   * 22 - Changed signature method. Two bytes now. */
+  final static public byte NETWORK_PROTOCOL_VERSION=22;
 
   final static public long PACKET_TIMEOUT_VALUE=5000;
   }

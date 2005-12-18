@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.13 2005/10/30 11:03:46 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.14 2005/12/18 13:18:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,14 +40,14 @@ public class NetworkClientManager
 
   static private class PacketContainer
     {
-    public byte signature;
+    public short signature;
     public byte remaining;
     public byte[] content;
     public InetSocketAddress address;
     public Date timestamp;
     }
 
-  private Map<Byte,PacketContainer> pendingPackets;
+  private Map<Short,PacketContainer> pendingPackets;
   private List<Message> processedMessages;
 
   /** Constructor that opens the socket on the marauroa_PORT and start the thread
@@ -65,7 +65,7 @@ public class NetworkClientManager
     socket.setReceiveBufferSize(128*1024);
 
     msgFactory=MessageFactory.getFactory();
-    pendingPackets=new LinkedHashMap<Byte,PacketContainer>();
+    pendingPackets=new LinkedHashMap<Short,PacketContainer>();
     processedMessages=new LinkedList<Message>();
     Log4J.finishMethod(logger,"NetworkClientManager");
     }
@@ -138,7 +138,7 @@ public class NetworkClientManager
       }
     }
 
-  final static private int PACKET_SIGNATURE_SIZE=3;
+  final static private int PACKET_SIGNATURE_SIZE=4;
   final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
 
   private void storePacket(InetSocketAddress address, byte[] data)
@@ -147,10 +147,10 @@ public class NetworkClientManager
      * We need to check on the list if the message exist and it exist we add this one. */
     byte total=data[0];
     byte position=data[1];
-    byte signature=data[2];
+    short signature=(short)(data[2]+data[3]<<8);
 
     logger.debug("receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
-    if(!pendingPackets.containsKey(new Byte(signature)))
+    if(!pendingPackets.containsKey(new Short(signature)))
       {
       /** This is the first packet */
       PacketContainer message=new PacketContainer();
@@ -160,13 +160,13 @@ public class NetworkClientManager
       message.address=address;
       message.content=new byte[CONTENT_PACKET_SIZE*total];
       message.timestamp=new Date();
-      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-3);
+      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-PACKET_SIGNATURE_SIZE);
 
-      pendingPackets.put(new Byte(signature),message);
+      pendingPackets.put(new Short(signature),message);
       }
     else
       {
-      PacketContainer message=(PacketContainer)pendingPackets.get(new Byte(signature));
+      PacketContainer message=(PacketContainer)pendingPackets.get(new Short(signature));
 
       --message.remaining;
       if(message.remaining<0)
@@ -175,7 +175,7 @@ public class NetworkClientManager
         }
       else
         {
-        System.arraycopy(data,3,message.content,(NetConst.UDP_PACKET_SIZE-3)*position,data.length-3);
+        System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
         }
       }
     }
