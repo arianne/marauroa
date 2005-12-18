@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.17 2005/12/18 19:57:40 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.18 2005/12/18 19:59:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,9 +56,9 @@ public class NetworkClientManager
     
     public void recieved(int pos)
       {
-      if(pos=>remaining.lenght)
+      if(pos>=remaining.length)
         {
-        logger.error("Confused messages: Recieved packet "+ pos+ " of (total) "+remaining.lenght);
+        logger.error("Confused messages: Recieved packet "+ pos+ " of (total) "+remaining.length);
         }
       else
         {
