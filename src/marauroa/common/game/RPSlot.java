@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.17 2005/11/17 07:02:26 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.18 2005/12/19 14:33:51 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -303,7 +303,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       {
       for(RPObject object: objects)
         {
-        if(id.equals(object.getID()))
+        // compare only the id, as the zone is not used for slots 
+        if(id.getObjectID() == object.getID().getObjectID())
           {
           return true;
           }
