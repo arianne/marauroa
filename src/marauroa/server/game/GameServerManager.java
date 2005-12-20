@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.20 2005/12/20 16:09:48 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.21 2005/12/20 18:22:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -446,7 +446,7 @@ public final class GameServerManager extends Thread
         }
       else
         {
-        MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),MessageS2CCreateAccountNACK.Reasons.UNKNOWN_REASON);  
+        MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS);  
         netMan.addMessage(msgCreateAccountNACK);        
         }
       }
