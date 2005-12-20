@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.18 2005/12/19 14:33:51 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.19 2005/12/20 19:01:44 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -315,6 +315,44 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       {
       return false;
       }
+    }
+  
+  /** traverses up the container tree to see if the item is one of the parents*/
+  public boolean hasAsParent(RPObject.ID id)
+    {
+    try
+      {
+      RPObject owner = getOwner();
+      // traverse the owner tree
+      while (owner != null)
+        {
+        // compare only the id, as the zone is not used for slots 
+        if(owner.getID().getObjectID() == id.getObjectID())
+          {
+          return true;
+          }
+        owner = owner.getContainer();
+        }
+      return false;
+      }
+    catch(AttributeNotFoundException e)
+      {
+      return false;
+      }
+    }
+  
+  /** traverses up the container tree and counts all container */
+  public int getContainedDepth()
+    {
+    int depth = 0;
+    RPObject owner = getOwner();
+    // traverse the owner tree
+    while (owner != null)
+      {
+      depth++;
+      owner = owner.getContainer();
+      }
+      return depth;
     }
   
   /** Return the number of elements in the slot */
