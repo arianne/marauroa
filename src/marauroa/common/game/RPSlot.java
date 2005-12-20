@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.19 2005/12/20 19:01:44 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.20 2005/12/20 19:29:45 mtotz Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -341,7 +341,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       }
     }
   
-  /** traverses up the container tree and counts all container */
+  /** traverses up the container tree and counts all parent container */
   public int getContainedDepth()
     {
     int depth = 0;
@@ -353,6 +353,31 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       owner = owner.getContainer();
       }
       return depth;
+    }
+  
+  /** 
+   * returns the number of items in this container and all subcontainers.
+   * <b>Warning:</b> This method may be very expensive and can lead to a stack
+   * overflow (if one item is contained in itself) 
+   */
+  public int getNumberOfContainedItems()
+    {
+    int numContainedItems = 0;
+    
+    // count all 
+    for (RPObject object : this)
+      {
+      // this is the item
+      numContainedItems++;
+      
+      // all all items inside this one 
+      for (RPSlot slot : object.slots())
+        {
+        numContainedItems += slot.getNumberOfContainedItems();
+        }
+      }
+    
+    return numContainedItems;
     }
   
   /** Return the number of elements in the slot */
