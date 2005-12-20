@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.6 2005/11/01 10:09:28 mtotz Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.7 2005/12/20 16:09:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,11 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     }
 
   public boolean checkGameVersion(String game, String version)
+    {
+    return false;
+    }
+
+  public boolean createAccount(String username, String password, String email)
     {
     return false;
     }

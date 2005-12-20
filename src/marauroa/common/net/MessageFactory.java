@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.7 2005/12/18 11:48:09 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.8 2005/12/20 16:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,6 +77,9 @@ public class MessageFactory
     register(Message.MessageType.S2C_LOGIN_SENDKEY,       MessageS2CLoginSendKey.class);
     register(Message.MessageType.S2C_LOGIN_SENDNONCE,     MessageS2CLoginSendNonce.class);
     register(Message.MessageType.C2S_LOGIN_SENDPROMISE,   MessageC2SLoginSendPromise.class);
+    register(Message.MessageType.C2S_CREATEACCOUNT,       MessageC2SCreateAccount.class);
+    register(Message.MessageType.S2C_CREATEACCOUNT_ACK,   MessageS2CCreateAccountACK.class);
+    register(Message.MessageType.S2C_CREATEACCOUNT_NACK,  MessageS2CCreateAccountNACK.class);
     Log4J.finishMethod(logger,"register");
     }
 

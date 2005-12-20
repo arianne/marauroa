@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.8 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: createaccount.java,v 1.9 2005/12/20 16:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,7 +118,7 @@ public abstract class createaccount
 
         logger.info("-i"+" to to define .ini file");
 
-        System.exit(0);
+        return 1;
         }
 
       ++i;

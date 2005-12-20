@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.3 2005/04/15 07:06:51 quisar Exp $ */
+/* $Id: Message.java,v 1.4 2005/12/20 16:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,9 @@ public class Message implements Serializable
     S2C_SERVERINFO,
     S2C_TRANSFER,
     S2C_TRANSFER_REQ,
+    C2S_CREATEACCOUNT,
+    S2C_CREATEACCOUNT_ACK,
+    S2C_CREATEACCOUNT_NACK
     }
 
   protected  MessageType type;

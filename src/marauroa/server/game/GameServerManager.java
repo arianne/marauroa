@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.19 2005/07/14 18:47:33 mtotz Exp $ */
+/* $Id: GameServerManager.java,v 1.20 2005/12/20 16:09:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -150,6 +150,10 @@ public final class GameServerManager extends Thread
             case C2S_TRANSFER_ACK:
               logger.debug("Processing C2S Transfer ACK Message");
               processTransferACK((MessageC2STransferACK)msg);
+              break;
+            case C2S_CREATEACCOUNT:
+              logger.debug("Processing C2S Create Account Message");
+              processCreateAccount((MessageC2SCreateAccount)msg);
               break;
             default:
               logger.debug("Unknown Message["+msg.getType()+"]");
@@ -427,6 +431,29 @@ public final class GameServerManager extends Thread
     
     
     Log4J.finishMethod(logger,"processLoginRequestKey");
+    }
+  
+  private void processCreateAccount(MessageC2SCreateAccount msg)
+    {
+    Log4J.startMethod(logger,"processCreateAccount");
+    try
+      {
+      if(rpMan.createAccount(msg.getUsername(),msg.getPassword(), msg.getEmail()))
+        {
+        logger.debug("Account ("+msg.getUsername()+") created.");
+        MessageS2CCreateAccountACK msgCreateAccountACK=new MessageS2CCreateAccountACK(msg.getAddress());  
+        netMan.addMessage(msgCreateAccountACK);        
+        }
+      else
+        {
+        MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),MessageS2CCreateAccountNACK.Reasons.UNKNOWN_REASON);  
+        netMan.addMessage(msgCreateAccountNACK);        
+        }
+      }
+    catch(Exception e)
+      {
+      }
+    Log4J.finishMethod(logger,"processCreateAccount");
     }
 
   private void processLoginSendPromise(Message msg)

@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.5 2005/05/12 19:34:37 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.6 2005/12/20 16:09:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,9 @@ public interface IRPRuleProcessor
   /** Returns true if the version of the game is compatible */
   public boolean checkGameVersion(String game, String version);
   
+  /** Creates an account for the game */  
+  public boolean createAccount(String username, String password, String email);
+    
   /** This method is called *before* adding an action by RPScheduler so you can 
    *  choose not to allow the action to be added by returning false */
   public boolean onActionAdd(RPAction action, List<RPAction> actionList);

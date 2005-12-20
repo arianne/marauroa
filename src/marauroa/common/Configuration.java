@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.3 2005/07/19 20:56:42 mtotz Exp $ */
+/* $Id: Configuration.java,v 1.4 2005/12/20 16:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,11 @@ public class Configuration
   public static void setConfigurationFile(String conf)
     {
     configurationFile=conf;
+    }  
+  
+  public static String getConfigurationFile()
+    {
+    return configurationFile;
     }  
   
   private Configuration() throws FileNotFoundException

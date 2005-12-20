@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.3 2005/05/29 22:06:16 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.4 2005/12/20 16:09:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,11 @@ public class PythonRP
     {
     return true;
     }
+  
+  public boolean createAccount(String username, String password, String email)
+    {
+    return false;
+    }  
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)
     {

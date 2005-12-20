@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.17 2005/10/25 18:19:15 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.18 2005/12/20 16:09:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -226,6 +226,48 @@ public abstract class ariannexp
     finally
       {
       Log4J.finishMethod(logger, "chooseCharacter");
+      }
+    }
+
+  public boolean createAccount(String username, String password, String email) throws ariannexpTimeoutException
+    {
+    Log4J.startMethod(logger, "createAccount");
+    try
+      {
+      Message msgCA=new MessageC2SCreateAccount(netMan.getAddress(),username, password, email);
+
+      netMan.addMessage(msgCA);
+
+      int recieved=0;
+
+      while(recieved!=1)
+        {
+        Message msg=getMessage();
+        switch(msg.getType())
+          {
+          case S2C_CREATEACCOUNT_ACK:
+            logger.debug("Create account ACK");
+            return true;
+          case S2C_CREATEACCOUNT_NACK:
+            logger.debug("Create account NACK");
+            event=((MessageS2CCreateAccountNACK)msg).getResolution();
+            return false;
+          default:
+            messages.add(msg);
+          }
+        }
+
+      return false;
+      }
+    catch(InvalidVersionException e)
+      {
+      logger.error("Invalid client version to connect to this server.",e);
+      onError(1,"Invalid client version to connect to this server.");
+      return false;
+      }
+    finally
+      {
+      Log4J.finishMethod(logger, "createAccount");
       }
     }
 

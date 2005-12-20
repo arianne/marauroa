@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.28 2005/12/16 19:35:04 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.29 2005/12/20 16:09:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -181,6 +181,11 @@ public class RPServerManager extends Thread
   public boolean checkGameVersion(String game, String version)
     {
     return ruleProcessor.checkGameVersion(game,version);
+    }
+  
+  public boolean createAccount(String username, String password, String email)
+    {
+    return ruleProcessor.createAccount(username,password,email);
     }
 
   private Perception getPlayerPerception(PlayerEntryContainer.RuntimePlayerEntry playerEntry)
