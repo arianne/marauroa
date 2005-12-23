@@ -154,6 +154,7 @@ Changelog
 - Changed way of signing messages
 - Changed protocol version.
 - Improved logger output to handle RPClass syntax problems.
+- Allow creation of accounts from within server.
 
 1.12 Oct 26, 2005
 - Fixed ConcurrentModificationException at ariannexp.loop

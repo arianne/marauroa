@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.16 2005/11/02 15:47:39 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.17 2005/12/23 07:29:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,6 +70,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     if(string.indexOf(';')!=-1) return false;
     if(string.indexOf(':')!=-1) return false;
     if(string.indexOf('#')!=-1) return false;
+    if(string.indexOf('<')!=-1) return false;
+    if(string.indexOf('>')!=-1) return false;
     return true;
     }
 
