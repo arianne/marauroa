@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.21 2005/12/20 18:22:57 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.22 2006/01/10 22:04:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -452,6 +452,7 @@ public final class GameServerManager extends Thread
       }
     catch(Exception e)
       {
+      logger.error(e);
       }
     Log4J.finishMethod(logger,"processCreateAccount");
     }
