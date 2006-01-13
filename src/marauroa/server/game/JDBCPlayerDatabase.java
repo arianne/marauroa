@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.20 2006/01/13 17:08:50 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.21 2006/01/13 17:47:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1340,19 +1340,32 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       
       StringBuffer param=new StringBuffer();
       
-      for(String i: params)
+      if(params.length>1)
         {
-        param.append(i);
-        param.append(" ");
+        for(int i=1;i<params.length;i++)
+          {
+          param.append(i);
+          param.append(" ");
+          }
         }
       
-      if(!validString(source) || !validString(event) || !validString(param.toString()))
+      try
+        {
+        if(!validString(source) || !validString(event) || !validString(param.toString()))
+          {
+          logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"");
+          return;
+          }
+        }
+      catch(Exception e)
         {
         logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"");
         return;
         }
+        
+      String firstParam=(params.length>0?params[0]:"");
 
-      String query = "insert into gameEvents(timedate, source, event, params) values(NULL,'"+source+"','"+event+"','"+param.toString()+"')";
+      String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"+source+"','"+event+"','"+firstParam+"','"+param.toString()+"')";
       stmt.execute(query);
       }
     catch(SQLException sqle)
