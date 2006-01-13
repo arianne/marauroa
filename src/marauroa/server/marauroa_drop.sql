@@ -6,6 +6,7 @@ drop table if exists rpslot;
 
 drop table if exists loginEvent;
 drop table if exists statistics;
+drop table if exists gameEvents;
 
 drop table if exists banlist;
 

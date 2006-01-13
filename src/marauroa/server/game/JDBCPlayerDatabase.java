@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.17 2005/12/23 07:29:08 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.18 2006/01/13 16:15:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1322,6 +1322,35 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     catch(SQLException sqle)
       {
       logger.warn("error adding statistics event",sqle);
+      throw new GenericDatabaseException(sqle);
+      }
+    finally
+      {
+      Log4J.finishMethod(logger, "addStatisticsEvent");
+      }
+    }
+
+  public void addGameEvent(Transaction trans, String source, String event, String... params) throws GenericDatabaseException
+    {
+    Log4J.startMethod(logger, "addStatisticsEvent");
+    try
+      {
+      Connection connection = ((JDBCTransaction)trans).getConnection();
+      Statement stmt = connection.createStatement();
+      
+      StringBuffer param=new StringBuffer();
+      
+      for(String i: params)
+        {
+        param.append(i);
+        }
+
+      String query = "insert into gameEvents(timedate, source, event, params) values(NULL,"+source+","+event+","+param.toString()+");";
+      stmt.execute(query);
+      }
+    catch(SQLException sqle)
+      {
+      logger.warn("error adding game event",sqle);
       throw new GenericDatabaseException(sqle);
       }
     finally
