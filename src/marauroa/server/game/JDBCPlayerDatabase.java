@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.21 2006/01/13 17:47:42 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.22 2006/01/13 17:54:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1344,7 +1344,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         for(int i=1;i<params.length;i++)
           {
-          param.append(i);
+          param.append(params[i]);
           param.append(" ");
           }
         }
