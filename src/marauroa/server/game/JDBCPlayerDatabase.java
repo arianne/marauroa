@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.19 2006/01/13 17:07:48 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.20 2006/01/13 17:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1346,7 +1346,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         param.append(" ");
         }
       
-      logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"");
       if(!validString(source) || !validString(event) || !validString(param.toString()))
         {
         logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"");
