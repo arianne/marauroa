@@ -75,6 +75,15 @@ create table if not exists statistics
   players_timeout integer,
   players_online integer
   );
+
+create table if not exists gameEvents
+  (
+  timedate timestamp,
+  
+  source varchar(64),
+  event  varchar(64),
+  params varchar(128),
+  );
   
 create table if not exists banlist
   (
