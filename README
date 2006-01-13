@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.20
+Version 1.21
 
 
 Status
@@ -144,6 +144,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.21 Jan 14, 2006
+- Added game events support
+- Fixed a but at RPSlot
+
 1.20 Dec 21, 2005
 - Added capacity to RPSlot
 - Changed serialization form of RPSlot
