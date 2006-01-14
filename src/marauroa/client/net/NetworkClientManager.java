@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.18 2005/12/18 19:59:51 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.19 2006/01/14 18:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,6 +175,23 @@ public class NetworkClientManager
         }
       }
     }
+  
+  public static void main(String[] args)
+    {
+    byte[] data={2,3,5,1};
+    
+    short used_signature=15271;
+
+    data[2]=(byte)(used_signature&0xFF);
+    data[3]=(byte)((used_signature>>8)&0xFF);
+
+    System.out.println (data[2]);
+    System.out.println (data[3]);
+    
+    short signature=(short)(data[2]&0xFF+((data[3]&0xFF)<<8));
+
+    System.out.println (signature);
+    }
 
   final static private int PACKET_SIGNATURE_SIZE=4;
   final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
@@ -185,7 +202,7 @@ public class NetworkClientManager
      * We need to check on the list if the message exist and it exist we add this one. */
     byte total=data[0];
     byte position=data[1];
-    short signature=(short)(data[2]+(data[3]<<8));
+    short signature=(short)(data[2]&0xFF+((data[3]&0xFF)<<8));
 
     logger.debug("receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
     if(!pendingPackets.containsKey(new Short(signature)))
@@ -267,6 +284,13 @@ public class NetworkClientManager
 
     return null;
     }
+  
+  private void clear()
+    {
+    logger.info("Cleaning pending packets and messages");
+    pendingPackets.clear();
+    processedMessages.clear();
+    }
 
   /** This method add a message to be delivered to the client the message is pointed to.
    *  @param msg the message to ve delivered. */
@@ -278,6 +302,11 @@ public class NetworkClientManager
       /* We enforce the remote endpoint */
       msg.setAddress(address);
       msg.setClientID(clientid);
+      
+      if(msg.getType()==Message.MessageType.C2S_OUTOFSYNC)
+        {
+        clear();
+        }
 
       ByteArrayOutputStream out=new ByteArrayOutputStream();
       OutputSerializer s=new OutputSerializer(out);

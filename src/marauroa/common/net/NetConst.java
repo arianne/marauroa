@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.11 2005/12/18 13:18:55 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.12 2006/01/14 18:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,7 @@ public class NetConst
     }
 
   /** Maximum size in bytes of the UDP packet. */
-  final static public int UDP_PACKET_SIZE=1500;
+  final static public int UDP_PACKET_SIZE=1000;
 
   /** Number of the protocol version.
    *  0 - Initial version

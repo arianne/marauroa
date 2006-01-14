@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.3 2005/07/19 20:56:42 mtotz Exp $ */
+/* $Id: PerceptionHandler.java,v 1.4 2006/01/14 18:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,8 +219,6 @@ public class PerceptionHandler
       }
     catch(RPObjectNotFoundException e)
       {
-//      System.out.println(world);
-//      e.printStackTrace();
       NDC.push("world is ["+world.toString()+"]");
       logger.error("error in applyModifiedRPObjects",e);
       NDC.pop();
@@ -228,8 +226,6 @@ public class PerceptionHandler
       }
     catch(Exception e)
       {
-//      System.out.println(world);
-//      e.printStackTrace();
       NDC.push("world is ["+world.toString()+"]");
       logger.error("error in applyModifiedRPObjects",e);
       NDC.pop();

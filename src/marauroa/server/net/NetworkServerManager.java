@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.13 2005/12/18 13:18:55 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.14 2006/01/14 18:53:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,7 @@ public final class NetworkServerManager
     socket=new DatagramSocket(NetConst.marauroa_PORT);
     socket.setSoTimeout(1000);
     socket.setTrafficClass(0x08|0x10);
-    socket.setSendBufferSize(1500*16);
+    socket.setSendBufferSize(1500*64);
 
     msgFactory=MessageFactory.getFactory();
     keepRunning=true;
@@ -295,7 +295,7 @@ public final class NetworkServerManager
             DatagramPacket pkt=new DatagramPacket(data,packetSize+PACKET_SIGNATURE_SIZE,msg.getAddress());
 
             socket.send(pkt);
-            logger.debug("Sent packet "+(i+1)+" of "+totalNumberOfPackets);
+            logger.debug("Sent packet("+used_signature+") "+(i+1)+" of "+totalNumberOfPackets);
             }
           
           if(logger.isDebugEnabled())
