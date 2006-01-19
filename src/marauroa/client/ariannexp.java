@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.19 2006/01/19 18:42:52 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.20 2006/01/19 19:56:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -378,12 +378,13 @@ public abstract class ariannexp
     try
       {
       //Message newmsg=netMan.getMessage();
-      Message newmsg=null;
-      
-      while((newmsg=netMan.getMessage())!=null)
+      Message newmsg=netMan.getMessage();
+      while(newmsg!=null)
         {
         messages.add(newmsg);
+        newmsg=netMan.getMessage();
         }
+      logger.debug("getMessage returned "+messages.size()+" messages");
 
       for(Message msg: messages)
         {

@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.19 2006/01/14 18:53:29 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.20 2006/01/19 19:56:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -171,7 +171,7 @@ public class NetworkClientManager
 
         processedMessages.add(msg);
         // NOTE: Break??? Why not run all the array...
-        break;
+        // break;
         }
       }
     }
