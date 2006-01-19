@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.2 2005/04/14 09:59:07 quisar Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.3 2006/01/19 18:42:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,7 +40,18 @@ public class MessageS2CTransferREQ extends Message
   
   public String toString()
     {
-    return "Message (S2C Transfer REQ) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+contents.size()+")";
+    StringBuffer st=new StringBuffer("Message (S2C Transfer REQ) from ("+source.getAddress().getHostAddress()+") CONTENTS: (");
+    for(TransferContent content: contents)
+      {
+      st.append("[");
+      st.append(content.name);
+      st.append(":");
+      st.append(content.timestamp);
+      st.append("]");
+      }
+    st.append(")");
+    
+    return st.toString();
     }
 
   public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException

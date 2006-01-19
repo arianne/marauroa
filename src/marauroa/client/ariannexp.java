@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.18 2005/12/20 16:09:47 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.19 2006/01/19 18:42:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ public abstract class ariannexp
       }
     finally
       {
-      Log4J.startMethod(logger, "login");
+      Log4J.finishMethod(logger, "login");
       }
     }
   
@@ -377,8 +377,10 @@ public abstract class ariannexp
 
     try
       {
-      Message newmsg=netMan.getMessage();
-      if(newmsg!=null)
+      //Message newmsg=netMan.getMessage();
+      Message newmsg=null;
+      
+      while((newmsg=netMan.getMessage())!=null)
         {
         messages.add(newmsg);
         }

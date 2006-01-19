@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.36 2005/11/01 17:47:12 mtotz Exp $ */
+/* $Id: marauroad.java,v 1.37 2006/01/19 18:42:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -252,7 +252,7 @@ public class marauroad extends Thread
         {
         buf.append("  ").append(line).append('\n');
         }
-      logger.info(buf.toString());
+      logger.debug(buf.toString());
       }
     }
     
