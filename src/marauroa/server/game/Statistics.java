@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.11 2005/11/02 15:47:39 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.12 2006/01/22 21:53:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -184,6 +184,13 @@ public class Statistics implements StatisticsMBean
       PrintWriter out=new PrintWriter(new FileOutputStream(webfolder+"server_stats.xml"));
       out.println("<statistics time=\""+(actualTime.getTime()/1000)+"\">");
       out.println("  <uptime value=\""+diff+"\"/>");
+
+      long totalMemory=Runtime.getRuntime().totalMemory()/1024;
+      long usedMemory=totalMemory-(Runtime.getRuntime().freeMemory()/1024);
+      
+      out.println("  <memory total=\""+totalMemory+"\" used=\""+usedMemory+"\"/>");
+      logger.info("Total/Used memory: "+totalMemory+"/"+usedMemory);
+
       sinceStart.print(out,diff);
       out.println("</statistics>");
       out.close();
