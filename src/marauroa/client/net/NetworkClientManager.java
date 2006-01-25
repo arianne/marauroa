@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.20 2006/01/19 19:56:47 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.21 2006/01/25 17:50:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -223,7 +223,10 @@ public class NetworkClientManager
       PacketContainer message=(PacketContainer)pendingPackets.get(new Short(signature));
 
       message.recieved(position);
-      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
+      if(message.isRecieved(position))
+        {
+        System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
+        }
       }
     }
 

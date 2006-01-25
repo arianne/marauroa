@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.6 2006/01/19 19:56:47 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.7 2006/01/25 17:50:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -128,18 +128,14 @@ public class PerceptionHandler
         synced=true;
         listener.onSynced();
         }
-      else if(message.getPerceptionTimestamp()-previousTimestamp>20)
+      else
         {
         synced=false;
         listener.onUnsynced();
         }
-      else
-        {
-        logger.info("Unsynced: trying to synchronize with new perceptions");
-        }
       }
 
-    if(message.getPerceptionTimestamp()-previousTimestamp>100)
+    if(message.getPerceptionTimestamp()-previousTimestamp>50)
       {
       listener.onTimeout();
       }
