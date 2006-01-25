@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.23 2006/01/25 15:42:54 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.24 2006/01/25 15:56:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -205,6 +205,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       characters = new String[vector.size()];
       characters = (String[])vector.toArray(characters);
       
+      stmt.close();
+      
       Log4J.finishMethod(logger, "getCharacterList");
       
       return characters;
@@ -246,18 +248,21 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       if(result.next())
         {
         result.close();
+        stmt.close();
+  
         logger.warn("Database already contains that username("+username+")");
         throw new PlayerAlreadyAddedException(username);
         }
       else
         {
         result.close();
-        
+      
         /* We store the hashed version of the password */
         password = Hash.hash(password);
 
         query = "insert into player(id,username,password,email,timedate,status) values(NULL,'"+username+"','"+ Hash.toHexString(password)+"','"+email+"',NULL,DEFAULT)";
         stmt.execute(query);
+        stmt.close();
         }
       }
     catch(SQLException sqle)
@@ -293,6 +298,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       stmt.execute(query);
       query = "delete from loginEvent where player_id="+id;
       stmt.execute(query);
+
+      stmt.close();
       }
     catch(SQLException sqle)
       {
@@ -337,6 +344,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       String query = "delete from characters where player_id="+id+" and charname like '"+character+"'";
 
       stmt.execute(query);
+      stmt.close();
       }
     catch(SQLException sqle)
       {
@@ -372,6 +380,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       String query = "update player set status='"+status+"' where username like '"+username+"'";
       logger.debug("setAccountStatus is executing query "+query);
       stmt.executeUpdate(query);
+      stmt.close();
       }
     catch(SQLException sqle)
       {
@@ -423,6 +432,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         String account_status = result.getString("status");
         result.close();
+        stmt.close();
 
         if("active".equals(account_status))
           {
@@ -434,19 +444,20 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           return false;
           }
         }
-      else
-        {
-        Connection connection1 = ((JDBCTransaction)trans).getConnection();
-        Statement stmt1 = connection1.createStatement();
-        String query1 = "select * from player;";
-        logger.debug("verifyAccount is executing query "+query1);
-        ResultSet result1 = stmt1.executeQuery(query1);
-        while(result1.next())
-          {
-          logger.debug(result1.getString("id")+"\t"+result1.getString("username")+"\t"+result1.getString("password"));
-          }
-        result1.close();
-        }
+// This code is unused. I think it was a workaround some transaction issues on 0.90
+//      else
+//        {
+//        Connection connection1 = ((JDBCTransaction)trans).getConnection();
+//        Statement stmt1 = connection1.createStatement();
+//        String query1 = "select * from player;";
+//        logger.debug("verifyAccount is executing query "+query1);
+//        ResultSet result1 = stmt1.executeQuery(query1);
+//        while(result1.next())
+//          {
+//          logger.debug(result1.getString("id")+"\t"+result1.getString("username")+"\t"+result1.getString("password"));
+//          }
+//        result1.close();
+//        }
 
       return false;
       }
@@ -498,6 +509,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
 
       result.close();
+      stmt.close();
 
       loginEvents = new String[vector.size()];
       loginEvents = (String[])vector.toArray(loginEvents);
@@ -538,18 +550,21 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       logger.debug("hasCharacter is executing query "+query);
 
       ResultSet result = stmt.executeQuery(query);
+      
+      boolean characterExists=false;
 
       if(result.next())
         {
         if(result.getInt("amount")!=0)
           {
-          result.close();
-          return true;
+          characterExists=true;
           }
         }
 
       result.close();
-      return false;
+      stmt.close();
+      
+      return characterExists;
       }
     catch(SQLException sqle)
       {
@@ -588,8 +603,10 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       Connection connection = ((JDBCTransaction)trans).getConnection();
       Statement stmt = connection.createStatement();
-      String query = "insert into loginEvent(player_id,address,timedate,result) values("+id+",'"+source.getAddress().getHostAddress()+"',NULL,"+(correctLogin?1:0)+")";
+      String query = "insert into loginEvent(player_id,address,timedate,result) values("+id+",'"+source.getAddress().getHostAddress()+"',NULL,"+(correctLogin?1:0)+")";      
       stmt.execute(query);
+      
+      stmt.close();
       }
     catch(SQLException sqle)
       {
@@ -633,6 +650,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
         String query = "insert into characters(player_id,charname,object_id) values("+id+",'"+character+"',"+object_id+")";
         stmt.execute(query);
+        stmt.close();
         }
       }
     catch(Exception sqle)
@@ -672,6 +690,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
 
       result.close();
+      stmt.close();
+
       return 0;
       }
     catch(SQLException sqle)
@@ -720,12 +740,15 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         if(result.getInt(1)==0)
           {
           result.close();
+          stmt.close();
           logger.debug("Database doesn't contains that username("+username+")-character("+character+")");
           throw new CharacterNotFoundException(username);
           }
         }
 
       result.close();
+      stmt.close();
+
       storeRPObject(getTransaction(),object);
       }
     catch(SQLException sqle)
@@ -776,12 +799,15 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         int object_id=result.getInt("object_id");
         result.close();
+        stmt.close();
 
         return loadRPObject(getTransaction(),object_id);
         }
       else
         {
         result.close();
+        stmt.close();
+        
         throw new CharacterNotFoundException(character);
         }
       }
@@ -832,12 +858,15 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       id = result.getInt("id");
       result.close();
+      stmt.close();
       }
     else
       {
       result.close();
+      stmt.close();
       throw new PlayerNotFoundException(username);
       }
+
     return(id);
     }
 
@@ -899,6 +928,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           break;
           }
         }
+
+      stmt.close();
 
       return ret;
       }
@@ -1076,18 +1107,21 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       logger.debug("hasRPObject is executing query "+query);
 
       ResultSet result = stmt.executeQuery(query);
+      
+      boolean rpObjectExists=false;
 
       if(result.next())
         {
         if(result.getInt("amount")!=0)
           {
-          result.close();
-          return true;
+          rpObjectExists=true;
           }
         }
 
       result.close();
-      return false;
+      stmt.close();
+      
+      return rpObjectExists;
       }
     catch(SQLException e)
       {
@@ -1176,6 +1210,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       }
 
     result.close();
+    stmt.close();
     }
 
   public void deleteRPObject(Transaction trans, int id) throws SQLException
@@ -1231,6 +1266,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     query = "delete from rpobject where object_id="+id+";";
     logger.debug("deleteRPObject is executing query "+query);
     stmt.execute(query);
+
+    stmt.close();
     }
 
   public synchronized int storeRPObject(Transaction trans, RPObject object) throws SQLException
@@ -1352,6 +1389,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       }
 
+    stmt.close();
+
     return object_id;
     }
 
@@ -1371,6 +1410,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         var.get("Players timeout")+","+
         var.get("Players online")+")";
       stmt.execute(query);
+      stmt.close();
       }
     catch(SQLException sqle)
       {
