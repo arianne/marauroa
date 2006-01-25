@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.5 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: JDBCTransaction.java,v 1.6 2006/01/25 15:42:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@
 package marauroa.server.game;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import marauroa.common.Log4J;
@@ -105,7 +106,9 @@ public class JDBCTransaction extends Transaction
           String query = "show tables";
 
           logger.debug("isValid ("+query+")");
-          stmt.executeQuery(query);
+          ResultSet result=stmt.executeQuery(query);
+          
+          stmt.close();
           valid = true;
           }
         else

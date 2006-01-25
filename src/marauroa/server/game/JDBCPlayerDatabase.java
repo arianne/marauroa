@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.22 2006/01/13 17:54:27 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.23 2006/01/25 15:42:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,15 +145,19 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       logger.debug("hasPlayer is using query: "+query);
 
       ResultSet result = stmt.executeQuery(query);
+      
+      boolean playerExists=false;
 
       if(result.next())
         {
         if(result.getInt("amount")!=0)
           {
-          return true;
+          playerExists=true;
           }
         }
-      return false;
+
+      stmt.close();
+      return playerExists;
       }
     catch(SQLException sqle)
       {
@@ -195,6 +199,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         vector.add(charactersSet.getString("characters.charname"));
         }
+        
+      charactersSet.close();
+
       characters = new String[vector.size()];
       characters = (String[])vector.toArray(characters);
       
@@ -238,11 +245,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
+        result.close();
         logger.warn("Database already contains that username("+username+")");
         throw new PlayerAlreadyAddedException(username);
         }
       else
         {
+        result.close();
+        
         /* We store the hashed version of the password */
         password = Hash.hash(password);
 
@@ -412,6 +422,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       if(result.next())
         {
         String account_status = result.getString("status");
+        result.close();
 
         if("active".equals(account_status))
           {
@@ -434,6 +445,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
           {
           logger.debug(result1.getString("id")+"\t"+result1.getString("username")+"\t"+result1.getString("password"));
           }
+        result1.close();
         }
 
       return false;
@@ -485,6 +497,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         vector.add(login_event.toString());
         }
 
+      result.close();
+
       loginEvents = new String[vector.size()];
       loginEvents = (String[])vector.toArray(loginEvents);
       Log4J.finishMethod(logger, "getLoginEvent");
@@ -529,9 +543,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         if(result.getInt("amount")!=0)
           {
+          result.close();
           return true;
           }
         }
+
+      result.close();
       return false;
       }
     catch(SQLException sqle)
@@ -648,8 +665,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       if(result.next())
         {
-        return result.getInt("amount");
+        int amount=result.getInt("amount");
+        result.close();
+        
+        return amount;
         }
+
+      result.close();
       return 0;
       }
     catch(SQLException sqle)
@@ -697,11 +719,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         if(result.getInt(1)==0)
           {
+          result.close();
           logger.debug("Database doesn't contains that username("+username+")-character("+character+")");
           throw new CharacterNotFoundException(username);
           }
         }
 
+      result.close();
       storeRPObject(getTransaction(),object);
       }
     catch(SQLException sqle)
@@ -751,10 +775,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       if(result.next())
         {
         int object_id=result.getInt("object_id");
+        result.close();
+
         return loadRPObject(getTransaction(),object_id);
         }
       else
         {
+        result.close();
         throw new CharacterNotFoundException(character);
         }
       }
@@ -804,9 +831,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     if(result.next())
       {
       id = result.getInt("id");
+      result.close();
       }
     else
       {
+      result.close();
       throw new PlayerNotFoundException(username);
       }
     return(id);
@@ -997,6 +1026,18 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       return set.getInt("object_id");
       }
+    
+    public void finalize()
+      {
+      try
+        {
+        set.close();
+        }
+      catch(SQLException e)
+        {
+        logger.error("Finalize RPObjectIterator: ",e);
+        }
+      }
     }
 
   public RPObjectIterator iterator(Transaction trans)
@@ -1040,10 +1081,12 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         if(result.getInt("amount")!=0)
           {
+          result.close();
           return true;
           }
         }
 
+      result.close();
       return false;
       }
     catch(SQLException e)
@@ -1103,6 +1146,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       object.put(name, value);
       }
 
+    result.close();
+
     query = "select name,capacity, slot_id from rpslot where object_id="+object_id+";";
     logger.debug("loadRPObject is executing query "+query);
     result = stmt.executeQuery(query);
@@ -1126,7 +1171,11 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         loadRPObject(trans,slotObject,resultSlot.getInt("object_id"));
         slot.add(slotObject);
         }
+
+      resultSlot.close();
       }
+
+    result.close();
     }
 
   public void deleteRPObject(Transaction trans, int id) throws SQLException
@@ -1170,6 +1219,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
       {
       deleteRPObject(connection,result.getInt(1));
       }
+
+    result.close();
 
     query = "delete from rpslot where object_id="+id+";";
     logger.debug("deleteRPObject is executing query "+query);
@@ -1288,6 +1339,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         {
         throw new SQLException("Not able to select RPSlot("+slot.getName()+") that have just been inserted");
         }
+  
+      slot_result.close();
 
       Iterator oit=slot.iterator();
 
@@ -1367,6 +1420,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
 
       String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"+source+"','"+event+"','"+firstParam+"','"+param.toString()+"')";
       stmt.execute(query);
+      stmt.close();
       }
     catch(SQLException sqle)
       {
