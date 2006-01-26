@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.14 2006/01/14 18:53:29 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.15 2006/01/26 18:59:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -214,7 +214,6 @@ public final class NetworkServerManager
           }
         catch(IOException e)
           {
-          stats.add("Message incorrect",1);
           /* Report the exception */
           logger.error("error while processing udp-packets",e);
           }

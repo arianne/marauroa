@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.20 2006/01/19 19:56:47 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.21 2006/01/26 18:59:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,8 +12,9 @@
  ***************************************************************************/
 package marauroa.client;
 import java.util.*;
-import marauroa.client.net.NetworkClientManager;
+import marauroa.client.net.ThreadedNetworkClientManager;
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 
 import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.crypto.Hash;
@@ -27,7 +28,7 @@ public abstract class ariannexp
   private static final Logger logger = Log4J.getLogger(ariannexp.class);
   
   public final static long TIMEOUT=10000;
-  private NetworkClientManager netMan;
+  private ThreadedNetworkClientManager netMan;
   private List<Message> messages;
 
   /** Constructor.
@@ -46,7 +47,7 @@ public abstract class ariannexp
   public void connect(String host, int port) throws java.net.SocketException
     {
     Log4J.startMethod(logger, "connect");
-    netMan=new NetworkClientManager(host,port);
+    netMan=new ThreadedNetworkClientManager(host,port);
     Log4J.finishMethod(logger, "connect");
     }
 
@@ -57,7 +58,7 @@ public abstract class ariannexp
 
     while(msg==null)
       {
-      msg=netMan.getMessage();
+      msg=netMan.getMessage(TimeoutConf.SOCKET_TIMEOUT);
 
       if(msg==null && System.currentTimeMillis()-delta>TIMEOUT)
         {
@@ -377,13 +378,9 @@ public abstract class ariannexp
 
     try
       {
-      //Message newmsg=netMan.getMessage();
-      Message newmsg=netMan.getMessage();
-      while(newmsg!=null)
-        {
-        messages.add(newmsg);
-        newmsg=netMan.getMessage();
-        }
+      Message newmsg=netMan.getMessage(30);
+      if(newmsg!=null) messages.add(newmsg);
+
       logger.debug("getMessage returned "+messages.size()+" messages");
 
       for(Message msg: messages)
@@ -432,11 +429,11 @@ public abstract class ariannexp
       {
       logger.warn(e);
       }
-    catch(InvalidVersionException e)
-      {
-      logger.error("Invalid client version to connect to this server.",e);
-      onError(1,"Invalid client version to connect to this server.");
-      }
+//    catch(InvalidVersionException e)
+//      {
+//      logger.error("Invalid client version to connect to this server.",e);
+//      onError(1,"Invalid client version to connect to this server.");
+//      }
     finally
       {
       Log4J.finishMethod(logger, "loop");
