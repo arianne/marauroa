@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.1 2006/01/26 18:59:47 arianne_rpg Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.2 2006/01/27 19:36:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -242,37 +242,49 @@ public final class ThreadedNetworkClientManager
   
     private void processPendingPackets() throws IOException, InvalidVersionException
       {
-      for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
+      List<Short> packetsToRemove=new LinkedList<Short>();
+      try
         {
-        PacketContainer message=it.next();
-  
-        if(message.isComplete())
+        Iterator<Short> it = pendingPackets.keySet().iterator();
+        while(it.hasNext())
           {
-          // delete the message from queue to prevent loop if it is a bad message
-          it.remove();
-          it=pendingPackets.values().iterator();
-  
-          Message msg=msgFactory.getMessage(message.content,message.address);
-  
-          if(logger.isDebugEnabled())
+          short value=it.next();
+          PacketContainer message=pendingPackets.get(value);
+    
+          if(message.isComplete())
             {
-            logger.debug("build message(type="+msg.getType()+") from packet("+message.signature+") from "+msg.getClientID()+" full ["+msg+"]");
-            }
-          
-          if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
-            {
-            clientid=msg.getClientID();
+            // delete the message from queue to prevent loop if it is a bad message
+            packetsToRemove.add(value);
+    
+            Message msg=msgFactory.getMessage(message.content,message.address);
+    
+            if(logger.isDebugEnabled())
+              {
+              logger.debug("build message(type="+msg.getType()+") from packet("+message.signature+") from "+msg.getClientID()+" full ["+msg+"]");
+              }
+            
+            if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
+              {
+              clientid=msg.getClientID();
+              }
+    
+            processedMessages.add(msg);
+            continue;
             }
   
-          processedMessages.add(msg);
+          if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
+            {
+            logger.debug("deleted incompleted message after timedout");
+            packetsToRemove.add(value);
+            }  
           }
-
-        if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
+        }
+      finally
+        {
+        for(Short value: packetsToRemove)
           {
-          logger.debug("deleted incompleted message after timedout");
-          it.remove();
-          it=pendingPackets.values().iterator();
-          }  
+          pendingPackets.remove(value);
+          }
         }
       }
   
