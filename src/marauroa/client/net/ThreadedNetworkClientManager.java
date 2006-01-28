@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.2 2006/01/27 19:36:17 arianne_rpg Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.3 2006/01/28 12:27:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -222,7 +222,7 @@ public final class ThreadedNetworkClientManager
       super("NetworkClientManagerRead");
       }
     
-    private Message getOldestProcessedMessage()
+    private synchronized Message getOldestProcessedMessage()
       {
       Message choosenMsg=((Message)processedMessages.get(0));
       int smallestTimestamp=choosenMsg.getMessageTimestamp();
@@ -240,7 +240,7 @@ public final class ThreadedNetworkClientManager
       return choosenMsg;
       }
   
-    private void processPendingPackets() throws IOException, InvalidVersionException
+    private synchronized void processPendingPackets() throws IOException, InvalidVersionException
       {
       List<Short> packetsToRemove=new LinkedList<Short>();
       try
@@ -288,7 +288,7 @@ public final class ThreadedNetworkClientManager
         }
       }
   
-    private void storePacket(InetSocketAddress address, byte[] data)
+    private synchronized void storePacket(InetSocketAddress address, byte[] data)
       {
       /* A multipart message. We try to read the rest now.
        * We need to check on the list if the message exist and it exist we add this one. */
