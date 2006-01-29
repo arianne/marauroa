@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.21 2006/01/26 18:59:47 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.22 2006/01/29 18:54:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -372,9 +372,11 @@ public abstract class ariannexp
     }
 
   /** Call this method to get and apply messages */
-  public void loop(int delta)
+  public boolean loop(int delta)
     {
     Log4J.startMethod(logger, "loop");
+
+    boolean recievedMessages=false;
 
     try
       {
@@ -385,6 +387,8 @@ public abstract class ariannexp
 
       for(Message msg: messages)
         {
+        recievedMessages=true;
+        
         switch(msg.getType())
           {
           case S2C_PERCEPTION:
@@ -438,6 +442,8 @@ public abstract class ariannexp
       {
       Log4J.finishMethod(logger, "loop");
       }
+
+    return recievedMessages;
     }
    
   /** It is called when a perception arrives so you can choose how to apply the perception */

@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.3 2006/01/28 12:27:35 arianne_rpg Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.4 2006/01/29 18:54:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -120,15 +120,15 @@ public final class ThreadedNetworkClientManager
     {
     Log4J.startMethod(logger, "getMessage");
     
-    try
-      {
-      readManager.processPendingPackets();
-      }
-    catch(Exception e)
-      {
-      logger.error("Exception when processing pending packets",e);
-      clear();
-      }
+//    try
+//      {
+//      readManager.processPendingPackets();
+//      }
+//    catch(Exception e)
+//      {
+//      logger.error("Exception when processing pending packets",e);
+//      clear();
+//      }
 
     if(processedMessages.size()==0)
       {
@@ -197,7 +197,7 @@ public final class ThreadedNetworkClientManager
 
     public boolean isRecieved(int pos)
       {
-      return remaining[pos];
+      return !remaining[pos];
       }
     
     public boolean isComplete()
@@ -315,10 +315,19 @@ public final class ThreadedNetworkClientManager
         PacketContainer message=(PacketContainer)pendingPackets.get(new Short(signature));
     
         message.recieved(position);
-        if(message.isRecieved(position))
+        if(!message.isRecieved(position))
           {
           System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
           }
+        }
+      
+      try
+        {
+        processPendingPackets();
+        }
+      catch(Exception e)
+        {
+        logger.error("Exception when processing pending packets",e);
         }
       }
     

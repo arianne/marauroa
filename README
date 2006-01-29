@@ -146,6 +146,8 @@ Changelog
 ---------
 1.22 Feb XX, 2006
 - Fixed memory leak because incorrectly handled JDBC Connection.
+- Added threaded network client.
+- Fixed messing messages because repeated signature.
 
 1.21 Jan 14, 2006
 - Added game events support
