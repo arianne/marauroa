@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.11 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.12 2006/02/05 18:00:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,16 +95,10 @@ public class PlayerEntryContainer
 
       boolean result=false;
       long value=System.currentTimeMillis()-timestampLastStored;
-      if(database_storedRPObject==null)
-        {
-        database_storedRPObject=(RPObject)object.clone();
-        }
 
-      /** If the object is the same it is not stored on database at all */
-      if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS && !database_storedRPObject.equals(object))
+      if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS)
         {
         timestampLastStored=System.currentTimeMillis();
-        database_storedRPObject=(RPObject)object.clone();
         result=true;
         }
 
@@ -130,22 +124,6 @@ public class PlayerEntryContainer
 
     /** It is true if client notified us that it got out of sync */
     public boolean perception_OutOfSync;
-    /** It is the lastest version of our RPObject sent, so if it is the same
-     *  we save it.*/
-    public RPObject perception_previousRPObject;
-
-    public boolean isPerceptionModifiedRPObject(RPObject perception_actualRPObject)
-      {
-      boolean result=false;
-
-      if(perception_previousRPObject==null || !perception_previousRPObject.equals(perception_actualRPObject))
-        {
-        perception_previousRPObject=(RPObject)perception_actualRPObject.clone();
-        result=true;
-        }
-
-      return result;
-      }
 
     /** Contains the content that is going to be transfered to client */
     List<TransferContent> contentToTransfer;

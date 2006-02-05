@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.17 2006/02/05 18:00:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -524,8 +524,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       content.put("id",attr.get("id"));
       content.put("zoneid",attr.get("zoneid"));
       }
-
-//    attr.added.clear();
     }
 
   public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
@@ -544,7 +542,5 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       content.put("id",attr.get("id"));
       content.put("zoneid",attr.get("zoneid"));
       }
-
-//    attr.deleted.clear();
     }
   }

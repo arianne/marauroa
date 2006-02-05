@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.15 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.16 2006/02/05 18:00:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -357,13 +357,16 @@ public class RPObject extends Attributes
   /** This method get the changes on added and deleted things from this object */
   public void getDifferences(RPObject oadded, RPObject odeleted) throws Exception 
     {
+    /** First we get differences from attributes */
     oadded.setAddedAttributes(this);
     odeleted.setDeletedAttributes(this);
     
+    /** Now we compute differences at slots of this object. First we get the deleted slots */
     odeleted.setDeletedRPSlot(this);
     
     for(RPSlot slot: slots)
       {
+      /** For each one of the existing slots, add the added objects */
       RPSlot added_slot=new RPSlot(slot.getName());            
       added_slot.setAddedRPObject(slot);
       
@@ -372,6 +375,7 @@ public class RPObject extends Attributes
         oadded.addSlot(added_slot);
         }
 
+      /** And add also the deleted objects */
       RPSlot deleted_slot=new RPSlot(slot.getName());            
       deleted_slot.setDeletedRPObject(slot);
       
@@ -380,13 +384,11 @@ public class RPObject extends Attributes
         odeleted.addSlot(deleted_slot);
         }
      
+      /** Now apply recursively to the existing objects in the slot */
       for(RPObject object: slot)
         {
         RPObject object_added=new RPObject();
         RPObject object_deleted=new RPObject();
-        
-        object_added.setRPClass(getRPClass());
-        object_deleted.setRPClass(getRPClass());
          
         object.getDifferences(object_added,object_deleted);        
 
@@ -424,7 +426,8 @@ public class RPObject extends Attributes
       {
       oadded.put("id",get("id"));
       }      
-    if(odeleted.size()>0 || odeleted.slots.size()>0) 
+      
+    if(odeleted.size()>0) // || odeleted.slots.size()>0) 
       {
       odeleted.put("id",get("id"));
       }
@@ -469,6 +472,7 @@ public class RPObject extends Attributes
           }
         }        
       }
+      
     if(added!=null)
       {
       for(String attrib: added)
