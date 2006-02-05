@@ -1,4 +1,4 @@
-/* $Id: DefaultPerceptionListener.java,v 1.1 2005/01/23 21:00:41 arianne_rpg Exp $ */
+/* $Id: DefaultPerceptionListener.java,v 1.2 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class DefaultPerceptionListener implements IPerceptionListener
 	return false;
 	}
 	
-  public boolean onMyRPObject(boolean changed,RPObject object)
+  public boolean onMyRPObject(RPObject added, RPObject deleted)
 	{
 	return false;
 	}

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.14 2005/12/17 21:22:03 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.15 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,46 +42,29 @@ public class RPObject extends Attributes
   public RPObject()
     {
     super(RPClass.getBaseRPObjectDefault());
-    initialize();
+
+    slots=new LinkedList<RPSlot>();
+    added=new LinkedList<RPSlot>();
+    deleted=new LinkedList<RPSlot>();
+    container=null;
     }
   
   public RPObject(RPObject object)
     {
-    super(RPClass.getBaseRPObjectDefault());
-    initialize();
-    copy(object);    
+    this();
+    fill(object);    
     }
 	
   /** Constructor
    *  @param id the id of the object */
   public RPObject(ID id)
     {
-    super(RPClass.getBaseRPObjectDefault());
-    initialize();
+    this();
     setID(id);
     }
-    
-  public RPObject(RPClass rpclass)
-    {
-    super(rpclass);
-    initialize();
-    }
-    
-  /** Constructor
-   *  @param id the id of the object */
-  public RPObject(ID id, RPClass rpclass)
-    {
-    super(rpclass);
-    initialize();
-    setID(id);
-    }
-  
+
   private void initialize()
     {
-    slots=new LinkedList<RPSlot>();
-    added=new LinkedList<RPSlot>();
-    deleted=new LinkedList<RPSlot>();
-    container=null;
     }
   
   /** Returns an ID object representing the id of this object */
@@ -125,8 +108,7 @@ public class RPObject extends Attributes
   
   public void resetAddedAndDeleted()
     {
-    resetAddedAndDeletedAttributes();
-    
+    resetAddedAndDeletedAttributes();    
     resetAddedAndDeletedRPSlot();
     }
 
@@ -149,34 +131,20 @@ public class RPObject extends Attributes
     {
     for(RPSlot slot: object.added)
       {
-      try
-        {
-        addSlot((RPSlot)slot.copy());
-        }
-      catch(Exception e)
-        {
-        logger.error("error in setAddedRPSlot",e);
-        }
+      RPSlot copied=(RPSlot)slot.clone();
+      copied.setOwner(this);
+      slots.add(copied);      
       }       
-    
-    object.added.clear();
     }
 
   public void setDeletedRPSlot(RPObject object)
     {
     for(RPSlot slot: object.deleted)
       {
-      try
-        {
-        addSlot(new RPSlot(slot.getName()));
-        }
-      catch(Exception e)
-        {
-        logger.error("error in setDeletedRPSlot",e);
-        }
+      RPSlot copied=new RPSlot(slot.getName());
+      copied.setOwner(this);
+      slots.add(copied);      
       }       
-    
-    object.deleted.clear();
     }
   
   /** This method returns true if the object has that slot
@@ -365,20 +333,24 @@ public class RPObject extends Attributes
       }    
     }
   
-  public void clearVisible()
+  public int clearVisible()
     {
-    super.clearVisible();
+    int i=super.clearVisible();
     
     for(RPSlot slot: slots)
       {
       if(getRPClass().isRPSlotVisible(slot.getName()))
         {
+        LinkedList<RPObject> objectToRemove=new LinkedList<RPObject>();
+
         for(RPObject object: slot)
           {
-          object.clearVisible();
+          i+=object.clearVisible();
           }
         }
       }
+    
+    return i;
     }
   
   // TODO: Refactor this method. Looks like it claims for bugs!"
@@ -412,6 +384,9 @@ public class RPObject extends Attributes
         {
         RPObject object_added=new RPObject();
         RPObject object_deleted=new RPObject();
+        
+        object_added.setRPClass(getRPClass());
+        object_deleted.setRPClass(getRPClass());
          
         object.getDifferences(object_added,object_deleted);        
 
@@ -526,34 +501,51 @@ public class RPObject extends Attributes
     }
   
   /** Create a real copy of the object */
-  public Object copy()
+  public Object clone()
     {
     RPObject object=new RPObject();
     
-    object.copy((Attributes)this);
-    try
+    object.fill((Attributes)this);
+    
+    object.container=container;
+    object.containerSlot=containerSlot;
+    
+    for(RPSlot slot: slots)
       {
-      for(RPSlot slot: slots)
-        {
-        object.addSlot((RPSlot)slot.copy());
-        }
+      RPSlot copied=(RPSlot)slot.clone();
+      copied.setOwner(object);      
+      object.slots.add(copied);
       }
-    catch(SlotAlreadyAddedException e)
+
+    for(RPSlot slot: added)
       {
-      // Should never happen
+      RPSlot copied=(RPSlot)slot.clone();
+      copied.setOwner(object);      
+      object.added.add(copied);
       }
+
+    for(RPSlot slot: deleted)
+      {
+      RPSlot copied=(RPSlot)slot.clone();
+      copied.setOwner(object);      
+      object.deleted.add(copied);
+      }
+
     return object;
     }
  
-  private void copy(RPObject object)
+  private void fill(RPObject object)
     {
-    super.copy((Attributes)object);
+    super.fill((Attributes)object);
     
+    container=object.container;
+    containerSlot=object.containerSlot;
+
     try
       {
       for(RPSlot slot: object.slots)
         {
-        addSlot((RPSlot)slot.copy());
+        addSlot((RPSlot)slot.clone());
         }
       }
     catch(SlotAlreadyAddedException e)

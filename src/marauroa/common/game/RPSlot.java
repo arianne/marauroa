@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.20 2005/12/20 19:29:45 mtotz Exp $ */
+/* $Id: RPSlot.java,v 1.21 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,41 +47,25 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     }
 
   public void setAddedRPObject(RPSlot slot)
-    {
-    
+    {    
     for(RPObject object: slot.added)
       {
-      try
-        {
-        add((RPObject)object.copy());
-        }
-      catch(Exception e)
-        {
-        logger.error("error in setAddedRPSlot",e);
-        }
+      RPObject copied=(RPObject)object.clone();
+      copied.setContainer(owner,slot);
+      objects.add(copied);      
       }       
-    
-    slot.added.clear();
     }
 
   public void setDeletedRPObject(RPSlot slot)
-    {
-    
+    {    
     for(RPObject object: slot.deleted)
       {
-      try
-        {
-        add((RPObject)object.copy());
-        }
-      catch(Exception e)
-        {
-        logger.error("error in setDeletedRPObject",e);
-        }
+      RPObject copied=(RPObject)object.clone();
+      copied.setContainer(owner,slot);
+      objects.add(copied);      
       }       
-    
-    slot.deleted.clear();
     }
-  
+
   void setOwner(RPObject object)
     {
     owner=object;
@@ -98,36 +82,47 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     capacity=-1;
     owner=null;
 
-    initialize();
-    }
-  
-  public RPSlot(String name)
-    {
-    this.name=name;
-    capacity=-1;
-    owner=null;
-    initialize();
-    }
-  
-  private void initialize()
-    {
     objects=new LinkedList<RPObject>();
     added=new LinkedList<RPObject>();
     deleted=new LinkedList<RPObject>();
     }
   
+  public RPSlot(String name)
+    {
+    this();
+    this.name=name;
+    }
+  
   /** This method create a copy of the slot */
-  public Object copy()
+  public Object clone()
     {
     RPSlot slot=new RPSlot();
 
     slot.name=name;
+    slot.owner=owner;
     slot.capacity=capacity;
 
     for(RPObject object: objects)
       {
-      slot.add((RPObject)object.copy());
+      RPObject copied=(RPObject)object.clone();
+      copied.setContainer(owner,slot);
+      slot.objects.add(copied);      
       }
+      
+    for(RPObject object: added)
+      {
+      RPObject copied=(RPObject)object.clone();
+      copied.setContainer(owner,slot);
+      slot.added.add(copied);      
+      }
+
+    for(RPObject object: deleted)
+      {
+      RPObject copied=(RPObject)object.clone();
+      copied.setContainer(owner,slot);
+      slot.deleted.add(copied);      
+      }
+
     return slot;
     }
   
@@ -176,12 +171,12 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       {
       throw new SlotIsFullException(name);
       }
-      
+    
     try
       {
-      Iterator<RPObject> it=objects.iterator();
-      boolean found=false;
+      boolean found=false;      
       
+      Iterator<RPObject> it=objects.iterator();
       while(!found && it.hasNext())
         {
         RPObject data=it.next();
@@ -197,9 +192,21 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         added.add(object);      
         }
 
-      objects.add(object);
-      
+      // If the object is on deleted list, remove from there.
+      found=false;      
+      it=deleted.iterator();
+      while(!found && it.hasNext())
+        {
+        RPObject data=it.next();
+        if(data.get("id").equals(object.get("id")))
+          {
+          it.remove();
+          found=true;
+          }
+        }
+
       object.setContainer(owner,this);
+      objects.add(object);      
       }
     catch(AttributeNotFoundException e)
       {
@@ -264,11 +271,12 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
             
           it.remove();
           
-          object.setContainer(null,null);
-          
+          object.setContainer(null,null);          
+
           return object;
           }
         }
+        
       throw new RPObjectNotFoundException(id);
       }
     catch(AttributeNotFoundException e)
@@ -293,6 +301,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
         }
       }
       
+    added.clear();      
     objects.clear();
     }
   

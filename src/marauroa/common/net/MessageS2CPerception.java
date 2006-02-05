@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.15 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,7 +56,8 @@ public class MessageS2CPerception extends Message
   private List<RPObject> modifiedAddedAttribsRPObjects;
   private List<RPObject> modifiedDeletedAttribsRPObjects;
   private List<RPObject> deletedRPObjects;
-  private RPObject myRPObject;
+  private RPObject myRPObjectModifiedAdded;
+  private RPObject myRPObjectModifiedDeleted;
   
   private static CachedCompressedPerception cache=CachedCompressedPerception.get();
   
@@ -64,8 +65,6 @@ public class MessageS2CPerception extends Message
   public MessageS2CPerception()
     {
     super(MessageType.S2C_PERCEPTION,null);
-
-    myRPObject=new RPObject();
     }
   
   /** Constructor with a TCP/IP source/destination of the message and the name
@@ -83,19 +82,23 @@ public class MessageS2CPerception extends Message
     addedRPObjects                  = perception.addedList;
     modifiedAddedAttribsRPObjects   = perception.modifiedAddedAttribsList;
     modifiedDeletedAttribsRPObjects = perception.modifiedDeletedAttribsList;
-    deletedRPObjects                = perception.deletedList;
-    
-    myRPObject=new RPObject();
+    deletedRPObjects                = perception.deletedList;    
     }
   
-  public void setMyRPObject(RPObject object)
+  public void setMyRPObject(RPObject added, RPObject deleted)
     {
-    myRPObject=object;
+    myRPObjectModifiedAdded=added;
+    myRPObjectModifiedDeleted=deleted;
     }
   
-  public RPObject getMyRPObject()
+  public RPObject getMyRPObjectAdded()
     {
-    return myRPObject;
+    return myRPObjectModifiedAdded;
+    }
+  
+  public RPObject getMyRPObjectDeleted()
+    {
+    return myRPObjectModifiedDeleted;
     }
   
   public void setPerceptionTimestamp(int ts)
@@ -109,7 +112,7 @@ public class MessageS2CPerception extends Message
     }
   
   
-  public byte getTypePerception()
+  public byte getPerceptionType()
     {
     return typePerception;
     }
@@ -179,8 +182,10 @@ public class MessageS2CPerception extends Message
       perception_string.append("    "+object+"\n");
       }
 
-    perception_string.append("\n  my object: \n");
-    perception_string.append("    "+myRPObject+"\n");
+    perception_string.append("\n  my object modified added: \n");
+    perception_string.append("    "+myRPObjectModifiedAdded+"\n");
+    perception_string.append("\n  my object modified deleted: \n");
+    perception_string.append("    "+myRPObjectModifiedDeleted+"\n");
 
     return perception_string.toString();
     }
@@ -304,15 +309,26 @@ public class MessageS2CPerception extends Message
     timestampPerception=ser.readInt();
 
     logger.debug("read My RPObject");
-    byte modifiedMyRPObject=ser.readByte();
-    if(modifiedMyRPObject==1)
+    byte modifiedAddedMyRPObjectPresent=ser.readByte();
+    if(modifiedAddedMyRPObjectPresent==1)
       {
-      myRPObject=(RPObject)ser.readObject(myRPObject);
-      setZoneid(myRPObject,zoneid.getID());
+      myRPObjectModifiedAdded=(RPObject)ser.readObject(new RPObject());
+      setZoneid(myRPObjectModifiedAdded,zoneid.getID());
       }
     else
       {
-      myRPObject=null;
+      myRPObjectModifiedAdded=null;
+      }
+
+    byte modifiedDeletedMyRPObjectPresent=ser.readByte();
+    if(modifiedDeletedMyRPObjectPresent==1)
+      {
+      myRPObjectModifiedDeleted=(RPObject)ser.readObject(new RPObject());
+      setZoneid(myRPObjectModifiedDeleted,zoneid.getID());
+      }
+    else
+      {
+      myRPObjectModifiedDeleted=null;
       }
     }
 
@@ -415,14 +431,24 @@ public class MessageS2CPerception extends Message
     OutputSerializer serializer=new OutputSerializer(array);
 
     serializer.write((int)timestampPerception);
-    if(myRPObject==null)
+    if(myRPObjectModifiedAdded==null)
       {
       serializer.write((byte)0);
       }
     else
       {
       serializer.write((byte)1);
-      myRPObject.writeObject(serializer,true);
+      myRPObjectModifiedAdded.writeObject(serializer,true);
+      }
+
+    if(myRPObjectModifiedDeleted==null)
+      {
+      serializer.write((byte)0);
+      }
+    else
+      {
+      serializer.write((byte)1);
+      myRPObjectModifiedDeleted.writeObject(serializer,true);
       }
       
     return array.toByteArray();

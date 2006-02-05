@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.22
+Version 1.90
 
 
 Status
@@ -144,7 +144,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.22 Feb XX, 2006
+1.90 Feb XX, 2006
+- Reworked Perception system.
+
+1.22 Jan 30, 2006
 - Fixed memory leak because incorrectly handled JDBC Connection.
 - Added threaded network client.
 - Fixed messing messages because repeated signature.

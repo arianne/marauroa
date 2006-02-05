@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.29 2005/12/20 16:09:48 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.30 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -217,18 +217,46 @@ public class RPServerManager extends Thread
       
       stats.add("Perceptions "+(perception.type==0?"DELTA":"SYNC"),1);
 
-      RPObject copy=(RPObject)object.copy();
-      copy.clearVisible();
-      
-      if(perception.type==Perception.SYNC || entry.isPerceptionModifiedRPObject(copy))
+      RPObject copy=(RPObject)object.clone();
+
+      if(perception.type==Perception.SYNC)
         {
-        messages2cPerception.setMyRPObject(copy);
+        copy.clearVisible();      
+        messages2cPerception.setMyRPObject(copy,null);
         }
       else
         {
-        messages2cPerception.setMyRPObject(null);
+        RPObject added=new RPObject();
+        RPObject deleted=new RPObject();
+        
+        try
+          {
+          copy.getDifferences(added,deleted);
+          added.clearVisible();
+          deleted.clearVisible();
+  
+          if(added.size()==0)
+            {
+            added=null;
+            }
+  
+          if(deleted.size()==0)
+            {
+            deleted=null;
+            }            
+          }
+        catch(Exception e)
+          {
+          logger.error("Error getting object differences", e);
+          logger.error(object);
+          logger.error(copy);
+          added=null;
+          deleted=null;
+          }
+  
+        messages2cPerception.setMyRPObject(added,deleted);
         }
-
+        
       messages2cPerception.setClientID(entry.clientid);
       messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
 

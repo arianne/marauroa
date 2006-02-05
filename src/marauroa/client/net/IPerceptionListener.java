@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.3 2005/04/06 15:34:58 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.4 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public interface IPerceptionListener
 	
 	/** onMyRPObject is called when our rpobject avatar is processed.
 	 *  Return true to stop further processing. */
-	public boolean onMyRPObject(boolean changed,RPObject object);
+	public boolean onMyRPObject(RPObject added, RPObject deleted);
 	
 	/** onClear is called when the whole world is going to be cleared.
 	 *  It happens on sync perceptions

@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.12 2006/01/14 18:53:29 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.13 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,8 +76,9 @@ public class NetConst
    * 20 - Compressed server info message.
    * 21 - Added capacity to RPSlot
    *    - Changed the RPClass serialization scheme
-   * 22 - Changed signature method. Two bytes now. */
-  final static public byte NETWORK_PROTOCOL_VERSION=22;
+   * 22 - Changed signature method. Two bytes now.
+   * 30 - Marauroa 2.0 refactoring */
+  final static public byte NETWORK_PROTOCOL_VERSION=30;
 
   final static public long PACKET_TIMEOUT_VALUE=5000;
   }

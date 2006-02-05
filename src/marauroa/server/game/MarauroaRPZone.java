@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.10 2005/11/01 10:09:28 mtotz Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.11 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -120,7 +120,7 @@ public abstract class MarauroaRPZone implements IRPZone
       // If objects has been removed, remove from modified
       modified.remove(object.getID());
       
-      perception.removed((RPObject)object.copy());
+      perception.removed((RPObject)object.clone());
 
       return object;
       }

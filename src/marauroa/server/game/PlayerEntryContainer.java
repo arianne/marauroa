@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.10 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.11 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,14 +97,14 @@ public class PlayerEntryContainer
       long value=System.currentTimeMillis()-timestampLastStored;
       if(database_storedRPObject==null)
         {
-        database_storedRPObject=(RPObject)object.copy();
+        database_storedRPObject=(RPObject)object.clone();
         }
 
       /** If the object is the same it is not stored on database at all */
       if(value>TimeoutConf.GAMESERVER_PLAYER_STORE_LAPSUS && !database_storedRPObject.equals(object))
         {
         timestampLastStored=System.currentTimeMillis();
-        database_storedRPObject=(RPObject)object.copy();
+        database_storedRPObject=(RPObject)object.clone();
         result=true;
         }
 
@@ -140,7 +140,7 @@ public class PlayerEntryContainer
 
       if(perception_previousRPObject==null || !perception_previousRPObject.equals(perception_actualRPObject))
         {
-        perception_previousRPObject=(RPObject)perception_actualRPObject.copy();
+        perception_previousRPObject=(RPObject)perception_actualRPObject.clone();
         result=true;
         }
 

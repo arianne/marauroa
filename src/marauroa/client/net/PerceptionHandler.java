@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.7 2006/01/25 17:50:52 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.8 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,9 +55,9 @@ public class PerceptionHandler
   
   public void apply(MessageS2CPerception message, Map<RPObject.ID,RPObject> world_instance) throws Exception
     {
-    listener.onPerceptionBegin(message.getTypePerception(), message.getPerceptionTimestamp());
+    listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
     
-    if(message.getTypePerception()==Perception.SYNC)
+    if(message.getPerceptionType()==Perception.SYNC)
       {
       try
         {
@@ -79,7 +79,7 @@ public class PerceptionHandler
         listener.onException(e,message);
         }
       }
-    else if(message.getTypePerception()==Perception.DELTA && previousTimestamp+1==message.getPerceptionTimestamp())
+    else if(message.getPerceptionType()==Perception.DELTA && previousTimestamp+1==message.getPerceptionTimestamp())
       {
       try
         {
@@ -140,7 +140,7 @@ public class PerceptionHandler
       listener.onTimeout();
       }
 
-    listener.onPerceptionEnd(message.getTypePerception(), message.getPerceptionTimestamp());
+    listener.onPerceptionEnd(message.getPerceptionType(), message.getPerceptionTimestamp());
     }
 
 
@@ -150,7 +150,7 @@ public class PerceptionHandler
     {
     try
       {
-      if(message.getTypePerception()==Perception.SYNC)
+      if(message.getPerceptionType()==Perception.SYNC)
         {
         if(!listener.onClear())
           {
@@ -238,17 +238,40 @@ public class PerceptionHandler
     {
     try
       {
-      RPObject myObject=message.getMyRPObject();
-      if(myObject!=null)
-        {
-        if(!listener.onMyRPObject(true,myObject))
+      RPObject added=message.getMyRPObjectAdded();
+      RPObject deleted=message.getMyRPObjectDeleted();
+      
+      if(!listener.onMyRPObject(added,deleted))
+        {        
+        RPObject.ID id=null;
+
+        if(added!=null)
           {
-          world.put(myObject.getID(),myObject);
+          id=added.getID();
           }
-        }
-      else
-        {
-        listener.onMyRPObject(false,null);
+
+        if(deleted!=null)
+          {
+          id=deleted.getID();
+          }
+        
+        if(id==null)
+          {
+          return;
+          }
+          
+        RPObject object=world.get(id);
+        try
+          {
+          object.applyDifferences(null,deleted);
+          }
+        catch(Exception e)
+          {
+          logger.warn("Exception at applying differences",e);
+          logger.warn("This is a KNOWN bug that happens when a object from a visible slot is removed");
+          }
+          
+        object.applyDifferences(added,null);
         }
       }
     catch(Exception e)

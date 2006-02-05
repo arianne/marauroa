@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.15 2005/12/17 23:13:27 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,25 +36,47 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
   private Map<String,String> content;
   private RPClass rpClass;
 
-  public Object copy()
+  public Object clone()
     {
     Attributes attr=new Attributes(this.rpClass);
 
     for(Map.Entry<String,String> entry: content.entrySet())
       {
-      attr.put(entry.getKey(),entry.getValue());
+      attr.content.put(entry.getKey(),entry.getValue());
       }
+      
+    for(Map.Entry<String,String> entry: added.entrySet())
+      {
+      attr.added.put(entry.getKey(),entry.getValue());
+      }
+      
+    for(Map.Entry<String,String> entry: deleted.entrySet())
+      {
+      attr.deleted.put(entry.getKey(),entry.getValue());
+      }
+      
     return attr;
     }
 
-  public Object copy(Attributes attr)
+  public Object fill(Attributes attr)
     {
     setRPClass(attr.rpClass);
 
     for(Map.Entry<String,String> entry: attr.content.entrySet())
       {
-      put(entry.getKey(),entry.getValue());
+      content.put(entry.getKey(),entry.getValue());
       }
+      
+    for(Map.Entry<String,String> entry: attr.added.entrySet())
+      {
+      added.put(entry.getKey(),entry.getValue());
+      }
+      
+    for(Map.Entry<String,String> entry: attr.deleted.entrySet())
+      {
+      deleted.put(entry.getKey(),entry.getValue());
+      }
+      
     return this;
     }
 
@@ -127,7 +149,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
   public void add(String attribute, int value) throws AttributeNotFoundException
     {
-    put(attribute,getInt(attribute)+value);
+    if(has(attribute))
+      {
+      put(attribute,value);
+      }
+    else
+      {
+      put(attribute,getInt(attribute)+value);
+      }
     }
 
   /** This method set the value of an attribute
@@ -452,18 +481,26 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       }
     }
 
-  public void clearVisible()
+  public int clearVisible()
     {
+    int i=0;
+
     Iterator<Map.Entry<String,String>> it=content.entrySet().iterator();
     while(it.hasNext())
       {
       Map.Entry<String,String> entry=it.next();
 
-      if(rpClass.isVisible(entry.getKey()) && !entry.getKey().equals("id"))
+      if(rpClass.isVisible(entry.getKey()) && !entry.getKey().equals("id") && !entry.getKey().equals("zoneid"))
         {
+        i++;
         it.remove();
+        
+        deleted.remove(entry.getKey());
+        added.remove(entry.getKey());
         }
       }
+    
+    return i;
     }
 
   public void resetAddedAndDeletedAttributes()
@@ -479,16 +516,16 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     for(Map.Entry<String,String> entry: attr.added.entrySet())
       {
       ++i;
-      put(entry.getKey(),entry.getValue());
+      content.put(entry.getKey(),entry.getValue());
       }
 
     if(i>0)
       {
-      put("id",attr.get("id"));
-      put("zoneid",attr.get("zoneid"));
+      content.put("id",attr.get("id"));
+      content.put("zoneid",attr.get("zoneid"));
       }
 
-    attr.added.clear();
+//    attr.added.clear();
     }
 
   public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
@@ -499,15 +536,15 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     for(Map.Entry<String,String> entry: attr.deleted.entrySet())
       {
       ++i;
-      put(entry.getKey(),entry.getValue());
+      content.put(entry.getKey(),entry.getValue());
       }
 
     if(i>0)
       {
-      put("id",attr.get("id"));
-      put("zoneid",attr.get("zoneid"));
+      content.put("id",attr.get("id"));
+      content.put("zoneid",attr.get("zoneid"));
       }
 
-    attr.deleted.clear();
+//    attr.deleted.clear();
     }
   }

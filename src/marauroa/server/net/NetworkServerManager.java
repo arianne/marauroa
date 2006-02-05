@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.15 2006/01/26 18:59:48 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -212,7 +212,7 @@ public final class NetworkServerManager
           /* We need the thread to check from time to time if user has requested
            * an exit */
           }
-        catch(IOException e)
+        catch(Throwable e)
           {
           /* Report the exception */
           logger.error("error while processing udp-packets",e);
