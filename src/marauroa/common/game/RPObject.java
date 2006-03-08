@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.16 2006/02/05 18:00:23 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.17 2006/03/08 23:40:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -563,14 +563,7 @@ public class RPObject extends Attributes
     {
     RPObject object=(RPObject)obj;
     
-    if(super.equals(obj) && slots.equals(object.slots))
-      {
-      return true;
-      }
-    else
-      {
-      return false;
-      }
+    return super.equals(obj) && slots.equals(object.slots);
     }
 
   public int hashCode()
