@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.17 2006/03/08 23:40:18 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.18 2006/03/21 13:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -253,24 +253,24 @@ public class RPObject extends Attributes
   
   public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException
     {
-    writeObject(out,false);
+    writeObject(out,DetailLevel.NORMAL);
     }
 	
-  public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
+  public void writeObject(marauroa.common.net.OutputSerializer out,DetailLevel level) throws java.io.IOException
     {
-    super.writeObject(out,fulldata);
+    super.writeObject(out,level);
     
     RPClass rpClass=getRPClass();
 		
     int size=slots.size();
     for(RPSlot slot: slots)
       {
-      if(fulldata==false && (rpClass.isRPSlotVisible(slot.getName())==false)) 
+      if(level==DetailLevel.NORMAL && (rpClass.isRPSlotVisible(slot.getName())==false)) 
         {
         //If this attribute is Hidden or private and full data is false
         --size;
         }
-      else if(fulldata==true && rpClass.isRPSlotHidden(slot.getName())) 
+      else if(level!=DetailLevel.FULL && rpClass.isRPSlotHidden(slot.getName())) 
         {
         //If this attribute is Hidden and full data is true.
         //This way we hide some attribute to player.
@@ -281,9 +281,9 @@ public class RPObject extends Attributes
     out.write(size);
     for(RPSlot slot: slots)
       {
-      if((fulldata==true && !rpClass.isRPSlotHidden(slot.getName())) || (rpClass.isRPSlotVisible(slot.getName())))
+      if((level==DetailLevel.PRIVATE && !rpClass.isRPSlotHidden(slot.getName())) || (rpClass.isRPSlotVisible(slot.getName())) || (level==DetailLevel.FULL))
         {
-        slot.writeObject(out,fulldata);
+        slot.writeObject(out,level);
         }              
       }
     }

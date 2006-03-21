@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.30
+Version 1.31
 
 
 Status
@@ -144,7 +144,10 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.30 Feb XX, 2006
+1.31 Mar 21, 2006
+- Allowed database replacement by games.
+
+1.30 Feb 26, 2006
 - Reworked Perception system.
 - Removed useless method at PlayerEntryContainer.
 - Use less memory.

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.17 2006/02/05 18:00:23 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.18 2006/03/21 13:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -325,24 +325,24 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
     {
     return content.keySet().iterator();
     }
-
+  
   public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException
     {
-    writeObject(out,false);
+    writeObject(out,DetailLevel.NORMAL);
     }
 
-  public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
+  public void writeObject(marauroa.common.net.OutputSerializer out,DetailLevel level) throws java.io.IOException
     {
     int size=content.size();
 
     for(String key: content.keySet())
       {
-      if(fulldata==false && (rpClass.isVisible(key)==false)) 
+      if(level==DetailLevel.NORMAL && (rpClass.isVisible(key)==false)) 
         {
         //If this attribute is Hidden or private and full data is false
         --size;
         }
-      else if(fulldata==true && rpClass.isHidden(key)) 
+      else if(level!=DetailLevel.FULL && rpClass.isHidden(key)) 
         {
         //If this attribute is Hidden and full data is true.
         //This way we hide some attribute to player.
@@ -356,7 +356,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       {
       String key=entry.getKey();
 
-      if((fulldata==true && !rpClass.isHidden(key)) || (rpClass.isVisible(key)))
+      if((level==DetailLevel.PRIVATE && !rpClass.isHidden(key)) || (rpClass.isVisible(key)) || (level==DetailLevel.FULL))
         {
         short code=-1;
 

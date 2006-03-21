@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.30 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.31 2006/03/21 13:19:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -293,10 +293,11 @@ public class RPServerManager extends Thread
           sendPlayerPerception(entry,perception,object);
 
           /** We check if we need to update player in the database */
-          if(entry.shouldStoredUpdate(object))
-            {
-            playersToUpdate.add(new Integer(clientid));
-            }
+// BUG: A fix to reduce database lag related.          
+//          if(entry.shouldStoredUpdate(object))
+//            {
+//            playersToUpdate.add(new Integer(clientid));
+//            }
           }
 
         if(entry.isTimedout())

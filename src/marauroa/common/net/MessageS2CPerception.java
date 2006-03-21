@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.17 2006/03/21 13:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
+import marauroa.common.game.DetailLevel;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -438,7 +439,7 @@ public class MessageS2CPerception extends Message
     else
       {
       serializer.write((byte)1);
-      myRPObjectModifiedAdded.writeObject(serializer,true);
+      myRPObjectModifiedAdded.writeObject(serializer,DetailLevel.PRIVATE);
       }
 
     if(myRPObjectModifiedDeleted==null)
@@ -448,7 +449,7 @@ public class MessageS2CPerception extends Message
     else
       {
       serializer.write((byte)1);
-      myRPObjectModifiedDeleted.writeObject(serializer,true);
+      myRPObjectModifiedDeleted.writeObject(serializer,DetailLevel.PRIVATE);
       }
       
     return array.toByteArray();

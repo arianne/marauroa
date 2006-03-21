@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.21 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.22 2006/03/21 13:19:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -447,10 +447,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
   
   public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException
     {
-    writeObject(out,false);
+    writeObject(out,DetailLevel.NORMAL);
     }
 	
-  public void writeObject(marauroa.common.net.OutputSerializer out,boolean fulldata) throws java.io.IOException
+  public void writeObject(marauroa.common.net.OutputSerializer out,DetailLevel level) throws java.io.IOException
     {
     short code=-1;
 
@@ -477,7 +477,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     out.write((int)objects.size());
     for(RPObject object: objects)
       {
-      object.writeObject(out,fulldata);
+      object.writeObject(out,level);
       }
     }
   

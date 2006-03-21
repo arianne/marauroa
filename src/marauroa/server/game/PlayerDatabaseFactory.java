@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.2 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.3 2006/03/21 13:19:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,14 +54,9 @@ public class PlayerDatabaseFactory
     Log4J.startMethod(logger,"getDatabase("+database_type+")");
     try
       {
-      if(database_type.equals("JDBCPlayerDatabase"))
-        {
-        logger.debug("loading JDBCPlayerDatabase");
-        return JDBCPlayerDatabase.getDatabase();
-        }
-
-      logger.warn("No PlayerDatabase choosen");
-      throw new NoDatabaseConfException();
+      Class databaseClass=Class.forName(database_type);
+      java.lang.reflect.Method singleton=databaseClass.getDeclaredMethod("getDatabase");
+      return (IPlayerDatabase)singleton.invoke(null);
       }
     catch(Exception e)
       {

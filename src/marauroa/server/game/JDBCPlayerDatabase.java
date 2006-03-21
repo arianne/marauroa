@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.24 2006/01/25 15:56:04 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.25 2006/03/21 13:19:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -83,13 +83,13 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
   /** Constructor that connect using a set of Properties.
    *  @param connInfo a Properties set with the options to create the database.
    *  Refer to JDBC Database HOWTO document. */
-  private JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
+  protected JDBCPlayerDatabase(Properties connInfo) throws NoDatabaseConfException, GenericDatabaseException
     {
     this.connInfo=connInfo;
     runDBScript("marauroa/server/marauroa_init.sql");
     }
 
-  private static IPlayerDatabase resetDatabaseConnection() throws Exception
+  protected static IPlayerDatabase resetDatabaseConnection() throws Exception
     {
     Configuration conf=Configuration.getConfiguration();
     Properties props = new Properties();
@@ -870,26 +870,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
     return(id);
     }
 
-  @SuppressWarnings("unused")
-  private boolean reInitDB() throws GenericDatabaseException
-    {
-    Log4J.startMethod(logger, "reInitDB");
-    try
-      {
-      return (runDBScript("marauroa/server/marauroa_drop.sql") && runDBScript("marauroa/server/marauroa_init.sql"));
-      }
-    catch(GenericDatabaseException e)
-      {
-      logger.warn("cannot reinitialize database",e);
-      throw e;
-      }
-    finally
-      {
-      Log4J.finishMethod(logger, "reInitDB");
-      }
-    }
-
-  private boolean runDBScript(String file) throws GenericDatabaseException
+  protected boolean runDBScript(String file) throws GenericDatabaseException
     {
     Log4J.startMethod(logger, "runDBScript");
 
@@ -1452,7 +1433,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase
         }
       catch(Exception e)
         {
-        logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"");
+        logger.info("Game event not logged because invalid strings: \""+source+"\",\""+event+"\",\""+param+"\"",e);
         return;
         }
         
