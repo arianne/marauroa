@@ -186,6 +186,7 @@ public class generateini
     
     String rp_RPWorldClass="";
     String rp_RPRuleProcessorClass="";
+    Strinh databaseType="marauroa.server.game.JDBCPlayerDatabase";
     
     if(gamename.equals("stendhal"))
       {      
@@ -201,8 +202,6 @@ public class generateini
       {
       System.out.println("Setting RPWorld and RPRuleProcessor for "+gamename);
       System.out.print("Write game's RPWorld class file  (games/stendhal/server/StendhalRPWorld.class): ");
-
-      databaseType="marauroa.server.game.JDBCPlayerDatabase";
 
       try
         {
