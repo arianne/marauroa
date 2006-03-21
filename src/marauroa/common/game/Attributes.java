@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.18 2006/03/21 13:19:30 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.19 2006/03/21 18:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -359,7 +359,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
       if((level==DetailLevel.PRIVATE && !rpClass.isHidden(key)) || (rpClass.isVisible(key)) || (level==DetailLevel.FULL))
         {
         short code=-1;
-
+        
         try
           {
           code=rpClass.getCode(key);
@@ -367,6 +367,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
         catch(RPClass.SyntaxException e)
           {
           logger.error("cannot writeObject, Attribute ["+key+"] not found",e);
+          code=-1;
+          }
+
+        if(level==DetailLevel.FULL)
+          {
+          // We want to ensure that attribute text is stored.
           code=-1;
           }
 

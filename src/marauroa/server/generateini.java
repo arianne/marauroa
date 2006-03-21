@@ -186,7 +186,7 @@ public class generateini
     
     String rp_RPWorldClass="";
     String rp_RPRuleProcessorClass="";
-    Strinh databaseType="marauroa.server.game.JDBCPlayerDatabase";
+    String databaseType="marauroa.server.game.JDBCPlayerDatabase";
     
     if(gamename.equals("stendhal"))
       {      

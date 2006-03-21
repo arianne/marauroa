@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.22 2006/03/21 13:19:30 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.23 2006/03/21 18:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -465,6 +465,12 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       code=-1;
       }
 
+    if(level==DetailLevel.FULL)
+      {
+      // We want to ensure that attribute text is stored.
+      code=-1;
+      }
+  
     out.write(code);
 
     if(code==-1)
