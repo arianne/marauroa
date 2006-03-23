@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.23 2006/03/21 18:39:50 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.24 2006/03/23 22:57:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -233,6 +233,19 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
       {
       logger.warn("error getting object",e);
       throw new RPObjectNotFoundException(id);
+      }
+    }
+  
+  /** Gets the object from the slot */
+  public RPObject getFirst() throws RPObjectNotFoundException
+    {
+    if(objects.size()>0)
+      {
+      return objects.get(0);
+      }
+    else
+      {
+      return null;
       }
     }
   
