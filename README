@@ -144,6 +144,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.31.1 Mar 24 2006
+- Bug at create account
+
 1.31 Mar 21, 2006
 - Allowed database replacement by games.
 
