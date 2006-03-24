@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.24 2006/03/23 22:57:47 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.25 2006/03/24 23:50:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -447,7 +447,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
     {
     StringBuilder str=new StringBuilder();
 
-    str.append(super.toString()).append(" named("+name+") with [");
+    str.append(super.toString()).append(" named("+name+") with capacity("+capacity+") [");
 
 
     for(RPObject object: objects)
