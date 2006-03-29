@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.14 2006/01/10 09:52:34 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.15 2006/03/29 18:01:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -167,7 +167,7 @@ public class RPWorld implements Iterable<IRPZone>
       }
     catch(Exception e)
       {
-      logger.error("error modifying object",e);
+      logger.error("error modifying object: "+object,e);
       throw new NoRPZoneException();  
       }
     }

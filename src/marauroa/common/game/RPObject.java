@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.19 2006/03/24 23:50:42 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.20 2006/03/29 18:01:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,7 +90,7 @@ public class RPObject extends Attributes
     return container!=null;    
     }
   
-  void setContainer(RPObject object, RPSlot slot)  // Package only access ... if only Java would have friendly declarations...
+  public void setContainer(RPObject object, RPSlot slot)  // Package only access ... if only Java would have friendly declarations...
     {
     container=object;  
     containerSlot=slot;  
