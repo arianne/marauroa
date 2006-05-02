@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.16 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.17 2006/05/02 20:28:45 intensifly Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,7 +64,11 @@ public final class NetworkServerManager
     /* Create the socket and set a timeout of 1 second */
     socket=new DatagramSocket(NetConst.marauroa_PORT);
     socket.setSoTimeout(1000);
-    socket.setTrafficClass(0x08|0x10);
+    try {
+      socket.setTrafficClass(0x08|0x10); 
+    } catch (Exception e) {
+      logger.warn("Cannot setTrafficClass " + e);
+    }
     socket.setSendBufferSize(1500*64);
 
     msgFactory=MessageFactory.getFactory();
