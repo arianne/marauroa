@@ -1,10 +1,82 @@
+/* $Id: generateini.java,v 1.10 2006/05/26 16:35:09 mtotz Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2003 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server;
 
 import java.io.*;
 import marauroa.common.crypto.RSAKey;
 
+/**
+ * generates the ini file 
+ */
 public class generateini 
   {
+  /**
+   * reads a String from the input. When no String is choosen the defaultValue
+   * is used.
+   */
+  public static String getStringWithDefault(BufferedReader input, String defaultValue)
+    {
+    String ret = "";
+    try
+      {
+      ret = input.readLine();
+      }
+    catch(IOException e)
+      {
+      e.printStackTrace();
+      System.exit(1);
+      }
+
+    if (ret.length() == 0 && defaultValue != null)
+      {
+      ret = defaultValue;
+      }
+      return ret;
+    }
+
+  /**
+   * reads a String from the input. When no String is choosen the errorMessage
+   * is is displayed and the application is terminated.
+   */
+  public static String getStringWithoutDefault(BufferedReader input, String errorMessage)
+    {
+    String ret = "";
+    try
+      {
+      ret = input.readLine();
+      }
+    catch(IOException e)
+      {
+      e.printStackTrace();
+      System.exit(1);
+      }
+
+    if (ret.length() == 0)
+      {
+      System.out.println(errorMessage);
+      System.out.println("Terminating...");
+      System.exit(1);
+      }
+      return ret;
+    }
+  
+  /** makes the first letter of the source uppercase */
+  public static String uppcaseFirstLetter(String source)
+    {
+    return (source.length() > 0) ? Character.toUpperCase(source.charAt(0))+source.substring(1) : source;
+    }
+  
+  
   public static void main (String[] args)
     {
     BufferedReader input=new BufferedReader(new InputStreamReader(System.in));
@@ -28,104 +100,33 @@ public class generateini
     System.out.println();
     System.out.println();
     
-    /** Create a .ini file for storing options */
-    System.out.print("Write name of the .ini file (marauroa.ini): ");
-    String filename="";
-    try
-      {
-      filename=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
+    System.out.println("This is the configuration utility for marauroa.");
+    System.out.println("Default values for each question will be printed in brackets.\n\n");
     
-    if(filename.equals(""))
-      {
-      filename="marauroa.ini";
-      }
-
-    System.out.println("Using \""+filename+"\" as .ini file");
-    System.out.println();
+    /** Create a .ini file for storing options */
+    System.out.print("Write name of the .ini file [marauroa.ini]: ");
+    String filename = getStringWithDefault(input, "marauroa.ini");
+    File file = new File(filename);
+    System.out.println("Writing to \""+file.getAbsolutePath()+"\"\n");
     
     
     /** Write configuration for database */
-    System.out.print("Write name of the database (marauroa): ");
-    String databasename="";
-    try
-      {
-      databasename=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(databasename.equals(""))
-      {
-      System.out.println("Aborting: No database chosen");
-      return;
-      }
+    System.out.print("Write name of the database [marauroa]: ");
+    String databasename = getStringWithDefault(input, "marauroa");
+    System.out.println("Using \""+databasename+"\" as database name\n");
 
-    System.out.println("Using \""+databasename+"\" as database name");
-    System.out.println();
+    System.out.print("Write name of the database host [localhost]: ");
+    String databasehost = getStringWithDefault(input, "localhost");
+    System.out.println("Using \""+databasehost+"\" as database host\n");
 
-    System.out.print("Write name of the database host (localhost): ");
-    String databasehost="";
-    try
-      {
-      databasehost=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(databasehost.equals(""))
-      {
-      databasehost="localhost";
-      }
+    System.out.print("Write name of the database user: ");
+    String databaseuser = getStringWithoutDefault(input, "Please enter a database user");
+    System.out.println("Using \""+databaseuser+"\" as database user\n");
 
-    System.out.println("Using \""+databasehost+"\" as database host");
-    System.out.println();
+    System.out.print("Write value of the database user password: ");
+    String databasepassword = getStringWithoutDefault(input, "Please enter a database password");
+    System.out.println("Using \""+databasepassword+"\" as database user password\n");
 
-    System.out.print("Write name of the database user (marauroa_user): ");
-    String databaseuser="";
-    try
-      {
-      databaseuser=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(databaseuser.equals(""))
-      {
-      databaseuser="marauroa_user";
-      }
-
-    System.out.println("Using \""+databaseuser+"\" as database user");
-    System.out.println();
-
-    System.out.print("Write value of the database user password (marauroa_pass): ");
-    String databasepassword="";
-    try
-      {
-      databasepassword=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(databasepassword.equals(""))
-      {
-      databasepassword="marauroa_pass";
-      }
-
-    System.out.println("Using \""+databasepassword+"\" as database user password");
-    System.out.println();
     System.out.println("In order to make efective these options please run:");
     System.out.println("# mysql");
     System.out.println("  create database "+databasename+";");
@@ -134,25 +135,9 @@ public class generateini
     System.out.println();
     
     /** Choose port that will be used */    
-    System.out.print("Write UDP port used by Marauroa (>1024): ");
-    String udpport="";
-    try
-      {
-      udpport=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(udpport.equals(""))
-      {
-      System.out.println("Aborting: No UDP port chosen");
-      return;
-      }
-
-    System.out.println("Using \""+udpport+"\" as UDP port for Marauroa");
-    System.out.println();
+    System.out.print("Write UDP port >1024 used by Marauroa. Note: Stendhal uses port 32160: ");
+    String udpport = getStringWithoutDefault(input, "Please choose a UDP port.");
+    System.out.println("Using \""+udpport+"\" as UDP port for Marauroa\n");
 
     /** Choose RP Content that will be used */    
     System.out.println("Marauroa is a server middleware to run multiplayer games. You need to"+
@@ -161,28 +146,11 @@ public class generateini
     System.out.println("- mapacman");
     System.out.println("- the1001");
     System.out.println("If you write your own game, just write its name here.");
-    System.out.println ("You will be asked for more info.");
-    System.out.println();
+    System.out.println ("You will be asked for more info.\n");
     
     System.out.print("Write name of the game server will run: ");
-    String gamename="";
-    try
-      {
-      gamename=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(gamename.equals(""))
-      {
-      System.out.println("Aborting: No UDP port chosen");
-      return;
-      }
-
-    System.out.println("Using \""+gamename+"\" as game");
-    System.out.println();
+    String gamename = getStringWithoutDefault(input, "Please enter the name of a game.");
+    System.out.println("Using \""+gamename+"\" as game\n");
     
     String rp_RPWorldClass="";
     String rp_RPRuleProcessorClass="";
@@ -201,133 +169,46 @@ public class generateini
     else
       {
       System.out.println("Setting RPWorld and RPRuleProcessor for "+gamename);
-      System.out.print("Write game's RPWorld class file  (games/stendhal/server/StendhalRPWorld.class): ");
+      String defaultRpWorld = "games/stendhal/"+gamename+"/server/"+uppcaseFirstLetter(gamename)+"RPWorld.class";
+      System.out.print("Write game's RPWorld class file  ["+defaultRpWorld+"]: ");
+      rp_RPWorldClass = getStringWithDefault(input, defaultRpWorld);
+      System.out.println("Using RPWorld class \""+rp_RPWorldClass+"\"\n");
 
-      try
-        {
-        rp_RPWorldClass=input.readLine();
-        }
-      catch(IOException e)
-        {
-        System.exit(1);
-        }
-    
-      if(udpport.equals(""))
-        {
-        System.out.println("Aborting: No RPWorld class choosen");
-        return;
-        }
-
-      System.out.print("Write game's RPRuleProcessor class file  (games/stendhal/server/StendhalRPRuleProcessor.class): ");
-
-      try
-        {
-        rp_RPRuleProcessorClass=input.readLine();
-        }
-      catch(IOException e)
-        {
-        System.exit(1);
-        }
-    
-      if(udpport.equals(""))
-        {
-        System.out.println("Aborting: No RPRuleProcessor class choosen");
-        return;
-        }
+      String defaultRpRuleProcessor = "games/stendhal/"+gamename+"/server/"+uppcaseFirstLetter(gamename)+"RPRuleProcessor.class";
+      System.out.print("Write game's RPRuleProcessor class file  ["+defaultRpRuleProcessor+"]: ");
+      rp_RPRuleProcessorClass = getStringWithDefault(input, defaultRpRuleProcessor);
+      System.out.println("Using RPRuleProcessor class \""+rp_RPWorldClass+"\"\n");
       }
-     
+
     System.out.println();
     
 
     /** Choose turn time that will be used */    
-    System.out.print("Write turn time duration in milliseconds (200<time<1000)): ");
-    String turntime="";
-    try
-      {
-      turntime=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(udpport.equals(""))
-      {      
-      turntime="300";
-      }
-
-    System.out.println("Using turn of "+turntime+" milliseconds");
-    System.out.println();
+    System.out.print("Write turn time duration in milliseconds (200<time<1000) [300]: ");
+    String turntime = getStringWithDefault(input, "300");
+    System.out.println("Using turn of "+turntime+" milliseconds\n");
 
 
     /** Choose where logs and statistics are generated */    
-    System.out.print("Write path for logs generation (./)): ");
-    String logs_path="";
-    try
-      {
-      logs_path=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(logs_path.equals(""))
-      {      
-      logs_path="./";
-      }
+    System.out.print("Write path for logs generation [./]: ");
+    String logs_path = getStringWithDefault(input, "./");
+    System.out.println("Using path \""+logs_path+"\" for log generation\n");
 
-    System.out.println("Using path \""+logs_path+"\" for log generation");
-    System.out.println();
+    System.out.print("Write path for statistics generation [./]: ");
+    String statistics_path = getStringWithDefault(input, "./");
+    System.out.println("Using path \""+statistics_path+"\" for statistics generation\n");
 
-    System.out.print("Write path for statistics generation (./)): ");
-    String statistics_path="";
-    try
-      {
-      statistics_path=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(statistics_path.equals(""))
-      {      
-      statistics_path="./";
-      }
-
-    System.out.println("Using path \""+statistics_path+"\" for statistics generation");
-    System.out.println();
-
-    System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create (512): ");
-    String keySize="";
-    try
-      {
-      keySize=input.readLine();
-      }
-    catch(IOException e)
-      {
-      System.exit(1);
-      }
-    
-    if(keySize.equals("") || Integer.valueOf(keySize) <= 0)
-      {      
-      keySize="512";
-      }
-
+    System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+    String keySize = getStringWithDefault(input, "512");
     System.out.println("Using key of " + keySize + " bits.");
     System.out.println("Please wait while the key is generated.");
-
     RSAKey key = RSAKey.generateKey(Integer.valueOf(keySize));
-    
-    System.out.println();
+    System.out.println("\n--- COMPLETE ---");
 
-
-    System.out.println("COMPLETE---");
-    System.out.println("Generating \""+filename+"\" file");
+    System.out.println("Generating \""+file.getAbsolutePath()+"\" file");
     try
       {
-      PrintWriter output=new PrintWriter(new FileOutputStream(filename));
+      PrintWriter output=new PrintWriter(new FileOutputStream(file));
       output.println("### Configuration file for "+gamename);
       output.println("### Automatically generated by generateini");
       output.println();
