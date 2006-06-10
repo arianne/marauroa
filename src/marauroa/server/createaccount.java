@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.10 2006/03/24 16:55:39 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.11 2006/06/10 13:37:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -130,7 +130,7 @@ public abstract class createaccount
     try
       {
       Configuration.setConfigurationFile(iniFile);
-      logger.info("Trying to create username("+get("username")+"), password("+get("password")+"), character("+get("character")+")");
+      logger.info("Trying to create username("+get("username")+"), character("+get("character")+")");
 
       JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase();
       trans=playerDatabase.getTransaction();
