@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.22 2006/01/29 18:54:16 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.23 2006/06/18 11:20:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,7 +81,7 @@ public abstract class ariannexp
    *  @param username Player username
    *  @param password Player password
    *  @return true if login is successful. */
-  public boolean login(String username, String password) throws ariannexpTimeoutException
+  public synchronized boolean login(String username, String password) throws ariannexpTimeoutException
     {
     Log4J.startMethod(logger, "login");
     try
@@ -189,7 +189,7 @@ public abstract class ariannexp
   /** After login allows you to choose a character to play
    *  @param character name of the character we want to play with.
    *  @return true if choosing character is successful. */
-  public boolean chooseCharacter(String character) throws ariannexpTimeoutException
+  public synchronized boolean chooseCharacter(String character) throws ariannexpTimeoutException
     {
     Log4J.startMethod(logger, "chooseCharacter");
     try
@@ -230,7 +230,7 @@ public abstract class ariannexp
       }
     }
 
-  public boolean createAccount(String username, String password, String email) throws ariannexpTimeoutException
+  public synchronized boolean createAccount(String username, String password, String email) throws ariannexpTimeoutException
     {
     Log4J.startMethod(logger, "createAccount");
     try
@@ -286,7 +286,7 @@ public abstract class ariannexp
     }
 
   /** Sends a RPAction to server and blocks until server confirms it. */
-  public void send(RPAction action, boolean block) throws ariannexpTimeoutException
+  public synchronized void send(RPAction action, boolean block) throws ariannexpTimeoutException
     {
     /** TODO: Useless we need to return something or disable blocking */
     Log4J.startMethod(logger, "send");
@@ -325,7 +325,7 @@ public abstract class ariannexp
 
   /** Request logout of server
    *  @return true if we have successfully logout. */
-  public boolean logout()
+  public synchronized boolean logout()
     {
     Log4J.startMethod(logger, "logout");
 
@@ -372,7 +372,7 @@ public abstract class ariannexp
     }
 
   /** Call this method to get and apply messages */
-  public boolean loop(int delta)
+  public synchronized boolean loop(int delta)
     {
     Log4J.startMethod(logger, "loop");
 
