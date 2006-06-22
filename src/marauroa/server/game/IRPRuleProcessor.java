@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.6 2005/12/20 16:09:48 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.7 2006/06/22 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.game;
 
 import java.util.*;
 import marauroa.common.game.*;
+import marauroa.server.createaccount.Result;
 
 /** Interface for the class that is in charge of executing actions.
  *  Implement it to personalize the game */
@@ -27,7 +28,7 @@ public interface IRPRuleProcessor
   public boolean checkGameVersion(String game, String version);
   
   /** Creates an account for the game */  
-  public boolean createAccount(String username, String password, String email);
+  public Result createAccount(String username, String password, String email);
     
   /** This method is called *before* adding an action by RPScheduler so you can 
    *  choose not to allow the action to be added by returning false */

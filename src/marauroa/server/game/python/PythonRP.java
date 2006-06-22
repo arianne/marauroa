@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.4 2005/12/20 16:09:48 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.5 2006/06/22 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 
 package marauroa.server.game.python;
 
+import marauroa.server.createaccount.Result;
 import marauroa.server.game.*;
 import marauroa.common.game.*;
 import marauroa.common.net.*;
@@ -41,9 +42,9 @@ public class PythonRP
     return true;
     }
   
-  public boolean createAccount(String username, String password, String email)
+  public Result createAccount(String username, String password, String email)
     {
-    return false;
+    return Result.FAILED_EXCEPTION;
     }  
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)

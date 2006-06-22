@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.7 2005/12/20 16:09:48 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.8 2006/06/22 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.server.createaccount.Result;
 
 
 /** Default implementation for <code>IRPRuleProcessor</code> */
@@ -42,9 +43,9 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor
     return false;
     }
 
-  public boolean createAccount(String username, String password, String email)
+  public Result createAccount(String username, String password, String email)
     {
-    return false;
+    return Result.FAILED_EXCEPTION;
     }
 
   public boolean onActionAdd(RPAction action, List<RPAction> actionList)

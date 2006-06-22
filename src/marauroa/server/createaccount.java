@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.11 2006/06/10 13:37:30 nhnb Exp $ */
+/* $Id: createaccount.java,v 1.12 2006/06/22 15:45:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,15 @@ import org.apache.log4j.Logger;
 public abstract class createaccount
   {
   private static final Logger logger=Log4J.getLogger(createaccount.class);
+  
+  public enum Result {
+	  OK_ACCOUNT_CREATED,
+	  FAILED_EMPTY_STRING,
+	  FAILED_INVALID_CHARACTER_USED,
+	  FAILED_STRING_SIZE,
+	  FAILED_PLAYER_EXISTS,
+	  FAILED_EXCEPTION
+  }
 
   /** This class store some basic information about the type of param, its name
    *  it default value and the allowed size ( > min and < max ) */
@@ -86,7 +95,7 @@ public abstract class createaccount
    *  instance so that you can get valid rpobjects' ids */
   public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
 
-  protected int run(String[] args)
+  protected Result run(String[] args)
     {
     int i=0;
     String iniFile = "marauroa.ini";
@@ -118,7 +127,7 @@ public abstract class createaccount
 
         logger.info("-i"+" to to define .ini file");
 
-        return 1;
+        return Result.FAILED_EMPTY_STRING;
         }
 
       ++i;
@@ -143,7 +152,7 @@ public abstract class createaccount
         if(item.value.equals(""))
           {
           logger.info("String is empty or null: "+item.name);
-          return 1;
+          return Result.FAILED_EMPTY_STRING;
           }
         }
 
@@ -153,7 +162,7 @@ public abstract class createaccount
         if(!playerDatabase.validString(item.value))
           {
           logger.info("String not valid: "+item.name);
-          return 2;
+          return Result.FAILED_INVALID_CHARACTER_USED;
           }
         }
 
@@ -163,7 +172,7 @@ public abstract class createaccount
         if(item.value.length()>item.max || item.value.length()<item.min)
           {
           logger.info("String size not valid: "+item.name);
-          return 3;
+          return Result.FAILED_STRING_SIZE;
           }
         }
 
@@ -171,7 +180,7 @@ public abstract class createaccount
       if(playerDatabase.hasPlayer(trans, get("username")))
         {
         logger.info("ERROR: Player exists");
-        return 4;
+        return Result.FAILED_PLAYER_EXISTS;
         }
 
       logger.info("Adding player");
@@ -200,9 +209,10 @@ public abstract class createaccount
           logger.fatal("Failed Rollback: "+ae.getMessage());
           }
         }
-      return 5;
+      
+      return Result.FAILED_EXCEPTION;
       }
 
-    return 0;
+    return Result.OK_ACCOUNT_CREATED;
     }
   }

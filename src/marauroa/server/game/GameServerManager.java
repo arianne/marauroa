@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.22 2006/01/10 22:04:37 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.23 2006/06/22 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.*;
 import marauroa.server.net.NetworkServerManager;
+import marauroa.server.createaccount.Result;
 import org.apache.log4j.Logger;
 
 /** The GameServerManager is a active entity of the marauroa.game package,
@@ -294,6 +295,16 @@ public final class GameServerManager extends Thread
             /* NOTE: Set the Object so that it is stored in Database */
             playerContainer.setRPObject(clientid,object);
             }
+          else
+            {
+            /* Send Logout ACK message */
+            MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
+      
+            msgLogout.setClientID(clientid);
+            netMan.addMessage(msgLogout);
+            
+            return;
+            }
           }
         catch(Exception e)
           {
@@ -438,7 +449,8 @@ public final class GameServerManager extends Thread
     Log4J.startMethod(logger,"processCreateAccount");
     try
       {
-      if(rpMan.createAccount(msg.getUsername(),msg.getPassword(), msg.getEmail()))
+      Result result=rpMan.createAccount(msg.getUsername(),msg.getPassword(), msg.getEmail());
+      if(result==Result.OK_ACCOUNT_CREATED)
         {
         logger.debug("Account ("+msg.getUsername()+") created.");
         MessageS2CCreateAccountACK msgCreateAccountACK=new MessageS2CCreateAccountACK(msg.getAddress());  
@@ -446,7 +458,18 @@ public final class GameServerManager extends Thread
         }
       else
         {
-        MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS);  
+    	MessageS2CCreateAccountNACK.Reasons reason;
+    	
+    	if(result==Result.FAILED_PLAYER_EXISTS)
+    	  {
+    	  reason=MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS;
+    	  }
+    	else
+    	  {
+    	  reason=MessageS2CCreateAccountNACK.Reasons.FIELD_TOO_SHORT;    	  
+    	  }
+    	
+        MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),reason);  
         netMan.addMessage(msgCreateAccountNACK);        
         }
       }

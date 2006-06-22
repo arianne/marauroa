@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.31 2006/03/21 13:19:31 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.32 2006/06/22 15:45:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,7 @@ import marauroa.common.net.MessageS2CPerception;
 import marauroa.common.net.MessageS2CTransferREQ;
 import marauroa.common.net.TransferContent;
 import marauroa.server.net.NetworkServerManager;
+import marauroa.server.createaccount;
 
 import org.apache.log4j.Logger;
 
@@ -183,7 +184,7 @@ public class RPServerManager extends Thread
     return ruleProcessor.checkGameVersion(game,version);
     }
   
-  public boolean createAccount(String username, String password, String email)
+  public createaccount.Result createAccount(String username, String password, String email)
     {
     return ruleProcessor.createAccount(username,password,email);
     }

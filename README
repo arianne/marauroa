@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.31
+Version 1.32
 
 
 Status
@@ -144,6 +144,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.32 Jun 22, 2006
+- Improved createaccount method to return information about the cause of the failure.
+
 1.31.1 Mar 24 2006
 - Bug at create account
 

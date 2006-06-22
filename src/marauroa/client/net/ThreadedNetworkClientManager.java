@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.4 2006/01/29 18:54:16 arianne_rpg Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.5 2006/06/22 15:45:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,14 +18,11 @@ import java.net.*;
 import java.util.*;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-import marauroa.common.CRC;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
-import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
-import marauroa.server.game.Statistics;
 import org.apache.log4j.Logger;
 
 
