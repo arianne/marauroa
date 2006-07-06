@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.11 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.12 2006/07/06 01:03:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -182,8 +182,10 @@ public abstract class MarauroaRPZone implements IRPZone
  
   public Perception getPerception(RPObject.ID id, byte type)
     {
+    /* deactivated very time consuming debug output
     if ((prebuildDeltaPerception==null || prebuildTotalPerception==null) && logger.isDebugEnabled())
       {
+
       StringBuffer world=new StringBuffer("World content: \n");
       
       for(RPObject object: objects.values())
@@ -192,6 +194,7 @@ public abstract class MarauroaRPZone implements IRPZone
         }
       logger.debug("getPerception(), "+world.toString());
       }
+    */
 
     if(type==Perception.DELTA)
       {
