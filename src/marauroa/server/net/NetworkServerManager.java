@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.22 2006/07/12 17:20:40 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.23 2006/07/12 21:32:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,10 +15,13 @@ package marauroa.server.net;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.InvalidVersionException;
@@ -35,26 +38,28 @@ import org.apache.log4j.Logger;
  *  it is in charge of sending and recieving the packages from the network. */
 public final class NetworkServerManager implements NetworkServerManagerCallback {
 	/** the logger instance. */
-	static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
+	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
 	/** The server socket from where we recieve the packets. */
-	DatagramSocket socket;
+	private DatagramSocket socket;
 
 	/** While keepRunning is true, we keep recieving messages */
-	boolean keepRunning;
+	private boolean keepRunning;
 
 	/** isFinished is true when the thread has really exited. */
-	boolean isfinished;
+	private boolean isfinished;
 
 	/** A List of Message objects: List<Message> */
-	List<Message> messages;
+	private List<Message> messages;
 
 	/** MessageFactory */
-	MessageFactory msgFactory;
+	private MessageFactory msgFactory;
+
+	Map<InetSocketAddress, Socket> tcpSockets = new HashMap<InetSocketAddress, Socket>();
 
 	private NetworkServerManagerRead readManager;
-
-	private NetworkServerManagerWrite writeManager;
+	private NetworkServerManagerWrite udpWriter;
+	private TCPWriter tcpWriter;
 
 	/** Statistics */
 	Statistics stats;
@@ -91,7 +96,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 		stats = Statistics.getStatistics();
 		readManager = new NetworkServerManagerRead(this, socket, stats);
 		readManager.start();
-		writeManager = new NetworkServerManagerWrite(this, socket, stats);
+		udpWriter = new NetworkServerManagerWrite(this, socket, stats);
+		tcpWriter = new TCPWriter(this, stats);
 		logger.debug("NetworkServerManager started successfully");
 	}
 
@@ -197,7 +203,12 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	 */
 	public void sendMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
-		writeManager.write(msg);
+		Socket socket = tcpSockets.get(msg.getAddress());
+		if (socket != null) {
+			tcpWriter.write(msg, socket);
+		} else {
+			udpWriter.write(msg);
+		}
 		Log4J.finishMethod(logger, "addMessage");
 	}
 
