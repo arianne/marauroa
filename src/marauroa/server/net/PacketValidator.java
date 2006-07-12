@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.6 2005/07/14 18:46:38 mtotz Exp $ */
+/* $Id: PacketValidator.java,v 1.7 2006/07/12 13:00:49 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,7 +59,12 @@ public class PacketValidator
     Log4J.finishMethod(logger, "PacketValidator");
     }
   
-  /** returns true if the source ip is banned */
+  /**
+   * Is the source ip-address banned? 
+   *
+   * @param packet the DatagramPacket received
+   * @return true if the source ip is banned
+   */
   public boolean checkBanned(DatagramPacket packet)
     {
     boolean banned = false;
@@ -67,7 +72,12 @@ public class PacketValidator
     return(banned);
     }
 
-  /** returns true if the address is banned */
+  /**
+   * Is the source ip-address banned? 
+   *
+   * @param address the InetAddress of the source
+   * @return true if the source ip is banned
+   */
   public synchronized boolean checkBanned(InetAddress address)
     {
     boolean banned = false;
@@ -116,7 +126,7 @@ public class PacketValidator
       if(ban_list_tmp.size()>0)
         {
         banList = new InetAddressMask[ban_list_tmp.size()];
-        banList = (InetAddressMask[])ban_list_tmp.toArray(banList);
+        banList = ban_list_tmp.toArray(banList);
         }
       
       // free database resources

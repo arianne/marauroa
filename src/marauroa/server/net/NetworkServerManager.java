@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.17 2006/05/02 20:28:45 intensifly Exp $ */
+/* $Id: NetworkServerManager.java,v 1.18 2006/07/12 12:58:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,17 +12,18 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-/***
- *** NOTE: I have again downgrade to 1.5 to disable multithread send that is
- ***   making CPU usage to reach 100% 
- */
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.*;
-import java.util.*;
-import marauroa.common.Log4J;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import marauroa.common.CRC;
+import marauroa.common.Log4J;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
@@ -30,6 +31,7 @@ import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics;
+
 import org.apache.log4j.Logger;
 
 
@@ -38,23 +40,30 @@ import org.apache.log4j.Logger;
 public final class NetworkServerManager
   {
   /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
+  static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
   /** The server socket from where we recieve the packets. */
-  private DatagramSocket socket;
+  DatagramSocket socket;
   /** While keepRunning is true, we keep recieving messages */
-  private boolean keepRunning;
+  boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
-  private boolean isfinished;
+  boolean isfinished;
   /** A List of Message objects: List<Message> */
-  private List<Message> messages;
-  private MessageFactory msgFactory;
+  List<Message> messages;
+  /** MessageFactory */
+  MessageFactory msgFactory;
   private NetworkServerManagerRead readManager;
   private NetworkServerManagerWrite writeManager;
-  private Statistics stats;
-  private PacketValidator packetValidator;
+  /** Statistics */
+  Statistics stats;
+  /** checkes if the ip-address is banned */
+  PacketValidator packetValidator;
   
-  /** Constructor that opens the socket on the marauroa_PORT and start the thread
-   to recieve new messages from the network. */
+  /** 
+   * Constructor that opens the socket on the marauroa_PORT and start the thread
+   * to recieve new messages from the network.
+   *
+   * @throws SocketException if the server socket cannot be created or bound.
+   */
   public NetworkServerManager() throws SocketException
     {
     Log4J.startMethod(logger, "NetworkServerManager");
@@ -96,8 +105,9 @@ public final class NetworkServerManager
     socket.close();
     logger.debug("NetworkServerManager is down");
     }
-    
-  private synchronized void newMessageArrived()
+
+  /** This methods notifies waiting threads to continue */
+  synchronized void newMessageArrived()
     {
     notifyAll();
     }
@@ -117,6 +127,7 @@ public final class NetworkServerManager
         }
       catch(InterruptedException e)
         {
+    	  // do nothing
         }
       }
 
@@ -129,7 +140,7 @@ public final class NetworkServerManager
     else
       {
       logger.debug("Message returned.");
-      message = (Message)messages.remove(0);
+      message = messages.remove(0);
       }
     Log4J.finishMethod(logger, "getMessage");
     return message;
@@ -148,11 +159,12 @@ public final class NetworkServerManager
         }
       catch(InterruptedException e)
         {
+    	  // do nothing
         }
       }
 
     Log4J.finishMethod(logger, "getMessage[blocking]");
-    return (Message)messages.remove(0);
+    return messages.remove(0);
     }
     
   /** This method add a message to be delivered to the client the message is pointed to.
@@ -167,12 +179,16 @@ public final class NetworkServerManager
   /** The active thread in charge of recieving messages from the network. */
   class NetworkServerManagerRead extends Thread
     {
+	/**
+	 * Create a new NetworkServerManagerReader instance
+	 */
     public NetworkServerManagerRead()
       {
       super("NetworkServerManagerRead");
       }
     
     /** Method that execute the reading. It runs as a active thread forever. */
+    @Override
     public void run()
       {
       logger.debug("run()");
@@ -232,11 +248,6 @@ public final class NetworkServerManager
   /** A wrapper class for sending messages to clients */
   class NetworkServerManagerWrite
     {
-    private int last_signature;
-    public NetworkServerManagerWrite()
-      {
-      last_signature=0;
-      }
     
     private byte[] serializeMessage(Message msg) throws IOException
       {
@@ -250,7 +261,11 @@ public final class NetworkServerManager
     final private int PACKET_SIGNATURE_SIZE=4;
     final private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
       
-    /** Method that execute the writting */
+    /**
+     * Method that execute the writting
+     *
+     * @param msg Message to write
+     */
     public void write(Message msg)
       {
       Log4J.startMethod(logger, "write");
