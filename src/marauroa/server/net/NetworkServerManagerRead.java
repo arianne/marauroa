@@ -49,12 +49,11 @@ class NetworkServerManagerRead extends Thread {
 					try {
 						Message msg = networkServerManager.msgFactory.getMessage(packet.getData(), (InetSocketAddress) packet.getSocketAddress());
 						logger.debug("Received message: " + msg.toString());
-						networkServerManager.messages.add(msg);
-						networkServerManager.newMessageArrived();
+						networkServerManager.receiveMessage(msg);
 					} catch (InvalidVersionException e) {
 						networkServerManager.stats.add("Message invalid version", 1);
 						MessageS2CInvalidMessage msg = new MessageS2CInvalidMessage((InetSocketAddress) packet.getSocketAddress(), "Invalid client version: Update client");
-						networkServerManager.addMessage(msg);
+						networkServerManager.sendMessage(msg);
 					}
 				} else {
 					logger.debug("UDP Packet discarded - client(" + packet + ") is banned.");

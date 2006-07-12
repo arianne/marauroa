@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.23 2006/06/22 15:45:55 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.24 2006/07/12 16:56:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -240,7 +240,7 @@ public final class GameServerManager extends Thread
         /* Correct: Character exist */
         MessageS2CChooseCharacterACK msgChooseCharacterACK=new MessageS2CChooseCharacterACK(msg.getAddress());
         msgChooseCharacterACK.setClientID(clientid);
-        netMan.addMessage(msgChooseCharacterACK);
+        netMan.sendMessage(msgChooseCharacterACK);
         }
       else
         {
@@ -251,7 +251,7 @@ public final class GameServerManager extends Thread
         MessageS2CChooseCharacterNACK msgChooseCharacterNACK=new MessageS2CChooseCharacterNACK(msg.getAddress());
 
         msgChooseCharacterNACK.setClientID(clientid);
-        netMan.addMessage(msgChooseCharacterNACK);
+        netMan.sendMessage(msgChooseCharacterNACK);
         }
       }
     catch(Exception e)
@@ -301,7 +301,7 @@ public final class GameServerManager extends Thread
             MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
       
             msgLogout.setClientID(clientid);
-            netMan.addMessage(msgLogout);
+            netMan.sendMessage(msgLogout);
             
             return;
             }
@@ -323,7 +323,7 @@ public final class GameServerManager extends Thread
       MessageS2CLogoutACK msgLogout=new MessageS2CLogoutACK(msg.getAddress());
 
       msgLogout.setClientID(clientid);
-      netMan.addMessage(msgLogout);
+      netMan.sendMessage(msgLogout);
       }
     catch(Exception e)
       {
@@ -379,7 +379,7 @@ public final class GameServerManager extends Thread
       MessageS2CActionACK msgAction=new MessageS2CActionACK(msg.getAddress(),action.getInt("action_id"));
 
       msgAction.setClientID(clientid);
-      netMan.addMessage(msgAction);
+      netMan.sendMessage(msgAction);
       }
     catch(Exception e)
       {
@@ -427,7 +427,7 @@ public final class GameServerManager extends Thread
       {
       MessageS2CLoginSendKey msgLoginSendKey=new MessageS2CLoginSendKey(msg.getAddress(),key);
       msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
-      netMan.addMessage(msgLoginSendKey);
+      netMan.sendMessage(msgLoginSendKey);
       }
     else
       {
@@ -437,7 +437,7 @@ public final class GameServerManager extends Thread
       /* Notify player of the event. */
       MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
 
-      netMan.addMessage(msgLoginNACK);
+      netMan.sendMessage(msgLoginNACK);
       }
     
     
@@ -454,7 +454,7 @@ public final class GameServerManager extends Thread
         {
         logger.debug("Account ("+msg.getUsername()+") created.");
         MessageS2CCreateAccountACK msgCreateAccountACK=new MessageS2CCreateAccountACK(msg.getAddress());  
-        netMan.addMessage(msgCreateAccountACK);        
+        netMan.sendMessage(msgCreateAccountACK);        
         }
       else
         {
@@ -470,7 +470,7 @@ public final class GameServerManager extends Thread
     	  }
     	
         MessageS2CCreateAccountNACK msgCreateAccountNACK=new MessageS2CCreateAccountNACK(msg.getAddress(),reason);  
-        netMan.addMessage(msgCreateAccountNACK);        
+        netMan.sendMessage(msgCreateAccountNACK);        
         }
       }
     catch(Exception e)
@@ -493,7 +493,7 @@ public final class GameServerManager extends Thread
         /* Notify player of the event. */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
   
-        netMan.addMessage(msgLoginNACK);
+        netMan.sendMessage(msgLoginNACK);
         return;
         }
         
@@ -507,7 +507,7 @@ public final class GameServerManager extends Thread
       
       MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getAddress(), nonce);
       msgLoginSendNonce.setClientID(clientid);
-      netMan.addMessage(msgLoginSendNonce);
+      netMan.sendMessage(msgLoginSendNonce);
       }
     catch(NoSuchClientIDException e)
       {
@@ -543,7 +543,7 @@ public final class GameServerManager extends Thread
         /* Send player the Login NACK message */
         MessageS2CLoginNACK msgLoginNACK=new MessageS2CLoginNACK(msg.getAddress(),MessageS2CLoginNACK.Reasons.USERNAME_WRONG);
 
-        netMan.addMessage(msgLoginNACK);
+        netMan.sendMessage(msgLoginNACK);
         playerContainer.removeRuntimePlayer(clientid);
         return;
         }
@@ -586,20 +586,20 @@ public final class GameServerManager extends Thread
       MessageS2CLoginACK msgLoginACK=new MessageS2CLoginACK(msg.getAddress());
 
       msgLoginACK.setClientID(clientid);
-      netMan.addMessage(msgLoginACK);
+      netMan.sendMessage(msgLoginACK);
 
       /* Send player the ServerInfo */
       MessageS2CServerInfo msgServerInfo=new MessageS2CServerInfo(msg.getAddress(),ServerInfo.get());
 
       msgServerInfo.setClientID(clientid);
-      netMan.addMessage(msgServerInfo);
+      netMan.sendMessage(msgServerInfo);
 
       /* Build player character list and send it to client */
       String[] characters=playerContainer.getCharacterList(clientid);
       MessageS2CCharacterList msgCharacters=new MessageS2CCharacterList(msg.getAddress(),characters);
 
       msgCharacters.setClientID(clientid);
-      netMan.addMessage(msgCharacters);
+      netMan.sendMessage(msgCharacters);
       playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.ClientState.LOGIN_COMPLETE);
       playerContainer.get(clientid).loginInformations = null;
       }
@@ -666,7 +666,7 @@ public final class GameServerManager extends Thread
             logger.debug("Transfering content "+content);
             MessageS2CTransfer msgTransfer=new MessageS2CTransfer(entry.source, content);
             msgTransfer.setClientID(clientid);
-            netMan.addMessage(msgTransfer);
+            netMan.sendMessage(msgTransfer);
             }
           else
             {

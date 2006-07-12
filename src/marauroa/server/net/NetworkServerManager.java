@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.20 2006/07/12 14:18:21 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.21 2006/07/12 16:56:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,7 +108,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	/** 
 	 * This methods notifies waiting threads to continue
 	 */
-	synchronized void newMessageArrived() {
+	private synchronized void newMessageArrived() {
 		notifyAll();
 	}
 
@@ -161,12 +161,22 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	}
 
 	/**
+	 * Puts a message received by the Networklayer into the list of messages.
+	 *
+	 * @param msg Message that was received
+	 */
+	public void receiveMessage(Message msg) {
+		messages.add(msg);
+		newMessageArrived();
+	}
+
+	/**
 	 * This method add a message to be delivered to the client the message
 	 * is pointed to.
 	 *
 	 * @param msg the message to be delivered.
 	 */
-	public void addMessage(Message msg) {
+	public void sendMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
 		writeManager.write(msg);
 		Log4J.finishMethod(logger, "addMessage");

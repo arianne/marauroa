@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.32 2006/06/22 15:45:55 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.33 2006/07/12 16:56:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -261,7 +261,7 @@ public class RPServerManager extends Thread
       messages2cPerception.setClientID(entry.clientid);
       messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
 
-      netMan.addMessage(messages2cPerception);
+      netMan.sendMessage(messages2cPerception);
       }
     }
 
@@ -435,7 +435,7 @@ public class RPServerManager extends Thread
           MessageS2CTransferREQ mes=new MessageS2CTransferREQ(entry.source,content);
           mes.setClientID(entry.clientid);
 
-          netMan.addMessage(mes);
+          netMan.sendMessage(mes);
           }
         catch(NoSuchClientIDException e)
           {
