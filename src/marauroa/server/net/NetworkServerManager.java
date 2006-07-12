@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.19 2006/07/12 13:29:12 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.20 2006/07/12 14:18:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
-public final class NetworkServerManager {
+public final class NetworkServerManager implements NetworkServerManagerCallback {
 	/** the logger instance. */
 	static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
@@ -87,7 +87,7 @@ public final class NetworkServerManager {
 		stats = Statistics.getStatistics();
 		readManager = new NetworkServerManagerRead(this);
 		readManager.start();
-		writeManager = new NetworkServerManagerWrite(this);
+		writeManager = new NetworkServerManagerWrite(this, socket, stats);
 		logger.debug("NetworkServerManager started successfully");
 	}
 
@@ -170,5 +170,9 @@ public final class NetworkServerManager {
 		Log4J.startMethod(logger, "addMessage");
 		writeManager.write(msg);
 		Log4J.finishMethod(logger, "addMessage");
+	}
+
+	public boolean isStillRunning() {
+		return keepRunning;
 	}
 }

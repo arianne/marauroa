@@ -3,27 +3,35 @@ package marauroa.server.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 import marauroa.common.CRC;
 import marauroa.common.Log4J;
 import marauroa.common.net.Message;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
+import marauroa.server.game.Statistics;
 
 import org.apache.log4j.Logger;
 
 /** A wrapper class for sending messages to clients */
 class NetworkServerManagerWrite {
 	private static Logger logger = Logger.getLogger(NetworkServerManagerWrite.class);
-	private NetworkServerManager networkServerManager = null;
+	private NetworkServerManagerCallback networkServerManager = null;
+	private DatagramSocket socket = null;
+	private Statistics stats = null;
 
 	/**
 	 * Creates a NetworkServerManagerWrite
 	 *
-	 * @param networkServerManager NetworkServerManager 
+	 * @param networkServerManager NetworkServerManager
+	 * @param socket communication end-point
+	 * @param stats Statistics
 	 */
-	public NetworkServerManagerWrite(NetworkServerManager networkServerManager) {
+	public NetworkServerManagerWrite(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
 		this.networkServerManager = networkServerManager;
+		this.socket = socket;
+		this.stats = stats;
 	}
 
 	private byte[] serializeMessage(Message msg) throws IOException {
@@ -47,15 +55,15 @@ class NetworkServerManagerWrite {
 		Log4J.startMethod(logger, "write");
 		try {
 			/* TODO: Looks like hardcoded, write it in a better way */
-			if (networkServerManager.keepRunning) {
+			if (networkServerManager.isStillRunning()) {
 				byte[] buffer = serializeMessage(msg);
 				short used_signature;
 
 				/*** Statistics ***/
 				used_signature = CRC.cmpCRC(buffer); //++last_signature;
 
-				networkServerManager.stats.add("Bytes send", buffer.length);
-				networkServerManager.stats.add("Message send", 1);
+				stats.add("Bytes send", buffer.length);
+				stats.add("Message send", 1);
 
 				logger.debug("Message(" + msg.getType() + ") size in bytes: " + buffer.length);
 				int totalNumberOfPackets = (buffer.length / CONTENT_PACKET_SIZE) + 1;
@@ -84,7 +92,7 @@ class NetworkServerManagerWrite {
 
 					DatagramPacket pkt = new DatagramPacket(data, packetSize + PACKET_SIGNATURE_SIZE, msg.getAddress());
 
-					networkServerManager.socket.send(pkt);
+					socket.send(pkt);
 					logger.debug("Sent packet(" + used_signature + ") " + (i + 1) + " of " + totalNumberOfPackets);
 				}
 
