@@ -1,30 +1,35 @@
 package marauroa.server.net;
 
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
-
-import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.Message;
-import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
+import marauroa.server.game.Statistics;
+
+import org.apache.log4j.Logger;
 
 /** 
  * The active thread in charge of recieving messages from the network.
  */
 class NetworkServerManagerRead extends Thread {
 	private static Logger logger = Logger.getLogger(NetworkServerManagerRead.class);
-	private NetworkServerManager networkServerManager = null;
+	private NetworkServerManagerCallback networkServerManager = null;
+	private DatagramSocket socket = null;
+	private Statistics stats = null;
 
 	/**
 	 * Creates a NetworkServerManagerRead
 	 *
 	 * @param networkServerManager NetworkServerManager 
+	 * @param socket communication end-point
+	 * @param stats Statistics
 	 */
-	public NetworkServerManagerRead(NetworkServerManager networkServerManager) {
+	public NetworkServerManagerRead(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
 		super("NetworkServerManagerRead");
 		this.networkServerManager = networkServerManager;
+		this.socket = socket;
+		this.stats = stats;
 	}
 
 	/** 
@@ -33,31 +38,19 @@ class NetworkServerManagerRead extends Thread {
 	@Override
 	public void run() {
 		logger.debug("run()");
-		while (networkServerManager.keepRunning) {
+		while (networkServerManager.isStillRunning()) {
 			byte[] buffer = new byte[NetConst.UDP_PACKET_SIZE];
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
 			try {
-				networkServerManager.socket.receive(packet);
+				socket.receive(packet);
 				logger.debug("Received UDP Packet");
 
 				/*** Statistics ***/
-				networkServerManager.stats.add("Bytes recv", packet.getLength());
-				networkServerManager.stats.add("Message recv", 1);
+				stats.add("Bytes recv", packet.getLength());
+				stats.add("Message recv", 1);
 
-				if (!networkServerManager.packetValidator.checkBanned(packet)) {
-					try {
-						Message msg = networkServerManager.msgFactory.getMessage(packet.getData(), (InetSocketAddress) packet.getSocketAddress());
-						logger.debug("Received message: " + msg.toString());
-						networkServerManager.receiveMessage(msg);
-					} catch (InvalidVersionException e) {
-						networkServerManager.stats.add("Message invalid version", 1);
-						MessageS2CInvalidMessage msg = new MessageS2CInvalidMessage((InetSocketAddress) packet.getSocketAddress(), "Invalid client version: Update client");
-						networkServerManager.sendMessage(msg);
-					}
-				} else {
-					logger.debug("UDP Packet discarded - client(" + packet + ") is banned.");
-				}
+				networkServerManager.receiveMessage(packet.getData(), (InetSocketAddress) packet.getSocketAddress());
 			} catch (java.net.SocketTimeoutException e) {
 				/* We need the thread to check from time to time if user has requested
 				 * an exit */
@@ -67,7 +60,7 @@ class NetworkServerManagerRead extends Thread {
 			}
 		}
 
-		networkServerManager.isfinished = true;
+		networkServerManager.finishedReadThread();
 		logger.debug("run() finished");
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.21 2006/07/12 16:56:43 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.22 2006/07/12 17:20:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,15 +12,19 @@
  ***************************************************************************/
 package marauroa.server.net;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
+import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.server.game.Statistics;
 
@@ -85,7 +89,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
-		readManager = new NetworkServerManagerRead(this);
+		readManager = new NetworkServerManagerRead(this, socket, stats);
 		readManager.start();
 		writeManager = new NetworkServerManagerWrite(this, socket, stats);
 		logger.debug("NetworkServerManager started successfully");
@@ -163,11 +167,26 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	/**
 	 * Puts a message received by the Networklayer into the list of messages.
 	 *
-	 * @param msg Message that was received
+	 * @param data of message that was received
+	 * @param inetSocketAddress the address of the client-socket (ip+port)
 	 */
-	public void receiveMessage(Message msg) {
-		messages.add(msg);
-		newMessageArrived();
+	public void receiveMessage(byte[] data, InetSocketAddress inetSocketAddress) throws IOException {
+		
+		if (!packetValidator.checkBanned(inetSocketAddress.getAddress())) {
+			try {
+				Message msg = msgFactory.getMessage(data, inetSocketAddress);
+				logger.debug("Received message: " + msg.toString());
+				messages.add(msg);
+				newMessageArrived();
+			} catch (InvalidVersionException e) {
+				stats.add("Message invalid version", 1);
+				MessageS2CInvalidMessage msg = new MessageS2CInvalidMessage(inetSocketAddress, "Invalid client version: Update client");
+				sendMessage(msg);
+			}
+		} else {
+			logger.debug("UDP Packet discarded - client(" + inetSocketAddress + ") is banned.");
+		}
+		
 	}
 
 	/**
@@ -184,5 +203,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 
 	public boolean isStillRunning() {
 		return keepRunning;
+	}
+	
+	public void finishedReadThread() {
+		isfinished = true;
 	}
 }
