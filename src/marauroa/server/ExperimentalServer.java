@@ -1,9 +1,11 @@
 package marauroa.server;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -20,14 +22,55 @@ import java.util.Set;
  * @author hendrik
  */
 public class ExperimentalServer {
+	private Selector acceptSelector = null;
+
+	private ServerSocketChannel ssc = null;
+
+	private final int MAXIN = 1000;
+
+	private final int MAXOUT = 1000;
+
+	class Acceptor implements Runnable { // inner
+		public void run() {
+			try {
+				SocketChannel c = ssc.accept();
+				if (c != null) new Handler(acceptSelector, c);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+	}
+
+	final class Handler {
+		final SocketChannel socket;
+		final SelectionKey sk;
+		ByteBuffer input = ByteBuffer.allocate(MAXIN);
+		ByteBuffer output = ByteBuffer.allocate(MAXOUT);
+		static final int READING = 0, SENDING = 1;
+		int state = READING;
+
+		public Handler(Selector sel, SocketChannel c) throws IOException {
+			socket = c;
+			c.configureBlocking(false);
+			// Optionally try first read now
+			sk = socket.register(sel, 0);
+			sk.attach(this);
+			sk.interestOps(SelectionKey.OP_READ);
+			sel.wakeup();
+		}
+		/*boolean inputIsComplete() { }
+		 boolean outputIsComplete() { }
+		 void process()              {  }*/
+	}
 
 	//	 Accept connections for current time. Lazy Exception thrown.
-	private static void acceptConnections(int port) throws Exception {
+	private void acceptConnections(int port) throws Exception {
 		// Selector for incoming time requests
-		Selector acceptSelector = SelectorProvider.provider().openSelector();
+		acceptSelector = SelectorProvider.provider().openSelector();
 
 		// Create a new server socket and set to non blocking mode
-		ServerSocketChannel ssc = ServerSocketChannel.open();
+		ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 
 		// Bind the server socket to the local host and port
@@ -41,6 +84,7 @@ public class ExperimentalServer {
 		// ready list when accept operations occur, so allowing multiplexed
 		// non-blocking I/O to take place.
 		SelectionKey acceptKey = ssc.register(acceptSelector, SelectionKey.OP_ACCEPT);
+		acceptKey.attach(new Acceptor());
 
 		int keysAdded = 0;
 
@@ -71,12 +115,35 @@ public class ExperimentalServer {
 		}
 	}
 
+	public void run() { // normally in a new Thread
+		try {
+			while (!Thread.interrupted()) {
+				acceptSelector.select();
+				Set selected = acceptSelector.selectedKeys();
+				Iterator it = selected.iterator();
+				while (it.hasNext()) {
+					dispatch((SelectionKey) it.next());
+				}
+				selected.clear();
+			}
+		} catch (IOException ex) { /* ... */
+			ex.printStackTrace();
+		}
+	}
+
+	void dispatch(SelectionKey k) {
+		Runnable r = (Runnable) (k.attachment());
+		if (r != null) r.run();
+	}
+
+
 	// Entry point.
 	public static void main(String[] args) {
 		// Parse command line arguments and
 		// create a new time server (no arguments yet)
 		try {
 			ExperimentalServer nbt = new ExperimentalServer();
+			nbt.acceptConnections(12345);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
