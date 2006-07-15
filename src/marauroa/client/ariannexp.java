@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.23 2006/06/18 11:20:43 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.24 2006/07/15 17:42:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,15 +11,40 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.client;
-import java.util.*;
+import java.util.ConcurrentModificationException;
+import java.util.LinkedList;
+import java.util.List;
+
+import marauroa.client.net.NetworkClientManagerInterface;
 import marauroa.client.net.ThreadedNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-
-import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.RPAction;
-import marauroa.common.net.*;
+import marauroa.common.net.InvalidVersionException;
+import marauroa.common.net.Message;
+import marauroa.common.net.MessageC2SAction;
+import marauroa.common.net.MessageC2SChooseCharacter;
+import marauroa.common.net.MessageC2SCreateAccount;
+import marauroa.common.net.MessageC2SLoginRequestKey;
+import marauroa.common.net.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.MessageC2SLoginSendPromise;
+import marauroa.common.net.MessageC2SLogout;
+import marauroa.common.net.MessageC2SOutOfSync;
+import marauroa.common.net.MessageC2SPerceptionACK;
+import marauroa.common.net.MessageC2STransferACK;
+import marauroa.common.net.MessageS2CCharacterList;
+import marauroa.common.net.MessageS2CCreateAccountNACK;
+import marauroa.common.net.MessageS2CLoginNACK;
+import marauroa.common.net.MessageS2CLoginSendKey;
+import marauroa.common.net.MessageS2CLoginSendNonce;
+import marauroa.common.net.MessageS2CPerception;
+import marauroa.common.net.MessageS2CServerInfo;
+import marauroa.common.net.MessageS2CTransfer;
+import marauroa.common.net.MessageS2CTransferREQ;
+import marauroa.common.net.TransferContent;
+
 import org.apache.log4j.Logger;
 
 public abstract class ariannexp
@@ -28,7 +53,7 @@ public abstract class ariannexp
   private static final Logger logger = Log4J.getLogger(ariannexp.class);
   
   public final static long TIMEOUT=10000;
-  private ThreadedNetworkClientManager netMan;
+  private NetworkClientManagerInterface netMan;
   private List<Message> messages;
 
   /** Constructor.

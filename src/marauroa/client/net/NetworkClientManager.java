@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.23 2006/07/15 17:10:40 nhnb Exp $ */
+/* $Id: NetworkClientManager.java,v 1.24 2006/07/15 17:42:09 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkClientManager is in charge of sending and recieving the packages
  *  from the network. */
-public class NetworkClientManager
+public class NetworkClientManager implements NetworkClientManagerInterface
   {
   /** the logger instance. */
   private static final Logger logger = Log4J.getLogger(NetworkClientManager.class);
@@ -345,5 +345,14 @@ public class NetworkClientManager
       {
       Log4J.finishMethod(logger,"addMessage");
       }
+    }
+
+    public Message getMessage(int timeout) {
+        try {
+            return getMessage();
+        } catch (InvalidVersionException e) {
+            logger.error(e, e);
+            return null;
+        }
     }
   }

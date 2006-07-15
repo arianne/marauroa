@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.6 2006/07/15 17:10:40 nhnb Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.7 2006/07/15 17:42:09 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,7 @@ import marauroa.common.net.OutputSerializer;
 import org.apache.log4j.Logger;
 
 
-public final class ThreadedNetworkClientManager
+public final class ThreadedNetworkClientManager implements NetworkClientManagerInterface
   {
   final static private int PACKET_SIGNATURE_SIZE=4;
   final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
