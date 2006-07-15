@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.21 2006/01/25 17:50:52 arianne_rpg Exp $ */
+/* $Id: NetworkClientManager.java,v 1.22 2006/07/15 16:53:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,8 @@ public class NetworkClientManager
 
   static private class PacketContainer
     {
+    private static final Logger logger = Log4J.getLogger(PacketContainer.class);
+
     public short signature;
     public boolean[] remaining;
     public byte[] content;
@@ -123,8 +125,8 @@ public class NetworkClientManager
 
   private Message getOldestProcessedMessage()
     {
-    Message choosenMsg=((Message)processedMessages.get(0));
-    int smallestTimestamp=choosenMsg.getMessageTimestamp();
+    Message choosenMsg = processedMessages.get(0);
+    int smallestTimestamp = choosenMsg.getMessageTimestamp();
 
     for(Message msg: processedMessages)
       {
@@ -220,7 +222,7 @@ public class NetworkClientManager
       }
     else
       {
-      PacketContainer message=(PacketContainer)pendingPackets.get(new Short(signature));
+      PacketContainer message=pendingPackets.get(new Short(signature));
 
       message.recieved(position);
       if(message.isRecieved(position))
