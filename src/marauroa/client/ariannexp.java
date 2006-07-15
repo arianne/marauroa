@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.24 2006/07/15 17:42:10 nhnb Exp $ */
+/* $Id: ariannexp.java,v 1.25 2006/07/15 19:41:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,11 +11,13 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.client;
+import java.net.SocketException;
 import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.client.net.NetworkClientManagerInterface;
+import marauroa.client.net.TCPThreadedNetworkClientManager;
 import marauroa.client.net.ThreadedNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
@@ -65,14 +67,35 @@ public abstract class ariannexp
     messages=new LinkedList<Message>();
     }
 
-  /** Call this method to connect to server.
-   *  This method just configure the connection, it doesn't send anything
-   *  @param host server host name
-   *  @param port server port number  */
-  public void connect(String host, int port) throws java.net.SocketException
+  /** 
+   * Call this method to connect to server.
+   * This method just configure the connection, it doesn't send anything
+   *
+   * @param host server host name
+   * @param port server port number
+   * @throws SocketException if connection is not possible
+   */
+  public void connect(String host, int port) throws SocketException
+  {
+	  connect(host, port, false);
+  }
+  /** 
+   * Call this method to connect to server.
+   * This method just configure the connection, it doesn't send anything
+   *
+   * @param host server host name
+   * @param port server port number
+   * @param useTCP use TCP instead of UDP
+   * @throws SocketException if connection is not possible
+   */
+  public void connect(String host, int port, boolean useTCP) throws SocketException
     {
     Log4J.startMethod(logger, "connect");
-    netMan=new ThreadedNetworkClientManager(host,port);
+    if (useTCP) {
+    	netMan=new TCPThreadedNetworkClientManager(host,port);
+    } else {
+    	netMan=new ThreadedNetworkClientManager(host,port);
+    }
     Log4J.finishMethod(logger, "connect");
     }
 
