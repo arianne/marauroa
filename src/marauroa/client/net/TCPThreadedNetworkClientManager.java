@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.1 2006/07/15 17:37:32 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.2 2006/07/15 19:32:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,11 @@ package marauroa.client.net;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +51,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	private int clientid;
 
 	/** The server socket from where we recieve the packets. */
-	private DatagramSocket socket;
+	private Socket socket;
 	private InetSocketAddress address;
 
 	/** While keepRunning is true, we keep recieving messages */
@@ -68,27 +70,34 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	public TCPThreadedNetworkClientManager(String host, int port) throws SocketException {
 		Log4J.startMethod(logger, "ThreadedNetworkClientManager");
 
-		clientid = 0;
-
-		/* Create the socket and set a timeout of 1 second */
-		address = new InetSocketAddress(host, port);
-		socket = new DatagramSocket();
-		socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
-		socket.setReceiveBufferSize(128 * 1024);
-
-		msgFactory = MessageFactory.getFactory();
-
-		keepRunning = true;
-		isfinished = false;
-
-		/* Because we access the list from several places we create a synchronized list. */
-		processedMessages = Collections.synchronizedList(new LinkedList<Message>());
-		pendingPackets = Collections.synchronizedMap(new LinkedHashMap<Short, PacketContainer>());
-
-		readManager = new NetworkClientManagerRead();
-		readManager.start();
-
-		writeManager = new NetworkClientManagerWrite();
+		try {
+			clientid = 0;
+	
+			/* Create the socket and set a timeout of 1 second */
+			address = new InetSocketAddress(host, port);
+			socket = new Socket(address.getAddress(), port);
+			socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
+			socket.setTcpNoDelay(true); // disable Nagle's algorithm
+			socket.setReceiveBufferSize(128 * 1024);
+	
+			msgFactory = MessageFactory.getFactory();
+	
+			keepRunning = true;
+			isfinished = false;
+	
+			/* Because we access the list from several places we create a synchronized list. */
+			processedMessages = Collections.synchronizedList(new LinkedList<Message>());
+			pendingPackets = Collections.synchronizedMap(new LinkedHashMap<Short, PacketContainer>());
+	
+			readManager = new NetworkClientManagerRead();
+			readManager.start();
+	
+			writeManager = new NetworkClientManagerWrite();
+		} catch (IOException e) {
+			// TODO: rewrite this in a cleaner way. This is a simple hack
+			// to be interface compatible because i know only Stendhal.
+			throw new SocketException(e.getMessage());
+		}
 
 		logger.debug("ThreadedNetworkClientManager started successfully");
 	}
@@ -103,7 +112,11 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			Thread.yield();
 		}
 
-		socket.close();
+		try {
+			socket.close();
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
 		logger.debug("NetworkClientManager is down");
 	}
 
@@ -198,9 +211,15 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	/** The active thread in charge of recieving messages from the network. */
 	class NetworkClientManagerRead extends Thread {
 		private final Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
+		private InputStream is = null;
 
 		public NetworkClientManagerRead() {
 			super("NetworkClientManagerRead");
+			try {
+				is = socket.getInputStream();
+			} catch (IOException e) {
+				logger.error(e, e);
+			}
 		}
 
 		private synchronized Message getOldestProcessedMessage() {
@@ -295,14 +314,22 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		public void run() {
 			logger.debug("run()");
 			while (keepRunning) {
-				byte[] buffer = new byte[NetConst.UDP_PACKET_SIZE];
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
 				try {
-					socket.receive(packet);
+					byte[] sizebuffer = new byte[4];
+					if (is.read(sizebuffer) < 4) {
+						continue;
+					}
+					int size = (sizebuffer[0] & 0xFF)
+						+ ((sizebuffer[1] & 0xFF) << 8)
+						+ ((sizebuffer[2] & 0xFF) << 16)
+						+ ((sizebuffer[3] & 0xFF) << 24);
+					
+					byte[] buffer = new byte[size];
+					is.read(buffer);
+					//socket.receive(packet);
 					logger.debug("Received UDP Packet");
 
-					storePacket((InetSocketAddress) packet.getSocketAddress(), packet.getData());
+					storePacket(address, buffer);
 					newMessageArrived();
 				} catch (java.net.SocketTimeoutException e) {
 					/* We need the thread to check from time to time if user has requested
@@ -322,22 +349,26 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	/** A wrapper class for sending messages to clients */
 	class NetworkClientManagerWrite {
 		private final Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
-
+		private OutputStream os = null;
 		private int last_signature;
+		
 		public NetworkClientManagerWrite() {
 			last_signature = 0;
+			try {
+				os = socket.getOutputStream();
+			} catch (IOException e) {
+				logger.error(e, e);
+			}
 		}
 
 		private byte[] serializeMessage(Message msg) throws IOException {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			OutputSerializer s = new OutputSerializer(out);
+			logger.debug("send message(" + msg.getType() + ") from " + msg.getClientID());
 
 			s.write(msg);
 			return out.toByteArray();
 		}
-
-		final private int PACKET_SIGNATURE_SIZE = 4;
-		final private int CONTENT_PACKET_SIZE = NetConst.UDP_PACKET_SIZE - PACKET_SIGNATURE_SIZE;
 
 		/** Method that execute the writting */
 		public void write(Message msg) {
@@ -353,16 +384,16 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 						clear();
 					}
 
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					OutputSerializer s = new OutputSerializer(out);
-
-					logger.debug("send message(" + msg.getType() + ") from " + msg.getClientID());
-					s.write(msg);
-
-					byte[] buffer = out.toByteArray();
-					DatagramPacket pkt = new DatagramPacket(buffer, buffer.length, msg.getAddress());
-
-					socket.send(pkt);
+					// write size and then the message
+					byte[] buffer = serializeMessage(msg);
+					byte[] sizebuffer = new byte[4];
+					int size = buffer.length;
+					sizebuffer[0] = (byte) (size & 255);
+					sizebuffer[1] = (byte) ((size >>  8) & 255);
+					sizebuffer[2] = (byte) ((size >> 16) & 255);
+					sizebuffer[3] = (byte) ((size >> 24) & 255);
+					os.write(sizebuffer);
+					os.write(buffer);
 				}
 				Log4J.finishMethod(logger, "write");
 			} catch (IOException e) {
