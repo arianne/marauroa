@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.22 2006/07/15 16:53:46 nhnb Exp $ */
+/* $Id: NetworkClientManager.java,v 1.23 2006/07/15 17:10:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,13 +14,25 @@ package marauroa.client.net;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import java.net.*;
-import java.util.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-import marauroa.common.net.*;
+import marauroa.common.net.InvalidVersionException;
+import marauroa.common.net.Message;
+import marauroa.common.net.MessageFactory;
+import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 

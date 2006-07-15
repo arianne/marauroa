@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.5 2006/06/22 15:45:54 arianne_rpg Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.6 2006/07/15 17:10:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,8 +14,19 @@ package marauroa.client.net;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.*;
-import java.util.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.net.InvalidVersionException;
@@ -23,6 +34,7 @@ import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
+
 import org.apache.log4j.Logger;
 
 
@@ -44,8 +56,6 @@ public final class ThreadedNetworkClientManager
   private boolean keepRunning;
   /** isFinished is true when the thread has really exited. */
   private boolean isfinished;
-  /** A List of Message objects: List<Message> */
-  private List<Message> messages;
   private MessageFactory msgFactory;
 
   private NetworkClientManagerRead readManager;
@@ -135,6 +145,7 @@ public final class ThreadedNetworkClientManager
         }
       catch(InterruptedException e)
         {
+    	  // do nothing
         }
       }
 
@@ -166,6 +177,7 @@ public final class ThreadedNetworkClientManager
 
   static private class PacketContainer
     {
+    private static final Logger logger = Log4J.getLogger(PacketContainer.class);
     public short signature;
     public boolean[] remaining;
     public byte[] content;
@@ -214,6 +226,8 @@ public final class ThreadedNetworkClientManager
   /** The active thread in charge of recieving messages from the network. */
   class NetworkClientManagerRead extends Thread
     {
+    private final Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
+
     public NetworkClientManagerRead()
       {
       super("NetworkClientManagerRead");
@@ -366,6 +380,7 @@ public final class ThreadedNetworkClientManager
   /** A wrapper class for sending messages to clients */
   class NetworkClientManagerWrite
     {
+    private final Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
     private int last_signature;
     public NetworkClientManagerWrite()
       {
