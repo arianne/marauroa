@@ -42,6 +42,7 @@ class TCPWriter {
 	}
 
 	final private int PACKET_SIGNATURE_SIZE = 4;
+	final private int PACKET_LENGTH_SIZE = 4;
 
 	/**
 	 * Method that execute the writting
@@ -64,16 +65,24 @@ class TCPWriter {
 
 				logger.debug("Message(" + msg.getType() + ") size in bytes: " + buffer.length);
 
-				byte[] data = new byte[PACKET_SIGNATURE_SIZE];
-				data[0] = (byte) (buffer.length & 255);;
-				data[1] = (byte) ((buffer.length >> 8) & 255);
-				data[2] = (byte) (used_signature & 255);
-				data[3] = (byte) ((used_signature >> 8) & 255);
+				byte[] data = new byte[PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE + buffer.length];
+				int size = buffer.length + PACKET_SIGNATURE_SIZE;
+				data[0] = (byte) (size & 255);
+				data[1] = (byte) ((size >>  8) & 255);
+				data[2] = (byte) ((size >> 16) & 255);
+				data[3] = (byte) ((size >> 24) & 255);
+				data[4] = (byte) 1;
+				data[5] = (byte) 0;
+				data[6] = (byte) (used_signature & 255);
+				data[7] = (byte) ((used_signature >> 8) & 255);
 				logger.debug("data size: " + buffer.length);
 
+				// don't use multiple os.write calls because we have
+				// disabled Nagel's algorithm.
+				System.arraycopy(buffer, 0, data, PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE, buffer.length);
+				
 				OutputStream os = socket.getOutputStream();
 				os.write(data);
-				os.write(buffer);
 				os.flush();
 				logger.debug("Sent packet(" + used_signature + ") " + buffer.length);
 
