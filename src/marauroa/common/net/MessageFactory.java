@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.8 2005/12/20 16:09:47 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.9 2006/07/16 06:43:29 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -88,27 +88,48 @@ public class MessageFactory
     factoryArray.put(new Integer(index.ordinal()),messageClass);
     }
 
-  /** Returns a object of the right class from a stream of serialized data.
-   @param data the serialized data
-   @param source the source of the message needed to build the object.
-   @return a message of the right class
-   @throws IOException in case of problems with the message
-   @throws InvalidVersionException if the message version doesn't match */
-  public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
+  /** 
+   * Returns a object of the right class from a stream of serialized data.
+   *
+   * @param data the serialized data
+   * @param source the source of the message needed to build the object.
+   * @return a message of the right class
+   * @throws IOException in case of problems with the message
+   * @throws InvalidVersionException if the message version doesn't match
+   */
+ public Message getMessage(byte[] data, InetSocketAddress source) throws IOException, InvalidVersionException
+   {
+	 return getMessage(data, source, 0);
+   }
+
+  /** 
+   * Returns a object of the right class from a stream of serialized data.
+   *
+   * @param data the serialized data
+   * @param source the source of the message needed to build the object.
+   * @param offset where to start reading in the data-array.
+   * @return a message of the right class
+   * @throws IOException in case of problems with the message
+   * @throws InvalidVersionException if the message version doesn't match
+   */
+  public Message getMessage(byte[] data, InetSocketAddress source, int offset) throws IOException, InvalidVersionException
     {
     Log4J.startMethod(logger,"getMessage");
     try
       {
-      if(data[0]==NetConst.NETWORK_PROTOCOL_VERSION)
+      if(data[offset]==NetConst.NETWORK_PROTOCOL_VERSION)
         {
         if(factoryArray.containsKey(new Integer(data[1])))
           {
           Message tmp=null;
           try
             {
-            Class messageType=(Class) factoryArray.get(new Integer(data[1]));
+            Class messageType=factoryArray.get(new Integer(data[offset + 1]));
             tmp = (Message) messageType.newInstance();
             ByteArrayInputStream in=new ByteArrayInputStream(data);
+            if (offset > 0) {
+            	in.skip(offset);
+            }
             InputSerializer s=new InputSerializer(in);
 
             tmp.readObject(s);
@@ -118,7 +139,7 @@ public class MessageFactory
           catch(Exception e)
             {
             NDC.push("message is ["+tmp+"]\n");
-            NDC.push("message dump is [\n"+Utility.dumpByteArray(data)+"\n]\n");
+            NDC.push("message dump is [\n"+Utility.dumpByteArray(data)+"\n] (offset: " + offset + ")\n");
             logger.error("error in getMessage",e);
             NDC.pop();
             NDC.pop();
