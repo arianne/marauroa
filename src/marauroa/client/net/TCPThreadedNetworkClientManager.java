@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.4 2006/07/16 06:24:20 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.5 2006/07/16 06:43:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,25 +18,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import marauroa.common.Log4J;
-import marauroa.common.TimeoutConf;
-import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
-import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
@@ -44,7 +35,6 @@ import org.apache.log4j.Logger;
 
 public final class TCPThreadedNetworkClientManager implements NetworkClientManagerInterface {
 	final static private int PACKET_SIGNATURE_SIZE = 4;
-	final static private int CONTENT_PACKET_SIZE = NetConst.UDP_PACKET_SIZE - PACKET_SIGNATURE_SIZE;
 
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(TCPThreadedNetworkClientManager.class);
@@ -165,15 +155,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		Log4J.finishMethod(logger, "addMessage");
 	}
 
-	static private class PacketContainer {
-		private static final Logger logger = Log4J.getLogger(PacketContainer.class);
-
-		public short signature;
-		public byte[] content;
-		public InetSocketAddress address;
-		public Date timestamp;
-	}
-
 	/** The active thread in charge of recieving messages from the network. */
 	class NetworkClientManagerRead extends Thread {
 		private final Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
@@ -190,41 +171,20 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 
 		private synchronized Message getOldestProcessedMessage() {
 			Message choosenMsg = processedMessages.get(0);
-			int smallestTimestamp = choosenMsg.getMessageTimestamp();
-
-			for (Message msg : processedMessages) {
-				if (msg.getMessageTimestamp() < smallestTimestamp) {
-					choosenMsg = msg;
-					smallestTimestamp = msg.getMessageTimestamp();
-				}
-			}
-
 			processedMessages.remove(choosenMsg);
 			return choosenMsg;
 		}
 
 		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
-			/* A multipart message. We try to read the rest now.
-			 * We need to check on the list if the message exist and it exist we add this one. */
 			short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
 
 			logger.debug("receive message(" + signature + ")");
 
-			PacketContainer message = new PacketContainer();
-
-			message.address = address;
-			message.timestamp = new Date();
-			message.content = new byte[data.length - PACKET_SIGNATURE_SIZE];
-
-			System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content, 0, data.length - PACKET_SIGNATURE_SIZE);
-
 			try {
-
-				// delete the message from queue to prevent loop if it is a bad message
-				Message msg = msgFactory.getMessage(message.content, message.address);
+				Message msg = msgFactory.getMessage(data, address, PACKET_SIGNATURE_SIZE);
 
 				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from packet(" + message.signature + ") from " + msg.getClientID() + " full [" + msg + "]");
+					logger.debug("build message(type=" + msg.getType() + ") from packet(" + signature + ") from " + msg.getClientID() + " full [" + msg + "]");
 				}
 
 				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
@@ -282,10 +242,8 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	class NetworkClientManagerWrite {
 		private final Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
 		private OutputStream os = null;
-		private int last_signature;
 		
 		public NetworkClientManagerWrite() {
-			last_signature = 0;
 			try {
 				os = socket.getOutputStream();
 			} catch (IOException e) {
