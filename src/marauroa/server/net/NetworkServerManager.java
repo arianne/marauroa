@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.23 2006/07/12 21:32:08 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.24 2006/07/16 03:16:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.net;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collections;
@@ -36,7 +37,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
-public final class NetworkServerManager implements NetworkServerManagerCallback {
+public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
@@ -55,11 +56,13 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	/** MessageFactory */
 	private MessageFactory msgFactory;
 
-	Map<InetSocketAddress, Socket> tcpSockets = new HashMap<InetSocketAddress, Socket>();
+	private HashMap<InetSocketAddress, Socket> tcpSockets = new HashMap<InetSocketAddress, Socket>();
 
-	private NetworkServerManagerRead readManager;
+	private NetworkServerManagerRead udpReader;
 	private NetworkServerManagerWrite udpWriter;
+	
 	private TCPWriter tcpWriter;
+	private TCPReader tcpReader;
 
 	/** Statistics */
 	Statistics stats;
@@ -77,6 +80,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 		Log4J.startMethod(logger, "NetworkServerManager");
 		/* init the packet validater (which can now only check if the address is banned)*/
 		packetValidator = new PacketValidator();
+		msgFactory = MessageFactory.getFactory();
+		keepRunning = true;
+		isfinished = false;
 
 		/* Create the socket and set a timeout of 1 second */
 		socket = new DatagramSocket(NetConst.marauroa_PORT);
@@ -88,15 +94,18 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 		}
 		socket.setSendBufferSize(1500 * 64);
 
-		msgFactory = MessageFactory.getFactory();
-		keepRunning = true;
-		isfinished = false;
+		Thread tcpListener = new Thread(this, "TCP-Listener");
+		tcpListener.setDaemon(true);
+		tcpListener.start();
+		
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
-		readManager = new NetworkServerManagerRead(this, socket, stats);
-		readManager.start();
+		udpReader = new NetworkServerManagerRead(this, socket, stats);
+		udpReader.start();
 		udpWriter = new NetworkServerManagerWrite(this, socket, stats);
+		tcpReader = new TCPReader(this, tcpSockets, stats);
+		tcpReader.start();
 		tcpWriter = new TCPWriter(this, stats);
 		logger.debug("NetworkServerManager started successfully");
 	}
@@ -218,5 +227,27 @@ public final class NetworkServerManager implements NetworkServerManagerCallback 
 	
 	public void finishedReadThread() {
 		isfinished = true;
+	}
+
+	public void run() {
+		try {
+			ServerSocket tcpSocket = new ServerSocket(NetConst.marauroa_PORT);
+			socket.setSoTimeout(1000);
+			try {
+				socket.setTrafficClass(0x08 | 0x10);
+			} catch (Exception e) {
+				logger.warn("Cannot setTrafficClass " + e);
+			}
+			while (keepRunning) {
+				Socket socket = tcpSocket.accept();
+				InetSocketAddress inetSocketAddress = new InetSocketAddress(socket.getInetAddress(), socket.getPort());
+				tcpSockets.put(inetSocketAddress, socket);
+				
+			}
+			tcpSocket.close();
+			
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
 	}
 }
