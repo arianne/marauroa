@@ -63,7 +63,7 @@ class TCPReader extends Thread {
 								+ ((sizebuffer[1] & 0xFF) << 8)
 								+ ((sizebuffer[2] & 0xFF) << 16)
 								+ ((sizebuffer[3] & 0xFF) << 24);
-							bytesToRead.put(socket, size);
+							bytesToRead.put(socket, new Integer(size));
 							found = true;
 						}
 					} else {
@@ -74,12 +74,7 @@ class TCPReader extends Thread {
 						found = true;
 						byte[] buffer = new byte[size];
 						is.read(buffer);
-						logger.debug("Received UDP Packet");
-						StringBuilder sb = new StringBuilder();
-						for (int i = 0; i < size; i++) {
-							sb.append(" " + buffer[i]);
-						}
-						logger.error("Received UDP Packet (" + size + ") : " + sb.toString());
+						logger.debug("Received TCP Packet");
 		
 						/*** Statistics ***/
 						stats.add("Bytes recv", size);
