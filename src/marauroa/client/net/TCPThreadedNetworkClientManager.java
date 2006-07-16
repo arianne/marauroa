@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.3 2006/07/16 03:13:23 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.4 2006/07/16 06:24:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	private MessageFactory msgFactory;
 	private NetworkClientManagerRead readManager;
 	private NetworkClientManagerWrite writeManager;
-	private Map<Short, PacketContainer> pendingPackets;
 	private List<Message> processedMessages;
 
 	/** Constructor that opens the socket on the marauroa_PORT and start the thread
@@ -86,7 +85,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 	
 			/* Because we access the list from several places we create a synchronized list. */
 			processedMessages = Collections.synchronizedList(new LinkedList<Message>());
-			pendingPackets = Collections.synchronizedMap(new LinkedHashMap<Short, PacketContainer>());
 	
 			readManager = new NetworkClientManagerRead();
 			readManager.start();
@@ -155,7 +153,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 
 	private void clear() {
 		logger.info("Cleaning pending packets and messages");
-		pendingPackets.clear();
 		processedMessages.clear();
 	}
 
@@ -172,39 +169,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		private static final Logger logger = Log4J.getLogger(PacketContainer.class);
 
 		public short signature;
-		public boolean[] remaining;
 		public byte[] content;
 		public InetSocketAddress address;
 		public Date timestamp;
-
-		public PacketContainer(short signature, int total) {
-			this.signature = signature;
-			remaining = new boolean[total];
-			content = new byte[CONTENT_PACKET_SIZE * total];
-			Arrays.fill(remaining, false);
-		}
-
-		public void recieved(int pos) {
-			if (pos >= remaining.length) {
-				logger.error("Confused messages: Recieved packet " + pos + " of (total) " + remaining.length);
-			} else {
-				remaining[pos] = true;
-			}
-		}
-
-		public boolean isRecieved(int pos) {
-			return !remaining[pos];
-		}
-
-		public boolean isComplete() {
-			for (boolean test : remaining) {
-				if (test == false) {
-					return false;
-				}
-			}
-
-			return true;
-		}
 	}
 
 	/** The active thread in charge of recieving messages from the network. */
@@ -222,7 +189,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		}
 
 		private synchronized Message getOldestProcessedMessage() {
-			Message choosenMsg = ((Message) processedMessages.get(0));
+			Message choosenMsg = processedMessages.get(0);
 			int smallestTimestamp = choosenMsg.getMessageTimestamp();
 
 			for (Message msg : processedMessages) {
@@ -236,76 +203,35 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			return choosenMsg;
 		}
 
-		private synchronized void processPendingPackets() throws IOException, InvalidVersionException {
-			List<Short> packetsToRemove = new LinkedList<Short>();
-			try {
-				Iterator<Short> it = pendingPackets.keySet().iterator();
-				while (it.hasNext()) {
-					short value = it.next();
-					PacketContainer message = pendingPackets.get(value);
-
-					if (message.isComplete()) {
-						// delete the message from queue to prevent loop if it is a bad message
-						packetsToRemove.add(value);
-
-						Message msg = msgFactory.getMessage(message.content, message.address);
-
-						if (logger.isDebugEnabled()) {
-							logger.debug("build message(type=" + msg.getType() + ") from packet(" + message.signature + ") from " + msg.getClientID() + " full [" + msg + "]");
-						}
-
-						if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
-							clientid = msg.getClientID();
-						}
-
-						processedMessages.add(msg);
-						continue;
-					}
-
-					if (System.currentTimeMillis() - message.timestamp.getTime() > TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT) {
-						logger.debug("deleted incompleted message after timedout");
-						packetsToRemove.add(value);
-					}
-				}
-			} finally {
-				for (Short value : packetsToRemove) {
-					pendingPackets.remove(value);
-				}
-			}
-		}
-
-		private synchronized void storePacket(InetSocketAddress address, byte[] data) {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
 			/* A multipart message. We try to read the rest now.
 			 * We need to check on the list if the message exist and it exist we add this one. */
-			byte total = data[0];
-			byte position = data[1];
 			short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
 
-			logger.debug("receive" + (total > 1 ? " multipart " : " ") + "message(" + signature + "): " + (position + 1) + " of " + total);
-			if (!pendingPackets.containsKey(new Short(signature))) {
-				/** This is the first packet */
-				PacketContainer message = new PacketContainer(signature, total);
+			logger.debug("receive message(" + signature + ")");
 
-				message.address = address;
-				message.timestamp = new Date();
-				message.content = new byte[data.length - PACKET_SIGNATURE_SIZE]; // TODO: optimize memory use
+			PacketContainer message = new PacketContainer();
 
-				message.recieved(position);
-				//System.err.println("position=" + position + "   X:" + (data.length - PACKET_SIGNATURE_SIZE) + " message.content: " + message.content.length);
-				System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content, CONTENT_PACKET_SIZE * position, data.length - PACKET_SIGNATURE_SIZE);
+			message.address = address;
+			message.timestamp = new Date();
+			message.content = new byte[data.length - PACKET_SIGNATURE_SIZE];
 
-				pendingPackets.put(new Short(signature), message);
-			} else {
-				PacketContainer message = (PacketContainer) pendingPackets.get(new Short(signature));
-
-				message.recieved(position);
-				if (!message.isRecieved(position)) {
-					System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content, (NetConst.UDP_PACKET_SIZE - PACKET_SIGNATURE_SIZE) * position, data.length - PACKET_SIGNATURE_SIZE);
-				}
-			}
+			System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content, 0, data.length - PACKET_SIGNATURE_SIZE);
 
 			try {
-				processPendingPackets();
+
+				// delete the message from queue to prevent loop if it is a bad message
+				Message msg = msgFactory.getMessage(message.content, message.address);
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("build message(type=" + msg.getType() + ") from packet(" + message.signature + ") from " + msg.getClientID() + " full [" + msg + "]");
+				}
+
+				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
+					clientid = msg.getClientID();
+				}
+
+				processedMessages.add(msg);
 			} catch (Exception e) {
 				logger.error("Exception when processing pending packets", e);
 			}
@@ -335,7 +261,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 					is.read(buffer);
 					logger.debug("Received UDP Packet");
 
-					storePacket(address, buffer);
+					storeMessage(address, buffer);
 					newMessageArrived();
 				} catch (java.net.SocketTimeoutException e) {
 					/* We need the thread to check from time to time if user has requested
