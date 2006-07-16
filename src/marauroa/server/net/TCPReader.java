@@ -50,6 +50,14 @@ class TCPReader extends Thread {
 			Map<InetSocketAddress, Socket> temptTcpSockets = (Map<InetSocketAddress, Socket>) tcpSockets.clone();
 			for (InetSocketAddress inetSocketAddress : temptTcpSockets.keySet()) {
 				Socket socket = temptTcpSockets.get(inetSocketAddress);
+				if (socket.isClosed()) {
+					networkServerManager.disconnectClient(inetSocketAddress);
+					continue;
+				}
+				if (!socket.isConnected()) {
+					networkServerManager.disconnectClient(inetSocketAddress);
+					continue;
+				}
 				try {
 					InputStream is = socket.getInputStream();
 					
@@ -84,8 +92,7 @@ class TCPReader extends Thread {
 						bytesToRead.remove(socket);
 					}
 				} catch (java.net.SocketTimeoutException e) {
-					/* We need the thread to check from time to time if user has requested
-					 * an exit */
+					logger.warn(e, e);
 				} catch (Throwable e) {
 					/* Report the exception */
 					logger.error("error while processing udp-packets", e);
