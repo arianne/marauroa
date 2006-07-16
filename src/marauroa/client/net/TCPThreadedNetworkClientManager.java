@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.2 2006/07/15 19:32:50 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.3 2006/07/16 03:13:23 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,7 +76,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			/* Create the socket and set a timeout of 1 second */
 			address = new InetSocketAddress(host, port);
 			socket = new Socket(address.getAddress(), port);
-			socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
 			socket.setTcpNoDelay(true); // disable Nagle's algorithm
 			socket.setReceiveBufferSize(128 * 1024);
 	
@@ -289,8 +288,10 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 
 				message.address = address;
 				message.timestamp = new Date();
+				message.content = new byte[data.length - PACKET_SIGNATURE_SIZE]; // TODO: optimize memory use
 
 				message.recieved(position);
+				//System.err.println("position=" + position + "   X:" + (data.length - PACKET_SIGNATURE_SIZE) + " message.content: " + message.content.length);
 				System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content, CONTENT_PACKET_SIZE * position, data.length - PACKET_SIGNATURE_SIZE);
 
 				pendingPackets.put(new Short(signature), message);
@@ -316,9 +317,15 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			while (keepRunning) {
 				try {
 					byte[] sizebuffer = new byte[4];
-					if (is.read(sizebuffer) < 4) {
+					if (is.available() < 4) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							logger.error(e, e);
+						}
 						continue;
 					}
+					is.read(sizebuffer);
 					int size = (sizebuffer[0] & 0xFF)
 						+ ((sizebuffer[1] & 0xFF) << 8)
 						+ ((sizebuffer[2] & 0xFF) << 16)
@@ -326,7 +333,6 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 					
 					byte[] buffer = new byte[size];
 					is.read(buffer);
-					//socket.receive(packet);
 					logger.debug("Received UDP Packet");
 
 					storePacket(address, buffer);
