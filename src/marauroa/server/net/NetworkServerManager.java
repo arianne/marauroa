@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.24 2006/07/16 03:16:10 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.25 2006/07/16 15:08:35 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.InvalidVersionException;
@@ -248,6 +247,18 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			
 		} catch (IOException e) {
 			logger.error(e, e);
+		}
+	}
+
+	public void disconnectClient(InetSocketAddress inetSocketAddress) {
+		Socket socket = tcpSockets.get(inetSocketAddress);
+		if (socket != null) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				logger.warn(e, e);
+			}
+			tcpSockets.remove(inetSocketAddress);
 		}
 	}
 }

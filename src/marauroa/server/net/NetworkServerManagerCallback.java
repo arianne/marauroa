@@ -31,4 +31,11 @@ public interface NetworkServerManagerCallback {
 	 * @throws IOException on an io-error.
 	 */
 	public void receiveMessage(byte[] data, InetSocketAddress inetSocketAddress) throws IOException;
+
+	/**
+	 * Disconnect a client freeing associated resources
+	 *
+	 * @param inetSocketAddress InetSocketAddress
+	 */
+	public void disconnectClient(InetSocketAddress inetSocketAddress);
 }
