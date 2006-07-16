@@ -6,6 +6,7 @@ package marauroa.server.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import marauroa.common.CRC;
@@ -94,6 +95,7 @@ class TCPWriter {
 		} catch (IOException e) {
 			/* Report the exception */
 			logger.error("error while sending a packet (msg=(" + msg + "))", e);
+			networkServerManager.disconnectClient(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
 		}
 	}
 }
