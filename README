@@ -38,8 +38,6 @@ Version 1.32
 
 Status
 ------
-Marauroa is NOT playable.
-
 Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 
 Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
@@ -144,7 +142,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
-1.32 Jun 22, 2006
+1.32 Jul 16, 2006
+- Added experimental support of TCP.
+- Fixed a cpu-intensive debug-message while creating zone-based perceptions
 - Improved createaccount method to return information about the cause of the failure.
 
 1.31.1 Mar 24 2006
