@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.24 2006/07/12 16:56:43 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.25 2006/07/16 15:10:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -302,7 +302,7 @@ public final class GameServerManager extends Thread
       
             msgLogout.setClientID(clientid);
             netMan.sendMessage(msgLogout);
-            
+            netMan.disconnectClient(msg.getAddress());
             return;
             }
           }
@@ -324,6 +324,7 @@ public final class GameServerManager extends Thread
 
       msgLogout.setClientID(clientid);
       netMan.sendMessage(msgLogout);
+      netMan.disconnectClient(msg.getAddress());
       }
     catch(Exception e)
       {

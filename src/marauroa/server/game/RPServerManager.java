@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.33 2006/07/12 16:56:43 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.34 2006/07/16 15:10:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -392,6 +392,7 @@ public class RPServerManager extends Thread
           playerContainer.removeRuntimePlayer(clientid);
           logger.debug("Notified player ("+clientid+")");
           }
+        netMan.disconnectClient(playerContainer.getInetSocketAddress(clientid));
         }
       }
     catch(Exception e)
@@ -410,7 +411,7 @@ public class RPServerManager extends Thread
     return ruleProcessor.onInit(object);
     }
 
-  /** This method is called when a player leave to the game */
+  /** This method is called when a player leaves the game */
   public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException
     {
     scheduler.clearRPActions(id);
