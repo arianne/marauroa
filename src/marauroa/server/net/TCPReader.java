@@ -102,7 +102,7 @@ class TCPReader extends Thread {
 			if (!found) {
 				// sleep
 				try {
-					long wait = 300 - (System.currentTimeMillis() - start);
+					long wait = 100 - (System.currentTimeMillis() - start);
 					if (wait > 0) {
 						Thread.sleep(wait);
 					} else {
