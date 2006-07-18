@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.34 2006/07/16 15:10:00 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.35 2006/07/18 03:34:04 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -380,6 +380,7 @@ public class RPServerManager extends Thread
               {
               /* NOTE: Set the Object so that it is stored in Database */
               playerContainer.setRPObject(clientid,object);
+              netMan.disconnectClient(playerContainer.getInetSocketAddress(clientid));
               }
             }
           }
@@ -392,7 +393,6 @@ public class RPServerManager extends Thread
           playerContainer.removeRuntimePlayer(clientid);
           logger.debug("Notified player ("+clientid+")");
           }
-        netMan.disconnectClient(playerContainer.getInetSocketAddress(clientid));
         }
       }
     catch(Exception e)
