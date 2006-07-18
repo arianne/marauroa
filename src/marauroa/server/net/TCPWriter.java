@@ -94,7 +94,7 @@ class TCPWriter {
 			Log4J.finishMethod(logger, "write");
 		} catch (IOException e) {
 			/* Report the exception */
-			logger.error("error while sending a packet (msg=(" + msg + "))", e);
+			logger.info("error while sending a packet (msg=(" + msg + "))", e);
 			networkServerManager.disconnectClient(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
 		}
 	}
