@@ -1,6 +1,8 @@
 package marauroa.server.net;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
@@ -71,13 +73,26 @@ class TCPReader extends Thread {
 								+ ((sizebuffer[1] & 0xFF) << 8)
 								+ ((sizebuffer[2] & 0xFF) << 16)
 								+ ((sizebuffer[3] & 0xFF) << 24);
+							System.err.println(size);
+							if (size == 542393671) { // "GET "
+								// This request was not created by the marauroa-client
+								// but it was created by the HTTP-client to compare
+								// version numbers. ==> Close it.
+								OutputStream os = socket.getOutputStream();
+								os.write("500 This is not a webserver\r\n\r\n".getBytes());
+								os.flush();
+								os.close();
+								logger.warn("Closing connection because packet-size is magic-number \"GET \".");
+								networkServerManager.disconnectClient(inetSocketAddress);
+								continue;
+							}
 							bytesToRead.put(socket, new Integer(size));
 							found = true;
 						}
 					} else {
 						size = toReadInt.intValue();
 					}
-	
+
 					if ((size > -1) && (is.available() >= size)) {
 						found = true;
 						byte[] buffer = new byte[size];
@@ -93,9 +108,13 @@ class TCPReader extends Thread {
 					}
 				} catch (java.net.SocketTimeoutException e) {
 					logger.warn(e, e);
-				} catch (Throwable e) {
+					networkServerManager.disconnectClient(inetSocketAddress);
+				} catch (IOException e) {
+					logger.warn(e, e);
+					networkServerManager.disconnectClient(inetSocketAddress);
+				} catch (Exception e) {
 					/* Report the exception */
-					logger.error("error while processing udp-packets", e);
+					logger.error("error while processing tcp-packets", e);
 				}
 			}
 
