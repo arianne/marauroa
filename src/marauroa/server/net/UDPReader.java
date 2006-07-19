@@ -12,8 +12,8 @@ import org.apache.log4j.Logger;
 /** 
  * The active thread in charge of recieving messages from the network.
  */
-class NetworkServerManagerRead extends Thread {
-	private static Logger logger = Logger.getLogger(NetworkServerManagerRead.class);
+class UDPReader extends Thread {
+	private static Logger logger = Logger.getLogger(UDPReader.class);
 	private NetworkServerManagerCallback networkServerManager = null;
 	private DatagramSocket socket = null;
 	private Statistics stats = null;
@@ -25,7 +25,7 @@ class NetworkServerManagerRead extends Thread {
 	 * @param socket communication end-point
 	 * @param stats Statistics
 	 */
-	public NetworkServerManagerRead(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
+	public UDPReader(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
 		super("NetworkServerManagerRead");
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;

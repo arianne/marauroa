@@ -15,8 +15,8 @@ import marauroa.server.game.Statistics;
 import org.apache.log4j.Logger;
 
 /** A wrapper class for sending messages to clients */
-class NetworkServerManagerWrite {
-	private static Logger logger = Logger.getLogger(NetworkServerManagerWrite.class);
+class UDPWriter {
+	private static Logger logger = Logger.getLogger(UDPWriter.class);
 	private NetworkServerManagerCallback networkServerManager = null;
 	private DatagramSocket socket = null;
 	private Statistics stats = null;
@@ -28,7 +28,7 @@ class NetworkServerManagerWrite {
 	 * @param socket communication end-point
 	 * @param stats Statistics
 	 */
-	public NetworkServerManagerWrite(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
+	public UDPWriter(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;
 		this.stats = stats;

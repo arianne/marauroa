@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.25 2006/07/16 15:08:35 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.26 2006/07/19 02:25:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,8 +57,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 
 	private HashMap<InetSocketAddress, Socket> tcpSockets = new HashMap<InetSocketAddress, Socket>();
 
-	private NetworkServerManagerRead udpReader;
-	private NetworkServerManagerWrite udpWriter;
+	private UDPReader udpReader;
+	private UDPWriter udpWriter;
 	
 	private TCPWriter tcpWriter;
 	private TCPReader tcpReader;
@@ -100,9 +100,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
-		udpReader = new NetworkServerManagerRead(this, socket, stats);
+		udpReader = new UDPReader(this, socket, stats);
 		udpReader.start();
-		udpWriter = new NetworkServerManagerWrite(this, socket, stats);
+		udpWriter = new UDPWriter(this, socket, stats);
 		tcpReader = new TCPReader(this, tcpSockets, stats);
 		tcpReader.start();
 		tcpWriter = new TCPWriter(this, stats);
