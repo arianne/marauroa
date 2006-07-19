@@ -73,7 +73,6 @@ class TCPReader extends Thread {
 								+ ((sizebuffer[1] & 0xFF) << 8)
 								+ ((sizebuffer[2] & 0xFF) << 16)
 								+ ((sizebuffer[3] & 0xFF) << 24);
-							System.err.println(size);
 							if (size == 542393671) { // "GET "
 								// This request was not created by the marauroa-client
 								// but it was created by the HTTP-client to compare
