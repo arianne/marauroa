@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.5 2006/07/16 06:43:08 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.6 2006/07/20 16:44:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
+import marauroa.common.Utility;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.OutputSerializer;
@@ -170,8 +171,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		}
 
 		private synchronized Message getOldestProcessedMessage() {
-			Message choosenMsg = processedMessages.get(0);
-			processedMessages.remove(choosenMsg);
+			Message choosenMsg = processedMessages.remove(0);
 			return choosenMsg;
 		}
 
@@ -218,8 +218,20 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 						+ ((sizebuffer[3] & 0xFF) << 24);
 					
 					byte[] buffer = new byte[size];
-					is.read(buffer);
-					logger.debug("Received UDP Packet");
+
+					// read until everything is received. We have to call read
+					// in a loop because the data may be split accross several
+					// packates.
+					int start = 0;
+					int read = 0;
+					do {
+						start = read;
+						read = is.read(buffer, start, size - start);
+					} while (start + read < size);
+					
+					//logger.debug("size: " + size + "\r\n" + Utility.dumpByteArray(buffer));
+					
+					logger.debug("Received TCP Packet");
 
 					storeMessage(address, buffer);
 					newMessageArrived();
