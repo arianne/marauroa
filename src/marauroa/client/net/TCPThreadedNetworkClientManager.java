@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.6 2006/07/20 16:44:11 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.7 2006/07/20 21:36:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -203,30 +203,40 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			while (keepRunning) {
 				try {
 					byte[] sizebuffer = new byte[4];
-					if (is.available() < 4) {
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							logger.error(e, e);
-						}
-						continue;
-					}
 					is.read(sizebuffer);
 					int size = (sizebuffer[0] & 0xFF)
 						+ ((sizebuffer[1] & 0xFF) << 8)
 						+ ((sizebuffer[2] & 0xFF) << 16)
 						+ ((sizebuffer[3] & 0xFF) << 24);
-					
+
 					byte[] buffer = new byte[size];
 
 					// read until everything is received. We have to call read
 					// in a loop because the data may be split accross several
-					// packates.
+					// packets.
+					long startTime = System.currentTimeMillis();
 					int start = 0;
 					int read = 0;
+					long waittime = 10;
+					int counter = 0;
 					do {
 						start = read;
 						read = is.read(buffer, start, size - start);
+						if (read < 0) {
+							logger.error("Read is negative counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
+							read = 0;
+							waittime = 100;
+						}
+						if (System.currentTimeMillis() - 2000 > startTime) {
+							logger.error("Waiting to long for follow-packets: counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
+							waittime = 1000;
+						}
+						try {
+							Thread.sleep(waittime);
+						} catch (InterruptedException e) {
+							logger.error(e, e);
+						}
+						counter++;
 					} while (start + read < size);
 					
 					//logger.debug("size: " + size + "\r\n" + Utility.dumpByteArray(buffer));
