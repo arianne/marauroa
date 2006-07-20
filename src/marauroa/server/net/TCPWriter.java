@@ -51,7 +51,7 @@ class TCPWriter {
 	 * @param msg Message to write
 	 * @param socket Socket
 	 */
-	public void write(Message msg, Socket socket) {
+	public synchronized void write(Message msg, Socket socket) {
 		Log4J.startMethod(logger, "write");
 		try {
 			if (networkServerManager.isStillRunning()) {
