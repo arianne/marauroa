@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.7 2006/07/20 21:36:54 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.8 2006/07/20 22:03:12 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -200,6 +200,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		/** Method that execute the reading. It runs as a active thread forever. */
 		public void run() {
 			logger.debug("run()");
+			int globalcounter = 0;
 			while (keepRunning) {
 				try {
 					byte[] sizebuffer = new byte[4];
@@ -223,12 +224,12 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 						start = read;
 						read = is.read(buffer, start, size - start);
 						if (read < 0) {
-							logger.error("Read is negative counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
+							logger.error("Read is negative globalcounter=" + globalcounter +" counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
 							read = 0;
 							waittime = 100;
 						}
 						if (System.currentTimeMillis() - 2000 > startTime) {
-							logger.error("Waiting to long for follow-packets: counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
+							logger.error("Waiting to long for follow-packets: globalcounter=" + globalcounter + " counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
 							waittime = 1000;
 						}
 						try {
@@ -252,6 +253,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 					/* Report the exception */
 					logger.error("error while processing udp-packets", e);
 				}
+				globalcounter++;
 			}
 
 			isfinished = true;
