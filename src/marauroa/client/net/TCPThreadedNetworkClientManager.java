@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.9 2006/07/20 22:05:32 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.10 2006/07/29 19:59:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -224,9 +224,8 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 						start = start + read;
 						read = is.read(buffer, start, size - start);
 						if (read < 0) {
-							logger.error("Read is negative globalcounter=" + globalcounter +" counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
-							read = 0;
-							waittime = 100;
+							isfinished = true;
+							return;
 						}
 						if (System.currentTimeMillis() - 2000 > startTime) {
 							logger.error("Waiting to long for follow-packets: globalcounter=" + globalcounter + " counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
