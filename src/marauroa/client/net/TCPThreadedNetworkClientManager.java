@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.10 2006/07/29 19:59:54 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.11 2006/08/01 22:40:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -248,9 +248,11 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 				} catch (java.net.SocketTimeoutException e) {
 					/* We need the thread to check from time to time if user has requested
 					 * an exit */
+					keepRunning = false;
 				} catch (IOException e) {
 					/* Report the exception */
-					logger.error("error while processing udp-packets", e);
+					logger.warn("error while processing tcp-packets", e);
+					keepRunning = false;
 				}
 				globalcounter++;
 			}
