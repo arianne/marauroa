@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.4 2005/12/20 16:09:47 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.5 2006/08/12 19:43:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,7 @@ public class Configuration
   private static String configurationFile="marauroa.ini";
   private Properties properties;
   private static Configuration configuration=null;
+  private static boolean persistence = true;
   
   /** This method defines the default configuration file for all the instances 
    *  of Configuration
@@ -39,6 +40,16 @@ public class Configuration
     configurationFile=conf;
     }  
   
+  /** 
+   * Should the configuration be read from and write to a file?
+   *
+   * @param persitence true to use files, false otherwise
+   */
+  public static void setConfigurationPersitance(boolean persistence)
+    {
+    Configuration.persistence = persistence;
+    }  
+
   public static String getConfigurationFile()
     {
     return configurationFile;
@@ -51,9 +62,11 @@ public class Configuration
       {
       properties=new Properties();
 
-      InputStream is = new FileInputStream(configurationFile);
-      properties.load(is);
-      is.close();
+      if (persistence) {
+	      InputStream is = new FileInputStream(configurationFile);
+	      properties.load(is);
+	      is.close();
+      }
       }
     catch(FileNotFoundException e)
       {
@@ -147,9 +160,11 @@ public class Configuration
       logger.debug("Property ["+property+"]="+value);
       properties.put(property,value);
 
-      OutputStream os = new FileOutputStream(configurationFile);
-      properties.store(os,null);
-      os.close();
+      if (persistence) {
+	      OutputStream os = new FileOutputStream(configurationFile);
+	      properties.store(os,null);
+	      os.close();
+      }
       }
     catch(FileNotFoundException e)
       {
