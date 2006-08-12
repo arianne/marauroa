@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.37 2006/01/19 18:42:52 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.38 2006/08/12 21:43:58 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,7 @@ public class marauroad extends Thread
     System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
     
     // Initialize Loggging
-    Log4J.init();
+    Log4J.init("marauroa/server/log4j.properties");
     marauroad.setArguments(args);
 
     marauroad.getMarauroa().start();
