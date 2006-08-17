@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.12 2006/06/22 15:45:54 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.13 2006/08/17 22:19:09 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -107,7 +107,9 @@ public abstract class createaccount
         if(args[i].equals(item.param))
           {
           item.value=args[i+1];
-          logger.info(item.name+"="+item.value);
+          if (!"password".equals(item.name)) {
+        	  logger.info(item.name+"="+item.value);
+          }
           break;
           }
         }
