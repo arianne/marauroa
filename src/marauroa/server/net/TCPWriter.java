@@ -1,6 +1,3 @@
-// ********************************************************
-//                   EXPERIMENTAL TCP-SUPPORT 
-// ********************************************************
 package marauroa.server.net;
 
 import java.io.ByteArrayOutputStream;
@@ -53,6 +50,7 @@ class TCPWriter {
 	 */
 	public void write(Message msg, Socket socket) {
 		Log4J.startMethod(logger, "write");
+        long timeStart = System.currentTimeMillis();
 		try {
 			if (networkServerManager.isStillRunning()) {
 				byte[] buffer = serializeMessage(msg);
@@ -97,5 +95,9 @@ class TCPWriter {
 			logger.info("error while sending a packet (msg=(" + msg + "))", e);
 			networkServerManager.disconnectClient(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
 		}
+        long timeEnd = System.currentTimeMillis();
+        if (timeEnd - timeStart > 1000) {
+            logger.warn("TCPWriter.write took " + (timeEnd - timeStart) + " (" + socket.getInetAddress() + ")");
+        }
 	}
 }
