@@ -26,7 +26,7 @@ class UDPReader extends Thread {
 	 * @param stats Statistics
 	 */
 	public UDPReader(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
-		super("NetworkServerManagerRead");
+		super("UDPReader");
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;
 		this.stats = stats;

@@ -32,7 +32,7 @@ class TCPReader extends Thread {
 	 * @param stats Statistics
 	 */
 	public TCPReader(NetworkServerManagerCallback networkServerManager, HashMap<InetSocketAddress, Socket> tcpSockets, Statistics stats) {
-		super("NetworkServerManagerRead");
+		super("TCPReader");
 		this.networkServerManager = networkServerManager;
 		this.tcpSockets = tcpSockets;
 		this.stats = stats;
