@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.35 2006/07/18 03:34:04 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.36 2006/08/18 20:28:49 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -477,6 +477,8 @@ public class RPServerManager extends Thread
       long start = System.nanoTime();
       long stop;
       long delay;
+      long timeStart = 0;
+      long[] timeEnds = new long[11];
 
       while(keepRunning)
         {
@@ -487,7 +489,12 @@ public class RPServerManager extends Thread
           delay=turnDuration-((stop-start)/1000000);
           if(delay<0)
             {
-            logger.warn("Turn duration overflow by "+(-delay)+" ms");
+            StringBuilder sb = new StringBuilder();
+            for (long timeEnd : timeEnds) {
+                sb.append(" " + (timeEnd-timeStart));
+            }
+            
+            logger.warn("Turn duration overflow by "+(-delay)+" ms: " + sb.toString());
             }
           else if(delay>turnDuration)
             {
@@ -505,43 +512,56 @@ public class RPServerManager extends Thread
           {
           }
         start=System.nanoTime();
+        timeStart = System.currentTimeMillis();
 
         try
           {
           playerContainer.getLock().requestWriteLock();
             {
+            timeEnds[0] = System.currentTimeMillis();
+
             /** Get actions that players send */
             scheduler.nextTurn();
+            timeEnds[1] = System.currentTimeMillis();
 
             /** Execute them all */
             scheduler.visit(ruleProcessor);
+            timeEnds[2] = System.currentTimeMillis();
 
             /** Compute game RP rules to move to the next turn */
             ruleProcessor.endTurn();
+            timeEnds[3] = System.currentTimeMillis();
 
             /** Send content that is waiting to players */
             deliverTransferContent();
+            timeEnds[4] = System.currentTimeMillis();
 
             /** Tell player what happened */
             buildPerceptions();
+            timeEnds[5] = System.currentTimeMillis();
 
             /** Move zone to the next turn */
             world.nextTurn();
+            timeEnds[6] = System.currentTimeMillis();
 
             /** Remove timeout players */
             notifyTimedoutPlayers(playersToRemove);
+            timeEnds[7] = System.currentTimeMillis();
             
             turn++;
 
             ruleProcessor.beginTurn();
+            timeEnds[8] = System.currentTimeMillis();
             }
           }
         finally
           {
           playerContainer.getLock().releaseLock();
+          timeEnds[9] = System.currentTimeMillis();
           }
 
         stats.set("Objects now",world.size());
+        timeEnds[10] = System.currentTimeMillis();
         }
       }
     catch(Throwable e)
