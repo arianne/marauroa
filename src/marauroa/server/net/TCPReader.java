@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -105,15 +107,19 @@ class TCPReader extends Thread {
 						networkServerManager.receiveMessage(buffer, inetSocketAddress);
 						bytesToRead.remove(socket);
 					}
-				} catch (java.net.SocketTimeoutException e) {
-					logger.warn(e, e);
+				} catch (SocketTimeoutException e) {
+					logger.warn(e + " (" + socket.getInetAddress() + ")", e);
 					networkServerManager.disconnectClient(inetSocketAddress);
+                } catch (SocketException e) {
+                    logger.warn(e + " (" + socket.getInetAddress() + ")", e);
+                    networkServerManager.disconnectClient(inetSocketAddress);
 				} catch (IOException e) {
-					logger.warn(e, e);
+					logger.warn(e + " (" + socket.getInetAddress() + ")", e);
 					networkServerManager.disconnectClient(inetSocketAddress);
 				} catch (Exception e) {
 					/* Report the exception */
-					logger.error("error while processing tcp-packets", e);
+					logger.error("error while processing tcp-packets (" + socket.getInetAddress() + ")", e);
+                    networkServerManager.disconnectClient(inetSocketAddress);
 				}
 			}
 
