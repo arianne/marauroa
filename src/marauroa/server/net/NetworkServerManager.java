@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.26 2006/07/19 02:25:20 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.27 2006/08/19 19:24:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
 	/** The server socket from where we recieve the packets. */
-	private DatagramSocket socket;
+	private DatagramSocket udpSocket;
 
 	/** While keepRunning is true, we keep recieving messages */
 	private boolean keepRunning;
@@ -84,14 +84,14 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		isfinished = false;
 
 		/* Create the socket and set a timeout of 1 second */
-		socket = new DatagramSocket(NetConst.marauroa_PORT);
-		socket.setSoTimeout(1000);
+		udpSocket = new DatagramSocket(NetConst.marauroa_PORT);
+		udpSocket.setSoTimeout(1000);
 		try {
-			socket.setTrafficClass(0x08 | 0x10);
+			udpSocket.setTrafficClass(0x08 | 0x10);
 		} catch (Exception e) {
 			logger.warn("Cannot setTrafficClass " + e);
 		}
-		socket.setSendBufferSize(1500 * 64);
+		udpSocket.setSendBufferSize(1500 * 64);
 
 		Thread tcpListener = new Thread(this, "TCP-Listener");
 		tcpListener.setDaemon(true);
@@ -100,9 +100,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
-		udpReader = new UDPReader(this, socket, stats);
+		udpReader = new UDPReader(this, udpSocket, stats);
 		udpReader.start();
-		udpWriter = new UDPWriter(this, socket, stats);
+		udpWriter = new UDPWriter(this, udpSocket, stats);
 		tcpReader = new TCPReader(this, tcpSockets, stats);
 		tcpReader.start();
 		tcpWriter = new TCPWriter(this, stats);
@@ -119,7 +119,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			Thread.yield();
 		}
 
-		socket.close();
+		udpSocket.close();
 		logger.debug("NetworkServerManager is down");
 	}
 
@@ -231,14 +231,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	public void run() {
 		try {
 			ServerSocket tcpSocket = new ServerSocket(NetConst.marauroa_PORT);
-			socket.setSoTimeout(1000);
-			try {
-				socket.setTrafficClass(0x08 | 0x10);
-			} catch (Exception e) {
-				logger.warn("Cannot setTrafficClass " + e);
-			}
 			while (keepRunning) {
 				Socket socket = tcpSocket.accept();
+                socket.setSoTimeout(500);
 				InetSocketAddress inetSocketAddress = new InetSocketAddress(socket.getInetAddress(), socket.getPort());
 				tcpSockets.put(inetSocketAddress, socket);
 				
