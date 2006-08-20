@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.11 2006/08/01 22:40:06 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.12 2006/08/20 15:40:16 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,23 +26,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
-import marauroa.common.Utility;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 
-
-public final class TCPThreadedNetworkClientManager implements NetworkClientManagerInterface {
+public final class TCPThreadedNetworkClientManager implements
+		NetworkClientManagerInterface {
 	final static private int PACKET_SIGNATURE_SIZE = 4;
 
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(TCPThreadedNetworkClientManager.class);
+	private static final Logger logger = Log4J
+			.getLogger(TCPThreadedNetworkClientManager.class);
+
 	private int clientid;
 
 	/** The server socket from where we recieve the packets. */
 	private Socket socket;
+
 	private InetSocketAddress address;
 
 	/** While keepRunning is true, we keep recieving messages */
@@ -50,36 +52,47 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
+
 	private MessageFactory msgFactory;
+
 	private NetworkClientManagerRead readManager;
+
 	private NetworkClientManagerWrite writeManager;
+
 	private List<Message> processedMessages;
 
-	/** Constructor that opens the socket on the marauroa_PORT and start the thread
-	 to recieve new messages from the network. */
-	public TCPThreadedNetworkClientManager(String host, int port) throws SocketException {
+	/**
+	 * Constructor that opens the socket on the marauroa_PORT and start the
+	 * thread to recieve new messages from the network.
+	 */
+	public TCPThreadedNetworkClientManager(String host, int port)
+			throws SocketException {
 		Log4J.startMethod(logger, "ThreadedNetworkClientManager");
 
 		try {
 			clientid = 0;
-	
+
 			/* Create the socket and set a timeout of 1 second */
 			address = new InetSocketAddress(host, port);
 			socket = new Socket(address.getAddress(), port);
 			socket.setTcpNoDelay(true); // disable Nagle's algorithm
 			socket.setReceiveBufferSize(128 * 1024);
-	
+
 			msgFactory = MessageFactory.getFactory();
-	
+
 			keepRunning = true;
 			isfinished = false;
-	
-			/* Because we access the list from several places we create a synchronized list. */
-			processedMessages = Collections.synchronizedList(new LinkedList<Message>());
-	
+
+			/*
+			 * Because we access the list from several places we create a
+			 * synchronized list.
+			 */
+			processedMessages = Collections
+					.synchronizedList(new LinkedList<Message>());
+
 			readManager = new NetworkClientManagerRead();
 			readManager.start();
-	
+
 			writeManager = new NetworkClientManagerWrite();
 		} catch (IOException e) {
 			// TODO: rewrite this in a cleaner way. This is a simple hack
@@ -90,7 +103,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		logger.debug("ThreadedNetworkClientManager started successfully");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#finish()
 	 */
 	public void finish() {
@@ -108,7 +123,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		logger.debug("NetworkClientManager is down");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getAddress()
 	 */
 	public InetSocketAddress getAddress() {
@@ -119,7 +136,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		notifyAll();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) {
@@ -147,7 +166,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		processedMessages.clear();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
 	 */
 	public void addMessage(Message msg) {
@@ -158,7 +179,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 
 	/** The active thread in charge of recieving messages from the network. */
 	class NetworkClientManagerRead extends Thread {
-		private final Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
+		private final Logger logger = Log4J
+				.getLogger(NetworkClientManagerRead.class);
+
 		private InputStream is = null;
 
 		public NetworkClientManagerRead() {
@@ -175,16 +198,20 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			return choosenMsg;
 		}
 
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
+		private synchronized void storeMessage(InetSocketAddress address,
+				byte[] data) {
 			short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
 
 			logger.debug("receive message(" + signature + ")");
 
 			try {
-				Message msg = msgFactory.getMessage(data, address, PACKET_SIGNATURE_SIZE);
+				Message msg = msgFactory.getMessage(data, address,
+						PACKET_SIGNATURE_SIZE);
 
 				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from packet(" + signature + ") from " + msg.getClientID() + " full [" + msg + "]");
+					logger.debug("build message(type=" + msg.getType()
+							+ ") from packet(" + signature + ") from "
+							+ msg.getClientID() + " full [" + msg + "]");
 				}
 
 				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
@@ -206,9 +233,9 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 					byte[] sizebuffer = new byte[4];
 					is.read(sizebuffer);
 					int size = (sizebuffer[0] & 0xFF)
-						+ ((sizebuffer[1] & 0xFF) << 8)
-						+ ((sizebuffer[2] & 0xFF) << 16)
-						+ ((sizebuffer[3] & 0xFF) << 24);
+							+ ((sizebuffer[1] & 0xFF) << 8)
+							+ ((sizebuffer[2] & 0xFF) << 16)
+							+ ((sizebuffer[3] & 0xFF) << 24);
 
 					byte[] buffer = new byte[size];
 
@@ -228,7 +255,19 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 							return;
 						}
 						if (System.currentTimeMillis() - 2000 > startTime) {
-							logger.error("Waiting to long for follow-packets: globalcounter=" + globalcounter + " counter=" + counter + " start=" +start + " read=" + read + " size=" + size + " time=" + (System.currentTimeMillis() - startTime));
+							logger
+									.error("Waiting to long for follow-packets: globalcounter="
+											+ globalcounter
+											+ " counter="
+											+ counter
+											+ " start="
+											+ start
+											+ " read="
+											+ read
+											+ " size="
+											+ size
+											+ " time="
+											+ (System.currentTimeMillis() - startTime));
 							waittime = 1000;
 						}
 						try {
@@ -238,16 +277,19 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 						}
 						counter++;
 					} while (start + read < size);
-					
-					//logger.debug("size: " + size + "\r\n" + Utility.dumpByteArray(buffer));
-					
+
+					// logger.debug("size: " + size + "\r\n" +
+					// Utility.dumpByteArray(buffer));
+
 					logger.debug("Received TCP Packet");
 
 					storeMessage(address, buffer);
 					newMessageArrived();
 				} catch (java.net.SocketTimeoutException e) {
-					/* We need the thread to check from time to time if user has requested
-					 * an exit */
+					/*
+					 * We need the thread to check from time to time if user has
+					 * requested an exit
+					 */
 					keepRunning = false;
 				} catch (IOException e) {
 					/* Report the exception */
@@ -262,12 +304,13 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		}
 	}
 
-
 	/** A wrapper class for sending messages to clients */
 	class NetworkClientManagerWrite {
-		private final Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
+		private final Logger logger = Log4J
+				.getLogger(NetworkClientManagerWrite.class);
+
 		private OutputStream os = null;
-		
+
 		public NetworkClientManagerWrite() {
 			try {
 				os = socket.getOutputStream();
@@ -279,7 +322,8 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		private byte[] serializeMessage(Message msg) throws IOException {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			OutputSerializer s = new OutputSerializer(out);
-			logger.debug("send message(" + msg.getType() + ") from " + msg.getClientID());
+			logger.debug("send message(" + msg.getType() + ") from "
+					+ msg.getClientID());
 
 			s.write(msg);
 			return out.toByteArray();
@@ -304,7 +348,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 					byte[] sizebuffer = new byte[4];
 					int size = buffer.length;
 					sizebuffer[0] = (byte) (size & 255);
-					sizebuffer[1] = (byte) ((size >>  8) & 255);
+					sizebuffer[1] = (byte) ((size >> 8) & 255);
 					sizebuffer[2] = (byte) ((size >> 16) & 255);
 					sizebuffer[3] = (byte) ((size >> 24) & 255);
 					os.write(sizebuffer);
@@ -313,7 +357,8 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 				Log4J.finishMethod(logger, "write");
 			} catch (IOException e) {
 				/* Report the exception */
-				logger.error("error while sending a packet (msg=(" + msg + "))", e);
+				logger.error(
+						"error while sending a packet (msg=(" + msg + "))", e);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.2 2005/04/14 09:59:06 quisar Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.3 2006/08/20 15:40:09 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,66 +11,72 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.common.net;
-  
+
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.io.*;
 
-/** This message indicate the server what of the available characters is chosen
- *  for the session to play.
- *  @see marauroa.common.net.Message
+/**
+ * This message indicate the server what of the available characters is chosen
+ * for the session to play.
+ * 
+ * @see marauroa.common.net.Message
  */
-public class MessageC2SChooseCharacter extends Message
-  {
-  private String character;
-  /** Constructor for allowing creation of an empty message */
-  public MessageC2SChooseCharacter()
-    {
-    super(MessageType.C2S_CHOOSECHARACTER,null);
-    }  
-    
-  /** Constructor with a TCP/IP source/destination of the message and the name
-   *  of the choosen character.
-   *  @param source The TCP/IP address associated to this message
-   *  @param character The name of the choosen character that <b>MUST</b> be one
-   *  of the returned by the marauroa.common.net.MessageS2CCharacters
-   *  @see marauroa.common.net.MessageS2CCharacterList
-   */
-  public MessageC2SChooseCharacter(InetSocketAddress source,String character)
-    {
-    super(MessageType.C2S_CHOOSECHARACTER,source);
-    this.character=character;
-    }  
-  
-  /** This methods returns the name of the chosen character 
-   @return the character name*/
-  public String getCharacter()
-    {
-    return character;    
-    }
+public class MessageC2SChooseCharacter extends Message {
+	private String character;
 
-  /** This method returns a String that represent the object 
-   *  @return a string representing the object.*/
-  public String toString()
-    {
-    return "Message (C2S ChooseCharacter) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+character+")";
-    }
-      
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
-    {
-    super.writeObject(out);    
-    out.write(character);
-    }
-    
-  public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
-    {
-    super.readObject(in);
-    character=in.readString();
-    if(type!=MessageType.C2S_CHOOSECHARACTER)
-      {
-      throw new java.lang.ClassNotFoundException();
-      }
-    }    
-  }
+	/** Constructor for allowing creation of an empty message */
+	public MessageC2SChooseCharacter() {
+		super(MessageType.C2S_CHOOSECHARACTER, null);
+	}
 
+	/**
+	 * Constructor with a TCP/IP source/destination of the message and the name
+	 * of the choosen character.
+	 * 
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 * @param character
+	 *            The name of the choosen character that <b>MUST</b> be one of
+	 *            the returned by the marauroa.common.net.MessageS2CCharacters
+	 * @see marauroa.common.net.MessageS2CCharacterList
+	 */
+	public MessageC2SChooseCharacter(InetSocketAddress source, String character) {
+		super(MessageType.C2S_CHOOSECHARACTER, source);
+		this.character = character;
+	}
 
-;
+	/**
+	 * This methods returns the name of the chosen character
+	 * 
+	 * @return the character name
+	 */
+	public String getCharacter() {
+		return character;
+	}
+
+	/**
+	 * This method returns a String that represent the object
+	 * 
+	 * @return a string representing the object.
+	 */
+	public String toString() {
+		return "Message (C2S ChooseCharacter) from ("
+				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ character + ")";
+	}
+
+	public void writeObject(marauroa.common.net.OutputSerializer out)
+			throws IOException {
+		super.writeObject(out);
+		out.write(character);
+	}
+
+	public void readObject(marauroa.common.net.InputSerializer in)
+			throws IOException, java.lang.ClassNotFoundException {
+		super.readObject(in);
+		character = in.readString();
+		if (type != MessageType.C2S_CHOOSECHARACTER) {
+			throw new java.lang.ClassNotFoundException();
+		}
+	}
+};

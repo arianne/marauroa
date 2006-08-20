@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.4 2006/01/19 18:42:52 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.5 2006/08/20 15:40:12 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,93 +12,90 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import java.util.*;
-import java.util.zip.*;
-import java.net.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.zip.DeflaterOutputStream;
 
-public class MessageS2CTransfer extends Message
-  {
-  /** TODO: Compress all the data that we send */
-  private List<TransferContent> contents;
-  
-  /** Constructor for allowing creation of an empty message */
-  public MessageS2CTransfer()
-    {
-    super(MessageType.S2C_TRANSFER,null);
-    }
-  
-  public MessageS2CTransfer(InetSocketAddress source,TransferContent content)
-    {
-    super(MessageType.S2C_TRANSFER,source);
-    
-    this.contents=new LinkedList<TransferContent>();
-    contents.add(content);
-    }
-  
-  public List<TransferContent> getContents()
-    {
-    return contents;
-    }
-  
-  public String toString()
-    {
-    StringBuffer st=new StringBuffer("Message (S2C Transfer) from ("+source.getAddress().getHostAddress()+") CONTENTS: (");
-    for(TransferContent content: contents)
-      {
-      st.append("[");
-      st.append(content.name);
-      st.append(":");
-      st.append(content.timestamp);
-      st.append("]");
-      }
-    st.append(")");
-    
-    return st.toString();
-    }
+public class MessageS2CTransfer extends Message {
+	/** TODO: Compress all the data that we send */
+	private List<TransferContent> contents;
 
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
-    {
-    super.writeObject(out);
-    
-    ByteArrayOutputStream array=new ByteArrayOutputStream();
-    DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
-    OutputSerializer serializer=new OutputSerializer(out_stream);
-        
-    int size=contents.size();
-    serializer.write(size);
-    
-    for(TransferContent content: contents)
-      {
-      content.writeFULL(serializer);
-      }    
+	/** Constructor for allowing creation of an empty message */
+	public MessageS2CTransfer() {
+		super(MessageType.S2C_TRANSFER, null);
+	}
 
-    out_stream.close();
-         
-    out.write(array.toByteArray());
-    }
-  
-  public void readObject(marauroa.common.net.InputSerializer in) throws IOException, ClassNotFoundException
-    {
-    super.readObject(in);
-    
-    ByteArrayInputStream array=new ByteArrayInputStream(in.readByteArray());
-    java.util.zip.InflaterInputStream szlib=new java.util.zip.InflaterInputStream(array,new java.util.zip.Inflater());
-    InputSerializer serializer=new InputSerializer(szlib);
+	public MessageS2CTransfer(InetSocketAddress source, TransferContent content) {
+		super(MessageType.S2C_TRANSFER, source);
 
-    int size=serializer.readInt();
-    contents=new LinkedList<TransferContent>();
-      
-    for(int i=0;i<size;i++)
-      {
-      TransferContent content=new TransferContent();
-      content.readFULL(serializer);
-      contents.add(content);
-      }
+		this.contents = new LinkedList<TransferContent>();
+		contents.add(content);
+	}
 
-    if(type!=MessageType.S2C_TRANSFER)
-      {
-      throw new java.lang.ClassNotFoundException();
-      }
-    }
-  }
+	public List<TransferContent> getContents() {
+		return contents;
+	}
+
+	public String toString() {
+		StringBuffer st = new StringBuffer("Message (S2C Transfer) from ("
+				+ source.getAddress().getHostAddress() + ") CONTENTS: (");
+		for (TransferContent content : contents) {
+			st.append("[");
+			st.append(content.name);
+			st.append(":");
+			st.append(content.timestamp);
+			st.append("]");
+		}
+		st.append(")");
+
+		return st.toString();
+	}
+
+	public void writeObject(marauroa.common.net.OutputSerializer out)
+			throws IOException {
+		super.writeObject(out);
+
+		ByteArrayOutputStream array = new ByteArrayOutputStream();
+		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+		OutputSerializer serializer = new OutputSerializer(out_stream);
+
+		int size = contents.size();
+		serializer.write(size);
+
+		for (TransferContent content : contents) {
+			content.writeFULL(serializer);
+		}
+
+		out_stream.close();
+
+		out.write(array.toByteArray());
+	}
+
+	public void readObject(marauroa.common.net.InputSerializer in)
+			throws IOException, ClassNotFoundException {
+		super.readObject(in);
+
+		ByteArrayInputStream array = new ByteArrayInputStream(in
+				.readByteArray());
+		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(
+				array, new java.util.zip.Inflater());
+		InputSerializer serializer = new InputSerializer(szlib);
+
+		int size = serializer.readInt();
+		contents = new LinkedList<TransferContent>();
+
+		for (int i = 0; i < size; i++) {
+			TransferContent content = new TransferContent();
+			content.readFULL(serializer);
+			contents.add(content);
+		}
+
+		if (type != MessageType.S2C_TRANSFER) {
+			throw new java.lang.ClassNotFoundException();
+		}
+	}
+}

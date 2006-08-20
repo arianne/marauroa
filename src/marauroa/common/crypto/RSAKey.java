@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.3 2005/04/16 10:29:38 arianne_rpg Exp $ */
+/* $Id: RSAKey.java,v 1.4 2006/08/20 15:40:17 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,130 +12,130 @@
  ***************************************************************************/
 package marauroa.common.crypto;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.io.PrintWriter;
-import java.io.PrintStream;
 
 public class RSAKey extends RSAPublicKey {
-  private BigInteger d;
+	private BigInteger d;
 
-  public RSAKey(BigInteger n, BigInteger d, BigInteger e) {
-    super(n,e);
-    this.d = d;
-  }
+	public RSAKey(BigInteger n, BigInteger d, BigInteger e) {
+		super(n, e);
+		this.d = d;
+	}
 
-  public void print(PrintWriter out) {
-    super.print(out);
-    out.println("d = " + d);
-  }
+	public void print(PrintWriter out) {
+		super.print(out);
+		out.println("d = " + d);
+	}
 
-  public void print(PrintStream out) {
-    super.print(out);
-    out.println("d = " + d);
-  }
+	public void print(PrintStream out) {
+		super.print(out);
+		out.println("d = " + d);
+	}
 
-  public static RSAKey generateKey(int nbBits) {
-    BigInteger p;
-    BigInteger q;
-    BigInteger n;
-    BigInteger d;
-    BigInteger e = new BigInteger("15");
-    BigInteger phi;
+	public static RSAKey generateKey(int nbBits) {
+		BigInteger p;
+		BigInteger q;
+		BigInteger n;
+		BigInteger d;
+		BigInteger e = new BigInteger("15");
+		BigInteger phi;
 
-    byte[] nonce = new byte[(nbBits / 16) + 1];
+		byte[] nonce = new byte[(nbBits / 16) + 1];
 
-    SecureRandom rand;
-    try {
-      rand = SecureRandom.getInstance ("SHA1PRNG");
-      rand.nextBytes (nonce);
-    }
-    catch(Exception ex) {
-      System.err.println("Can't happen...");
-      ex.printStackTrace();
-      System.exit(1);
-    }
+		SecureRandom rand;
+		try {
+			rand = SecureRandom.getInstance("SHA1PRNG");
+			rand.nextBytes(nonce);
+		} catch (Exception ex) {
+			System.err.println("Can't happen...");
+			ex.printStackTrace();
+			System.exit(1);
+		}
 
-    if(nonce[0] >= 0) {
-      nonce[0] -= 128;
-    }
+		if (nonce[0] >= 0) {
+			nonce[0] -= 128;
+		}
 
-    p = new BigInteger(1,nonce);
+		p = new BigInteger(1, nonce);
 
-    p = p.subtract(p.remainder(big6)).subtract(big1);
-    q = p.subtract(big6);
+		p = p.subtract(p.remainder(big6)).subtract(big1);
+		q = p.subtract(big6);
 
-    //Select two prime numbers, p and q, such
-    // that n = p*q > max and the number of
-    // characters in n is <= blockSize, where
-    // max is the maximum possible data value in
-    // a data block.
-    //Use the incoming first guess for p and then
-    // iterate by increasing the value of p until
-    // a highly-probable prime number is
-    // found.
+		// Select two prime numbers, p and q, such
+		// that n = p*q > max and the number of
+		// characters in n is <= blockSize, where
+		// max is the maximum possible data value in
+		// a data block.
+		// Use the incoming first guess for p and then
+		// iterate by increasing the value of p until
+		// a highly-probable prime number is
+		// found.
 
-    while(!(p.isProbablePrime(1000) && p.multiply(big2).add(big1).isProbablePrime(1000))){
-      p = p.add(big6);
-    }//end while loop
+		while (!(p.isProbablePrime(1000) && p.multiply(big2).add(big1)
+				.isProbablePrime(1000))) {
+			p = p.add(big6);
+		}// end while loop
 
-    //Make the first guess for q one less than p
-    // and then iterate until a highly-probable
-    // prime number is found for q that satisfies
-    // the two conditions given above.
+		// Make the first guess for q one less than p
+		// and then iterate until a highly-probable
+		// prime number is found for q that satisfies
+		// the two conditions given above.
 
-    //The current value of q satisfies one of
-    // the required conditions, but may not be
-    // a prime number.  Get the next prime number
-    // smaller than the current value of q.
-    while(!(q.isProbablePrime(1000) && q.multiply(big2).add(big1).isProbablePrime(1000))){
-      q = q.subtract(big6);
-    }//end while loop
+		// The current value of q satisfies one of
+		// the required conditions, but may not be
+		// a prime number. Get the next prime number
+		// smaller than the current value of q.
+		while (!(q.isProbablePrime(1000) && q.multiply(big2).add(big1)
+				.isProbablePrime(1000))) {
+			q = q.subtract(big6);
+		}// end while loop
 
-    p = p.multiply(big2).add(big1);
-    q = q.multiply(big2).add(big1);
+		p = p.multiply(big2).add(big1);
+		q = q.multiply(big2).add(big1);
 
+		// Now we have a prime value for q that
+		// satisfies one of the two required
+		// conditions. Compute the current value
+		// for n and start working to confirm or
+		// satisfy the other condition.
+		n = p.multiply(q);
 
-    //Now we have a prime value for q that
-    // satisfies one of the two required
-    // conditions.  Compute the current value
-    // for n and start working to confirm or
-    // satisfy the other condition.
-    n = p.multiply(q);
+		// Compute phi, as (p - 1)*(q - 1).
+		BigInteger pPrime = p.subtract(big1);
+		BigInteger qPrime = q.subtract(big1);
+		phi = pPrime.multiply(qPrime);
 
-    //Compute phi, as (p - 1)*(q - 1).
-    BigInteger pPrime = p.subtract(big1);
-    BigInteger qPrime = q.subtract(big1);
-    phi = pPrime.multiply(qPrime);
+		// Compute e. First guess is incoming
+		// value.
+		while (!e.gcd(phi).equals(big1)) {
+			e = e.add(big1);
+		}// end while loop
 
-    //Compute e.  First guess is incoming
-    // value.
-    while(!e.gcd(phi).equals(big1)){
-      e = e.add(big1);
-    }//end while loop
+		// Compute the value for d
+		d = e.modInverse(phi);
+		return new RSAKey(n, d, e);
+	}
 
-    //Compute the value for d
-    d = e.modInverse(phi);
-    return new RSAKey(n,d,e);
-  }
+	public BigInteger decode(BigInteger message) {
+		return message.modPow(d, n);
+	}
 
-  public BigInteger decode(BigInteger message) {
-    return message.modPow(d,n);
-  }
+	public byte[] decodeByteArray(byte[] message) {
+		return Hash.BigIntToBytes(decode(new BigInteger(message)));
+	}
 
-  public byte[] decodeByteArray(byte[] message) {
-    return Hash.BigIntToBytes(decode(new BigInteger(message)));
-  }
+	public BigInteger sign(BigInteger message) {
+		return decode(message);
+	}
 
-  public BigInteger sign(BigInteger message) {
-    return decode(message);
-  }
+	public RSAPublicKey getPublicKey() {
+		return new RSAPublicKey(n, e);
+	}
 
-  public RSAPublicKey getPublicKey() {
-    return new RSAPublicKey(n,e);
-  }
-
-  public BigInteger getD() {
-    return d;
-  }
+	public BigInteger getD() {
+		return d;
+	}
 }

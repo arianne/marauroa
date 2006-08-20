@@ -1,4 +1,4 @@
-/* $Id: RSAPublicKey.java,v 1.4 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: RSAPublicKey.java,v 1.5 2006/08/20 15:40:17 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,78 +12,70 @@
  ***************************************************************************/
 package marauroa.common.crypto;
 
-import java.math.BigInteger;
-import java.io.PrintWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.math.BigInteger;
 
-public class RSAPublicKey
-{
-  public static final BigInteger big0 = new BigInteger("0");
-  public static final BigInteger big1 = new BigInteger("1");
-  public static final BigInteger big2 = new BigInteger("2");
-  public static final BigInteger big6 = new BigInteger("6");
-  protected BigInteger           n;
-  protected BigInteger           e;
+public class RSAPublicKey {
+	public static final BigInteger big0 = new BigInteger("0");
 
-  public RSAPublicKey(BigInteger n, BigInteger e)
-  {
-    this.n = n;
-    this.e = e;
-  }
+	public static final BigInteger big1 = new BigInteger("1");
 
-  public void print(PrintWriter out)
-  {
-    out.println("n = " + n);
-    out.println("e = " + e);
-  }
+	public static final BigInteger big2 = new BigInteger("2");
 
-  public void print(PrintStream out)
-  {
-    out.println("n = " + n);
-    out.println("e = " + e);
-  }
+	public static final BigInteger big6 = new BigInteger("6");
 
-  public BigInteger getN()
-  {
-    return n;
-  }
+	protected BigInteger n;
 
-  public BigInteger getE()
-  {
-    return e;
-  }
+	protected BigInteger e;
 
-  public BigInteger encode(BigInteger message)
-  {
-    return message.modPow(e, n);
-  }
+	public RSAPublicKey(BigInteger n, BigInteger e) {
+		this.n = n;
+		this.e = e;
+	}
 
-  public byte[] encodeByteArray(byte[] message)
-  {
-    return encode(Hash.BytesToBigInt(message)).toByteArray();
-  }
+	public void print(PrintWriter out) {
+		out.println("n = " + n);
+		out.println("e = " + e);
+	}
 
-  public boolean verifySignature(BigInteger message, BigInteger signature)
-  {
-    return message.equals(encode(signature));
-  }
+	public void print(PrintStream out) {
+		out.println("n = " + n);
+		out.println("e = " + e);
+	}
 
-  public static BigInteger getValue(String str)
-  {
-    byte[] v = str.getBytes();
-    for (byte b : v)
-    {
-      if (b != 0)
-      {
-        return new BigInteger(1, v);
-      }
-    }
-    return big0;
-  }
+	public BigInteger getN() {
+		return n;
+	}
 
-  public static String getString(BigInteger value)
-  {
-    return new String(value.toByteArray());
-  }
+	public BigInteger getE() {
+		return e;
+	}
+
+	public BigInteger encode(BigInteger message) {
+		return message.modPow(e, n);
+	}
+
+	public byte[] encodeByteArray(byte[] message) {
+		return encode(Hash.BytesToBigInt(message)).toByteArray();
+	}
+
+	public boolean verifySignature(BigInteger message, BigInteger signature) {
+		return message.equals(encode(signature));
+	}
+
+	public static BigInteger getValue(String str) {
+		byte[] v = str.getBytes();
+		for (byte b : v) {
+			if (b != 0) {
+				return new BigInteger(1, v);
+			}
+		}
+		return big0;
+	}
+
+	public static String getString(BigInteger value) {
+		return new String(value.toByteArray());
+	}
 
 }

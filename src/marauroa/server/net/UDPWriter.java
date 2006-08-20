@@ -17,18 +17,25 @@ import org.apache.log4j.Logger;
 /** A wrapper class for sending messages to clients */
 class UDPWriter {
 	private static Logger logger = Logger.getLogger(UDPWriter.class);
+
 	private NetworkServerManagerCallback networkServerManager = null;
+
 	private DatagramSocket socket = null;
+
 	private Statistics stats = null;
 
 	/**
 	 * Creates a NetworkServerManagerWrite
-	 *
-	 * @param networkServerManager NetworkServerManager
-	 * @param socket communication end-point
-	 * @param stats Statistics
+	 * 
+	 * @param networkServerManager
+	 *            NetworkServerManager
+	 * @param socket
+	 *            communication end-point
+	 * @param stats
+	 *            Statistics
 	 */
-	public UDPWriter(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
+	public UDPWriter(NetworkServerManagerCallback networkServerManager,
+			DatagramSocket socket, Statistics stats) {
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;
 		this.stats = stats;
@@ -44,12 +51,14 @@ class UDPWriter {
 
 	final private int PACKET_SIGNATURE_SIZE = 4;
 
-	final private int CONTENT_PACKET_SIZE = NetConst.UDP_PACKET_SIZE - PACKET_SIGNATURE_SIZE;
+	final private int CONTENT_PACKET_SIZE = NetConst.UDP_PACKET_SIZE
+			- PACKET_SIGNATURE_SIZE;
 
 	/**
 	 * Method that execute the writting
-	 *
-	 * @param msg Message to write
+	 * 
+	 * @param msg
+	 *            Message to write
 	 */
 	public void write(Message msg) {
 		Log4J.startMethod(logger, "write");
@@ -59,17 +68,19 @@ class UDPWriter {
 				byte[] buffer = serializeMessage(msg);
 				short used_signature;
 
-				/*** Statistics ***/
-				used_signature = CRC.cmpCRC(buffer); //++last_signature;
+				/** * Statistics ** */
+				used_signature = CRC.cmpCRC(buffer); // ++last_signature;
 
 				stats.add("Bytes send", buffer.length);
 				stats.add("Message send", 1);
 
-				logger.debug("Message(" + msg.getType() + ") size in bytes: " + buffer.length);
+				logger.debug("Message(" + msg.getType() + ") size in bytes: "
+						+ buffer.length);
 				int totalNumberOfPackets = (buffer.length / CONTENT_PACKET_SIZE) + 1;
 				int bytesRemaining = buffer.length;
 
-				byte[] data = new byte[CONTENT_PACKET_SIZE + PACKET_SIGNATURE_SIZE];
+				byte[] data = new byte[CONTENT_PACKET_SIZE
+						+ PACKET_SIGNATURE_SIZE];
 
 				for (int i = 0; i < totalNumberOfPackets; ++i) {
 					int packetSize = CONTENT_PACKET_SIZE;
@@ -88,12 +99,15 @@ class UDPWriter {
 					data[2] = (byte) (used_signature & 255);
 					data[3] = (byte) ((used_signature >> 8) & 255);
 
-					System.arraycopy(buffer, CONTENT_PACKET_SIZE * i, data, PACKET_SIGNATURE_SIZE, packetSize);
+					System.arraycopy(buffer, CONTENT_PACKET_SIZE * i, data,
+							PACKET_SIGNATURE_SIZE, packetSize);
 
-					DatagramPacket pkt = new DatagramPacket(data, packetSize + PACKET_SIGNATURE_SIZE, msg.getAddress());
+					DatagramPacket pkt = new DatagramPacket(data, packetSize
+							+ PACKET_SIGNATURE_SIZE, msg.getAddress());
 
 					socket.send(pkt);
-					logger.debug("Sent packet(" + used_signature + ") " + (i + 1) + " of " + totalNumberOfPackets);
+					logger.debug("Sent packet(" + used_signature + ") "
+							+ (i + 1) + " of " + totalNumberOfPackets);
 				}
 
 				if (logger.isDebugEnabled()) {

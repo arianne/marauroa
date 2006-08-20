@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.9 2006/06/22 15:45:55 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.10 2006/08/20 15:40:17 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.game.python;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
@@ -22,159 +23,134 @@ import marauroa.server.createaccount.Result;
 import marauroa.server.game.IRPRuleProcessor;
 import marauroa.server.game.RPServerManager;
 import marauroa.server.game.RPWorld;
+
 import org.apache.log4j.Logger;
 
-
-
-/** FIXME: TODO: Update this class. It is now broken.
- *  Document how to use it. */
+/**
+ * FIXME: TODO: Update this class. It is now broken. Document how to use it.
+ */
 @SuppressWarnings("unused")
-public class PythonRPRuleProcessor implements IRPRuleProcessor
-  {
-  /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(PythonRPRuleProcessor.class);
+public class PythonRPRuleProcessor implements IRPRuleProcessor {
+	/** the logger instance. */
+	private static final Logger logger = Log4J
+			.getLogger(PythonRPRuleProcessor.class);
 
-  private GameScript gameScript;
-  private PythonRP pythonRP;
-  
-  private RPServerManager rpman; 
+	private GameScript gameScript;
 
-  public PythonRPRuleProcessor() throws FileNotFoundException
-    {
-    }
+	private PythonRP pythonRP;
 
-  /** Set the context where the actions are executed.
-   *  @param zone The zone where actions happens. */
-  public void setContext(RPServerManager rpman, RPWorld world)
-    {
-    try
-      {
-      this.rpman=rpman;
-      
-      gameScript=GameScript.getGameScript();
-      gameScript.setRPWorld(world);
-      pythonRP=gameScript.getGameRules();
-      }
-    catch(Exception e)
-      {
-      logger.error("error while setting context",e);
-      }
-    }
+	private RPServerManager rpman;
 
-
-  public boolean checkGameVersion(String game, String version)
-    {
-    return pythonRP.checkGameVersion(game,version);
-    }
-    
-  public Result createAccount(String username, String password, String email)
-    {
-    return pythonRP.createAccount(username,password,email);
-    }
-
-  public boolean onActionAdd(RPAction action, List<RPAction> actionList)
-    {
-    return pythonRP.onActionAdd(action,actionList);
-    }
-
-  public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList)
-    {
-    return pythonRP.onIncompleteActionAdd(action,actionList);
-    }  
-
-  /** Execute an action in the name of a player.
-   *  @param id the id of the object owner of the actions.
-   *  @param action the action to execute
-   *  @return the action status, that can be Success, Fail or incomplete, please
-   *      refer to Actions Explained for more info. */
-  public RPAction.Status execute(RPObject.ID id, RPAction action)
-    {
-    Log4J.startMethod(logger, "execute");
-
-    RPAction.Status status=RPAction.Status.FAIL;
-
-    try
-      {
-      if(pythonRP.execute(id,action)==1)
-        {
-        status=RPAction.Status.SUCCESS;
+	public PythonRPRuleProcessor() throws FileNotFoundException {
 	}
-      }
-    catch(Exception e)
-      {
-      logger.error("error in execute()",e);
-      }
-    finally
-      {
-      Log4J.finishMethod(logger, "execute");
-      }
 
-    return status;
-    }
+	/**
+	 * Set the context where the actions are executed.
+	 * 
+	 * @param zone
+	 *            The zone where actions happens.
+	 */
+	public void setContext(RPServerManager rpman, RPWorld world) {
+		try {
+			this.rpman = rpman;
 
-  /** Notify it when a new turn happens */
-  synchronized public void endTurn()
-    {
-    Log4J.startMethod(logger, "endTurn");
-    pythonRP.endTurn();
-    Log4J.finishMethod(logger, "endTurn");
-    }
+			gameScript = GameScript.getGameScript();
+			gameScript.setRPWorld(world);
+			pythonRP = gameScript.getGameRules();
+		} catch (Exception e) {
+			logger.error("error while setting context", e);
+		}
+	}
 
-  synchronized public void beginTurn()
-    {
-    Log4J.startMethod(logger, "beginTurn");
-    pythonRP.beginTurn();
-    Log4J.finishMethod(logger, "beginTurn");
-    }
+	public boolean checkGameVersion(String game, String version) {
+		return pythonRP.checkGameVersion(game, version);
+	}
 
-  synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException
-    {
-    Log4J.startMethod(logger, "onInit");
-    try
-      {
-      return pythonRP.onInit(object);
-      }
-    finally
-      {
-      Log4J.finishMethod(logger, "onInit");
-      }
-    }
+	public Result createAccount(String username, String password, String email) {
+		return pythonRP.createAccount(username, password, email);
+	}
 
-  synchronized public boolean onExit(RPObject.ID id)
-    {
-    Log4J.startMethod(logger, "onExit");
-    try
-      {
-      return pythonRP.onExit(id);
-      }
-    catch(Exception e)
-      {
-      logger.error("onExit() returned with an exeption",e);
-      return true;
-      }
-    finally
-      {
-      Log4J.finishMethod(logger, "onExit");
-      }
-    }
+	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
+		return pythonRP.onActionAdd(action, actionList);
+	}
 
-  synchronized public boolean onTimeout(RPObject.ID id)
-    {
-    Log4J.startMethod(logger, "onTimeout");
-    try
-      {
-      return pythonRP.onTimeout(id);
-      }
-    catch(Exception e)
-      {
-      logger.error("onTimeout() returned with an exeption",e);
-      return true;
-      }
-    finally
-      {
-      Log4J.startMethod(logger, "onTimeout");
-      }
-    }
-  }
+	public boolean onIncompleteActionAdd(RPAction action,
+			List<RPAction> actionList) {
+		return pythonRP.onIncompleteActionAdd(action, actionList);
+	}
 
+	/**
+	 * Execute an action in the name of a player.
+	 * 
+	 * @param id
+	 *            the id of the object owner of the actions.
+	 * @param action
+	 *            the action to execute
+	 * @return the action status, that can be Success, Fail or incomplete,
+	 *         please refer to Actions Explained for more info.
+	 */
+	public RPAction.Status execute(RPObject.ID id, RPAction action) {
+		Log4J.startMethod(logger, "execute");
 
+		RPAction.Status status = RPAction.Status.FAIL;
+
+		try {
+			if (pythonRP.execute(id, action) == 1) {
+				status = RPAction.Status.SUCCESS;
+			}
+		} catch (Exception e) {
+			logger.error("error in execute()", e);
+		} finally {
+			Log4J.finishMethod(logger, "execute");
+		}
+
+		return status;
+	}
+
+	/** Notify it when a new turn happens */
+	synchronized public void endTurn() {
+		Log4J.startMethod(logger, "endTurn");
+		pythonRP.endTurn();
+		Log4J.finishMethod(logger, "endTurn");
+	}
+
+	synchronized public void beginTurn() {
+		Log4J.startMethod(logger, "beginTurn");
+		pythonRP.beginTurn();
+		Log4J.finishMethod(logger, "beginTurn");
+	}
+
+	synchronized public boolean onInit(RPObject object)
+			throws RPObjectInvalidException {
+		Log4J.startMethod(logger, "onInit");
+		try {
+			return pythonRP.onInit(object);
+		} finally {
+			Log4J.finishMethod(logger, "onInit");
+		}
+	}
+
+	synchronized public boolean onExit(RPObject.ID id) {
+		Log4J.startMethod(logger, "onExit");
+		try {
+			return pythonRP.onExit(id);
+		} catch (Exception e) {
+			logger.error("onExit() returned with an exeption", e);
+			return true;
+		} finally {
+			Log4J.finishMethod(logger, "onExit");
+		}
+	}
+
+	synchronized public boolean onTimeout(RPObject.ID id) {
+		Log4J.startMethod(logger, "onTimeout");
+		try {
+			return pythonRP.onTimeout(id);
+		} catch (Exception e) {
+			logger.error("onTimeout() returned with an exeption", e);
+			return true;
+		} finally {
+			Log4J.startMethod(logger, "onTimeout");
+		}
+	}
+}

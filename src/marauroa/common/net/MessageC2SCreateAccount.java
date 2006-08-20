@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.1 2005/12/20 16:09:47 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.2 2006/08/20 15:40:10 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,83 +11,86 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.common.net;
-  
+
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.io.*;
 
-/** This message indicate the server to create an account.
- *  @see marauroa.common.net.Message
+/**
+ * This message indicate the server to create an account.
+ * 
+ * @see marauroa.common.net.Message
  */
-public class MessageC2SCreateAccount extends Message
-  {
-  private String username;
-  private String password;
-  private String email;
-  
-  /** Constructor for allowing creation of an empty message */
-  public MessageC2SCreateAccount()
-    {
-    super(MessageType.C2S_CREATEACCOUNT,null);
-    }  
-    
-  /** Constructor with a TCP/IP source/destination of the message and the name
-   *  of the choosen character.
-   *  @param source The TCP/IP address associated to this message
-   *  @param character The name of the choosen character that <b>MUST</b> be one
-   *  of the returned by the marauroa.common.net.MessageS2CCharacters
-   *  @see marauroa.common.net.MessageS2CCharacterList
-   */
-  public MessageC2SCreateAccount(InetSocketAddress source,String username, String password, String email)
-    {
-    super(MessageType.C2S_CREATEACCOUNT,source);
-    this.username=username;
-    this.password=password;
-    this.email=email;
-    }  
-  
-  public String getUsername()
-    {
-    return username;
-    }
-    
-  public String getPassword()
-    {
-    return password;
-    }
-    
-  public String getEmail()
-    {
-    return email;
-    }    
-  
-  /** This method returns a String that represent the object 
-   *  @return a string representing the object.*/
-  public String toString()
-    {
-    return "Message (C2S CreateAccount) from ("+source.getAddress().getHostAddress()+") CONTENTS: ("+username+";"+password+";"+email+")";
-    }
-      
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
-    {
-    super.writeObject(out);    
-    out.write(username);
-    out.write(password);
-    out.write(email);
-    }
-    
-  public void readObject(marauroa.common.net.InputSerializer in) throws IOException, java.lang.ClassNotFoundException
-    {
-    super.readObject(in);
-    username=in.readString();
-    password=in.readString();
-    email=in.readString();
-    
-    if(type!=MessageType.C2S_CREATEACCOUNT)    
-      {
-      throw new java.lang.ClassNotFoundException();
-      }
-    }    
-  }
+public class MessageC2SCreateAccount extends Message {
+	private String username;
 
+	private String password;
 
-;
+	private String email;
+
+	/** Constructor for allowing creation of an empty message */
+	public MessageC2SCreateAccount() {
+		super(MessageType.C2S_CREATEACCOUNT, null);
+	}
+
+	/**
+	 * Constructor with a TCP/IP source/destination of the message and the name
+	 * of the choosen character.
+	 * 
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 * @param character
+	 *            The name of the choosen character that <b>MUST</b> be one of
+	 *            the returned by the marauroa.common.net.MessageS2CCharacters
+	 * @see marauroa.common.net.MessageS2CCharacterList
+	 */
+	public MessageC2SCreateAccount(InetSocketAddress source, String username,
+			String password, String email) {
+		super(MessageType.C2S_CREATEACCOUNT, source);
+		this.username = username;
+		this.password = password;
+		this.email = email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * This method returns a String that represent the object
+	 * 
+	 * @return a string representing the object.
+	 */
+	public String toString() {
+		return "Message (C2S CreateAccount) from ("
+				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ username + ";" + password + ";" + email + ")";
+	}
+
+	public void writeObject(marauroa.common.net.OutputSerializer out)
+			throws IOException {
+		super.writeObject(out);
+		out.write(username);
+		out.write(password);
+		out.write(email);
+	}
+
+	public void readObject(marauroa.common.net.InputSerializer in)
+			throws IOException, java.lang.ClassNotFoundException {
+		super.readObject(in);
+		username = in.readString();
+		password = in.readString();
+		email = in.readString();
+
+		if (type != MessageType.C2S_CREATEACCOUNT) {
+			throw new java.lang.ClassNotFoundException();
+		}
+	}
+};

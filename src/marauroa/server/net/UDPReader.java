@@ -9,30 +9,37 @@ import marauroa.server.game.Statistics;
 
 import org.apache.log4j.Logger;
 
-/** 
+/**
  * The active thread in charge of recieving messages from the network.
  */
 class UDPReader extends Thread {
 	private static Logger logger = Logger.getLogger(UDPReader.class);
+
 	private NetworkServerManagerCallback networkServerManager = null;
+
 	private DatagramSocket socket = null;
+
 	private Statistics stats = null;
 
 	/**
 	 * Creates a NetworkServerManagerRead
-	 *
-	 * @param networkServerManager NetworkServerManager 
-	 * @param socket communication end-point
-	 * @param stats Statistics
+	 * 
+	 * @param networkServerManager
+	 *            NetworkServerManager
+	 * @param socket
+	 *            communication end-point
+	 * @param stats
+	 *            Statistics
 	 */
-	public UDPReader(NetworkServerManagerCallback networkServerManager, DatagramSocket socket, Statistics stats) {
+	public UDPReader(NetworkServerManagerCallback networkServerManager,
+			DatagramSocket socket, Statistics stats) {
 		super("UDPReader");
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;
 		this.stats = stats;
 	}
 
-	/** 
+	/**
 	 * Method that execute the reading. It runs as a active thread forever.
 	 */
 	@Override
@@ -46,14 +53,17 @@ class UDPReader extends Thread {
 				socket.receive(packet);
 				logger.debug("Received UDP Packet");
 
-				/*** Statistics ***/
+				/** * Statistics ** */
 				stats.add("Bytes recv", packet.getLength());
 				stats.add("Message recv", 1);
 
-				networkServerManager.receiveMessage(packet.getData(), (InetSocketAddress) packet.getSocketAddress());
+				networkServerManager.receiveMessage(packet.getData(),
+						(InetSocketAddress) packet.getSocketAddress());
 			} catch (java.net.SocketTimeoutException e) {
-				/* We need the thread to check from time to time if user has requested
-				 * an exit */
+				/*
+				 * We need the thread to check from time to time if user has
+				 * requested an exit
+				 */
 			} catch (Throwable e) {
 				/* Report the exception */
 				logger.error("error while processing udp-packets", e);

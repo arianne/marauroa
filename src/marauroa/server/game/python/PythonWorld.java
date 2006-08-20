@@ -1,4 +1,4 @@
-/* $Id: PythonWorld.java,v 1.2 2005/11/01 10:09:29 mtotz Exp $ */
+/* $Id: PythonWorld.java,v 1.3 2006/08/20 15:40:17 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,19 +12,15 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
-public class PythonWorld
-{
-  public PythonWorld()
-  {
-  }
+public class PythonWorld {
+	public PythonWorld() {
+	}
 
-  public boolean onInit()
-  {
-    return false;
-  }
+	public boolean onInit() {
+		return false;
+	}
 
-  public boolean onFinish()
-  {
-    return false;
-  }
+	public boolean onFinish() {
+		return false;
+	}
 }

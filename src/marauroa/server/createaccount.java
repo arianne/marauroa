@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.13 2006/08/17 22:19:09 nhnb Exp $ */
+/* $Id: createaccount.java,v 1.14 2006/08/20 15:40:09 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,209 +12,197 @@
  ***************************************************************************/
 package marauroa.server;
 
-import java.util.*;
-import java.io.*;
-import marauroa.server.game.*;
-import marauroa.common.Log4J;
+import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+
 import marauroa.common.Configuration;
-import marauroa.common.game.*;
+import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
+import marauroa.common.game.AttributeNotFoundException;
+import marauroa.common.game.RPObject;
+import marauroa.server.game.IPlayerDatabase;
+import marauroa.server.game.JDBCPlayerDatabase;
+import marauroa.server.game.PlayerDatabaseFactory;
+import marauroa.server.game.Transaction;
+
 import org.apache.log4j.Logger;
 
-/** This is the base class to extend in order to create an account.
- *  The class provide a few methods of which you inherit and implement. */
-public abstract class createaccount
-  {
-  private static final Logger logger=Log4J.getLogger(createaccount.class);
-  
-  public enum Result {
-	  OK_ACCOUNT_CREATED,
-	  FAILED_EMPTY_STRING,
-	  FAILED_INVALID_CHARACTER_USED,
-	  FAILED_STRING_SIZE,
-	  FAILED_PLAYER_EXISTS,
-	  FAILED_EXCEPTION
-  }
+/**
+ * This is the base class to extend in order to create an account. The class
+ * provide a few methods of which you inherit and implement.
+ */
+public abstract class createaccount {
+	private static final Logger logger = Log4J.getLogger(createaccount.class);
 
-  /** This class store some basic information about the type of param, its name
-   *  it default value and the allowed size ( > min and < max ) */
-  public static class Information
-    {
-    public String param;
-    public String name;
-    public String value;
-    public int min;
-    public int max;
+	public enum Result {
+		OK_ACCOUNT_CREATED, FAILED_EMPTY_STRING, FAILED_INVALID_CHARACTER_USED, FAILED_STRING_SIZE, FAILED_PLAYER_EXISTS, FAILED_EXCEPTION
+	}
 
+	/**
+	 * This class store some basic information about the type of param, its name
+	 * it default value and the allowed size ( > min and < max )
+	 */
+	public static class Information {
+		public String param;
 
-    public Information(String param, String name)
-      {
-      this.param=param;
-      this.name=name;
-      this.value="";
-      this.max=256;
-      }
+		public String name;
 
-    public Information(String param, String name,int min, int max)
-      {
-      this.param=param;
-      this.name=name;
-      this.value="";
-      this.min=min;
-      this.max=max;
-      }
-    }
+		public String value;
 
-  protected List<Information> information;
+		public int min;
 
-  public createaccount()
-    {
-    information= new LinkedList<Information>();
+		public int max;
 
-    information.add(new Information("-u","username",4,20));
-    information.add(new Information("-p","password",4,256));
-    information.add(new Information("-e","email"));
-    information.add(new Information("-c","character",4,20));
-    }
+		public Information(String param, String name) {
+			this.param = param;
+			this.name = name;
+			this.value = "";
+			this.max = 256;
+		}
 
-  protected String get(String name) throws AttributeNotFoundException
-    {
-    for(Information item: information)
-      {
-      if(item.name.equals(name))
-        {
-        return item.value;
-        }
-      }
+		public Information(String param, String name, int min, int max) {
+			this.param = param;
+			this.name = name;
+			this.value = "";
+			this.min = min;
+			this.max = max;
+		}
+	}
 
-    throw new AttributeNotFoundException(name);
-    }
+	protected List<Information> information;
 
-  /** Implement this method on the subclass in order to create an object that will be
-   *  inserted into the database by the createaccount class. You are given a playerDatabase
-   *  instance so that you can get valid rpobjects' ids */
-  public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
+	public createaccount() {
+		information = new LinkedList<Information>();
 
-  protected Result run(String[] args)
-    {
-    int i=0;
-    String iniFile = "marauroa.ini";
+		information.add(new Information("-u", "username", 4, 20));
+		information.add(new Information("-p", "password", 4, 256));
+		information.add(new Information("-e", "email"));
+		information.add(new Information("-c", "character", 4, 20));
+	}
 
-    while(i!=args.length)
-      {
-      for(Information item: information)
-        {
-        if(args[i].equals(item.param))
-          {
-          item.value=args[i+1];
-          if (!"password".equals(item.name)) {
-        	  logger.info(item.name+"="+item.value);
-          }
-          break;
-          }
-        }
+	protected String get(String name) throws AttributeNotFoundException {
+		for (Information item : information) {
+			if (item.name.equals(name)) {
+				return item.value;
+			}
+		}
 
-      if(args[i].equals("-i"))
-        {
-	      iniFile=args[i+1];
-        }
+		throw new AttributeNotFoundException(name);
+	}
 
-      if(args[i].equals("-h"))
-        {
-        logger.info("createaccount application for Marauroa");
-        for(Information item: information)
-          {
-          logger.info(item.param+" to use/add "+item.name);
-          }
+	/**
+	 * Implement this method on the subclass in order to create an object that
+	 * will be inserted into the database by the createaccount class. You are
+	 * given a playerDatabase instance so that you can get valid rpobjects' ids
+	 */
+	public abstract RPObject populatePlayerRPObject(
+			IPlayerDatabase playerDatabase) throws Exception;
 
-        logger.info("-i"+" to to define .ini file");
+	protected Result run(String[] args) {
+		int i = 0;
+		String iniFile = "marauroa.ini";
 
-        return Result.FAILED_EMPTY_STRING;
-        }
+		while (i != args.length) {
+			for (Information item : information) {
+				if (args[i].equals(item.param)) {
+					item.value = args[i + 1];
+					if (!"password".equals(item.name)) {
+						logger.info(item.name + "=" + item.value);
+					}
+					break;
+				}
+			}
 
-      ++i;
-      }
+			if (args[i].equals("-i")) {
+				iniFile = args[i + 1];
+			}
 
-    Transaction trans=null;
-    PrintWriter out=null;
+			if (args[i].equals("-h")) {
+				logger.info("createaccount application for Marauroa");
+				for (Information item : information) {
+					logger.info(item.param + " to use/add " + item.name);
+				}
 
-    try
-      {
-      Configuration.setConfigurationFile(iniFile);
-      logger.info("Trying to create username("+get("username")+"), character("+get("character")+")");
+				logger.info("-i" + " to to define .ini file");
 
-      JDBCPlayerDatabase playerDatabase=(JDBCPlayerDatabase)PlayerDatabaseFactory.getDatabase();
-      trans=playerDatabase.getTransaction();
-      
-      trans.begin();
+				return Result.FAILED_EMPTY_STRING;
+			}
 
-      logger.info("Checking for null/empty string");
-      for(Information item: information)
-        {
-        if(item.value.equals(""))
-          {
-          logger.info("String is empty or null: "+item.name);
-          return Result.FAILED_EMPTY_STRING;
-          }
-        }
+			++i;
+		}
 
-      logger.info("Checking for valid string");
-      for(Information item: information)
-        {
-        if(!playerDatabase.validString(item.value))
-          {
-          logger.info("String not valid: "+item.name);
-          return Result.FAILED_INVALID_CHARACTER_USED;
-          }
-        }
+		Transaction trans = null;
+		PrintWriter out = null;
 
-      logger.info("Checking string size");
-      for(Information item: information)
-        {
-        if(item.value.length()>item.max || item.value.length()<item.min)
-          {
-          logger.info("String size not valid: "+item.name);
-          return Result.FAILED_STRING_SIZE;
-          }
-        }
+		try {
+			Configuration.setConfigurationFile(iniFile);
+			logger.info("Trying to create username(" + get("username")
+					+ "), character(" + get("character") + ")");
 
-      logger.info("Checking if player exists");
-      if(playerDatabase.hasPlayer(trans, get("username")))
-        {
-        logger.info("ERROR: Player exists");
-        return Result.FAILED_PLAYER_EXISTS;
-        }
+			JDBCPlayerDatabase playerDatabase = (JDBCPlayerDatabase) PlayerDatabaseFactory
+					.getDatabase();
+			trans = playerDatabase.getTransaction();
 
-      logger.info("Adding player");
-      playerDatabase.addPlayer(trans,get("username"),Hash.hash(get("password")),get("email"));
+			trans.begin();
 
-      RPObject object=populatePlayerRPObject(playerDatabase);
+			logger.info("Checking for null/empty string");
+			for (Information item : information) {
+				if (item.value.equals("")) {
+					logger.info("String is empty or null: " + item.name);
+					return Result.FAILED_EMPTY_STRING;
+				}
+			}
 
-      playerDatabase.addCharacter(trans, get("username"),get("character"),object);
-      logger.info("Correctly created");
-      
-      trans.commit();
-      }
-    catch(Exception e)
-      {
-      if(out!=null)
-        {
-        logger.warn("Failed: "+e.getMessage());
-        e.printStackTrace(out);
+			logger.info("Checking for valid string");
+			for (Information item : information) {
+				if (!playerDatabase.validString(item.value)) {
+					logger.info("String not valid: " + item.name);
+					return Result.FAILED_INVALID_CHARACTER_USED;
+				}
+			}
 
-        try
-          {
-          trans.rollback();
-          }
-        catch(Exception ae)
-          {
-          logger.fatal("Failed Rollback: "+ae.getMessage());
-          }
-        }
-      
-      return Result.FAILED_EXCEPTION;
-      }
+			logger.info("Checking string size");
+			for (Information item : information) {
+				if (item.value.length() > item.max
+						|| item.value.length() < item.min) {
+					logger.info("String size not valid: " + item.name);
+					return Result.FAILED_STRING_SIZE;
+				}
+			}
 
-    return Result.OK_ACCOUNT_CREATED;
-    }
-  }
+			logger.info("Checking if player exists");
+			if (playerDatabase.hasPlayer(trans, get("username"))) {
+				logger.info("ERROR: Player exists");
+				return Result.FAILED_PLAYER_EXISTS;
+			}
+
+			logger.info("Adding player");
+			playerDatabase.addPlayer(trans, get("username"), Hash
+					.hash(get("password")), get("email"));
+
+			RPObject object = populatePlayerRPObject(playerDatabase);
+
+			playerDatabase.addCharacter(trans, get("username"),
+					get("character"), object);
+			logger.info("Correctly created");
+
+			trans.commit();
+		} catch (Exception e) {
+			if (out != null) {
+				logger.warn("Failed: " + e.getMessage());
+				e.printStackTrace(out);
+
+				try {
+					trans.rollback();
+				} catch (Exception ae) {
+					logger.fatal("Failed Rollback: " + ae.getMessage());
+				}
+			}
+
+			return Result.FAILED_EXCEPTION;
+		}
+
+		return Result.OK_ACCOUNT_CREATED;
+	}
+}

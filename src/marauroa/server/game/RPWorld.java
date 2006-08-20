@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.15 2006/03/29 18:01:15 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.16 2006/08/20 15:40:15 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,221 +14,186 @@ package marauroa.server.game;
 
 import java.util.HashMap;
 import java.util.Iterator;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.game.RPSlot;
+
 import org.apache.log4j.Logger;
 
-public class RPWorld implements Iterable<IRPZone>
-  {
-  /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(RPWorld.class);
+public class RPWorld implements Iterable<IRPZone> {
+	/** the logger instance. */
+	private static final Logger logger = Log4J.getLogger(RPWorld.class);
 
-  HashMap<IRPZone.ID,IRPZone> zones;
-  PlayerEntryContainer playerContainer;
-    
-  public RPWorld()
-    {
-    zones=new HashMap<IRPZone.ID,IRPZone>();
-    }
-  
-  /** This method is called when RPWorld is created */
-  public void onInit() throws Exception
-    {
-    }
-  
-  /** This method is called when server is going to shutdown. */
-  public void onFinish() throws Exception
-    {
-    }
-    
-  public void setPlayerContainer(PlayerEntryContainer playerContainer)
-    {
-    this.playerContainer=playerContainer;
-    }
-  
-  public void addRPZone(IRPZone zone)
-    {
-    zones.put(zone.getID(),zone);
-    }
-  
-  public boolean hasRPZone(IRPZone.ID zoneid)
-    {
-    return zones.containsKey(zoneid);
-    }
-    
-  public IRPZone getRPZone(IRPZone.ID zoneid)
-    {
-    return zones.get(zoneid);
-    }
+	HashMap<IRPZone.ID, IRPZone> zones;
 
-  public IRPZone getRPZone(RPObject.ID objectid)
-    {
-    return zones.get(new IRPZone.ID(objectid.getZoneID()));
-    }
-  
-  public void add(RPObject object) throws NoRPZoneException, RPObjectInvalidException  
-    {
-    try
-      {
-      if(object.has("zoneid"))
-        {
-        IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
-        zone.assignRPObjectID(object);
-      
-        // Changing too the objects inside the slots 
-        Iterator<RPSlot> it=object.slotsIterator();
-        while(it.hasNext())
-          {
-          RPSlot slot=it.next();
-          String zoneid=object.get("zoneid");
-        
-          for(RPObject item: slot)
-            {
-            item.put("zoneid",zoneid);
-            zone.assignRPObjectID(item);
-            }
-          }
-          
-        zone.add(object);
-        
-        /** NOTE: Document this hack */        
-        if(object.has("clientid"))
-          {
-          playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
-          PlayerEntryContainer.RuntimePlayerEntry entry=playerContainer.get(object.getInt("clientid"));
-          entry.perception_OutOfSync=true;
-          }
-        }        
-      }
-    catch(Exception e)
-      {
-      logger.warn("error add object to world",e);
-      throw new NoRPZoneException();  
-      }
-    }
-  
-  public RPObject get(RPObject.ID id) throws NoRPZoneException, RPObjectInvalidException  
-    {
-    try
-      {
-      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
-      return zone.get(id);
-      }
-    catch(Exception e)
-      {
-      logger.error("error getting object ["+id+"]",e);
-      throw new NoRPZoneException();  
-      }
-    }
+	PlayerEntryContainer playerContainer;
 
-  public boolean has(RPObject.ID id) throws NoRPZoneException, RPObjectInvalidException  
-    {
-    try
-      {
-      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
-      return zone.has(id);
-      }
-    catch(Exception e)
-      {
-      logger.error("error while checking if world has object ["+id+"]",e);
-      throw new NoRPZoneException();  
-      }
-    }
+	public RPWorld() {
+		zones = new HashMap<IRPZone.ID, IRPZone>();
+	}
 
-  public RPObject remove(RPObject.ID id) throws NoRPZoneException, RPObjectNotFoundException  
-    {
-    try
-      {
-      IRPZone zone=zones.get(new IRPZone.ID(id.getZoneID()));
-      return zone.remove(id);
-      }
-    catch(Exception e)
-      {
-      logger.error("error while removing object ["+id+"]",e);
-      throw new NoRPZoneException();  
-      }
-    }
-  
-  public Iterator<IRPZone> iterator()
-    {
-    return zones.values().iterator();
-    }
-  
-  public void modify(RPObject object) throws NoRPZoneException  
-    {
-    try
-      {
-      IRPZone zone=zones.get(new IRPZone.ID(object.get("zoneid")));
-      zone.modify(object);
-      }
-    catch(Exception e)
-      {
-      logger.error("error modifying object: "+object,e);
-      throw new NoRPZoneException();  
-      }
-    }
-  
-    
-  public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) throws NoRPZoneException
-    {
-    Log4J.startMethod(logger, "changeZone");
-    try
-      {
-      if(newzoneid.equals(oldzoneid))
-        {
-        return;
-        }
-      
-      // newzone is never used?
-      //IRPZone newzone=getRPZone(newzoneid);
-      IRPZone oldzone=getRPZone(oldzoneid);
-      
-      oldzone.remove(object.getID());
-            
-      object.put("zoneid",newzoneid.getID());
-      
-      add(object);    
-      }
-    catch(Exception e)
-      {
-      logger.error("error changing Zone",e);
-      throw new NoRPZoneException();
-      }
-    finally
-      {
-      Log4J.finishMethod(logger, "changeZone");
-      }
-    }  
+	/** This method is called when RPWorld is created */
+	public void onInit() throws Exception {
+	}
 
-  public void changeZone(String oldzone, String newzone, RPObject object) throws NoRPZoneException
-    {
-    changeZone(new IRPZone.ID(oldzone),new IRPZone.ID(newzone),object);
-    }  
-  
-  public void nextTurn()
-    {
-    Log4J.startMethod(logger, "nextTurn");
-    for(IRPZone zone: zones.values())
-      {
-      zone.nextTurn();
-      }
-      
-    Log4J.finishMethod(logger, "nextTurn");
-    }
-  
-  public int size()
-    {
-    int size=0;
-    
-    for(IRPZone zone: zones.values()) 
-      {
-      size+=zone.size();
-      }
-     
-    return size;
-    }
-  }
+	/** This method is called when server is going to shutdown. */
+	public void onFinish() throws Exception {
+	}
+
+	public void setPlayerContainer(PlayerEntryContainer playerContainer) {
+		this.playerContainer = playerContainer;
+	}
+
+	public void addRPZone(IRPZone zone) {
+		zones.put(zone.getID(), zone);
+	}
+
+	public boolean hasRPZone(IRPZone.ID zoneid) {
+		return zones.containsKey(zoneid);
+	}
+
+	public IRPZone getRPZone(IRPZone.ID zoneid) {
+		return zones.get(zoneid);
+	}
+
+	public IRPZone getRPZone(RPObject.ID objectid) {
+		return zones.get(new IRPZone.ID(objectid.getZoneID()));
+	}
+
+	public void add(RPObject object) throws NoRPZoneException,
+			RPObjectInvalidException {
+		try {
+			if (object.has("zoneid")) {
+				IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+				zone.assignRPObjectID(object);
+
+				// Changing too the objects inside the slots
+				Iterator<RPSlot> it = object.slotsIterator();
+				while (it.hasNext()) {
+					RPSlot slot = it.next();
+					String zoneid = object.get("zoneid");
+
+					for (RPObject item : slot) {
+						item.put("zoneid", zoneid);
+						zone.assignRPObjectID(item);
+					}
+				}
+
+				zone.add(object);
+
+				/** NOTE: Document this hack */
+				if (object.has("clientid")) {
+					playerContainer.setRPObjectID(object.getInt("clientid"),
+							object.getID());
+					PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer
+							.get(object.getInt("clientid"));
+					entry.perception_OutOfSync = true;
+				}
+			}
+		} catch (Exception e) {
+			logger.warn("error add object to world", e);
+			throw new NoRPZoneException();
+		}
+	}
+
+	public RPObject get(RPObject.ID id) throws NoRPZoneException,
+			RPObjectInvalidException {
+		try {
+			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
+			return zone.get(id);
+		} catch (Exception e) {
+			logger.error("error getting object [" + id + "]", e);
+			throw new NoRPZoneException();
+		}
+	}
+
+	public boolean has(RPObject.ID id) throws NoRPZoneException,
+			RPObjectInvalidException {
+		try {
+			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
+			return zone.has(id);
+		} catch (Exception e) {
+			logger.error("error while checking if world has object [" + id
+					+ "]", e);
+			throw new NoRPZoneException();
+		}
+	}
+
+	public RPObject remove(RPObject.ID id) throws NoRPZoneException,
+			RPObjectNotFoundException {
+		try {
+			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
+			return zone.remove(id);
+		} catch (Exception e) {
+			logger.error("error while removing object [" + id + "]", e);
+			throw new NoRPZoneException();
+		}
+	}
+
+	public Iterator<IRPZone> iterator() {
+		return zones.values().iterator();
+	}
+
+	public void modify(RPObject object) throws NoRPZoneException {
+		try {
+			IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+			zone.modify(object);
+		} catch (Exception e) {
+			logger.error("error modifying object: " + object, e);
+			throw new NoRPZoneException();
+		}
+	}
+
+	public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid,
+			RPObject object) throws NoRPZoneException {
+		Log4J.startMethod(logger, "changeZone");
+		try {
+			if (newzoneid.equals(oldzoneid)) {
+				return;
+			}
+
+			// newzone is never used?
+			// IRPZone newzone=getRPZone(newzoneid);
+			IRPZone oldzone = getRPZone(oldzoneid);
+
+			oldzone.remove(object.getID());
+
+			object.put("zoneid", newzoneid.getID());
+
+			add(object);
+		} catch (Exception e) {
+			logger.error("error changing Zone", e);
+			throw new NoRPZoneException();
+		} finally {
+			Log4J.finishMethod(logger, "changeZone");
+		}
+	}
+
+	public void changeZone(String oldzone, String newzone, RPObject object)
+			throws NoRPZoneException {
+		changeZone(new IRPZone.ID(oldzone), new IRPZone.ID(newzone), object);
+	}
+
+	public void nextTurn() {
+		Log4J.startMethod(logger, "nextTurn");
+		for (IRPZone zone : zones.values()) {
+			zone.nextTurn();
+		}
+
+		Log4J.finishMethod(logger, "nextTurn");
+	}
+
+	public int size() {
+		int size = 0;
+
+		for (IRPZone zone : zones.values()) {
+			size += zone.size();
+		}
+
+		return size;
+	}
+}

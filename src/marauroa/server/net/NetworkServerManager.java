@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.27 2006/08/19 19:24:15 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.28 2006/08/20 15:40:13 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,12 +33,15 @@ import marauroa.server.game.Statistics;
 
 import org.apache.log4j.Logger;
 
-
-/** The NetworkServerManager is the active entity of the marauroa.net package,
- *  it is in charge of sending and recieving the packages from the network. */
-public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable {
+/**
+ * The NetworkServerManager is the active entity of the marauroa.net package, it
+ * is in charge of sending and recieving the packages from the network.
+ */
+public final class NetworkServerManager implements
+		NetworkServerManagerCallback, Runnable {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
+	private static final Logger logger = Log4J
+			.getLogger(NetworkServerManager.class);
 
 	/** The server socket from where we recieve the packets. */
 	private DatagramSocket udpSocket;
@@ -58,9 +61,11 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	private HashMap<InetSocketAddress, Socket> tcpSockets = new HashMap<InetSocketAddress, Socket>();
 
 	private UDPReader udpReader;
+
 	private UDPWriter udpWriter;
-	
+
 	private TCPWriter tcpWriter;
+
 	private TCPReader tcpReader;
 
 	/** Statistics */
@@ -69,15 +74,19 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	/** checkes if the ip-address is banned */
 	PacketValidator packetValidator;
 
-	/** 
-	 * Constructor that opens the socket on the marauroa_PORT and start the thread
-	 * to recieve new messages from the network.
-	 *
-	 * @throws SocketException if the server socket cannot be created or bound.
+	/**
+	 * Constructor that opens the socket on the marauroa_PORT and start the
+	 * thread to recieve new messages from the network.
+	 * 
+	 * @throws SocketException
+	 *             if the server socket cannot be created or bound.
 	 */
 	public NetworkServerManager() throws SocketException {
 		Log4J.startMethod(logger, "NetworkServerManager");
-		/* init the packet validater (which can now only check if the address is banned)*/
+		/*
+		 * init the packet validater (which can now only check if the address is
+		 * banned)
+		 */
 		packetValidator = new PacketValidator();
 		msgFactory = MessageFactory.getFactory();
 		keepRunning = true;
@@ -96,8 +105,11 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		Thread tcpListener = new Thread(this, "TCP-Listener");
 		tcpListener.setDaemon(true);
 		tcpListener.start();
-		
-		/* Because we access the list from several places we create a synchronized list. */
+
+		/*
+		 * Because we access the list from several places we create a
+		 * synchronized list.
+		 */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
 		udpReader = new UDPReader(this, udpSocket, stats);
@@ -109,7 +121,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		logger.debug("NetworkServerManager started successfully");
 	}
 
-	/** 
+	/**
 	 * This method notify the thread to finish it execution
 	 */
 	public void finish() {
@@ -123,18 +135,19 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		logger.debug("NetworkServerManager is down");
 	}
 
-	/** 
+	/**
 	 * This methods notifies waiting threads to continue
 	 */
 	private synchronized void newMessageArrived() {
 		notifyAll();
 	}
 
-	/** 
-	 * This method returns a Message from the list or block for timeout milliseconds
-	 * until a message is available or null if timeout happens.
-	 *
-	 * @param timeout timeout time in milliseconds
+	/**
+	 * This method returns a Message from the list or block for timeout
+	 * milliseconds until a message is available or null if timeout happens.
+	 * 
+	 * @param timeout
+	 *            timeout time in milliseconds
 	 * @return a Message or null if timeout happens
 	 */
 	public synchronized Message getMessage(int timeout) {
@@ -159,9 +172,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		return message;
 	}
 
-	/** 
+	/**
 	 * This method blocks until a message is available
-	 *
+	 * 
 	 * @return a Message
 	 */
 	public synchronized Message getMessage() {
@@ -180,12 +193,15 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 
 	/**
 	 * Puts a message received by the Networklayer into the list of messages.
-	 *
-	 * @param data of message that was received
-	 * @param inetSocketAddress the address of the client-socket (ip+port)
+	 * 
+	 * @param data
+	 *            of message that was received
+	 * @param inetSocketAddress
+	 *            the address of the client-socket (ip+port)
 	 */
-	public void receiveMessage(byte[] data, InetSocketAddress inetSocketAddress) throws IOException {
-		
+	public void receiveMessage(byte[] data, InetSocketAddress inetSocketAddress)
+			throws IOException {
+
 		if (!packetValidator.checkBanned(inetSocketAddress.getAddress())) {
 			try {
 				Message msg = msgFactory.getMessage(data, inetSocketAddress);
@@ -194,20 +210,24 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 				newMessageArrived();
 			} catch (InvalidVersionException e) {
 				stats.add("Message invalid version", 1);
-				MessageS2CInvalidMessage msg = new MessageS2CInvalidMessage(inetSocketAddress, "Invalid client version: Update client");
+				MessageS2CInvalidMessage msg = new MessageS2CInvalidMessage(
+						inetSocketAddress,
+						"Invalid client version: Update client");
 				sendMessage(msg);
 			}
 		} else {
-			logger.debug("UDP Packet discarded - client(" + inetSocketAddress + ") is banned.");
+			logger.debug("UDP Packet discarded - client(" + inetSocketAddress
+					+ ") is banned.");
 		}
-		
+
 	}
 
 	/**
-	 * This method add a message to be delivered to the client the message
-	 * is pointed to.
-	 *
-	 * @param msg the message to be delivered.
+	 * This method add a message to be delivered to the client the message is
+	 * pointed to.
+	 * 
+	 * @param msg
+	 *            the message to be delivered.
 	 */
 	public void sendMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
@@ -223,7 +243,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	public boolean isStillRunning() {
 		return keepRunning;
 	}
-	
+
 	public void finishedReadThread() {
 		isfinished = true;
 	}
@@ -233,13 +253,14 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			ServerSocket tcpSocket = new ServerSocket(NetConst.marauroa_PORT);
 			while (keepRunning) {
 				Socket socket = tcpSocket.accept();
-                socket.setSoTimeout(500);
-				InetSocketAddress inetSocketAddress = new InetSocketAddress(socket.getInetAddress(), socket.getPort());
+				socket.setSoTimeout(500);
+				InetSocketAddress inetSocketAddress = new InetSocketAddress(
+						socket.getInetAddress(), socket.getPort());
 				tcpSockets.put(inetSocketAddress, socket);
-				
+
 			}
 			tcpSocket.close();
-			
+
 		} catch (IOException e) {
 			logger.error(e, e);
 		}

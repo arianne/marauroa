@@ -1,4 +1,4 @@
-/* $Id: RPActionList.java,v 1.2 2005/07/18 20:52:41 mtotz Exp $ */
+/* $Id: RPActionList.java,v 1.3 2006/08/20 15:40:15 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,67 +12,71 @@
  ***************************************************************************/
 package marauroa.server.game;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Collections;
+
 import marauroa.common.game.RPAction;
 
+/** This class represents a list of RPActions and uses a LinkedList as backstore. * */
+public class RPActionList implements Iterable<RPAction> {
+	/** A LinkedList<RPAction> that contains actions */
+	private LinkedList<RPAction> actionsList;
 
+	public RPActionList() {
+		actionsList = new LinkedList<RPAction>();
+	}
 
-/** This class represents a list of RPActions and uses a LinkedList as backstore. **/
-public class RPActionList implements Iterable<RPAction>
-  {
-  /** A LinkedList<RPAction> that contains actions */
-  private LinkedList<RPAction> actionsList;
-  
-  public RPActionList()
-    {
-    actionsList = new LinkedList<RPAction>();
-    }
-  
-  /** This method adds a new rp action to list
-   * @param rp_action - RPAction to add into list
-   * @return actions that was just added
-   **/
-  public RPAction add(RPAction rp_action)
-    {
-    actionsList.add(rp_action);
-    return(rp_action);
-    }
-  
-  /** This method gets the RPAction
-   * @param index index of RPAction to retrieve
-   * @return actions that was just added
-   **/
-  public RPAction get(int index)
-    {
-    return(actionsList.get(index));
-    }
-    
-  /** This method removes the RPAction at position index
-   * @param index index of RPAction to remove
-   * @return actions that was just removed
-   **/
-  public RPAction remove(int index)
-    {
-    return actionsList.remove(index);
-    }
-  
-  /** This method gets the size
-   * @return count of RPActions in this list
-   **/
-  public int size()
-    {
-    return(actionsList.size());
-    }
-  
-  /**
-   * gets the RP Actions Iterator
-   * @return Iterator<RPAction>
-   **/
-  public Iterator<RPAction> iterator()
-    {
-    return(Collections.unmodifiableList(actionsList).iterator());
-    }
-    
-  }
+	/**
+	 * This method adds a new rp action to list
+	 * 
+	 * @param rp_action -
+	 *            RPAction to add into list
+	 * @return actions that was just added
+	 */
+	public RPAction add(RPAction rp_action) {
+		actionsList.add(rp_action);
+		return (rp_action);
+	}
+
+	/**
+	 * This method gets the RPAction
+	 * 
+	 * @param index
+	 *            index of RPAction to retrieve
+	 * @return actions that was just added
+	 */
+	public RPAction get(int index) {
+		return (actionsList.get(index));
+	}
+
+	/**
+	 * This method removes the RPAction at position index
+	 * 
+	 * @param index
+	 *            index of RPAction to remove
+	 * @return actions that was just removed
+	 */
+	public RPAction remove(int index) {
+		return actionsList.remove(index);
+	}
+
+	/**
+	 * This method gets the size
+	 * 
+	 * @return count of RPActions in this list
+	 */
+	public int size() {
+		return (actionsList.size());
+	}
+
+	/**
+	 * gets the RP Actions Iterator
+	 * 
+	 * @return Iterator<RPAction>
+	 */
+	public Iterator<RPAction> iterator() {
+		return (Collections.unmodifiableList(actionsList).iterator());
+	}
+
+}

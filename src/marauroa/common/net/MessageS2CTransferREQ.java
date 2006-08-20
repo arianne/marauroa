@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.3 2006/01/19 18:42:52 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.4 2006/08/20 15:40:12 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,78 +12,72 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.LinkedList;
+import java.util.List;
 
-public class MessageS2CTransferREQ extends Message
-  {
-  private List<TransferContent> contents;
-  
-  /** Constructor for allowing creation of an empty message */
-  public MessageS2CTransferREQ()
-    {
-    super(MessageType.S2C_TRANSFER_REQ,null);
-    }
-  
-  public MessageS2CTransferREQ(InetSocketAddress source,List<TransferContent> contents)
-    {
-    super(MessageType.S2C_TRANSFER_REQ,source);
-    
-    this.contents=contents;
-    }
-  
-  public List<TransferContent> getContents()
-    {
-    return contents;
-    }
-  
-  public String toString()
-    {
-    StringBuffer st=new StringBuffer("Message (S2C Transfer REQ) from ("+source.getAddress().getHostAddress()+") CONTENTS: (");
-    for(TransferContent content: contents)
-      {
-      st.append("[");
-      st.append(content.name);
-      st.append(":");
-      st.append(content.timestamp);
-      st.append("]");
-      }
-    st.append(")");
-    
-    return st.toString();
-    }
+public class MessageS2CTransferREQ extends Message {
+	private List<TransferContent> contents;
 
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException
-    {
-    super.writeObject(out);
-    
-    int size=contents.size();
-    out.write(size);
-    
-    for(TransferContent content: contents)
-      {
-      content.writeREQ(out);
-      }    
-    }
-  
-  public void readObject(marauroa.common.net.InputSerializer in) throws IOException, ClassNotFoundException
-    {
-    super.readObject(in);
-    
-    int size=in.readInt();
-    contents=new LinkedList<TransferContent>();
-      
-    for(int i=0;i<size;i++)
-      {
-      TransferContent content=new TransferContent();
-      content.readREQ(in);
-      contents.add(content);
-      }
+	/** Constructor for allowing creation of an empty message */
+	public MessageS2CTransferREQ() {
+		super(MessageType.S2C_TRANSFER_REQ, null);
+	}
 
-    if(type!=MessageType.S2C_TRANSFER_REQ)
-      {
-      throw new java.lang.ClassNotFoundException();
-      }
-    }
-  }
+	public MessageS2CTransferREQ(InetSocketAddress source,
+			List<TransferContent> contents) {
+		super(MessageType.S2C_TRANSFER_REQ, source);
+
+		this.contents = contents;
+	}
+
+	public List<TransferContent> getContents() {
+		return contents;
+	}
+
+	public String toString() {
+		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from ("
+				+ source.getAddress().getHostAddress() + ") CONTENTS: (");
+		for (TransferContent content : contents) {
+			st.append("[");
+			st.append(content.name);
+			st.append(":");
+			st.append(content.timestamp);
+			st.append("]");
+		}
+		st.append(")");
+
+		return st.toString();
+	}
+
+	public void writeObject(marauroa.common.net.OutputSerializer out)
+			throws IOException {
+		super.writeObject(out);
+
+		int size = contents.size();
+		out.write(size);
+
+		for (TransferContent content : contents) {
+			content.writeREQ(out);
+		}
+	}
+
+	public void readObject(marauroa.common.net.InputSerializer in)
+			throws IOException, ClassNotFoundException {
+		super.readObject(in);
+
+		int size = in.readInt();
+		contents = new LinkedList<TransferContent>();
+
+		for (int i = 0; i < size; i++) {
+			TransferContent content = new TransferContent();
+			content.readREQ(in);
+			contents.add(content);
+		}
+
+		if (type != MessageType.S2C_TRANSFER_REQ) {
+			throw new java.lang.ClassNotFoundException();
+		}
+	}
+}

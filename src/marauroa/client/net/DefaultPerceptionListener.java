@@ -1,4 +1,4 @@
-/* $Id: DefaultPerceptionListener.java,v 1.2 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: DefaultPerceptionListener.java,v 1.3 2006/08/20 15:40:16 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,77 +12,63 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import marauroa.common.game.*;
-import marauroa.common.net.*;
+import marauroa.common.game.RPObject;
+import marauroa.common.net.MessageS2CPerception;
 
-public class DefaultPerceptionListener implements IPerceptionListener
-  {
-  public DefaultPerceptionListener()
-	{
-	}
-	
-  public boolean onAdded(RPObject object)
-	{
-	return false;
-	}
-	
-  public boolean onModifiedAdded(RPObject object, RPObject changes)
-	{
-	return false;
-	}
-	
-  public boolean onModifiedDeleted(RPObject object, RPObject changes)
-	{
-	return false;
-	}
-	
-  public boolean onDeleted(RPObject object)
-	{
-	return false;
-	}
-	
-  public boolean onMyRPObject(RPObject added, RPObject deleted)
-	{
-	return false;
-	}
-	
-  public boolean onClear()
-	{
-	return false;
+public class DefaultPerceptionListener implements IPerceptionListener {
+	public DefaultPerceptionListener() {
 	}
 
-  public int onTimeout()
-	{
-	return 0;
-	}
-	
-  public int onSynced()
-	{
-	return 0;
-	}
-	
-  public int onUnsynced()
-	{
-	return 0;
-	}
- 
-  public int onPerceptionBegin(byte type, int timestamp)
-	{
-	return 0;
+	public boolean onAdded(RPObject object) {
+		return false;
 	}
 
-  public int onPerceptionEnd(byte type, int timestamp)
-	{
-	return 0;
+	public boolean onModifiedAdded(RPObject object, RPObject changes) {
+		return false;
 	}
-	
-  public int onException(Exception e, MessageS2CPerception perception) throws Exception
-	{
-	System.out.println(e.getMessage());
-	System.out.println(perception);
-	e.printStackTrace();
-	
-	throw e;
-	}
-  }
 
+	public boolean onModifiedDeleted(RPObject object, RPObject changes) {
+		return false;
+	}
+
+	public boolean onDeleted(RPObject object) {
+		return false;
+	}
+
+	public boolean onMyRPObject(RPObject added, RPObject deleted) {
+		return false;
+	}
+
+	public boolean onClear() {
+		return false;
+	}
+
+	public int onTimeout() {
+		return 0;
+	}
+
+	public int onSynced() {
+		return 0;
+	}
+
+	public int onUnsynced() {
+		return 0;
+	}
+
+	public int onPerceptionBegin(byte type, int timestamp) {
+		return 0;
+	}
+
+	public int onPerceptionEnd(byte type, int timestamp) {
+		return 0;
+	}
+
+	public int onException(Exception e, MessageS2CPerception perception)
+			throws Exception {
+		System.out.println(e.getMessage());
+		System.out.println(perception);
+		e.printStackTrace();
+
+		throw e;
+	}
+}

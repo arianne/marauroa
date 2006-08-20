@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.19 2006/03/21 18:39:50 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.20 2006/08/20 15:40:08 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,535 +18,492 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
+
 import org.apache.log4j.Logger;
 
-
 /** This class hosts a list of Attributes stored as pairs String=String */
-public class Attributes implements marauroa.common.net.Serializable, Iterable<String>
-  {
-  /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(Attributes.class);
-  
-  private Map<String,String> added;
-  private Map<String,String> deleted;
+public class Attributes implements marauroa.common.net.Serializable,
+		Iterable<String> {
+	/** the logger instance. */
+	private static final Logger logger = Log4J.getLogger(Attributes.class);
 
-  /** A Map<String,String> that contains the attributes */
-  private Map<String,String> content;
-  private RPClass rpClass;
+	private Map<String, String> added;
 
-  public Object clone()
-    {
-    Attributes attr=new Attributes(this.rpClass);
+	private Map<String, String> deleted;
 
-    for(Map.Entry<String,String> entry: content.entrySet())
-      {
-      attr.content.put(entry.getKey(),entry.getValue());
-      }
-      
-    for(Map.Entry<String,String> entry: added.entrySet())
-      {
-      attr.added.put(entry.getKey(),entry.getValue());
-      }
-      
-    for(Map.Entry<String,String> entry: deleted.entrySet())
-      {
-      attr.deleted.put(entry.getKey(),entry.getValue());
-      }
-      
-    return attr;
-    }
+	/** A Map<String,String> that contains the attributes */
+	private Map<String, String> content;
 
-  public Object fill(Attributes attr)
-    {
-    setRPClass(attr.rpClass);
+	private RPClass rpClass;
 
-    for(Map.Entry<String,String> entry: attr.content.entrySet())
-      {
-      content.put(entry.getKey(),entry.getValue());
-      }
-      
-    for(Map.Entry<String,String> entry: attr.added.entrySet())
-      {
-      added.put(entry.getKey(),entry.getValue());
-      }
-      
-    for(Map.Entry<String,String> entry: attr.deleted.entrySet())
-      {
-      deleted.put(entry.getKey(),entry.getValue());
-      }
-      
-    return this;
-    }
+	public Object clone() {
+		Attributes attr = new Attributes(this.rpClass);
 
-  /** Constructor */
-  public Attributes(RPClass rpclass)
-    {
-    rpClass=rpclass;
+		for (Map.Entry<String, String> entry : content.entrySet()) {
+			attr.content.put(entry.getKey(), entry.getValue());
+		}
 
-    content=new HashMap<String,String>();
-    added=new HashMap<String,String>();
-    deleted=new HashMap<String,String>();
-    }
+		for (Map.Entry<String, String> entry : added.entrySet()) {
+			attr.added.put(entry.getKey(), entry.getValue());
+		}
 
-  public void setRPClass(RPClass rpclass)
-    {
-    rpClass=rpclass;
-    }
+		for (Map.Entry<String, String> entry : deleted.entrySet()) {
+			attr.deleted.put(entry.getKey(), entry.getValue());
+		}
 
-  public RPClass getRPClass()
-    {
-    return rpClass;
-    }
+		return attr;
+	}
 
-  public boolean instanceOf(RPClass baseclass)
-    {
-    return rpClass.subclassOf(baseclass.getName());
-    }
+	public Object fill(Attributes attr) {
+		setRPClass(attr.rpClass);
 
-  public boolean isEmpty()
-    {
-    return content.isEmpty();
-    }
+		for (Map.Entry<String, String> entry : attr.content.entrySet()) {
+			content.put(entry.getKey(), entry.getValue());
+		}
 
-  public int size()
-    {
-    return content.size();
-    }
+		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
+			added.put(entry.getKey(), entry.getValue());
+		}
 
-  /** This method returns true if the attribute exists
-   *  @param attribute the attribute name to check
-   *  @return true if it exist or false otherwise */
-  public boolean has(String attribute)
-    {
-    return content.containsKey(attribute);
-    }
+		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
+			deleted.put(entry.getKey(), entry.getValue());
+		}
 
-  /** This method set the value of an attribute
-   *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */
-  public void put(String attribute, String value)
-    {
-    /* This is for Delta-delta feature */
-    added.put(attribute,value);
+		return this;
+	}
 
-    if(attribute.equals("type") && RPClass.hasRPClass(value))
-      {
-      try
-        {
-        setRPClass(RPClass.getRPClass(value));
-        }
-      catch(RPClass.SyntaxException e)
-        {
-        /* NOTE: Can't ever happen */
-        logger.error("cannot put attribute ["+attribute+"] value: ["+value+"], Syntax error",e);
-        }
-      }
+	/** Constructor */
+	public Attributes(RPClass rpclass) {
+		rpClass = rpclass;
 
-    content.put(attribute,value);
-    }
+		content = new HashMap<String, String>();
+		added = new HashMap<String, String>();
+		deleted = new HashMap<String, String>();
+	}
 
-  public void add(String attribute, int value) throws AttributeNotFoundException
-    {
-    if(has(attribute))
-      {
-      put(attribute,value);
-      }
-    else
-      {
-      put(attribute,getInt(attribute)+value);
-      }
-    }
+	public void setRPClass(RPClass rpclass) {
+		rpClass = rpclass;
+	}
 
-  /** This method set the value of an attribute
-   *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */
-  public void put(String attribute, int value)
-    {
-    put(attribute,Integer.toString(value));
-    }
+	public RPClass getRPClass() {
+		return rpClass;
+	}
 
-  /** This method set the value of an attribute
-   *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */
-  public void put(String attribute, double value)
-    {
-    put(attribute,Double.toString(value));
-    }
+	public boolean instanceOf(RPClass baseclass) {
+		return rpClass.subclassOf(baseclass.getName());
+	}
 
-  /** This method set the value of an attribute
-   *  @param attribute the attribute to be set.
-   *  @param value the value we want to set. */
-  public void put(String attribute, List<String> value)
-    {
-    put(attribute,Attributes.ListToString(value));
-    }
+	public boolean isEmpty() {
+		return content.isEmpty();
+	}
 
-  /** This methods return the value of an attribute
-   *  @param attribute the attribute we want to get
-   *  @return the value of the attribute
-   *  @exception AttributesNotFoundException if the attributes doesn't exist. */
-  public String get(String attribute) throws AttributeNotFoundException
-    {
-    if(content.containsKey(attribute))
-      {
-      return content.get(attribute);
-      }
-    else
-      {
-      throw new AttributeNotFoundException(attribute);
-      }
-    }
+	public int size() {
+		return content.size();
+	}
 
-  public int getInt(String attribute) throws AttributeNotFoundException
-    {
-    if(content.containsKey(attribute))
-      {
-      return Integer.parseInt(content.get(attribute));
-      }
-    else
-      {
-      throw new AttributeNotFoundException(attribute);
-      }
-    }
+	/**
+	 * This method returns true if the attribute exists
+	 * 
+	 * @param attribute
+	 *            the attribute name to check
+	 * @return true if it exist or false otherwise
+	 */
+	public boolean has(String attribute) {
+		return content.containsKey(attribute);
+	}
 
-  public double getDouble(String attribute) throws AttributeNotFoundException
-    {
-    if(content.containsKey(attribute))
-      {
-      return Double.parseDouble(content.get(attribute));
-      }
-    else
-      {
-      throw new AttributeNotFoundException(attribute);
-      }
-    }
+	/**
+	 * This method set the value of an attribute
+	 * 
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
+	 */
+	public void put(String attribute, String value) {
+		/* This is for Delta-delta feature */
+		added.put(attribute, value);
 
-  public List<String> getList(String attribute) throws AttributeNotFoundException
-    {
-    if(content.containsKey(attribute))
-      {
-      return StringToList(content.get(attribute));
-      }
-    else
-      {
-      throw new AttributeNotFoundException(attribute);
-      }
-    }
+		if (attribute.equals("type") && RPClass.hasRPClass(value)) {
+			try {
+				setRPClass(RPClass.getRPClass(value));
+			} catch (RPClass.SyntaxException e) {
+				/* NOTE: Can't ever happen */
+				logger.error("cannot put attribute [" + attribute
+						+ "] value: [" + value + "], Syntax error", e);
+			}
+		}
 
-  /** This methods remove the attribute from the container
-   *  @param attribute the attribute we want to remove
-   *  @exception AttributesNotFoundException if the attributes doesn't exist. */
-  public void remove(String attribute) throws AttributeNotFoundException
-    {
-    if(content.containsKey(attribute))
-      {
-      if(added.containsKey(attribute))
-        {
-        added.remove(attribute);
-        }
-      else
-        {
-        /* This is for Delta^2 feature, as if it is empty it fails. */
-        deleted.put(attribute,"0");
-        }
+		content.put(attribute, value);
+	}
 
-      content.remove(attribute);
-      }
-    else
-      {
-      throw new AttributeNotFoundException(attribute);
-      }
-    }
+	public void add(String attribute, int value)
+			throws AttributeNotFoundException {
+		if (has(attribute)) {
+			put(attribute, value);
+		} else {
+			put(attribute, getInt(attribute) + value);
+		}
+	}
 
-  /** This method returns true of both object are equal.
-   *  @param attr another Attributes object
-   *  @return true if they are equal, or false otherwise. */
-  public boolean equals(Object attr)
-    {
-    return content.equals(((Attributes)attr).content);
-    }
+	/**
+	 * This method set the value of an attribute
+	 * 
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
+	 */
+	public void put(String attribute, int value) {
+		put(attribute, Integer.toString(value));
+	}
 
-  public int hashCode()
-    {
-    return content.hashCode();
-    }
+	/**
+	 * This method set the value of an attribute
+	 * 
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
+	 */
+	public void put(String attribute, double value) {
+		put(attribute, Double.toString(value));
+	}
 
-  /** This method returns a String that represent the object
-   *  @return a string representing the object.*/
-  public String toString()
-    {
-    StringBuffer tmp=new StringBuffer("Attributes of Class("+rpClass.getName()+"): ");
+	/**
+	 * This method set the value of an attribute
+	 * 
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
+	 */
+	public void put(String attribute, List<String> value) {
+		put(attribute, Attributes.ListToString(value));
+	}
 
-    for(Map.Entry<String,String> entry: content.entrySet())
-      {
-      tmp.append("["+entry.getKey());
-      tmp.append("="+entry.getValue()+"]");
-      }
+	/**
+	 * This methods return the value of an attribute
+	 * 
+	 * @param attribute
+	 *            the attribute we want to get
+	 * @return the value of the attribute
+	 * @exception AttributesNotFoundException
+	 *                if the attributes doesn't exist.
+	 */
+	public String get(String attribute) throws AttributeNotFoundException {
+		if (content.containsKey(attribute)) {
+			return content.get(attribute);
+		} else {
+			throw new AttributeNotFoundException(attribute);
+		}
+	}
 
-    return tmp.toString();
-    }
+	public int getInt(String attribute) throws AttributeNotFoundException {
+		if (content.containsKey(attribute)) {
+			return Integer.parseInt(content.get(attribute));
+		} else {
+			throw new AttributeNotFoundException(attribute);
+		}
+	}
 
-  private static String ListToString(List<String> list)
-    {
-    StringBuffer buffer=new StringBuffer("[");
+	public double getDouble(String attribute) throws AttributeNotFoundException {
+		if (content.containsKey(attribute)) {
+			return Double.parseDouble(content.get(attribute));
+		} else {
+			throw new AttributeNotFoundException(attribute);
+		}
+	}
 
-    for(Iterator it=list.iterator(); it.hasNext();)
-      {
-      String value=(String)it.next();
+	public List<String> getList(String attribute)
+			throws AttributeNotFoundException {
+		if (content.containsKey(attribute)) {
+			return StringToList(content.get(attribute));
+		} else {
+			throw new AttributeNotFoundException(attribute);
+		}
+	}
 
-      buffer.append(value);
-      if(it.hasNext())
-        {
-        buffer.append("\t");
-        }
-      }
+	/**
+	 * This methods remove the attribute from the container
+	 * 
+	 * @param attribute
+	 *            the attribute we want to remove
+	 * @exception AttributesNotFoundException
+	 *                if the attributes doesn't exist.
+	 */
+	public void remove(String attribute) throws AttributeNotFoundException {
+		if (content.containsKey(attribute)) {
+			if (added.containsKey(attribute)) {
+				added.remove(attribute);
+			} else {
+				/* This is for Delta^2 feature, as if it is empty it fails. */
+				deleted.put(attribute, "0");
+			}
 
-    buffer.append("]");
-    return buffer.toString();
-    }
+			content.remove(attribute);
+		} else {
+			throw new AttributeNotFoundException(attribute);
+		}
+	}
 
-  private static List<String> StringToList(String list)
-    {
-    String[] array=list.substring(1,list.length()-1).split("\t");
-    List<String> result=new LinkedList<String>();
+	/**
+	 * This method returns true of both object are equal.
+	 * 
+	 * @param attr
+	 *            another Attributes object
+	 * @return true if they are equal, or false otherwise.
+	 */
+	public boolean equals(Object attr) {
+		return content.equals(((Attributes) attr).content);
+	}
 
-    for(int i=0;i<array.length;++i)
-      {
-      result.add(array[i]);
-      }
+	public int hashCode() {
+		return content.hashCode();
+	}
 
-    return result;
-    }
+	/**
+	 * This method returns a String that represent the object
+	 * 
+	 * @return a string representing the object.
+	 */
+	public String toString() {
+		StringBuffer tmp = new StringBuffer("Attributes of Class("
+				+ rpClass.getName() + "): ");
 
-  /** returns an iterator over the attribute names */
-  public Iterator<String> iterator()
-    {
-    return content.keySet().iterator();
-    }
-  
-  public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException
-    {
-    writeObject(out,DetailLevel.NORMAL);
-    }
+		for (Map.Entry<String, String> entry : content.entrySet()) {
+			tmp.append("[" + entry.getKey());
+			tmp.append("=" + entry.getValue() + "]");
+		}
 
-  public void writeObject(marauroa.common.net.OutputSerializer out,DetailLevel level) throws java.io.IOException
-    {
-    int size=content.size();
+		return tmp.toString();
+	}
 
-    for(String key: content.keySet())
-      {
-      if(level==DetailLevel.NORMAL && (rpClass.isVisible(key)==false)) 
-        {
-        //If this attribute is Hidden or private and full data is false
-        --size;
-        }
-      else if(level!=DetailLevel.FULL && rpClass.isHidden(key)) 
-        {
-        //If this attribute is Hidden and full data is true.
-        //This way we hide some attribute to player.
-        --size;
-        }
-      }
+	private static String ListToString(List<String> list) {
+		StringBuffer buffer = new StringBuffer("[");
 
-    out.write(rpClass.getName());
-    out.write(size);
-    for(Map.Entry<String,String> entry: content.entrySet())
-      {
-      String key=entry.getKey();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			String value = (String) it.next();
 
-      if((level==DetailLevel.PRIVATE && !rpClass.isHidden(key)) || (rpClass.isVisible(key)) || (level==DetailLevel.FULL))
-        {
-        short code=-1;
-        
-        try
-          {
-          code=rpClass.getCode(key);
-          }
-        catch(RPClass.SyntaxException e)
-          {
-          logger.error("cannot writeObject, Attribute ["+key+"] not found",e);
-          code=-1;
-          }
+			buffer.append(value);
+			if (it.hasNext()) {
+				buffer.append("\t");
+			}
+		}
 
-        if(level==DetailLevel.FULL)
-          {
-          // We want to ensure that attribute text is stored.
-          code=-1;
-          }
+		buffer.append("]");
+		return buffer.toString();
+	}
 
-        out.write(code);
+	private static List<String> StringToList(String list) {
+		String[] array = list.substring(1, list.length() - 1).split("\t");
+		List<String> result = new LinkedList<String>();
 
-        if(code==-1)
-          {
-          out.write(key);
-          }
+		for (int i = 0; i < array.length; ++i) {
+			result.add(array[i]);
+		}
 
-        try
-          {
-          switch (rpClass.getType(key))
-            {
-            case RPClass.VERY_LONG_STRING:
-              out.write(entry.getValue());
-              break;
-            case RPClass.LONG_STRING:
-              out.write65536LongString(entry.getValue());
-              break;
-            case RPClass.STRING:
-              out.write255LongString(entry.getValue());
-              break;
-            case RPClass.FLOAT:
-              out.write(Float.parseFloat(entry.getValue()));
-              break;
-            case RPClass.INT:
-              out.write(Integer.parseInt(entry.getValue()));
-              break;
-            case RPClass.SHORT:
-              out.write(Short.parseShort(entry.getValue()));
-              break;
-            case RPClass.BYTE:
-              out.write(Byte.parseByte(entry.getValue()));
-              break;
-            case RPClass.FLAG:
-              /* It is empty because it is a flag and so, it is already present. */
-              break;
-            default:
-            /* NOTE: Must never happen */
-            logger.fatal("got unknown attribute type "+rpClass.getType(key));
-            break;
-            }
-          }
-        catch(Exception e)
-          {
-          String className=(rpClass!=null?rpClass.getName():null);
-          logger.error("Attribute "+key+" ["+className+"] caused an exception",e);
-          throw new java.io.IOException(e.getMessage());
-          }
-        }
-      }
-    }
+		return result;
+	}
 
-  public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException
-    {
-    rpClass=RPClass.getRPClass(in.readString());
-    int size=in.readInt();
+	/** returns an iterator over the attribute names */
+	public Iterator<String> iterator() {
+		return content.keySet().iterator();
+	}
 
-    if(size>TimeoutConf.MAX_ARRAY_ELEMENTS)
-      {
-      throw new IOException("Illegal request of an list of "+String.valueOf(size)+" size");
-      }
+	public void writeObject(marauroa.common.net.OutputSerializer out)
+			throws java.io.IOException {
+		writeObject(out, DetailLevel.NORMAL);
+	}
 
-    content.clear();
+	public void writeObject(marauroa.common.net.OutputSerializer out,
+			DetailLevel level) throws java.io.IOException {
+		int size = content.size();
 
-    for(int i=0;i<size;++i)
-      {
-      short code=in.readShort();
-      String key;
-      if(code==-1)
-        {
-        key=in.readString();
-        }
-      else
-        {
-        key=rpClass.getName(code);
-        }
+		for (String key : content.keySet()) {
+			if (level == DetailLevel.NORMAL
+					&& (rpClass.isVisible(key) == false)) {
+				// If this attribute is Hidden or private and full data is false
+				--size;
+			} else if (level != DetailLevel.FULL && rpClass.isHidden(key)) {
+				// If this attribute is Hidden and full data is true.
+				// This way we hide some attribute to player.
+				--size;
+			}
+		}
 
-      if(rpClass.getType(key)==RPClass.VERY_LONG_STRING)
-        {
-        content.put(key,in.readString());
-        }
-      else if(rpClass.getType(key)==RPClass.LONG_STRING)
-        {
-        content.put(key,in.read65536LongString());
-        }
-      else if(rpClass.getType(key)==RPClass.STRING)
-        {
-        content.put(key,in.read255LongString());
-        }
-      else if(rpClass.getType(key)==RPClass.FLOAT)
-        {
-        content.put(key,Float.toString(in.readFloat()));
-        }
-      else if(rpClass.getType(key)==RPClass.INT)
-        {
-        content.put(key,Integer.toString(in.readInt()));
-        }
-      else if(rpClass.getType(key)==RPClass.SHORT)
-        {
-        content.put(key,Integer.toString(in.readShort()));
-        }
-      else if(rpClass.getType(key)==RPClass.BYTE)
-        {
-        content.put(key,Integer.toString(in.readByte()));
-        }
-      else if(rpClass.getType(key)==RPClass.FLAG)
-        {
-        content.put(key,"");
-        }
-      }
-    }
+		out.write(rpClass.getName());
+		out.write(size);
+		for (Map.Entry<String, String> entry : content.entrySet()) {
+			String key = entry.getKey();
 
-  public int clearVisible()
-    {
-    int i=0;
+			if ((level == DetailLevel.PRIVATE && !rpClass.isHidden(key))
+					|| (rpClass.isVisible(key)) || (level == DetailLevel.FULL)) {
+				short code = -1;
 
-    Iterator<Map.Entry<String,String>> it=content.entrySet().iterator();
-    while(it.hasNext())
-      {
-      Map.Entry<String,String> entry=it.next();
+				try {
+					code = rpClass.getCode(key);
+				} catch (RPClass.SyntaxException e) {
+					logger.error("cannot writeObject, Attribute [" + key
+							+ "] not found", e);
+					code = -1;
+				}
 
-      if(rpClass.isVisible(entry.getKey()) && !entry.getKey().equals("id") && !entry.getKey().equals("zoneid"))
-        {
-        i++;
-        it.remove();
-        
-        deleted.remove(entry.getKey());
-        added.remove(entry.getKey());
-        }
-      }
-    
-    return i;
-    }
+				if (level == DetailLevel.FULL) {
+					// We want to ensure that attribute text is stored.
+					code = -1;
+				}
 
-  public void resetAddedAndDeletedAttributes()
-    {
-    added.clear();
-    deleted.clear();
-    }
+				out.write(code);
 
-  public void setAddedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
-    {
-    rpClass=attr.rpClass;
-    int i=0;
-    for(Map.Entry<String,String> entry: attr.added.entrySet())
-      {
-      ++i;
-      content.put(entry.getKey(),entry.getValue());
-      }
+				if (code == -1) {
+					out.write(key);
+				}
 
-    if(i>0)
-      {
-      content.put("id",attr.get("id"));
-      content.put("zoneid",attr.get("zoneid"));
-      }
-    }
+				try {
+					switch (rpClass.getType(key)) {
+					case RPClass.VERY_LONG_STRING:
+						out.write(entry.getValue());
+						break;
+					case RPClass.LONG_STRING:
+						out.write65536LongString(entry.getValue());
+						break;
+					case RPClass.STRING:
+						out.write255LongString(entry.getValue());
+						break;
+					case RPClass.FLOAT:
+						out.write(Float.parseFloat(entry.getValue()));
+						break;
+					case RPClass.INT:
+						out.write(Integer.parseInt(entry.getValue()));
+						break;
+					case RPClass.SHORT:
+						out.write(Short.parseShort(entry.getValue()));
+						break;
+					case RPClass.BYTE:
+						out.write(Byte.parseByte(entry.getValue()));
+						break;
+					case RPClass.FLAG:
+						/*
+						 * It is empty because it is a flag and so, it is
+						 * already present.
+						 */
+						break;
+					default:
+						/* NOTE: Must never happen */
+						logger.fatal("got unknown attribute type "
+								+ rpClass.getType(key));
+						break;
+					}
+				} catch (Exception e) {
+					String className = (rpClass != null ? rpClass.getName()
+							: null);
+					logger.error("Attribute " + key + " [" + className
+							+ "] caused an exception", e);
+					throw new java.io.IOException(e.getMessage());
+				}
+			}
+		}
+	}
 
-  public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException
-    {
-    rpClass=attr.rpClass;
+	public void readObject(marauroa.common.net.InputSerializer in)
+			throws java.io.IOException, java.lang.ClassNotFoundException {
+		rpClass = RPClass.getRPClass(in.readString());
+		int size = in.readInt();
 
-    int i=0;
-    for(Map.Entry<String,String> entry: attr.deleted.entrySet())
-      {
-      ++i;
-      content.put(entry.getKey(),entry.getValue());
-      }
+		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
+			throw new IOException("Illegal request of an list of "
+					+ String.valueOf(size) + " size");
+		}
 
-    if(i>0)
-      {
-      content.put("id",attr.get("id"));
-      content.put("zoneid",attr.get("zoneid"));
-      }
-    }
-  }
+		content.clear();
+
+		for (int i = 0; i < size; ++i) {
+			short code = in.readShort();
+			String key;
+			if (code == -1) {
+				key = in.readString();
+			} else {
+				key = rpClass.getName(code);
+			}
+
+			if (rpClass.getType(key) == RPClass.VERY_LONG_STRING) {
+				content.put(key, in.readString());
+			} else if (rpClass.getType(key) == RPClass.LONG_STRING) {
+				content.put(key, in.read65536LongString());
+			} else if (rpClass.getType(key) == RPClass.STRING) {
+				content.put(key, in.read255LongString());
+			} else if (rpClass.getType(key) == RPClass.FLOAT) {
+				content.put(key, Float.toString(in.readFloat()));
+			} else if (rpClass.getType(key) == RPClass.INT) {
+				content.put(key, Integer.toString(in.readInt()));
+			} else if (rpClass.getType(key) == RPClass.SHORT) {
+				content.put(key, Integer.toString(in.readShort()));
+			} else if (rpClass.getType(key) == RPClass.BYTE) {
+				content.put(key, Integer.toString(in.readByte()));
+			} else if (rpClass.getType(key) == RPClass.FLAG) {
+				content.put(key, "");
+			}
+		}
+	}
+
+	public int clearVisible() {
+		int i = 0;
+
+		Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, String> entry = it.next();
+
+			if (rpClass.isVisible(entry.getKey())
+					&& !entry.getKey().equals("id")
+					&& !entry.getKey().equals("zoneid")) {
+				i++;
+				it.remove();
+
+				deleted.remove(entry.getKey());
+				added.remove(entry.getKey());
+			}
+		}
+
+		return i;
+	}
+
+	public void resetAddedAndDeletedAttributes() {
+		added.clear();
+		deleted.clear();
+	}
+
+	public void setAddedAttributes(Attributes attr)
+			throws AttributeNotFoundException, RPClass.SyntaxException {
+		rpClass = attr.rpClass;
+		int i = 0;
+		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
+			++i;
+			content.put(entry.getKey(), entry.getValue());
+		}
+
+		if (i > 0) {
+			content.put("id", attr.get("id"));
+			content.put("zoneid", attr.get("zoneid"));
+		}
+	}
+
+	public void setDeletedAttributes(Attributes attr)
+			throws AttributeNotFoundException, RPClass.SyntaxException {
+		rpClass = attr.rpClass;
+
+		int i = 0;
+		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
+			++i;
+			content.put(entry.getKey(), entry.getValue());
+		}
+
+		if (i > 0) {
+			content.put("id", attr.get("id"));
+			content.put("zoneid", attr.get("zoneid"));
+		}
+	}
+}

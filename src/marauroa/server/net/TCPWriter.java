@@ -17,16 +17,21 @@ import org.apache.log4j.Logger;
 /** A wrapper class for sending messages to clients */
 class TCPWriter {
 	private static Logger logger = Logger.getLogger(TCPWriter.class);
+
 	private NetworkServerManagerCallback networkServerManager = null;
+
 	private Statistics stats = null;
 
 	/**
 	 * Creates a NetworkServerManagerWrite
-	 *
-	 * @param networkServerManager NetworkServerManager
-	 * @param stats Statistics
+	 * 
+	 * @param networkServerManager
+	 *            NetworkServerManager
+	 * @param stats
+	 *            Statistics
 	 */
-	public TCPWriter(NetworkServerManagerCallback networkServerManager, Statistics stats) {
+	public TCPWriter(NetworkServerManagerCallback networkServerManager,
+			Statistics stats) {
 		this.networkServerManager = networkServerManager;
 		this.stats = stats;
 	}
@@ -40,34 +45,39 @@ class TCPWriter {
 	}
 
 	final private int PACKET_SIGNATURE_SIZE = 4;
+
 	final private int PACKET_LENGTH_SIZE = 4;
 
 	/**
 	 * Method that execute the writting
-	 *
-	 * @param msg Message to write
-	 * @param socket Socket
+	 * 
+	 * @param msg
+	 *            Message to write
+	 * @param socket
+	 *            Socket
 	 */
 	public void write(Message msg, Socket socket) {
 		Log4J.startMethod(logger, "write");
-        long timeStart = System.currentTimeMillis();
+		long timeStart = System.currentTimeMillis();
 		try {
 			if (networkServerManager.isStillRunning()) {
 				byte[] buffer = serializeMessage(msg);
 				short used_signature;
 
-				/*** Statistics ***/
-				used_signature = CRC.cmpCRC(buffer); //++last_signature;
+				/** * Statistics ** */
+				used_signature = CRC.cmpCRC(buffer); // ++last_signature;
 
 				stats.add("Bytes send", buffer.length);
 				stats.add("Message send", 1);
 
-				logger.debug("Message(" + msg.getType() + ") size in bytes: " + buffer.length);
+				logger.debug("Message(" + msg.getType() + ") size in bytes: "
+						+ buffer.length);
 
-				byte[] data = new byte[PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE + buffer.length];
+				byte[] data = new byte[PACKET_LENGTH_SIZE
+						+ PACKET_SIGNATURE_SIZE + buffer.length];
 				int size = buffer.length + PACKET_SIGNATURE_SIZE;
 				data[0] = (byte) (size & 255);
-				data[1] = (byte) ((size >>  8) & 255);
+				data[1] = (byte) ((size >> 8) & 255);
 				data[2] = (byte) ((size >> 16) & 255);
 				data[3] = (byte) ((size >> 24) & 255);
 				data[4] = (byte) 1;
@@ -78,12 +88,14 @@ class TCPWriter {
 
 				// don't use multiple os.write calls because we have
 				// disabled Nagel's algorithm.
-				System.arraycopy(buffer, 0, data, PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE, buffer.length);
-				
+				System.arraycopy(buffer, 0, data, PACKET_LENGTH_SIZE
+						+ PACKET_SIGNATURE_SIZE, buffer.length);
+
 				OutputStream os = socket.getOutputStream();
 				os.write(data);
 				os.flush();
-				logger.debug("Sent packet(" + used_signature + ") " + buffer.length);
+				logger.debug("Sent packet(" + used_signature + ") "
+						+ buffer.length);
 
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sent message: " + msg);
@@ -93,11 +105,13 @@ class TCPWriter {
 		} catch (IOException e) {
 			/* Report the exception */
 			logger.info("error while sending a packet (msg=(" + msg + "))", e);
-			networkServerManager.disconnectClient(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
+			networkServerManager.disconnectClient(new InetSocketAddress(socket
+					.getInetAddress(), socket.getPort()));
 		}
-        long timeEnd = System.currentTimeMillis();
-        if (timeEnd - timeStart > 1000) {
-            logger.warn("TCPWriter.write took " + (timeEnd - timeStart) + " (" + socket.getInetAddress() + ")");
-        }
+		long timeEnd = System.currentTimeMillis();
+		if (timeEnd - timeStart > 1000) {
+			logger.warn("TCPWriter.write took " + (timeEnd - timeStart) + " ("
+					+ socket.getInetAddress() + ")");
+		}
 	}
 }

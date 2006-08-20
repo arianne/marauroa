@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.24 2006/07/15 17:42:09 nhnb Exp $ */
+/* $Id: NetworkClientManager.java,v 1.25 2006/08/20 15:40:16 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,323 +36,321 @@ import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 
+/**
+ * The NetworkClientManager is in charge of sending and recieving the packages
+ * from the network.
+ */
+public class NetworkClientManager implements NetworkClientManagerInterface {
+	/** the logger instance. */
+	private static final Logger logger = Log4J
+			.getLogger(NetworkClientManager.class);
 
+	private DatagramSocket socket;
 
-/** The NetworkClientManager is in charge of sending and recieving the packages
- *  from the network. */
-public class NetworkClientManager implements NetworkClientManagerInterface
-  {
-  /** the logger instance. */
-  private static final Logger logger = Log4J.getLogger(NetworkClientManager.class);
-  
-  private DatagramSocket socket;
-  private InetSocketAddress address;
-  private int clientid;
-  private MessageFactory msgFactory;
+	private InetSocketAddress address;
 
-  static private class PacketContainer
-    {
-    private static final Logger logger = Log4J.getLogger(PacketContainer.class);
+	private int clientid;
 
-    public short signature;
-    public boolean[] remaining;
-    public byte[] content;
-    public InetSocketAddress address;
-    public Date timestamp;
-    
-    public PacketContainer(short signature, int total)
-      {
-      this.signature=signature;
-      remaining=new boolean[total];
-      content=new byte[CONTENT_PACKET_SIZE*total];
-      Arrays.fill(remaining, false);
-      }
-    
-    public void recieved(int pos)
-      {
-      if(pos>=remaining.length)
-        {
-        logger.error("Confused messages: Recieved packet "+ pos+ " of (total) "+remaining.length);
-        }
-      else
-        {
-        remaining[pos]=true;
-        }
-      }
+	private MessageFactory msgFactory;
 
-    public boolean isRecieved(int pos)
-      {
-      return remaining[pos];
-      }
-    
-    public boolean isComplete()
-      {
-      for(boolean test: remaining)
-        {
-        if(test==false)
-          {
-          return false;
-          }
-        }
-      
-      return true;
-      }
-    }
+	static private class PacketContainer {
+		private static final Logger logger = Log4J
+				.getLogger(PacketContainer.class);
 
-  private Map<Short,PacketContainer> pendingPackets;
-  private List<Message> processedMessages;
+		public short signature;
 
-  /** Constructor that opens the socket on the marauroa_PORT and start the thread
-   to recieve new messages from the network. */
-  public NetworkClientManager(String host, int port) throws SocketException
-    {
-    Log4J.startMethod(logger,"NetworkClientManager");
-    clientid=0;
-    address=new InetSocketAddress(host,port);
-    socket=new DatagramSocket();
-    socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
-    // This line mades Mac OS X to throw an exception so, let's comment it.
-    // It suggest the UDP stack to deliver this packet with maximum performance.
-    //socket.setTrafficClass(0x08|0x10);
-    socket.setReceiveBufferSize(128*1024);
+		public boolean[] remaining;
 
-    msgFactory=MessageFactory.getFactory();
-    pendingPackets=new LinkedHashMap<Short,PacketContainer>();
-    processedMessages=new LinkedList<Message>();
-    Log4J.finishMethod(logger,"NetworkClientManager");
-    }
+		public byte[] content;
 
-  public InetSocketAddress getAddress()
-    {
-    return address;
-    }
+		public InetSocketAddress address;
 
-  /** This method notify the thread to finish it execution */
-  public void finish()
-    {
-    Log4J.startMethod(logger,"finish");
-    socket.close();
-    Log4J.finishMethod(logger,"finish");
-    }
+		public Date timestamp;
 
-  private Message getOldestProcessedMessage()
-    {
-    Message choosenMsg = processedMessages.get(0);
-    int smallestTimestamp = choosenMsg.getMessageTimestamp();
+		public PacketContainer(short signature, int total) {
+			this.signature = signature;
+			remaining = new boolean[total];
+			content = new byte[CONTENT_PACKET_SIZE * total];
+			Arrays.fill(remaining, false);
+		}
 
-    for(Message msg: processedMessages)
-      {
-      if(msg.getMessageTimestamp()<smallestTimestamp)
-        {
-        choosenMsg=msg;
-        smallestTimestamp=msg.getMessageTimestamp();
-        }
-      }
+		public void recieved(int pos) {
+			if (pos >= remaining.length) {
+				logger.error("Confused messages: Recieved packet " + pos
+						+ " of (total) " + remaining.length);
+			} else {
+				remaining[pos] = true;
+			}
+		}
 
-    processedMessages.remove(choosenMsg);
-    return choosenMsg;
-    }
+		public boolean isRecieved(int pos) {
+			return remaining[pos];
+		}
 
-  private void processPendingPackets() throws IOException, InvalidVersionException
-    {
-    for(Iterator<PacketContainer> it = pendingPackets.values().iterator(); it.hasNext();)
-      {
-      PacketContainer message=it.next();
+		public boolean isComplete() {
+			for (boolean test : remaining) {
+				if (test == false) {
+					return false;
+				}
+			}
 
-      if(System.currentTimeMillis()-message.timestamp.getTime()>TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT)
-        {
-        logger.debug("deleted incompleted message after timedout");
-        it.remove();
-        continue;
-        }
+			return true;
+		}
+	}
 
-      if(message.isComplete())
-        {
-        // delete the message from queue to prevent loop if it is a bad message
-        it.remove();
+	private Map<Short, PacketContainer> pendingPackets;
 
-        Message msg=msgFactory.getMessage(message.content,message.address);
+	private List<Message> processedMessages;
 
-        if(logger.isDebugEnabled())
-          {
-          logger.debug("build message(type="+msg.getType()+") from packet("+message.signature+") from "+msg.getClientID()+" full ["+msg+"]");
-          }
-        
-        if(msg.getType()==Message.MessageType.S2C_LOGIN_SENDNONCE)
-          {
-          clientid=msg.getClientID();
-          }
+	/**
+	 * Constructor that opens the socket on the marauroa_PORT and start the
+	 * thread to recieve new messages from the network.
+	 */
+	public NetworkClientManager(String host, int port) throws SocketException {
+		Log4J.startMethod(logger, "NetworkClientManager");
+		clientid = 0;
+		address = new InetSocketAddress(host, port);
+		socket = new DatagramSocket();
+		socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
+		// This line mades Mac OS X to throw an exception so, let's comment it.
+		// It suggest the UDP stack to deliver this packet with maximum
+		// performance.
+		// socket.setTrafficClass(0x08|0x10);
+		socket.setReceiveBufferSize(128 * 1024);
 
-        processedMessages.add(msg);
-        // NOTE: Break??? Why not run all the array...
-        // break;
-        }
-      }
-    }
-  
-  public static void main(String[] args)
-    {
-    byte[] data={2,3,5,1};
-    
-    short used_signature=15271;
+		msgFactory = MessageFactory.getFactory();
+		pendingPackets = new LinkedHashMap<Short, PacketContainer>();
+		processedMessages = new LinkedList<Message>();
+		Log4J.finishMethod(logger, "NetworkClientManager");
+	}
 
-    data[2]=(byte)(used_signature&0xFF);
-    data[3]=(byte)((used_signature>>8)&0xFF);
+	public InetSocketAddress getAddress() {
+		return address;
+	}
 
-    System.out.println (data[2]);
-    System.out.println (data[3]);
-    
-    short signature=(short)(data[2]&0xFF+((data[3]&0xFF)<<8));
+	/** This method notify the thread to finish it execution */
+	public void finish() {
+		Log4J.startMethod(logger, "finish");
+		socket.close();
+		Log4J.finishMethod(logger, "finish");
+	}
 
-    System.out.println (signature);
-    }
+	private Message getOldestProcessedMessage() {
+		Message choosenMsg = processedMessages.get(0);
+		int smallestTimestamp = choosenMsg.getMessageTimestamp();
 
-  final static private int PACKET_SIGNATURE_SIZE=4;
-  final static private int CONTENT_PACKET_SIZE=NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE;
+		for (Message msg : processedMessages) {
+			if (msg.getMessageTimestamp() < smallestTimestamp) {
+				choosenMsg = msg;
+				smallestTimestamp = msg.getMessageTimestamp();
+			}
+		}
 
-  private void storePacket(InetSocketAddress address, byte[] data)
-    {
-    /* A multipart message. We try to read the rest now.
-     * We need to check on the list if the message exist and it exist we add this one. */
-    byte total=data[0];
-    byte position=data[1];
-    short signature=(short)(data[2]&0xFF+((data[3]&0xFF)<<8));
+		processedMessages.remove(choosenMsg);
+		return choosenMsg;
+	}
 
-    logger.debug("receive"+(total>1?" multipart ":" ")+"message("+signature+"): "+(position+1)+" of "+total);
-    if(!pendingPackets.containsKey(new Short(signature)))
-      {
-      /** This is the first packet */
-      PacketContainer message=new PacketContainer(signature,total);
+	private void processPendingPackets() throws IOException,
+			InvalidVersionException {
+		for (Iterator<PacketContainer> it = pendingPackets.values().iterator(); it
+				.hasNext();) {
+			PacketContainer message = it.next();
 
-      message.address=address;
-      message.timestamp=new Date();
+			if (System.currentTimeMillis() - message.timestamp.getTime() > TimeoutConf.CLIENT_MESSAGE_DROPPED_TIMEOUT) {
+				logger.debug("deleted incompleted message after timedout");
+				it.remove();
+				continue;
+			}
 
-      message.recieved(position);
-      System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,CONTENT_PACKET_SIZE*position,data.length-PACKET_SIGNATURE_SIZE);
+			if (message.isComplete()) {
+				// delete the message from queue to prevent loop if it is a bad
+				// message
+				it.remove();
 
-      pendingPackets.put(new Short(signature),message);
-      }
-    else
-      {
-      PacketContainer message=pendingPackets.get(new Short(signature));
+				Message msg = msgFactory.getMessage(message.content,
+						message.address);
 
-      message.recieved(position);
-      if(message.isRecieved(position))
-        {
-        System.arraycopy(data,PACKET_SIGNATURE_SIZE,message.content,(NetConst.UDP_PACKET_SIZE-PACKET_SIGNATURE_SIZE)*position,data.length-PACKET_SIGNATURE_SIZE);
-        }
-      }
-    }
+				if (logger.isDebugEnabled()) {
+					logger.debug("build message(type=" + msg.getType()
+							+ ") from packet(" + message.signature + ") from "
+							+ msg.getClientID() + " full [" + msg + "]");
+				}
 
-  /** This method returns a message if it is available or null
-   *  @return a Message*/
-  public Message getMessage() throws InvalidVersionException
-    {
-    Log4J.startMethod(logger,"getMessage");
-    try
-      {
-      if(processedMessages.size()>0)
-        {
-        return getOldestProcessedMessage();
-        }
+				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
+					clientid = msg.getClientID();
+				}
 
-      processPendingPackets();
-      }
-    catch(InvalidVersionException e)
-      {
-      logger.warn("got getMessage with invalid version",e);
-      throw e;
-      }
-    catch(Exception e)
-      {
-      /* Report the exception */
-      logger.error("error getting Message",e);
-      }
+				processedMessages.add(msg);
+				// NOTE: Break??? Why not run all the array...
+				// break;
+			}
+		}
+	}
 
-    try
-      {
-      byte[] buffer=new byte[NetConst.UDP_PACKET_SIZE];
-      DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
-      int i=0;
+	public static void main(String[] args) {
+		byte[] data = { 2, 3, 5, 1 };
 
-      /** We want to avoid this to block the whole client recieving messages */
-      while(i<TimeoutConf.CLIENT_NETWORK_NUM_READ)
-        {
-        ++i;
-        socket.receive(packet);
+		short used_signature = 15271;
 
-        byte[] data=packet.getData();
-        storePacket((InetSocketAddress)packet.getSocketAddress(),data);
-        }
-      }
-    catch(java.net.SocketTimeoutException e)
-      {
-      /* We need the thread to check from time to time if user has requested an exit */
-      }
-    catch(IOException e)
-      {
-      /* Report the exception */
-      logger.error("error getting Message",e);
-      }
-    finally
-      {
-      Log4J.finishMethod(logger,"getMessage");
-      }
+		data[2] = (byte) (used_signature & 0xFF);
+		data[3] = (byte) ((used_signature >> 8) & 0xFF);
 
-    return null;
-    }
-  
-  private void clear()
-    {
-    logger.info("Cleaning pending packets and messages");
-    pendingPackets.clear();
-    processedMessages.clear();
-    }
+		System.out.println(data[2]);
+		System.out.println(data[3]);
 
-  /** This method add a message to be delivered to the client the message is pointed to.
-   *  @param msg the message to ve delivered. */
-  public synchronized void addMessage(Message msg)
-    {
-    Log4J.startMethod(logger,"addMessage");
-    try
-      {
-      /* We enforce the remote endpoint */
-      msg.setAddress(address);
-      msg.setClientID(clientid);
-      
-      if(msg.getType()==Message.MessageType.C2S_OUTOFSYNC)
-        {
-        clear();
-        }
+		short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
 
-      ByteArrayOutputStream out=new ByteArrayOutputStream();
-      OutputSerializer s=new OutputSerializer(out);
+		System.out.println(signature);
+	}
 
-      logger.debug("send message("+msg.getType()+") from "+msg.getClientID());
-      s.write(msg);
+	final static private int PACKET_SIGNATURE_SIZE = 4;
 
-      byte[] buffer=out.toByteArray();
-      DatagramPacket pkt=new DatagramPacket(buffer,buffer.length,msg.getAddress());
+	final static private int CONTENT_PACKET_SIZE = NetConst.UDP_PACKET_SIZE
+			- PACKET_SIGNATURE_SIZE;
 
-      socket.send(pkt);
-      }
-    catch(IOException e)
-      {
-      /* Report the exception */
-      logger.error("error while adding Message",e);
-      }
-    finally
-      {
-      Log4J.finishMethod(logger,"addMessage");
-      }
-    }
+	private void storePacket(InetSocketAddress address, byte[] data) {
+		/*
+		 * A multipart message. We try to read the rest now. We need to check on
+		 * the list if the message exist and it exist we add this one.
+		 */
+		byte total = data[0];
+		byte position = data[1];
+		short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
 
-    public Message getMessage(int timeout) {
-        try {
-            return getMessage();
-        } catch (InvalidVersionException e) {
-            logger.error(e, e);
-            return null;
-        }
-    }
-  }
+		logger.debug("receive" + (total > 1 ? " multipart " : " ") + "message("
+				+ signature + "): " + (position + 1) + " of " + total);
+		if (!pendingPackets.containsKey(new Short(signature))) {
+			/** This is the first packet */
+			PacketContainer message = new PacketContainer(signature, total);
+
+			message.address = address;
+			message.timestamp = new Date();
+
+			message.recieved(position);
+			System.arraycopy(data, PACKET_SIGNATURE_SIZE, message.content,
+					CONTENT_PACKET_SIZE * position, data.length
+							- PACKET_SIGNATURE_SIZE);
+
+			pendingPackets.put(new Short(signature), message);
+		} else {
+			PacketContainer message = pendingPackets.get(new Short(signature));
+
+			message.recieved(position);
+			if (message.isRecieved(position)) {
+				System
+						.arraycopy(
+								data,
+								PACKET_SIGNATURE_SIZE,
+								message.content,
+								(NetConst.UDP_PACKET_SIZE - PACKET_SIGNATURE_SIZE)
+										* position, data.length
+										- PACKET_SIGNATURE_SIZE);
+			}
+		}
+	}
+
+	/**
+	 * This method returns a message if it is available or null
+	 * 
+	 * @return a Message
+	 */
+	public Message getMessage() throws InvalidVersionException {
+		Log4J.startMethod(logger, "getMessage");
+		try {
+			if (processedMessages.size() > 0) {
+				return getOldestProcessedMessage();
+			}
+
+			processPendingPackets();
+		} catch (InvalidVersionException e) {
+			logger.warn("got getMessage with invalid version", e);
+			throw e;
+		} catch (Exception e) {
+			/* Report the exception */
+			logger.error("error getting Message", e);
+		}
+
+		try {
+			byte[] buffer = new byte[NetConst.UDP_PACKET_SIZE];
+			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+			int i = 0;
+
+			/**
+			 * We want to avoid this to block the whole client recieving
+			 * messages
+			 */
+			while (i < TimeoutConf.CLIENT_NETWORK_NUM_READ) {
+				++i;
+				socket.receive(packet);
+
+				byte[] data = packet.getData();
+				storePacket((InetSocketAddress) packet.getSocketAddress(), data);
+			}
+		} catch (java.net.SocketTimeoutException e) {
+			/*
+			 * We need the thread to check from time to time if user has
+			 * requested an exit
+			 */
+		} catch (IOException e) {
+			/* Report the exception */
+			logger.error("error getting Message", e);
+		} finally {
+			Log4J.finishMethod(logger, "getMessage");
+		}
+
+		return null;
+	}
+
+	private void clear() {
+		logger.info("Cleaning pending packets and messages");
+		pendingPackets.clear();
+		processedMessages.clear();
+	}
+
+	/**
+	 * This method add a message to be delivered to the client the message is
+	 * pointed to.
+	 * 
+	 * @param msg
+	 *            the message to ve delivered.
+	 */
+	public synchronized void addMessage(Message msg) {
+		Log4J.startMethod(logger, "addMessage");
+		try {
+			/* We enforce the remote endpoint */
+			msg.setAddress(address);
+			msg.setClientID(clientid);
+
+			if (msg.getType() == Message.MessageType.C2S_OUTOFSYNC) {
+				clear();
+			}
+
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			OutputSerializer s = new OutputSerializer(out);
+
+			logger.debug("send message(" + msg.getType() + ") from "
+					+ msg.getClientID());
+			s.write(msg);
+
+			byte[] buffer = out.toByteArray();
+			DatagramPacket pkt = new DatagramPacket(buffer, buffer.length, msg
+					.getAddress());
+
+			socket.send(pkt);
+		} catch (IOException e) {
+			/* Report the exception */
+			logger.error("error while adding Message", e);
+		} finally {
+			Log4J.finishMethod(logger, "addMessage");
+		}
+	}
+
+	public Message getMessage(int timeout) {
+		try {
+			return getMessage();
+		} catch (InvalidVersionException e) {
+			logger.error(e, e);
+			return null;
+		}
+	}
+}

@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.4 2006/02/05 11:08:50 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.5 2006/08/20 15:40:16 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,53 +12,71 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import marauroa.common.game.*;
-import marauroa.common.net.*;
+import marauroa.common.game.RPObject;
+import marauroa.common.net.MessageS2CPerception;
 
-/** The IPerceptionListener interface provides methods that are called while
- *  applying the perception */
-public interface IPerceptionListener
-	{
-	/** onAdded is called when an object is added to the world for first time.
-	 *  Return true to stop further processing. */
+/**
+ * The IPerceptionListener interface provides methods that are called while
+ * applying the perception
+ */
+public interface IPerceptionListener {
+	/**
+	 * onAdded is called when an object is added to the world for first time.
+	 * Return true to stop further processing.
+	 */
 	public boolean onAdded(RPObject object);
-	
-	/** onModifiedAdded is called when an object is modified by adding or changing
-	 *  one of its attributes. Return true to stop further processing.
-	 *  Note that the method is called *before* modifing the object. */
+
+	/**
+	 * onModifiedAdded is called when an object is modified by adding or
+	 * changing one of its attributes. Return true to stop further processing.
+	 * Note that the method is called *before* modifing the object.
+	 */
 	public boolean onModifiedAdded(RPObject object, RPObject changes);
-	
-	/** onModifiedDeleted is called each time the object has one of its attributes
-	 *  removed. Return true to stop further processing.
-   *  Note that the method is called *before* modifing the object. */
-  public boolean onModifiedDeleted(RPObject object, RPObject changes);
-  
-	/** onDeleted is called when an object is removed of the world
-	 *  Return true to stop further processing. */
+
+	/**
+	 * onModifiedDeleted is called each time the object has one of its
+	 * attributes removed. Return true to stop further processing. Note that the
+	 * method is called *before* modifing the object.
+	 */
+	public boolean onModifiedDeleted(RPObject object, RPObject changes);
+
+	/**
+	 * onDeleted is called when an object is removed of the world Return true to
+	 * stop further processing.
+	 */
 	public boolean onDeleted(RPObject object);
-	
-	/** onMyRPObject is called when our rpobject avatar is processed.
-	 *  Return true to stop further processing. */
+
+	/**
+	 * onMyRPObject is called when our rpobject avatar is processed. Return true
+	 * to stop further processing.
+	 */
 	public boolean onMyRPObject(RPObject added, RPObject deleted);
-	
-	/** onClear is called when the whole world is going to be cleared.
-	 *  It happens on sync perceptions
-	 *  Return true to stop further processing. */
+
+	/**
+	 * onClear is called when the whole world is going to be cleared. It happens
+	 * on sync perceptions Return true to stop further processing.
+	 */
 	public boolean onClear();
- 
-	/** onTimeout is called when the client has timeout, that is, when it is 50 turns far from server*/
+
+	/**
+	 * onTimeout is called when the client has timeout, that is, when it is 50
+	 * turns far from server
+	 */
 	public int onTimeout();
+
 	/** onSynced is called when the client recover sync */
 	public int onSynced();
+
 	/** onUnsynced is called when the client lose sync */
 	public int onUnsynced();
-	
+
 	/** onPerceptionBegin is called when the perception is going to be applied */
 	public int onPerceptionBegin(byte type, int timestamp);
+
 	/** onPerceptionBegin is called when the perception has been applied */
 	public int onPerceptionEnd(byte type, int timestamp);
-	
-	/** onException is called when an exception happens */
-	public int onException(Exception e, MessageS2CPerception perception) throws Exception;
-	}
 
+	/** onException is called when an exception happens */
+	public int onException(Exception e, MessageS2CPerception perception)
+			throws Exception;
+}
