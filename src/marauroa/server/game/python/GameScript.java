@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.5 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: GameScript.java,v 1.6 2006/08/20 17:35:21 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,9 @@
  ***************************************************************************/
 
 package marauroa.server.game.python;
+
+import org.python.util.PythonInterpreter;
+import org.python.core.*;
 
 import marauroa.common.Configuration;
 import marauroa.server.game.RPScheduler;
