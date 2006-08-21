@@ -169,7 +169,7 @@ class TCPWriter {
 				} else {
 					// otherwise we wait
 					try {
-						Thread.sleep(100);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						logger.error(e, e);
 					}
