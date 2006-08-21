@@ -116,6 +116,7 @@ class TCPWriter {
 		private static Logger logger = Logger.getLogger(TCPWriterThread.class);
 		private NetworkServerManagerCallback networkServerManagerCallback = null;
 		private List<Pair<Socket, byte[]>> queue = null;
+		private long watchdog = System.currentTimeMillis();
 
 		/**
 		 * Creates a TCPWriterThread
@@ -131,9 +132,19 @@ class TCPWriter {
 			this.queue = queue;
 		}
 
+		/**
+		 * Returns the timestamp this thread was last seen alive.
+		 *
+		 * @return watchdog
+		 */
+		public long getWatchdogTime() {
+			return watchdog;
+		}
+
 		@Override
 		public void run() {
 			while (true) {
+				watchdog = System.currentTimeMillis();
 
 				// try to remove the first element
 				Pair<Socket, byte[]> pair = null;
@@ -202,17 +213,22 @@ class TCPWriter {
 		@Override
 		public void start() {
 			createTCPWriterThread();
-//			super.start();
+			super.start();
 		}
 
 
 		@Override
 		public void run() {
 			while (true) {
+				if (System.currentTimeMillis() - tcpWriterThread.getWatchdogTime() >= 2000) {
+					logger.error("TCPWriterThread is not responding, killing and restarting it");
+					tcpWriterThread.stop();
+					createTCPWriterThread();
+				}
 	
 				// Wait
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					logger.error(e, e);
 				}
