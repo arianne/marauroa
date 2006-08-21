@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,6 +118,8 @@ class TCPWriter {
 		private NetworkServerManagerCallback networkServerManagerCallback = null;
 		private List<Pair<Socket, byte[]>> queue = null;
 		private long watchdog = System.currentTimeMillis();
+		private Socket possibleBadSocket = null;
+		private boolean keepRunning = true;
 
 		/**
 		 * Creates a TCPWriterThread
@@ -141,9 +144,31 @@ class TCPWriter {
 			return watchdog;
 		}
 
+		/**
+		 * Removes the possibl-bad-socket from the queue and closes it.
+		 */
+		@SuppressWarnings("cast")
+		public void kill() {
+			Socket mySocket =  possibleBadSocket;
+			if (mySocket != null) {
+				logger.error("Killing " + mySocket.getInetAddress());
+				networkServerManagerCallback.disconnectClient(new InetSocketAddress(mySocket.getInetAddress(), mySocket.getPort()));
+				synchronized (queue) {
+					Iterator<Pair<Socket, byte[]>> itr = queue.iterator();
+					while (itr.hasNext()) {
+						Pair<Socket, byte[]> pair = (Pair<Socket, byte[]>) itr.next();
+						if (pair.first().equals(mySocket)) {
+							itr.remove();
+						}
+					}
+				}
+			}
+			keepRunning = false;
+		}
+
 		@Override
 		public void run() {
-			while (true) {
+			while (keepRunning) {
 				watchdog = System.currentTimeMillis();
 
 				// try to remove the first element
@@ -157,9 +182,11 @@ class TCPWriter {
 				// if we removed an item from the queue, we will process it here
 				if (pair != null) {
 					try  {
+						possibleBadSocket = pair.first();
 						OutputStream os = pair.first().getOutputStream();
 						os.write(pair.second());
 						os.flush();
+						possibleBadSocket = null;
 					} catch (Exception e) {
 						/* Report the exception */
 						logger.info("error while sending a packet (to " + pair.first().getInetAddress() + ")", e);
@@ -216,13 +243,18 @@ class TCPWriter {
 			super.start();
 		}
 
-
 		@Override
 		public void run() {
 			while (true) {
 				if (System.currentTimeMillis() - tcpWriterThread.getWatchdogTime() >= 2000) {
 					logger.error("TCPWriterThread is not responding, killing and restarting it");
-					tcpWriterThread.stop();
+					tcpWriterThread.kill();
+					try {
+						// i am not sure if this works because the blocking is in native code
+						tcpWriterThread.stop();
+					} catch (Exception e) {
+						logger.warn(e, e);
+					}
 					createTCPWriterThread();
 				}
 	
