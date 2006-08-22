@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.37 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: RPServerManager.java,v 1.38 2006/08/22 01:18:20 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -96,13 +96,14 @@ public class RPServerManager extends Thread {
 
 			Configuration conf = Configuration.getConfiguration();
 			Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
-			world = (RPWorld) worldClass.newInstance();
+			// call the get() method without parameters to retrieve the singleton instance
+			world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 			world.setPlayerContainer(playerContainer);
 			world.onInit();
 
 			Class ruleProcessorClass = Class.forName(conf
 					.get("rp_RPRuleProcessorClass"));
-			ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.newInstance();
+			ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 			ruleProcessor.setContext(this, world);
 
 			String duration = conf.get("rp_turnDuration");

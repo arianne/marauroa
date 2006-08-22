@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.16 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: RPWorld.java,v 1.17 2006/08/22 01:18:20 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,12 +28,22 @@ public class RPWorld implements Iterable<IRPZone> {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(RPWorld.class);
 
+	/** The Singleton instance */
+	private static RPWorld instance;
+
 	HashMap<IRPZone.ID, IRPZone> zones;
 
 	PlayerEntryContainer playerContainer;
 
-	public RPWorld() {
+	protected RPWorld() {
 		zones = new HashMap<IRPZone.ID, IRPZone>();
+	}
+	
+	public static RPWorld get() {
+		if (instance == null) {
+			instance = new RPWorld();
+		}
+		return instance;
 	}
 
 	/** This method is called when RPWorld is created */

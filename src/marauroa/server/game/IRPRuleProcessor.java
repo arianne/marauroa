@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.8 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.9 2006/08/22 01:18:20 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,13 @@ import marauroa.server.createaccount.Result;
  * to personalize the game
  */
 public interface IRPRuleProcessor {
+	
+	// Important: you must implement the method
+	// public static IRPRuleProcessor get().
+	// TODO: Find a way to enforce this. (The static modifier is not
+	// allowed in interfaces.)
+	
+	
 	/**
 	 * Set the context where the actions are executed.
 	 * 
