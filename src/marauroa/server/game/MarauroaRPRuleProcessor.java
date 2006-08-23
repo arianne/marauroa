@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.10 2006/08/22 01:18:20 wikipedian Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.11 2006/08/23 02:11:45 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,8 +26,6 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 	
 	private static MarauroaRPRuleProcessor instance;
 	
-	private RPWorld world;
-
 	private RPServerManager rpman;
 
 	protected MarauroaRPRuleProcessor() {
@@ -40,8 +38,7 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 		return instance;
 	}
 
-	public void setContext(RPServerManager rpman, RPWorld world) {
-		this.world = world;
+	public void setContext(RPServerManager rpman) {
 		this.rpman = rpman;
 	}
 

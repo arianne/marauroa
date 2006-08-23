@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.9 2006/08/22 01:18:20 wikipedian Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.10 2006/08/23 02:11:45 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,10 +35,10 @@ public interface IRPRuleProcessor {
 	/**
 	 * Set the context where the actions are executed.
 	 * 
-	 * @param zone
-	 *            The zone where actions happens.
+	 * @param rpman
+	 *            ...
 	 */
-	public void setContext(RPServerManager rpman, RPWorld world);
+	public void setContext(RPServerManager rpman);
 
 	/** Returns true if the version of the game is compatible */
 	public boolean checkGameVersion(String game, String version);
