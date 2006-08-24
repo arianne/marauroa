@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.10 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.11 2006/08/24 22:34:22 wikipedian Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,12 +50,12 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	 * @param zone
 	 *            The zone where actions happens.
 	 */
-	public void setContext(RPServerManager rpman, RPWorld world) {
+	public void setContext(RPServerManager rpman) {
 		try {
 			this.rpman = rpman;
 
 			gameScript = GameScript.getGameScript();
-			gameScript.setRPWorld(world);
+			gameScript.setRPWorld(RPWorld.get());
 			pythonRP = gameScript.getGameRules();
 		} catch (Exception e) {
 			logger.error("error while setting context", e);
