@@ -100,7 +100,7 @@ class TCPWriter {
 		} catch (Exception e) {
 			/* Report the exception */
 			logger.info("error while sending a packet (msg=(" + msg + "))", e);
-			networkServerManagerCallback.disconnectClient(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
+			networkServerManagerCallback.internalDisconnectClientNow(new InetSocketAddress(socket.getInetAddress(), socket.getPort()));
 		}
         long timeEnd = System.currentTimeMillis();
         if (timeEnd - timeStart > 1000) {
@@ -114,7 +114,7 @@ class TCPWriter {
 	 * thread and have a second one to monitor and restart this.
 	 */
 	public static class TCPWriterThread extends Thread {
-		private static Logger logger = Logger.getLogger(TCPWriterThread.class);
+		private Logger logger = Logger.getLogger(TCPWriterThread.class);
 		private NetworkServerManagerCallback networkServerManagerCallback = null;
 		private List<Pair<Socket, byte[]>> queue = null;
 		private long watchdog = System.currentTimeMillis();
@@ -152,7 +152,7 @@ class TCPWriter {
 			Socket mySocket =  possibleBadSocket;
 			if (mySocket != null) {
 				logger.error("Killing " + mySocket.getInetAddress());
-				networkServerManagerCallback.disconnectClient(new InetSocketAddress(mySocket.getInetAddress(), mySocket.getPort()));
+				networkServerManagerCallback.internalDisconnectClientNow(new InetSocketAddress(mySocket.getInetAddress(), mySocket.getPort()));
 				synchronized (queue) {
 					Iterator<Pair<Socket, byte[]>> itr = queue.iterator();
 					while (itr.hasNext()) {
@@ -190,11 +190,13 @@ class TCPWriter {
 					} catch (Exception e) {
 						/* Report the exception */
 						logger.info("error while sending a packet (to " + pair.first().getInetAddress() + ")", e);
-						networkServerManagerCallback.disconnectClient(new InetSocketAddress(pair.first().getInetAddress(), pair.first().getPort()));
+						networkServerManagerCallback.internalDisconnectClientNow(new InetSocketAddress(pair.first().getInetAddress(), pair.first().getPort()));
 					}
 
 				} else {
 					// otherwise we wait
+					networkServerManagerCallback.internalDisconnectClientsNow();
+
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {

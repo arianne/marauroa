@@ -51,15 +51,16 @@ class TCPReader extends Thread {
 		while (networkServerManager.isStillRunning()) {
 			boolean found = false;
 			long start = System.currentTimeMillis();
+			// clone tcpSockets so that we do not lock it to long
 			Map<InetSocketAddress, Socket> temptTcpSockets = cloneMap(tcpSockets);
 			for (InetSocketAddress inetSocketAddress : temptTcpSockets.keySet()) {
 				Socket socket = temptTcpSockets.get(inetSocketAddress);
 				if (socket.isClosed()) {
-					networkServerManager.disconnectClient(inetSocketAddress);
+					networkServerManager.internalDisconnectClientNow(inetSocketAddress);
 					continue;
 				}
 				if (!socket.isConnected()) {
-					networkServerManager.disconnectClient(inetSocketAddress);
+					networkServerManager.internalDisconnectClientNow(inetSocketAddress);
 					continue;
 				}
 				try {
@@ -109,17 +110,17 @@ class TCPReader extends Thread {
 					}
 				} catch (SocketTimeoutException e) {
 					logger.warn(e + " (" + socket.getInetAddress() + ")", e);
-					networkServerManager.disconnectClient(inetSocketAddress);
+					networkServerManager.internalDisconnectClientNow(inetSocketAddress);
                 } catch (SocketException e) {
                     logger.warn(e + " (" + socket.getInetAddress() + ")", e);
-                    networkServerManager.disconnectClient(inetSocketAddress);
+                    networkServerManager.internalDisconnectClientNow(inetSocketAddress);
 				} catch (IOException e) {
 					logger.warn(e + " (" + socket.getInetAddress() + ")", e);
-					networkServerManager.disconnectClient(inetSocketAddress);
+					networkServerManager.internalDisconnectClientNow(inetSocketAddress);
 				} catch (Exception e) {
 					/* Report the exception */
 					logger.error("error while processing tcp-packets (" + socket.getInetAddress() + ")", e);
-                    networkServerManager.disconnectClient(inetSocketAddress);
+                    networkServerManager.internalDisconnectClientNow(inetSocketAddress);
 				}
 			}
 
