@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.3 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,17 +22,20 @@ public class ByteCounterOutputStream extends OutputStream {
 	long bytesWritten;
 
 	public ByteCounterOutputStream(OutputStream os) {
-		if (os == null)
+		if (os == null) {
 			throw new NullPointerException("OutputStream is null!!!");
+		}
 		this.os = os;
 		bytesWritten = 0;
 	}
 
+	@Override
 	public void write(int b) throws IOException {
 		os.write(b);
 		bytesWritten++;
 	}
 
+	@Override
 	public void write(byte[] b) throws IOException {
 		os.write(b);
 		bytesWritten += b.length;
@@ -42,10 +45,12 @@ public class ByteCounterOutputStream extends OutputStream {
 		return (bytesWritten);
 	}
 
+	@Override
 	public void flush() throws IOException {
 		os.flush();
 	}
 
+	@Override
 	public void close() throws IOException {
 		os.close();
 	}

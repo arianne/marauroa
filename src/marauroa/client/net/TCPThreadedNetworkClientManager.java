@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.12 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.13 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -225,6 +225,7 @@ public final class TCPThreadedNetworkClientManager implements
 		}
 
 		/** Method that execute the reading. It runs as a active thread forever. */
+		@Override
 		public void run() {
 			logger.debug("run()");
 			int globalcounter = 0;

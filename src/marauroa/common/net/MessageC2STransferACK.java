@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.3 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,12 +36,14 @@ public class MessageC2STransferACK extends Message {
 		return contents;
 	}
 
+	@Override
 	public String toString() {
 		return "Message (C2S Transfer ACK) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
 				+ contents.size() + ")";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
@@ -54,6 +56,7 @@ public class MessageC2STransferACK extends Message {
 		}
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, ClassNotFoundException {
 		super.readObject(in);

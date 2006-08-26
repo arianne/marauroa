@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.4 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: OutputSerializer.java,v 1.5 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,7 @@ public class OutputSerializer {
 	 *            the byte array to serialize
 	 */
 	public void write(byte[] a) throws IOException {
-		write((int) a.length);
+		write(a.length);
 		out.write(a);
 	}
 
@@ -178,7 +178,8 @@ public class OutputSerializer {
 	 */
 	public void write(String[] a) throws IOException {
 		write(a.length);
-		for (int i = 0; i < a.length; i++)
+		for (int i = 0; i < a.length; i++) {
 			write(a[i]);
+		}
 	}
 };

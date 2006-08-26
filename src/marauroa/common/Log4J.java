@@ -39,8 +39,9 @@ public class Log4J {
 
 	/** initializes log4j with a custom properties file. */
 	public static void init(String filename) {
-		if (configured)
+		if (configured) {
 			return;
+		}
 
 		InputStream propsFile = Log4J.class.getClassLoader()
 				.getResourceAsStream(filename);

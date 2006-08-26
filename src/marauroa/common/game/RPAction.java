@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.4 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: RPAction.java,v 1.5 2006/08/26 20:00:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,7 @@ public class RPAction extends Attributes {
 		super(RPClass.getBaseRPActionDefault());
 	}
 
+	@Override
 	public Object clone() {
 		RPAction action = new RPAction();
 

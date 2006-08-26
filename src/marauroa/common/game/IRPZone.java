@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.7 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: IRPZone.java,v 1.8 2006/08/26 20:00:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,7 @@ public interface IRPZone extends Iterable<RPObject> {
 		 *            another id object
 		 * @return true if they are equal, or false otherwise.
 		 */
+		@Override
 		public boolean equals(Object anotherid) {
 			if (anotherid != null) {
 				return (id.equals(((IRPZone.ID) anotherid).id));
@@ -55,6 +56,7 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** We need it for HashMap */
+		@Override
 		public int hashCode() {
 			return id.hashCode();
 		}
@@ -64,6 +66,7 @@ public interface IRPZone extends Iterable<RPObject> {
 		 * 
 		 * @return a string representing the object.
 		 */
+		@Override
 		public String toString() {
 			return "IRPZone.ID [id=" + id + "]";
 		}

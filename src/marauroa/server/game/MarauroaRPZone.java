@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.13 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.14 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,7 +104,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException {
 		if (objects.containsKey(id)) {
-			RPObject object = (RPObject) objects.remove(id);
+			RPObject object = objects.remove(id);
 
 			// If objects has been removed, remove from modified
 			modified.remove(object.getID());
@@ -119,7 +119,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	public RPObject get(RPObject.ID id) throws RPObjectNotFoundException {
 		if (objects.containsKey(id)) {
-			RPObject object = (RPObject) objects.get(id);
+			RPObject object = objects.get(id);
 			return object;
 		}
 		throw new RPObjectNotFoundException(id);

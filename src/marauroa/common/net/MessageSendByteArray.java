@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.4 2006/08/20 15:40:12 wikipedian Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.5 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,12 +52,14 @@ public class MessageSendByteArray extends Message {
 		return hash;
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
 		out.write(hash);
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

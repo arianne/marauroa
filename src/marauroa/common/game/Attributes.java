@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.20 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: Attributes.java,v 1.21 2006/08/26 20:00:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 
 	private RPClass rpClass;
 
+	@Override
 	public Object clone() {
 		Attributes attr = new Attributes(this.rpClass);
 
@@ -257,10 +258,12 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 *            another Attributes object
 	 * @return true if they are equal, or false otherwise.
 	 */
+	@Override
 	public boolean equals(Object attr) {
 		return content.equals(((Attributes) attr).content);
 	}
 
+	@Override
 	public int hashCode() {
 		return content.hashCode();
 	}
@@ -270,6 +273,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer tmp = new StringBuffer("Attributes of Class("
 				+ rpClass.getName() + "): ");

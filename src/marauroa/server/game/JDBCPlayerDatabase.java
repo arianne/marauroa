@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.26 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.27 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,6 +62,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		 * 
 		 * @return a string representing the object.
 		 */
+		@Override
 		public String toString() {
 			return "Login " + (correct ? "SUCESSFULL" : "FAILED") + " at "
 					+ time.toString() + " from " + address;
@@ -69,24 +70,33 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 	}
 
 	public boolean validString(String string) {
-		if (string.indexOf('\\') != -1)
+		if (string.indexOf('\\') != -1) {
 			return false;
-		if (string.indexOf('\'') != -1)
+		}
+		if (string.indexOf('\'') != -1) {
 			return false;
-		if (string.indexOf('"') != -1)
+		}
+		if (string.indexOf('"') != -1) {
 			return false;
-		if (string.indexOf('%') != -1)
+		}
+		if (string.indexOf('%') != -1) {
 			return false;
-		if (string.indexOf(';') != -1)
+		}
+		if (string.indexOf(';') != -1) {
 			return false;
-		if (string.indexOf(':') != -1)
+		}
+		if (string.indexOf(':') != -1) {
 			return false;
-		if (string.indexOf('#') != -1)
+		}
+		if (string.indexOf('#') != -1) {
 			return false;
-		if (string.indexOf('<') != -1)
+		}
+		if (string.indexOf('<') != -1) {
 			return false;
-		if (string.indexOf('>') != -1)
+		}
+		if (string.indexOf('>') != -1) {
 			return false;
+		}
 		return true;
 	}
 
@@ -224,7 +234,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			charactersSet.close();
 
 			characters = new String[vector.size()];
-			characters = (String[]) vector.toArray(characters);
+			characters = vector.toArray(characters);
 
 			stmt.close();
 
@@ -547,7 +557,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 				LoginEvent login_event = new LoginEvent();
 
 				login_event.address = result.getString("address");
-				login_event.time = (java.util.Date) result
+				login_event.time = result
 						.getTimestamp("timedate");
 				login_event.correct = result.getInt("result") != 0;
 				vector.add(login_event.toString());
@@ -557,7 +567,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			stmt.close();
 
 			loginEvents = new String[vector.size()];
-			loginEvents = (String[]) vector.toArray(loginEvents);
+			loginEvents = vector.toArray(loginEvents);
 			Log4J.finishMethod(logger, "getLoginEvent");
 			return loginEvents;
 		} catch (SQLException sqle) {
@@ -1089,6 +1099,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			return set.getInt("object_id");
 		}
 
+		@Override
 		public void finalize() {
 			try {
 				set.close();

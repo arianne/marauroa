@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.2 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: Pair.java,v 1.3 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,7 @@ public class Pair<T1, T2> {
 		second = o2;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Pair) {
 			Pair object = (Pair) o;
@@ -65,6 +66,7 @@ public class Pair<T1, T2> {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		int h1 = 0;
 		int h2 = 0;

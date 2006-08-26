@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.2 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,16 +42,19 @@ public class MessageS2CCreateAccountACK extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		return "Message (S2C CreateAccount ACK) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: ()";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

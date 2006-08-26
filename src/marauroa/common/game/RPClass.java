@@ -133,14 +133,17 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public static RPClass getBaseRPObjectDefault() {
 		if (defaultRPClass == null) {
 			defaultRPClass = new RPClass("") {
+				@Override
 				public short getCode(String name) {
 					return -1;
 				}
 
+				@Override
 				public byte getType(String name) {
 					return RPClass.STRING;
 				}
 
+				@Override
 				public byte getFlags(String name) {
 					if (name.charAt(0) == '!') {
 						return RPClass.PRIVATE;
@@ -149,14 +152,17 @@ public class RPClass implements marauroa.common.net.Serializable {
 					}
 				}
 
+				@Override
 				public short getRPSlotCode(String name) {
 					return -1;
 				}
 
+				@Override
 				public int getRPSlotCapacity(String name) {
 					return -1;
 				}
 
+				@Override
 				public byte getRPSlotFlags(String name) {
 					if (name.charAt(0) == '!') {
 						return RPClass.PRIVATE;

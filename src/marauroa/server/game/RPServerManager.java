@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.39 2006/08/23 02:11:45 wikipedian Exp $ */
+/* $Id: RPServerManager.java,v 1.40 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -434,6 +434,7 @@ public class RPServerManager extends Thread {
 		transferContent(id, list);
 	}
 
+	@Override
 	public void run() {
 		try {
 			Log4J.startMethod(logger, "run");

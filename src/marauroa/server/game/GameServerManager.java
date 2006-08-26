@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.26 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: GameServerManager.java,v 1.27 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -130,6 +130,7 @@ public final class GameServerManager extends Thread {
 		Log4J.finishMethod(logger, "finish");
 	}
 
+	@Override
 	public void run() {
 		Log4J.startMethod(logger, "run");
 		try {
@@ -246,8 +247,9 @@ public final class GameServerManager extends Thread {
 
 			// verify event
 			if (!isValidEvent(msg,
-					PlayerEntryContainer.ClientState.LOGIN_COMPLETE))
+					PlayerEntryContainer.ClientState.LOGIN_COMPLETE)) {
 				return;
+			}
 
 			if (playerContainer.hasCharacter(clientid, msg.getCharacter())) {
 				logger.debug("Client(" + msg.getAddress().toString()
@@ -364,8 +366,9 @@ public final class GameServerManager extends Thread {
 			int clientid = msg.getClientID();
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
+			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
 				return;
+			}
 
 			/* Send the action to RP Manager */
 			RPAction action = msg.getRPAction();
@@ -411,8 +414,9 @@ public final class GameServerManager extends Thread {
 			int clientid = msg.getClientID();
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
+			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
 				return;
+			}
 
 			/** TODO: Compute client lag here */
 
@@ -525,8 +529,9 @@ public final class GameServerManager extends Thread {
 			MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.NULL))
+			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.NULL)) {
 				return;
+			}
 
 			int clientid = msg.getClientID();
 			PlayerEntryContainer.RuntimePlayerEntry player = playerContainer
@@ -622,8 +627,9 @@ public final class GameServerManager extends Thread {
 			int clientid = msg.getClientID();
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
+			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
 				return;
+			}
 
 			/** Notify PlayerEntryContainer that this player is out of Sync */
 			PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer
@@ -642,8 +648,9 @@ public final class GameServerManager extends Thread {
 			int clientid = msg.getClientID();
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN))
+			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
 				return;
+			}
 
 			/** Handle Transfer ACK here */
 			PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer
@@ -714,7 +721,7 @@ public final class GameServerManager extends Thread {
 				}
 			}
 			String[] result = new String[l_result.size()];
-			return (String[]) l_result.toArray(result);
+			return l_result.toArray(result);
 		}
 	}
 

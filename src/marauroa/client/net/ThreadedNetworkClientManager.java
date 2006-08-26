@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.8 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.9 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -241,7 +241,7 @@ public final class ThreadedNetworkClientManager implements
 		}
 
 		private synchronized Message getOldestProcessedMessage() {
-			Message choosenMsg = ((Message) processedMessages.get(0));
+			Message choosenMsg = (processedMessages.get(0));
 			int smallestTimestamp = choosenMsg.getMessageTimestamp();
 
 			for (Message msg : processedMessages) {
@@ -329,7 +329,7 @@ public final class ThreadedNetworkClientManager implements
 
 				pendingPackets.put(new Short(signature), message);
 			} else {
-				PacketContainer message = (PacketContainer) pendingPackets
+				PacketContainer message = pendingPackets
 						.get(new Short(signature));
 
 				message.recieved(position);
@@ -350,6 +350,7 @@ public final class ThreadedNetworkClientManager implements
 		}
 
 		/** Method that execute the reading. It runs as a active thread forever. */
+		@Override
 		public void run() {
 			logger.debug("run()");
 			while (keepRunning) {

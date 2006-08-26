@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.3 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,18 +59,21 @@ public class MessageC2SChooseCharacter extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		return "Message (C2S ChooseCharacter) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
 				+ character + ")";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
 		out.write(character);
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

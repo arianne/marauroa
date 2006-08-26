@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.4 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: RSAKey.java,v 1.5 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,11 +25,13 @@ public class RSAKey extends RSAPublicKey {
 		this.d = d;
 	}
 
+	@Override
 	public void print(PrintWriter out) {
 		super.print(out);
 		out.println("d = " + d);
 	}
 
+	@Override
 	public void print(PrintStream out) {
 		super.print(out);
 		out.println("d = " + d);

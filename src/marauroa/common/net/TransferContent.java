@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.4 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: TransferContent.java,v 1.5 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ public class TransferContent {
 	public TransferContent() {
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sstr = new StringBuffer();
 

@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.26 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: ariannexp.java,v 1.27 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -415,8 +415,9 @@ public abstract class ariannexp {
 
 		try {
 			Message newmsg = netMan.getMessage(30);
-			if (newmsg != null)
+			if (newmsg != null) {
 				messages.add(newmsg);
+			}
 
 			logger
 					.debug("getMessage returned " + messages.size()

@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.3 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: PythonRPWorld.java,v 1.4 2006/08/26 20:00:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,10 +41,12 @@ public class PythonRPWorld extends RPWorld {
 		Log4J.finishMethod(logger, "PythonRPWorld");
 	}
 
+	@Override
 	public void onInit() throws Exception {
 		pythonWorld.onInit();
 	}
 
+	@Override
 	public void onFinish() throws Exception {
 		pythonWorld.onFinish();
 	}

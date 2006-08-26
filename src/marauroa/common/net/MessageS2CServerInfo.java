@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.6 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.7 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,6 +62,7 @@ public class MessageS2CServerInfo extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer text = new StringBuffer(" ");
 
@@ -73,6 +74,7 @@ public class MessageS2CServerInfo extends Message {
 				+ text.substring(0, text.length() - 1) + ")";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
@@ -108,6 +110,7 @@ public class MessageS2CServerInfo extends Message {
 		out.write(array.toByteArray());
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

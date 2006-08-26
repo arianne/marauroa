@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.2 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,12 +62,14 @@ public class MessageS2CLoginSendKey extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		return "Message (S2C Login Send key) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: (n:"
 				+ key.getN() + "\te:" + key.getE() + ")";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
@@ -75,6 +77,7 @@ public class MessageS2CLoginSendKey extends Message {
 		out.write(key.getE().toByteArray());
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

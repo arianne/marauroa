@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.13 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.14 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -154,6 +154,7 @@ public class PlayerEntryContainer {
 			return null;
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer st = new StringBuffer("PlayerEntry(");
 			st.append(characterid + ",");
@@ -368,7 +369,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "verifyRuntimePlayer");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				if (source.equals(entry.source)) {
@@ -461,7 +462,7 @@ public class PlayerEntryContainer {
 		try {
 			if (hasRuntimePlayer(clientid)) {
 				try {
-					RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+					RuntimePlayerEntry entry = listPlayerEntries
 							.get(new Integer(clientid));
 
 					return playerDatabase.getLoginEvent(transaction,
@@ -588,7 +589,7 @@ public class PlayerEntryContainer {
 		try {
 			if (hasRuntimePlayer(clientid)) {
 				try {
-					RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+					RuntimePlayerEntry entry = listPlayerEntries
 							.get(new Integer(clientid));
 
 					return playerDatabase.hasCharacter(transaction,
@@ -628,7 +629,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "setChoosenCharacter");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				entry.choosenCharacter = character;
@@ -661,7 +662,7 @@ public class PlayerEntryContainer {
 		try {
 			if (hasRuntimePlayer(clientid)) {
 				try {
-					RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+					RuntimePlayerEntry entry = listPlayerEntries
 							.get(new Integer(clientid));
 
 					return playerDatabase.getCharactersList(transaction,
@@ -709,7 +710,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "getRPObject");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 				RPObject object = playerDatabase.getRPObject(transaction,
 						entry.username, character);
@@ -765,7 +766,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "setRPObject");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				transaction.begin();
@@ -833,7 +834,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "get");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				return (RuntimePlayerEntry) listPlayerEntries.get(new Integer(
+				return listPlayerEntries.get(new Integer(
 						clientid));
 			} else {
 				logger.debug("No such RunTimePlayer(" + clientid + ")");
@@ -859,7 +860,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "getRuntimeState");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				return entry.state;
@@ -888,7 +889,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "changeRuntimeState");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 				ClientState oldState = entry.state;
 
@@ -923,7 +924,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "getRPObjectID");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				return entry.characterid;
@@ -958,7 +959,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "setRPObjectID");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				entry.characterid = id;
@@ -984,7 +985,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "getUsername");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				return entry.username;
@@ -1010,7 +1011,7 @@ public class PlayerEntryContainer {
 		Log4J.startMethod(logger, "InetSocketAddress ");
 		try {
 			if (hasRuntimePlayer(clientid)) {
-				RuntimePlayerEntry entry = (RuntimePlayerEntry) listPlayerEntries
+				RuntimePlayerEntry entry = listPlayerEntries
 						.get(new Integer(clientid));
 
 				return entry.source;

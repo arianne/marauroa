@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.21 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: RPObject.java,v 1.22 2006/08/26 20:00:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,6 +81,7 @@ public class RPObject extends Attributes {
 	}
 
 	/** Returns true if the object is empty */
+	@Override
 	public boolean isEmpty() {
 		return super.isEmpty() && slots.isEmpty();
 	}
@@ -234,6 +235,7 @@ public class RPObject extends Attributes {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer tmp = new StringBuffer("RPObject with ");
 
@@ -246,11 +248,13 @@ public class RPObject extends Attributes {
 		return tmp.toString();
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out,
 			DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
@@ -282,6 +286,7 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws java.io.IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
@@ -305,6 +310,7 @@ public class RPObject extends Attributes {
 	}
 
 	/** Returns the size of the object */
+	@Override
 	public int size() {
 		try {
 			int total = super.size();
@@ -321,6 +327,7 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	@Override
 	public int clearVisible() {
 		int i = super.clearVisible();
 
@@ -469,6 +476,7 @@ public class RPObject extends Attributes {
 	}
 
 	/** Create a real copy of the object */
+	@Override
 	public Object clone() {
 		RPObject object = new RPObject();
 
@@ -499,7 +507,7 @@ public class RPObject extends Attributes {
 	}
 
 	private void fill(RPObject object) {
-		super.fill((Attributes) object);
+		super.fill(object);
 
 		container = object.container;
 		containerSlot = object.containerSlot;
@@ -514,12 +522,14 @@ public class RPObject extends Attributes {
 	}
 
 	/** Returns true if two objects are exactly equal */
+	@Override
 	public boolean equals(Object obj) {
 		RPObject object = (RPObject) obj;
 
 		return super.equals(obj) && slots.equals(object.slots);
 	}
 
+	@Override
 	public int hashCode() {
 		try {
 			return getInt("id");
@@ -602,6 +612,7 @@ public class RPObject extends Attributes {
 		 *            another id object
 		 * @return true if they are equal, or false otherwise.
 		 */
+		@Override
 		public boolean equals(Object anotherid) {
 			if (anotherid != null) {
 				return (id == ((RPObject.ID) anotherid).id && zoneid
@@ -612,6 +623,7 @@ public class RPObject extends Attributes {
 		}
 
 		/** We need it for HashMap */
+		@Override
 		public int hashCode() {
 			return id * 1500 + zoneid.hashCode();
 		}
@@ -621,6 +633,7 @@ public class RPObject extends Attributes {
 		 * 
 		 * @return a string representing the object.
 		 */
+		@Override
 		public String toString() {
 			return "RPObject.ID [id=" + id + " zoneid=" + zoneid + "]";
 		}

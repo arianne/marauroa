@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendNonce.java,v 1.3 2006/08/20 15:40:12 wikipedian Exp $ */
+/* $Id: MessageS2CLoginSendNonce.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,12 +42,14 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 		super(MessageType.S2C_LOGIN_SENDNONCE, source, hash);
 	}
 
+	@Override
 	public String toString() {
 		return "Message (S2C Login Send Nonce) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: (nonce:"
 				+ Hash.toHexString(hash) + ")";
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

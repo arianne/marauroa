@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.26 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: RPSlot.java,v 1.27 2006/08/26 20:00:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -89,6 +89,7 @@ public class RPSlot implements marauroa.common.net.Serializable,
 	}
 
 	/** This method create a copy of the slot */
+	@Override
 	public Object clone() {
 		RPSlot slot = new RPSlot();
 
@@ -141,8 +142,9 @@ public class RPSlot implements marauroa.common.net.Serializable,
 				}
 			}
 
-			if (exists)
+			if (exists) {
 				i++;
+			}
 		} while (exists);
 
 		object.put("id", i);
@@ -364,16 +366,19 @@ public class RPSlot implements marauroa.common.net.Serializable,
 	}
 
 	/** Returns true if both objects are equal */
+	@Override
 	public boolean equals(Object object) {
 		RPSlot slot = (RPSlot) object;
 
 		return name.equals(slot.name) && objects.equals(slot.objects);
 	}
 
+	@Override
 	public int hashCode() {
 		return name.hashCode() + objects.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 
@@ -416,8 +421,8 @@ public class RPSlot implements marauroa.common.net.Serializable,
 			out.write(name);
 		}
 
-		out.write((byte) capacity);
-		out.write((int) objects.size());
+		out.write(capacity);
+		out.write(objects.size());
 		for (RPObject object : objects) {
 			object.writeObject(out, level);
 		}

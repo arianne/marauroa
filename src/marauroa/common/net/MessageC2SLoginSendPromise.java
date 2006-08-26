@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendPromise.java,v 1.3 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: MessageC2SLoginSendPromise.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,12 +42,14 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 		super(MessageType.C2S_LOGIN_SENDPROMISE, source, hash);
 	}
 
+	@Override
 	public String toString() {
 		return "Message (C2S Login Send Promise) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: (hash:"
 				+ Hash.toHexString(hash) + ")";
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

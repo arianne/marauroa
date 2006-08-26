@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.18 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.19 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -167,6 +167,7 @@ public class MessageS2CPerception extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder perception_string = new StringBuilder();
 		perception_string.append("Type: " + typePerception + " Timestamp: "
@@ -201,6 +202,7 @@ public class MessageS2CPerception extends Message {
 		return perception_string.toString();
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		if (logger.isDebugEnabled()) {
@@ -224,6 +226,7 @@ public class MessageS2CPerception extends Message {
 		}
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
@@ -342,6 +345,7 @@ public class MessageS2CPerception extends Message {
 				this.zoneid = zoneid;
 			}
 
+			@Override
 			public boolean equals(Object obj) {
 				if (obj instanceof CacheKey) {
 					CacheKey a = (CacheKey) obj;
@@ -353,6 +357,7 @@ public class MessageS2CPerception extends Message {
 				return false;
 			}
 
+			@Override
 			public int hashCode() {
 				return (type + 1) * zoneid.hashCode();
 			}
@@ -399,7 +404,7 @@ public class MessageS2CPerception extends Message {
 				logger.debug("Perception FOUND in cache");
 			}
 
-			return (byte[]) cachedContent.get(key);
+			return cachedContent.get(key);
 		}
 	}
 
@@ -415,7 +420,7 @@ public class MessageS2CPerception extends Message {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		OutputSerializer serializer = new OutputSerializer(array);
 
-		serializer.write((int) timestampPerception);
+		serializer.write(timestampPerception);
 		if (myRPObjectModifiedAdded == null) {
 			serializer.write((byte) 0);
 		} else {
@@ -437,25 +442,25 @@ public class MessageS2CPerception extends Message {
 
 	private void computeStaticPartPerception(OutputSerializer ser)
 			throws IOException {
-		ser.write((byte) typePerception);
+		ser.write(typePerception);
 		ser.write(zoneid);
 
-		ser.write((int) addedRPObjects.size());
+		ser.write(addedRPObjects.size());
 		for (RPObject object : addedRPObjects) {
 			ser.write(object);
 		}
 
-		ser.write((int) modifiedAddedAttribsRPObjects.size());
+		ser.write(modifiedAddedAttribsRPObjects.size());
 		for (RPObject object : modifiedAddedAttribsRPObjects) {
 			ser.write(object);
 		}
 
-		ser.write((int) modifiedDeletedAttribsRPObjects.size());
+		ser.write(modifiedDeletedAttribsRPObjects.size());
 		for (RPObject object : modifiedDeletedAttribsRPObjects) {
 			ser.write(object);
 		}
 
-		ser.write((int) deletedRPObjects.size());
+		ser.write(deletedRPObjects.size());
 		for (RPObject object : deletedRPObjects) {
 			ser.write(object);
 		}

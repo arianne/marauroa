@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.5 2006/08/20 15:40:12 wikipedian Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.6 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,7 @@ public class MessageS2CTransfer extends Message {
 		return contents;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer st = new StringBuffer("Message (S2C Transfer) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: (");
@@ -55,6 +56,7 @@ public class MessageS2CTransfer extends Message {
 		return st.toString();
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
@@ -75,6 +77,7 @@ public class MessageS2CTransfer extends Message {
 		out.write(array.toByteArray());
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, ClassNotFoundException {
 		super.readObject(in);

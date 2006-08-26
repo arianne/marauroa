@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.5 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.6 2006/08/26 20:00:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,18 +80,21 @@ public class MessageS2CLoginNACK extends Message {
 	 * 
 	 * @return a string representing the object.
 	 */
+	@Override
 	public String toString() {
 		return "Message (S2C Login NACK) from ("
 				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
 				+ getResolution() + ")";
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
 		out.write((byte) reason.ordinal());
 	}
 
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);

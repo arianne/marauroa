@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.7 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: JDBCTransaction.java,v 1.8 2006/08/26 20:00:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,6 +51,7 @@ public class JDBCTransaction extends Transaction {
 		return connection;
 	}
 
+	@Override
 	public void begin() throws TransactionException {
 		try {
 			Statement stmt = connection.createStatement();
@@ -60,6 +61,7 @@ public class JDBCTransaction extends Transaction {
 		}
 	}
 
+	@Override
 	public void commit() throws TransactionException {
 		try {
 			logger.debug("Commiting");
@@ -69,6 +71,7 @@ public class JDBCTransaction extends Transaction {
 		}
 	}
 
+	@Override
 	public void rollback() {
 		try {
 			logger.debug("Rollback");
