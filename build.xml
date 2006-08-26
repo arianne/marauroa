@@ -7,17 +7,20 @@
   <property name="lib"  value="lib"/>
   <property name="libdir"  value="libs"/>
   <property name="docs" value="javadocs"/>
-  
+
   <!-- EDIT HERE TO CONFIGURE YOUR JAR FILE NAMES -->
   <property name="connectorJ_jar" value="mysql-connector.jar"/>
   <property name="jython_jar" value="jython.jar"/>
   <property name="log4j_jar" value="log4j.jar"/>
+  <property name="jnlp_jar" value="jnlp.jar"/>
   <!-- [END] -->
-  
+
   <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
   <property name="jython" value="${libdir}/${jython_jar}"/>
   <property name="log4j" value="${libdir}/${log4j_jar}"/>
-  <property name="classpath" value="${build};${connectorJ};${jython};${log4j}"/>
+  <property name="jnlp" value="${libdir}/${jnlp_jar}"/>
+
+  <property name="classpath" value="${build};${connectorJ};${jython};${log4j};${jnlp}"/>
   
   <property name="jarname" value="marauroa-${version}.jar"/>
 
