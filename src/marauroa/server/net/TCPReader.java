@@ -71,7 +71,12 @@ class TCPReader extends Thread {
 					if (toReadInt == null) {
 						// read size
 						if (is.available() >= 4) {
-							is.read(sizebuffer);
+							if (is.read(sizebuffer) < 4) {
+								// this should never happen because of the
+								// is.available() right above. But to make 
+								// findbugs happy i put some error handling here.
+								logger.error("Expected 4 bytes but did not get them", new Throwable());
+							}
 							size = (sizebuffer[0] & 0xFF)
 								+ ((sizebuffer[1] & 0xFF) << 8)
 								+ ((sizebuffer[2] & 0xFF) << 16)
