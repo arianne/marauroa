@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.6 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: Configuration.java,v 1.7 2006/08/27 17:58:47 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,16 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import marauroa.common.io.Persistence;
+
 /** This class is a basic configuration file manager */
 public class Configuration {
 	/** the logger instance. */
 	private static final org.apache.log4j.Logger logger = Log4J
 			.getLogger(Configuration.class);
 
+	private static boolean relativeToHome = false;
+	private static String basedir = "";
 	private static String configurationFile = "marauroa.ini";
 
 	private Properties properties;
@@ -39,18 +43,32 @@ public class Configuration {
 	 * This method defines the default configuration file for all the instances
 	 * of Configuration
 	 * 
-	 * @param conf
-	 *            the location of the file
+	 * @param conf the location of the file
 	 */
 	public static void setConfigurationFile(String conf) {
+		relativeToHome = false;
+		basedir = "";
+		configurationFile = conf;
+	}
+
+	/**
+	 * This method defines the default configuration file for all the instances
+	 * of Configuration
+	 * 
+	 * @param relativeToHome should this file be placed below the users home directory?
+	 * @param basedir directory prefix which is ignore in webstart environment
+	 * @param conf the location of the file
+	 */
+	public static void setConfigurationFile(boolean relativeToHome, String basedir, String conf) {
+		relativeToHome = false;
+		basedir = "";
 		configurationFile = conf;
 	}
 
 	/**
 	 * Should the configuration be read from and write to a file?
 	 * 
-	 * @param persitence
-	 *            true to use files, false otherwise
+	 * @param persistence true to use files, false otherwise
 	 */
 	public static void setConfigurationPersitance(boolean persistence) {
 		Configuration.persistence = persistence;
@@ -66,7 +84,7 @@ public class Configuration {
 			properties = new Properties();
 
 			if (persistence) {
-				InputStream is = new FileInputStream(configurationFile);
+				InputStream is =  Persistence.get().getInputStream(relativeToHome, basedir, configurationFile);
 				properties.load(is);
 				is.close();
 			}
@@ -156,12 +174,12 @@ public class Configuration {
 			properties.put(property, value);
 
 			if (persistence) {
-				OutputStream os = new FileOutputStream(configurationFile);
+				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir, configurationFile);
 				properties.store(os, null);
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("Configuration file not found: " + configurationFile,
+			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile,
 					e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
