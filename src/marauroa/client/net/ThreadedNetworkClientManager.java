@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.9 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.10 2006/08/27 14:03:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -83,6 +83,9 @@ public final class ThreadedNetworkClientManager implements
 
 		/* Create the socket and set a timeout of 1 second */
 		address = new InetSocketAddress(host, port);
+		if (address.getAddress() == null) {
+			throw new SocketException("Unknown Host");
+		}
 		socket = new DatagramSocket();
 		socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
 		socket.setReceiveBufferSize(128 * 1024);
