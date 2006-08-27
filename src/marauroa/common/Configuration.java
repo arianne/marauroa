@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.7 2006/08/27 17:58:47 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.8 2006/08/27 19:00:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,8 +60,8 @@ public class Configuration {
 	 * @param conf the location of the file
 	 */
 	public static void setConfigurationFile(boolean relativeToHome, String basedir, String conf) {
-		relativeToHome = false;
-		basedir = "";
+		Configuration.relativeToHome = relativeToHome;
+		Configuration.basedir = basedir;
 		configurationFile = conf;
 	}
 
