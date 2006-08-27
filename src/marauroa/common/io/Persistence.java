@@ -52,7 +52,7 @@ public abstract class Persistence {
 	 * Gets an input stream to this "virtual" file
 	 *
 	 * @param relativeToHome should this file be placed below the users home directory?
-	 * @param basedir prefix directory
+	 * @param basedir directory prefix which is ignore in webstart environment
 	 * @param filename filename (without path)
 	 * @return InputStream
 	 * @throws IOException on io error
@@ -63,7 +63,7 @@ public abstract class Persistence {
 	 * Gets an output stream to this "virtual" file
 	 *
 	 * @param relativeToHome should this file be placed below the users home directory?
-	 * @param basedir prefix directory
+	 * @param basedir directory prefix which is ignore in webstart environment
 	 * @param filename filename (without path)
 	 * @return OutputStream
 	 * @throws IOException on io error
