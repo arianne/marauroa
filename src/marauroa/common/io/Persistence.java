@@ -1,4 +1,4 @@
-package marauroa.client.io;
+package marauroa.common.io;
 
 import java.io.IOException;
 import java.io.InputStream;
