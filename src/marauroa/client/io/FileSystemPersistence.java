@@ -12,7 +12,7 @@ import java.io.OutputStream;
  * @author hendrik
  */
 public class FileSystemPersistence extends Persistence {
-	private String basedir = System.getProperty("user.home") + "/stendhal/"; 
+	private String homedir = System.getProperty("user.home") + "/"; 
 
 	/**
 	 * creates a "normal" FileSystemPersistence
@@ -20,15 +20,23 @@ public class FileSystemPersistence extends Persistence {
 	FileSystemPersistence() {
 		// package visibile only
 	}
-
-	@Override
-	public InputStream getInputStream(String filename) throws IOException {
-		return new FileInputStream(basedir + filename);
+	
+	private String concatFilename(boolean relativeToHome, String basedir, String filename) {
+		String file = basedir + "/" + filename;
+		if (relativeToHome) {
+			file = homedir + file;
+		}
+		return file;
 	}
 
 	@Override
-	public OutputStream getOutputStream(String filename) throws IOException {
-		return new FileOutputStream(basedir + filename);
+	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+		return new FileInputStream(concatFilename(relativeToHome, basedir, filename));
+	}
+
+	@Override
+	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+		return new FileOutputStream(concatFilename(relativeToHome, basedir, filename));
 	}
 
 }

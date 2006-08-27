@@ -51,19 +51,23 @@ public abstract class Persistence {
 	/**
 	 * Gets an input stream to this "virtual" file
 	 *
+	 * @param relativeToHome should this file be placed below the users home directory?
+	 * @param basedir prefix directory
 	 * @param filename filename (without path)
 	 * @return InputStream
 	 * @throws IOException on io error
 	 */
-	public abstract InputStream getInputStream(String filename) throws IOException;
+	public abstract InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException;
 
 	/**
 	 * Gets an output stream to this "virtual" file
 	 *
+	 * @param relativeToHome should this file be placed below the users home directory?
+	 * @param basedir prefix directory
 	 * @param filename filename (without path)
-	 * @return InputStream
+	 * @return OutputStream
 	 * @throws IOException on io error
 	 */
-	public abstract OutputStream getOutputStream(String filename) throws IOException;
+	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException;
 
 }
