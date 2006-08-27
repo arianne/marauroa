@@ -20,13 +20,26 @@ public class FileSystemPersistence extends Persistence {
 	FileSystemPersistence() {
 		// package visibile only
 	}
-	
+
+	/**
+	 * create the filename string
+	 *
+	 * @param relativeToHome should this file be placed below the users home directory?
+	 * @param basedir directory prefix which is ignore in webstart environment
+	 * @param filename filename (without path)
+	 * @return filename
+	 */
 	private String concatFilename(boolean relativeToHome, String basedir, String filename) {
-		String file = basedir + "/" + filename;
+		StringBuilder file = new StringBuilder();
 		if (relativeToHome) {
-			file = homedir + file;
+			file.append(homedir);
 		}
-		return file;
+		if ((basedir != null) && (!basedir.trim().equals(""))) {
+			file.append(basedir);
+			file.append("/");
+		}
+		file.append(filename);
+		return file.toString();
 	}
 
 	@Override
