@@ -35,7 +35,7 @@ public abstract class Persistence {
 				try {
 					// we use reflection to prevent any runtime dependency on jnlp.jar
 					// outside webstart. So we do not have to distribute jnlp.jar
-					Class clazz = Class.forName("games.stendhal.client.io.WebstartPersistence");
+					Class clazz = Class.forName("marauroa.common.io.WebstartPersistence");
 					instance = (Persistence) clazz.newInstance();
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
