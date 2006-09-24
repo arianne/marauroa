@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.27 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: ariannexp.java,v 1.28 2006/09/24 22:39:19 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -332,7 +332,7 @@ public abstract class ariannexp {
 	}
 
 	/** Sends a RPAction to server and blocks until server confirms it. */
-	public synchronized void send(RPAction action, boolean block)
+	private synchronized void send(RPAction action, boolean block)
 			throws ariannexpTimeoutException {
 		/** TODO: Useless we need to return something or disable blocking */
 		Log4J.startMethod(logger, "send");
@@ -478,6 +478,15 @@ public abstract class ariannexp {
 		}
 
 		return recievedMessages;
+	}
+
+	/**
+	 * Are we connected to the server?
+	 *
+	 * @return true unless it is sure that we are disconnected
+	 */
+	public boolean getConnectionState() {
+		return netMan.getConnectionState();
 	}
 
 	/**
