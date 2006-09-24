@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.10 2006/08/27 14:03:11 nhnb Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.11 2006/09/24 22:05:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -187,6 +187,10 @@ public final class ThreadedNetworkClientManager implements
 		Log4J.startMethod(logger, "addMessage");
 		writeManager.write(msg);
 		Log4J.finishMethod(logger, "addMessage");
+	}
+
+	public boolean getConnectionState() {
+		return true;
 	}
 
 	static private class PacketContainer {

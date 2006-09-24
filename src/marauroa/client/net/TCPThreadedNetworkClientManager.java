@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.14 2006/08/27 14:03:11 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.15 2006/09/24 22:05:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,6 +60,8 @@ public final class TCPThreadedNetworkClientManager implements
 	private NetworkClientManagerWrite writeManager;
 
 	private List<Message> processedMessages;
+	
+	private boolean connected = true;
 
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -100,6 +102,7 @@ public final class TCPThreadedNetworkClientManager implements
 		} catch (IOException e) {
 			// TODO: rewrite this in a cleaner way. This is a simple hack
 			// to be interface compatible because i know only Stendhal.
+			connected = false;
 			throw new SocketException(e.getMessage());
 		}
 
@@ -176,8 +179,14 @@ public final class TCPThreadedNetworkClientManager implements
 	 */
 	public void addMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
-		writeManager.write(msg);
+		if (!writeManager.write(msg)) {
+			connected = false;
+		}
 		Log4J.finishMethod(logger, "addMessage");
+	}
+
+	public boolean getConnectionState() {
+		return connected;
 	}
 
 	/** The active thread in charge of recieving messages from the network. */
@@ -334,7 +343,7 @@ public final class TCPThreadedNetworkClientManager implements
 		}
 
 		/** Method that execute the writting */
-		public void write(Message msg) {
+		public boolean write(Message msg) {
 			Log4J.startMethod(logger, "write");
 			try {
 				/* TODO: Looks like hardcoded, write it in a better way */
@@ -363,7 +372,9 @@ public final class TCPThreadedNetworkClientManager implements
 				/* Report the exception */
 				logger.error(
 						"error while sending a packet (msg=(" + msg + "))", e);
+				return false;
 			}
+			return true;
 		}
 	}
 }

@@ -41,4 +41,10 @@ public interface NetworkClientManagerInterface {
 	 */
 	public abstract void addMessage(Message msg);
 
+	/**
+	 * returns true unless it is sure that we are disconnected.
+	 *
+	 * @return true if we may be online
+	 */
+	public boolean getConnectionState();
 }

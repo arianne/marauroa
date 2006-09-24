@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.25 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: NetworkClientManager.java,v 1.26 2006/09/24 22:05:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -352,5 +352,9 @@ public class NetworkClientManager implements NetworkClientManagerInterface {
 			logger.error(e, e);
 			return null;
 		}
+	}
+
+	public boolean getConnectionState() {
+		return true;
 	}
 }
