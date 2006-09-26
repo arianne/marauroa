@@ -18,3 +18,4 @@ bin
 marauroa-*-src.tar.gz
 marauroa-*.zip
 .fbwarnings
+.fbprefs
