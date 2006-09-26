@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.27 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.28 2006/09/26 19:27:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -98,6 +98,24 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Escapes ' and \ in a string so that the result can be passed into an
+	 * SQL command. The parameter has be quoted using ' in the sql. Most
+	 * database engines accept single quotes around numbers as well.
+     * <p>Please note that special characters for LIKE and other matching
+	 * commands are not quotes. The result of this method is suiteable for
+	 * INSERT, UPDATE and an "=" operator in the WHERE part.
+	 * 
+	 * @param param string to quote
+	 * @return quoted string
+	 */
+	public String escapeSQLString(String param) {
+		if (param == null) {
+			return param;
+		}
+		return param.replace("'", "''").replace("\\", "\\\\");
 	}
 
 	private static IPlayerDatabase playerDatabase = null;
@@ -496,23 +514,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 					return false;
 				}
 			}
-			// This code is unused. I think it was a workaround some transaction
-			// issues on 0.90
-			// else
-			// {
-			// Connection connection1 =
-			// ((JDBCTransaction)trans).getConnection();
-			// Statement stmt1 = connection1.createStatement();
-			// String query1 = "select * from player;";
-			// logger.debug("verifyAccount is executing query "+query1);
-			// ResultSet result1 = stmt1.executeQuery(query1);
-			// while(result1.next())
-			// {
-			// logger.debug(result1.getString("id")+"\t"+result1.getString("username")+"\t"+result1.getString("password"));
-			// }
-			// result1.close();
-			// }
-
 			return false;
 		} catch (Exception e) {
 			logger.warn("error verifying account ", e);
@@ -1432,8 +1433,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			Connection connection = ((JDBCTransaction) trans).getConnection();
 			Statement stmt = connection.createStatement();
 
+			String firstParam = (params.length > 0 ? params[0] : "");
 			StringBuffer param = new StringBuffer();
-
 			if (params.length > 1) {
 				for (int i = 1; i < params.length; i++) {
 					param.append(params[i]);
@@ -1441,34 +1442,14 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 				}
 			}
 
-			try {
-				if (!validString(source) || !validString(event)
-						|| !validString(param.toString())) {
-					logger
-							.info("Game event not logged because invalid strings: \""
-									+ source
-									+ "\",\""
-									+ event
-									+ "\",\""
-									+ param + "\"");
-					return;
-				}
-			} catch (Exception e) {
-				logger.info("Game event not logged because invalid strings: \""
-						+ source + "\",\"" + event + "\",\"" + param + "\"", e);
-				return;
-			}
-
-			String firstParam = (params.length > 0 ? params[0] : "");
-
 			String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"
-					+ source
+					+ escapeSQLString(source)
 					+ "','"
-					+ event
+					+ escapeSQLString(event)
 					+ "','"
-					+ firstParam
+					+ escapeSQLString(firstParam)
 					+ "','"
-					+ param.toString() + "')";
+					+ escapeSQLString(param.toString()) + "')";
 			stmt.execute(query);
 			stmt.close();
 		} catch (SQLException sqle) {
