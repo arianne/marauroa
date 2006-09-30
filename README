@@ -54,10 +54,6 @@ Requeriments
 To actually compile Marauroa you will need:
 - Java SDK 1.5 http://java.sun.com
 - Ant 1.6 http://ant.apache.org
-- Log4j http://logging.apache.org/log4j/
-
-Optionally:
-- Jython 2.1 http://www.jython.org/download.html
 
 In order to get it working with MySQL you will also need:
 - MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
@@ -72,9 +68,9 @@ Build
 First, install Java, Ant, and Jython
   NOTE: Do not install Jython on a directory path that contains spaces.
 
-Second, set junit.jar and jython.jar on the classpath.
+Second, set log4j, jnlp.jar and jython.jar on the classpath.
   For Example:
-  set classpath=%classpath%;C:\junit3.8.1\junit.jar
+  set classpath=%classpath%;lib\jnlp.jar;lib\log4j.jar;lib\jython.jar
   set classpath=%classpath%;C:\junit3.8.1\junit.jar
 
 Third, move to the marauroa directory.
@@ -142,6 +138,14 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.34
+- new client side method to detect disconnected tcp-streams
+- fixed a problem with may cause logging of game events to fail
+
+1.33
+- moved persistence handling in unsinged webstart from Stendhal to Marauroa
+- Singleton pattern for RPWorld
+
 1.32 Jul 16, 2006
 - Added experimental support of TCP.
 - Fixed a cpu-intensive debug-message while creating zone-based perceptions
