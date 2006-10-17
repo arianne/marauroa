@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.26 2006/09/24 22:05:40 nhnb Exp $ */
+/* $Id: NetworkClientManager.java,v 1.27 2006/10/17 08:58:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -109,6 +109,13 @@ public class NetworkClientManager implements NetworkClientManagerInterface {
 	public NetworkClientManager(String host, int port) throws SocketException {
 		Log4J.startMethod(logger, "NetworkClientManager");
 		clientid = 0;
+		// Disable java internal dns cache to handle ip-address change of server
+		// (TODO: implement automatic reconnect)
+		// The normal dns cache by the operarting system which obeys the ttl will
+		// continue to work. We only disable the Java dns cache because it ignores
+		// ttl and caches everything until the end of the virtual machine.
+		java.security.Security.setProperty("networkaddress.cache.ttl" , "0");
+
 		address = new InetSocketAddress(host, port);
 		socket = new DatagramSocket();
 		socket.setSoTimeout(TimeoutConf.SOCKET_TIMEOUT);
