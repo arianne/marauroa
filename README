@@ -33,7 +33,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.32
+Version 1.34.1
 
 
 Status
@@ -138,6 +138,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+1.34.1
+- disable java built in dns cache (as this required the client to be restarted after server ip change)
+
 1.34
 - new client side method to detect disconnected tcp-streams
 - fixed a problem with may cause logging of game events to fail
