@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.40 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.41 2006/11/04 18:43:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,7 @@ public class marauroad extends Thread {
 				System.out
 						.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
-				System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
+				System.out.println("(C) 1999-2006 Miguel Angel Blanch Lardin");
 				System.out.println();
 				System.out.println("usage: [-c gamefile] [-l]");
 				System.out
@@ -79,30 +79,21 @@ public class marauroad extends Thread {
 		System.out
 				.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
+		System.out.println("(C) 1999-2006 Miguel Angel Blanch Lardin");
 		System.out.println();
-		System.out
-				.println("This program is free software; you can redistribute it and/or modify");
-		System.out
-				.println("it under the terms of the GNU General Public License as published by");
-		System.out
-				.println("the Free Software Foundation; either version 2 of the License, or");
+		System.out.println("This program is free software; you can redistribute it and/or modify");
+		System.out.println("it under the terms of the GNU General Public License as published by");
+		System.out.println("the Free Software Foundation; either version 2 of the License, or");
 		System.out.println("(at your option) any later version.");
 		System.out.println();
-		System.out
-				.println("This program is distributed in the hope that it will be useful,");
-		System.out
-				.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-		System.out
-				.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+		System.out.println("This program is distributed in the hope that it will be useful,");
+		System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+		System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
 		System.out.println("GNU General Public License for more details.");
 		System.out.println();
-		System.out
-				.println("You should have received a copy of the GNU General Public License");
-		System.out
-				.println("along with this program; if not, write to the Free Software");
-		System.out
-				.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println("You should have received a copy of the GNU General Public License");
+		System.out.println("along with this program; if not, write to the Free Software");
+		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
 		// Initialize Loggging
 		Log4J.init("marauroa/server/log4j.properties");
@@ -115,6 +106,7 @@ public class marauroad extends Thread {
 	public synchronized void run() {
 		logger.debug("marauroad thread started");
 
+		// Adding a Bean for statistical access using jmanager
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			// Unique identification of MBeans
@@ -172,37 +164,35 @@ public class marauroad extends Thread {
 		try {
 			netMan = new marauroa.server.net.NetworkServerManager();
 		} catch (Exception e) {
-			logger
-					.fatal(
-							"Marauroa can't create NetworkServerManager.\n"
-									+ "Reasons:\n"
-									+ "- You are already running a copy of Marauroa on the same UDP port\n"
-									+ "- You haven't specified a valid configuration file\n"
-									+ "- You haven't create database\n"
-									+ "- You have invalid username and password to connnect to database\n",
-							e);
+			logger.fatal(
+					"Marauroa can't create NetworkServerManager.\n"
+					+ "Reasons:\n"
+					+ "- You are already running a copy of Marauroa on the same UDP port\n"
+					+ "- You haven't specified a valid configuration file\n"
+					+ "- You haven't create database\n"
+					+ "- You have invalid username and password to connnect to database\n",
+					e);
 			return false;
 		}
 
 		try {
 			rpMan = new RPServerManager(netMan);
 		} catch (Exception e) {
-			logger
-					.fatal(
-							"Marauroa can't create RPServerManager.\n"
-									+ "Reasons:\n"
-									+ "- You haven't specified a valid configuration file\n"
-									+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
-									+ "- There may be an error in the Game startup method.\n",
-							e);
+			logger.fatal(
+					"Marauroa can't create RPServerManager.\n"
+					+ "Reasons:\n"
+					+ "- You haven't specified a valid configuration file\n"
+					+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
+					+ "- There may be an error in the Game startup method.\n",
+					e);
 			return false;
 		}
 
 		try {
-			RSAKey key = new RSAKey(new BigInteger(Configuration
-					.getConfiguration().get("n")), new BigInteger(Configuration
-					.getConfiguration().get("d")), new BigInteger(Configuration
-					.getConfiguration().get("e")));
+			RSAKey key = new RSAKey(
+					new BigInteger(Configuration.getConfiguration().get("n")), 
+					new BigInteger(Configuration.getConfiguration().get("d")), 
+					new BigInteger(Configuration.getConfiguration().get("e")));
 			gameMan = new GameServerManager(key, netMan, rpMan);
 		} catch (Exception e) {
 			logger
@@ -220,7 +210,6 @@ public class marauroad extends Thread {
 			public void run() {
 				// Note: Log4J ist shutdown already at this point
 				logger.warn("User requesting shutdown");
-				printStackTrace();
 				finish();
 				logger.warn("Shutdown completed. See you later");
 			}
@@ -228,20 +217,6 @@ public class marauroad extends Thread {
 
 		logger.debug("initialize finished");
 		return true;
-	}
-
-	private void printStackTrace() {
-		Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
-
-		for (Thread thread : threads.keySet()) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("Thread: ").append(thread.getName()).append('\n');
-
-			for (StackTraceElement line : thread.getStackTrace()) {
-				buf.append("  ").append(line).append('\n');
-			}
-			logger.debug(buf.toString());
-		}
 	}
 
 	public void finish() {
