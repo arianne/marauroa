@@ -1,4 +1,4 @@
-/* $Id: generateini.java,v 1.12 2006/11/04 16:53:48 arianne_rpg Exp $ */
+/* $Id: generateini.java,v 1.13 2006/11/04 16:59:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,8 +126,7 @@ public class generateini {
 		System.out.println("Using \"" + databasepassword
 				+ "\" as database user password\n");
 
-		System.out
-				.println("In order to make efective these options please run:");
+		System.out.println("In order to make efective these options please run:");
 		System.out.println("# mysql");
 		System.out.println("  create database " + databasename + ";");
 		System.out.println("  grant all on " + databasename + ".* to "
@@ -137,22 +136,19 @@ public class generateini {
 		System.out.println();
 
 		/** Choose port that will be used */
-		System.out
-				.print("Write UDP port >1024 used by Marauroa. Note: Stendhal uses port 32160: ");
+		System.out.print("Write UDP port >1024 used by Marauroa. Note: Stendhal uses port 32160: ");
 		String udpport = getStringWithoutDefault(input,
 				"Please choose a UDP port.");
 		System.out.println("Using \"" + udpport
 				+ "\" as UDP port for Marauroa\n");
 
 		/** Choose RP Content that will be used */
-		System.out
-				.println("Marauroa is a server middleware to run multiplayer games. You need to"
+		System.out.println("Marauroa is a server middleware to run multiplayer games. You need to"
 						+ "add a game to the system so that server can work. Actually Arianne has implemented several games:");
 		System.out.println("- stendhal");
 		System.out.println("- mapacman");
 		System.out.println("- the1001");
-		System.out
-				.println("If you write your own game, just write its name here.");
+		System.out.println("If you write your own game, just write its name here.");
 		System.out.println("You will be asked for more info.\n");
 
 		System.out.print("Write name of the game server will run: ");
@@ -165,67 +161,52 @@ public class generateini {
 		String databaseType = "marauroa.server.game.JDBCPlayerDatabase";
 
 		if (gamename.equals("stendhal")) {
-			System.out
-					.println("NOTE: Setting RPWorld and RPRuleProcessor for Stendhal");
-			System.out
-					.println("NOTE: Make sure Marauroa can find in CLASSPATH the folder games/stendhal/*");
-			System.out
-					.println("NOTE: Copy stendhal's games folder inside folder that contains marauroa.jar file");
+			System.out.println("NOTE: Setting RPWorld and RPRuleProcessor for Stendhal");
+			System.out.println("NOTE: Make sure Marauroa can find in CLASSPATH the folder games/stendhal/*");
+			System.out.println("NOTE: Copy stendhal's games folder inside folder that contains marauroa.jar file");
 
 			rp_RPWorldClass = "games.stendhal.server.StendhalRPWorld";
 			rp_RPRuleProcessorClass = "games.stendhal.server.StendhalRPRuleProcessor";
 			databaseType = "games.stendhal.server.StendhalPlayerDatabase";
 		} else {
-			System.out.println("Setting RPWorld and RPRuleProcessor for "
-					+ gamename);
-			String defaultRpWorld = "games/stendhal/" + gamename + "/server/"
-					+ uppcaseFirstLetter(gamename) + "RPWorld.class";
-			System.out.print("Write game's RPWorld class file  ["
-					+ defaultRpWorld + "]: ");
+			System.out.println("Setting RPWorld and RPRuleProcessor for "+ gamename);
+			String defaultRpWorld = "games/stendhal/" + gamename + "/server/"+ uppcaseFirstLetter(gamename) + "RPWorld.class";
+			System.out.print("Write game's RPWorld class file  ["+ defaultRpWorld + "]: ");
 			rp_RPWorldClass = getStringWithDefault(input, defaultRpWorld);
-			System.out.println("Using RPWorld class \"" + rp_RPWorldClass
-					+ "\"\n");
+			System.out.println("Using RPWorld class \"" + rp_RPWorldClass+ "\"\n");
 
-			String defaultRpRuleProcessor = "games/stendhal/" + gamename
-					+ "/server/" + uppcaseFirstLetter(gamename)
+			String defaultRpRuleProcessor = "games/stendhal/" + gamename + "/server/" + uppcaseFirstLetter(gamename)
 					+ "RPRuleProcessor.class";
-			System.out.print("Write game's RPRuleProcessor class file  ["
-					+ defaultRpRuleProcessor + "]: ");
-			rp_RPRuleProcessorClass = getStringWithDefault(input,
-					defaultRpRuleProcessor);
-			System.out.println("Using RPRuleProcessor class \""
-					+ rp_RPWorldClass + "\"\n");
+			System.out.print("Write game's RPRuleProcessor class file  ["+ defaultRpRuleProcessor + "]: ");
+			rp_RPRuleProcessorClass = getStringWithDefault(input,defaultRpRuleProcessor);
+			System.out.println("Using RPRuleProcessor class \""+ rp_RPWorldClass + "\"\n");
 		}
 
 		System.out.println();
 
 		/** Choose turn time that will be used */
-		System.out
-				.print("Write turn time duration in milliseconds (200<time<1000) [300]: ");
+		System.out.print("Write turn time duration in milliseconds (200<time<1000) [300]: ");
 		String turntime = getStringWithDefault(input, "300");
 		System.out.println("Using turn of " + turntime + " milliseconds\n");
 
 		/** Choose where logs and statistics are generated */
 		System.out.print("Write path for logs generation [./]: ");
 		String logs_path = getStringWithDefault(input, "./");
-		System.out.println("Using path \"" + logs_path
-				+ "\" for log generation\n");
+		System.out.println("Using path \"" + logs_path+ "\" for log generation\n");
 
 		System.out.print("Write path for statistics generation [./]: ");
 		String statistics_path = getStringWithDefault(input, "./");
 		System.out.println("Using path \"" + statistics_path
 				+ "\" for statistics generation\n");
 
-		System.out
-				.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+		System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
 		String keySize = getStringWithDefault(input, "512");
 		System.out.println("Using key of " + keySize + " bits.");
 		System.out.println("Please wait while the key is generated.");
 		RSAKey key = RSAKey.generateKey(Integer.valueOf(keySize));
 		System.out.println("\n--- COMPLETE ---");
 
-		System.out
-				.println("Generating \"" + file.getAbsolutePath() + "\" file");
+		System.out.println("Generating \"" + file.getAbsolutePath() + "\" file");
 		try {
 			PrintWriter output = new PrintWriter(new FileOutputStream(file));
 			output.println("### Configuration file for " + gamename);
@@ -233,8 +214,7 @@ public class generateini {
 			output.println();
 			output.println("marauroa_DATABASE=" + databaseType);
 			output.println();
-			output.println("jdbc_url=jdbc:mysql://" + databasehost + "/"
-					+ databasename);
+			output.println("jdbc_url=jdbc:mysql://" + databasehost + "/"+ databasename);
 			output.println("jdbc_class=com.mysql.jdbc.Driver");
 			output.println("jdbc_user=" + databaseuser);
 			output.println("jdbc_pwd=" + databasepassword);
@@ -242,16 +222,13 @@ public class generateini {
 			output.println("marauroa_PORT=" + udpport);
 			output.println();
 			output.println("rp_RPWorldClass=" + rp_RPWorldClass);
-			output
-					.println("rp_RPRuleProcessorClass="
-							+ rp_RPRuleProcessorClass);
+			output.println("rp_RPRuleProcessorClass="+ rp_RPRuleProcessorClass);
 			output.println("rp_turnDuration=" + turntime);
 			output.println();
 			output.println("server_typeGame=" + gamename);
 			output.println("server_name=" + gamename + " Marauroa server");
 			output.println("server_version=stable");
-			output
-					.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
+			output.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 			output.println();
 			output.println("server_stats_directory=" + statistics_path);
 			output.println("server_logs_directory=" + logs_path);
