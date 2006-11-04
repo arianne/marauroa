@@ -1,4 +1,4 @@
-/* $Id: generateini.java,v 1.11 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: generateini.java,v 1.12 2006/11/04 16:53:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,38 +78,27 @@ public class generateini {
 		BufferedReader input = new BufferedReader(new InputStreamReader(
 				System.in));
 
-		System.out
-				.println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
 		System.out.println();
-		System.out
-				.println("This program is free software; you can redistribute it and/or modify");
-		System.out
-				.println("it under the terms of the GNU General Public License as published by");
-		System.out
-				.println("the Free Software Foundation; either version 2 of the License, or");
+		System.out.println("This program is free software; you can redistribute it and/or modify");
+		System.out.println("it under the terms of the GNU General Public License as published by");
+		System.out.println("the Free Software Foundation; either version 2 of the License, or");
 		System.out.println("(at your option) any later version.");
 		System.out.println();
-		System.out
-				.println("This program is distributed in the hope that it will be useful,");
-		System.out
-				.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-		System.out
-				.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+		System.out.println("This program is distributed in the hope that it will be useful,");
+		System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+		System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
 		System.out.println("GNU General Public License for more details.");
 		System.out.println();
-		System.out
-				.println("You should have received a copy of the GNU General Public License");
-		System.out
-				.println("along with this program; if not, write to the Free Software");
-		System.out
-				.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println("You should have received a copy of the GNU General Public License");
+		System.out.println("along with this program; if not, write to the Free Software");
+		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 		System.out.println();
 		System.out.println();
 
 		System.out.println("This is the configuration utility for marauroa.");
-		System.out
-				.println("Default values for each question will be printed in brackets.\n\n");
+		System.out.println("Default values for each question will be printed in brackets.\n\n");
 
 		/** Create a .ini file for storing options */
 		System.out.print("Write name of the .ini file [marauroa.ini]: ");
