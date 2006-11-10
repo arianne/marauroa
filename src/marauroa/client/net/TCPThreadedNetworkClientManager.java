@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.15 2006/09/24 22:05:40 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.16 2006/11/10 07:40:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -181,6 +181,8 @@ public final class TCPThreadedNetworkClientManager implements
 		Log4J.startMethod(logger, "addMessage");
 		if (!writeManager.write(msg)) {
 			connected = false;
+		} else {
+			connected = true;
 		}
 		Log4J.finishMethod(logger, "addMessage");
 	}
