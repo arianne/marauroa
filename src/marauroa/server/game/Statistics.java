@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.13 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: Statistics.java,v 1.14 2006/12/02 15:53:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,7 +72,7 @@ public class Statistics implements StatisticsMBean {
 
 		public void print(PrintWriter out, double diff) {
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + type + "\" value=\""
+				out.println("<attrib name=\"" + escapeML(type) + "\" value=\""
 						+ content.get(type) + "\" />");
 			}
 		}
@@ -80,7 +80,7 @@ public class Statistics implements StatisticsMBean {
 		public void print(PrintStream out, double diff) {
 			out.println("Statistics: " + content.size());
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + type + "\" value=\""
+				out.println("<attrib name=\"" + escapeML(type) + "\" value=\""
 						+ content.get(type) + "\" />");
 			}
 		}
@@ -183,5 +183,16 @@ public class Statistics implements StatisticsMBean {
 
 	public long get(String type) {
 		return sinceStart == null ? -1 : sinceStart.get(type);
+	}
+
+	/**
+	 * escapes special characerers in XML hand HTML.
+	 * 
+	 * @param param
+	 *            string to escape
+	 * @return escaped strings
+	 */
+	private static String escapeML(String param) {
+		return param.replace("&", "&amp;").replace("\"", "&quot;");
 	}
 }
