@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.31 2006/12/10 18:05:08 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32 2006/12/10 19:37:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -505,11 +505,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 				String account_status = result.getString("status");
 				result.close();
 				stmt.close();
-
-                // workaround for double login exploit with different upper/lower case of username
-                if (!userNameFromDB.equals(informations.userName)) {
-                    return false;
-                }
 
 				if ("active".equals(account_status)) {
 					return true;
