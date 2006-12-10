@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.29 2006/12/10 17:05:41 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.30 2006/12/10 18:00:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -607,9 +607,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 
 			Connection connection = ((JDBCTransaction) trans).getConnection();
 			Statement stmt = connection.createStatement();
-			String query = "select count(*) as amount from  player,characters where username = '"
+			String query = "select count(*) as amount from  player,characters where username like '"
 					+ username
-					+ "' and charname = '"
+					+ "' and charname like '"
 					+ character
 					+ "' and player.id=characters.player_id";
 
