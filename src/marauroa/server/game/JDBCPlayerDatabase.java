@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.30 2006/12/10 18:00:57 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.31 2006/12/10 18:05:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -494,16 +494,22 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			Connection connection = ((JDBCTransaction) trans).getConnection();
 			Statement stmt = connection.createStatement();
 			String hexPassword = Hash.toHexString(Hash.hash(password));
-			String query = "select status from player where username like '"
+			String query = "select status, username from player where username like '"
 					+ informations.userName + "' and password like '"
 					+ hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
 			if (result.next()) {
+                String userNameFromDB = result.getString("username");
 				String account_status = result.getString("status");
 				result.close();
 				stmt.close();
+
+                // workaround for double login exploit with different upper/lower case of username
+                if (!userNameFromDB.equals(informations.userName)) {
+                    return false;
+                }
 
 				if ("active".equals(account_status)) {
 					return true;
