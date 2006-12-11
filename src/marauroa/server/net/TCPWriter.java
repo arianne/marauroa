@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.common.CRC;
 import marauroa.common.Log4J;
 import marauroa.common.Pair;
 import marauroa.common.net.Message;
