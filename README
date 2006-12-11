@@ -8,6 +8,16 @@
 | FOR A PARTICULAR PURPOSE.  See the file LICENSE for more details.
 -------------------------------------------------------------------------------
 
+*******************************************************************************
+**                NOTE - WARNING - IMPORTANT NOTICE                          **
+*******************************************************************************
+**                                                                           **
+**          This version of Marauroa is experimental                         **
+**          Use it at your own risk.                                         **
+**          It doesn't work with any other game yet!                         **
+**                                                                           **
+*******************************************************************************
+
 Marauroa
 --------
 Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to build 
@@ -33,11 +43,13 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.34.1
+Version 2.0
 
 
 Status
 ------
+Version > 2.0 doesn't support anything yet. YOU ARE WARNED!.
+
 Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 
 Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
@@ -138,6 +150,9 @@ Read instead the clients pages at http://arianne.sourceforge.net
 
 Changelog
 ---------
+2.00 
+- Incompatible with Stendhal 0.5x or Jmapacman games.
+
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case
 - disable java built in dns cache (as this required the client to be restarted after server ip change)
