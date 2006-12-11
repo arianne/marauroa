@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.16 2006/11/10 07:40:54 nhnb Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.17 2006/12/11 12:58:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -214,17 +214,13 @@ public final class TCPThreadedNetworkClientManager implements
 
 		private synchronized void storeMessage(InetSocketAddress address,
 				byte[] data) {
-			short signature = (short) (data[2] & 0xFF + ((data[3] & 0xFF) << 8));
-
-			logger.debug("receive message(" + signature + ")");
 
 			try {
-				Message msg = msgFactory.getMessage(data, address,
-						PACKET_SIGNATURE_SIZE);
+				Message msg = msgFactory.getMessage(data, address);
 
 				if (logger.isDebugEnabled()) {
 					logger.debug("build message(type=" + msg.getType()
-							+ ") from packet(" + signature + ") from "
+							+ ") from "
 							+ msg.getClientID() + " full [" + msg + "]");
 				}
 
