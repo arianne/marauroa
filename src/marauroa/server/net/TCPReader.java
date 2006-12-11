@@ -51,8 +51,10 @@ class TCPReader extends Thread {
 		while (networkServerManager.isStillRunning()) {
 			boolean found = false;
 			long start = System.currentTimeMillis();
+			
 			// clone tcpSockets so that we do not lock it to long
 			Map<InetSocketAddress, Socket> temptTcpSockets = cloneMap(tcpSockets);
+			
 			for (InetSocketAddress inetSocketAddress : temptTcpSockets.keySet()) {
 				Socket socket = temptTcpSockets.get(inetSocketAddress);
 				if (socket.isClosed()) {
@@ -81,6 +83,7 @@ class TCPReader extends Thread {
 								+ ((sizebuffer[1] & 0xFF) << 8)
 								+ ((sizebuffer[2] & 0xFF) << 16)
 								+ ((sizebuffer[3] & 0xFF) << 24);
+							
 							if (size == 542393671) { // "GET "
 								// This request was not created by the marauroa-client
 								// but it was created by the HTTP-client to compare

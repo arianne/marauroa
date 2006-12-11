@@ -48,7 +48,6 @@ class TCPWriter {
 		return out.toByteArray();
 	}
 
-	final private int PACKET_SIGNATURE_SIZE = 4;
 	final private int PACKET_LENGTH_SIZE = 4;
 
 	/**
@@ -63,35 +62,28 @@ class TCPWriter {
 		try {
 			if (networkServerManagerCallback.isStillRunning()) {
 				byte[] buffer = serializeMessage(msg);
-				short used_signature;
 
 				/*** Statistics ***/
-				used_signature = CRC.cmpCRC(buffer); //++last_signature;
-
 				stats.add("Bytes send", buffer.length);
 				stats.add("Message send", 1);
 
 				logger.debug("Message(" + msg.getType() + ") size in bytes: " + buffer.length);
 
-				byte[] data = new byte[PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE + buffer.length];
-				int size = buffer.length + PACKET_SIGNATURE_SIZE;
+				int size = PACKET_LENGTH_SIZE + buffer.length;
+				byte[] data = new byte[size];
+				
 				data[0] = (byte) (size & 255);
 				data[1] = (byte) ((size >>  8) & 255);
 				data[2] = (byte) ((size >> 16) & 255);
 				data[3] = (byte) ((size >> 24) & 255);
-				data[4] = (byte) 1;
-				data[5] = (byte) 0;
-				data[6] = (byte) (used_signature & 255);
-				data[7] = (byte) ((used_signature >> 8) & 255);
 				logger.debug("data size: " + buffer.length);
 
-				// don't use multiple os.write calls because we have
-				// disabled Nagel's algorithm.
-				System.arraycopy(buffer, 0, data, PACKET_LENGTH_SIZE + PACKET_SIGNATURE_SIZE, buffer.length);
+				// don't use multiple os.write calls because we have disabled Nagel's algorithm.
+				System.arraycopy(buffer, 0, data, PACKET_LENGTH_SIZE, buffer.length);
 				synchronized (queue) {
-					queue.add(new Pair(socket, data));
+					queue.add(new Pair<Socket,byte[]>(socket, data));
 				}
-				logger.debug("Sending packet(" + used_signature + ") " + buffer.length);
+
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending message: " + msg);
 				}
@@ -147,7 +139,6 @@ class TCPWriter {
 		/**
 		 * Removes the possibl-bad-socket from the queue and closes it.
 		 */
-		@SuppressWarnings("cast")
 		public void kill() {
 			Socket mySocket =  possibleBadSocket;
 			if (mySocket != null) {
@@ -198,7 +189,7 @@ class TCPWriter {
 					networkServerManagerCallback.internalDisconnectClientsNow();
 
 					try {
-						Thread.sleep(50);
+						Thread.sleep(30);
 					} catch (InterruptedException e) {
 						logger.error(e, e);
 					}
@@ -253,7 +244,7 @@ class TCPWriter {
 					tcpWriterThread.kill();
 					try {
 						// i am not sure if this works because the blocking is in native code
-						tcpWriterThread.stop();
+						tcpWriterThread.interrupt();
 					} catch (Exception e) {
 						logger.warn(e, e);
 					}

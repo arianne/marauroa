@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.14 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: createaccount.java,v 1.15 2006/12/11 12:52:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,12 @@ public abstract class createaccount {
 	private static final Logger logger = Log4J.getLogger(createaccount.class);
 
 	public enum Result {
-		OK_ACCOUNT_CREATED, FAILED_EMPTY_STRING, FAILED_INVALID_CHARACTER_USED, FAILED_STRING_SIZE, FAILED_PLAYER_EXISTS, FAILED_EXCEPTION
+		OK_ACCOUNT_CREATED, 
+		FAILED_EMPTY_STRING, 
+		FAILED_INVALID_CHARACTER_USED, 
+		FAILED_STRING_SIZE, 
+		FAILED_PLAYER_EXISTS, 
+		FAILED_EXCEPTION
 	}
 
 	/**
@@ -45,13 +50,9 @@ public abstract class createaccount {
 	 */
 	public static class Information {
 		public String param;
-
 		public String name;
-
 		public String value;
-
 		public int min;
-
 		public int max;
 
 		public Information(String param, String name) {
@@ -96,8 +97,7 @@ public abstract class createaccount {
 	 * will be inserted into the database by the createaccount class. You are
 	 * given a playerDatabase instance so that you can get valid rpobjects' ids
 	 */
-	public abstract RPObject populatePlayerRPObject(
-			IPlayerDatabase playerDatabase) throws Exception;
+	public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
 
 	protected Result run(String[] args) {
 		int i = 0;
@@ -137,11 +137,10 @@ public abstract class createaccount {
 
 		try {
 			Configuration.setConfigurationFile(iniFile);
-			logger.info("Trying to create username(" + get("username")
-					+ "), character(" + get("character") + ")");
+			
+			logger.info("Trying to create username(" + get("username")+ "), character(" + get("character") + ")");
 
-			JDBCPlayerDatabase playerDatabase = (JDBCPlayerDatabase) PlayerDatabaseFactory
-					.getDatabase();
+			JDBCPlayerDatabase playerDatabase = (JDBCPlayerDatabase) PlayerDatabaseFactory.getDatabase();
 			trans = playerDatabase.getTransaction();
 
 			trans.begin();
@@ -164,8 +163,7 @@ public abstract class createaccount {
 
 			logger.info("Checking string size");
 			for (Information item : information) {
-				if (item.value.length() > item.max
-						|| item.value.length() < item.min) {
+				if (item.value.length() > item.max || item.value.length() < item.min) {
 					logger.info("String size not valid: " + item.name);
 					return Result.FAILED_STRING_SIZE;
 				}
@@ -178,13 +176,11 @@ public abstract class createaccount {
 			}
 
 			logger.info("Adding player");
-			playerDatabase.addPlayer(trans, get("username"), Hash
-					.hash(get("password")), get("email"));
+			playerDatabase.addPlayer(trans, get("username"), Hash.hash(get("password")), get("email"));
 
 			RPObject object = populatePlayerRPObject(playerDatabase);
 
-			playerDatabase.addCharacter(trans, get("username"),
-					get("character"), object);
+			playerDatabase.addCharacter(trans, get("username"),	get("character"), object);
 			logger.info("Correctly created");
 
 			trans.commit();

@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.29 2006/08/24 22:27:48 nhnb Exp $ */
+/* $Id: NetworkServerManager.java,v 1.30 2006/12/11 12:52:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -91,6 +91,27 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		keepRunning = true;
 		isfinished = false;
 
+		/* Because we access the list from several places we create a synchronized list. */
+		messages = Collections.synchronizedList(new LinkedList<Message>());
+		stats = Statistics.getStatistics();
+
+		createUDPSocket();
+		createTCPSocket();
+		
+		logger.debug("NetworkServerManager started successfully");
+	}
+
+	private void createTCPSocket() {
+		Thread tcpListener = new Thread(this, "TCP-Listener");
+		tcpListener.setDaemon(true);
+		tcpListener.start();
+		
+		tcpReader = new TCPReader(this, tcpSockets, stats);
+		tcpReader.start();
+		tcpWriter = new TCPWriter(this, stats);
+	}
+
+	private void createUDPSocket() throws SocketException {
 		/* Create the socket and set a timeout of 1 second */
 		udpSocket = new DatagramSocket(NetConst.marauroa_PORT);
 		udpSocket.setSoTimeout(1000);
@@ -101,20 +122,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		}
 		udpSocket.setSendBufferSize(1500 * 64);
 
-		Thread tcpListener = new Thread(this, "TCP-Listener");
-		tcpListener.setDaemon(true);
-		tcpListener.start();
-		
-		/* Because we access the list from several places we create a synchronized list. */
-		messages = Collections.synchronizedList(new LinkedList<Message>());
-		stats = Statistics.getStatistics();
+		udpWriter = new UDPWriter(this, udpSocket, stats);
 		udpReader = new UDPReader(this, udpSocket, stats);
 		udpReader.start();
-		udpWriter = new UDPWriter(this, udpSocket, stats);
-		tcpReader = new TCPReader(this, tcpSockets, stats);
-		tcpReader.start();
-		tcpWriter = new TCPWriter(this, stats);
-		logger.debug("NetworkServerManager started successfully");
 	}
 
 	/** 
@@ -197,7 +207,11 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		if (!packetValidator.checkBanned(inetSocketAddress.getAddress())) {
 			try {
 				Message msg = msgFactory.getMessage(data, inetSocketAddress);
-				logger.debug("Received message: " + msg.toString());
+				
+				if(logger.isDebugEnabled()) {
+				  logger.debug("Received message: " + msg.toString());
+				}
+				
 				messages.add(msg);
 				newMessageArrived();
 			} catch (InvalidVersionException e) {
@@ -244,7 +258,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			ServerSocket tcpSocket = new ServerSocket(NetConst.marauroa_PORT);
 			while (keepRunning) {
 				Socket socket = tcpSocket.accept();
-                socket.setSoTimeout(500);
+                socket.setSoTimeout(10);
 				InetSocketAddress inetSocketAddress = new InetSocketAddress(socket.getInetAddress(), socket.getPort());
 				synchronized (tcpSockets) {
 					tcpSockets.put(inetSocketAddress, socket);

@@ -31,8 +31,7 @@ class UDPReader extends Thread {
 	 * @param stats
 	 *            Statistics
 	 */
-	public UDPReader(NetworkServerManagerCallback networkServerManager,
-			DatagramSocket socket, Statistics stats) {
+	public UDPReader(NetworkServerManagerCallback networkServerManager,	DatagramSocket socket, Statistics stats) {
 		super("UDPReader");
 		this.networkServerManager = networkServerManager;
 		this.socket = socket;
@@ -57,8 +56,7 @@ class UDPReader extends Thread {
 				stats.add("Bytes recv", packet.getLength());
 				stats.add("Message recv", 1);
 
-				networkServerManager.receiveMessage(packet.getData(),
-						(InetSocketAddress) packet.getSocketAddress());
+				networkServerManager.receiveMessage(packet.getData(),(InetSocketAddress) packet.getSocketAddress());
 			} catch (java.net.SocketTimeoutException e) {
 				/*
 				 * We need the thread to check from time to time if user has

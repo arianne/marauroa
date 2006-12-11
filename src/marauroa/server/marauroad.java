@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.41 2006/11/04 18:43:50 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.42 2006/12/11 12:52:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.server;
 // marauroa stuff
 import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
-import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -28,21 +27,23 @@ import marauroa.server.game.RPServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.NetworkServerManager;
 
-/** the launcher of the whole Marauroa Server. */
+/** The launcher of the whole Marauroa Server. 
+ *  Run this class to make your game server run.
+ *  Marauroa works by loading core class from your game server.
+ */
 public class marauroad extends Thread {
 	/** the logger instance. */
-	private static final org.apache.log4j.Logger logger = Log4J
-			.getLogger(marauroad.class);
+	private static final org.apache.log4j.Logger logger = Log4J.getLogger(marauroad.class);
 
-	// private static final boolean DEBUG=true;
-	private static final String VERSION = "1.12";
+	private static final String VERSION = "2.00";
 
 	private static marauroad marauroa;
 
+	/** A network manager object to handle network events */
 	private NetworkServerManager netMan;
-
+	/** A game manager object to handle server glue logic and database stuff */
 	private GameServerManager gameMan;
-
+	/** Finally a rp game object that is coded on game's server plugin. */
 	private RPServerManager rpMan;
 
 	private static void setArguments(String[] args) {
@@ -59,14 +60,12 @@ public class marauroad extends Thread {
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {
-				System.out
-						.println("Marauroa - an open source multiplayer online framework for game development -");
+				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
-				System.out.println("(C) 1999-2006 Miguel Angel Blanch Lardin");
+				System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 				System.out.println();
 				System.out.println("usage: [-c gamefile] [-l]");
-				System.out
-						.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+				System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
 				System.out.println("\t-h: print this help message");
 				System.exit(0);
@@ -76,10 +75,9 @@ public class marauroad extends Thread {
 	}
 
 	public static void main(String[] args) {
-		System.out
-				.println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2006 Miguel Angel Blanch Lardin");
+		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
@@ -102,10 +100,7 @@ public class marauroad extends Thread {
 		marauroad.getMarauroa().start();
 	}
 
-	@Override
-	public synchronized void run() {
-		logger.debug("marauroad thread started");
-
+	private void createBeanForStatistics() {
 		// Adding a Bean for statistical access using jmanager
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -117,9 +112,15 @@ public class marauroad extends Thread {
 			mbs.registerMBean(statBean, statName);
 			logger.debug("Statistics bean registered.");
 		} catch (Exception e) {
-			logger.error("cannot register statistics bean, continuing anyway.",
-					e);
+			logger.error("cannot register statistics bean, continuing anyway.",	e);
 		}
+	}
+
+	@Override
+	public synchronized void run() {
+		logger.debug("marauroad thread started");
+		
+		createBeanForStatistics();
 
 		boolean finish = false;
 		marauroad instance = marauroad.getMarauroa();
@@ -193,15 +194,15 @@ public class marauroad extends Thread {
 					new BigInteger(Configuration.getConfiguration().get("n")), 
 					new BigInteger(Configuration.getConfiguration().get("d")), 
 					new BigInteger(Configuration.getConfiguration().get("e")));
+			
 			gameMan = new GameServerManager(key, netMan, rpMan);
 		} catch (Exception e) {
-			logger
-					.fatal(
-							"Marauroa can't create GameServerManager.\n"
-									+ "Reasons:\n"
-									+ "- You haven't specified a valid configuration file\n"
-									+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
-							e);
+			logger.fatal(
+					"Marauroa can't create GameServerManager.\n"
+					+ "Reasons:\n"
+					+ "- You haven't specified a valid configuration file\n"
+					+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
+					e);
 			return false;
 		}
 

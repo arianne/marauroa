@@ -1,4 +1,4 @@
-/* $Id: generateini.java,v 1.13 2006/11/04 16:59:36 arianne_rpg Exp $ */
+/* $Id: generateini.java,v 1.14 2006/12/11 12:52:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,8 +50,7 @@ public class generateini {
 	 * reads a String from the input. When no String is choosen the errorMessage
 	 * is is displayed and the application is terminated.
 	 */
-	public static String getStringWithoutDefault(BufferedReader input,
-			String errorMessage) {
+	public static String getStringWithoutDefault(BufferedReader input, String errorMessage) {
 		String ret = "";
 		try {
 			ret = input.readLine();
@@ -79,7 +78,7 @@ public class generateini {
 				System.in));
 
 		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
-		System.out.println("(C) 1999-2005 Miguel Angel Blanch Lardin");
+		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
