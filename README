@@ -155,6 +155,8 @@ Changelog
 ---------
 2.00 
 - Incompatible with Stendhal 0.5x or Jmapacman games.
+- Added non blocking network server.
+- Removed UDP support.
 
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case
