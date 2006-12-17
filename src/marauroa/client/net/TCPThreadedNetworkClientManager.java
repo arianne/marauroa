@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.17 2006/12/11 12:58:23 arianne_rpg Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.18 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,15 +25,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.Decoder;
+import marauroa.common.net.Encoder;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageFactory;
-import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 
-public final class TCPThreadedNetworkClientManager implements
-		NetworkClientManagerInterface {
-	final static private int PACKET_SIGNATURE_SIZE = 4;
+public final class TCPThreadedNetworkClientManager implements NetworkClientManagerInterface {
 
 	/** the logger instance. */
 	private static final Logger logger = Log4J
@@ -53,13 +51,14 @@ public final class TCPThreadedNetworkClientManager implements
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
 
-	private MessageFactory msgFactory;
-
 	private NetworkClientManagerRead readManager;
 
 	private NetworkClientManagerWrite writeManager;
 
 	private List<Message> processedMessages;
+	
+	private Encoder encoder;
+	private Decoder decoder;
 	
 	private boolean connected = true;
 
@@ -83,10 +82,11 @@ public final class TCPThreadedNetworkClientManager implements
 			socket.setTcpNoDelay(true); // disable Nagle's algorithm
 			socket.setReceiveBufferSize(128 * 1024);
 
-			msgFactory = MessageFactory.getFactory();
-
 			keepRunning = true;
 			isfinished = false;
+			
+			encoder=Encoder.get();
+			decoder=Decoder.get();
 
 			/*
 			 * Because we access the list from several places we create a
@@ -117,6 +117,9 @@ public final class TCPThreadedNetworkClientManager implements
 	public void finish() {
 		logger.debug("shutting down NetworkClientManager");
 		keepRunning = false;
+		
+		readManager.interrupt();
+		
 		while (isfinished == false) {
 			Thread.yield();
 		}
@@ -212,11 +215,10 @@ public final class TCPThreadedNetworkClientManager implements
 			return choosenMsg;
 		}
 
-		private synchronized void storeMessage(InetSocketAddress address,
-				byte[] data) {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
 
 			try {
-				Message msg = msgFactory.getMessage(data, address);
+				Message msg=decoder.decode(address, data);
 
 				if (logger.isDebugEnabled()) {
 					logger.debug("build message(type=" + msg.getType()
@@ -247,14 +249,15 @@ public final class TCPThreadedNetworkClientManager implements
 							+ ((sizebuffer[1] & 0xFF) << 8)
 							+ ((sizebuffer[2] & 0xFF) << 16)
 							+ ((sizebuffer[3] & 0xFF) << 24);
-
+					
 					byte[] buffer = new byte[size];
+					System.arraycopy(sizebuffer, 0, buffer, 0, 4);
 
 					// read until everything is received. We have to call read
 					// in a loop because the data may be split accross several
 					// packets.
 					long startTime = System.currentTimeMillis();
-					int start = 0;
+					int start = 4;
 					int read = 0;
 					long waittime = 10;
 					int counter = 0;
@@ -330,21 +333,9 @@ public final class TCPThreadedNetworkClientManager implements
 			}
 		}
 
-		private byte[] serializeMessage(Message msg) throws IOException {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputSerializer s = new OutputSerializer(out);
-			logger.debug("send message(" + msg.getType() + ") from "
-					+ msg.getClientID());
-
-			s.write(msg);
-			return out.toByteArray();
-		}
-
 		/** Method that execute the writting */
 		public boolean write(Message msg) {
-			Log4J.startMethod(logger, "write");
 			try {
-				/* TODO: Looks like hardcoded, write it in a better way */
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
 					msg.setAddress(address);
@@ -354,22 +345,11 @@ public final class TCPThreadedNetworkClientManager implements
 						clear();
 					}
 
-					// write size and then the message
-					byte[] buffer = serializeMessage(msg);
-					byte[] sizebuffer = new byte[4];
-					int size = buffer.length;
-					sizebuffer[0] = (byte) (size & 255);
-					sizebuffer[1] = (byte) ((size >> 8) & 255);
-					sizebuffer[2] = (byte) ((size >> 16) & 255);
-					sizebuffer[3] = (byte) ((size >> 24) & 255);
-					os.write(sizebuffer);
-					os.write(buffer);
+					os.write(encoder.encode(msg));
 				}
-				Log4J.finishMethod(logger, "write");
 			} catch (IOException e) {
 				/* Report the exception */
-				logger.error(
-						"error while sending a packet (msg=(" + msg + "))", e);
+				logger.error("error while sending a packet (msg=(" + msg + "))", e);
 				return false;
 			}
 			return true;

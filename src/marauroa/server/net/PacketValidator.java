@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.8 2006/08/20 15:40:13 wikipedian Exp $ */
+/* $Id: PacketValidator.java,v 1.9 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.net;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -81,6 +82,28 @@ public class PacketValidator {
 	 */
 	public synchronized boolean checkBanned(InetAddress address) {
 		boolean banned = false;
+		Log4J.startMethod(logger, "checkBanned");
+		checkReload();
+		if (banList != null) {
+			for (int i = 0; i < banList.length; i++) {
+				InetAddressMask iam = banList[i];
+				if (iam.matches(address)) {
+					logger.debug("Address " + address + " is banned by " + iam);
+					banned = true;
+					break;
+				}
+			}
+		}
+
+		Log4J.finishMethod(logger, "checkBanned");
+		return banned;
+	}
+
+	public synchronized boolean checkBanned(Socket socket) {
+		boolean banned = false;
+		
+		InetAddress address=socket.getInetAddress();
+		
 		Log4J.startMethod(logger, "checkBanned");
 		checkReload();
 		if (banList != null) {

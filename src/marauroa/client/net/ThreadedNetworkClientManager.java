@@ -1,4 +1,4 @@
-/* $Id: ThreadedNetworkClientManager.java,v 1.11 2006/09/24 22:05:40 nhnb Exp $ */
+/* $Id: ThreadedNetworkClientManager.java,v 1.12 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,7 @@ import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 
+@Deprecated
 public final class ThreadedNetworkClientManager implements
 		NetworkClientManagerInterface {
 	final static private int PACKET_SIGNATURE_SIZE = 4;

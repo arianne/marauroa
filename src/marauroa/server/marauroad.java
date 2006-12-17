@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.42 2006/12/11 12:52:34 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.43 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.RPServerManager;
 import marauroa.server.game.Statistics;
+import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.NetworkServerManager;
 
 /** The launcher of the whole Marauroa Server. 
@@ -40,7 +41,7 @@ public class marauroad extends Thread {
 	private static marauroad marauroa;
 
 	/** A network manager object to handle network events */
-	private NetworkServerManager netMan;
+	private INetworkServerManager netMan;
 	/** A game manager object to handle server glue logic and database stuff */
 	private GameServerManager gameMan;
 	/** Finally a rp game object that is coded on game's server plugin. */

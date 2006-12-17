@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.27 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.28 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,6 +50,7 @@ import marauroa.common.net.MessageS2CServerInfo;
 import marauroa.common.net.MessageS2CTransfer;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
+import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.NetworkServerManager;
 
 import org.apache.log4j.Logger;
@@ -64,7 +65,7 @@ public final class GameServerManager extends Thread {
 	private static final Logger logger = Log4J
 			.getLogger(GameServerManager.class);
 
-	private NetworkServerManager netMan;
+	private INetworkServerManager netMan;
 
 	private RPServerManager rpMan;
 
@@ -86,7 +87,7 @@ public final class GameServerManager extends Thread {
 	 * @param netMan
 	 *            a NetworkServerManager instance.
 	 */
-	public GameServerManager(RSAKey key, NetworkServerManager netMan,
+	public GameServerManager(RSAKey key, INetworkServerManager netMan,
 			RPServerManager rpMan) throws Exception {
 		super("GameServerManager");
 		Log4J.startMethod(logger, "GameServerManager");

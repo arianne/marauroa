@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.30 2006/12/11 12:52:32 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.31 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
-public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable {
+public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable, INetworkServerManager {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
@@ -127,8 +127,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		udpReader.start();
 	}
 
-	/** 
-	 * This method notify the thread to finish it execution
+	/* (non-Javadoc)
+	 * @see marauroa.server.net.INetworkServerManager#finish()
 	 */
 	public void finish() {
 		logger.debug("shutting down NetworkServerManager");
@@ -148,12 +148,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		notifyAll();
 	}
 
-	/** 
-	 * This method returns a Message from the list or block for timeout milliseconds
-	 * until a message is available or null if timeout happens.
-	 *
-	 * @param timeout timeout time in milliseconds
-	 * @return a Message or null if timeout happens
+	/* (non-Javadoc)
+	 * @see marauroa.server.net.INetworkServerManager#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) {
 		Log4J.startMethod(logger, "getMessage");
@@ -177,10 +173,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		return message;
 	}
 
-	/** 
-	 * This method blocks until a message is available
-	 *
-	 * @return a Message
+	/* (non-Javadoc)
+	 * @see marauroa.server.net.INetworkServerManager#getMessage()
 	 */
 	public synchronized Message getMessage() {
 		Log4J.startMethod(logger, "getMessage[blocking]");
@@ -225,11 +219,8 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		
 	}
 
-	/**
-	 * This method add a message to be delivered to the client the message
-	 * is pointed to.
-	 *
-	 * @param msg the message to be delivered.
+	/* (non-Javadoc)
+	 * @see marauroa.server.net.INetworkServerManager#sendMessage(marauroa.common.net.Message)
 	 */
 	public void sendMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
@@ -245,6 +236,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		Log4J.finishMethod(logger, "addMessage");
 	}
 
+	/* (non-Javadoc)
+	 * @see marauroa.server.net.INetworkServerManager#isStillRunning()
+	 */
 	public boolean isStillRunning() {
 		return keepRunning;
 	}

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.40 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.41 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,7 @@ import marauroa.common.net.MessageS2CPerception;
 import marauroa.common.net.MessageS2CTransferREQ;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount;
+import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.NetworkServerManager;
 
 import org.apache.log4j.Logger;
@@ -66,7 +67,7 @@ public class RPServerManager extends Thread {
 	private Statistics stats;
 
 	/** The networkServerManager so that we can send perceptions */
-	private NetworkServerManager netMan;
+	private INetworkServerManager netMan;
 
 	/** The PlayerEntryContainer so that we know where to send perceptions */
 	private PlayerEntryContainer playerContainer;
@@ -81,7 +82,7 @@ public class RPServerManager extends Thread {
 	 * @param netMan
 	 *            the NetworkServerManager so that we can send message
 	 */
-	public RPServerManager(NetworkServerManager netMan) throws Exception {
+	public RPServerManager(INetworkServerManager netMan) throws Exception {
 		super("RPServerManager");
 		Log4J.startMethod(logger, "RPServerManager");
 		try {

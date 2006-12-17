@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.10 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: MessageFactory.java,v 1.11 2006/12/17 21:41:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,49 +58,32 @@ public class MessageFactory {
 	private void register() {
 		Log4J.startMethod(logger, "register");
 		register(Message.MessageType.C2S_ACTION, MessageC2SAction.class);
-		register(Message.MessageType.C2S_CHOOSECHARACTER,
-				MessageC2SChooseCharacter.class);
+		register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
 		register(Message.MessageType.C2S_LOGOUT, MessageC2SLogout.class);
 		register(Message.MessageType.S2C_ACTION_ACK, MessageS2CActionACK.class);
-		register(Message.MessageType.S2C_CHARACTERLIST,
-				MessageS2CCharacterList.class);
-		register(Message.MessageType.S2C_CHOOSECHARACTER_ACK,
-				MessageS2CChooseCharacterACK.class);
-		register(Message.MessageType.S2C_CHOOSECHARACTER_NACK,
-				MessageS2CChooseCharacterNACK.class);
+		register(Message.MessageType.S2C_CHARACTERLIST,	MessageS2CCharacterList.class);
+		register(Message.MessageType.S2C_CHOOSECHARACTER_ACK, MessageS2CChooseCharacterACK.class);
+		register(Message.MessageType.S2C_CHOOSECHARACTER_NACK, MessageS2CChooseCharacterNACK.class);
 		register(Message.MessageType.S2C_LOGIN_ACK, MessageS2CLoginACK.class);
 		register(Message.MessageType.S2C_LOGIN_NACK, MessageS2CLoginNACK.class);
 		register(Message.MessageType.S2C_LOGOUT_ACK, MessageS2CLogoutACK.class);
-		register(Message.MessageType.S2C_LOGOUT_NACK,
-				MessageS2CLogoutNACK.class);
+		register(Message.MessageType.S2C_LOGOUT_NACK, MessageS2CLogoutNACK.class);
 		register(Message.MessageType.S2C_PERCEPTION, MessageS2CPerception.class);
-		register(Message.MessageType.C2S_PERCEPTION_ACK,
-				MessageC2SPerceptionACK.class);
+		register(Message.MessageType.C2S_PERCEPTION_ACK, MessageC2SPerceptionACK.class);
 		register(Message.MessageType.C2S_OUTOFSYNC, MessageC2SOutOfSync.class);
 		register(Message.MessageType.S2C_SERVERINFO, MessageS2CServerInfo.class);
-		register(Message.MessageType.S2C_INVALIDMESSAGE,
-				MessageS2CInvalidMessage.class);
-		register(Message.MessageType.S2C_TRANSFER_REQ,
-				MessageS2CTransferREQ.class);
-		register(Message.MessageType.C2S_TRANSFER_ACK,
-				MessageC2STransferACK.class);
+		register(Message.MessageType.S2C_INVALIDMESSAGE, MessageS2CInvalidMessage.class);
+		register(Message.MessageType.S2C_TRANSFER_REQ, MessageS2CTransferREQ.class);
+		register(Message.MessageType.C2S_TRANSFER_ACK, MessageC2STransferACK.class);
 		register(Message.MessageType.S2C_TRANSFER, MessageS2CTransfer.class);
-		register(Message.MessageType.C2S_LOGIN_REQUESTKEY,
-				MessageC2SLoginRequestKey.class);
-		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
-				MessageC2SLoginSendNonceNameAndPassword.class);
-		register(Message.MessageType.S2C_LOGIN_SENDKEY,
-				MessageS2CLoginSendKey.class);
-		register(Message.MessageType.S2C_LOGIN_SENDNONCE,
-				MessageS2CLoginSendNonce.class);
-		register(Message.MessageType.C2S_LOGIN_SENDPROMISE,
-				MessageC2SLoginSendPromise.class);
-		register(Message.MessageType.C2S_CREATEACCOUNT,
-				MessageC2SCreateAccount.class);
-		register(Message.MessageType.S2C_CREATEACCOUNT_ACK,
-				MessageS2CCreateAccountACK.class);
-		register(Message.MessageType.S2C_CREATEACCOUNT_NACK,
-				MessageS2CCreateAccountNACK.class);
+		register(Message.MessageType.C2S_LOGIN_REQUESTKEY, MessageC2SLoginRequestKey.class);
+		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, MessageC2SLoginSendNonceNameAndPassword.class);
+		register(Message.MessageType.S2C_LOGIN_SENDKEY,	MessageS2CLoginSendKey.class);
+		register(Message.MessageType.S2C_LOGIN_SENDNONCE, MessageS2CLoginSendNonce.class);
+		register(Message.MessageType.C2S_LOGIN_SENDPROMISE, MessageC2SLoginSendPromise.class);
+		register(Message.MessageType.C2S_CREATEACCOUNT, MessageC2SCreateAccount.class);
+		register(Message.MessageType.S2C_CREATEACCOUNT_ACK, MessageS2CCreateAccountACK.class);
+		register(Message.MessageType.S2C_CREATEACCOUNT_NACK, MessageS2CCreateAccountNACK.class);
 		Log4J.finishMethod(logger, "register");
 	}
 
