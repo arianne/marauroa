@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.31 2006/12/17 21:41:32 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.32 2006/12/18 19:57:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
+@Deprecated
 public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable, INetworkServerManager {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
@@ -297,5 +298,10 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 				internalDisconnectClientNow(inetSocketAddress);
 			}
 		}
+	}
+
+	public void start() {
+		// TODO Auto-generated method stub
+		
 	}
 }

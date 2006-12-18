@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.43 2006/12/17 21:41:32 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.44 2006/12/18 19:57:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -164,7 +164,8 @@ public class marauroad extends Thread {
 	public boolean init() {
 		logger.debug("staring initialize");
 		try {
-			netMan = new marauroa.server.net.NetworkServerManager();
+			netMan = new marauroa.server.net.nio.NIONetworkServerManager();
+			netMan.start();
 		} catch (Exception e) {
 			logger.fatal(
 					"Marauroa can't create NetworkServerManager.\n"
@@ -179,6 +180,7 @@ public class marauroad extends Thread {
 
 		try {
 			rpMan = new RPServerManager(netMan);
+			rpMan.start();
 		} catch (Exception e) {
 			logger.fatal(
 					"Marauroa can't create RPServerManager.\n"
@@ -197,6 +199,7 @@ public class marauroad extends Thread {
 					new BigInteger(Configuration.getConfiguration().get("e")));
 			
 			gameMan = new GameServerManager(key, netMan, rpMan);
+			gameMan.start();
 		} catch (Exception e) {
 			logger.fatal(
 					"Marauroa can't create GameServerManager.\n"
@@ -223,6 +226,7 @@ public class marauroad extends Thread {
 
 	public void finish() {
 		netMan.finish();
+		logger.info("Network layer finished");
 		gameMan.finish();
 	}
 }

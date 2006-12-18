@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 /**
  * The active thread in charge of recieving messages from the network.
  */
+@Deprecated
 class UDPReader extends Thread {
 	private static Logger logger = Logger.getLogger(UDPReader.class);
 

@@ -218,11 +218,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 
 				try {
 					Message msg = decoder.decode(address, event.data);
-					System.out.println("MESSAGE: "+msg);
 					messages.add(msg);				
 				} catch (InvalidVersionException e) {
 					stats.add("Message invalid version", 1);
-					System.out.println("INVALID");
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(address, "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {

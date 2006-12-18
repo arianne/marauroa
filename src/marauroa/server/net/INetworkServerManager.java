@@ -41,4 +41,6 @@ public interface INetworkServerManager {
 
 	public abstract void disconnectClient(InetSocketAddress address);
 
+	public abstract void start();
+
 }

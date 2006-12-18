@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 /** 
  * The active thread in charge of recieving messages from the network.
  */
+@Deprecated
 class TCPReader extends Thread {
 	private static Logger logger = Logger.getLogger(TCPReader.class);
 	private NetworkServerManagerCallback networkServerManager = null;

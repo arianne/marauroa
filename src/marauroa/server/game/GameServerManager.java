@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.28 2006/12/17 21:41:32 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.29 2006/12/18 19:57:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,7 +97,6 @@ public final class GameServerManager extends Thread {
 		this.rpMan = rpMan;
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
-		start();
 		Log4J.finishMethod(logger, "GameServerManager");
 	}
 
@@ -106,10 +105,7 @@ public final class GameServerManager extends Thread {
 		rpMan.finish();
 		keepRunning = false;
 		while (isfinished == false) {
-			try {
-				Thread.sleep(1000);
-			} catch (java.lang.InterruptedException e) {
-			}
+			Thread.yield();
 		}
 
 		PlayerEntryContainer.ClientIDIterator it = playerContainer.iterator();

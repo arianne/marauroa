@@ -19,6 +19,7 @@ import marauroa.server.game.Statistics;
 import org.apache.log4j.Logger;
 
 /** A wrapper class for sending messages to clients */
+@Deprecated
 class TCPWriter {
 	private static Logger logger = Logger.getLogger(TCPWriter.class);
 	private NetworkServerManagerCallback networkServerManagerCallback = null;
