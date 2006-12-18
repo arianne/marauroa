@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.4 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: InetAddressMask.java,v 1.5 2006/12/18 21:06:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.net;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 /**
  * This class is a mask that determines if a IPv4 address match with the mask.
@@ -61,6 +62,15 @@ public class InetAddressMask {
 		// was false and what part was true...
 
 		return (ret);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if(object instanceof InetAddressMask) {
+			InetAddressMask other=(InetAddressMask)object;
+			return Arrays.equals(address, other.address) && Arrays.equals(mask, other.mask);
+		}
+		return false;
 	}
 
 	@Override

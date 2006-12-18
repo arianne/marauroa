@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.9 2006/12/17 21:41:32 arianne_rpg Exp $ */
+/* $Id: PacketValidator.java,v 1.10 2006/12/18 21:06:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -34,17 +35,22 @@ import org.apache.log4j.Logger;
  * check if the address is banned, may be it will check more later)
  * 
  */
-public class PacketValidator {
+public class PacketValidator implements Iterable<InetAddressMask>{
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(PacketValidator.class);
 
-	private InetAddressMask[] banList;
+	/** Permanent bans are stored inside the database. */
+	private List<InetAddressMask> permanentBans;
+	
+	/** Temporal bans are added using the API and are lost on each server reset. 
+	 *  Consider using Database for a permanent ban  */
+	private List<InetAddressMask> temporalBans;
 
 	/* timestamp of last reload */
 	private long lastLoadTS;
 
-	/* */
-	private long reloadAfter;
+	/* How often do we reload ban information from database? Each 5 minutes*/
+	private final static long reloadAfter=5 * 60 * 1000;
 
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -52,12 +58,41 @@ public class PacketValidator {
 	 */
 	public PacketValidator() {
 		Log4J.startMethod(logger, "PacketValidator");
+		
+		permanentBans=new LinkedList<InetAddressMask>();
+		temporalBans=new LinkedList<InetAddressMask>();
 
-		/* at most each 5 minutes */
-		reloadAfter = 5 * 60 * 1000;
 		/* read ban list from configuration */
 		loadBannedIPNetworkListFromDB();
+		
 		Log4J.finishMethod(logger, "PacketValidator");
+	}
+	
+	/**
+	 * This adds a temporal ban.
+	 * @param address the address to ban
+	 * @param mask mask to apply to the address
+	 */
+	public void addBan(String address, String mask) {
+		temporalBans.add(new InetAddressMask(address,mask));
+	}
+	
+	/** 
+	 * Removes one of the added temporal bans. 
+	 * @param address the address to remove
+	 * @param mask the mask used.
+	 * @return true if it has been removed.
+	 */
+	public boolean removeBan(String address, String mask) {
+		return temporalBans.remove(new InetAddressMask(address,mask));
+	}
+
+	/**
+	 * Returns an iterator over the temporal bans.
+	 * To access permanent bans, use database facility.
+	 */
+	public Iterator<InetAddressMask> iterator() {
+		return temporalBans.iterator();
 	}
 
 	/**
@@ -68,9 +103,7 @@ public class PacketValidator {
 	 * @return true if the source ip is banned
 	 */
 	public boolean checkBanned(DatagramPacket packet) {
-		boolean banned = false;
-		banned = checkBanned(packet.getAddress());
-		return (banned);
+		return checkBanned(packet.getAddress());
 	}
 
 	/**
@@ -81,44 +114,32 @@ public class PacketValidator {
 	 * @return true if the source ip is banned
 	 */
 	public synchronized boolean checkBanned(InetAddress address) {
-		boolean banned = false;
 		Log4J.startMethod(logger, "checkBanned");
+
 		checkReload();
-		if (banList != null) {
-			for (int i = 0; i < banList.length; i++) {
-				InetAddressMask iam = banList[i];
-				if (iam.matches(address)) {
-					logger.debug("Address " + address + " is banned by " + iam);
-					banned = true;
-					break;
-				}
+
+		for(InetAddressMask iam: temporalBans) {
+			if (iam.matches(address)) {
+				logger.debug("Address " + address + " is temporally banned by " + iam);
+				return true;
 			}
 		}
 
+		for(InetAddressMask iam: permanentBans) {
+			if (iam.matches(address)) {
+				logger.debug("Address " + address + " is permanently banned by " + iam);
+				return true;
+			}
+		}
+
+
 		Log4J.finishMethod(logger, "checkBanned");
-		return banned;
+		return false;
 	}
 
 	public synchronized boolean checkBanned(Socket socket) {
-		boolean banned = false;
-		
 		InetAddress address=socket.getInetAddress();
-		
-		Log4J.startMethod(logger, "checkBanned");
-		checkReload();
-		if (banList != null) {
-			for (int i = 0; i < banList.length; i++) {
-				InetAddressMask iam = banList[i];
-				if (iam.matches(address)) {
-					logger.debug("Address " + address + " is banned by " + iam);
-					banned = true;
-					break;
-				}
-			}
-		}
-
-		Log4J.finishMethod(logger, "checkBanned");
-		return banned;
+		return checkBanned(address);
 	}
 
 	/** loads and initializes the ban list from a database */
@@ -128,31 +149,23 @@ public class PacketValidator {
 			IPlayerDatabase db = JDBCPlayerDatabase.getDatabase();
 
 			/* read ban list from DB */
-			Connection connection = ((JDBCTransaction) db.getTransaction())
-					.getConnection();
+			Connection connection = ((JDBCTransaction) db.getTransaction()).getConnection();
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt
-					.executeQuery("select address,mask from banlist");
-			banList = null;
-			List<InetAddressMask> ban_list_tmp = new ArrayList<InetAddressMask>();
+			ResultSet rs = stmt.executeQuery("select address,mask from banlist");
+			
+			permanentBans.clear();
 			while (rs.next()) {
 				String address = rs.getString("address");
 				String mask = rs.getString("mask");
 				InetAddressMask iam = new InetAddressMask(address, mask);
-				ban_list_tmp.add(iam);
-			}
-
-			if (ban_list_tmp.size() > 0) {
-				banList = new InetAddressMask[ban_list_tmp.size()];
-				banList = ban_list_tmp.toArray(banList);
+				permanentBans.add(iam);
 			}
 
 			// free database resources
 			rs.close();
 			stmt.close();
 
-			logger.debug("loaded " + ban_list_tmp.size()
-					+ " entries from ban table");
+			logger.debug("loaded " + permanentBans.size()+ " entries from ban table");
 		} catch (SQLException sqle) {
 			logger.error("cannot read banned networks database table", sqle);
 		} catch (Exception e) {

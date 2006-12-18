@@ -139,7 +139,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		if(packetValidator.checkBanned(socket.getInetAddress())) {
 			/* If address is banned, just close connection */
 			try {
-				channel.close();
+				server.close(channel);
 			} catch (IOException e) {
 				/* I don't think I want to listen to complains... */
 				logger.info(e);
@@ -203,9 +203,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		
 	}
 
-	public boolean isStillRunning() {
-		return keepRunning;
+	public PacketValidator getValidator() {
+		return packetValidator;
 	}
+	
 	
 	@Override
 	public void run() {
@@ -281,8 +282,5 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				}
 			}			
 		}.start();
-	}
-	
-	
-	
+	}	
 }

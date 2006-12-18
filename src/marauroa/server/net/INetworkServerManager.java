@@ -5,13 +5,14 @@ import java.net.InetSocketAddress;
 
 import marauroa.common.net.Message;
 
+/** A Network Server Manager is an active object ( a thread ) that send and recieve messages
+ *  from clients. There is not transport or technology imposed.
+ *  
+ * @author miguel
+ */
 public interface INetworkServerManager {
-
-	/** 
-	 * This method notify the thread to finish it execution
-	 */
-	public abstract void finish();
-
+	public abstract PacketValidator getValidator();
+	
 	/** 
 	 * This method returns a Message from the list or block for timeout milliseconds
 	 * until a message is available or null if timeout happens.
@@ -37,10 +38,22 @@ public interface INetworkServerManager {
 	 */
 	public abstract void sendMessage(Message msg);
 
-	public abstract boolean isStillRunning();
-
+	/** 
+	 * This method disconnect a client or silently fails if client doesn't exists.
+	 *  
+	 * @param address
+	 */
 	public abstract void disconnectClient(InetSocketAddress address);
 
+	/**
+	 * This method inits the active object 
+	 */
 	public abstract void start();
+	
+	/** 
+	 * This method notify the active object to finish it execution
+	 */
+	public abstract void finish();
+
 
 }
