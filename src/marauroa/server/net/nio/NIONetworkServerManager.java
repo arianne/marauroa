@@ -1,3 +1,15 @@
+/* $Id: NIONetworkServerManager.java,v 1.5 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2003 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.net.nio;
 
 import java.io.IOException;
@@ -21,7 +33,7 @@ import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.PacketValidator;
+import marauroa.server.net.ConnectionValidator;
 
 import org.apache.log4j.Logger;
 
@@ -49,7 +61,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	private Statistics stats;
 
 	/** checkes if the ip-address is banned */
-	private PacketValidator packetValidator;
+	private ConnectionValidator packetValidator;
 
 	private BlockingQueue<DataEvent> queue;
 	
@@ -60,7 +72,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		Log4J.startMethod(logger, "NetworkServerManager");
 
 		/* init the packet validater (which can now only check if the address is banned)*/
-		packetValidator = new PacketValidator();
+		packetValidator = new ConnectionValidator();
 		keepRunning = true;
 		isFinished = false;
 		
@@ -203,7 +215,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		
 	}
 
-	public PacketValidator getValidator() {
+	public ConnectionValidator getValidator() {
 		return packetValidator;
 	}
 	

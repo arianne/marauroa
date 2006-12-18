@@ -1,3 +1,15 @@
+/* $Id: INetworkServerManager.java,v 1.4 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2003 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.net;
 
 import java.io.IOException;
@@ -11,7 +23,12 @@ import marauroa.common.net.Message;
  * @author miguel
  */
 public interface INetworkServerManager {
-	public abstract PacketValidator getValidator();
+	/**
+	 * This method provides the connection validator object.
+	 * You can use it to ban connection IP.
+	 * @return validator.
+	 */
+	public abstract ConnectionValidator getValidator();
 	
 	/** 
 	 * This method returns a Message from the list or block for timeout milliseconds
