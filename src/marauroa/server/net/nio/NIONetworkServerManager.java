@@ -88,7 +88,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	 * This method notify the thread to finish it execution
 	 */
 	public void finish() {
-		logger.debug("shutting down NetworkServerManager");
+		logger.info("shutting down NetworkServerManager");
 		keepRunning = false;
 		
 		server.finish();
@@ -98,7 +98,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 			Thread.yield();
 		}		
 
-		logger.debug("NetworkServerManager is down");
+		logger.info("NetworkServerManager is down");
 	}
 
 	/** 
@@ -191,16 +191,16 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	}
 
 	public void disconnectClient(InetSocketAddress address) {
-		SocketChannel channel = null;
 		synchronized (sockets) {
-			channel = sockets.get(address);
+			try {
+			SocketChannel channel=sockets.remove(address);
+			server.close(channel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
-		try {
-			channel.close();
-		} catch (IOException e) {
-			/** I am not interested in the exception */
-		}
 	}
 
 	public boolean isStillRunning() {
@@ -213,20 +213,20 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 			while(keepRunning) {
 				DataEvent event=queue.take();
 
-				if(event!=null) {				
-					Socket socket=event.channel.socket();
-					InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
+				Socket socket=event.channel.socket();
+				InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
 
-					try {
-						Message msg = decoder.decode(address, event.data);
-						messages.add(msg);				
-					} catch (InvalidVersionException e) {
-						stats.add("Message invalid version", 1);
-						MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(address, "Invalid client version: Update client");
-						sendMessage(invMsg);
-					} catch (IOException e) {
-						/* We don't care */
-					}
+				try {
+					Message msg = decoder.decode(address, event.data);
+					System.out.println("MESSAGE: "+msg);
+					messages.add(msg);				
+				} catch (InvalidVersionException e) {
+					stats.add("Message invalid version", 1);
+					System.out.println("INVALID");
+					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(address, "Invalid client version: Update client");
+					sendMessage(invMsg);
+				} catch (IOException e) {
+					/* We don't care */
 				}
 			}			
 		} catch (InterruptedException e) {
@@ -277,7 +277,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 					
 					System.out.println("CLIENT: "+rpl);
 					
-					clientman.finish();
+					System.exit(0);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

@@ -51,6 +51,10 @@ class NioServer extends Thread {
 		this.worker = worker;
 		this.worker.setServer(this);
 	}
+	
+	public void close(SocketChannel channel) throws IOException {
+		channel.close();		
+	}
 
 	public void send(SocketChannel socket, byte[] data) {
 		synchronized (this.pendingChanges) {
@@ -95,10 +99,12 @@ class NioServer extends Thread {
 					Iterator changes = this.pendingChanges.iterator();
 					while (changes.hasNext()) {
 						ChangeRequest change = (ChangeRequest) changes.next();
-						switch (change.type) {
-						case ChangeRequest.CHANGEOPS:
-							SelectionKey key = change.socket.keyFor(this.selector);
-							key.interestOps(change.ops);
+						if(change.socket.isConnected()) {
+							switch (change.type) {
+							case ChangeRequest.CHANGEOPS:
+								SelectionKey key = change.socket.keyFor(this.selector);
+								key.interestOps(change.ops);
+							}
 						}
 					}
 					this.pendingChanges.clear();
@@ -131,7 +137,6 @@ class NioServer extends Thread {
 			}
 		}
 		
-		System.out.println("Finished nio thread");
 		isFinished=true;
 	}
 
