@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.42 2006/12/18 19:57:30 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.43 2006/12/18 20:08:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,6 @@ import marauroa.common.net.MessageS2CTransferREQ;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount;
 import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.NetworkServerManager;
 
 import org.apache.log4j.Logger;
 

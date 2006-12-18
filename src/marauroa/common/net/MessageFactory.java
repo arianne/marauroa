@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.11 2006/12/17 21:41:32 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.12 2006/12/18 20:08:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.common.net;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 

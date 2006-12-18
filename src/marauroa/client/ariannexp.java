@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.28 2006/09/24 22:39:19 nhnb Exp $ */
+/* $Id: ariannexp.java,v 1.29 2006/12/18 20:08:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ import java.util.List;
 
 import marauroa.client.net.NetworkClientManagerInterface;
 import marauroa.client.net.TCPThreadedNetworkClientManager;
-import marauroa.client.net.ThreadedNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
@@ -83,31 +82,12 @@ public abstract class ariannexp {
 	 * @throws SocketException
 	 *             if connection is not possible
 	 */
-	public void connect(String host, int port) throws SocketException {
-		connect(host, port, false);
-	}
-
-	/**
-	 * Call this method to connect to server. This method just configure the
-	 * connection, it doesn't send anything
-	 * 
-	 * @param host
-	 *            server host name
-	 * @param port
-	 *            server port number
-	 * @param useTCP
-	 *            use TCP instead of UDP
-	 * @throws SocketException
-	 *             if connection is not possible
-	 */
-	public void connect(String host, int port, boolean useTCP)
+	public void connect(String host, int port)
 			throws SocketException {
 		Log4J.startMethod(logger, "connect");
-		if (useTCP) {
-			netMan = new TCPThreadedNetworkClientManager(host, port);
-		} else {
-			netMan = new ThreadedNetworkClientManager(host, port);
-		}
+
+		netMan = new TCPThreadedNetworkClientManager(host, port);
+
 		Log4J.finishMethod(logger, "connect");
 	}
 

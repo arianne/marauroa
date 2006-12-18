@@ -1,4 +1,4 @@
-/* $Id: NetworkClientManager.java,v 1.27 2006/10/17 08:58:32 nhnb Exp $ */
+/* $Id: NetworkClientManager.java,v 1.28 2006/12/18 20:08:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
  * The NetworkClientManager is in charge of sending and recieving the packages
  * from the network.
  */
+@Deprecated
 public class NetworkClientManager implements NetworkClientManagerInterface {
 	/** the logger instance. */
 	private static final Logger logger = Log4J

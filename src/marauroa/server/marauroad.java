@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.44 2006/12/18 19:57:30 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.45 2006/12/18 20:08:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,6 @@ import marauroa.server.game.GameServerManager;
 import marauroa.server.game.RPServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.NetworkServerManager;
 
 /** The launcher of the whole Marauroa Server. 
  *  Run this class to make your game server run.

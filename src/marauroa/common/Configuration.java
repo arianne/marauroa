@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.8 2006/08/27 19:00:15 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.9 2006/12/18 20:08:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,9 +12,7 @@
  ***************************************************************************/
 package marauroa.common;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

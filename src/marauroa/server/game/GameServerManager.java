@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.29 2006/12/18 19:57:30 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.30 2006/12/18 20:08:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -51,7 +51,6 @@ import marauroa.common.net.MessageS2CTransfer;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
 import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.NetworkServerManager;
 
 import org.apache.log4j.Logger;
 
