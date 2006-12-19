@@ -1,4 +1,4 @@
-/* $Id: PacketValidator.java,v 1.10 2006/12/18 21:06:08 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.1 2006/12/19 12:13:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,9 +35,9 @@ import org.apache.log4j.Logger;
  * check if the address is banned, may be it will check more later)
  * 
  */
-public class PacketValidator implements Iterable<InetAddressMask>{
+public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(PacketValidator.class);
+	private static final Logger logger = Log4J.getLogger(ConnectionValidator.class);
 
 	/** Permanent bans are stored inside the database. */
 	private List<InetAddressMask> permanentBans;
@@ -56,7 +56,7 @@ public class PacketValidator implements Iterable<InetAddressMask>{
 	 * Constructor that opens the socket on the marauroa_PORT and start the
 	 * thread to recieve new messages from the network.
 	 */
-	public PacketValidator() {
+	public ConnectionValidator() {
 		Log4J.startMethod(logger, "PacketValidator");
 		
 		permanentBans=new LinkedList<InetAddressMask>();
