@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.15 2006/12/11 12:52:34 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.16 2006/12/19 12:10:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,11 @@ import org.apache.log4j.Logger;
 public abstract class createaccount {
 	private static final Logger logger = Log4J.getLogger(createaccount.class);
 
+	/** This enum represent the possible values returned by the create account process.
+	 *  Caller should verify that the process ended in OK_ACCOUNT_CREATED.
+	 * @author miguel
+	 *
+	 */
 	public enum Result {
 		OK_ACCOUNT_CREATED, 
 		FAILED_EMPTY_STRING, 

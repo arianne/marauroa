@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.45 2006/12/18 20:08:14 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.46 2006/12/19 12:10:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,8 +35,10 @@ public class marauroad extends Thread {
 	/** the logger instance. */
 	private static final org.apache.log4j.Logger logger = Log4J.getLogger(marauroad.class);
 
+	/** Which marauroa version are we running */
 	private static final String VERSION = "2.00";
 
+	/** Marauroa is a singleton. */
 	private static marauroad marauroa;
 
 	/** A network manager object to handle network events */
@@ -169,10 +171,10 @@ public class marauroad extends Thread {
 			logger.fatal(
 					"Marauroa can't create NetworkServerManager.\n"
 					+ "Reasons:\n"
-					+ "- You are already running a copy of Marauroa on the same UDP port\n"
+					+ "- You are already running a copy of Marauroa on the same TCP port\n"
 					+ "- You haven't specified a valid configuration file\n"
 					+ "- You haven't create database\n"
-					+ "- You have invalid username and password to connnect to database\n",
+					+ "- You have invalid username and password to connect to database\n",
 					e);
 			return false;
 		}
@@ -225,7 +227,6 @@ public class marauroad extends Thread {
 
 	public void finish() {
 		netMan.finish();
-		logger.info("Network layer finished");
 		gameMan.finish();
 	}
 }
