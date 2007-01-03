@@ -83,7 +83,7 @@ create table if not exists gameEvents
   source varchar(64),
   event  varchar(64),
   param1 varchar(128),
-  param2 varchar(128)
+  param2 varchar(1024)
   );
   
 create table if not exists banlist
