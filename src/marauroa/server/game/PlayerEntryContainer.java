@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.15 2006/12/10 19:35:11 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.16 2007/01/04 13:26:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -533,7 +533,7 @@ public class PlayerEntryContainer {
 						.getValue();
 
 				if (playerEntry.username != null
-						&& playerEntry.username.equals(username)) {
+						&& playerEntry.username.equalsIgnoreCase(username)) {
 					return playerEntry.clientid;
 				}
 			}
