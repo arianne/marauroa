@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.14 2006/12/02 15:53:30 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.14.2.1 2007/01/06 05:25:05 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,6 +193,6 @@ public class Statistics implements StatisticsMBean {
 	 * @return escaped strings
 	 */
 	private static String escapeML(String param) {
-		return param.replace("&", "&amp;").replace("\"", "&quot;");
+		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 }
