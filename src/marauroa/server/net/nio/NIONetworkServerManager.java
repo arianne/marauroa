@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.5 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.6 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ import marauroa.common.net.MessageC2SAction;
 import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.server.game.Statistics;
+import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.ConnectionValidator;
 
@@ -67,6 +68,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	
 	private Encoder encoder;
 	private Decoder decoder;
+
 	
 	public NIONetworkServerManager() throws IOException {
 		Log4J.startMethod(logger, "NetworkServerManager");
@@ -89,6 +91,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		logger.debug("NetworkServerManager started successfully");
 		
 		server=new NioServer(null, NetConst.marauroa_PORT, this);
+		server.registerDisconnectedListener(this);
 		server.start();
 	}
 
@@ -162,13 +165,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	}
 
 	/** Removes the channel from the map when the client disconnect or is disconnected */
-	public void onDisconnect(SocketChannel channel) {
-		Socket socket=channel.socket();
-		InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
-		
+	public void onDisconnect(InetSocketAddress address) {
 		sockets.remove(address);
 	}
-
 
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		byte[] dataCopy = new byte[count];
@@ -219,6 +218,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		return packetValidator;
 	}
 	
+	public void registerDisconnectedListener(IDisconnectedListener listener) {
+		server.registerDisconnectedListener(listener);
+	}	
 	
 	@Override
 	public void run() {
@@ -294,5 +296,5 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				}
 			}			
 		}.start();
-	}	
+	}
 }

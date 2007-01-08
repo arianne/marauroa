@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.16 2007/01/04 13:26:57 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.17 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,11 +37,16 @@ import org.apache.log4j.Logger;
  */
 public class PlayerEntryContainer {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
-			.getLogger(PlayerEntryContainer.class);
+	private static final Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
 
+	/** This enum describe one of the possible state of the client. */
 	enum ClientState {
-		NULL, LOGIN_COMPLETE, GAME_BEGIN,
+		/** Connection is accepted but login stage is not completed. */
+		NULL, 
+		/** Login identification is completed but still choosing character- */
+		LOGIN_COMPLETE, 
+		/** Client is already playing. */
+		GAME_BEGIN,
 	}
 
 	/**
@@ -85,6 +90,19 @@ public class PlayerEntryContainer {
 		 */
 		public SecuredLoginInfo loginInformations;
 
+		/**
+		 * This method updates the timestamp so player is not timeout.
+		 */
+		public void updateTimestamp() {
+			timestamp=System.currentTimeMillis();
+		}
+		
+		/**
+		 * This method returns true if the player has timeout as a result
+		 * of lack of activity.
+		 * 
+		 * @return true if timeout happened
+		 */
 		public boolean isTimedout() {
 			long value = System.currentTimeMillis() - timestamp;
 			if (value > TimeoutConf.GAMESERVER_PLAYER_TIMEOUT) {
@@ -94,11 +112,13 @@ public class PlayerEntryContainer {
 			}
 		}
 
-		/** The time when the latest event was done in this player */
+		/** Timestamp of the last storage time of the object. */
 		public long timestampLastStored;
 
+		/** Latest version of the object stored */
 		public RPObject database_storedRPObject;
 
+		/** Returns true if the object should be stored */
 		public boolean shouldStoredUpdate(RPObject object) {
 			Log4J.startMethod(logger, "shouldStoredUpdate");
 
@@ -126,6 +146,7 @@ public class PlayerEntryContainer {
 		/** A counter to detect dropped packets or bad order at client side */
 		public int perception_counter;
 
+		/** Returns the next perception timestamp. */
 		public int getPerceptionTimestamp() {
 			return perception_counter++;
 		}
@@ -136,6 +157,7 @@ public class PlayerEntryContainer {
 		/** Contains the content that is going to be transfered to client */
 		List<TransferContent> contentToTransfer;
 
+		/** Clears the contents to be transfered */
 		public void clearContent() {
 			contentToTransfer = null;
 		}
@@ -322,8 +344,7 @@ public class PlayerEntryContainer {
 			entry.clientid = generateClientID(source);
 			entry.perception_counter = 0;
 			entry.perception_OutOfSync = true;
-			entry.loginInformations = new RuntimePlayerEntry.SecuredLoginInfo(
-					key);
+			entry.loginInformations = new RuntimePlayerEntry.SecuredLoginInfo(key);
 			entry.loginInformations.clientNonceHash = clientNonceHash;
 
 			listPlayerEntries.put(new Integer(entry.clientid), entry);
@@ -561,6 +582,27 @@ public class PlayerEntryContainer {
 				}
 			}
 
+			return -1;
+		} finally {
+			Log4J.finishMethod(logger, "getClientidPlayer");
+		}
+	}
+
+	public int getClientidPlayer(InetSocketAddress address) {
+		Log4J.startMethod(logger, "getClientidPlayer");
+		try {
+			Iterator it = listPlayerEntries.entrySet().iterator();
+
+			while (it.hasNext()) {
+				Map.Entry entry = (Map.Entry) it.next();
+				RuntimePlayerEntry playerEntry = (RuntimePlayerEntry) entry
+						.getValue();
+
+				if (playerEntry.source != null
+						&& playerEntry.source.equals(address)) {
+					return playerEntry.clientid;
+				}
+			}
 			return -1;
 		} finally {
 			Log4J.finishMethod(logger, "getClientidPlayer");

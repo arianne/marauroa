@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.11 2006/08/23 02:11:45 wikipedian Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.12 2007/01/08 19:26:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.game.RPObject.ID;
 import marauroa.server.createaccount.Result;
 
 /** Default implementation for <code>IRPRuleProcessor</code> */
@@ -79,5 +80,8 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 
 	public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
 		return false;
+	}
+
+	public void onForcedExit(ID id) throws RPObjectNotFoundException {
 	}
 }

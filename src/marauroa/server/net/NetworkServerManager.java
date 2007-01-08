@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.34 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.35 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -308,5 +308,10 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	public ConnectionValidator getValidator() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void registerDisconnectedListener(IDisconnectedListener listener) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: IPlayerDatabase.java,v 1.4 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.5 2007/01/08 19:26:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,8 +19,8 @@ import marauroa.common.game.RPObject;
 /** The interface that all the databases marauroa use MUST implement. */
 public interface IPlayerDatabase {
 	/**
-	 * Retursn true if the strign is valid and doesn't contains any strange
-	 * character
+	 * Returns true if the strign is valid and doesn't contains any strange
+	 * character like :, ;, ,, ", ', ...
 	 */
 	public boolean validString(String string);
 
@@ -39,7 +39,7 @@ public interface IPlayerDatabase {
 			PlayerEntryContainer.RuntimePlayerEntry.SecuredLoginInfo informations)
 			throws GenericDatabaseException;
 
-	/***************************************************************************
+	/**
 	 * This method sets the account into one of the predefined states:
 	 * active,inactive,banned don't forget to commit the changes.
 	 * 
@@ -47,7 +47,7 @@ public interface IPlayerDatabase {
 	 *            is the name of the player
 	 * @param status
 	 *            the new status of the account
-	 **************************************************************************/
+	 */
 	public void setAccountStatus(Transaction trans, String username,
 			String status) throws GenericDatabaseException;
 

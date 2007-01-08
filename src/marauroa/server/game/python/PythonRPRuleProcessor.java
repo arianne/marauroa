@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.11 2006/08/24 22:34:22 wikipedian Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.12 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,8 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.game.RPObject.ID;
 import marauroa.server.createaccount.Result;
 import marauroa.server.game.IRPRuleProcessor;
 import marauroa.server.game.RPServerManager;
@@ -152,5 +154,10 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		} finally {
 			Log4J.startMethod(logger, "onTimeout");
 		}
+	}
+
+	public void onForcedExit(ID id) throws RPObjectNotFoundException {
+		// TODO Auto-generated method stub
+		
 	}
 }

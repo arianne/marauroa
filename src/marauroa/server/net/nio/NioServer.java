@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.3 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.4 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.net.nio;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -22,6 +23,8 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.*;
+
+import marauroa.server.net.IDisconnectedListener;
 
 
 
@@ -52,6 +55,8 @@ class NioServer extends Thread {
 
 	// Maps a SocketChannel to a list of ByteBuffer instances
 	private Map<SocketChannel,List<ByteBuffer>> pendingData = new HashMap<SocketChannel,List<ByteBuffer>>();
+	
+	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		keepRunning = true;
@@ -62,9 +67,18 @@ class NioServer extends Thread {
 		this.selector = this.initSelector();
 		this.worker = worker;
 		this.worker.setServer(this);
+		
+		listeners=new LinkedList<IDisconnectedListener>();
 	}
 	
 	public void close(SocketChannel channel) throws IOException {
+		Socket socket=channel.socket();
+		InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
+
+		for(IDisconnectedListener listener: listeners) {
+			listener.onDisconnect(address);
+		}
+
 		channel.close();		
 	}
 
@@ -180,19 +194,18 @@ class NioServer extends Thread {
 		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
-			worker.onDisconnect(socketChannel);
-
 			key.cancel();
-			socketChannel.close();
+			
+			close(socketChannel);
+
 			return;
 		}
 
 		if (numRead == -1) {
 			// Remote entity shut the socket down cleanly. Do the
 			// same from our end and cancel the channel.
-			worker.onDisconnect(socketChannel);
+			close((SocketChannel) key.channel());
 
-			key.channel().close();
 			key.cancel();
 			return;
 		}
@@ -245,5 +258,9 @@ class NioServer extends Thread {
 		serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
 
 		return socketSelector;
+	}
+
+	public void registerDisconnectedListener(IDisconnectedListener listener) {
+		this.listeners.add(listener);		
 	}
 }

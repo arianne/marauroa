@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.4 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.5 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,11 +17,10 @@ import marauroa.common.Log4J;
 
 import org.apache.log4j.Logger;
 
-/** utility class for choosing the right player databese. */
+/** Utility class for choosing the right player databese. */
 public class PlayerDatabaseFactory {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
-			.getLogger(PlayerDatabaseFactory.class);
+	private static final Logger logger = Log4J.getLogger(PlayerDatabaseFactory.class);
 
 	/**
 	 * This method returns an instance of PlayerDatabase choosen using the
@@ -57,8 +56,7 @@ public class PlayerDatabaseFactory {
 		Log4J.startMethod(logger, "getDatabase(" + database_type + ")");
 		try {
 			Class databaseClass = Class.forName(database_type);
-			java.lang.reflect.Method singleton = databaseClass
-					.getDeclaredMethod("getDatabase");
+			java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getDatabase");
 			return (IPlayerDatabase) singleton.invoke(null);
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);

@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.29 2006/12/18 20:08:13 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.30 2007/01/08 19:26:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -171,8 +171,7 @@ public abstract class ariannexp {
 					}
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
-					netMan
-							.addMessage(new MessageC2SLoginSendNonceNameAndPassword(
+					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(
 									msg.getAddress(), clientNonce, username,
 									cryptedPassword));
 					break;

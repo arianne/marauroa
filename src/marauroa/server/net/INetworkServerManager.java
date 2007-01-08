@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.4 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.5 2007/01/08 19:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,12 @@ import marauroa.common.net.Message;
  * @author miguel
  */
 public interface INetworkServerManager {
+	/**
+	 * Register a listener that will be called when a disconnected event happens.
+	 * It is up to the implementer if this call add or replace the actual listener.
+	 */
+	public abstract void registerDisconnectedListener(IDisconnectedListener listener);
+	
 	/**
 	 * This method provides the connection validator object.
 	 * You can use it to ban connection IP.

@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.10 2006/08/23 02:11:45 wikipedian Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.11 2007/01/08 19:26:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,15 +23,12 @@ import marauroa.server.createaccount.Result;
 /**
  * Interface for the class that is in charge of executing actions. Implement it
  * to personalize the game
+ * Important: you must implement the method
+ *	 public static IRPRuleProcessor get().
+ *
+ * TODO: Find a way to enforce this. (The static modifier is not allowed in interfaces.)
  */
-public interface IRPRuleProcessor {
-	
-	// Important: you must implement the method
-	// public static IRPRuleProcessor get().
-	// TODO: Find a way to enforce this. (The static modifier is not
-	// allowed in interfaces.)
-	
-	
+public interface IRPRuleProcessor {	
 	/**
 	 * Set the context where the actions are executed.
 	 * 
@@ -87,13 +84,22 @@ public interface IRPRuleProcessor {
 	public boolean onInit(RPObject object) throws RPObjectInvalidException;
 
 	/**
-	 * Callback method called when a new player exits the game
+	 * Callback method called when a player exits the game
 	 * 
 	 * @param id
 	 *            the new player id that exits the game.
 	 * @return true to update the player on database.
 	 */
 	public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException;
+	
+	/**
+	 * This method request game to logout player.
+	 * It should only fail to logout the player if it is already logged out.
+	 * 
+	 * @param id player identification
+	 * @throws RPObjectNotFoundException if the player is already logged out
+	 */
+	public void onForcedExit(RPObject.ID id) throws RPObjectNotFoundException;
 
 	/**
 	 * Callback method called when a new player time out
