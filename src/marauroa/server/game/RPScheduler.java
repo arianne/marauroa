@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.6 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: RPScheduler.java,v 1.7 2007/01/13 21:50:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
  * This class represents a scheduler to deliver action by turns, so every action
  * added to the scheduler is executed on the next turn. Each object can cast as
  * many actions as it wants.
+ * 
+ * TODO: Simplify it.
  */
 public class RPScheduler {
 	/** the logger instance. */
@@ -88,6 +90,7 @@ public class RPScheduler {
 
 	/**
 	 * Add an RPAction to the scheduler for the next turn
+	 * An incomplete action is one that has been executed and the result was not completed.
 	 * 
 	 * @param action
 	 *            the RPAction

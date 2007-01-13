@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.43 2006/12/18 20:08:14 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.44 2007/01/13 21:50:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -101,8 +101,7 @@ public class RPServerManager extends Thread {
 			world.setPlayerContainer(playerContainer);
 			world.onInit();
 
-			Class ruleProcessorClass = Class.forName(conf
-					.get("rp_RPRuleProcessorClass"));
+			Class ruleProcessorClass = Class.forName(conf.get("rp_RPRuleProcessorClass"));
 			// call the get() method without parameters to retrieve the singleton instance
 			ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 			ruleProcessor.setContext(this);
@@ -112,10 +111,7 @@ public class RPServerManager extends Thread {
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {
-			logger
-					.warn(
-							"ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",
-							e);
+			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",	e);
 			throw e;
 		} finally {
 			Log4J.finishMethod(logger, "RPServerManager");
@@ -130,11 +126,9 @@ public class RPServerManager extends Thread {
 	public void finish() {
 		Log4J.startMethod(logger, "finish");
 		keepRunning = false;
+		
 		while (isfinished == false) {
-			try {
-				Thread.sleep(1000);
-			} catch (java.lang.InterruptedException e) {
-			}
+			Thread.yield();
 		}
 
 		try {
@@ -188,16 +182,12 @@ public class RPServerManager extends Thread {
 		IRPZone zone = world.getRPZone(playerEntry.characterid);
 
 		if (playerEntry.perception_OutOfSync == false) {
-			logger.debug("Perception DELTA for player ("
-					+ playerEntry.characterid + ")");
-			perception = zone.getPerception(playerEntry.characterid,
-					Perception.DELTA);
+			logger.debug("Perception DELTA for player ("+ playerEntry.characterid + ")");
+			perception = zone.getPerception(playerEntry.characterid, Perception.DELTA);
 		} else {
 			playerEntry.perception_OutOfSync = false;
-			logger.debug("Perception SYNC for player ("
-					+ playerEntry.characterid + ")");
-			perception = zone.getPerception(playerEntry.characterid,
-					Perception.SYNC);
+			logger.debug("Perception SYNC for player ("+ playerEntry.characterid + ")");
+			perception = zone.getPerception(playerEntry.characterid, Perception.SYNC);
 		}
 
 		return perception;
@@ -210,9 +200,13 @@ public class RPServerManager extends Thread {
 			MessageS2CPerception messages2cPerception = new MessageS2CPerception(
 					entry.source, perception);
 
-			stats.add("Perceptions "
-					+ (perception.type == 0 ? "DELTA" : "SYNC"), 1);
+			stats.add("Perceptions "+ (perception.type == 0 ? "DELTA" : "SYNC"), 1);
 
+			/* The perception is build of two parts: the general information and the private information
+			 *  about our object.
+			 *  This private information consists only of attributes that are not visible to every player
+			 *  but the owner, because visible attributes are already stored in the perception.
+			 */
 			RPObject copy = (RPObject) object.clone();
 
 			if (perception.type == Perception.SYNC) {

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.17 2007/01/08 19:26:14 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.18 2007/01/13 21:50:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,12 @@ public class PlayerEntryContainer {
 	 * database
 	 */
 	static public class RuntimePlayerEntry {
+		/** 
+		 * This class store the information needed to allow a secure login.
+		 * Once login is completed the information is cleared.
+		 * @author miguel
+		 *
+		 */
 		static public class SecuredLoginInfo {
 			byte[] clientNonceHash;
 
