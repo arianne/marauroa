@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.7 2007/01/13 21:50:19 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.8 2007/01/14 22:07:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,8 +145,7 @@ public class RPScheduler {
 		Log4J.startMethod(logger, "visit");
 		try {
 			logger.debug(actualTurn.size() + " players running actions");
-			for (Map.Entry<RPObject.ID, List<RPAction>> entry : actualTurn
-					.entrySet()) {
+			for (Map.Entry<RPObject.ID, List<RPAction>> entry : actualTurn.entrySet()) {
 				RPObject.ID id = entry.getKey();
 				List<RPAction> list = entry.getValue();
 
@@ -154,8 +153,7 @@ public class RPScheduler {
 				for (RPAction action : list) {
 					logger.debug("visit action " + action);
 					try {
-						RPAction.Status status = ruleProcessor.execute(id,
-								action);
+						RPAction.Status status = ruleProcessor.execute(id,action);
 
 						/* If state is incomplete add for next turn */
 						if (status.equals(RPAction.Status.INCOMPLETE)) {
