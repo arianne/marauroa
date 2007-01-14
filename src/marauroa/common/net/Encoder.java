@@ -3,12 +3,17 @@ package marauroa.common.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-
+/**
+ * This class encode a Message as a stream of bytes.
+ * Encoder follows singleton pattern.
+ * @author miguel
+ */
 public class Encoder {
 	private Encoder() {		
 	}
 	
 	private static Encoder instance;
+	
 	public static Encoder get() {
 		if(instance==null) {
 			instance=new Encoder();
@@ -17,6 +22,12 @@ public class Encoder {
 		return instance;		
 	}
 	
+	/** 
+	 * This method encodes using the Marauroa protocol a Message as a stream of bytes.
+	 * @param msg The message to encode
+	 * @return a byte array 
+	 * @throws IOException if there is any error encoding the message.
+	 */
 	public byte[] encode(Message msg) throws IOException {
 		int size=0;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

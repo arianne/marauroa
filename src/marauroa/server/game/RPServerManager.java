@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.44 2007/01/13 21:50:19 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.45 2007/01/14 19:20:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -262,8 +262,7 @@ public class RPServerManager extends Thread {
 			int clientid = it.next();
 
 			try {
-				PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer
-						.get(clientid);
+				PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer.get(clientid);
 
 				if (entry.state == PlayerEntryContainer.ClientState.GAME_BEGIN) {
 					Perception perception = getPlayerPerception(entry);
@@ -280,9 +279,12 @@ public class RPServerManager extends Thread {
 					// }
 				}
 
+				/** As a result of TCP support it is not possible to timeout anymore. */
+				/*				  
 				if (entry.isTimedout()) {
 					playersToRemove.add(new Integer(clientid));
 				}
+				*/
 			} catch (Exception e) {
 				logger
 						.error(

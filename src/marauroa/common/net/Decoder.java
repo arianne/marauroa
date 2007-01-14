@@ -5,6 +5,11 @@ import java.net.InetSocketAddress;
 import java.util.Map;
 
 
+/**
+ * This class decode a stream of bytes and build a Marauroa message with it.
+ * Decoder follow singleton pattern.
+ * @author miguel
+ */
 public class Decoder {
 	private Map<InetSocketAddress,byte[]> content;
 
@@ -12,6 +17,7 @@ public class Decoder {
 	private MessageFactory msgFactory;
 	
 	private static Decoder instance;
+	
 	public static Decoder get() {
 		if(instance==null) {
 			instance=new Decoder();

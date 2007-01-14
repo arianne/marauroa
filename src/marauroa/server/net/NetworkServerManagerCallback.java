@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
  *
  * @author hendrik
  */
+@Deprecated
 public interface NetworkServerManagerCallback {
 
 	/**

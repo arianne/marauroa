@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.17 2006/08/22 01:18:20 wikipedian Exp $ */
+/* $Id: RPWorld.java,v 1.18 2007/01/14 19:20:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,22 +54,31 @@ public class RPWorld implements Iterable<IRPZone> {
 	public void onFinish() throws Exception {
 	}
 
-	public void setPlayerContainer(PlayerEntryContainer playerContainer) {
+	/** This method is called by GameServerManager to set the PlayerEntryContainer.
+	 *  This is plainly silly because PlayerEntryContainer is a singleton... 
+	 * @param playerContainer
+	 */
+	@Deprecated
+	void setPlayerContainer(PlayerEntryContainer playerContainer) {
 		this.playerContainer = playerContainer;
 	}
 
+	/** Adds a new zone to World */
 	public void addRPZone(IRPZone zone) {
 		zones.put(zone.getID(), zone);
 	}
 
+	/** Returns true if world has such zone */
 	public boolean hasRPZone(IRPZone.ID zoneid) {
 		return zones.containsKey(zoneid);
 	}
 
+	/** Returns the zone or null if it doesn't exists */
 	public IRPZone getRPZone(IRPZone.ID zoneid) {
 		return zones.get(zoneid);
 	}
 
+	/** Returns the zone or null if it doesn't exists */
 	public IRPZone getRPZone(RPObject.ID objectid) {
 		return zones.get(new IRPZone.ID(objectid.getZoneID()));
 	}
@@ -97,10 +106,8 @@ public class RPWorld implements Iterable<IRPZone> {
 
 				/** NOTE: Document this hack */
 				if (object.has("clientid")) {
-					playerContainer.setRPObjectID(object.getInt("clientid"),
-							object.getID());
-					PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer
-							.get(object.getInt("clientid"));
+					playerContainer.setRPObjectID(object.getInt("clientid"),object.getID());
+					PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer.get(object.getInt("clientid"));
 					entry.perception_OutOfSync = true;
 				}
 			}
@@ -167,6 +174,8 @@ public class RPWorld implements Iterable<IRPZone> {
 			}
 
 			// newzone is never used?
+			// Yes, because RPWorld.add seems to be more than RPZone.add and that is also plainly bad.
+			// BUG: RPWorld.add has more than it says.			
 			// IRPZone newzone=getRPZone(newzoneid);
 			IRPZone oldzone = getRPZone(oldzoneid);
 

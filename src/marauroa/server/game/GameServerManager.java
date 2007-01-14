@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.31 2007/01/08 19:26:13 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.32 2007/01/14 19:20:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,8 +64,7 @@ import org.apache.log4j.Logger;
  */
 public final class GameServerManager extends Thread implements IDisconnectedListener {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
-			.getLogger(GameServerManager.class);
+	private static final Logger logger = Log4J.getLogger(GameServerManager.class);
 
 	private INetworkServerManager netMan;
 
@@ -226,7 +225,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		int clientid = msg.getClientID();
 		if (!playerContainer.hasRuntimePlayer(clientid)) {
 			/* Error: Player didn't login. */
-			logger.debug("Client(" + msg.getAddress().toString()+ ") has not login yet");
+			logger.debug("Client(" + msg.getAddress()+ ") has not login yet");
 			return false;
 		}
 		
@@ -235,13 +234,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * Error: Player has not completed login yet, or he/she has logout
 			 * already.
 			 */
-			logger.debug("Client(" + msg.getAddress().toString()+ ") is not in the required state (" + state + ")");
+			logger.debug("Client(" + msg.getAddress()+ ") is not in the required state (" + state + ")");
 			return false;
 		}
 		
 		if (!playerContainer.verifyRuntimePlayer(clientid, msg.getAddress())) {
 			/* Error: Player has not correct IP<->clientid relation */
-			logger.debug("Client(" + msg.getAddress().toString()+ ") has not correct IP<->clientid relation");
+			logger.debug("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
 			return false;
 		}
 		
