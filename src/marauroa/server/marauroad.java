@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.46 2006/12/19 12:10:10 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.47 2007/01/18 12:31:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,8 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.server.game.GameServerManager;
-import marauroa.server.game.RPServerManager;
 import marauroa.server.game.Statistics;
+import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
 
 /** The launcher of the whole Marauroa Server. 

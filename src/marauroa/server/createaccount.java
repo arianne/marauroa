@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.16 2006/12/19 12:10:10 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.17 2007/01/18 12:31:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,10 +21,10 @@ import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPObject;
-import marauroa.server.game.IPlayerDatabase;
-import marauroa.server.game.JDBCPlayerDatabase;
-import marauroa.server.game.PlayerDatabaseFactory;
-import marauroa.server.game.Transaction;
+import marauroa.server.game.db.IPlayerDatabase;
+import marauroa.server.game.db.JDBCPlayerDatabase;
+import marauroa.server.game.db.PlayerDatabaseFactory;
+import marauroa.server.game.db.Transaction;
 
 import org.apache.log4j.Logger;
 
