@@ -7,7 +7,7 @@ package marauroa.server.game;
  * @author miguel
  *
  */
-class CharacterAlreadyAddedException extends Exception {
+public class CharacterAlreadyAddedException extends Exception {
 	private static final long serialVersionUID = -3614527698941280035L;
 
 	public CharacterAlreadyAddedException(String character) {

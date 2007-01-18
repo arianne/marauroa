@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.15 2007/01/06 05:24:19 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.16 2007/01/18 12:58:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.game.db.JDBCPlayerDatabase;
+import marauroa.server.game.db.Transaction;
 
 import org.apache.log4j.Logger;
 
@@ -33,7 +35,7 @@ public class Statistics implements StatisticsMBean {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(Statistics.class);
 
-	static class Variables implements Iterable<String> {
+	public static class Variables implements Iterable<String> {
 		Map<String, Long> content;
 
 		public Variables() {

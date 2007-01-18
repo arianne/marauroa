@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.6 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: PythonRP.java,v 1.7 2007/01/18 12:58:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
-import marauroa.server.game.RPServerManager;
+import marauroa.server.game.rp.RPServerManager;
 
 public class PythonRP {
 	public PythonRP() {

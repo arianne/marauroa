@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.32 2007/01/14 19:20:04 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.33 2007/01/18 12:58:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,7 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,8 +23,10 @@ import marauroa.common.PropertyNotFoundException;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageC2SAction;
 import marauroa.common.net.MessageC2SChooseCharacter;
@@ -52,6 +54,10 @@ import marauroa.common.net.MessageS2CServerInfo;
 import marauroa.common.net.MessageS2CTransfer;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
+import marauroa.server.game.container.ClientState;
+import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
+import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
 
@@ -70,7 +76,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	private RPServerManager rpMan;
 
-	private PlayerEntryContainer playerContainer;
+	private marauroa.server.game.container.PlayerEntryContainer playerContainer;
 
 	private Statistics stats;
 
@@ -99,7 +105,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		
 		netMan.registerDisconnectedListener(this);
 		
-		playerContainer = PlayerEntryContainer.getContainer();
+		playerContainer = marauroa.server.game.container.PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 		
 		Log4J.finishMethod(logger, "GameServerManager");
@@ -126,21 +132,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	private void storeConnectedPlayers() {
-		PlayerEntryContainer.ClientIDIterator it = playerContainer.iterator();
-		while (it.hasNext()) {
-			RPObject object=null;
-			
+		for(PlayerEntry entry: playerContainer) {
+			RPObject player=entry.object;
 			try {
-				int clientid = it.next();
-				RPObject.ID id = playerContainer.getRPObjectID(clientid);
-				object = rpMan.getRPObject(id);
-
-				if (rpMan.onExit(id)) {
-					/* NOTE: Set the Object so that it is stored in Database */
-					playerContainer.setRPObject(clientid, object);
+				if(rpMan.onExit(player.getID())) {
+					entry.storeRPObject(player);
 				}
 			} catch (Exception e) {
-				logger.error("Offending player was: "+object, e);
+				logger.error("Offending player was: "+player, e);
 			}
 		}
 	}
@@ -220,27 +219,27 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the message to check
 	 * @return true, the event is valid, else false
 	 */
-	private boolean isValidEvent(Message msg, PlayerEntryContainer.ClientState state)
-			throws NoSuchClientIDException {
+	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState state) throws NoSuchClientIDException {
 		int clientid = msg.getClientID();
-		if (!playerContainer.hasRuntimePlayer(clientid)) {
+		
+		if(entry==null) {
 			/* Error: Player didn't login. */
-			logger.debug("Client(" + msg.getAddress()+ ") has not login yet");
+			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
 			return false;
 		}
-		
-		if (playerContainer.getRuntimeState(clientid) != state) {
+				
+		if (entry.state != state) {
 			/*
 			 * Error: Player has not completed login yet, or he/she has logout
 			 * already.
 			 */
-			logger.debug("Client(" + msg.getAddress()+ ") is not in the required state (" + state + ")");
+			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + state + ")");
 			return false;
 		}
 		
-		if (!playerContainer.verifyRuntimePlayer(clientid, msg.getAddress())) {
-			/* Error: Player has not correct IP<->clientid relation */
-			logger.debug("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
+		if (entry.channel!=msg.getSocketChannel()) {
+			/* Info: Player is using a different socket to communicate with server. */
+			logger.info("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
 			return false;
 		}
 		
@@ -258,20 +257,21 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			int clientid = msg.getClientID();
 
+			PlayerEntry entry=playerContainer.get(clientid);
+			
 			/* verify event so that we can trust that it comes from our player and
 			   that it has completed the login stage. */
-			if (!isValidEvent(msg,PlayerEntryContainer.ClientState.LOGIN_COMPLETE)) {
+			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
 				return;
 			}
 
 			/* We check if this account has such player. */
-			if (playerContainer.hasCharacter(clientid, msg.getCharacter())) {
-				logger.debug("Client(" + msg.getAddress().toString()+ ") has character(" + msg.getCharacter() + ")");
-				/* We set the character in the runtime info */
-				playerContainer.setChoosenCharacter(clientid, msg.getCharacter());
+			if (entry.hasCharacter(msg.getCharacter())) {
+				/* We set the character in the entry info */
+				entry.character=msg.getCharacter();
 
 				/* We restore back the character to the world */
-				RPObject object = playerContainer.getRPObject(clientid, msg.getCharacter());
+				RPObject object = entry.loadRPObject();
 
 				/*
 				 * We set the clientid attribute to link easily the object with
@@ -283,19 +283,19 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				rpMan.onInit(object);
 				
 				/* And finally sets this connection state to GAME_BEGIN */
-				playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.ClientState.GAME_BEGIN);
+				entry.state=ClientState.GAME_BEGIN;
 
 				/* Correct: Character exist */
-				MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(msg.getAddress());
+				MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(msg.getSocketChannel());
 				msgChooseCharacterACK.setClientID(clientid);
 				netMan.sendMessage(msgChooseCharacterACK);
 			} else {
 				/** This account doesn't own that character */
 				logger.debug("Client(" + msg.getAddress().toString()+ ") hasn't character(" + msg.getCharacter() + ")");
-				playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.ClientState.LOGIN_COMPLETE);
+				entry.state=ClientState.LOGIN_COMPLETE;
 
 				/* Error: There is no such character */
-				MessageS2CChooseCharacterNACK msgChooseCharacterNACK = new MessageS2CChooseCharacterNACK(msg.getAddress());
+				MessageS2CChooseCharacterNACK msgChooseCharacterNACK = new MessageS2CChooseCharacterNACK(msg.getSocketChannel());
 
 				msgChooseCharacterNACK.setClientID(clientid);
 				netMan.sendMessage(msgChooseCharacterNACK);
@@ -315,37 +315,38 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private void processLogoutEvent(MessageC2SLogout msg) {
 		Log4J.startMethod(logger, "processLogoutEvent");
 		try {
+			int clientid = msg.getClientID();
+			
+			PlayerEntry entry=playerContainer.get(clientid);
+
 			/* verify event so that we can trust that it comes from our player and
 			   that it has completed the login stage. */
-			if (!isValidEvent(msg,PlayerEntryContainer.ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
-			int clientid = msg.getClientID();
-
-			RPObject.ID id = playerContainer.getRPObjectID(clientid);
-			RPObject object = rpMan.getRPObject(id);
+			RPObject object = entry.object;
 
 			/* We request to logout of game */
-			if (rpMan.onExit(id)) {
+			if (rpMan.onExit(object.getID())) {
 				/* NOTE: Set the Object so that it is stored in Database */
-				playerContainer.setRPObject(clientid, object);
+				entry.storeRPObject(object);
 
 				stats.add("Players logout", 1);
-				playerContainer.removeRuntimePlayer(clientid);
+				playerContainer.remove(clientid);
 
 				/* Send Logout ACK message */
-				MessageS2CLogoutACK msgLogout = new MessageS2CLogoutACK(msg.getAddress());
+				MessageS2CLogoutACK msgLogout = new MessageS2CLogoutACK(msg.getSocketChannel());
 
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
-				netMan.disconnectClient(msg.getAddress());
+				netMan.disconnectClient(msg.getSocketChannel());
 			} else {
 				/* If RPManager returned false, that means that logout is not allowed right now, so
 				 * player request is rejected.
 				 * This can be useful to disallow logout on some situations.
 				 */
-				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getAddress());
+				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getSocketChannel());
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
 				return;
@@ -361,37 +362,37 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * This method is called by network manager when a client connection is lost
 	 * or even when the client logout correctly.
 	 */
-	public void onDisconnect(InetSocketAddress address) {
+	public void onDisconnect(SocketChannel channel) {
 		/* We need to adquire the lock because this is handle by another thread */
 		playerContainer.getLock().requestWriteLock();
 		
+		PlayerEntry entry=playerContainer.get(channel);
+		
+		/* We check that player is not already removed */
+		if(entry==null) {
+			/* There is no player entry for such channel 
+			 * This is not necesaryly an error, as the connection could be
+			 * anything else but an arianne client or we are just disconnecting
+			 * a player that logout correctly. */
+			return;
+		}
+
 		try {
-			/* We check that player is not already removed */
-			int clientid=playerContainer.getClientidPlayer(address);
-
-			if(clientid==-1) {
-				/* Player already removed */
-				return;
-			}
-
-			RPObject.ID id = playerContainer.getRPObjectID(clientid);
-			RPObject object = rpMan.getRPObject(id);
+			RPObject object = entry.object;
 			/* We request to logout of game */
-			if (rpMan.onExit(id)) {
-				/* NOTE: Set the Object so that it is stored in Database */
-				playerContainer.setRPObject(clientid, object);
+			rpMan.onTimeout(object.getID());
 
-				stats.add("Players logout", 1);
-				playerContainer.removeRuntimePlayer(clientid);
-			} else {
-				/* We need to add a Timeout here so it is removed after X seconds. */
-			}
+			entry.storeRPObject(object);
+
+			stats.add("Players logout", 1);
 		} catch (Exception e) {
 			logger.error("Error disconnecting a player: ",e);
 		} finally {
+			/* Finally we remove the entry */
+			playerContainer.remove(entry.clientid);
+
 			playerContainer.getLock().releaseLock();
 		}
-
 	}
 
 	static int lastActionIdGenerated = 0;
@@ -406,8 +407,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			int clientid = msg.getClientID();
 
+			PlayerEntry entry=playerContainer.get(clientid);
+
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
@@ -419,15 +422,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				action.put("action_id", ++lastActionIdGenerated);
 			}
 
-			/* Enforce source_id and action_id */
-			RPObject.ID id = playerContainer.getRPObjectID(clientid);
-
 			/* TODO: These are action attributes that are important for RP functionality.
 			 *  Tag them in such way that it is not possible to change them on a buggy
 			 *  RP implementation.
 			 */
-			action.put("sourceid", id.getObjectID());
-			action.put("zoneid", id.getZoneID());
+			RPObject object=entry.object;
+			action.put("sourceid", object.get("sourceid"));
+			action.put("zoneid", object.get("zoneid"));
 			action.put("when", rpMan.getTurn());
 
 			stats.add("Actions added", 1);
@@ -460,7 +461,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		MessageC2SLoginRequestKey msgRequest = (MessageC2SLoginRequestKey) msg;
 		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
-			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getAddress(), key);
+			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getSocketChannel(), key);
 			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
 			netMan.sendMessage(msgLoginSendKey);
 		} else {
@@ -468,7 +469,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			logger.debug("Client is running an incompatible game version. Client("+ msg.getAddress().toString() + ") can't login");
 
 			/* Notify player of the event. */
-			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getAddress(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
+			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
 			netMan.sendMessage(msgLoginNACK);
 		}
 
@@ -485,9 +486,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		Log4J.startMethod(logger, "processCreateAccount");
 		try {
 			Result result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail());
+			
 			if (result == Result.OK_ACCOUNT_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
-				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getAddress());
+				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				MessageS2CCreateAccountNACK.Reasons reason;
@@ -498,7 +500,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					reason = MessageS2CCreateAccountNACK.Reasons.FIELD_TOO_SHORT;
 				}
 
-				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(msg.getAddress(), reason);
+				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(msg.getSocketChannel(), reason);
 				netMan.sendMessage(msgCreateAccountNACK);
 			}
 		} catch (Exception e) {
@@ -517,14 +519,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private void processLoginSendPromise(Message msg) {
 		Log4J.startMethod(logger, "processLoginSendPromise");
 		try {
+			/* TODO: Fix me. This limit leads easily to a DOS attack */
 			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
 				/* Error: Too many clients logged on the server. */
 				logger.warn("Server is full, Client("+ msg.getAddress().toString() + ") can't login");
 
 				/* Notify player of the event. */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getAddress(),
-						MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
-
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
 				netMan.sendMessage(msgLoginNACK);
 				return;
 			}
@@ -532,15 +533,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 			
 			byte[] nonce = Hash.random(Hash.hashLength());
-			int clientid = playerContainer.addRuntimePlayer(key,msgLoginSendPromise.getHash(), msg.getAddress());
+			
+			PlayerEntry entry=playerContainer.add(key,msgLoginSendPromise.getHash(),msg.getSocketChannel());
+			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key,msgLoginSendPromise.getHash(),nonce);
 
-			PlayerEntryContainer.RuntimePlayerEntry player = playerContainer.get(clientid);
-			player.loginInformations.serverNonce = nonce;
-
-			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getAddress(), nonce);
-			msgLoginSendNonce.setClientID(clientid);
+			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getSocketChannel(), nonce);
+			msgLoginSendNonce.setClientID(entry.clientid);
 			netMan.sendMessage(msgLoginSendNonce);
-		} catch (NoSuchClientIDException e) {
+		} catch (Exception e) {
 			logger.error("client not found", e);
 		}
 
@@ -557,81 +557,88 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
 
+			int clientid = msg.getClientID();
+			PlayerEntry entry=playerContainer.get(clientid);
+			
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.NULL)) {
+			if (!isValidEvent(msg, entry, ClientState.CONNECTION_ACCEPTED)) {
 				return;
 			}
+			
+			SecuredLoginInfo info=entry.loginInformations;
 
-			int clientid = msg.getClientID();
-			PlayerEntryContainer.RuntimePlayerEntry player = playerContainer.get(clientid);
-			player.loginInformations.clientNonce = msgLogin.getHash();
-			player.loginInformations.userName = msgLogin.getUsername();
-			player.loginInformations.password = msgLogin.getPassword();
+			/* TODO: clientNonce is already set above... does it really need to be set again? */
+			info.clientNonce = msgLogin.getHash();
+			info.username = msgLogin.getUsername();
+			info.password = msgLogin.getPassword();
 
 			/* We verify the username and the password to make sure player is who he/she says he/she is. */
-			if (!playerContainer.verifyAccount(player.loginInformations)) {
+			if (!info.verify()) {
 				/* If the verification fails we send player a NACK and record the event */
 				logger.info("Incorrect username/password for player "+ msgLogin.getUsername());
 				stats.add("Players invalid login", 1);
-				playerContainer.addLoginEvent(msgLogin.getUsername(), msg.getAddress(), false);
+				info.addLoginEvent(msg.getAddress(), false);
 
 				/* Send player the Login NACK message */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getAddress(),
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
 						MessageS2CLoginNACK.Reasons.USERNAME_WRONG);
 
 				netMan.sendMessage(msgLoginNACK);
-				playerContainer.removeRuntimePlayer(clientid);
+				playerContainer.remove(clientid);
 				return;
 			}
-
-			if (playerContainer.hasPlayer(msgLogin.getUsername())) {
-				/* Warning: Player is already logged. */
+			
+			/* Now we check if this player is previously logged in */
+			PlayerEntry existing=playerContainer.get(msgLogin.getUsername());
+			
+			if(existing!=null) {
+				/* Warning: Player is alreay logged. So we proceed to store it and remove from game. */
 				logger.warn("Client(" + msg.getAddress().toString()	+ ") trying to login twice");
-				int clientoldid = playerContainer.getClientidPlayer(msgLogin.getUsername());
 
-				if (playerContainer.getRuntimeState(clientoldid) == PlayerEntryContainer.ClientState.GAME_BEGIN) {
-					RPObject.ID id = playerContainer.getRPObjectID(clientoldid);
-					RPObject object = rpMan.getRPObject(id);
-
-					if (rpMan.onExit(id)) {
+				if (existing.state == ClientState.GAME_BEGIN) {
+					RPObject object=existing.object;
+					
+					if (rpMan.onExit(object.getID())) {
 						/* NOTE: Set the Object so that it is stored in Database */
-						playerContainer.setRPObject(clientoldid, object);
+						existing.storeRPObject(object);
 					}
 				} else {
 					logger.info("Player trying to logout without choosing character");
 				}
 
-				playerContainer.removeRuntimePlayer(clientoldid);
+				playerContainer.remove(existing.clientid);
 			}
 
 			logger.debug("Correct username/password");
 
 			/* Correct: The login is correct */
-			player.username = player.loginInformations.userName;
+			entry.username = info.username;
+			
+			/* Now we store at database the login event */
+			info.addLoginEvent(msg.getAddress(), true);
+
 			/* We clean the login information as it is not longer useful. */
-			player.loginInformations = null;
-			playerContainer.addLoginEvent(msgLogin.getUsername(), msg.getAddress(), true);
+			entry.loginInformations = null;			
 
 			stats.add("Players login", 1);
 
 			/* Send player the Login ACK message */
-			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getAddress());
+			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getSocketChannel());
 			msgLoginACK.setClientID(clientid);
 			netMan.sendMessage(msgLoginACK);
 
 			/* Send player the ServerInfo */
-			MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(msg.getAddress(), ServerInfo.get());
+			MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(msg.getSocketChannel(), ServerInfo.get());
 			msgServerInfo.setClientID(clientid);
 			netMan.sendMessage(msgServerInfo);
 
 			/* Build player character list and send it to client */
-			String[] characters = playerContainer.getCharacterList(clientid);
-			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getAddress(), characters);
+			String[] characters = entry.getCharacters();
+			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getSocketChannel(), characters);
 			msgCharacters.setClientID(clientid);
 			netMan.sendMessage(msgCharacters);
 			
-			playerContainer.changeRuntimeState(clientid,PlayerEntryContainer.ClientState.LOGIN_COMPLETE);
-			playerContainer.get(clientid).loginInformations = null;
+			entry.state=ClientState.LOGIN_COMPLETE;
 		} catch (Exception e) {
 			logger.error("error while processing SecuredLoginEvent", e);
 		} finally {
@@ -648,15 +655,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		Log4J.startMethod(logger, "processOutOfSyncEvent");
 		try {
 			int clientid = msg.getClientID();
+			PlayerEntry entry=playerContainer.get(clientid);
 
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
-			/** Notify PlayerEntryContainer that this player is out of Sync */
-			PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer.get(clientid);
-			entry.perception_OutOfSync = true;
+			/** Notify Player Entry that this player is out of Sync */
+			entry.requestedSync = true;
 		} catch (Exception e) {
 			logger.error("error while processing OutOfSyncEvent", e);
 		} finally {
@@ -674,13 +681,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			int clientid = msg.getClientID();
 
+			PlayerEntry entry=playerContainer.get(clientid);
+
 			// verify event
-			if (!isValidEvent(msg, PlayerEntryContainer.ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
 			/** Handle Transfer ACK here */
-			PlayerEntryContainer.RuntimePlayerEntry entry = playerContainer.get(clientid);
 			for (TransferContent content : msg.getContents()) {
 				if (content.ack == true) {
 					logger.debug("Trying transfer content " + content);
@@ -691,7 +699,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						stats.add("Tranfer content size", content.data.length);
 
 						logger.debug("Transfering content " + content);
-						MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.source, content);
+
+						MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.channel, content);
 						msgTransfer.setClientID(clientid);
 						netMan.sendMessage(msgTransfer);
 					} else {

@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.4 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: PythonRPWorld.java,v 1.5 2007/01/18 12:58:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa.server.game.python;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.RPWorld;
+import marauroa.server.game.rp.RPWorld;
 
 import org.apache.log4j.Logger;
 
