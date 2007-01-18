@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.4 2007/01/08 19:26:14 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.5 2007/01/18 12:42:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,10 +26,14 @@ import java.util.*;
 
 import marauroa.server.net.IDisconnectedListener;
 
-
-
+/**
+ * This class is the basic schema for a nio server.
+ * It works in a pattern of master/slave.
+ * @author miguel
+ *
+ */
 class NioServer extends Thread {
-	// The host:port combination to listen on
+	/** The host:port combination to listen on */
 	private InetAddress hostAddress;
 	private int port;
 	
@@ -39,23 +43,27 @@ class NioServer extends Thread {
 	/** isFinished is true when the thread has really exited. */
 	private boolean isFinished;
 
-	// The channel on which we'll accept connections
+	/** The channel on which we'll accept connections */
 	private ServerSocketChannel serverChannel;
 
-	// The selector we'll be monitoring
+	/** The selector we'll be monitoring */
 	private Selector selector;
 
-	// The buffer into which we'll read data when it's available
+	/** The buffer into which we'll read data when it's available */
 	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
+	/** This is the slave associated with this master.
+	 *  As it is a simple thread, we only need one slave.
+	 */
 	private IWorker worker;
 
-	// A list of PendingChange instances
+	/** A list of PendingChange instances */
 	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-	// Maps a SocketChannel to a list of ByteBuffer instances
+	/** Maps a SocketChannel to a list of ByteBuffer instances */
 	private Map<SocketChannel,List<ByteBuffer>> pendingData = new HashMap<SocketChannel,List<ByteBuffer>>();
 	
+	/** A list of the listener to the onDisconnect event. */
 	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
@@ -70,18 +78,25 @@ class NioServer extends Thread {
 		
 		listeners=new LinkedList<IDisconnectedListener>();
 	}
-	
-	public void close(SocketChannel channel) throws IOException {
-		Socket socket=channel.socket();
-		InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
 
+	/** This method closes a channel.
+	 * It also notify any listener about the event.
+	 * @param channel the channel to close.
+	 * @throws IOException @see SocketChannel.close()
+	 */
+	public void close(SocketChannel channel) throws IOException {
 		for(IDisconnectedListener listener: listeners) {
-			listener.onDisconnect(address);
+			listener.onDisconnect(channel);
 		}
 
 		channel.close();		
 	}
 
+	/**
+	 * This method is used to send data on a socket.
+	 * @param socket the socketchannel to use.
+	 * @param data a byte array of data to send
+	 */
 	public void send(SocketChannel socket, byte[] data) {
 		synchronized (this.pendingChanges) {
 			// Indicate we want the interest ops set changed
@@ -114,6 +129,7 @@ class NioServer extends Thread {
 		try {
 			selector.close();
 		} catch (IOException e) {
+			// We really don't care about the exception.
 		}
 	}
 
@@ -260,6 +276,8 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
+	
+	/** Register a listener to notify about disconnected events */
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
 		this.listeners.add(listener);		
 	}

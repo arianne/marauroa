@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.6 2007/01/08 19:26:14 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.7 2007/01/18 12:42:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,12 +34,17 @@ import marauroa.common.net.NetConst;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.ConnectionValidator;
+import marauroa.server.net.validator.ConnectionValidator;
 
 import org.apache.log4j.Logger;
 
 
-
+/**
+ * This is the implementation of a worker that send messages, recieve it, ...
+ * This class also handles validation of connections and disconnections events
+ * @author miguel
+ *
+ */
 public class NIONetworkServerManager extends Thread implements IWorker, INetworkServerManager {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
@@ -56,13 +61,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	/** A List of Message objects: List<Message> */
 	private BlockingQueue<Message> messages;
 
-	private Map<InetSocketAddress, SocketChannel> sockets = null;
-
 	/** Statistics */
 	private Statistics stats;
 
 	/** checkes if the ip-address is banned */
-	private ConnectionValidator packetValidator;
+	private ConnectionValidator connectionValidator;
 
 	private BlockingQueue<DataEvent> queue;
 	
@@ -74,7 +77,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		Log4J.startMethod(logger, "NetworkServerManager");
 
 		/* init the packet validater (which can now only check if the address is banned)*/
-		packetValidator = new ConnectionValidator();
+		connectionValidator = new ConnectionValidator();
 		keepRunning = true;
 		isFinished = false;
 		
@@ -86,8 +89,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		stats = Statistics.getStatistics();
 		queue = new LinkedBlockingQueue<DataEvent>();
 		
-		sockets=new HashMap<InetSocketAddress, SocketChannel>();
-
 		logger.debug("NetworkServerManager started successfully");
 		
 		server=new NioServer(null, NetConst.marauroa_PORT, this);
@@ -146,12 +147,14 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 	}
 
-	/** Adds the channel to the map of address, channel when the client connects */
+	/** We check that this socket is not banned.
+	 *  We do it just on connect so we save lots of queries. */
 	public void onConnect(SocketChannel channel) {
 		Socket socket=channel.socket();
-		InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
 		
-		if(packetValidator.checkBanned(socket.getInetAddress())) {
+		if(connectionValidator.checkBanned(socket)) {
+			logger.info("Reject connect from banned IP: "+socket.getInetAddress());
+			
 			/* If address is banned, just close connection */
 			try {
 				server.close(channel);
@@ -159,15 +162,15 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				/* I don't think I want to listen to complains... */
 				logger.info(e);
 			}
-		} else {
-			sockets.put(address, channel);
 		}
+		
+		//TODO: I feel here we should ask PlayerEntryContainer for a new entry.
 	}
 
 	/** Removes the channel from the map when the client disconnect or is disconnected */
-	public void onDisconnect(InetSocketAddress address) {
-		sockets.remove(address);
-	}
+	public void onDisconnect(SocketChannel channel) {
+		// TODO: We should do something on disconnect or just don't care about it at all
+		}
 
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		byte[] dataCopy = new byte[count];
@@ -187,35 +190,26 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	 * @throws IOException 
 	 */
 	public void sendMessage(Message msg) {
-		SocketChannel channel = null;
-		synchronized (sockets) {
-			channel = sockets.get(msg.getAddress());
-		}		
-		
 		try {
 			byte[] data = encoder.encode(msg);
-			server.send(channel, data);
+			server.send(msg.getSocketChannel(), data);
 		} catch (IOException e) {
 			e.printStackTrace();
 			/** I am not interested in the exception. NioServer will detect this and close connection  */
 		}
 	}
 
-	public void disconnectClient(InetSocketAddress address) {
-		synchronized (sockets) {
+	public void disconnectClient(SocketChannel channel) {
 			try {
-			SocketChannel channel=sockets.remove(address);
 			server.close(channel);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Unable to disconnect a client "+channel.socket(),e);
 			}
-			
-		}
 		
 	}
 
 	public ConnectionValidator getValidator() {
-		return packetValidator;
+		return connectionValidator;
 	}
 	
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
@@ -232,11 +226,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
 
 				try {
-					Message msg = decoder.decode(address, event.data);
+					Message msg = decoder.decode(event.channel, event.data);
 					messages.add(msg);				
 				} catch (InvalidVersionException e) {
 					stats.add("Message invalid version", 1);
-					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(address, "Invalid client version: Update client");
+					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
 					/* We don't care */
@@ -247,54 +241,5 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 		
 		isFinished=true;
-	}
-	
-	public static void main(String[] args) throws IOException, InterruptedException {
-		new Thread() {
-			public void run() {
-				try {
-					NIONetworkServerManager netman=new NIONetworkServerManager();
-					netman.start();
-					System.out.println("Started");
-
-					Message msg=netman.getMessage();
-					System.out.println("SERVER: "+msg);
-					netman.sendMessage(msg);
-					
-					Thread.sleep(2000);
-
-					netman.finish();
-					System.out.println("Finished");
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}			
-		}.start();
-
-		new Thread() {
-			public void run() {
-				try {
-					TCPThreadedNetworkClientManager clientman=new TCPThreadedNetworkClientManager("localhost",NetConst.marauroa_PORT);
-
-					RPAction action=new RPAction();
-					action.put("test",4);
-					action.put("hola","caca");
-					
-					Message msg=new MessageC2SAction(null,action);
-					clientman.addMessage(msg);
-					
-					Message rpl=null;
-					while(rpl==null) {
-						rpl=clientman.getMessage(1000);
-					}
-					
-					System.out.println("CLIENT: "+rpl);
-					
-					System.exit(0);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}			
-		}.start();
 	}
 }

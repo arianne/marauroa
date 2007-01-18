@@ -1,4 +1,4 @@
-/* $Id: ChangeRequest.java,v 1.2 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: ChangeRequest.java,v 1.3 2007/01/18 12:42:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,11 @@
 package marauroa.server.net.nio;
 import java.nio.channels.SocketChannel;
 
+/** 
+ * This class notify the NIO Server about a change request on one of the sockets.
+ * @author miguel
+ *
+ */
 public class ChangeRequest {
 	public static final int REGISTER = 1;
 	public static final int CHANGEOPS = 2;

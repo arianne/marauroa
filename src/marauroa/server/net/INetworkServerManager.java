@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.5 2007/01/08 19:26:14 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.6 2007/01/18 12:42:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,9 +13,10 @@
 package marauroa.server.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.net.Message;
+import marauroa.server.net.validator.ConnectionValidator;
 
 /** A Network Server Manager is an active object ( a thread ) that send and recieve messages
  *  from clients. There is not transport or technology imposed.
@@ -66,7 +67,7 @@ public interface INetworkServerManager {
 	 *  
 	 * @param address
 	 */
-	public abstract void disconnectClient(InetSocketAddress address);
+	public abstract void disconnectClient(SocketChannel channel);
 
 	/**
 	 * This method inits the active object 

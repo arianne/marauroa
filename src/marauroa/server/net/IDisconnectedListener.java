@@ -1,6 +1,6 @@
 package marauroa.server.net;
 
-import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /** 
  * This interface provides a callback notification for disconnected clients.
@@ -10,6 +10,6 @@ import java.net.InetSocketAddress;
  */
 public interface IDisconnectedListener {
 	/** This method is called when a connection is closed. */
-	public void onDisconnect(InetSocketAddress address);
+	public void onDisconnect(SocketChannel channel);
 
 }

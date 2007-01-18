@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.5 2006/12/18 21:06:08 arianne_rpg Exp $ */
+/* $Id: InetAddressMask.java,v 1.1 2007/01/18 12:42:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,7 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 
-package marauroa.server.net;
+package marauroa.server.net.validator;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.19 2006/12/18 20:08:13 arianne_rpg Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.20 2007/01/18 12:38:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,11 +31,10 @@ import marauroa.common.net.Message;
 
 import org.apache.log4j.Logger;
 
-public final class TCPThreadedNetworkClientManager implements NetworkClientManagerInterface {
+public final class TCPThreadedNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** the logger instance. */
-	private static final Logger logger = Log4J
-			.getLogger(TCPThreadedNetworkClientManager.class);
+	private static final Logger logger = Log4J.getLogger(TCPThreadedNetworkClientManager.class);
 
 	private int clientid;
 
@@ -217,7 +216,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
 
 			try {
-				Message msg=decoder.decode(address, data);
+				Message msg=decoder.decode(null, data);
 
 				if (logger.isDebugEnabled()) {
 					logger.debug("build message(type=" + msg.getType()
@@ -337,7 +336,7 @@ public final class TCPThreadedNetworkClientManager implements NetworkClientManag
 			try {
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
-					msg.setAddress(address);
+					msg.setSocketChannel(null);
 					msg.setClientID(clientid);
 
 					if (msg.getType() == Message.MessageType.C2S_OUTOFSYNC) {

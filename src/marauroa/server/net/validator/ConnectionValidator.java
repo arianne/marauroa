@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.1 2006/12/19 12:13:35 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.1 2007/01/18 12:42:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.net;
+package marauroa.server.net.validator;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -24,9 +24,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.IPlayerDatabase;
-import marauroa.server.game.JDBCPlayerDatabase;
-import marauroa.server.game.JDBCTransaction;
+import marauroa.server.game.db.IPlayerDatabase;
+import marauroa.server.game.db.JDBCPlayerDatabase;
+import marauroa.server.game.db.JDBCTransaction;
 
 import org.apache.log4j.Logger;
 
@@ -102,6 +102,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 *            the DatagramPacket received
 	 * @return true if the source ip is banned
 	 */
+	@Deprecated
 	public boolean checkBanned(DatagramPacket packet) {
 		return checkBanned(packet.getAddress());
 	}

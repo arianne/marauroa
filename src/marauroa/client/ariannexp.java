@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.30 2007/01/08 19:26:13 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.31 2007/01/18 12:38:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,7 @@ import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.client.net.NetworkClientManagerInterface;
+import marauroa.client.net.INetworkClientManagerInterface;
 import marauroa.client.net.TCPThreadedNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
@@ -55,7 +55,7 @@ public abstract class ariannexp {
 
 	public final static long TIMEOUT = 10000;
 
-	private NetworkClientManagerInterface netMan;
+	private INetworkClientManagerInterface netMan;
 
 	private List<Message> messages;
 
@@ -149,8 +149,7 @@ public abstract class ariannexp {
 					key = ((MessageS2CLoginSendKey) msg).getKey();
 
 					clientNonce = Hash.random(Hash.hashLength());
-					netMan.addMessage(new MessageC2SLoginSendPromise(msg
-							.getAddress(), Hash.hash(clientNonce)));
+					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
 					break;
 				}
 				case S2C_LOGIN_SENDNONCE: {
@@ -172,7 +171,7 @@ public abstract class ariannexp {
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
 					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(
-									msg.getAddress(), clientNonce, username,
+									null, clientNonce, username,
 									cryptedPassword));
 					break;
 				}
@@ -230,8 +229,7 @@ public abstract class ariannexp {
 			throws ariannexpTimeoutException {
 		Log4J.startMethod(logger, "chooseCharacter");
 		try {
-			Message msgCC = new MessageC2SChooseCharacter(netMan.getAddress(),
-					character);
+			Message msgCC = new MessageC2SChooseCharacter(null, character);
 
 			netMan.addMessage(msgCC);
 
@@ -267,8 +265,7 @@ public abstract class ariannexp {
 			String email) throws ariannexpTimeoutException {
 		Log4J.startMethod(logger, "createAccount");
 		try {
-			Message msgCA = new MessageC2SCreateAccount(netMan.getAddress(),
-					username, password, email);
+			Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 			netMan.addMessage(msgCA);
 
@@ -316,8 +313,7 @@ public abstract class ariannexp {
 		/** TODO: Useless we need to return something or disable blocking */
 		Log4J.startMethod(logger, "send");
 		try {
-			MessageC2SAction msgAction = new MessageC2SAction(netMan
-					.getAddress(), action);
+			MessageC2SAction msgAction = new MessageC2SAction(null, action);
 			netMan.addMessage(msgAction);
 
 			if (block) {
@@ -352,7 +348,7 @@ public abstract class ariannexp {
 		Log4J.startMethod(logger, "logout");
 
 		try {
-			Message msgL = new MessageC2SLogout(netMan.getAddress());
+			Message msgL = new MessageC2SLogout(null);
 
 			netMan.addMessage(msgL);
 			int recieved = 0;
@@ -408,8 +404,7 @@ public abstract class ariannexp {
 				switch (msg.getType()) {
 				case S2C_PERCEPTION: {
 					logger.debug("Processing Message Perception");
-					MessageC2SPerceptionACK reply = new MessageC2SPerceptionACK(
-							msg.getAddress());
+					MessageC2SPerceptionACK reply = new MessageC2SPerceptionACK(null);
 					netMan.addMessage(reply);
 
 					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
@@ -425,8 +420,7 @@ public abstract class ariannexp {
 
 					items = onTransferREQ(items);
 
-					MessageC2STransferACK reply = new MessageC2STransferACK(msg
-							.getAddress(), items);
+					MessageC2STransferACK reply = new MessageC2STransferACK(null, items);
 					netMan.addMessage(reply);
 
 					break;
