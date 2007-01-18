@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.4 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the client that the server has accepted its create
@@ -33,7 +34,7 @@ public class MessageS2CCreateAccountACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CCreateAccountACK(InetSocketAddress source) {
+	public MessageS2CCreateAccountACK(SocketChannel source) {
 		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
 	}
 
@@ -45,7 +46,7 @@ public class MessageS2CCreateAccountACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C CreateAccount ACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ()";
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.12 2006/12/18 20:08:13 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.13 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,9 +104,9 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, InetSocketAddress source)
+	public Message getMessage(byte[] data, SocketChannel channel)
 			throws IOException, InvalidVersionException {
-		return getMessage(data, source, 0);
+		return getMessage(data, channel, 0);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, InetSocketAddress source, int offset)
+	public Message getMessage(byte[] data, SocketChannel channel, int offset)
 			throws IOException, InvalidVersionException {
 		Log4J.startMethod(logger, "getMessage");
 		try {
@@ -141,7 +142,7 @@ public class MessageFactory {
 						InputSerializer s = new InputSerializer(in);
 
 						tmp.readObject(s);
-						tmp.setAddress(source);
+						tmp.setSocketChannel(channel);
 						return tmp;
 					} catch (Exception e) {
 						NDC.push("message is [" + tmp + "]\n");

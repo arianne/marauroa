@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutNACK.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CLogoutNACK.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the client that the server has rejected its Logout
@@ -33,7 +34,7 @@ public class MessageS2CLogoutNACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CLogoutNACK(InetSocketAddress source) {
+	public MessageS2CLogoutNACK(SocketChannel source) {
 		super(MessageType.S2C_LOGOUT_NACK, source);
 	}
 
@@ -45,7 +46,7 @@ public class MessageS2CLogoutNACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C Logout NACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ()";
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override

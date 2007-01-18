@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.5 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the server what of the available characters is chosen
@@ -40,7 +41,7 @@ public class MessageC2SChooseCharacter extends Message {
 	 *            the returned by the marauroa.common.net.MessageS2CCharacters
 	 * @see marauroa.common.net.MessageS2CCharacterList
 	 */
-	public MessageC2SChooseCharacter(InetSocketAddress source, String character) {
+	public MessageC2SChooseCharacter(SocketChannel source, String character) {
 		super(MessageType.C2S_CHOOSECHARACTER, source);
 		this.character = character;
 	}
@@ -62,7 +63,7 @@ public class MessageC2SChooseCharacter extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S ChooseCharacter) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ character + ")";
 	}
 

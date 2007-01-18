@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.6 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.7 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
@@ -29,7 +30,7 @@ public class MessageS2CTransfer extends Message {
 		super(MessageType.S2C_TRANSFER, null);
 	}
 
-	public MessageS2CTransfer(InetSocketAddress source, TransferContent content) {
+	public MessageS2CTransfer(SocketChannel source, TransferContent content) {
 		super(MessageType.S2C_TRANSFER, source);
 
 		this.contents = new LinkedList<TransferContent>();
@@ -43,7 +44,7 @@ public class MessageS2CTransfer extends Message {
 	@Override
 	public String toString() {
 		StringBuffer st = new StringBuffer("Message (S2C Transfer) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (");
+				+ getAddress() + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);

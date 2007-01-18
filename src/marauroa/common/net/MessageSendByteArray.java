@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.5 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.6 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message is a generic message that send a byte array.
@@ -37,8 +38,7 @@ public class MessageSendByteArray extends Message {
 	 * @param hash
 	 *            The byte array you want to send.
 	 */
-	public MessageSendByteArray(MessageType type, InetSocketAddress source,
-			byte[] hash) {
+	public MessageSendByteArray(MessageType type, SocketChannel source,	byte[] hash) {
 		super(type, source);
 		this.hash = hash;
 	}

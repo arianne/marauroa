@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.4 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.RSAPublicKey;
 
@@ -43,7 +44,7 @@ public class MessageS2CLoginSendKey extends Message {
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageS2CLoginSendKey(InetSocketAddress source, RSAPublicKey key) {
+	public MessageS2CLoginSendKey(SocketChannel source, RSAPublicKey key) {
 		super(MessageType.S2C_LOGIN_SENDKEY, source);
 		this.key = key;
 	}
@@ -65,7 +66,7 @@ public class MessageS2CLoginSendKey extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C Login Send key) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (n:"
+				+getAddress() + ") CONTENTS: (n:"
 				+ key.getN() + "\te:" + key.getE() + ")";
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,9 +14,15 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
+/** This message is for confirming server the content we want to be transfered to us.
+ *  This way client can implement a cache system to save bandwidth.
+ * @author miguel
+ *
+ */
 public class MessageC2STransferACK extends Message {
 	private List<TransferContent> contents;
 
@@ -25,8 +31,7 @@ public class MessageC2STransferACK extends Message {
 		super(MessageType.C2S_TRANSFER_ACK, null);
 	}
 
-	public MessageC2STransferACK(InetSocketAddress source,
-			List<TransferContent> content) {
+	public MessageC2STransferACK(SocketChannel source, List<TransferContent> content) {
 		super(MessageType.C2S_TRANSFER_ACK, source);
 
 		this.contents = content;
@@ -39,7 +44,7 @@ public class MessageC2STransferACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S Transfer ACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ contents.size() + ")";
 	}
 

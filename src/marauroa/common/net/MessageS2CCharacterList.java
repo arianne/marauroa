@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -36,7 +37,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @param characters
 	 *            the list of characters of the player
 	 */
-	public MessageS2CCharacterList(InetSocketAddress source, String[] characters) {
+	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
 		this.characters = characters;
 	}
@@ -63,7 +64,7 @@ public class MessageS2CCharacterList extends Message {
 			text.append(characters[i] + ",");
 		}
 		return "Message (S2C Character List) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ text.substring(0, text.length() - 1) + ")";
 	}
 

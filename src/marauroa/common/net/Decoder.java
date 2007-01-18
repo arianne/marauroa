@@ -2,6 +2,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.Map;
 
 
@@ -11,7 +12,7 @@ import java.util.Map;
  * @author miguel
  */
 public class Decoder {
-	private Map<InetSocketAddress,byte[]> content;
+	private Map<SocketChannel,byte[]> content;
 
 	/** MessageFactory */
 	private MessageFactory msgFactory;
@@ -31,7 +32,7 @@ public class Decoder {
 		msgFactory = MessageFactory.getFactory();		
 	}
 	
-	public Message decode(InetSocketAddress address, byte[] data) throws IOException, InvalidVersionException {
+	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
 		Message msg=null;
 		
 		int size = (data[0] & 0xFF)
@@ -43,7 +44,7 @@ public class Decoder {
 			byte[] buffer=new byte[size-4];
 			System.arraycopy(data, 4, buffer, 0, size-4);
 
-			msg = msgFactory.getMessage(buffer, address);
+			msg = msgFactory.getMessage(buffer, channel);
 		} else {
 			/* TODO: Size is not the expected: We should store and wait for message completion. */
 			throw new IOException();

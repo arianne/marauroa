@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendPromise.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendPromise.java,v 1.5 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.Hash;
 
@@ -38,14 +39,14 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 	 * @param hash
 	 *            The hash code of the nonce to use.
 	 */
-	public MessageC2SLoginSendPromise(InetSocketAddress source, byte[] hash) {
+	public MessageC2SLoginSendPromise(SocketChannel source, byte[] hash) {
 		super(MessageType.C2S_LOGIN_SENDPROMISE, source, hash);
 	}
 
 	@Override
 	public String toString() {
 		return "Message (C2S Login Send Promise) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (hash:"
+				+ getAddress() + ") CONTENTS: (hash:"
 				+ Hash.toHexString(hash) + ")";
 	}
 

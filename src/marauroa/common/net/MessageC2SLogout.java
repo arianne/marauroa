@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLogout.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SLogout.java,v 1.5 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
@@ -32,7 +33,7 @@ public class MessageC2SLogout extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SLogout(InetSocketAddress source) {
+	public MessageC2SLogout(SocketChannel source) {
 		super(MessageType.C2S_LOGOUT, source);
 	}
 
@@ -44,7 +45,7 @@ public class MessageC2SLogout extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S Logout) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ()";
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.19 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.20 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -86,7 +87,7 @@ public class MessageS2CPerception extends Message {
 	 *            the list of object that has been deleted since the last
 	 *            perception.
 	 */
-	public MessageS2CPerception(InetSocketAddress source, Perception perception) {
+	public MessageS2CPerception(SocketChannel source, Perception perception) {
 		super(MessageType.S2C_PERCEPTION, source);
 
 		typePerception = perception.type;

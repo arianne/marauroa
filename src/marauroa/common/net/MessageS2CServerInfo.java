@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.7 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.8 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 
@@ -43,7 +44,7 @@ public class MessageS2CServerInfo extends Message {
 	 * @param contents
 	 *            the list of strings to describe the server.
 	 */
-	public MessageS2CServerInfo(InetSocketAddress source, String[] contents) {
+	public MessageS2CServerInfo(SocketChannel source, String[] contents) {
 		super(MessageType.S2C_SERVERINFO, source);
 		this.contents = contents;
 	}
@@ -70,7 +71,7 @@ public class MessageS2CServerInfo extends Message {
 			text.append("[" + contents[i] + "],");
 		}
 		return "Message (S2C Server Info) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ text.substring(0, text.length() - 1) + ")";
 	}
 

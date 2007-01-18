@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SAction.java,v 1.5 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.game.RPAction;
 
@@ -39,7 +40,7 @@ public class MessageC2SAction extends Message {
 	 * @param action
 	 *            the username of the user that wants to login
 	 */
-	public MessageC2SAction(InetSocketAddress source, RPAction action) {
+	public MessageC2SAction(SocketChannel source, RPAction action) {
 		super(MessageType.C2S_ACTION, source);
 		this.action = action;
 	}
@@ -61,7 +62,7 @@ public class MessageC2SAction extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S Action) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ action.toString() + ")";
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.4 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.Hash;
 
@@ -45,7 +46,7 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageC2SLoginSendNonceNameAndPassword(InetSocketAddress source,
+	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source,
 			byte[] nonce, String username, byte[] password) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
 		this.username = username;
@@ -78,7 +79,7 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	@Override
 	public String toString() {
 		return "Message (C2S Login) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (nonce:"
+				+ getAddress() + ") CONTENTS: (nonce:"
 				+ Hash.toHexString(hash) + "\tusername:" + username
 				+ "\tpassword:" + Hash.toHexString(password) + ")";
 	}

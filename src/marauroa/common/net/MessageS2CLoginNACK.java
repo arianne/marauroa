@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.6 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.7 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the client that the server has reject its login Message
@@ -51,7 +52,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CLoginNACK(InetSocketAddress source, Reasons resolution) {
+	public MessageS2CLoginNACK(SocketChannel source, Reasons resolution) {
 		super(MessageType.S2C_LOGIN_NACK, source);
 		reason = resolution;
 	}
@@ -83,7 +84,7 @@ public class MessageS2CLoginNACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C Login NACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ getResolution() + ")";
 	}
 

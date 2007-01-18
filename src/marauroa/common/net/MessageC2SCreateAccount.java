@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.4 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the server to create an account.
@@ -43,7 +44,7 @@ public class MessageC2SCreateAccount extends Message {
 	 *            the returned by the marauroa.common.net.MessageS2CCharacters
 	 * @see marauroa.common.net.MessageS2CCharacterList
 	 */
-	public MessageC2SCreateAccount(InetSocketAddress source, String username,
+	public MessageC2SCreateAccount(SocketChannel source, String username,
 			String password, String email) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
@@ -71,7 +72,7 @@ public class MessageC2SCreateAccount extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S CreateAccount) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ username + ";" + password + ";" + email + ")";
 	}
 

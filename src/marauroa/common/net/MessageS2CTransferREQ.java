@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.5 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.6 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,8 +26,7 @@ public class MessageS2CTransferREQ extends Message {
 		super(MessageType.S2C_TRANSFER_REQ, null);
 	}
 
-	public MessageS2CTransferREQ(InetSocketAddress source,
-			List<TransferContent> contents) {
+	public MessageS2CTransferREQ(SocketChannel source, List<TransferContent> contents) {
 		super(MessageType.S2C_TRANSFER_REQ, source);
 
 		this.contents = contents;
@@ -39,7 +39,7 @@ public class MessageS2CTransferREQ extends Message {
 	@Override
 	public String toString() {
 		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (");
+				+ getAddress() + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);

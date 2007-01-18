@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -41,7 +42,7 @@ public class MessageS2CInvalidMessage extends Message {
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageS2CInvalidMessage(InetSocketAddress source, String reason) {
+	public MessageS2CInvalidMessage(SocketChannel source, String reason) {
 		super(MessageType.S2C_INVALIDMESSAGE, source);
 		this.reason = reason;
 	}
@@ -63,7 +64,7 @@ public class MessageS2CInvalidMessage extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C Message Invalid) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (reason:"
+				+ getAddress() + ") CONTENTS: (reason:"
 				+ reason + ")";
 	}
 

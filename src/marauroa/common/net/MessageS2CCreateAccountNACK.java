@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.3 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.4 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,13 +15,13 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the client that the server has reject its login Message
  * 
  * @see marauroa.common.net.Message
  */
-
 public class MessageS2CCreateAccountNACK extends Message {
 	public enum Reasons {
 		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
@@ -45,7 +45,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateAccountNACK(InetSocketAddress source,
+	public MessageS2CCreateAccountNACK(SocketChannel source,
 			Reasons resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
 		reason = resolution;
@@ -78,7 +78,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (S2C Create Account NACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ("
+				+ getAddress() + ") CONTENTS: ("
 				+ getResolution() + ")";
 	}
 

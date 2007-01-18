@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.6 2007/01/14 19:20:04 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.7 2007/01/18 12:37:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,10 @@
 package marauroa.common.net;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 /**
  * Message is a class to represent all the kind of messages that are possible to
@@ -58,18 +61,18 @@ public class Message implements Serializable {
 
 	protected int timestampMessage;
 
-	protected InetSocketAddress source;
-
+	protected SocketChannel channel;
+	
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public Message(MessageType type, InetSocketAddress source) {
+	public Message(MessageType type, SocketChannel channel) {
 		this.type = type;
 		this.clientid = CLIENTID_INVALID;
-		this.source = source;
+		this.channel = channel;
 		timestampMessage = (int) (System.currentTimeMillis());
 	}
 
@@ -77,19 +80,27 @@ public class Message implements Serializable {
 	 * Sets the TCP/IP source/destination of the message
 	 * 
 	 * @param source
-	 *            The TCP/IP address associated to this message
+	 *            The TCP/IP socket associated to this message
 	 */
-	public void setAddress(InetSocketAddress source) {
-		this.source = source;
+	public void setSocketChannel(SocketChannel channel) {
+		this.channel = channel;
 	}
 
 	/**
-	 * Returns the TCP/IP address associatted with this message
+	 * Returns the TCP/IP socket associatted with this message
 	 * 
-	 * @return the TCP/IP address associatted with this message
+	 * @return the TCP/IP socket associatted with this message
 	 */
+	public SocketChannel getSocketChannel() {
+		return channel;
+	}
+	
+	/** Returns the address of the channel associated. */
+	@Deprecated
 	public InetSocketAddress getAddress() {
-		return source;
+		//return channel.socket().getInetAddress();
+		Socket socket=channel.socket();
+		return new InetSocketAddress(socket.getInetAddress(), socket.getPort());
 	}
 
 	/**
@@ -147,8 +158,7 @@ public class Message implements Serializable {
 	 * @exception java.lang.ClassNotFoundException
 	 *                if the serialized class doesn't exist.
 	 */
-	public void readObject(InputSerializer in) throws IOException,
-			java.lang.ClassNotFoundException {
+	public void readObject(InputSerializer in) throws IOException, java.lang.ClassNotFoundException {
 		if (in.readByte() != NetConst.NETWORK_PROTOCOL_VERSION) {
 			throw new IOException();
 		}

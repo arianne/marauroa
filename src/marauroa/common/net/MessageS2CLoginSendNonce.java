@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendNonce.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageS2CLoginSendNonce.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.Hash;
 
@@ -38,14 +39,14 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 	 * @param hash
 	 *            The nonce to send to the client.
 	 */
-	public MessageS2CLoginSendNonce(InetSocketAddress source, byte[] hash) {
+	public MessageS2CLoginSendNonce(SocketChannel source, byte[] hash) {
 		super(MessageType.S2C_LOGIN_SENDNONCE, source, hash);
 	}
 
 	@Override
 	public String toString() {
 		return "Message (S2C Login Send Nonce) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: (nonce:"
+				+ getAddress() + ") CONTENTS: (nonce:"
 				+ Hash.toHexString(hash) + ")";
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SPerceptionACK.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: MessageC2SPerceptionACK.java,v 1.5 2007/01/18 12:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the server that the client has accepted its Perception
@@ -33,7 +34,7 @@ public class MessageC2SPerceptionACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SPerceptionACK(InetSocketAddress source) {
+	public MessageC2SPerceptionACK(SocketChannel source) {
 		super(MessageType.C2S_PERCEPTION_ACK, source);
 	}
 
@@ -45,7 +46,7 @@ public class MessageC2SPerceptionACK extends Message {
 	@Override
 	public String toString() {
 		return "Message (C2S Perception ACK) from ("
-				+ source.getAddress().getHostAddress() + ") CONTENTS: ()";
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
