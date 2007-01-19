@@ -142,8 +142,8 @@ http://gladiators.game-server.cc
 <game>.<game>createaccount -u <user> -p <password> -c <character> -e <email>
 
 For example:
-  · games.stendhal.server.stendhalcreateaccout -u root -p pazzw0rd -c MaSSive -e root@localhost.com
-  · mapacman.mapacmancreateaccount -u root -p pazzw0rd -c MaSSive -e root@localhost.com
+  ï¿½ games.stendhal.server.stendhalcreateaccout -u root -p pazzw0rd -c MaSSive -e root@localhost.com
+  ï¿½ mapacman.mapacmancreateaccount -u root -p pazzw0rd -c MaSSive -e root@localhost.com
 
 Each game has a different number of parameters, check it with the -h parameter.
 
@@ -157,6 +157,15 @@ Changelog
 - Incompatible with Stendhal 0.5x or Jmapacman games.
 - Added non blocking network server.
 - Removed UDP support.
+- Moved client to work with nio package.
+- Improved efficience of data structure accesses at server.
+- Simplified NetworkServerManager structure.
+- Documented widely everything.
+- Reimplemented Game package to improve efficience.
+- Removed useless exceptions.
+- Allowed to send a template object when creating account, so we can customize player object on creation time.
+- Removed incomplete action concept.
+- Simplified RPScheduler.
 
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case

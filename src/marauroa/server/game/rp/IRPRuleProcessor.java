@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.1 2007/01/18 12:51:54 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,42 +32,43 @@ public interface IRPRuleProcessor {
 	/**
 	 * Set the context where the actions are executed.
 	 * 
-	 * @param rpman
-	 *            ...
+	 * @param rpman the RPServerManager object that is running our actions
 	 */
 	public void setContext(RPServerManager rpman);
 
-	/** Returns true if the version of the game is compatible */
+	/** 
+	 * Returns true if the version of the game is compatible 
+	 * @param game the game name
+	 * @param version the game version
+	 * @return true if game,version is compatible */
 	public boolean checkGameVersion(String game, String version);
 
-	/** Creates an account for the game */
-	public Result createAccount(String username, String password, String email);
+	/** 
+	 * Creates an account for the game 
+	 * @param username the username who is going to be added.
+	 * @param password the password for our username. 
+	 * @param email the email of the player for notifications or password reminders. 
+	 * @param template the RPObject template we going to create.
+	 * @return the Result of creating the account. */
+	public Result createAccount(String username, String password, String email, RPObject template);
 
 	/**
 	 * This method is called *before* adding an action by RPScheduler so you can
 	 * choose not to allow the action to be added by returning false
+	 * 
+	 * @param action the action that is going to be added.
+	 * @param actionList the actions that this player already owns.
+	 * @return true if we approve the action to be added.
 	 */
 	public boolean onActionAdd(RPAction action, List<RPAction> actionList);
 
 	/**
-	 * This method is called *before* adding an incomplete action, an action
-	 * that has been added before but has not been completed, by RPScheduler so
-	 * you can choose not to allow the action to be added by returning false
-	 */
-	public boolean onIncompleteActionAdd(RPAction action,
-			List<RPAction> actionList);
-
-	/**
 	 * Execute an action in the name of a player.
 	 * 
-	 * @param id
-	 *            the id of the object owner of the actions.
-	 * @param action
-	 *            the action to execute
-	 * @return the action status, that can be Success, Fail or incomplete,
-	 *         please refer to Actions Explained for more info.
+	 * @param id the id of the object owner of the actions.
+	 * @param action the action to execute
 	 */
-	public RPAction.Status execute(RPObject.ID id, RPAction action);
+	public void execute(RPObject.ID id, RPAction action);
 
 	/** Notify it when a begin of actual turn happens. */
 	public void beginTurn();
@@ -78,34 +79,23 @@ public interface IRPRuleProcessor {
 	/**
 	 * Callback method called when a new player enters in the game
 	 * 
-	 * @param object
-	 *            the new player that enters in the game.
+	 * @param object the new player that enters in the game.
 	 */
 	public boolean onInit(RPObject object) throws RPObjectInvalidException;
 
 	/**
 	 * Callback method called when a player exits the game
 	 * 
-	 * @param id
-	 *            the new player id that exits the game.
-	 * @return true to update the player on database.
+	 * @param id the new player id that exits the game.
+	 * @return true to allow player to exit
 	 */
 	public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException;
-	
-	/**
-	 * This method request game to logout player.
-	 * It should only fail to logout the player if it is already logged out.
-	 * 
-	 * @param id player identification
-	 * @throws RPObjectNotFoundException if the player is already logged out
-	 */
-	public void onForcedExit(RPObject.ID id) throws RPObjectNotFoundException;
 
 	/**
-	 * Callback method called when a new player time out
+	 * Callback method called when a new player time out.
+	 * This method MUST logout the player
 	 * 
-	 * @param id
-	 *            the new player id that timeouts.
+	 * @param id the new player id that timeouts.
 	 */
-	public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException;
+	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException;
 }

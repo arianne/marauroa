@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.1 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server.net.validator;
 
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Connection;
@@ -33,6 +32,8 @@ import org.apache.log4j.Logger;
 /**
  * The PacketValidator validates the ariving packets, (currently it can only
  * check if the address is banned, may be it will check more later)
+ * 
+ * FIXME: It WILL appear race conditions if it is accessed from outside the Network thread.
  * 
  */
 public class ConnectionValidator implements Iterable<InetAddressMask>{
@@ -93,18 +94,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 */
 	public Iterator<InetAddressMask> iterator() {
 		return temporalBans.iterator();
-	}
-
-	/**
-	 * Is the source ip-address banned?
-	 * 
-	 * @param packet
-	 *            the DatagramPacket received
-	 * @return true if the source ip is banned
-	 */
-	@Deprecated
-	public boolean checkBanned(DatagramPacket packet) {
-		return checkBanned(packet.getAddress());
 	}
 
 	/**

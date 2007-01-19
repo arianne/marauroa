@@ -1,28 +1,18 @@
 package marauroa.server.game.db;
 
-/**
- * This exception notify about any generic database exception, mainly about SQLExceptions.
- * 
- * @author miguel
- *
- */
+@Deprecated
 public class GenericDatabaseException extends Exception {
-	private static final long serialVersionUID = -2764012454573117520L;
 
-	public GenericDatabaseException(Throwable cause) {
-		super(cause);
+	public GenericDatabaseException(Exception e) {
+		super(e);
 	}
 
-	public GenericDatabaseException(String message, Throwable cause) {
-		super(message, cause);
+	public GenericDatabaseException(String text, Exception sqle) {
+		super(text,sqle);
 	}
 
-	/**
-	 * Do not use
-	 * <code>throw new GenericDatabaseException(cause.getMessage())</code>.
-	 * use: <code>throw new GenericDatabaseException(cause)</code>.
-	 */
-	GenericDatabaseException(String message) {
-		super(message);
+	public GenericDatabaseException(String text) {
+		super(text);
 	}
+
 }

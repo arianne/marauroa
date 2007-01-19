@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.33 2007/01/18 12:58:06 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.34 2007/01/19 08:08:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,8 @@ import marauroa.common.PropertyNotFoundException;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
-import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
-import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageC2SAction;
 import marauroa.common.net.MessageC2SChooseCharacter;
@@ -36,9 +34,7 @@ import marauroa.common.net.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.MessageC2SLoginSendPromise;
 import marauroa.common.net.MessageC2SLogout;
 import marauroa.common.net.MessageC2SOutOfSync;
-import marauroa.common.net.MessageC2SPerceptionACK;
 import marauroa.common.net.MessageC2STransferACK;
-import marauroa.common.net.MessageS2CActionACK;
 import marauroa.common.net.MessageS2CCharacterList;
 import marauroa.common.net.MessageS2CChooseCharacterACK;
 import marauroa.common.net.MessageS2CChooseCharacterNACK;
@@ -220,8 +216,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @return true, the event is valid, else false
 	 */
 	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState state) throws NoSuchClientIDException {
-		int clientid = msg.getClientID();
-		
 		if(entry==null) {
 			/* Error: Player didn't login. */
 			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
@@ -485,7 +479,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		Log4J.startMethod(logger, "processCreateAccount");
 		try {
-			Result result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail());
+			Result result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
 			
 			if (result == Result.OK_ACCOUNT_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
@@ -534,7 +528,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			
 			byte[] nonce = Hash.random(Hash.hashLength());
 			
-			PlayerEntry entry=playerContainer.add(key,msgLoginSendPromise.getHash(),msg.getSocketChannel());
+			PlayerEntry entry=playerContainer.add(msg.getSocketChannel());
 			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key,msgLoginSendPromise.getHash(),nonce);
 
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getSocketChannel(), nonce);
@@ -626,6 +620,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getSocketChannel());
 			msgLoginACK.setClientID(clientid);
 			netMan.sendMessage(msgLoginACK);
+			
+			/* TODO: Return also player a list of previous login attemps */
 
 			/* Send player the ServerInfo */
 			MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(msg.getSocketChannel(), ServerInfo.get());

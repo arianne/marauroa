@@ -1,4 +1,4 @@
-/* $Id: IPlayerDatabase.java,v 1.1 2007/01/18 12:51:56 arianne_rpg Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.2 2007/01/19 08:08:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,9 @@ import marauroa.server.game.PlayerAlreadyAddedException;
 import marauroa.server.game.PlayerNotFoundException;
 import marauroa.server.game.container.PlayerEntry;
 
-/** The interface that all the databases marauroa use MUST implement. */
+/** The interface that all the databases marauroa use MUST implement. 
+ *  TODO: We are missing core important methods. 
+ *  IMHO We should create several interfaces for database access. */
 public interface IPlayerDatabase {
 	/**
 	 * Returns true if the strign is valid and doesn't contains any strange
@@ -39,10 +41,7 @@ public interface IPlayerDatabase {
 	 *            containes the informations to decide if the login is correct.
 	 * @return true if informations are correct, false otherwise.
 	 */
-	public boolean verifyAccount(
-			Transaction trans,
-			PlayerEntry.SecuredLoginInfo informations)
-			throws GenericDatabaseException;
+	public boolean verifyAccount(Transaction trans,	PlayerEntry.SecuredLoginInfo informations) throws GenericDatabaseException;
 
 	/**
 	 * This method sets the account into one of the predefined states:
@@ -53,16 +52,7 @@ public interface IPlayerDatabase {
 	 * @param status
 	 *            the new status of the account
 	 */
-	public void setAccountStatus(Transaction trans, String username,
-			String status) throws GenericDatabaseException;
-
-	/**
-	 * This method returns the number of Players that exist on database
-	 * 
-	 * @return the number of players that exist on database
-	 */
-	public int getPlayerCount(Transaction trans)
-			throws GenericDatabaseException;
+	public void setAccountStatus(Transaction trans, String username, String status) throws GenericDatabaseException;
 
 	/**
 	 * This method add a Login event to the player
@@ -76,9 +66,7 @@ public interface IPlayerDatabase {
 	 * @exception PlayerNotFoundException
 	 *                if the player doesn't exist in database.
 	 */
-	public void addLoginEvent(Transaction trans, String username,
-			InetSocketAddress source, boolean correctLogin)
-			throws PlayerNotFoundException, GenericDatabaseException;
+	public void addLoginEvent(Transaction trans, String username, InetSocketAddress source, boolean correctLogin) throws PlayerNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method returns the list of Login events as a array of Strings
@@ -89,8 +77,7 @@ public interface IPlayerDatabase {
 	 * @exception PlayerNotFoundException
 	 *                if the player doesn't exist in database.
 	 */
-	public String[] getLoginEvent(Transaction trans, String username)
-			throws PlayerNotFoundException, GenericDatabaseException;
+	public String[] getLoginEvent(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method returns the lis of character that the player pointed by
@@ -103,8 +90,7 @@ public interface IPlayerDatabase {
 	 * @exception PlayerNotFoundException
 	 *                if that player does not exists.
 	 */
-	public String[] getCharactersList(Transaction trans, String username)
-			throws PlayerNotFoundException, GenericDatabaseException;
+	public String[] getCharactersList(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method is the opposite of getRPObject, and store in Database the
@@ -128,9 +114,7 @@ public interface IPlayerDatabase {
 	 *                if the character doesn't exist or it is not owned by the
 	 *                player.
 	 */
-	public void setRPObject(Transaction trans, String username,
-			String character, RPObject object) throws PlayerNotFoundException,
-			CharacterNotFoundException, GenericDatabaseException;
+	public void setRPObject(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method retrieves from Database the object for an existing player and
@@ -152,9 +136,7 @@ public interface IPlayerDatabase {
 	 *                if the character doesn't exist or it is not owned by the
 	 *                player.
 	 */
-	public RPObject getRPObject(Transaction trans, String username,
-			String character) throws PlayerNotFoundException,
-			CharacterNotFoundException, GenericDatabaseException;
+	public RPObject getRPObject(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method returns true if the database has the player pointed by
@@ -164,8 +146,7 @@ public interface IPlayerDatabase {
 	 *            the name of the player we are asking if it exists.
 	 * @return true if player exists or false otherwise.
 	 */
-	public boolean hasPlayer(Transaction trans, String username)
-			throws GenericDatabaseException;
+	public boolean hasPlayer(Transaction trans, String username) throws GenericDatabaseException;
 
 	/**
 	 * This method add the player to database with username and password as
@@ -178,20 +159,17 @@ public interface IPlayerDatabase {
 	 * @exception PlayerAlreadyAddedExceptio
 	 *                if the player is already in database
 	 */
-	public void addPlayer(Transaction trans, String username, byte[] password,
-			String email) throws PlayerAlreadyAddedException,
-			GenericDatabaseException;
+	public void addPlayer(Transaction trans, String username, byte[] password, String email) throws PlayerAlreadyAddedException, GenericDatabaseException;
 
 	/**
-	 * This method remove the player with usernae from database.
+	 * This method remove the player with username from database.
 	 * 
 	 * @param username
 	 *            is the name of the player
 	 * @exception PlayerNotFoundException
 	 *                if the player doesn't exist in database.
 	 */
-	public void removePlayer(Transaction trans, String username)
-			throws PlayerNotFoundException, GenericDatabaseException;
+	public void removePlayer(Transaction trans, String username) throws PlayerNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method returns true if the player has that character or false if it
@@ -205,9 +183,7 @@ public interface IPlayerDatabase {
 	 * @exception PlayerNotFoundException
 	 *                if the player doesn't exist in database.
 	 */
-	public boolean hasCharacter(Transaction trans, String username,
-			String character) throws PlayerNotFoundException,
-			GenericDatabaseException;
+	public boolean hasCharacter(Transaction trans, String username,	String character) throws PlayerNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method add a character asociated to a player.
@@ -225,9 +201,7 @@ public interface IPlayerDatabase {
 	 *                if the character doesn't exist or it is not owned by the
 	 *                player.
 	 */
-	public void addCharacter(Transaction trans, String username,
-			String character, RPObject object) throws PlayerNotFoundException,
-			CharacterAlreadyAddedException, GenericDatabaseException;
+	public void addCharacter(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException,	CharacterAlreadyAddedException, GenericDatabaseException;
 
 	/**
 	 * This method removes a character asociated with a player.
@@ -242,9 +216,7 @@ public interface IPlayerDatabase {
 	 *                if the character doesn't exist or it is not owned by the
 	 *                player.
 	 */
-	public void removeCharacter(Transaction trans, String username,
-			String character) throws PlayerNotFoundException,
-			CharacterNotFoundException, GenericDatabaseException;
+	public void removeCharacter(Transaction trans, String username, String character) throws PlayerNotFoundException, CharacterNotFoundException, GenericDatabaseException;
 
 	/**
 	 * This method returns a valid connection

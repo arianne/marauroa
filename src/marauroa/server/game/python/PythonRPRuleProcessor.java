@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.13 2007/01/18 12:58:07 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.14 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,8 +68,8 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.checkGameVersion(game, version);
 	}
 
-	public Result createAccount(String username, String password, String email) {
-		return pythonRP.createAccount(username, password, email);
+	public Result createAccount(String username, String password, String email, RPObject template) {
+		return pythonRP.createAccount(username, password, email, template);
 	}
 
 	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
@@ -91,7 +91,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	 * @return the action status, that can be Success, Fail or incomplete,
 	 *         please refer to Actions Explained for more info.
 	 */
-	public RPAction.Status execute(RPObject.ID id, RPAction action) {
+	public void execute(RPObject.ID id, RPAction action) {
 		Log4J.startMethod(logger, "execute");
 
 		RPAction.Status status = RPAction.Status.FAIL;
@@ -105,8 +105,6 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		} finally {
 			Log4J.finishMethod(logger, "execute");
 		}
-
-		return status;
 	}
 
 	/** Notify it when a new turn happens */
@@ -144,20 +142,14 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		}
 	}
 
-	synchronized public boolean onTimeout(RPObject.ID id) {
+	synchronized public void onTimeout(RPObject.ID id) {
 		Log4J.startMethod(logger, "onTimeout");
 		try {
-			return pythonRP.onTimeout(id);
+			pythonRP.onTimeout(id);
 		} catch (Exception e) {
 			logger.error("onTimeout() returned with an exeption", e);
-			return true;
 		} finally {
 			Log4J.startMethod(logger, "onTimeout");
 		}
-	}
-
-	public void onForcedExit(ID id) throws RPObjectNotFoundException {
-		// TODO Auto-generated method stub
-		
 	}
 }

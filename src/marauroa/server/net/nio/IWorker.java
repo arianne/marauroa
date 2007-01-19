@@ -1,4 +1,4 @@
-/* $Id: IWorker.java,v 1.4 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: IWorker.java,v 1.5 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,15 +14,13 @@ package marauroa.server.net.nio;
 
 import java.nio.channels.SocketChannel;
 
-import marauroa.server.net.IDisconnectedListener;
-
 /**
  * This interface should be implemented by all the classes that
  * are added as workers to NIOServer
  * @author miguel
  *
  */
-public interface IWorker extends IDisconnectedListener{
+public interface IWorker {
 	/** This method associate this worker with a NIO Server. */
 	public abstract void setServer(NioServer server);
     /** This is a callback method that is called onConnect */

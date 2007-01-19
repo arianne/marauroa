@@ -7,16 +7,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
-
 import marauroa.common.Log4J;
-import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
-import marauroa.common.game.RPObject.ID;
 import marauroa.server.RWLock;
-import marauroa.server.game.db.IPlayerDatabase;
-import marauroa.server.game.db.PlayerDatabaseFactory;
-import marauroa.server.game.db.Transaction;
+
+import org.apache.log4j.Logger;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -176,12 +171,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	/** Add a new Player entry to the container.
 	 *  This method assigns automatically a random clientid to this player entry.
 	 *  
-	 * @param key the RSA Key used at server
-	 * @param hash the hash send from client
 	 * @param socketChannel the socket channel associated with the client
 	 * @return client id resulting
 	 */
-	public PlayerEntry add(RSAKey key, byte[] hash, SocketChannel channel) {
+	public PlayerEntry add(SocketChannel channel) {
 		/* We create an entry */
 		PlayerEntry entry=new PlayerEntry(channel);
 		entry.clientid=generateClientID();

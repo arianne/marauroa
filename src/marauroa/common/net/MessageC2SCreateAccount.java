@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.4 2007/01/18 12:37:45 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.5 2007/01/19 08:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.RPObject;
+
 /**
  * This message indicate the server to create an account.
  * 
@@ -27,6 +29,8 @@ public class MessageC2SCreateAccount extends Message {
 	private String password;
 
 	private String email;
+	
+	private RPObject template;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SCreateAccount() {
@@ -45,11 +49,12 @@ public class MessageC2SCreateAccount extends Message {
 	 * @see marauroa.common.net.MessageS2CCharacterList
 	 */
 	public MessageC2SCreateAccount(SocketChannel source, String username,
-			String password, String email) {
+			String password, String email, RPObject template) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.template = template;
 	}
 
 	public String getUsername() {
@@ -63,6 +68,10 @@ public class MessageC2SCreateAccount extends Message {
 	public String getEmail() {
 		return email;
 	}
+	
+	public RPObject getTemplate() {
+		return template;
+	}
 
 	/**
 	 * This method returns a String that represent the object
@@ -73,7 +82,7 @@ public class MessageC2SCreateAccount extends Message {
 	public String toString() {
 		return "Message (C2S CreateAccount) from ("
 				+ getAddress() + ") CONTENTS: ("
-				+ username + ";" + password + ";" + email + ")";
+				+ username + ";" + password + ";" + email + ";" + template +")";
 	}
 
 	@Override
@@ -83,6 +92,7 @@ public class MessageC2SCreateAccount extends Message {
 		out.write(username);
 		out.write(password);
 		out.write(email);
+		out.write(template);
 	}
 
 	@Override
@@ -92,6 +102,7 @@ public class MessageC2SCreateAccount extends Message {
 		username = in.readString();
 		password = in.readString();
 		email = in.readString();
+		template=(RPObject)in.readObject(new RPObject());
 
 		if (type != MessageType.C2S_CREATEACCOUNT) {
 			throw new java.lang.ClassNotFoundException();

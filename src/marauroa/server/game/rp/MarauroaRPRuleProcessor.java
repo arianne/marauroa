@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.1 2007/01/18 12:51:55 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 		return false;
 	}
 
-	public Result createAccount(String username, String password, String email) {
+	public Result createAccount(String username, String password, String email, RPObject template) {
 		return Result.FAILED_EXCEPTION;
 	}
 
@@ -60,8 +60,7 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 		return true;
 	}
 
-	public RPAction.Status execute(RPObject.ID id, RPAction list) {
-		return RPAction.Status.FAIL;
+	public void execute(RPObject.ID id, RPAction list) {
 	}
 
 	public void beginTurn() {
@@ -78,10 +77,6 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 		return false;
 	}
 
-	public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
-		return false;
-	}
-
-	public void onForcedExit(ID id) throws RPObjectNotFoundException {
+	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
 	}
 }

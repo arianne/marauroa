@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.7 2007/01/18 12:58:07 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.8 2007/01/19 08:08:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class PythonRP {
 		return true;
 	}
 
-	public Result createAccount(String username, String password, String email) {
+	public Result createAccount(String username, String password, String email, RPObject template) {
 		return Result.FAILED_EXCEPTION;
 	}
 

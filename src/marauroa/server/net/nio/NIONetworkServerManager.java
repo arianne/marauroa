@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.7 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.8 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,22 +13,16 @@
 package marauroa.server.net.nio;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import marauroa.client.net.TCPThreadedNetworkClientManager;
 import marauroa.common.Log4J;
-import marauroa.common.game.RPAction;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
-import marauroa.common.net.MessageC2SAction;
 import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
 import marauroa.server.game.Statistics;
@@ -92,7 +86,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		logger.debug("NetworkServerManager started successfully");
 		
 		server=new NioServer(null, NetConst.marauroa_PORT, this);
-		server.registerDisconnectedListener(this);
 		server.start();
 	}
 
@@ -167,11 +160,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		//TODO: I feel here we should ask PlayerEntryContainer for a new entry.
 	}
 
-	/** Removes the channel from the map when the client disconnect or is disconnected */
-	public void onDisconnect(SocketChannel channel) {
-		// TODO: We should do something on disconnect or just don't care about it at all
-		}
-
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		byte[] dataCopy = new byte[count];
 		System.arraycopy(data, 0, dataCopy, 0, count);
@@ -221,9 +209,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		try {
 			while(keepRunning) {
 				DataEvent event=queue.take();
-
-				Socket socket=event.channel.socket();
-				InetSocketAddress address=new InetSocketAddress(socket.getInetAddress(),socket.getPort());
 
 				try {
 					Message msg = decoder.decode(event.channel, event.data);

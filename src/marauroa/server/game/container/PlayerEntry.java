@@ -4,23 +4,20 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
-import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Message;
 import marauroa.common.net.TransferContent;
-import marauroa.server.game.CharacterNotFoundException;
 import marauroa.server.game.NoSuchCharacterException;
-import marauroa.server.game.NoSuchClientIDException;
 import marauroa.server.game.NoSuchPlayerException;
 import marauroa.server.game.PlayerNotFoundException;
 import marauroa.server.game.db.GenericDatabaseException;
 import marauroa.server.game.db.IPlayerDatabase;
 import marauroa.server.game.db.PlayerDatabaseFactory;
 import marauroa.server.game.db.Transaction;
+
+import org.apache.log4j.Logger;
 
 public class PlayerEntry {
 	/** the logger instance. */

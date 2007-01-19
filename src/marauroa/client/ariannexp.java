@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.31 2007/01/18 12:38:30 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.32 2007/01/19 08:08:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.RPAction;
+import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageC2SAction;
@@ -262,10 +263,10 @@ public abstract class ariannexp {
 	}
 
 	public synchronized boolean createAccount(String username, String password,
-			String email) throws ariannexpTimeoutException {
+			String email, RPObject template) throws ariannexpTimeoutException {
 		Log4J.startMethod(logger, "createAccount");
 		try {
-			Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
+			Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
 
 			netMan.addMessage(msgCA);
 

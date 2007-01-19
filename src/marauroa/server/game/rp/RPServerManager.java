@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.1 2007/01/18 12:51:56 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server.game.rp;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.common.game.RPObject.ID;
 import marauroa.common.net.MessageS2CPerception;
 import marauroa.common.net.MessageS2CTransferREQ;
 import marauroa.common.net.TransferContent;
@@ -178,8 +176,8 @@ public class RPServerManager extends Thread {
 	}
 
 	public createaccount.Result createAccount(String username, String password,
-			String email) {
-		return ruleProcessor.createAccount(username, password, email);
+			String email, RPObject template) {
+		return ruleProcessor.createAccount(username, password, email, template);
 	}
 
 	private Perception getPlayerPerception(PlayerEntry entry) {
@@ -278,9 +276,9 @@ public class RPServerManager extends Thread {
 	}
 	
 	/** This method is called when connection to client is closed */
-	public boolean onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
+	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
 		scheduler.clearRPActions(id);
-		return ruleProcessor.onTimeout(id);
+		ruleProcessor.onTimeout(id);
 	}
 
 	/** This method is called when a player leaves the game */
