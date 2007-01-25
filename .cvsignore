@@ -19,3 +19,5 @@ marauroa-*-src.tar.gz
 marauroa-*.zip
 .fbwarnings
 .fbprefs
+.checkstyle
+.pmd
