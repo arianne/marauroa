@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.9 2006/12/18 20:08:13 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.10 2007/01/25 12:01:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,8 +24,7 @@ import marauroa.common.io.Persistence;
 /** This class is a basic configuration file manager */
 public class Configuration {
 	/** the logger instance. */
-	private static final org.apache.log4j.Logger logger = Log4J
-			.getLogger(Configuration.class);
+	private static final org.apache.log4j.Logger logger = Log4J.getLogger(Configuration.class);
 
 	private static boolean relativeToHome = false;
 	private static String basedir = "";
@@ -87,9 +86,7 @@ public class Configuration {
 				is.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger
-					.warn("Configuration file not found: " + configurationFile,
-							e);
+			logger.warn("Configuration file not found: " + configurationFile, e);
 			throw e;
 		} catch (IOException e) {
 			logger.warn("Error loading Configuration file", e);
