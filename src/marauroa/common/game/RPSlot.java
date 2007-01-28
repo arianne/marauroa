@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.27 2006/08/26 20:00:28 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.28 2007/01/28 20:22:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -368,9 +368,12 @@ public class RPSlot implements marauroa.common.net.Serializable,
 	/** Returns true if both objects are equal */
 	@Override
 	public boolean equals(Object object) {
-		RPSlot slot = (RPSlot) object;
-
-		return name.equals(slot.name) && objects.equals(slot.objects);
+		if(object instanceof RPSlot) {
+		  RPSlot slot = (RPSlot) object;
+		  return name.equals(slot.name) && objects.equals(slot.objects);
+		} else {
+			return false;
+		}
 	}
 
 	@Override

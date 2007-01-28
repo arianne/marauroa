@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.21 2006/08/26 20:00:28 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.22 2007/01/28 20:22:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -260,7 +260,11 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 */
 	@Override
 	public boolean equals(Object attr) {
-		return content.equals(((Attributes) attr).content);
+		if(attr instanceof Attributes) {
+			return content.equals(((Attributes) attr).content);
+		} else {
+			return false;
+		}
 	}
 
 	@Override

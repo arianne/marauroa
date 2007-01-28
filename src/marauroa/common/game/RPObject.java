@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.22 2006/08/26 20:00:28 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.23 2007/01/28 20:22:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -524,9 +524,12 @@ public class RPObject extends Attributes {
 	/** Returns true if two objects are exactly equal */
 	@Override
 	public boolean equals(Object obj) {
-		RPObject object = (RPObject) obj;
-
-		return super.equals(obj) && slots.equals(object.slots);
+		if(obj instanceof RPObject) {
+			RPObject object = (RPObject) obj;
+			return super.equals(obj) && slots.equals(object.slots);
+		} else {
+			return false;
+		}		
 	}
 
 	@Override
@@ -614,7 +617,7 @@ public class RPObject extends Attributes {
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			if (anotherid != null) {
+			if (anotherid != null && anotherid instanceof RPObject.ID) {
 				return (id == ((RPObject.ID) anotherid).id && zoneid
 						.equals(((RPObject.ID) anotherid).zoneid));
 			} else {

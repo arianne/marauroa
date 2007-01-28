@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.34 2007/01/19 08:08:53 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.35 2007/01/28 20:22:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -569,7 +569,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/* We verify the username and the password to make sure player is who he/she says he/she is. */
 			if (!info.verify()) {
 				/* If the verification fails we send player a NACK and record the event */
-				logger.info("Incorrect username/password for player "+ msgLogin.getUsername());
+				logger.info("Incorrect username/password for player "+ info.username);
 				stats.add("Players invalid login", 1);
 				info.addLoginEvent(msg.getAddress(), false);
 

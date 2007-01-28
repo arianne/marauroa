@@ -1,6 +1,7 @@
 package marauroa.server.game.db.nio;
 
 import java.io.FileNotFoundException;
+import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,12 +15,13 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPObject;
+import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.NoDatabaseConfException;
 
 import org.apache.log4j.Logger;
 
-public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess {
+public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginEventsAccess {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NIOJDBCDatabase.class);
 
@@ -64,9 +66,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess {
 		sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 	}
 	
-	private static NIOJDBCDatabase database;
+	private static ILoginEventsAccess database;
 	
-	public static NIOJDBCDatabase getDatabase() {
+	public static ILoginEventsAccess getDatabase() {
 		if(database==null) {
 			Configuration conf=null;
 
@@ -378,9 +380,146 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess {
 			throw e;
 		}
 	}
-
 	
-	private int storeRPObject(JDBCTransaction transaction2, RPObject player) {
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#verify(marauroa.server.game.db.JDBCTransaction, marauroa.server.game.container.PlayerEntry.SecuredLoginInfo)
+	 */
+	public boolean verify(JDBCTransaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
+		try {
+			if (Hash.compare(Hash.hash(informations.clientNonce),informations.clientNonceHash) != 0) {
+				logger.info("Different hashs for client Nonce");
+				return false;
+			}
+
+			byte[] b1 = informations.key.decodeByteArray(informations.password);
+			byte[] b2 = Hash.xor(informations.clientNonce,informations.serverNonce);
+			if (b2 == null) {
+				logger.info("B2 is null");
+				return false;
+			}
+
+			byte[] password = Hash.xor(b1, b2);
+			if (password == null) {
+				logger.debug("Password is null");
+				return false;
+			}
+
+			if (!StringChecker.validString(informations.username)) {
+				throw new SQLException("Invalid string username=("+informations.username+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+			String hexPassword = Hash.toHexString(Hash.hash(password));
+			String query = "select status, username from player where username like '"
+					+ informations.username + "' and password like '"+ hexPassword + "'";
+			logger.debug("verifyAccount is executing query " + query);
+			ResultSet result = stmt.executeQuery(query);
+			
+			boolean isplayer=false;
+
+			if (result.next()) {
+                String userNameFromDB = result.getString("username");
+				String account_status = result.getString("status");
+				
+				if ("active".equals(account_status)) {
+					isplayer=true;
+				} else {
+					logger.info("Username/password is ok, but account is in status {"+ account_status + "}");
+				}
+
+				if(!userNameFromDB.equals(informations.username)) {
+					logger.warn("Username("+informations.username+") is not the same that stored username("+userNameFromDB+")");
+					isplayer=false;
+				}
+
+			}
+			
+			result.close();
+			stmt.close();
+
+			return isplayer;
+		} catch (SQLException e) {
+			logger.error("Can't query for player("+informations.username+")", e);
+			throw e;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#addLoginEvent(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.net.InetSocketAddress, boolean)
+	 */
+	public void addLoginEvent(JDBCTransaction transaction, String username, InetSocketAddress source, boolean correctLogin) throws SQLException {
+		try {
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+")");
+			}
+
+			int id = getDatabasePlayerId(transaction, username);
+
+			if(id==-1) {
+				/** This should never happen as we should check previously that player exists... */
+				throw new SQLException("Unable to find player("+username+")");
+			}
+			
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+			String query = "insert into loginEvent(player_id,address,timedate,result) values("
+					+ id
+					+ ",'"
+					+ source.getAddress()
+					+ "',NULL," + (correctLogin ? 1 : 0) + ")";
+			stmt.execute(query);
+
+			stmt.close();
+		} catch (SQLException e) {
+			logger.error("Can't query for player("+username+")", e);
+			throw e;
+		}
+	}
+
+	/** Class to store the login events */
+	public static class LoginEvent {
+		/** TCP/IP address of the source of the login message */
+		public String address;
+
+		/** Time and date of the login event */
+		public java.util.Date time;
+
+		/** True if login was correct */
+		public boolean correct;
+
+		/**
+		 * This method returns a String that represent the object
+		 * 
+		 * @return a string representing the object.
+		 */
+		@Override
+		public String toString() {
+			return "Login " + (correct ? "SUCESSFULL" : "FAILED") + " at "+ time.toString() + " from " + address;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#getLoginEvents(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 */
+	public List<LoginEvent> getLoginEvents(JDBCTransaction transaction, String username) throws SQLException {
+		/** TODO: Do it later and use it. */
+		return null;
+	}
+	
+	
+	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) {		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private int deleteRPObject(JDBCTransaction transaction, int objectid) {		
 		// TODO Auto-generated method stub
 		return 0;
-	}}
+	}
+	
+	private int storeRPObject(JDBCTransaction transaction, RPObject player) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+}
