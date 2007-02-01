@@ -134,7 +134,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 */
 	public PlayerEntry get(String username) {
 		for(PlayerEntry entry: clientidMap.values()) {
-			if(entry.username.equals(username)) {
+			/* NOTE: Bug fix: We use ignore case to detect already logged players better. */
+			if(entry.username.equalsIgnoreCase(username)) {
 				return entry;
 			}
 		}
