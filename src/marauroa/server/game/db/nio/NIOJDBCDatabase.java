@@ -15,13 +15,17 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPObject;
+import marauroa.server.game.Statistics;
+import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.db.GenericDatabaseException;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.NoDatabaseConfException;
+import marauroa.server.game.db.Transaction;
 
 import org.apache.log4j.Logger;
 
-public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginEventsAccess {
+public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginEventsAccess, IEventsAccess {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NIOJDBCDatabase.class);
 
@@ -157,7 +161,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 
-			String query = "insert into player(id,username,password,email,timedate,status) values("
+			String query = "insert into account(id,username,password,email,timedate,status) values("
 				+ "NULL,'"
 				+ username + "','"
 				+ Hash.toHexString(password) + "','"
@@ -194,7 +198,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
-			String query = "select count(*) as amount from  player where username like '"+ username + "'";
+			String query = "select count(*) as amount from  account where username like '"+ username + "'";
 
 			logger.debug("hasPlayer is using query: " + query);
 
@@ -226,7 +230,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			
-			String query = "update player set status='" + status + "' where username like '" + username + "'";
+			String query = "update account set status='" + status + "' where username like '" + username + "'";
 			logger.debug("setAccountStatus is executing query " + query);
 			
 			stmt.executeUpdate(query);
@@ -252,7 +256,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			throw new SQLException("Invalid string username=("+username+")");
 		}
 
-		String query = "select id from player where username like '" + username	+ "'";
+		String query = "select id from account where username like '" + username	+ "'";
 
 		logger.debug("getDatabasePlayerId is executing query " + query);
 
@@ -315,10 +319,10 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
-			String query = "select count(*) as amount from  player,characters where "
+			String query = "select count(*) as amount from  account,characters where "
 				    + "username like '"	+ username
 					+ "' and charname like '" + character
-					+ "' and player.id=characters.player_id";
+					+ "' and account.id=characters.player_id";
 
 			logger.debug("hasCharacter is executing query " + query);
 
@@ -411,7 +415,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			String hexPassword = Hash.toHexString(Hash.hash(password));
-			String query = "select status, username from player where username like '"
+			String query = "select status, username from account where username like '"
 					+ informations.username + "' and password like '"+ hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
@@ -507,6 +511,84 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.nio.IEventsAccess#addGameEvent(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public void addGameEvent(Transaction trans, String source, String event, String... params) {
+		try {
+			Connection connection = ((JDBCTransaction) trans).getConnection();
+			Statement stmt = connection.createStatement();
+
+			String firstParam = (params.length > 0 ? params[0] : "");
+			StringBuffer param = new StringBuffer();
+			if (params.length > 1) {
+				for (int i = 1; i < params.length; i++) {
+					param.append(params[i]);
+					param.append(" ");
+				}
+			}
+
+			String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"
+					+ StringChecker.escapeSQLString(source)+ "','"
+					+ StringChecker.escapeSQLString(event)+ "','"
+					+ StringChecker.escapeSQLString(firstParam)+ "','"
+					+ StringChecker.escapeSQLString(param.toString()) + "')";
+			
+			stmt.execute(query);
+			stmt.close();
+		} catch (SQLException sqle) {
+			logger.warn("Error adding game event: "+event, sqle);
+		}
+	}	
+	
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.nio.IEventsAccess#addStatisticsEvent(marauroa.server.game.db.Transaction, marauroa.server.game.Statistics.Variables)
+	 */
+	public void addStatisticsEvent(Transaction trans, Variables var) {
+		try {
+			Connection connection = ((JDBCTransaction) trans).getConnection();
+			Statement stmt = connection.createStatement();
+
+			String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) values(NULL,"
+				+ var.get("Bytes send")+ ","
+				+ var.get("Bytes recv")+ ","
+				+ var.get("Players login")+ ","
+				+ var.get("Players logout")+ ","
+				+ var.get("Players timeout")+ ","
+				+ var.get("Players online") + ")";
+			stmt.execute(query);
+			stmt.close();
+		} catch (SQLException sqle) {
+			logger.warn("Error adding statistics event", sqle);
+		}
+	}	
+	
+	/**
+	 * This method stores a character's avatar at database and update the link with Character table.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @param player the RPObject itself.
+	 * @return true if it is true or false otherwise
+	 * @throws SQLException if there is any problem at database.
+	 */
+	public boolean storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException {
+		return false;
+	}
+	
+	/**
+	 * This method load from database the character's avatar asociated to this character.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @return The loaded RPObject
+	 * @throws SQLException if there is any problem at database
+	 */
+	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException {
+		return null;
+	}
 	
 	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) {		
 		// TODO Auto-generated method stub

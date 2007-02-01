@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.1 2007/01/18 12:51:57 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.2 2007/02/01 18:29:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ import org.apache.log4j.Logger;
  * This is JDBC interface to the database. Actually it is limited to MySQL
  * because we are using the AUTO_INCREMENT keyword.
  */
+@Deprecated
 public class JDBCPlayerDatabase implements IPlayerDatabase {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(JDBCPlayerDatabase.class);

@@ -1,12 +1,12 @@
-create table if not exists player
-  (
+create table if not exists account
+  {
   id integer auto_increment not null,
   username varchar(32) not null,
   password varchar(255) not null,
   
   email varchar(64) not null,
   timedate timestamp,
-  status ENUM('active','inactive','banned') not null default 'active',
+  status ENUM('active','banned') not null default 'active',
   
   primary key(id)
   )
@@ -25,33 +25,11 @@ create table if not exists characters
 create table if not exists rpobject
   (
   object_id integer auto_increment not null,
-  slot_id integer,
+  data blob,  
   
-  PRIMARY KEY(object_id)
+  primary key(object_id)
   )
   TYPE=INNODB;
-  
-create table if not exists rpattribute
-  (
-  object_id integer not null,
-  name varchar(64) not null,
-  value varchar(255),
-  
-  primary key(object_id,name)
-  )
-  TYPE=INNODB;
-
-create table if not exists rpslot
-  (
-  object_id integer not null,
-  name varchar(64) not null,
-  capacity integer,
-  slot_id integer auto_increment not null,  
-  
-  primary key(slot_id)
-  )
-  TYPE=INNODB;
-
 
 create table if not exists loginEvent
   (
