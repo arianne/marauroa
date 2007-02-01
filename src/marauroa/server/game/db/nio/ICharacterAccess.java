@@ -1,5 +1,6 @@
 package marauroa.server.game.db.nio;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,9 +17,10 @@ public interface ICharacterAccess {
 	 * @param character character's name
 	 * @param player player RPObject
 	 * @throws SQLException if there is any kind of database problem.
+	 * @throws IOException if RPObject can NOT be serialized
 	 */
 	public void addCharacter(JDBCTransaction transaction, String username,
-			String character, RPObject player) throws SQLException;
+			String character, RPObject player) throws SQLException, IOException;
 
 	/**
 	 * Removes a character of a player. This method also remove the associated RPObject.
@@ -54,4 +56,28 @@ public interface ICharacterAccess {
 	public List<String> getCharacters(JDBCTransaction transaction,
 			String username) throws SQLException;
 
-}
+	
+	/**
+	 * This method load from database the character's avatar asociated to this character.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @return The loaded RPObject
+	 * @throws SQLException if there is any problem at database
+	 * @throws IOException if player can NOT be serialized
+	 */
+	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException, IOException;
+
+	/**
+	 * This method stores a character's avatar at database and update the link with Character table.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @param player the RPObject itself.
+	 * @throws SQLException if there is any problem at database.
+	 * @throws IOException if player can NOT be serialized
+	 */
+	public void storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException;
+	}

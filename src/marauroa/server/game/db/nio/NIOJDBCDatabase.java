@@ -1,24 +1,34 @@
 package marauroa.server.game.db.nio;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
+import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
-import marauroa.server.game.Statistics;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.db.GenericDatabaseException;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.NoDatabaseConfException;
 import marauroa.server.game.db.Transaction;
@@ -273,28 +283,31 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 
 		return id;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ICharacterAccess#addCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String, marauroa.common.game.RPObject)
 	 */
-	public void addCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException {
+	public void addCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
 			}
 
-				Connection connection = transaction.getConnection();
-				Statement stmt = connection.createStatement();
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
 
-				int id = getDatabasePlayerId(transaction, username);
-				int object_id = storeRPObject(transaction, player);
+			int id = getDatabasePlayerId(transaction, username);
+			int object_id = storeRPObject(transaction, player);
 
-				String query = "insert into characters(player_id,charname,object_id) values("
-						+ id + ",'" + character + "'," + object_id + ")";
-				stmt.execute(query);
-				stmt.close();
-			
+			String query = "insert into characters(player_id,charname,object_id) values("
+				+ id + ",'" + character + "'," + object_id + ")";
+			stmt.execute(query);
+			stmt.close();
+
 		} catch (SQLException e) {
+			logger.error("Can't add player("+username+") character("+character+")", e);
+			throw e;
+		} catch (IOException e) {
 			logger.error("Can't add player("+username+") character("+character+")", e);
 			throw e;
 		}
@@ -385,6 +398,80 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		}
 	}
 	
+	
+	/**
+	 * This method stores a character's avatar at database and update the link with Character table.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @param player the RPObject itself.
+	 * @throws SQLException if there is any problem at database.
+	 * @throws IOException 
+	 */
+	public void storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
+		try {
+			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
+				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			int objectid=storeRPObject(transaction, player);
+			String query="update characters set object_id="+objectid+" where charname='"+character+"'";
+			stmt.execute(query);
+			
+		} catch (SQLException sqle) {
+			logger.warn("Error storing character: "+player, sqle);
+			throw sqle;
+		} catch (IOException e) {
+			logger.warn("Error storing character: "+player, e);
+			throw e;
+		}
+	}
+
+	/**
+	 * This method load from database the character's avatar asociated to this character.
+	 * 
+	 * @param transaction the database transaction
+	 * @param username the player's username
+	 * @param character the player's character name
+	 * @return The loaded RPObject
+	 * @throws SQLException if there is any problem at database
+	 * @throws IOException 
+	 */
+	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException, IOException {
+		try {
+			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
+				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			String query="select object_id from characters where charname='"+character+"'";
+			ResultSet result=stmt.executeQuery(query);
+			
+			RPObject player=null;
+			if(result.next()) {
+				int objectid=result.getInt("object_id");
+				player=loadRPObject(transaction, objectid);
+			}
+			
+			result.close();
+			stmt.close();
+			
+			return player;			
+		} catch (SQLException sqle) {
+			logger.warn("Error loading character: "+character, sqle);
+			throw sqle;
+		} catch (IOException e) {
+			logger.warn("Error loading character: "+character, e);
+			throw e;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#verify(marauroa.server.game.db.JDBCTransaction, marauroa.server.game.container.PlayerEntry.SecuredLoginInfo)
 	 */
@@ -563,35 +650,53 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		}
 	}	
 	
-	/**
-	 * This method stores a character's avatar at database and update the link with Character table.
-	 * 
-	 * @param transaction the database transaction
-	 * @param username the player's username
-	 * @param character the player's character name
-	 * @param player the RPObject itself.
-	 * @return true if it is true or false otherwise
-	 * @throws SQLException if there is any problem at database.
-	 */
-	public boolean storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException {
-		return false;
-	}
-	
-	/**
-	 * This method load from database the character's avatar asociated to this character.
-	 * 
-	 * @param transaction the database transaction
-	 * @param username the player's username
-	 * @param character the player's character name
-	 * @return The loaded RPObject
-	 * @throws SQLException if there is any problem at database
-	 */
-	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException {
-		return null;
-	}
-	
-	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) {		
-		// TODO Auto-generated method stub
+	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) throws SQLException, IOException {		
+		Connection connection = transaction.getConnection();
+
+		String query = "select data from rpobject where object_id=" + objectid;
+		logger.debug("loadRPObject is executing query " + query);
+
+		Statement stmt = connection.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+
+		if (rs.next()) {
+			Blob data = rs.getBlob("data");
+			InputStream input = data.getBinaryStream();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			
+			// set read buffer size
+			byte[] rb = new byte[1024];
+			int ch = 0;
+			// process blob
+			while ((ch = input.read(rb)) != -1) {
+				output.write(rb, 0, ch);
+			}
+			byte[] content = output.toByteArray();
+			input.close();
+			output.close();
+
+			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
+			InflaterInputStream szlib = new InflaterInputStream(inStream,new Inflater());
+			InputSerializer inser = new InputSerializer(szlib);
+
+			rs.close();
+			stmt.close();
+
+			RPObject object=null;
+			
+			try {
+				object = (RPObject) inser.readObject(new RPObject());
+			} catch (ClassNotFoundException e) {
+				/** This will never ever happen. */
+			}
+			
+			object.put("#db_id", objectid);
+
+			return object;
+		}
+
+		rs.close();
+		stmt.close();
 		return null;
 	}
 
@@ -600,8 +705,83 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		return 0;
 	}
 	
-	private int storeRPObject(JDBCTransaction transaction, RPObject player) {
-		// TODO Auto-generated method stub
-		return 0;
+	private boolean hasRPObject(JDBCTransaction transaction, int objectid) throws SQLException {		
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+		String query = "select count(*) as amount from rpobject where object_id="+ objectid;
+
+		logger.debug("hasRPObject is executing query " + query);
+
+		ResultSet result = stmt.executeQuery(query);
+
+		boolean rpObjectExists = false;
+
+		if (result.next()) {
+			if (result.getInt("amount") != 0) {
+				rpObjectExists = true;
+			}
+		}
+
+		result.close();
+		stmt.close();
+
+		return rpObjectExists;
+	}
+	
+	private int storeRPObject(JDBCTransaction transaction, RPObject object) throws IOException, SQLException {
+		Connection connection = transaction.getConnection();
+
+		int object_id = -1;
+
+		ByteArrayOutputStream array = new ByteArrayOutputStream();
+		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+		OutputSerializer serializer = new OutputSerializer(out_stream);
+
+		try {
+			object.writeObject(serializer, DetailLevel.FULL);
+			out_stream.close();
+		} catch (IOException e) {
+			logger.warn("Error while serializing rpobject: " + object, e);
+			throw e;
+		}
+
+		// setup stream for blob
+		ByteArrayInputStream inStream = new ByteArrayInputStream(array.toByteArray());
+
+		String objectid = null;
+
+		if (object.has("#db_id")) {
+			objectid = object.get("#db_id");
+		}
+
+		String query;
+
+		if (objectid != null && hasRPObject(transaction, object_id)) {
+			query = "update rpobject data=? where object_id=" + objectid;
+		} else {
+			query = "insert into rpobject(object_id,data) values(null,?)";
+		}
+		logger.debug("storeRPObject is executing query " + query);
+
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setBinaryStream(1, inStream, inStream.available());
+		ps.executeUpdate();
+		ps.close();
+
+		// If object is new, get the objectid we gave it.
+		if (objectid == null) {
+			Statement stmt = connection.createStatement();
+			query = "select LAST_INSERT_ID() as inserted_id from avatars";
+			logger.debug("storeRPObject is executing query " + query);
+			ResultSet result = stmt.executeQuery(query);
+
+			result.next();
+			object_id = result.getInt("inserted_id");
+			
+			result.close();
+			stmt.close();
+		}
+
+		return object_id;
 	}
 }
