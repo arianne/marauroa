@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.1 2007/01/18 12:51:58 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.2 2007/02/02 19:40:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,8 @@
 
 package marauroa.server.game.db;
 
+import java.sql.SQLException;
+
 /**
  * This class represents a transaction which can be used to
  * retrieve/store/change in PlayerDatabase. Different PlayerDatabase
@@ -22,8 +24,9 @@ package marauroa.server.game.db;
  * JDBCTransaction in order to work properly
  */
 public class Transaction {
-	/** Starts a transaction */
-	public void begin() throws TransactionException {
+	/** Starts a transaction 
+	 * @throws SQLException */
+	public void begin() throws SQLException {
 	}
 
 	/**
@@ -31,11 +34,12 @@ public class Transaction {
 	 * 
 	 * @exception TransactionException
 	 *                if the underlaying backstore throws an Exception
+	 * @throws SQLException 
 	 */
-	public void commit() throws TransactionException {
+	public void commit() throws SQLException {
 	}
 
 	/** Makes previous changes to backstore invalid */
-	public void rollback() {
+	public void rollback()  throws SQLException {
 	}
 }

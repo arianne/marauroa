@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.2 2007/02/01 18:29:55 arianne_rpg Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.3 2007/02/02 19:40:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -682,7 +682,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 	 */
 	public void addCharacter(Transaction trans, String username,
 			String character, RPObject object) throws PlayerNotFoundException,
-			CharacterAlreadyAddedException, GenericDatabaseException {
+			CharacterAlreadyAddedException, GenericDatabaseException, SQLException {
 		Log4J.startMethod(logger, "addCharacter");
 		try {
 			if (!validString(username) || !validString(character)) {
@@ -709,9 +709,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		} catch (Exception sqle) {
 			// TODO: NOTE: HACK: IMHO it should be rolledback at the caller.
 			trans.rollback();
-			logger.warn(
-					"error addint Character " + username + ", " + character,
-					sqle);
+			logger.warn("error addint Character " + username + ", " + character,sqle);
 			throw new GenericDatabaseException(username, sqle);
 		} finally {
 			Log4J.finishMethod(logger, "addCharacter");

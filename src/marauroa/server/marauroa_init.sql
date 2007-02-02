@@ -1,5 +1,5 @@
 create table if not exists account
-  {
+  (
   id integer auto_increment not null,
   username varchar(32) not null,
   password varchar(255) not null,
@@ -7,8 +7,9 @@ create table if not exists account
   email varchar(64) not null,
   timedate timestamp,
   status ENUM('active','banned') not null default 'active',
-  
-  primary key(id)
+
+  primary key(username),
+  key(id)
   )
   TYPE=INNODB;
 

@@ -56,8 +56,9 @@ public interface IPlayerAccess {
 	 * 
 	 * @param transaction the player database
 	 * @param username player username
-	 * @return 
+	 * @return the status of the player
+	 * @throws SQLException if there is any database problem
 	 */
-	public String getAccountStatus(JDBCTransaction transaction, String username);
+	public String getAccountStatus(JDBCTransaction transaction, String username) throws SQLException;
 
 }

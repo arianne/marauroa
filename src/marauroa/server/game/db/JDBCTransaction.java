@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.1 2007/01/18 12:51:57 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.2 2007/02/02 19:40:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,34 +52,21 @@ public class JDBCTransaction extends Transaction {
 	}
 
 	@Override
-	public void begin() throws TransactionException {
-		try {
+	public void begin() throws SQLException {
 			Statement stmt = connection.createStatement();
 			stmt.execute("start transaction;");
-		} catch (SQLException e) {
-			throw new TransactionException(e.getMessage(), e);
-		}
 	}
 
 	@Override
-	public void commit() throws TransactionException {
-		try {
+	public void commit() throws SQLException {
 			logger.debug("Commiting");
 			connection.commit();
-		} catch (SQLException e) {
-			throw new TransactionException(e.getMessage(), e);
-		}
 	}
 
 	@Override
-	public void rollback() {
-		try {
+	public void rollback() throws SQLException {
 			logger.debug("Rollback");
 			connection.rollback();
-		} catch (SQLException e) {
-			// throw new TransactionException(e.getMessage());
-			logger.error("rollback failed", e);
-		}
 	}
 
 	public boolean isValid() {
@@ -93,7 +80,7 @@ public class JDBCTransaction extends Transaction {
 
 					logger.debug("isValid (" + query + ")");
 					ResultSet result = stmt.executeQuery(query);
-
+					result.close();
 					stmt.close();
 					valid = true;
 				} else {

@@ -80,9 +80,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 	}
 	
-	private static ILoginEventsAccess database;
+	private static NIOJDBCDatabase database;
 	
-	public static ILoginEventsAccess getDatabase() {
+	public static NIOJDBCDatabase getDatabase() {
 		if(database==null) {
 			Configuration conf=null;
 
@@ -167,7 +167,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=("+username+") email=("+email+")");
 			}
-
+			
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 
@@ -254,8 +254,35 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
-	public String getAccountStatus(JDBCTransaction transaction, String username) {
-		return null;
+	public String getAccountStatus(JDBCTransaction transaction, String username) throws SQLException {
+		try{
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+")");
+			}
+
+			String query = "select status from account where username like '" + username	+ "'";
+
+			logger.debug("getAccountStatus is executing query " + query);
+
+			ResultSet result = stmt.executeQuery(query);
+
+			String status=null;
+
+			if (result.next()) {
+				status = result.getString("status");
+			}
+
+			result.close();
+			stmt.close();
+
+			return status;
+		} catch(SQLException e) {
+			logger.error("Can't query player("+username+")", e);
+			throw e;
+		}
 	}
 
 	private int getDatabasePlayerId(JDBCTransaction trans, String username) throws SQLException {

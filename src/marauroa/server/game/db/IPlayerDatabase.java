@@ -1,4 +1,4 @@
-/* $Id: IPlayerDatabase.java,v 1.2 2007/01/19 08:08:53 arianne_rpg Exp $ */
+/* $Id: IPlayerDatabase.java,v 1.3 2007/02/02 19:40:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game.db;
 
 import java.net.InetSocketAddress;
+import java.sql.SQLException;
 
 import marauroa.common.game.RPObject;
 import marauroa.server.game.CharacterAlreadyAddedException;
@@ -200,8 +201,9 @@ public interface IPlayerDatabase {
 	 * @exception GenericDatabaseException
 	 *                if the character doesn't exist or it is not owned by the
 	 *                player.
+	 * @throws SQLException 
 	 */
-	public void addCharacter(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException,	CharacterAlreadyAddedException, GenericDatabaseException;
+	public void addCharacter(Transaction trans, String username, String character, RPObject object) throws PlayerNotFoundException,	CharacterAlreadyAddedException, GenericDatabaseException, SQLException;
 
 	/**
 	 * This method removes a character asociated with a player.

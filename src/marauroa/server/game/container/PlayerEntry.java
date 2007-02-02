@@ -2,6 +2,7 @@ package marauroa.server.game.container;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.sql.SQLException;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -55,18 +56,11 @@ public class PlayerEntry {
 			return playerDatabase.verifyAccount(transaction, this);
 		}
 
-		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws GenericDatabaseException {
-			Log4J.startMethod(logger, "addLoginEvent");
-			try {
-				transaction.begin();
-				playerDatabase.addLoginEvent(transaction, username, address, loginResult);
-				transaction.commit();
-			} catch (Exception e) {
-				transaction.rollback();
-				throw new GenericDatabaseException(e);
-			} finally {
-				Log4J.finishMethod(logger, "addLoginEvent");
-			}		}
+		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException, PlayerNotFoundException, GenericDatabaseException {
+			transaction.begin();
+			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
+			transaction.commit();
+		}
 	}
 
 	/** The state in which this player is */
@@ -144,8 +138,9 @@ public class PlayerEntry {
 	/**
 	 * This method stores an object at database backend
 	 * @param object the object to store
+	 * @throws SQLException 
 	 */
-	public void storeRPObject(RPObject player) throws NoSuchPlayerException, NoSuchCharacterException, GenericDatabaseException {
+	public void storeRPObject(RPObject player) throws NoSuchPlayerException, NoSuchCharacterException, GenericDatabaseException, SQLException {
 		Log4J.startMethod(logger, "setRPObject");
 		try {
 				transaction.begin();
