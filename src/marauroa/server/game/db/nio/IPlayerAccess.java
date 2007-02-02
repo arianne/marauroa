@@ -23,8 +23,9 @@ public interface IPlayerAccess {
 	 * @param transaction the database transaction
 	 * @param username the player to remove.
 	 * @return true if success or false otherwise.
+	 * @throws SQLException 
 	 */
-	public boolean removePlayer(JDBCTransaction transaction, String username);
+	public boolean removePlayer(JDBCTransaction transaction, String username) throws SQLException;
 
 	/**
 	 * Query database to look for a player.

@@ -192,9 +192,31 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#removePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
-	public boolean removePlayer(JDBCTransaction transaction, String username) {
-		/** TODO: Code this. Right now it is not used anyway.*/
-		return false;
+	public boolean removePlayer(JDBCTransaction transaction, String username) throws SQLException {
+		try {
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+")");
+			}
+						
+			/* We first remove any characters associated with this player. */
+			for(String character: getCharacters(transaction,username)) {
+			  removeCharacter(transaction,username, character);
+			}
+			
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+			
+			String query = "delete from account where username='"+ username + "'";
+			
+			logger.debug("removePlayer is using query: "+query);			
+			stmt.execute(query);
+			stmt.close();
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("Can't add player("+username+") to Database", e);
+			throw e;
+		}	
 	}
 
 	/* (non-Javadoc)

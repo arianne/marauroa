@@ -4,7 +4,10 @@
 package marauroa.server.game.db.nio;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -14,9 +17,7 @@ import marauroa.common.crypto.Hash;
 import marauroa.server.game.db.JDBCTransaction;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -97,6 +98,22 @@ public class TestPlayerAccess {
 	}
 
 	@Test
+	public void removePlayer() throws SQLException {
+		String username="testUser";
+
+		JDBCTransaction transaction=database.getTransaction();
+		try {
+			transaction.begin();		
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+			database.removePlayer(transaction, username);
+			assertFalse(database.hasPlayer(transaction, username));
+		} finally {
+			transaction.rollback();
+		}
+	}
+	
+	@Test
 	public void getStatus() throws SQLException {
 		String username="testUser";
 		
@@ -106,6 +123,23 @@ public class TestPlayerAccess {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertEquals("active",database.getAccountStatus(transaction, username));
+		} finally {
+			transaction.rollback();
+		}
+	}
+
+	@Test
+	public void setStatus() throws SQLException {
+		String username="testUser";
+		
+		JDBCTransaction transaction=database.getTransaction();
+
+		try {
+			transaction.begin();
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertEquals("active",database.getAccountStatus(transaction, username));
+			database.setAccountStatus(transaction, username, "banned");
+			assertEquals("banned",database.getAccountStatus(transaction, username));			
 		} finally {
 			transaction.rollback();
 		}
