@@ -9,11 +9,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
+import marauroa.common.game.RPObject;
 import marauroa.server.game.db.JDBCTransaction;
 
 import org.junit.BeforeClass;
@@ -23,23 +25,23 @@ import org.junit.Test;
  * @author miguel
  *
  */
-public class TestPlayerAccess {
-	
+public class TestCharacterAccess {
+
 	static class TestJDBC extends NIOJDBCDatabase {
 		public TestJDBC(Properties props) {
 			super(props);			
 		}
 	}
-	
+
 	private static TestJDBC database;
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void createDatabase() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
-		
+
 		Properties props = new Properties();
 
 		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
@@ -51,86 +53,60 @@ public class TestPlayerAccess {
 	}
 
 	@Test
-	public void addPlayer() throws SQLException {
+	public void addCharacter() throws SQLException, IOException {
 		String username="testUser";
+		String character="testCharacter";
+		RPObject player=new RPObject();
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
 			transaction.begin();		
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
 		} finally {
 			transaction.rollback();
 		}
 	}
 
 	@Test(expected=SQLException.class) 
-	public void doubleAddedPlayer() throws SQLException {
+	public void doubleAddedCharacter() throws SQLException, IOException {
 		String username="testUser";
-		
+		String character="testCharacter";
+		RPObject player=new RPObject();
+
 		JDBCTransaction transaction=database.getTransaction();			
 		try{
 			transaction.begin();
-			
-			if(database.hasPlayer(transaction, username)) {
-				fail("Player was not expected");
-			}
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 
-			if(!database.hasPlayer(transaction, username)) {
-				fail("Player was expected");
-			}
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			
-			fail("Player was added");
+			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
+			database.addCharacter(transaction, username, character, player);
+
+			fail("Character was added");
 		} finally {
 			transaction.rollback();
 		}
 	}
 
 	@Test
-	public void removePlayer() throws SQLException {
+	public void removeCharacter() throws SQLException, IOException {
 		String username="testUser";
+		String character="testCharacter";
+		RPObject player=new RPObject();
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
 			transaction.begin();		
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
-			database.removePlayer(transaction, username);
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
+			database.removeCharacter(transaction, username, character);
 			assertFalse(database.hasPlayer(transaction, username));
-		} finally {
-			transaction.rollback();
-		}
-	}
-	
-	@Test
-	public void getStatus() throws SQLException {
-		String username="testUser";
-		
-		JDBCTransaction transaction=database.getTransaction();
-
-		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active",database.getAccountStatus(transaction, username));
-		} finally {
-			transaction.rollback();
-		}
-	}
-
-	@Test
-	public void setStatus() throws SQLException {
-		String username="testUser";
-		
-		JDBCTransaction transaction=database.getTransaction();
-
-		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active",database.getAccountStatus(transaction, username));
-			database.setAccountStatus(transaction, username, "banned");
-			assertEquals("banned",database.getAccountStatus(transaction, username));			
 		} finally {
 			transaction.rollback();
 		}

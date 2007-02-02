@@ -820,7 +820,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		// If object is new, get the objectid we gave it.
 		if (objectid == null) {
 			Statement stmt = connection.createStatement();
-			query = "select LAST_INSERT_ID() as inserted_id from avatars";
+			query = "select LAST_INSERT_ID() as inserted_id from rpobject";
 			logger.debug("storeRPObject is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
