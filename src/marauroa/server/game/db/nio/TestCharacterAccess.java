@@ -154,4 +154,26 @@ public class TestCharacterAccess {
 			transaction.rollback();
 		}
 	}
+
+	@Test
+	public void storeAndLoadCharacter() throws SQLException, IOException {
+		String username="testUser";
+		String character="testCharacter";
+		RPObject player=new RPObject();
+		player.put("one", "number one");
+		player.put("two", 2);
+		player.put("three", 3.0);
+
+		JDBCTransaction transaction=database.getTransaction();
+		try {
+			transaction.begin();		
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			database.addCharacter(transaction, username, character, player);
+			RPObject loaded=database.loadCharacter(transaction, username, character);
+			assertEquals(player,loaded);
+		} finally {
+			transaction.rollback();
+		}
+	}
+
 }

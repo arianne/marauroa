@@ -860,6 +860,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			result.next();
 			object_id = result.getInt("inserted_id");
 			
+			// We alter the original object to add the proper db_id
+			object.put("#db_id", object_id);
+			
 			result.close();
 			stmt.close();
 		}
