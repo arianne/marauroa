@@ -29,9 +29,10 @@ public interface ICharacterAccess {
 	 * @param username player's username
 	 * @param character character name
 	 * @return true if it is removed or false otherwise
+	 * @throws SQLException if there is any database problem
 	 */
 	public boolean removeCharacter(JDBCTransaction transaction,
-			String username, String character);
+			String username, String character) throws SQLException;
 
 	/**
 	 * This method returns true if the player has that character or false if it hasn't

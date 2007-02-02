@@ -214,7 +214,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			
 			return true;
 		} catch (SQLException e) {
-			logger.error("Can't add player("+username+") to Database", e);
+			logger.error("Can't remove player("+username+") to Database", e);
 			throw e;
 		}	
 	}
@@ -365,9 +365,42 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ICharacterAccess#removeCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
 	 */
-	public boolean removeCharacter(JDBCTransaction transaction, String username, String character) {
-		/** TODO: Code this. Right now it is not used anyway.*/
-		return false;
+	public boolean removeCharacter(JDBCTransaction transaction, String username, String character) throws SQLException {
+		try {
+			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
+				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
+			}					
+			
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+			
+			int player_id=getDatabasePlayerId(transaction, username);
+			
+			String query = "select object_id from characters where player_id="+ player_id + " and charname='"+ character +"'";
+			ResultSet result = stmt.executeQuery(query);
+
+			if (result.next()) {				
+				int id = result.getInt("object_id");
+				removeRPObject(transaction, id);
+			} else {
+				result.close();
+				stmt.close();
+				
+				throw new SQLException("Character ("+character+") without object: Database integrity error.");
+			}
+			result.close();
+			
+			query = "delete from characters where player_id="+ player_id + " and charname='"+ character +"'";
+			
+			logger.debug("removeCharacter is using query: "+query);			
+			stmt.execute(query);
+			stmt.close();
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("Can't remove player("+username+") from Database", e);
+			throw e;
+		}	
 	}
 	
 	/* (non-Javadoc)
@@ -749,7 +782,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		return null;
 	}
 
-	private int deleteRPObject(JDBCTransaction transaction, int objectid) {		
+	private int removeRPObject(JDBCTransaction transaction, int objectid) {		
 		// TODO Auto-generated method stub
 		return 0;
 	}

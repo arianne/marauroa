@@ -4,13 +4,15 @@
 package marauroa.server.game.db.nio;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
@@ -105,8 +107,49 @@ public class TestCharacterAccess {
 			assertTrue(database.hasPlayer(transaction, username));
 			database.addCharacter(transaction, username, character, player);
 			assertTrue(database.hasCharacter(transaction, username, character));
-			database.removeCharacter(transaction, username, character);
-			assertFalse(database.hasPlayer(transaction, username));
+			database.removeCharacter(transaction, username, character);			
+			assertFalse(database.hasCharacter(transaction, username, character));
+		} finally {
+			transaction.rollback();
+		}
+	}
+
+	@Test
+	public void removePlayerCharacter() throws SQLException, IOException {
+		String username="testUser";
+		String character="testCharacter";
+		RPObject player=new RPObject();
+
+		JDBCTransaction transaction=database.getTransaction();
+		try {
+			transaction.begin();		
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
+			database.removePlayer(transaction, username);			
+			assertFalse(database.hasCharacter(transaction, username, character));
+		} finally {
+			transaction.rollback();
+		}
+	}
+
+	@Test
+	public void getCharacters() throws SQLException, IOException {
+		String username="testUser";
+		String[] characters={"testCharacter1","testCharacter2","testCharacter3"};
+
+		JDBCTransaction transaction=database.getTransaction();
+		try {
+			transaction.begin();		
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			for(String character: characters) {
+			  database.addCharacter(transaction, username, character, new RPObject());
+			}
+			
+			List<String> result=database.getCharacters(transaction, username);
+			assertEquals(characters, result.toArray());
+			
 		} finally {
 			transaction.rollback();
 		}
