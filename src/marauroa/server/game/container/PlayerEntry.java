@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.4 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.5 2007/02/03 17:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -22,9 +22,9 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Message;
 import marauroa.common.net.TransferContent;
+import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.PlayerDatabaseFactory;
-import marauroa.server.game.db.nio.IDatabase;
 
 public class PlayerEntry {
 	/** A object representing the database */

@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.2 2007/02/03 17:33:42 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.3 2007/02/03 17:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.server.game.db;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.server.game.db.nio.IDatabase;
 
 import org.apache.log4j.Logger;
 

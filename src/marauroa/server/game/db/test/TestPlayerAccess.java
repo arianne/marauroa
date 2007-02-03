@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.4 2007/02/03 17:33:44 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.nio;
+package marauroa.server.game.db.test;
 
 
 import static org.junit.Assert.assertEquals;
@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
+import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.JDBCTransaction;
 
 import org.junit.BeforeClass;

@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.1 2007/02/03 17:33:43 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.nio;
+package marauroa.server.game.db;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,8 +41,6 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.db.JDBCTransaction;
-import marauroa.server.game.db.NoDatabaseConfException;
 
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.3 2007/02/03 17:33:44 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.4 2007/02/03 17:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.db.nio.IDatabase;
-import marauroa.server.game.db.nio.JDBCDatabase;
+import marauroa.server.game.db.IDatabase;
+import marauroa.server.game.db.JDBCDatabase;
 
 import org.apache.log4j.Logger;
 

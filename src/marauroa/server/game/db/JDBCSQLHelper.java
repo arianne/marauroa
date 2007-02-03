@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.2 2007/02/03 17:33:43 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.nio;
+package marauroa.server.game.db;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.db.JDBCTransaction;
 
 import org.apache.log4j.Logger;
 

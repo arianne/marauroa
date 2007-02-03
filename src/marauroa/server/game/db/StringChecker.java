@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.2 2007/02/03 17:33:44 arianne_rpg Exp $ */
+/* $Id: StringChecker.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.nio;
+package marauroa.server.game.db;
 
 public class StringChecker {
 	/** 

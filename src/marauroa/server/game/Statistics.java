@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.17 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.18 2007/02/03 17:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.JDBCTransaction;
-import marauroa.server.game.db.nio.JDBCDatabase;
 
 import org.apache.log4j.Logger;
 

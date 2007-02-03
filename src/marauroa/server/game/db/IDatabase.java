@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.1 2007/02/03 17:33:42 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.nio;
+package marauroa.server.game.db;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -20,8 +20,7 @@ import java.util.List;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.db.JDBCTransaction;
-import marauroa.server.game.db.nio.JDBCDatabase.LoginEvent;
+import marauroa.server.game.db.JDBCDatabase.LoginEvent;
 
 public interface IDatabase {
 	/**
