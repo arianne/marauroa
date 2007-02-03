@@ -1,34 +1,37 @@
+/* $Id: PlayerEntry.java,v 1.4 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2007 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.game.container;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.List;
 
-import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Message;
 import marauroa.common.net.TransferContent;
-import marauroa.server.game.NoSuchCharacterException;
-import marauroa.server.game.NoSuchPlayerException;
-import marauroa.server.game.PlayerNotFoundException;
-import marauroa.server.game.db.GenericDatabaseException;
-import marauroa.server.game.db.IPlayerDatabase;
+import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.PlayerDatabaseFactory;
-import marauroa.server.game.db.Transaction;
-
-import org.apache.log4j.Logger;
+import marauroa.server.game.db.nio.IDatabase;
 
 public class PlayerEntry {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(PlayerEntry.class);
-
 	/** A object representing the database */
-	protected static IPlayerDatabase playerDatabase;
-    protected static Transaction transaction;
+	protected static IDatabase playerDatabase;
+    protected static JDBCTransaction transaction;
     
-    public static void initDatabase() throws GenericDatabaseException {
+    public static void initDatabase() {
     		playerDatabase=PlayerDatabaseFactory.getDatabase();
     		transaction=playerDatabase.getTransaction();
     }
@@ -52,11 +55,11 @@ public class PlayerEntry {
 			this.serverNonce=serverNonce;
 		}
 
-		public boolean verify() throws GenericDatabaseException {
-			return playerDatabase.verifyAccount(transaction, this);
+		public boolean verify() throws SQLException {
+			return playerDatabase.verify(transaction, this);
 		}
 
-		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException, PlayerNotFoundException, GenericDatabaseException {
+		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
 			transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
 			transaction.commit();
@@ -140,26 +143,24 @@ public class PlayerEntry {
 	 * @param object the object to store
 	 * @throws SQLException 
 	 */
-	public void storeRPObject(RPObject player) throws NoSuchPlayerException, NoSuchCharacterException, GenericDatabaseException, SQLException {
-		Log4J.startMethod(logger, "setRPObject");
+	public void storeRPObject(RPObject player) throws SQLException,IOException {
 		try {
-				transaction.begin();
+			transaction.begin();
 
-				/* We store the object in the database */
-				playerDatabase.setRPObject(transaction, username, character, player);
-				
-				/* And update the entry */
-				object=player;
-				
-				transaction.commit();
+			/* We store the object in the database */
+			playerDatabase.storeCharacter(transaction, username, character, player);
 
-		} catch (Exception e) {
+			/* And update the entry */
+			object=player;
+
+			transaction.commit();
+		} catch (SQLException e) {
 			transaction.rollback();
-			logger.warn("Error storing RPObject", e);
-			throw new GenericDatabaseException(e);
-		} finally {
-			Log4J.finishMethod(logger, "setRPObject");
-		}	
+			throw e;
+		} catch (IOException e) {
+			transaction.rollback();
+			throw e;
+		}
 	}
 
 	/**
@@ -178,14 +179,15 @@ public class PlayerEntry {
 	 * This method loads the object pointed by username and character from database
 	 * and assign already it to the entry.
 	 * @return the loaded object
+	 * @throws IOException 
 	 * @throws Exception if the load fails.
 	 */
-	public RPObject loadRPObject() throws Exception {
-		object = playerDatabase.getRPObject(transaction,username, character);
+	public RPObject loadRPObject() throws SQLException, IOException {
+		object = playerDatabase.loadCharacter(transaction,username, character);
 		return object;
 	}
 
-	public String[] getCharacters() throws PlayerNotFoundException, GenericDatabaseException {
-		return playerDatabase.getCharactersList(transaction, username);
+	public List<String> getCharacters() throws SQLException {
+		return playerDatabase.getCharacters(transaction, username);
 	}	
 }

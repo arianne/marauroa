@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.35 2007/01/28 20:22:16 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.36 2007/02/03 17:33:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -629,7 +629,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			netMan.sendMessage(msgServerInfo);
 
 			/* Build player character list and send it to client */
-			String[] characters = entry.getCharacters();
+			String[] characters = entry.getCharacters().toArray(new String[0]);
 			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getSocketChannel(), characters);
 			msgCharacters.setClientID(clientid);
 			netMan.sendMessage(msgCharacters);

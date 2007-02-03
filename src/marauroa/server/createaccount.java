@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.17 2007/01/18 12:31:07 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.18 2007/02/03 17:33:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,10 +21,11 @@ import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPObject;
-import marauroa.server.game.db.IPlayerDatabase;
-import marauroa.server.game.db.JDBCPlayerDatabase;
+import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.PlayerDatabaseFactory;
-import marauroa.server.game.db.Transaction;
+import marauroa.server.game.db.nio.IDatabase;
+import marauroa.server.game.db.nio.JDBCDatabase;
+import marauroa.server.game.db.nio.StringChecker;
 
 import org.apache.log4j.Logger;
 
@@ -102,7 +103,7 @@ public abstract class createaccount {
 	 * will be inserted into the database by the createaccount class. You are
 	 * given a playerDatabase instance so that you can get valid rpobjects' ids
 	 */
-	public abstract RPObject populatePlayerRPObject(IPlayerDatabase playerDatabase) throws Exception;
+	public abstract RPObject populatePlayerRPObject(IDatabase playerDatabase) throws Exception;
 
 	protected Result run(String[] args) {
 		int i = 0;
@@ -137,7 +138,7 @@ public abstract class createaccount {
 			++i;
 		}
 
-		Transaction trans = null;
+		JDBCTransaction trans = null;
 		PrintWriter out = null;
 
 		try {
@@ -145,7 +146,7 @@ public abstract class createaccount {
 			
 			logger.info("Trying to create username(" + get("username")+ "), character(" + get("character") + ")");
 
-			JDBCPlayerDatabase playerDatabase = (JDBCPlayerDatabase) PlayerDatabaseFactory.getDatabase();
+			JDBCDatabase playerDatabase = (JDBCDatabase) PlayerDatabaseFactory.getDatabase();
 			trans = playerDatabase.getTransaction();
 
 			trans.begin();
@@ -160,7 +161,7 @@ public abstract class createaccount {
 
 			logger.info("Checking for valid string");
 			for (Information item : information) {
-				if (!playerDatabase.validString(item.value)) {
+				if (!StringChecker.validString(item.value)) {
 					logger.info("String not valid: " + item.name);
 					return Result.FAILED_INVALID_CHARACTER_USED;
 				}

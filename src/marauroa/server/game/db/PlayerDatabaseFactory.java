@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.1 2007/01/18 12:51:57 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.2 2007/02/03 17:33:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.game.db;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.game.db.nio.IDatabase;
 
 import org.apache.log4j.Logger;
 
@@ -28,7 +29,7 @@ public class PlayerDatabaseFactory {
 	 * 
 	 * @return A shared instance of PlayerDatabase
 	 */
-	public static IPlayerDatabase getDatabase() throws NoDatabaseConfException {
+	public static IDatabase getDatabase() throws NoDatabaseConfException {
 		Log4J.startMethod(logger, "getDatabase");
 		try {
 			Configuration conf = Configuration.getConfiguration();
@@ -51,13 +52,13 @@ public class PlayerDatabaseFactory {
 	 *            A String containing the type of database
 	 * @return A shared instance of PlayerDatabase
 	 */
-	public static IPlayerDatabase getDatabase(String database_type)
+	public static IDatabase getDatabase(String database_type)
 			throws NoDatabaseConfException {
 		Log4J.startMethod(logger, "getDatabase(" + database_type + ")");
 		try {
 			Class databaseClass = Class.forName(database_type);
 			java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getDatabase");
-			return (IPlayerDatabase) singleton.invoke(null);
+			return (IDatabase) singleton.invoke(null);
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);
 			throw new NoDatabaseConfException(e);

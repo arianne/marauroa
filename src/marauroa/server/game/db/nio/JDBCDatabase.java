@@ -1,3 +1,15 @@
+/* $Id: JDBCDatabase.java,v 1.1 2007/02/03 17:33:43 arianne_rpg Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2007 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.game.db.nio;
 
 import java.io.ByteArrayInputStream;
@@ -31,13 +43,12 @@ import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.NoDatabaseConfException;
-import marauroa.server.game.db.Transaction;
 
 import org.apache.log4j.Logger;
 
-public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginEventsAccess, IEventsAccess {
+public class JDBCDatabase implements IDatabase {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(NIOJDBCDatabase.class);
+	private static final Logger logger = Log4J.getLogger(JDBCDatabase.class);
 
 	/** connection info * */
 	private Properties connInfo;
@@ -63,7 +74,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	 *            jdbc_pwd
 	 *              Password.
 	 */
-	protected NIOJDBCDatabase(Properties connInfo) throws NoDatabaseConfException {
+	protected JDBCDatabase(Properties connInfo) throws NoDatabaseConfException {
 		this.connInfo=connInfo;
 		
 		sql=JDBCSQLHelper.get();		
@@ -80,9 +91,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 		sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 	}
 	
-	private static NIOJDBCDatabase database;
+	private static JDBCDatabase database;
 	
-	public static NIOJDBCDatabase getDatabase() {
+	public static JDBCDatabase getDatabase() {
 		if(database==null) {
 			Configuration conf=null;
 
@@ -98,7 +109,7 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 			props.put("jdbc_user", conf.get("jdbc_user"));
 			props.put("jdbc_pwd", conf.get("jdbc_pwd"));
 
-			database=new NIOJDBCDatabase(props);
+			database=new JDBCDatabase(props);
 		}
 		
 		return database;		
@@ -683,9 +694,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addGameEvent(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void addGameEvent(Transaction trans, String source, String event, String... params) {
+	public void addGameEvent(JDBCTransaction trans, String source, String event, String... params) {
 		try {
-			Connection connection = ((JDBCTransaction) trans).getConnection();
+			Connection connection = trans.getConnection();
 			Statement stmt = connection.createStatement();
 
 			String firstParam = (params.length > 0 ? params[0] : "");
@@ -713,9 +724,9 @@ public class NIOJDBCDatabase implements IPlayerAccess, ICharacterAccess, ILoginE
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addStatisticsEvent(marauroa.server.game.db.Transaction, marauroa.server.game.Statistics.Variables)
 	 */
-	public void addStatisticsEvent(Transaction trans, Variables var) {
+	public void addStatisticsEvent(JDBCTransaction trans, Variables var) {
 		try {
-			Connection connection = ((JDBCTransaction) trans).getConnection();
+			Connection connection = trans.getConnection();
 			Statement stmt = connection.createStatement();
 
 			String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) values(NULL,"

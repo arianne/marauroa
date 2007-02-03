@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.2 2007/02/02 19:40:57 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.3 2007/02/03 17:33:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import marauroa.common.Log4J;
 
 import org.apache.log4j.Logger;
 
-public class JDBCTransaction extends Transaction {
+public class JDBCTransaction {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(JDBCTransaction.class);
 
@@ -51,19 +51,16 @@ public class JDBCTransaction extends Transaction {
 		return connection;
 	}
 
-	@Override
 	public void begin() throws SQLException {
 			Statement stmt = connection.createStatement();
 			stmt.execute("start transaction;");
 	}
 
-	@Override
 	public void commit() throws SQLException {
 			logger.debug("Commiting");
 			connection.commit();
 	}
 
-	@Override
 	public void rollback() throws SQLException {
 			logger.debug("Rollback");
 			connection.rollback();

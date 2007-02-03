@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.3 2007/02/03 17:33:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,9 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.db.IPlayerDatabase;
-import marauroa.server.game.db.JDBCPlayerDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.nio.IDatabase;
+import marauroa.server.game.db.nio.JDBCDatabase;
 
 import org.apache.log4j.Logger;
 
@@ -136,10 +135,10 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	public synchronized void loadBannedIPNetworkListFromDB() {
 		Log4J.startMethod(logger, "loadBannedIPNetworkListFromDB");
 		try {
-			IPlayerDatabase db = JDBCPlayerDatabase.getDatabase();
+			IDatabase db = JDBCDatabase.getDatabase();
 
 			/* read ban list from DB */
-			Connection connection = ((JDBCTransaction) db.getTransaction()).getConnection();
+			Connection connection = db.getTransaction().getConnection();
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("select address,mask from banlist");
 			
