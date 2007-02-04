@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.4 2007/02/04 13:10:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,11 +33,11 @@ public class RPScheduler {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(RPScheduler.class);
 
-	/** a HashMap<RPObject.ID,RPActionList> of entries for this turn */
-	private Map<RPObject.ID, List<RPAction>> actualTurn;
+	/** a HashMap<RPObject,RPActionList> of entries for this turn */
+	private Map<RPObject, List<RPAction>> actualTurn;
 
-	/** a HashMap<RPObject.ID,RPActionList> of entries for next turn */
-	private Map<RPObject.ID, List<RPAction>> nextTurn;
+	/** a HashMap<RPObject,RPActionList> of entries for next turn */
+	private Map<RPObject, List<RPAction>> nextTurn;
 
 	/** Turn we are executing now */
 	private int turn;
@@ -45,29 +45,29 @@ public class RPScheduler {
 	/** Constructor */
 	public RPScheduler() {
 		turn = 0;
-		actualTurn = new HashMap<RPObject.ID, List<RPAction>>();
-		nextTurn = new HashMap<RPObject.ID, List<RPAction>>();
+		actualTurn = new HashMap<RPObject, List<RPAction>>();
+		nextTurn = new HashMap<RPObject, List<RPAction>>();
 	}
 
 	/**
 	 * Add an RPAction to the scheduler for the next turn
+	 * @param object 
 	 * 
 	 * @param action the RPAction to add.
 	 */
-	public synchronized boolean addRPAction(RPAction action,IRPRuleProcessor ruleProcessor) {
+	public synchronized boolean addRPAction(RPObject object, RPAction action,IRPRuleProcessor ruleProcessor) {
 		try {
-			RPObject.ID id = new RPObject.ID(action);
-			
-			List<RPAction> list=nextTurn.get(id);
+			List<RPAction> list=nextTurn.get(object);
 			
 			if(list==null) {
 				list=new LinkedList<RPAction>();
-				nextTurn.put(id, list);
+				nextTurn.put(object, list);
 			}
 
-			if (ruleProcessor.onActionAdd(action, list)) {
+			if (ruleProcessor.onActionAdd(object, action, list)) {
 				list.add(action);
 			}
+			
 			return true;
 		} catch (AttributeNotFoundException e) {
 			logger.error("cannot add action to RPScheduler, Action(" + action + ") is missing a required attributes", e);
@@ -80,9 +80,9 @@ public class RPScheduler {
 	 * giver object id.
 	 * @param id object id to remove actions
 	 */
-	public synchronized void clearRPActions(RPObject.ID id) {
-		nextTurn.remove(id);
-		actualTurn.remove(id);
+	public synchronized void clearRPActions(RPObject object) {
+		nextTurn.remove(object);
+		actualTurn.remove(object);
 	}
 
 	/**
@@ -90,25 +90,18 @@ public class RPScheduler {
 	 * ruleProcessor Depending on the result the action needs to be added for
 	 * next turn.
 	 */
-	public void visit(IRPRuleProcessor ruleProcessor) {
-		try {
-			logger.debug(actualTurn.size() + " players running actions");
-			for (Map.Entry<RPObject.ID, List<RPAction>> entry : actualTurn.entrySet()) {
-				RPObject.ID id = entry.getKey();
-				List<RPAction> list = entry.getValue();
+	public synchronized void visit(IRPRuleProcessor ruleProcessor) {
+		for (Map.Entry<RPObject, List<RPAction>> entry : actualTurn.entrySet()) {
+			RPObject object = entry.getKey();
+			List<RPAction> list = entry.getValue();
 
-				logger.debug(list.size() + " actions to visit for " + id);
-				for (RPAction action : list) {
-					logger.debug("visit action " + action);
-					try {
-						ruleProcessor.execute(id,action);
-					} catch (Exception e) {
-						logger.error("error in visit()", e);
-					}
+			for (RPAction action : list) {
+				try {
+					ruleProcessor.execute(object,action);
+				} catch (Exception e) {
+					logger.error("error in visit()", e);
 				}
 			}
-		} catch (Exception e) {
-			logger.error("error in visit", e);
 		}
 	}
 
@@ -117,15 +110,12 @@ public class RPScheduler {
 	 * actual turn
 	 */
 	public synchronized void nextTurn() {
-		Log4J.startMethod(logger, "nextTurn");
 		++turn;
 
 		/* we cross-exchange the two turns and erase the contents of the next turn */
-		Map<RPObject.ID, List<RPAction>> tmp = actualTurn;
+		Map<RPObject, List<RPAction>> tmp = actualTurn;
 		actualTurn = nextTurn;
 		nextTurn = tmp;
 		nextTurn.clear();
-
-		Log4J.finishMethod(logger, "nextTurn");
 	}
 }

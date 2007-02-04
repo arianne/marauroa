@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.4 2007/02/04 13:10:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,19 +56,20 @@ public interface IRPRuleProcessor {
 	 * This method is called *before* adding an action by RPScheduler so you can
 	 * choose not to allow the action to be added by returning false
 	 * 
+	 * @param object the object that casted the action
 	 * @param action the action that is going to be added.
 	 * @param actionList the actions that this player already owns.
 	 * @return true if we approve the action to be added.
 	 */
-	public boolean onActionAdd(RPAction action, List<RPAction> actionList);
+	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList);
 
 	/**
 	 * Execute an action in the name of a player.
 	 * 
-	 * @param id the object that executes 
+	 * @param object the object that executes 
 	 * @param action the action to execute
 	 */
-	public void execute(RPObject.ID id, RPAction action);
+	public void execute(RPObject object, RPAction action);
 
 	/** 
 	 * Notify it when a begin of actual turn happens. 

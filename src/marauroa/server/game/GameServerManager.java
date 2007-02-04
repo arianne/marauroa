@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.37 2007/02/04 12:56:59 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.38 2007/02/04 13:10:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -433,7 +433,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				stats.add("Actions invalid", 1);
 			}
 
-			rpMan.addRPAction(action);
+			rpMan.addRPAction(object, action);
 		} catch (Exception e) {
 			stats.add("Actions invalid", 1);
 			logger.error("error while processing ActionEvent", e);

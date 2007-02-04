@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.4 2007/02/04 13:10:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,12 +53,12 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 		return Result.FAILED_EXCEPTION;
 	}
 
-	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
+	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-	public void execute(RPObject.ID id, RPAction action) {
+	public void execute(RPObject object, RPAction action) {
 		// TODO Auto-generated method stub
 	}
 

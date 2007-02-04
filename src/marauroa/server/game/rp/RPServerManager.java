@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.4 2007/02/04 13:10:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,15 +145,16 @@ public class RPServerManager extends Thread {
 		Log4J.finishMethod(logger, "finish");
 	}
 
-	/** Adds an action for the next turn */
-	public void addRPAction(RPAction action) throws ActionInvalidException {
+	/** Adds an action for the next turn 
+	 * @param object */
+	public void addRPAction(RPObject object, RPAction action) throws ActionInvalidException {
 		Log4J.startMethod(logger, "addRPAction");
 		try {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Added action: " + action);
 			}
 
-			scheduler.addRPAction(action, ruleProcessor);
+			scheduler.addRPAction(object, action, ruleProcessor);
 		} finally {
 			Log4J.finishMethod(logger, "addRPAction");
 		}
@@ -277,13 +278,13 @@ public class RPServerManager extends Thread {
 	
 	/** This method is called when connection to client is closed */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
-		scheduler.clearRPActions(object.getID());
+		scheduler.clearRPActions(object);
 		ruleProcessor.onTimeout(object);
 	}
 
 	/** This method is called when a player leaves the game */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
-		scheduler.clearRPActions(object.getID());
+		scheduler.clearRPActions(object);
 		return ruleProcessor.onExit(object);
 	}
 

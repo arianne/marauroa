@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.15 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.16 2007/02/04 13:10:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -162,5 +162,15 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void execute(RPObject object, RPAction action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
