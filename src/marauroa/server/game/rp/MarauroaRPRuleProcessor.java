@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPRuleProcessor.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: MarauroaRPRuleProcessor.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,6 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.common.game.RPObject.ID;
 import marauroa.server.createaccount.Result;
 
 /** Default implementation for <code>IRPRuleProcessor</code> */
@@ -40,43 +39,49 @@ public class MarauroaRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public void setContext(RPServerManager rpman) {
+		// TODO Auto-generated method stub
 		this.rpman = rpman;
 	}
 
 	public boolean checkGameVersion(String game, String version) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public Result createAccount(String username, String password, String email, RPObject template) {
+		// TODO Auto-generated method stub
 		return Result.FAILED_EXCEPTION;
 	}
 
 	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
-	public boolean onIncompleteActionAdd(RPAction action,
-			List<RPAction> actionList) {
-		return true;
-	}
-
-	public void execute(RPObject.ID id, RPAction list) {
+	public void execute(RPObject.ID id, RPAction action) {
+		// TODO Auto-generated method stub
 	}
 
 	public void beginTurn() {
+		// TODO Auto-generated method stub
 	}
 
 	public void endTurn() {
+		// TODO Auto-generated method stub
 	}
 
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException {
+	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		// TODO Auto-generated method stub
+		
 	}
 }

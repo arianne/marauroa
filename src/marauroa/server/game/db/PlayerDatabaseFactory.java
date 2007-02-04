@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.3 2007/02/03 17:40:25 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.4 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,6 @@ public class PlayerDatabaseFactory {
 	 * @return A shared instance of PlayerDatabase
 	 */
 	public static IDatabase getDatabase() throws NoDatabaseConfException {
-		Log4J.startMethod(logger, "getDatabase");
 		try {
 			Configuration conf = Configuration.getConfiguration();
 			String database_type = conf.get("marauroa_DATABASE");
@@ -38,8 +37,6 @@ public class PlayerDatabaseFactory {
 		} catch (Exception e) {
 			logger.debug("cannot get player databese", e);
 			throw new NoDatabaseConfException(e);
-		} finally {
-			Log4J.finishMethod(logger, "getDatabase");
 		}
 	}
 
@@ -61,8 +58,6 @@ public class PlayerDatabaseFactory {
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);
 			throw new NoDatabaseConfException(e);
-		} finally {
-			Log4J.finishMethod(logger, "getDatabase(" + database_type + ")");
 		}
 	}
 }

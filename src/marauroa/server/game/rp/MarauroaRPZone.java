@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.1 2007/01/18 12:51:55 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,11 +26,16 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
-import marauroa.common.game.RPObjectNotFoundException;
 
 import org.apache.log4j.Logger;
 
-/** default implementation of <code>IRPZone</code> */
+/**
+ * default implementation of <code>IRPZone</code> 
+ * This class implements the Delta² algorithm to save bandwidth.
+ * You should extends this class.
+ * @author miguel
+ *
+ */
 public abstract class MarauroaRPZone implements IRPZone {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(MarauroaRPZone.class);
@@ -45,9 +50,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 *  This information is useful for DeltaÂ² algorithm. */
 	private Map<RPObject.ID, RPObject> modified;
 
-	/** 
-	 * This is the perception for the actual turn.
-	 */
+	/** This is the perception for the actual turn. */
 	private Perception perception;
 
 	/** This is a cache for the perception for this turn. */
@@ -62,11 +65,6 @@ public abstract class MarauroaRPZone implements IRPZone {
 	private static Random rand = new Random();
 
 	public MarauroaRPZone(String zoneid) {
-		initialize(zoneid);
-	}
-
-	/** Initialize the object */
-	private void initialize(String zoneid) {
 		this.zoneid = new ID(zoneid);
 		rand.setSeed(new Date().getTime());
 
@@ -86,7 +84,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException {
 		try {
-			RPObject.ID id = new RPObject.ID(object);
+			RPObject.ID id = object.getID();
 
 			object.resetAddedAndDeleted();
 			objects.put(id, object);
@@ -104,7 +102,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
-			RPObject.ID id = new RPObject.ID(object);
+			RPObject.ID id = object.getID();
 
 			if (!modified.containsKey(id) && has(id)) {
 				modified.put(id, object);
@@ -118,32 +116,24 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 * Removes the object from zone.
 	 * @return the removed object
 	 */
-	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException {
-		if (objects.containsKey(id)) {
-			RPObject object = objects.remove(id);
+	public RPObject remove(RPObject.ID id) {
+		RPObject object = objects.remove(id);
 
+		if(object!=null) {
 			// If objects has been removed, remove from modified
 			modified.remove(object.getID());
-
 			perception.removed((RPObject) object.clone());
-
-			return object;
-		} else {
-			throw new RPObjectNotFoundException(id);
 		}
+
+		return object;
 	}
 
 	/**
 	 * Returns the object which id is id.
 	 * @return the object
-	 * @throws RPObjectNotFoundException when the object id is not found at zone.
 	 */
-	public RPObject get(RPObject.ID id) throws RPObjectNotFoundException {
-		if (objects.containsKey(id)) {
-			RPObject object = objects.get(id);
-			return object;
-		}
-		throw new RPObjectNotFoundException(id);
+	public RPObject get(RPObject.ID id) {
+		return objects.get(id);
 	}
 
 	/** 
@@ -151,24 +141,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 * @return true if object exists.
 	 */
 	public boolean has(RPObject.ID id) {
-		if (objects.containsKey(id)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/** 
-	 * Create a new empty object with a valid id.
-	 * It doesn't add it to the zone.
-	 */
-	public RPObject create() {
-		RPObject.ID id = new RPObject.ID(++lastNonPermanentIdAssigned, zoneid);
-		while (has(id)) {
-			id = new RPObject.ID(++lastNonPermanentIdAssigned, zoneid);
-		}
-
-		return new RPObject(id);
+		return objects.containsKey(id);
 	}
 
 	/**
@@ -199,18 +172,6 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 * </ul>
 	 */
 	public Perception getPerception(RPObject.ID id, byte type) {
-		/*
-		 * deactivated very time consuming debug output if
-		 * ((prebuildDeltaPerception==null || prebuildTotalPerception==null) &&
-		 * logger.isDebugEnabled()) {
-		 * 
-		 * StringBuffer world=new StringBuffer("World content: \n");
-		 * 
-		 * for(RPObject object: objects.values()) { world.append("
-		 * "+object.toString()+"\n"); } logger.debug("getPerception(),
-		 * "+world.toString()); }
-		 */
-
 		if (type == Perception.DELTA) {
 			if (prebuildDeltaPerception == null) {
 				prebuildDeltaPerception = perception;
@@ -225,8 +186,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 			}
 
 			return prebuildDeltaPerception;
-		} else /* type==Perception.SYNC */
-		{
+		} else /* type==Perception.SYNC */ {
 			if (prebuildSyncPerception == null) {
 				prebuildSyncPerception = new Perception(Perception.SYNC,getID());
 				prebuildSyncPerception.addedList = new ArrayList<RPObject>(objects.values());
@@ -237,7 +197,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This methods resets the deltaÂ² information of objects.
+	 * This methods resets the delta² information of objects.
 	 */
 	public void reset() {
 		for (RPObject object : objects.values()) {
@@ -273,8 +233,8 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 		prebuildSyncPerception = null;
 		prebuildDeltaPerception = null;
+		
 		modified.clear();
-
 		perception.clear();
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.36 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.37 2007/02/04 12:56:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		for(PlayerEntry entry: playerContainer) {
 			RPObject player=entry.object;
 			try {
-				if(rpMan.onExit(player.getID())) {
+				if(rpMan.onExit(player)) {
 					entry.storeRPObject(player);
 				}
 			} catch (Exception e) {
@@ -322,7 +322,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			RPObject object = entry.object;
 
 			/* We request to logout of game */
-			if (rpMan.onExit(object.getID())) {
+			if (rpMan.onExit(object)) {
 				/* NOTE: Set the Object so that it is stored in Database */
 				entry.storeRPObject(object);
 
@@ -374,7 +374,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			RPObject object = entry.object;
 			/* We request to logout of game */
-			rpMan.onTimeout(object.getID());
+			rpMan.onTimeout(object);
 
 			entry.storeRPObject(object);
 
@@ -592,7 +592,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				if (existing.state == ClientState.GAME_BEGIN) {
 					RPObject object=existing.object;
 					
-					if (rpMan.onExit(object.getID())) {
+					if (rpMan.onExit(object)) {
 						/* NOTE: Set the Object so that it is stored in Database */
 						existing.storeRPObject(object);
 					}

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -276,15 +276,15 @@ public class RPServerManager extends Thread {
 	}
 	
 	/** This method is called when connection to client is closed */
-	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException {
-		scheduler.clearRPActions(id);
-		ruleProcessor.onTimeout(id);
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		scheduler.clearRPActions(object.getID());
+		ruleProcessor.onTimeout(object);
 	}
 
 	/** This method is called when a player leaves the game */
-	public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException {
-		scheduler.clearRPActions(id);
-		return ruleProcessor.onExit(id);
+	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
+		scheduler.clearRPActions(object.getID());
+		return ruleProcessor.onExit(object);
 	}
 
 	private void deliverTransferContent() {

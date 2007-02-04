@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.8 2007/01/19 08:08:53 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.9 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
 import marauroa.server.game.rp.RPServerManager;
 
+@Deprecated
 public class PythonRP {
 	public PythonRP() {
 	}

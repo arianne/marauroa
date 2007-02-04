@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.3 2007/02/03 17:33:41 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.4 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,12 @@ import marauroa.common.Log4J;
 
 import org.apache.log4j.Logger;
 
-public class JDBCTransaction {
+/**
+ * Implementation of a JDBC transaction for MySQL
+ * @author miguel
+ *
+ */
+public class JDBCTransaction extends Transaction {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(JDBCTransaction.class);
 
@@ -66,7 +71,7 @@ public class JDBCTransaction {
 			connection.rollback();
 	}
 
-	public boolean isValid() {
+	boolean isValid() {
 		boolean valid = false;
 
 		if (connection != null) {

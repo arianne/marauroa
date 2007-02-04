@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.1 2007/01/18 12:51:56 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -82,89 +82,58 @@ public class RPWorld implements Iterable<IRPZone> {
 		return zones.get(new IRPZone.ID(objectid.getZoneID()));
 	}
 
-	public void add(RPObject object) throws NoRPZoneException,
-			RPObjectInvalidException {
-		try {
-			if (object.has("zoneid")) {
-				IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
-				zone.assignRPObjectID(object);
+	public void add(RPObject object) throws RPObjectInvalidException {
+		if (object.has("zoneid")) {
+			IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+			zone.assignRPObjectID(object);
 
-				// Changing too the objects inside the slots
-				Iterator<RPSlot> it = object.slotsIterator();
-				while (it.hasNext()) {
-					RPSlot slot = it.next();
-					String zoneid = object.get("zoneid");
+			// Changing too the objects inside the slots
+			Iterator<RPSlot> it = object.slotsIterator();
+			while (it.hasNext()) {
+				RPSlot slot = it.next();
+				String zoneid = object.get("zoneid");
 
-					for (RPObject item : slot) {
-						item.put("zoneid", zoneid);
-						zone.assignRPObjectID(item);
-					}
+				for (RPObject item : slot) {
+					item.put("zoneid", zoneid);
+					zone.assignRPObjectID(item);
 				}
-
-				zone.add(object);
-
-				/** NOTE: Document this hack */
-				if (object.has("clientid")) {
-					PlayerEntry entry=playerContainer.get(object.getInt("clientid"));
-					entry.requestedSync=true;
-					}
 			}
-		} catch (Exception e) {
-			logger.warn("error add object to world", e);
-			throw new NoRPZoneException();
+
+			zone.add(object);
+
+			/** NOTE: Document this hack */
+			if (object.has("clientid")) {
+				PlayerEntry entry=playerContainer.get(object.getInt("clientid"));
+				entry.requestedSync=true;
+			}
 		}
 	}
 
-	public RPObject get(RPObject.ID id) throws NoRPZoneException,
-			RPObjectInvalidException {
-		try {
-			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
-			return zone.get(id);
-		} catch (Exception e) {
-			logger.error("error getting object [" + id + "]", e);
-			throw new NoRPZoneException();
-		}
+	public RPObject get(RPObject.ID id) throws RPObjectInvalidException {
+		IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
+		return zone.get(id);
 	}
 
-	public boolean has(RPObject.ID id) throws NoRPZoneException,
-			RPObjectInvalidException {
-		try {
+	public boolean has(RPObject.ID id) throws RPObjectInvalidException {
 			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
 			return zone.has(id);
-		} catch (Exception e) {
-			logger.error("error while checking if world has object [" + id
-					+ "]", e);
-			throw new NoRPZoneException();
-		}
 	}
 
-	public RPObject remove(RPObject.ID id) throws NoRPZoneException,
-			RPObjectNotFoundException {
-		try {
+	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException {
 			IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
 			return zone.remove(id);
-		} catch (Exception e) {
-			logger.error("error while removing object [" + id + "]", e);
-			throw new NoRPZoneException();
-		}
 	}
 
 	public Iterator<IRPZone> iterator() {
 		return zones.values().iterator();
 	}
 
-	public void modify(RPObject object) throws NoRPZoneException {
-		try {
-			IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
-			zone.modify(object);
-		} catch (Exception e) {
-			logger.error("error modifying object: " + object, e);
-			throw new NoRPZoneException();
-		}
+	public void modify(RPObject object) {
+		IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+		zone.modify(object);
 	}
 
-	public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid,
-			RPObject object) throws NoRPZoneException {
+	public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) throws RPObjectInvalidException {
 		Log4J.startMethod(logger, "changeZone");
 		try {
 			if (newzoneid.equals(oldzoneid)) {
@@ -184,14 +153,13 @@ public class RPWorld implements Iterable<IRPZone> {
 			add(object);
 		} catch (Exception e) {
 			logger.error("error changing Zone", e);
-			throw new NoRPZoneException();
+			throw new RPObjectInvalidException("zoneid");
 		} finally {
 			Log4J.finishMethod(logger, "changeZone");
 		}
 	}
 
-	public void changeZone(String oldzone, String newzone, RPObject object)
-			throws NoRPZoneException {
+	public void changeZone(String oldzone, String newzone, RPObject object) throws RPObjectInvalidException {
 		changeZone(new IRPZone.ID(oldzone), new IRPZone.ID(newzone), object);
 	}
 

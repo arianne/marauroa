@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,12 @@ import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.db.JDBCDatabase.LoginEvent;
 
+/**
+ * This interface exposes the methods a database implementation should have.
+ * @author miguel
+ *
+ */
+//TODO: Missing RPZone storable objects interface 
 public interface IDatabase {
 	/**
 	 * Adds this player to database with username, password and email.

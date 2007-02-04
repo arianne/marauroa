@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.7 2007/01/18 12:58:07 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.8 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.server.game.rp.RPScheduler;
 import marauroa.server.game.rp.RPWorld;
 
 /** This class is a wrapper for calling python in a better way. */
+@Deprecated
 class GameScript {
 	private PythonInterpreter interpreter;
 

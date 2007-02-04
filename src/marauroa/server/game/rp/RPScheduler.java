@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,8 +28,6 @@ import org.apache.log4j.Logger;
  * This class represents a scheduler to deliver action by turns, so every action
  * added to the scheduler is executed on the next turn. Each object can cast as
  * many actions as it wants.
- * 
- * TODO: Simplify it.
  */
 public class RPScheduler {
 	/** the logger instance. */

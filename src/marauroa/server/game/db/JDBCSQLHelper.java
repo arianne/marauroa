@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,11 @@ import marauroa.common.Log4J;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A helper class that runs SQL scripts. 
+ * @author miguel
+ *
+ */
 public class JDBCSQLHelper {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(JDBCSQLHelper.class);

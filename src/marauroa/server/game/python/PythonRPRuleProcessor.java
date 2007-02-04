@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.14 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.15 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
  * FIXME: TODO: Update this class. It is now broken. Document how to use it.
  */
 @SuppressWarnings("unused")
+@Deprecated
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	/** the logger instance. */
 	private static final Logger logger = Log4J
@@ -151,5 +152,15 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		} finally {
 			Log4J.startMethod(logger, "onTimeout");
 		}
+	}
+
+	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		// TODO Auto-generated method stub
+		
 	}
 }

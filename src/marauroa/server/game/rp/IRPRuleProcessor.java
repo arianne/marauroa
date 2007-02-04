@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.2 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,15 +65,19 @@ public interface IRPRuleProcessor {
 	/**
 	 * Execute an action in the name of a player.
 	 * 
-	 * @param id the id of the object owner of the actions.
+	 * @param id the object that executes 
 	 * @param action the action to execute
 	 */
 	public void execute(RPObject.ID id, RPAction action);
 
-	/** Notify it when a begin of actual turn happens. */
+	/** 
+	 * Notify it when a begin of actual turn happens. 
+	 */
 	public void beginTurn();
 
-	/** Notify it when a end of actual turn happens. */
+	/** 
+	 * Notify it when a end of actual turn happens. 
+	 */
 	public void endTurn();
 
 	/**
@@ -89,7 +93,7 @@ public interface IRPRuleProcessor {
 	 * @param id the new player id that exits the game.
 	 * @return true to allow player to exit
 	 */
-	public boolean onExit(RPObject.ID id) throws RPObjectNotFoundException;
+	public boolean onExit(RPObject object) throws RPObjectNotFoundException;
 
 	/**
 	 * Callback method called when a new player time out.
@@ -97,5 +101,5 @@ public interface IRPRuleProcessor {
 	 * 
 	 * @param id the new player id that timeouts.
 	 */
-	public void onTimeout(RPObject.ID id) throws RPObjectNotFoundException;
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException;
 }

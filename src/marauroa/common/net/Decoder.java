@@ -12,6 +12,7 @@ import java.util.Map;
  * @author miguel
  */
 public class Decoder {
+	// TODO: Fix me
 	private Map<SocketChannel,byte[]> content;
 
 	/** MessageFactory */

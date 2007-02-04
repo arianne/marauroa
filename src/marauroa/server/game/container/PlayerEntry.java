@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.5 2007/02/03 17:40:25 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.6 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -26,14 +26,17 @@ import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.PlayerDatabaseFactory;
 
+/**
+ * This class represent a player on game.
+ * It handles all the bussiness glue that it is needed by the server.
+ * @author miguel *
+ */
 public class PlayerEntry {
 	/** A object representing the database */
 	protected static IDatabase playerDatabase;
-    protected static JDBCTransaction transaction;
     
     public static void initDatabase() {
     		playerDatabase=PlayerDatabaseFactory.getDatabase();
-    		transaction=playerDatabase.getTransaction();
     }
 
     /** 
@@ -56,11 +59,13 @@ public class PlayerEntry {
 		}
 
 		public boolean verify() throws SQLException {
-			return playerDatabase.verify(transaction, this);
+			return playerDatabase.verify(playerDatabase.getTransaction(), this);
 		}
 
 		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
-			transaction.begin();
+    		JDBCTransaction transaction=playerDatabase.getTransaction();
+    		
+    		transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
 			transaction.commit();
 		}
@@ -144,6 +149,8 @@ public class PlayerEntry {
 	 * @throws SQLException 
 	 */
 	public void storeRPObject(RPObject player) throws SQLException,IOException {
+		JDBCTransaction transaction=playerDatabase.getTransaction();
+		
 		try {
 			transaction.begin();
 
@@ -172,7 +179,7 @@ public class PlayerEntry {
 	 * @throws Exception If there is a Database exception.
 	 */
 	public boolean hasCharacter(String character) throws Exception {
-		return playerDatabase.hasCharacter(transaction, username, character);
+		return playerDatabase.hasCharacter(playerDatabase.getTransaction(), username, character);
 	}
 
 	/**
@@ -183,11 +190,11 @@ public class PlayerEntry {
 	 * @throws Exception if the load fails.
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
-		object = playerDatabase.loadCharacter(transaction,username, character);
+		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(),username, character);
 		return object;
 	}
 
 	public List<String> getCharacters() throws SQLException {
-		return playerDatabase.getCharacters(transaction, username);
+		return playerDatabase.getCharacters(playerDatabase.getTransaction(), username);
 	}	
 }

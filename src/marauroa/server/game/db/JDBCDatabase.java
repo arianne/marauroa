@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -44,6 +44,11 @@ import marauroa.server.game.container.PlayerEntry;
 
 import org.apache.log4j.Logger;
 
+/** 
+ * This is a JDBC implementation for MySQL is IDatabase interface.
+ * @author miguel
+ *
+ */
 public class JDBCDatabase implements IDatabase {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(JDBCDatabase.class);
