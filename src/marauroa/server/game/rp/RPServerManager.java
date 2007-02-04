@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.4 2007/02/04 13:10:43 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.5 2007/02/04 13:37:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,8 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.PropertyNotFoundException;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPAction;
@@ -101,18 +104,9 @@ public class RPServerManager extends Thread {
 			this.netMan = netMan;
 
 			Configuration conf = Configuration.getConfiguration();
-			Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
-			// call the get() method without parameters to retrieve the singleton instance
-			world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
-			world.onInit();
-
-			Class ruleProcessorClass = Class.forName(conf.get("rp_RPRuleProcessorClass"));
-			// call the get() method without parameters to retrieve the singleton instance
-			ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
-			ruleProcessor.setContext(this);
+			initializeExtensions(conf);
 
 			String duration = conf.get("rp_turnDuration");
-
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {
@@ -123,6 +117,38 @@ public class RPServerManager extends Thread {
 		}
 	}
 
+	/**
+	 * This method loads the extensions: IRPRuleProcessor and IRPWorld that are going to be used
+	 * to implement your game. 
+	 * This method loads these class from the class names passed as arguments in Configuration
+	 * 
+	 * @param conf the Configuration class
+	 * @return
+	 * @throws ClassNotFoundException 
+	 * @throws PropertyNotFoundException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 * @throws SecurityException 
+	 * @throws IllegalArgumentException 
+	 */
+	protected Configuration initializeExtensions(Configuration conf) throws PropertyNotFoundException, ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
+		// call the get() method without parameters to retrieve the singleton instance
+		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		world.onInit();
+
+		Class ruleProcessorClass = Class.forName(conf.get("rp_RPRuleProcessorClass"));
+		// call the get() method without parameters to retrieve the singleton instance
+		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		ruleProcessor.setContext(this);
+		return conf;
+	}
+
+	/** 
+	 * This method returns the actual turn number.
+	 * @return actual turn number
+	 */ 
 	public int getTurn() {
 		return turn;
 	}
@@ -414,6 +440,45 @@ public class RPServerManager extends Thread {
 		} finally {
 			isfinished = true;
 			Log4J.finishMethod(logger, "run");
+		}
+	}
+
+	/** This method disconnects a player from the server. */
+	public void disconnectPlayer(RPObject object) {
+		/* We need to adquire the lock because this is handle by another thread */
+		playerContainer.getLock().requestWriteLock();
+
+		try {
+			PlayerEntry entry=playerContainer.get(object.getID());
+			disconnect(entry);
+		} finally {
+			playerContainer.getLock().releaseLock();
+		}
+	}
+
+
+	public void disconnect(PlayerEntry entry) {
+		/* We check that player is not already removed */
+		if(entry==null) {
+			/* There is no player entry for such channel 
+			 * This is not necesaryly an error, as the connection could be
+			 * anything else but an arianne client or we are just disconnecting
+			 * a player that logout correctly. */
+			return;
+		}
+
+		try {
+			RPObject object=entry.object;
+			/* We request to logout of game */
+			onTimeout(object);
+			
+			entry.storeRPObject(object);
+		} catch (Exception e) {
+			logger.error("Error disconnecting a player: ",e);
+		} finally {
+			stats.add("Players logout", 1);
+			/* Finally we remove the entry */
+			playerContainer.remove(entry.clientid);
 		}
 	}
 }

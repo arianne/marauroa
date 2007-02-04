@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.6 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.7 2007/02/04 13:37:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,12 +43,12 @@ public class PythonRPWorld extends RPWorld {
 	}
 
 	@Override
-	public void onInit() throws Exception {
+	public void onInit() {
 		pythonWorld.onInit();
 	}
 
 	@Override
-	public void onFinish() throws Exception {
+	public void onFinish() {
 		pythonWorld.onFinish();
 	}
 

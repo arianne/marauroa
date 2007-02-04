@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.3 2007/02/04 13:37:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,11 +55,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	}
 
 	/** This method is called when RPWorld is created */
-	public void onInit() throws Exception {
+	public void onInit() {
 	}
 
 	/** This method is called when server is going to shutdown. */
-	public void onFinish() throws Exception {
+	public void onFinish() {
 	}
 
 	/** Adds a new zone to World */

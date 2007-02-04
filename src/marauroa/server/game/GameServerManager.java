@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.38 2007/02/04 13:10:42 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.39 2007/02/04 13:37:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -359,32 +359,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	public void onDisconnect(SocketChannel channel) {
 		/* We need to adquire the lock because this is handle by another thread */
 		playerContainer.getLock().requestWriteLock();
-		
-		PlayerEntry entry=playerContainer.get(channel);
-		
-		/* We check that player is not already removed */
-		if(entry==null) {
-			/* There is no player entry for such channel 
-			 * This is not necesaryly an error, as the connection could be
-			 * anything else but an arianne client or we are just disconnecting
-			 * a player that logout correctly. */
-			return;
-		}
 
-		try {
-			RPObject object = entry.object;
-			/* We request to logout of game */
-			rpMan.onTimeout(object);
-
-			entry.storeRPObject(object);
-
-			stats.add("Players logout", 1);
-		} catch (Exception e) {
-			logger.error("Error disconnecting a player: ",e);
+		try{
+			PlayerEntry entry=playerContainer.get(channel);		
+			rpMan.disconnect(entry);
 		} finally {
-			/* Finally we remove the entry */
-			playerContainer.remove(entry.clientid);
-
 			playerContainer.getLock().releaseLock();
 		}
 	}
