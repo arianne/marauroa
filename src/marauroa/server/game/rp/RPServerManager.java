@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.5 2007/02/04 13:37:06 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.6 2007/02/04 21:17:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
-import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -78,7 +77,7 @@ public class RPServerManager extends Thread {
 	/** The PlayerEntryContainer so that we know where to send perceptions */
 	private PlayerEntryContainer playerContainer;
 
-	private List<Integer> playersToRemove;
+	private List<PlayerEntry> playersToRemove;
 
 	private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
 
@@ -95,12 +94,12 @@ public class RPServerManager extends Thread {
 			stats = Statistics.getStatistics();
 			keepRunning = true;
 			isfinished = false;
-			
+
 			scheduler = new RPScheduler();
 			contentsToTransfer = new HashMap<RPObject.ID, List<TransferContent>>();
 			playerContainer = PlayerEntryContainer.getContainer();
-			
-			playersToRemove = new LinkedList<Integer>();
+
+			playersToRemove = new LinkedList<PlayerEntry>();
 			this.netMan = netMan;
 
 			Configuration conf = Configuration.getConfiguration();
@@ -157,7 +156,7 @@ public class RPServerManager extends Thread {
 	public void finish() {
 		Log4J.startMethod(logger, "finish");
 		keepRunning = false;
-		
+
 		while (isfinished == false) {
 			Thread.yield();
 		}
@@ -172,7 +171,10 @@ public class RPServerManager extends Thread {
 	}
 
 	/** Adds an action for the next turn 
-	 * @param object */
+	 * @param object the object that casted the action
+	 * @param action the action itself
+	 * @throws ActionInvalidException
+	 */
 	public void addRPAction(RPObject object, RPAction action) throws ActionInvalidException {
 		Log4J.startMethod(logger, "addRPAction");
 		try {
@@ -186,22 +188,24 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** Returns an object of the world */
-	public RPObject getRPObject(RPObject.ID id)
-			throws RPObjectNotFoundException {
-		Log4J.startMethod(logger, "getRPObject");
-		try {
-			IRPZone zone = world.getRPZone(id);
-			return zone.get(id);
-		} finally {
-			Log4J.finishMethod(logger, "getRPObject");
-		}
-	}
-
+	/** 
+	 * This method decide if an client runs a compatible version of the game
+	 * @param game the game name
+	 * @param version the game version as a string
+	 * @return true if it is compatible.
+	 */
 	public boolean checkGameVersion(String game, String version) {
 		return ruleProcessor.checkGameVersion(game, version);
 	}
 
+	/**
+	 * Creates an account for a player in the game.
+	 * @param username player's username
+	 * @param password player's password
+	 * @param email player's email
+	 * @param template the template we are going to use to create the object.
+	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
+	 */
 	public createaccount.Result createAccount(String username, String password,
 			String email, RPObject template) {
 		return ruleProcessor.createAccount(username, password, email, template);
@@ -226,63 +230,64 @@ public class RPServerManager extends Thread {
 	}
 
 	private void sendPlayerPerception(PlayerEntry entry, Perception perception, RPObject object) {
-		if (perception != null) {
-			MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel, perception);
+		if (perception == null) {
+			/** Until player enters game perception is null */
+			return;
+		}
 
-			stats.add("Perceptions "+ (perception.type == 0 ? "DELTA" : "SYNC"), 1);
+		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel, perception);
 
-			/* The perception is build of two parts: the general information and the private information
-			 *  about our object.
-			 *  This private information consists only of attributes that are not visible to every player
-			 *  but the owner, because visible attributes are already stored in the perception.
-			 */
-			RPObject copy = (RPObject) object.clone();
+		stats.add("Perceptions "+ (perception.type == 0 ? "DELTA" : "SYNC"), 1);
 
-			if (perception.type == Perception.SYNC) {
-				copy.clearVisible();
-				messages2cPerception.setMyRPObject(copy, null);
-			} else {
-				RPObject added = new RPObject();
-				RPObject deleted = new RPObject();
+		/* The perception is build of two parts: the general information and the private information
+		 *  about our object.
+		 *  This private information consists only of attributes that are not visible to every player
+		 *  but the owner, because visible attributes are already stored in the perception.
+		 */
+		RPObject copy = (RPObject) object.clone();
 
-				try {
-					copy.getDifferences(added, deleted);
-					added.clearVisible();
-					deleted.clearVisible();
+		if (perception.type == Perception.SYNC) {
+			copy.clearVisible();
+			messages2cPerception.setMyRPObject(copy, null);
+		} else {
+			RPObject added = new RPObject();
+			RPObject deleted = new RPObject();
 
-					if (added.size() == 0) {
-						added = null;
-					}
+			try {
+				copy.getDifferences(added, deleted);
+				added.clearVisible();
+				deleted.clearVisible();
 
-					if (deleted.size() == 0) {
-						deleted = null;
-					}
-				} catch (Exception e) {
-					logger.error("Error getting object differences", e);
-					logger.error(object);
-					logger.error(copy);
+				if (added.size() == 0) {
 					added = null;
-					deleted = null;
 				}
 
-				messages2cPerception.setMyRPObject(added, deleted);
+				if (deleted.size() == 0) {
+					deleted = null;
+				}
+			} catch (Exception e) {
+				logger.error("Error getting object differences", e);
+				logger.error(object);
+				logger.error(copy);
+				added = null;
+				deleted = null;
 			}
 
-			messages2cPerception.setClientID(entry.clientid);
-			messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
-
-			netMan.sendMessage(messages2cPerception);
+			messages2cPerception.setMyRPObject(added, deleted);
 		}
+
+		messages2cPerception.setClientID(entry.clientid);
+		messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
+
+		netMan.sendMessage(messages2cPerception);
 	}
 
 	private void buildPerceptions() {
-		Log4J.startMethod(logger, "buildPerceptions");
-
 		playersToRemove.clear();
 
 		/** We reset the cache at Perceptions */
 		MessageS2CPerception.clearPrecomputedPerception();
-		
+
 		for(PlayerEntry entry: playerContainer) {
 			try {
 				if (entry.state == ClientState.GAME_BEGIN) {
@@ -291,27 +296,30 @@ public class RPServerManager extends Thread {
 				}
 			} catch (RuntimeException e) {
 				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
-				playersToRemove.add(entry.clientid);			}
+				playersToRemove.add(entry);			
+			}
 		}
-
-		Log4J.finishMethod(logger, "buildPerceptions");
+		
+		for(PlayerEntry entry: playersToRemove) {
+			disconnect(entry);
+		}
 	}
 
 	/** This method is called when a player is added to the game */
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
 		return ruleProcessor.onInit(object);
 	}
-	
-	/** This method is called when connection to client is closed */
-	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
-		scheduler.clearRPActions(object);
-		ruleProcessor.onTimeout(object);
-	}
 
 	/** This method is called when a player leaves the game */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		scheduler.clearRPActions(object);
 		return ruleProcessor.onExit(object);
+	}
+
+	/** This method is called when connection to client is closed */
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		scheduler.clearRPActions(object);
+		ruleProcessor.onTimeout(object);
 	}
 
 	private void deliverTransferContent() {
@@ -361,6 +369,7 @@ public class RPServerManager extends Thread {
 
 			while (keepRunning) {
 				stop = System.nanoTime();
+				
 				try {
 					logger.info("Turn time elapsed: " + ((stop - start) / 1000)	+ " microsecs");
 					delay = turnDuration - ((stop - start) / 1000000);
@@ -372,10 +381,7 @@ public class RPServerManager extends Thread {
 
 						logger.warn("Turn duration overflow by " + (-delay)	+ " ms: " + sb.toString());
 					} else if (delay > turnDuration) {
-						logger.error("Delay bigger than Turn duration. [delay: "
-										+ delay
-										+ "] [turnDuration:"
-										+ turnDuration + "]");
+						logger.error("Delay bigger than Turn duration. [delay: "+ delay+ "] [turnDuration:"+ turnDuration + "]");
 						delay = 0;
 					}
 
@@ -385,48 +391,48 @@ public class RPServerManager extends Thread {
 					}
 				} catch (InterruptedException e) {
 				}
+				
 				start = System.nanoTime();
 				timeStart = System.currentTimeMillis();
 
+				playerContainer.getLock().requestWriteLock();
+
 				try {
-					playerContainer.getLock().requestWriteLock();
-					{
-						timeEnds[0] = System.currentTimeMillis();
+					timeEnds[0] = System.currentTimeMillis();
 
-						/** Get actions that players send */
-						scheduler.nextTurn();
-						timeEnds[1] = System.currentTimeMillis();
+					/** Get actions that players send */
+					scheduler.nextTurn();
+					timeEnds[1] = System.currentTimeMillis();
 
-						/** Execute them all */
-						scheduler.visit(ruleProcessor);
-						timeEnds[2] = System.currentTimeMillis();
+					/** Execute them all */
+					scheduler.visit(ruleProcessor);
+					timeEnds[2] = System.currentTimeMillis();
 
-						/** Compute game RP rules to move to the next turn */
-						ruleProcessor.endTurn();
-						timeEnds[3] = System.currentTimeMillis();
+					/** Compute game RP rules to move to the next turn */
+					ruleProcessor.endTurn();
+					timeEnds[3] = System.currentTimeMillis();
 
-						/** Send content that is waiting to players */
-						deliverTransferContent();
-						timeEnds[4] = System.currentTimeMillis();
+					/** Send content that is waiting to players */
+					deliverTransferContent();
+					timeEnds[4] = System.currentTimeMillis();
 
-						/** Tell player what happened */
-						buildPerceptions();
-						timeEnds[5] = System.currentTimeMillis();
+					/** Tell player what happened */
+					buildPerceptions();
+					timeEnds[5] = System.currentTimeMillis();
 
-						/** Move zone to the next turn */
-						world.nextTurn();
-						timeEnds[6] = System.currentTimeMillis();
+					/** Move zone to the next turn */
+					world.nextTurn();
+					timeEnds[6] = System.currentTimeMillis();
 
-						/** Remove timeout players */
-						/* NOTE: As we use TCP there are not anymore timeout players */
-						//notifyTimedoutPlayers(playersToRemove);
-						timeEnds[7] = System.currentTimeMillis();
+					/** Remove timeout players */
+					/* NOTE: As we use TCP there are not anymore timeout players */
+					//notifyTimedoutPlayers(playersToRemove);
+					timeEnds[7] = System.currentTimeMillis();
 
-						turn++;
+					turn++;
 
-						ruleProcessor.beginTurn();
-						timeEnds[8] = System.currentTimeMillis();
-					}
+					ruleProcessor.beginTurn();
+					timeEnds[8] = System.currentTimeMillis();
 				} finally {
 					playerContainer.getLock().releaseLock();
 					timeEnds[9] = System.currentTimeMillis();
@@ -471,7 +477,7 @@ public class RPServerManager extends Thread {
 			RPObject object=entry.object;
 			/* We request to logout of game */
 			onTimeout(object);
-			
+
 			entry.storeRPObject(object);
 		} catch (Exception e) {
 			logger.error("Error disconnecting a player: ",e);
