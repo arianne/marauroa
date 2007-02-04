@@ -42,8 +42,6 @@ public class TestEncoderDecoder {
 		Message decoded=dec.decode(null,result);
 		byte[] reencoded=enc.encode(decoded);
 		
-		System.out.println(reencoded.length);
-		
 		assertEquals(result.length, reencoded.length);
 		
 		/** We verify the assertion by re encoding again the message.
@@ -64,7 +62,7 @@ public class TestEncoderDecoder {
 		MessageC2SAction message=new MessageC2SAction(null,action);
 		
 		byte[] result=enc.encode(message);
-		
+
 		Decoder dec=Decoder.get();
 
 		int split=new Random().nextInt(result.length);

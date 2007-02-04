@@ -41,10 +41,11 @@ public class Decoder {
 			
 			byte[] data=new byte[size-4];
 			
-			boolean first=true;
+			int offset=0;
 			for(byte[] p: parts) {
-				System.arraycopy(p, (first?4:0) , data, 0, p.length-(first?4:0));
-				first=false;
+				int amount=p.length-(offset==0?4:0);
+				System.arraycopy(p, (offset==0?4:0) , data, offset, amount);
+				offset+=amount;				
 			}
 			
 			Message msg=msgFactory.getMessage(data, channel);
