@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.8 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.9 2007/02/04 17:55:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -212,13 +212,15 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 
 				try {
 					Message msg = decoder.decode(event.channel, event.data);
-					messages.add(msg);				
+					if(msg!=null) {
+						messages.add(msg);
+					}
 				} catch (InvalidVersionException e) {
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
-					/* We don't care */
+					logger.warn("IOException while building message.",e);
 				}
 			}			
 		} catch (InterruptedException e) {

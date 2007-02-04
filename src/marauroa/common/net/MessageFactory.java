@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.13 2007/01/18 12:37:46 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.14 2007/02/04 17:55:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -132,8 +132,7 @@ public class MessageFactory {
 				if (factoryArray.containsKey(new Integer(data[1]))) {
 					Message tmp = null;
 					try {
-						Class messageType = factoryArray.get(new Integer(
-								data[offset + 1]));
+						Class messageType = factoryArray.get(new Integer(data[offset + 1]));
 						tmp = (Message) messageType.newInstance();
 						ByteArrayInputStream in = new ByteArrayInputStream(data);
 						if (offset > 0) {
