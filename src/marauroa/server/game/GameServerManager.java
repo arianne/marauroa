@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.39 2007/02/04 13:37:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.40 2007/02/05 17:39:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,6 +52,7 @@ import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
@@ -68,14 +69,19 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(GameServerManager.class);
 
+	/** We need network server manager to be able to send messages */
 	private INetworkServerManager netMan;
 
+	/** We need rp manager to run the messages and actions from players */
 	private RPServerManager rpMan;
 
-	private marauroa.server.game.container.PlayerEntryContainer playerContainer;
+	/** The playerContainer handles all the player management */
+	private PlayerEntryContainer playerContainer;
 
+	/** Statistics about actions runs */
 	private Statistics stats;
 
+	/** The server RSA Key */
 	private RSAKey key;
 
 	/** The thread will be running while keepRunning is true */
@@ -91,7 +97,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	public GameServerManager(RSAKey key, INetworkServerManager netMan, RPServerManager rpMan) throws Exception {
 		super("GameServerManager");
-		Log4J.startMethod(logger, "GameServerManager");
 		keepRunning = true;
 		isfinished=false;
 		
@@ -101,17 +106,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		
 		netMan.registerDisconnectedListener(this);
 		
-		playerContainer = marauroa.server.game.container.PlayerEntryContainer.getContainer();
+		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
-		
-		Log4J.finishMethod(logger, "GameServerManager");
 	}
 
 	/** 
 	 * This method request the active object to finish its execution and store all
 	 * the players back to database.
-	 * NOTE: Shouldn't this be a RPManager task?
-	 *
 	 */
 	public void finish() {
 		Log4J.startMethod(logger, "finish");
@@ -129,14 +130,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	private void storeConnectedPlayers() {
 		for(PlayerEntry entry: playerContainer) {
-			RPObject player=entry.object;
-			try {
-				if(rpMan.onExit(player)) {
-					entry.storeRPObject(player);
-				}
-			} catch (Exception e) {
-				logger.error("Offending player was: "+player, e);
-			}
+			rpMan.disconnect(entry);
 		}
 	}
 
@@ -215,7 +209,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the message to check
 	 * @return true, the event is valid, else false
 	 */
-	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState state) throws NoSuchClientIDException {
+	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState state) {
 		if(entry==null) {
 			/* Error: Player didn't login. */
 			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
@@ -540,7 +534,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			
 			SecuredLoginInfo info=entry.loginInformations;
 
-			/* TODO: clientNonce is already set above... does it really need to be set again? */
 			info.clientNonce = msgLogin.getHash();
 			info.username = msgLogin.getUsername();
 			info.password = msgLogin.getPassword();
@@ -638,7 +631,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 
 			/** Notify Player Entry that this player is out of Sync */
-			entry.requestedSync = true;
+			entry.requestSync();
 		} catch (Exception e) {
 			logger.error("error while processing OutOfSyncEvent", e);
 		} finally {

@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.18 2007/02/03 17:40:25 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.19 2007/02/05 17:39:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server.game;
 
 import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,21 +34,39 @@ public class Statistics implements StatisticsMBean {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(Statistics.class);
 
+	/**
+	 * This class is very similar to a Map<String, Long> with the extra that 
+	 * adds some comodity methods like: 
+	 * - add
+	 * - print 
+	 * @author miguel
+	 */
 	public static class Variables implements Iterable<String> {
-		Map<String, Long> content;
+		private Map<String, Long> content;
 
 		public Variables() {
 			content = new HashMap<String, Long>();
 		}
 
+		/** Clear all the variables */
 		public void clear() {
 			content.clear();
 		}
 
+		/**
+		 * Put a new variable at the Map
+		 * @param type name of the variable
+		 * @param value its value
+		 */
 		public void put(String type, long value) {
 			content.put(type, value);
 		}
 
+		/**
+		 * Add value to previously existing variable.
+		 * @param type name of the variable
+		 * @param value value to add
+		 */
 		public void add(String type, long value) {
 			if (!content.containsKey(type)) {
 				put(type, value);
@@ -58,29 +75,38 @@ public class Statistics implements StatisticsMBean {
 			}
 		}
 
+		/**
+		 * Returns a variable value
+		 * @param type name of the variable
+		 * @return its value
+		 */
 		public long get(String type) {
 			return content.get(type);
 		}
 
+		/** Iterate over the variables 
+		 *  @return an iterator over the variables
+         */
 		public Iterator<String> iterator() {
 			return content.keySet().iterator();
 		}
 
+		/** 
+		 * Adds to this instance the instance var 
+		 * @param var a instance of Variables to add to this one.
+		 */
 		public void add(Variables var) {
 			for (String type : var) {
 				add(type, var.get(type));
 			}
 		}
 
+		/**
+		 * Prints the variable 
+		 * @param out
+		 * @param diff
+		 */
 		public void print(PrintWriter out, double diff) {
-			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeML(type) + "\" value=\""
-						+ content.get(type) + "\" />");
-			}
-		}
-
-		public void print(PrintStream out, double diff) {
-			out.println("Statistics: " + content.size());
 			for (String type : content.keySet()) {
 				out.println("<attrib name=\"" + escapeML(type) + "\" value=\""
 						+ content.get(type) + "\" />");
@@ -88,12 +114,16 @@ public class Statistics implements StatisticsMBean {
 		}
 	}
 
-	Variables now;
+	/** This is the actual values */
+	private Variables now;
 
-	Variables sinceStart;
+	/** This is variables values since the server startup */
+	private Variables sinceStart;
 
+	/** Server start time */
 	private Date startTime;
 
+	/** The date of the last statistics event added to database */
 	private Date lastStatisticsEventAdded;
 
 	private Statistics() {
@@ -160,18 +190,14 @@ public class Statistics implements StatisticsMBean {
 				init();
 			}
 
-			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder
-					+ "server_stats.xml"));
-			out.println("<statistics time=\"" + (actualTime.getTime() / 1000)
-					+ "\">");
+			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder+ "server_stats.xml"));
+			out.println("<statistics time=\"" + (actualTime.getTime() / 1000)+ "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
 			long totalMemory = Runtime.getRuntime().totalMemory() / 1024;
-			long usedMemory = totalMemory
-					- (Runtime.getRuntime().freeMemory() / 1024);
+			long usedMemory = totalMemory- (Runtime.getRuntime().freeMemory() / 1024);
 
-			out.println("  <memory total=\"" + totalMemory + "\" used=\""
-					+ usedMemory + "\"/>");
+			out.println("  <memory total=\"" + totalMemory + "\" used=\""+ usedMemory + "\"/>");
 			logger.info("Total/Used memory: " + totalMemory + "/" + usedMemory);
 
 			sinceStart.print(out, diff);
