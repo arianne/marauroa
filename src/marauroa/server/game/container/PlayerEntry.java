@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.6 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.7 2007/02/05 17:14:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -194,7 +194,19 @@ public class PlayerEntry {
 		return object;
 	}
 
+	/**
+	 * This method returns a list of all the characters available for this player
+	 * @return a list containing all the usable characters
+	 * @throws SQLException if there is any database problem.
+	 */
 	public List<String> getCharacters() throws SQLException {
 		return playerDatabase.getCharacters(playerDatabase.getTransaction(), username);
+	}
+
+	/**
+	 * This method forces an update on the next perception sending.
+	 */
+	public void requestSync() {
+		requestedSync=true;		
 	}	
 }

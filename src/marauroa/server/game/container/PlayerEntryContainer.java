@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.4 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.5 2007/02/05 17:14:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -19,11 +19,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.server.RWLock;
-
-import org.apache.log4j.Logger;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -32,9 +29,6 @@ import org.apache.log4j.Logger;
  *
  */
 public class PlayerEntryContainer implements Iterable<PlayerEntry> {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
-
 	/** A reader/writers lock for controlling the access */
 	private RWLock lock;
 
@@ -47,7 +41,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static PlayerEntryContainer playerEntryContainer;
 
 	/** Constructor */
-	private PlayerEntryContainer() throws Exception {
+	private PlayerEntryContainer() {
 		/* Initialize the random number generator */
 		rand = new Random();
 		rand.setSeed(new Date().getTime());
@@ -58,12 +52,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		clientidMap = new HashMap<Integer, PlayerEntry>();
 		
 		/* Choose the database type using configuration file */
-		try {
-			PlayerEntry.initDatabase();
-		} catch (Exception e) {
-			logger.error("ABORT: marauroad can't allocate database");
-			throw e;
-		}
+		PlayerEntry.initDatabase();
 	}
 
 	/**
@@ -71,7 +60,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * 
 	 * @return A shared instance of PlayerEntryContainer
 	 */
-	public static PlayerEntryContainer getContainer() throws Exception {
+	public static PlayerEntryContainer getContainer() {
 		if (playerEntryContainer == null) {
 			playerEntryContainer = new PlayerEntryContainer();
 		}

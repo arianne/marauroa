@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.3 2007/02/05 17:14:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -146,6 +146,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * This method assigns a valid id to the object.
+	 * @param object the object that is going to obtain a new id
 	 */
 	public void assignRPObjectID(RPObject object) {
 		RPObject.ID id = new RPObject.ID(++lastNonPermanentIdAssigned, zoneid);

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.6 2007/02/04 21:17:36 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.7 2007/02/05 17:14:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,7 @@ import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.net.INetworkServerManager;
+import marauroa.server.net.validator.ConnectionValidator;
 
 import org.apache.log4j.Logger;
 
@@ -486,5 +487,13 @@ public class RPServerManager extends Thread {
 			/* Finally we remove the entry */
 			playerContainer.remove(entry.clientid);
 		}
+	}
+	
+	/** 
+	 * This method exposes network layer connection validator so game logic can handle it.  
+	 * @return the connection validator
+	 */
+	public ConnectionValidator getValidator() {
+		return netMan.getValidator();
 	}
 }
