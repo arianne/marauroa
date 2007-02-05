@@ -43,16 +43,15 @@ public class Decoder {
 				return null;
 			}
 			
-			byte[] data=new byte[size-4];
+			byte[] data=new byte[size];
 			
 			int offset=0;
 			for(byte[] p: parts) {
-				int amount=p.length-(offset==0?4:0);
-				System.arraycopy(p, (offset==0?4:0) , data, offset, amount);
-				offset+=amount;				
+				System.arraycopy(p, 0 , data, offset, p.length);
+				offset+=p.length;				
 			}
 			
-			Message msg=msgFactory.getMessage(data, channel);
+			Message msg=msgFactory.getMessage(data, channel,4);
 			return msg;
 		}
 	}
@@ -94,10 +93,7 @@ public class Decoder {
 		+ ((data[3] & 0xFF) << 24);
 
 		if(data.length==size) {
-			byte[] buffer=new byte[size - 4];
-			System.arraycopy(data, 4, buffer, 0, size-4);
-
-			msg = msgFactory.getMessage(buffer, channel);
+			msg = msgFactory.getMessage(data, channel, 4);
 		} else {
 			/* Size is not the expected: We should store and wait for message completion. */
 			MessageParts buffers=content.get(channel);
