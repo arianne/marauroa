@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.3 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -55,8 +55,6 @@ public class JDBCSQLHelper {
 	 * @return true if the whole file was executed or false in any other error.
 	 */
 	public boolean runDBScript(JDBCTransaction transaction, String file) {
-		Log4J.startMethod(logger, "runDBScript");
-
 		boolean ret = true;
 		Connection con = transaction.getConnection();
 		BufferedReader in = null;
@@ -105,8 +103,6 @@ public class JDBCSQLHelper {
 				}
 			} catch (IOException e) {
 			}
-
-			Log4J.finishMethod(logger, "runDBScript");
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.4 2007/02/05 17:14:53 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.5 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,7 +166,6 @@ public class RPWorld implements Iterable<IRPZone> {
 	 * @throws RPObjectInvalidException
 	 */
 	public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) {
-		Log4J.startMethod(logger, "changeZone");
 		try {
 			if (newzoneid.equals(oldzoneid)) {
 				return;
@@ -181,8 +180,6 @@ public class RPWorld implements Iterable<IRPZone> {
 		} catch (Exception e) {
 			logger.error("error changing Zone", e);
 			throw new RPObjectInvalidException("zoneid");
-		} finally {
-			Log4J.finishMethod(logger, "changeZone");
 		}
 	}
 
@@ -200,12 +197,9 @@ public class RPWorld implements Iterable<IRPZone> {
 	 * This method make world to move to the next turn, calling each zone nextTurn method.	 *
 	 */
 	public void nextTurn() {
-		Log4J.startMethod(logger, "nextTurn");
 		for (IRPZone zone : zones.values()) {
 			zone.nextTurn();
 		}
-
-		Log4J.finishMethod(logger, "nextTurn");
 	}
 
 	/**

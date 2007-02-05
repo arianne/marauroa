@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.3 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -127,7 +127,6 @@ public class JDBCDatabase implements IDatabase {
 	 * @throws NoDatabaseConfException If there is any kind of problem creating the connection.
 	 */
 	private Connection createConnection(Properties props) throws NoDatabaseConfException {
-		Log4J.startMethod(logger, "createConnection");
 		try {
 			/* We instantiate now the Driver class */
 			try{
@@ -156,8 +155,6 @@ public class JDBCDatabase implements IDatabase {
 		}  catch (SQLException e) {
 			logger.fatal("Unable to create a connection to: "+props.get("jdbc_url"),e);
 			throw new NoDatabaseConfException(e);
-		} finally {
-			Log4J.finishMethod(logger, "createConnection");
 		}
 	}
 
@@ -484,9 +481,6 @@ public class JDBCDatabase implements IDatabase {
 			charactersSet.close();
 
 			stmt.close();
-
-			Log4J.finishMethod(logger, "getCharacterList");
-
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player("+username+")", e);

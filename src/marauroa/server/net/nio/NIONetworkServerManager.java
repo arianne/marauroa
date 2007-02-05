@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.9 2007/02/04 17:55:21 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.10 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,8 +68,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 
 	
 	public NIONetworkServerManager() throws IOException {
-		Log4J.startMethod(logger, "NetworkServerManager");
-
 		/* init the packet validater (which can now only check if the address is banned)*/
 		connectionValidator = new ConnectionValidator();
 		keepRunning = true;

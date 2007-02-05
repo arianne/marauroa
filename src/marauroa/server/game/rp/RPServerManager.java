@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.8 2007/02/05 17:39:42 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.9 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,7 +90,6 @@ public class RPServerManager extends Thread {
 	 */
 	public RPServerManager(INetworkServerManager netMan) throws Exception {
 		super("RPServerManager");
-		Log4J.startMethod(logger, "RPServerManager");
 		try {
 			stats = Statistics.getStatistics();
 			keepRunning = true;
@@ -112,8 +111,6 @@ public class RPServerManager extends Thread {
 		} catch (Exception e) {
 			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",	e);
 			throw e;
-		} finally {
-			Log4J.finishMethod(logger, "RPServerManager");
 		}
 	}
 
@@ -155,7 +152,6 @@ public class RPServerManager extends Thread {
 
 	/** This method finish the thread that run the RPServerManager */
 	public void finish() {
-		Log4J.startMethod(logger, "finish");
 		keepRunning = false;
 
 		while (isfinished == false) {
@@ -167,8 +163,6 @@ public class RPServerManager extends Thread {
 		} catch (Exception e) {
 			logger.error("error while finishing RPServerManager", e);
 		}
-
-		Log4J.finishMethod(logger, "finish");
 	}
 
 	/** Adds an action for the next turn 
@@ -177,16 +171,11 @@ public class RPServerManager extends Thread {
 	 * @throws ActionInvalidException
 	 */
 	public void addRPAction(RPObject object, RPAction action) throws ActionInvalidException {
-		Log4J.startMethod(logger, "addRPAction");
-		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Added action: " + action);
-			}
-
-			scheduler.addRPAction(object, action, ruleProcessor);
-		} finally {
-			Log4J.finishMethod(logger, "addRPAction");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Added action: " + action);
 		}
+
+		scheduler.addRPAction(object, action, ruleProcessor);
 	}
 
 	/** 
@@ -343,11 +332,9 @@ public class RPServerManager extends Thread {
 
 	/** This method is triggered to send content to the clients */
 	public void transferContent(RPObject.ID id, List<TransferContent> content) {
-		Log4J.startMethod(logger, "transferContent");
 		synchronized (contentsToTransfer) {
 			contentsToTransfer.put(id, content);
 		}
-		Log4J.finishMethod(logger, "transferContent");
 	}
 
 	/** This method is triggered to send content to the clients */
@@ -361,7 +348,6 @@ public class RPServerManager extends Thread {
 	@Override
 	public void run() {
 		try {
-			Log4J.startMethod(logger, "run");
 			long start = System.nanoTime();
 			long stop;
 			long delay;
@@ -446,7 +432,6 @@ public class RPServerManager extends Thread {
 			logger.fatal("Unhandled exception, server will shut down.", e);
 		} finally {
 			isfinished = true;
-			Log4J.finishMethod(logger, "run");
 		}
 	}
 

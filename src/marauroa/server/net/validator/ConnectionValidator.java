@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.4 2007/02/03 17:40:25 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.5 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,15 +57,11 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * thread to recieve new messages from the network.
 	 */
 	public ConnectionValidator() {
-		Log4J.startMethod(logger, "PacketValidator");
-		
 		permanentBans=new LinkedList<InetAddressMask>();
 		temporalBans=new LinkedList<InetAddressMask>();
 
 		/* read ban list from configuration */
 		loadBannedIPNetworkListFromDB();
-		
-		Log4J.finishMethod(logger, "PacketValidator");
 	}
 	
 	/**
@@ -103,8 +99,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * @return true if the source ip is banned
 	 */
 	public synchronized boolean checkBanned(InetAddress address) {
-		Log4J.startMethod(logger, "checkBanned");
-
 		checkReload();
 
 		for(InetAddressMask iam: temporalBans) {
@@ -121,8 +115,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 			}
 		}
 
-
-		Log4J.finishMethod(logger, "checkBanned");
 		return false;
 	}
 
@@ -133,7 +125,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 
 	/** loads and initializes the ban list from a database */
 	public synchronized void loadBannedIPNetworkListFromDB() {
-		Log4J.startMethod(logger, "loadBannedIPNetworkListFromDB");
 		try {
 			IDatabase db = JDBCDatabase.getDatabase();
 
@@ -162,17 +153,14 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 		}
 
 		lastLoadTS = System.currentTimeMillis();
-		Log4J.finishMethod(logger, "loadBannedIPNetworkListFromDB");
 	}
 
 	/**
 	 * checks if reload is necessary and performs it
 	 */
 	public synchronized void checkReload() {
-		Log4J.startMethod(logger, "checkReload");
 		if (System.currentTimeMillis() - lastLoadTS >= reloadAfter) {
 			loadBannedIPNetworkListFromDB();
 		}
-		Log4J.finishMethod(logger, "checkReload");
 	}
 }

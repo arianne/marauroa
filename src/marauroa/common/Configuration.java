@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.10 2007/01/25 12:01:57 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.11 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,7 +76,6 @@ public class Configuration {
 	}
 
 	private Configuration() throws FileNotFoundException {
-		Log4J.startMethod(logger, "Configuration");
 		try {
 			properties = new Properties();
 
@@ -91,8 +90,6 @@ public class Configuration {
 		} catch (IOException e) {
 			logger.warn("Error loading Configuration file", e);
 			throw new FileNotFoundException(configurationFile);
-		} finally {
-			Log4J.finishMethod(logger, "Configuration");
 		}
 	}
 
@@ -102,15 +99,10 @@ public class Configuration {
 	 * @return a shared instance of Configuration
 	 */
 	public static Configuration getConfiguration() throws FileNotFoundException {
-		Log4J.startMethod(logger, "getConfiguration");
-		try {
-			if (configuration == null) {
-				configuration = new Configuration();
-			}
-			return configuration;
-		} finally {
-			Log4J.finishMethod(logger, "getConfiguration");
+		if (configuration == null) {
+			configuration = new Configuration();
 		}
+		return configuration;
 	}
 
 	/**
@@ -123,35 +115,25 @@ public class Configuration {
 	 *                if the property is not found.
 	 */
 	public String get(String property) throws PropertyNotFoundException {
-		Log4J.startMethod(logger, "get");
-		try {
-			String result = properties.getProperty(property);
+		String result = properties.getProperty(property);
 
-			if (result == null) {
-				logger.debug("Property [" + property + "] not found");
-				throw new PropertyNotFoundException(property);
-			}
-
-			logger.debug("Property [" + property + "]=" + result);
-			return result;
-		} finally {
-			Log4J.finishMethod(logger, "get");
+		if (result == null) {
+			logger.debug("Property [" + property + "] not found");
+			throw new PropertyNotFoundException(property);
 		}
+
+		logger.debug("Property [" + property + "]=" + result);
+		return result;
 	}
 
 	public boolean has(String property) {
-		Log4J.startMethod(logger, "has");
-		try {
-			String result = properties.getProperty(property);
+		String result = properties.getProperty(property);
 
-			if (result == null) {
-				return false;
-			}
-
-			return true;
-		} finally {
-			Log4J.finishMethod(logger, "has");
+		if (result == null) {
+			return false;
 		}
+
+		return true;
 	}
 
 	/**
@@ -163,7 +145,6 @@ public class Configuration {
 	 *            the value to set
 	 */
 	public void set(String property, String value) {
-		Log4J.startMethod(logger, "set");
 		try {
 			logger.debug("Property [" + property + "]=" + value);
 			properties.put(property, value);
@@ -178,8 +159,6 @@ public class Configuration {
 					e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
-		} finally {
-			Log4J.finishMethod(logger, "set");
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.40 2007/02/05 17:39:42 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.41 2007/02/05 18:07:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -115,7 +115,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * the players back to database.
 	 */
 	public void finish() {
-		Log4J.startMethod(logger, "finish");
 		rpMan.finish();
 		keepRunning = false;
 		while (isfinished == false) {
@@ -124,8 +123,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		/* We store all the players when we are requested to exit */
 		storeConnectedPlayers();
-
-		Log4J.finishMethod(logger, "finish");
 	}
 
 	private void storeConnectedPlayers() {
@@ -136,7 +133,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	@Override
 	public void run() {
-		Log4J.startMethod(logger, "run");
 		try {
 			while (keepRunning) {
 				Message msg = netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
@@ -193,7 +189,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 
 		isfinished = true;
-		Log4J.finishMethod(logger, "run");
 	}
 
 	/**
@@ -241,7 +236,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg The ChooseCharacter message
 	 */
 	private void processChooseCharacterEvent(MessageC2SChooseCharacter msg) {
-		Log4J.startMethod(logger, "processChooseCharacterEvent");
 		try {
 			int clientid = msg.getClientID();
 
@@ -290,8 +284,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		} catch (Exception e) {
 			logger.error("error when processing character event", e);
-		} finally {
-			Log4J.finishMethod(logger, "processChooseCharacterEvent");
 		}
 	}
 
@@ -301,7 +293,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the logout message
 	 */
 	private void processLogoutEvent(MessageC2SLogout msg) {
-		Log4J.startMethod(logger, "processLogoutEvent");
 		try {
 			int clientid = msg.getClientID();
 			
@@ -341,8 +332,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		} catch (Exception e) {
 			logger.error("error while processing LogoutEvent", e);
-		} finally {
-			Log4J.finishMethod(logger, "processLogoutEvent");
 		}
 	}
 
@@ -370,7 +359,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the action message
 	 */
 	private void processActionEvent(MessageC2SAction msg) {
-		Log4J.startMethod(logger, "processActionEvent");
 		try {
 			int clientid = msg.getClientID();
 
@@ -410,8 +398,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		} catch (Exception e) {
 			stats.add("Actions invalid", 1);
 			logger.error("error while processing ActionEvent", e);
-		} finally {
-			Log4J.finishMethod(logger, "processActionEvent");
 		}
 	}
 
@@ -424,8 +410,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the login message.
 	 */
 	private void processLoginRequestKey(Message msg) {
-		Log4J.startMethod(logger, "processLoginRequestKey");
-
 		MessageC2SLoginRequestKey msgRequest = (MessageC2SLoginRequestKey) msg;
 		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getSocketChannel(), key);
@@ -439,8 +423,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
 			netMan.sendMessage(msgLoginNACK);
 		}
-
-		Log4J.finishMethod(logger, "processLoginRequestKey");
 	}
 
 	/** 
@@ -450,7 +432,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg The create account message.
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
-		Log4J.startMethod(logger, "processCreateAccount");
 		try {
 			Result result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
 			
@@ -473,7 +454,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		Log4J.finishMethod(logger, "processCreateAccount");
 	}
 
 	/**
@@ -484,7 +464,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the promise message.
 	 */
 	private void processLoginSendPromise(Message msg) {
-		Log4J.startMethod(logger, "processLoginSendPromise");
 		try {
 			/* TODO: Fix me. This limit leads easily to a DOS attack */
 			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
@@ -510,8 +489,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		} catch (Exception e) {
 			logger.error("client not found", e);
 		}
-
-		Log4J.finishMethod(logger, "processLoginSendPromise");
 	}
 
 	/** 
@@ -520,7 +497,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg
 	 */
 	private void processSecuredLoginEvent(Message msg) {
-		Log4J.startMethod(logger, "processSecuredLoginEvent");
 		try {
 			MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
 
@@ -609,8 +585,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			entry.state=ClientState.LOGIN_COMPLETE;
 		} catch (Exception e) {
 			logger.error("error while processing SecuredLoginEvent", e);
-		} finally {
-			Log4J.finishMethod(logger, "processSecuredLoginEvent");
 		}
 	}
 
@@ -620,7 +594,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the out of sync message
 	 */
 	private void processOutOfSyncEvent(MessageC2SOutOfSync msg) {
-		Log4J.startMethod(logger, "processOutOfSyncEvent");
 		try {
 			int clientid = msg.getClientID();
 			PlayerEntry entry=playerContainer.get(clientid);
@@ -634,8 +607,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			entry.requestSync();
 		} catch (Exception e) {
 			logger.error("error while processing OutOfSyncEvent", e);
-		} finally {
-			Log4J.finishMethod(logger, "processOutOfSyncEvent");
 		}
 	}
 
@@ -645,7 +616,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param msg the transfer ACK message
 	 */
 	private void processTransferACK(MessageC2STransferACK msg) {
-		Log4J.startMethod(logger, "processTransferACK");
 		try {
 			int clientid = msg.getClientID();
 
@@ -683,8 +653,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			entry.clearContent();
 		} catch (Exception e) {
 			logger.error("error while processing TransferACK", e);
-		} finally {
-			Log4J.finishMethod(logger, "processTransferACK");
 		}
 	}
 
@@ -700,7 +668,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private static class ServerInfo {
 		static Configuration config;
 		static {
-			Log4J.startMethod(logger, "ServerInfo[static]");
 			try {
 				config = Configuration.getConfiguration();
 				// just check if mandatory properties are set
@@ -711,7 +678,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			} catch (Exception e) {
 				logger.error("ERROR: Unable to load Server info", e);
 			}
-			Log4J.finishMethod(logger, "ServerInfo[static]");
 		}
 
 		/** This method builds a String[] from the properties used in Server Info */

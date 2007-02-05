@@ -43,15 +43,12 @@ public class Log4J {
 			return;
 		}
 
-		InputStream propsFile = Log4J.class.getClassLoader()
-				.getResourceAsStream(filename);
+		InputStream propsFile = Log4J.class.getClassLoader().getResourceAsStream(filename);
 		try {
 			Properties props = new Properties();
 			if (propsFile == null) {
-				System.err.println("Cannot find " + filename
-						+ " in classpath. Using default properties.");
-				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES
-						.getBytes()));
+				System.err.println("Cannot find " + filename+ " in classpath. Using default properties.");
+				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes()));
 			} else {
 				System.out.println("Configuring Log4J using " + filename);
 				props.load(propsFile);
@@ -59,8 +56,7 @@ public class Log4J {
 			PropertyConfigurator.configure(props);
 			configured = true;
 		} catch (IOException ioe) {
-			System.err.println("cannot read property-file " + LOG4J_PROPERTIES
-					+ " because " + ioe.getMessage());
+			System.err.println("cannot read property-file " + LOG4J_PROPERTIES+ " because " + ioe.getMessage());
 		}
 	}
 
@@ -85,6 +81,7 @@ public class Log4J {
 	 * @param method
 	 *            name of the method
 	 */
+	@Deprecated
 	public static void startMethod(Logger logger, String method) {
 		logger.debug(method + " started (+)");
 	}
@@ -97,6 +94,7 @@ public class Log4J {
 	 * @param method
 	 *            name of the method
 	 */
+	@Deprecated
 	public static void finishMethod(Logger logger, String method) {
 		logger.debug(method + " finished (-)");
 	}
