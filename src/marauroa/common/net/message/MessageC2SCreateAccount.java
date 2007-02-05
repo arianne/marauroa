@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.6 2007/02/05 18:24:38 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,24 +10,30 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.RPObject;
+
 /**
- * This message indicate the server that the client wants to login and send the
- * needed info: username and password to login to server.
+ * This message indicate the server to create an account.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageS2CInvalidMessage extends Message {
-	private String reason;
+public class MessageC2SCreateAccount extends Message {
+	private String username;
+
+	private String password;
+
+	private String email;
+	
+	private RPObject template;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CInvalidMessage() {
-		super(MessageType.S2C_INVALIDMESSAGE, null);
-		reason = "";
+	public MessageC2SCreateAccount() {
+		super(MessageType.C2S_CREATEACCOUNT, null);
 	}
 
 	/**
@@ -36,23 +42,34 @@ public class MessageS2CInvalidMessage extends Message {
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param username
-	 *            the username of the user that wants to login
-	 * @param password
-	 *            the plain password of the user that wants to login
+	 * @param character
+	 *            The name of the choosen character that <b>MUST</b> be one of
+	 *            the returned by the marauroa.common.net.MessageS2CCharacters
+	 * @see marauroa.common.net.message.MessageS2CCharacterList
 	 */
-	public MessageS2CInvalidMessage(SocketChannel source, String reason) {
-		super(MessageType.S2C_INVALIDMESSAGE, source);
-		this.reason = reason;
+	public MessageC2SCreateAccount(SocketChannel source, String username,
+			String password, String email, RPObject template) {
+		super(MessageType.C2S_CREATEACCOUNT, source);
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.template = template;
 	}
 
-	/**
-	 * This method returns the reason
-	 * 
-	 * @return the reason
-	 */
-	public String getReason() {
-		return reason;
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+	
+	public RPObject getTemplate() {
+		return template;
 	}
 
 	/**
@@ -62,25 +79,31 @@ public class MessageS2CInvalidMessage extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Message Invalid) from ("
-				+ getAddress() + ") CONTENTS: (reason:"
-				+ reason + ")";
+		return "Message (C2S CreateAccount) from ("
+				+ getAddress() + ") CONTENTS: ("
+				+ username + ";" + password + ";" + email + ";" + template +")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-		out.write(reason);
+		out.write(username);
+		out.write(password);
+		out.write(email);
+		out.write(template);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		reason = in.readString();
+		username = in.readString();
+		password = in.readString();
+		email = in.readString();
+		template=(RPObject)in.readObject(new RPObject());
 
-		if (type != MessageType.S2C_INVALIDMESSAGE) {
+		if (type != MessageType.C2S_CREATEACCOUNT) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

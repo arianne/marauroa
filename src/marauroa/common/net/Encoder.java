@@ -3,6 +3,8 @@ package marauroa.common.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import marauroa.common.net.message.Message;
+
 /**
  * This class encode a Message as a stream of bytes.
  * Encoder follows singleton pattern.

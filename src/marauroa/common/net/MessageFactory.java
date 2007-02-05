@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.15 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.16 2007/02/05 18:37:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,32 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.Utility;
 import marauroa.common.game.Attributes;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SAction;
+import marauroa.common.net.message.MessageC2SChooseCharacter;
+import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SLoginRequestKey;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendPromise;
+import marauroa.common.net.message.MessageC2SLogout;
+import marauroa.common.net.message.MessageC2SOutOfSync;
+import marauroa.common.net.message.MessageC2STransferACK;
+import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.common.net.message.MessageS2CChooseCharacterACK;
+import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
+import marauroa.common.net.message.MessageS2CCreateAccountACK;
+import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CInvalidMessage;
+import marauroa.common.net.message.MessageS2CLoginACK;
+import marauroa.common.net.message.MessageS2CLoginNACK;
+import marauroa.common.net.message.MessageS2CLoginSendKey;
+import marauroa.common.net.message.MessageS2CLoginSendNonce;
+import marauroa.common.net.message.MessageS2CLogoutACK;
+import marauroa.common.net.message.MessageS2CLogoutNACK;
+import marauroa.common.net.message.MessageS2CPerception;
+import marauroa.common.net.message.MessageS2CServerInfo;
+import marauroa.common.net.message.MessageS2CTransfer;
+import marauroa.common.net.message.MessageS2CTransferREQ;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -58,7 +84,6 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_ACTION, MessageC2SAction.class);
 		register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
 		register(Message.MessageType.C2S_LOGOUT, MessageC2SLogout.class);
-		register(Message.MessageType.S2C_ACTION_ACK, MessageS2CActionACK.class);
 		register(Message.MessageType.S2C_CHARACTERLIST,	MessageS2CCharacterList.class);
 		register(Message.MessageType.S2C_CHOOSECHARACTER_ACK, MessageS2CChooseCharacterACK.class);
 		register(Message.MessageType.S2C_CHOOSECHARACTER_NACK, MessageS2CChooseCharacterNACK.class);
@@ -67,7 +92,6 @@ public class MessageFactory {
 		register(Message.MessageType.S2C_LOGOUT_ACK, MessageS2CLogoutACK.class);
 		register(Message.MessageType.S2C_LOGOUT_NACK, MessageS2CLogoutNACK.class);
 		register(Message.MessageType.S2C_PERCEPTION, MessageS2CPerception.class);
-		register(Message.MessageType.C2S_PERCEPTION_ACK, MessageC2SPerceptionACK.class);
 		register(Message.MessageType.C2S_OUTOFSYNC, MessageC2SOutOfSync.class);
 		register(Message.MessageType.S2C_SERVERINFO, MessageS2CServerInfo.class);
 		register(Message.MessageType.S2C_INVALIDMESSAGE, MessageS2CInvalidMessage.class);
@@ -121,50 +145,44 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel, int offset)
-			throws IOException, InvalidVersionException {
-		Log4J.startMethod(logger, "getMessage");
-		try {
-			if (data[offset] == NetConst.NETWORK_PROTOCOL_VERSION) {
-				if (factoryArray.containsKey(new Integer(data[1]))) {
-					Message tmp = null;
-					try {
-						Class messageType = factoryArray.get(new Integer(data[offset + 1]));
-						tmp = (Message) messageType.newInstance();
-						ByteArrayInputStream in = new ByteArrayInputStream(data);
-						if (offset > 0) {
-							in.skip(offset);
-						}
-						InputSerializer s = new InputSerializer(in);
-
-						tmp.readObject(s);
-						tmp.setSocketChannel(channel);
-						return tmp;
-					} catch (Exception e) {
-						NDC.push("message is [" + tmp + "]\n");
-						NDC.push("message dump is [\n"
-								+ Utility.dumpByteArray(data) + "\n] (offset: "
-								+ offset + ")\n");
-						logger.error("error in getMessage", e);
-						NDC.pop();
-						NDC.pop();
-						throw new IOException(e.getMessage());
+	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException, InvalidVersionException {
+		if (data[offset] == NetConst.NETWORK_PROTOCOL_VERSION) {
+			if (factoryArray.containsKey(new Integer(data[1]))) {
+				Message tmp = null;
+				try {
+					Class messageType = factoryArray.get(new Integer(data[offset + 1]));
+					tmp = (Message) messageType.newInstance();
+					ByteArrayInputStream in = new ByteArrayInputStream(data);
+					if (offset > 0) {
+						in.skip(offset);
 					}
-				} else {
-					logger.warn("Message type [" + data[1]
-							+ "] is not registered in the MessageFactory");
-					throw new IOException("Message type [" + data[1]
-							+ "] is not registered in the MessageFactory");
+					InputSerializer s = new InputSerializer(in);
+
+					tmp.readObject(s);
+					tmp.setSocketChannel(channel);
+					return tmp;
+				} catch (Exception e) {
+					NDC.push("message is [" + tmp + "]\n");
+					NDC.push("message dump is [\n"
+							+ Utility.dumpByteArray(data) + "\n] (offset: "
+							+ offset + ")\n");
+					logger.error("error in getMessage", e);
+					NDC.pop();
+					NDC.pop();
+					throw new IOException(e.getMessage());
 				}
 			} else {
-				logger.warn("Message has incorrect protocol version(" + data[0]
-						+ ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION
-						+ ")");
-				logger.debug("Message is: " + Utility.dumpByteArray(data));
-				throw new InvalidVersionException(data[0]);
+				logger.warn("Message type [" + data[1]
+				                                    + "] is not registered in the MessageFactory");
+				throw new IOException("Message type [" + data[1]
+				                                              + "] is not registered in the MessageFactory");
 			}
-		} finally {
-			Log4J.finishMethod(logger, "getMessage");
+		} else {
+			logger.warn("Message has incorrect protocol version(" + data[0]
+			                                                             + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION
+			                                                             + ")");
+			logger.debug("Message is: " + Utility.dumpByteArray(data));
+			throw new InvalidVersionException(data[0]);
 		}
 	}
 };

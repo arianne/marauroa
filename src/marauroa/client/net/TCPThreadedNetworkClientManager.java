@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.20 2007/01/18 12:38:30 arianne_rpg Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.21 2007/02/05 18:37:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
-import marauroa.common.net.Message;
+import marauroa.common.net.message.Message;
 
 import org.apache.log4j.Logger;
 

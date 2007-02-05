@@ -1,4 +1,4 @@
-/* $Id: MessageC2SPerceptionACK.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,21 +10,21 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the server that the client has accepted its Perception
+ * This message indicate the client that the server has accepted its login
  * Message
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageC2SPerceptionACK extends Message {
+public class MessageS2CLoginACK extends Message {
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2SPerceptionACK() {
-		super(MessageType.C2S_PERCEPTION_ACK, null);
+	public MessageS2CLoginACK() {
+		super(MessageType.S2C_LOGIN_ACK, null);
 	}
 
 	/**
@@ -33,8 +33,8 @@ public class MessageC2SPerceptionACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SPerceptionACK(SocketChannel source) {
-		super(MessageType.C2S_PERCEPTION_ACK, source);
+	public MessageS2CLoginACK(SocketChannel source) {
+		super(MessageType.S2C_LOGIN_ACK, source);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class MessageC2SPerceptionACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Perception ACK) from ("
+		return "Message (S2C Login ACK) from ("
 				+ getAddress() + ") CONTENTS: ()";
 	}
 
@@ -58,7 +58,7 @@ public class MessageC2SPerceptionACK extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		if (type != MessageType.C2S_PERCEPTION_ACK) {
+		if (type != MessageType.S2C_LOGIN_ACK) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.8 2007/02/05 18:24:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,30 +10,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.DeflaterOutputStream;
 
-public class MessageS2CTransfer extends Message {
-	/** TODO: Compress all the data that we send */
+import marauroa.common.net.TransferContent;
+
+public class MessageS2CTransferREQ extends Message {
 	private List<TransferContent> contents;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CTransfer() {
-		super(MessageType.S2C_TRANSFER, null);
+	public MessageS2CTransferREQ() {
+		super(MessageType.S2C_TRANSFER_REQ, null);
 	}
 
-	public MessageS2CTransfer(SocketChannel source, TransferContent content) {
-		super(MessageType.S2C_TRANSFER, source);
+	public MessageS2CTransferREQ(SocketChannel source, List<TransferContent> contents) {
+		super(MessageType.S2C_TRANSFER_REQ, source);
 
-		this.contents = new LinkedList<TransferContent>();
-		contents.add(content);
+		this.contents = contents;
 	}
 
 	public List<TransferContent> getContents() {
@@ -42,7 +39,7 @@ public class MessageS2CTransfer extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer) from ("
+		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from ("
 				+ getAddress() + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
@@ -61,20 +58,12 @@ public class MessageS2CTransfer extends Message {
 			throws IOException {
 		super.writeObject(out);
 
-		ByteArrayOutputStream array = new ByteArrayOutputStream();
-		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
-		OutputSerializer serializer = new OutputSerializer(out_stream);
-
 		int size = contents.size();
-		serializer.write(size);
+		out.write(size);
 
 		for (TransferContent content : contents) {
-			content.writeFULL(serializer);
+			content.writeREQ(out);
 		}
-
-		out_stream.close();
-
-		out.write(array.toByteArray());
 	}
 
 	@Override
@@ -82,22 +71,16 @@ public class MessageS2CTransfer extends Message {
 			throws IOException, ClassNotFoundException {
 		super.readObject(in);
 
-		ByteArrayInputStream array = new ByteArrayInputStream(in
-				.readByteArray());
-		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(
-				array, new java.util.zip.Inflater());
-		InputSerializer serializer = new InputSerializer(szlib);
-
-		int size = serializer.readInt();
+		int size = in.readInt();
 		contents = new LinkedList<TransferContent>();
 
 		for (int i = 0; i < size; i++) {
 			TransferContent content = new TransferContent();
-			content.readFULL(serializer);
+			content.readREQ(in);
 			contents.add(content);
 		}
 
-		if (type != MessageType.S2C_TRANSFER) {
+		if (type != MessageType.S2C_TRANSFER_REQ) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

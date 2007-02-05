@@ -1,4 +1,4 @@
-/* $Id: MessageS2CActionACK.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,23 +10,30 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has accepted its Action
- * Message
+ * This message indicate the client that the server has reject its login Message
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageS2CActionACK extends Message {
-	private int actionId;
+public class MessageS2CCreateAccountNACK extends Message {
+	public enum Reasons {
+		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
+	}
+
+	static private String[] text = { "Unknown reason",
+			"Username already exists.", "Field is too short", };
+
+	private Reasons reason;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CActionACK() {
-		super(MessageType.S2C_ACTION_ACK, null);
+	public MessageS2CCreateAccountNACK() {
+		super(MessageType.S2C_CREATEACCOUNT_NACK, null);
 	}
 
 	/**
@@ -34,14 +41,32 @@ public class MessageS2CActionACK extends Message {
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param resolution
+	 *            the reason to deny the login
 	 */
-	public MessageS2CActionACK(SocketChannel source, int actionId) {
-		super(MessageType.S2C_ACTION_ACK, source);
-		this.actionId = actionId;
+	public MessageS2CCreateAccountNACK(SocketChannel source,
+			Reasons resolution) {
+		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
+		reason = resolution;
 	}
 
-	public int getActionID() {
-		return actionId;
+	/**
+	 * This method returns the resolution of the login event
+	 * 
+	 * @return a byte representing the resolution given.
+	 */
+	public Reasons getResolutionCode() {
+		return reason;
+	}
+
+	/**
+	 * This method returns a String that represent the resolution given to the
+	 * login event
+	 * 
+	 * @return a string representing the resolution.
+	 */
+	public String getResolution() {
+		return text[reason.ordinal()];
 	}
 
 	/**
@@ -51,24 +76,24 @@ public class MessageS2CActionACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Action ACK) from ("
-				+ getAddress()
-				+ ") CONTENTS: (action_id=" + actionId + ")";
+		return "Message (S2C Create Account NACK) from ("
+				+ getAddress() + ") CONTENTS: ("
+				+ getResolution() + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-		out.write(actionId);
+		out.write((byte) reason.ordinal());
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		actionId = in.readInt();
-		if (type != MessageType.S2C_ACTION_ACK) {
+		reason = Reasons.values()[in.readByte()];
+		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

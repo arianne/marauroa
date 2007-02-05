@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.10 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.11 2007/02/05 18:37:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,9 +22,9 @@ import marauroa.common.Log4J;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.Message;
-import marauroa.common.net.MessageS2CInvalidMessage;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageS2CInvalidMessage;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;

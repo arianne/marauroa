@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.7 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendPromise.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,57 +10,52 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.crypto.Hash;
+
 /**
- * This message indicate the client that the server has accepted its
- * ChooseCharacter Message
+ * This message indicate the server that the client wants to login and send the
+ * needed info: username and password to login to server.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageS2CChooseCharacterACK extends Message {
+public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CChooseCharacterACK() {
-		super(MessageType.S2C_CHOOSECHARACTER_ACK, null);
+	public MessageC2SLoginSendPromise() {
+		super(MessageType.C2S_LOGIN_SENDPROMISE);
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and the name
+	 * of the choosen character.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param hash
+	 *            The hash code of the nonce to use.
 	 */
-	public MessageS2CChooseCharacterACK(SocketChannel source) {
-		super(MessageType.S2C_CHOOSECHARACTER_ACK, source);
+	public MessageC2SLoginSendPromise(SocketChannel source, byte[] hash) {
+		super(MessageType.C2S_LOGIN_SENDPROMISE, source, hash);
 	}
 
-	/**
-	 * This method returns a String that represent the object
-	 * 
-	 * @return a string representing the object.
-	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Choose Character ACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
-	}
-
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
-		super.writeObject(out);
+		return "Message (C2S Login Send Promise) from ("
+				+ getAddress() + ") CONTENTS: (hash:"
+				+ Hash.toHexString(hash) + ")";
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-
-		if (type != MessageType.S2C_CHOOSECHARACTER_ACK) {
+		if (type != MessageType.C2S_LOGIN_SENDPROMISE) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}
-};
+
+}

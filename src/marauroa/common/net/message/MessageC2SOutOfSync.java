@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageC2SOutOfSync.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,72 +10,55 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
-import java.util.LinkedList;
-import java.util.List;
 
-/** This message is for confirming server the content we want to be transfered to us.
- *  This way client can implement a cache system to save bandwidth.
- * @author miguel
- *
+/**
+ * The Logout Message is sent from client to server to indicate that it wants to
+ * finish the session.
  */
-public class MessageC2STransferACK extends Message {
-	private List<TransferContent> contents;
-
+public class MessageC2SOutOfSync extends Message {
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2STransferACK() {
-		super(MessageType.C2S_TRANSFER_ACK, null);
+	public MessageC2SOutOfSync() {
+		super(MessageType.C2S_OUTOFSYNC, null);
 	}
 
-	public MessageC2STransferACK(SocketChannel source, List<TransferContent> content) {
-		super(MessageType.C2S_TRANSFER_ACK, source);
-
-		this.contents = content;
+	/**
+	 * Constructor with a TCP/IP source/destination of the message and the name
+	 * of the choosen character.
+	 * 
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 */
+	public MessageC2SOutOfSync(SocketChannel source) {
+		super(MessageType.C2S_OUTOFSYNC, source);
 	}
 
-	public List<TransferContent> getContents() {
-		return contents;
-	}
-
+	/**
+	 * This method returns a String that represent the object
+	 * 
+	 * @return a string representing the object.
+	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Transfer ACK) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ contents.size() + ")";
+		return "Message (C2S Out of Sync) from ("
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-
-		int size = contents.size();
-		out.write(size);
-
-		for (TransferContent content : contents) {
-			content.writeACK(out);
-		}
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-
-		int size = in.readInt();
-		contents = new LinkedList<TransferContent>();
-
-		for (int i = 0; i < size; i++) {
-			TransferContent content = new TransferContent();
-			content.readACK(in);
-			contents.add(content);
-		}
-
-		if (type != MessageType.C2S_TRANSFER_ACK) {
+		if (type != MessageType.C2S_OUTOFSYNC) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}
-}
+};

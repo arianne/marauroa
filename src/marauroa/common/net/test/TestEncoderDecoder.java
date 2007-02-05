@@ -12,8 +12,8 @@ import marauroa.common.game.RPAction;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.Message;
-import marauroa.common.net.MessageC2SAction;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SAction;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

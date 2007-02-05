@@ -1,4 +1,4 @@
-/* $Id: MessageC2SOutOfSync.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,19 +10,24 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.RPAction;
+
 /**
- * The Logout Message is sent from client to server to indicate that it wants to
- * finish the session.
+ * This message indicate the server the action the client wants to perform.
+ * 
+ * @see marauroa.common.net.message.Message
  */
-public class MessageC2SOutOfSync extends Message {
+public class MessageC2SAction extends Message {
+	private RPAction action;
+
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2SOutOfSync() {
-		super(MessageType.C2S_OUTOFSYNC, null);
+	public MessageC2SAction() {
+		super(MessageType.C2S_ACTION, null);
 	}
 
 	/**
@@ -31,9 +36,21 @@ public class MessageC2SOutOfSync extends Message {
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param action
+	 *            the username of the user that wants to login
 	 */
-	public MessageC2SOutOfSync(SocketChannel source) {
-		super(MessageType.C2S_OUTOFSYNC, source);
+	public MessageC2SAction(SocketChannel source, RPAction action) {
+		super(MessageType.C2S_ACTION, source);
+		this.action = action;
+	}
+
+	/**
+	 * This method returns the action
+	 * 
+	 * @return the action
+	 */
+	public RPAction getRPAction() {
+		return action;
 	}
 
 	/**
@@ -43,21 +60,24 @@ public class MessageC2SOutOfSync extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Out of Sync) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (C2S Action) from ("
+				+ getAddress() + ") CONTENTS: ("
+				+ action.toString() + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
+		action.writeObject(out);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		if (type != MessageType.C2S_OUTOFSYNC) {
+		action = (RPAction) in.readObject(new RPAction());
+		if (type != MessageType.C2S_ACTION) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.32 2007/01/19 08:08:50 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.33 2007/02/05 18:37:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,27 +26,26 @@ import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.Message;
-import marauroa.common.net.MessageC2SAction;
-import marauroa.common.net.MessageC2SChooseCharacter;
-import marauroa.common.net.MessageC2SCreateAccount;
-import marauroa.common.net.MessageC2SLoginRequestKey;
-import marauroa.common.net.MessageC2SLoginSendNonceNameAndPassword;
-import marauroa.common.net.MessageC2SLoginSendPromise;
-import marauroa.common.net.MessageC2SLogout;
-import marauroa.common.net.MessageC2SOutOfSync;
-import marauroa.common.net.MessageC2SPerceptionACK;
-import marauroa.common.net.MessageC2STransferACK;
-import marauroa.common.net.MessageS2CCharacterList;
-import marauroa.common.net.MessageS2CCreateAccountNACK;
-import marauroa.common.net.MessageS2CLoginNACK;
-import marauroa.common.net.MessageS2CLoginSendKey;
-import marauroa.common.net.MessageS2CLoginSendNonce;
-import marauroa.common.net.MessageS2CPerception;
-import marauroa.common.net.MessageS2CServerInfo;
-import marauroa.common.net.MessageS2CTransfer;
-import marauroa.common.net.MessageS2CTransferREQ;
 import marauroa.common.net.TransferContent;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SAction;
+import marauroa.common.net.message.MessageC2SChooseCharacter;
+import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SLoginRequestKey;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendPromise;
+import marauroa.common.net.message.MessageC2SLogout;
+import marauroa.common.net.message.MessageC2SOutOfSync;
+import marauroa.common.net.message.MessageC2STransferACK;
+import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CLoginNACK;
+import marauroa.common.net.message.MessageS2CLoginSendKey;
+import marauroa.common.net.message.MessageS2CLoginSendNonce;
+import marauroa.common.net.message.MessageS2CPerception;
+import marauroa.common.net.message.MessageS2CServerInfo;
+import marauroa.common.net.message.MessageS2CTransfer;
+import marauroa.common.net.message.MessageS2CTransferREQ;
 
 import org.apache.log4j.Logger;
 
@@ -300,44 +299,10 @@ public abstract class ariannexp {
 	}
 
 	/** Sends a RPAction to server */
-	public void send(RPAction action) {
-		try {
-			send(action, false);
-		} catch (ariannexpTimeoutException e) {
-			/** This will never happen */
-		}
-	}
-
-	/** Sends a RPAction to server and blocks until server confirms it. */
-	private synchronized void send(RPAction action, boolean block)
-			throws ariannexpTimeoutException {
-		/** TODO: Useless we need to return something or disable blocking */
-		Log4J.startMethod(logger, "send");
-		try {
-			MessageC2SAction msgAction = new MessageC2SAction(null, action);
-			netMan.addMessage(msgAction);
-
-			if (block) {
-				int recieved = 0;
-				while (recieved != 1) {
-					Message msg = getMessage();
-					switch (msg.getType()) {
-					case S2C_ACTION_ACK:
-						recieved++;
-						break;
-					default:
-						messages.add(msg);
-					}
-				}
-			}
-		} catch (InvalidVersionException e) {
-			logger
-					.error("Invalid client version to connect to this server.",
-							e);
-			onError(1, "Invalid client version to connect to this server.");
-		} finally {
-			Log4J.finishMethod(logger, "send");
-		}
+	private synchronized void send(RPAction action)
+	throws ariannexpTimeoutException {
+		MessageC2SAction msgAction = new MessageC2SAction(null, action);
+		netMan.addMessage(msgAction);
 	}
 
 	/**
@@ -405,9 +370,6 @@ public abstract class ariannexp {
 				switch (msg.getType()) {
 				case S2C_PERCEPTION: {
 					logger.debug("Processing Message Perception");
-					MessageC2SPerceptionACK reply = new MessageC2SPerceptionACK(null);
-					netMan.addMessage(reply);
-
 					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
 					onPerception(msgPer);
 

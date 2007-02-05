@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.9 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: PerceptionHandler.java,v 1.10 2007/02/05 18:37:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.common.net.MessageS2CPerception;
+import marauroa.common.net.message.MessageS2CPerception;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;

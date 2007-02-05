@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutNACK.java,v 1.6 2007/02/05 18:24:41 arianne_rpg Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,56 +10,58 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has rejected its Logout
- * Message
+ * This message is a generic message that send a byte array.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageS2CLogoutNACK extends Message {
+public class MessageSendByteArray extends Message {
+	protected byte[] hash;
+
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CLogoutNACK() {
-		super(MessageType.S2C_LOGOUT_NACK, null);
+	public MessageSendByteArray(MessageType type) {
+		super(type, null);
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and the byte
+	 * array to send.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param hash
+	 *            The byte array you want to send.
 	 */
-	public MessageS2CLogoutNACK(SocketChannel source) {
-		super(MessageType.S2C_LOGOUT_NACK, source);
+	public MessageSendByteArray(MessageType type, SocketChannel source,	byte[] hash) {
+		super(type, source);
+		this.hash = hash;
 	}
 
 	/**
-	 * This method returns a String that represent the object
+	 * This method returns the byte array.
 	 * 
-	 * @return a string representing the object.
+	 * @return the byte array
 	 */
-	@Override
-	public String toString() {
-		return "Message (S2C Logout NACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
+	public byte[] getHash() {
+		return hash;
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
+		out.write(hash);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		if (type != MessageType.S2C_LOGOUT_NACK) {
-			throw new java.lang.ClassNotFoundException();
-		}
+		hash = in.readByteArray();
 	}
 }

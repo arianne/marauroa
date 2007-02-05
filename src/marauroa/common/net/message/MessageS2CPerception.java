@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.21 2007/02/05 18:24:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,6 +32,8 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -40,7 +42,7 @@ import org.apache.log4j.NDC;
  * This message indicate the client the objects that the server has determined
  * that this client is able to see.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  * @see marauroa.game.RPZone
  */
 public class MessageS2CPerception extends Message {

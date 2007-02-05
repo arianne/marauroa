@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.41 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.42 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,30 +25,30 @@ import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
-import marauroa.common.net.Message;
-import marauroa.common.net.MessageC2SAction;
-import marauroa.common.net.MessageC2SChooseCharacter;
-import marauroa.common.net.MessageC2SCreateAccount;
-import marauroa.common.net.MessageC2SLoginRequestKey;
-import marauroa.common.net.MessageC2SLoginSendNonceNameAndPassword;
-import marauroa.common.net.MessageC2SLoginSendPromise;
-import marauroa.common.net.MessageC2SLogout;
-import marauroa.common.net.MessageC2SOutOfSync;
-import marauroa.common.net.MessageC2STransferACK;
-import marauroa.common.net.MessageS2CCharacterList;
-import marauroa.common.net.MessageS2CChooseCharacterACK;
-import marauroa.common.net.MessageS2CChooseCharacterNACK;
-import marauroa.common.net.MessageS2CCreateAccountACK;
-import marauroa.common.net.MessageS2CCreateAccountNACK;
-import marauroa.common.net.MessageS2CLoginACK;
-import marauroa.common.net.MessageS2CLoginNACK;
-import marauroa.common.net.MessageS2CLoginSendKey;
-import marauroa.common.net.MessageS2CLoginSendNonce;
-import marauroa.common.net.MessageS2CLogoutACK;
-import marauroa.common.net.MessageS2CLogoutNACK;
-import marauroa.common.net.MessageS2CServerInfo;
-import marauroa.common.net.MessageS2CTransfer;
 import marauroa.common.net.TransferContent;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SAction;
+import marauroa.common.net.message.MessageC2SChooseCharacter;
+import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SLoginRequestKey;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendPromise;
+import marauroa.common.net.message.MessageC2SLogout;
+import marauroa.common.net.message.MessageC2SOutOfSync;
+import marauroa.common.net.message.MessageC2STransferACK;
+import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.common.net.message.MessageS2CChooseCharacterACK;
+import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
+import marauroa.common.net.message.MessageS2CCreateAccountACK;
+import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CLoginACK;
+import marauroa.common.net.message.MessageS2CLoginNACK;
+import marauroa.common.net.message.MessageS2CLoginSendKey;
+import marauroa.common.net.message.MessageS2CLoginSendNonce;
+import marauroa.common.net.message.MessageS2CLogoutACK;
+import marauroa.common.net.message.MessageS2CLogoutNACK;
+import marauroa.common.net.message.MessageS2CServerInfo;
+import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.server.createaccount.Result;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;

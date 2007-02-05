@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterNACK.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterNACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
@@ -19,7 +19,7 @@ import java.nio.channels.SocketChannel;
  * This message indicate the client that the server has rejected its
  * ChooseCharacter Message
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
 public class MessageS2CChooseCharacterNACK extends Message {
 	/** Constructor for allowing creation of an empty message */

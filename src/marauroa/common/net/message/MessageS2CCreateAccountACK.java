@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLogoutACK.java,v 1.6 2007/02/05 18:24:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,21 +10,21 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has accepted its Logout
- * Message
+ * This message indicate the client that the server has accepted its create
+ * account Message
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageS2CLogoutACK extends Message {
+public class MessageS2CCreateAccountACK extends Message {
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CLogoutACK() {
-		super(MessageType.S2C_LOGOUT_ACK, null);
+	public MessageS2CCreateAccountACK() {
+		super(MessageType.S2C_CREATEACCOUNT_ACK, null);
 	}
 
 	/**
@@ -33,8 +33,8 @@ public class MessageS2CLogoutACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CLogoutACK(SocketChannel source) {
-		super(MessageType.S2C_LOGOUT_ACK, source);
+	public MessageS2CCreateAccountACK(SocketChannel source) {
+		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class MessageS2CLogoutACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Logout ACK) from ("
+		return "Message (S2C CreateAccount ACK) from ("
 				+ getAddress() + ") CONTENTS: ()";
 	}
 
@@ -58,7 +58,7 @@ public class MessageS2CLogoutACK extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		if (type != MessageType.S2C_LOGOUT_ACK) {
+		if (type != MessageType.S2C_CREATEACCOUNT_ACK) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

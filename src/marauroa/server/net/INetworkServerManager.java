@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.6 2007/01/18 12:42:39 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.7 2007/02/05 18:37:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.server.net;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import marauroa.common.net.Message;
+import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /** A Network Server Manager is an active object ( a thread ) that send and recieve messages

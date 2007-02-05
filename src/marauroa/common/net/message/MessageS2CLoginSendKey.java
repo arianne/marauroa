@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.5 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,28 +10,26 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.channels.SocketChannel;
 
-import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.RSAPublicKey;
 
 /**
  * This message indicate the server that the client wants to login and send the
  * needed info: username and password to login to server.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageC2SLoginSendNonceNameAndPassword extends
-		MessageSendByteArray {
-	private String username;
-
-	private byte[] password;
+public class MessageS2CLoginSendKey extends Message {
+	private RSAPublicKey key;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2SLoginSendNonceNameAndPassword() {
-		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD);
+	public MessageS2CLoginSendKey() {
+		super(MessageType.S2C_LOGIN_SENDKEY, null);
 	}
 
 	/**
@@ -45,11 +43,9 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source,
-			byte[] nonce, String username, byte[] password) {
-		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
-		this.username = username;
-		this.password = password;
+	public MessageS2CLoginSendKey(SocketChannel source, RSAPublicKey key) {
+		super(MessageType.S2C_LOGIN_SENDKEY, source);
+		this.key = key;
 	}
 
 	/**
@@ -57,17 +53,8 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 * 
 	 * @return the username
 	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * This method returns the encoded password
-	 * 
-	 * @return the password
-	 */
-	public byte[] getPassword() {
-		return password;
+	public RSAPublicKey getKey() {
+		return key;
 	}
 
 	/**
@@ -77,27 +64,27 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login) from ("
-				+ getAddress() + ") CONTENTS: (nonce:"
-				+ Hash.toHexString(hash) + "\tusername:" + username
-				+ "\tpassword:" + Hash.toHexString(password) + ")";
+		return "Message (S2C Login Send key) from ("
+				+getAddress() + ") CONTENTS: (n:"
+				+ key.getN() + "\te:" + key.getE() + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-		out.write(username);
-		out.write(password);
+		out.write(key.getN().toByteArray());
+		out.write(key.getE().toByteArray());
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		username = in.readString();
-		password = in.readByteArray();
-		if (type != MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD) {
+		BigInteger n = new BigInteger(in.readByteArray());
+		BigInteger e = new BigInteger(in.readByteArray());
+		key = new RSAPublicKey(n, e);
+		if (type != MessageType.S2C_LOGIN_SENDKEY) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}

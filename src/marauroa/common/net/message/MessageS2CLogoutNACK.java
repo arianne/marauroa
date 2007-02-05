@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageS2CLogoutNACK.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,48 +10,31 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the server what of the available characters is chosen
- * for the session to play.
+ * This message indicate the client that the server has rejected its Logout
+ * Message
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageC2SChooseCharacter extends Message {
-	private String character;
-
+public class MessageS2CLogoutNACK extends Message {
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2SChooseCharacter() {
-		super(MessageType.C2S_CHOOSECHARACTER, null);
+	public MessageS2CLogoutNACK() {
+		super(MessageType.S2C_LOGOUT_NACK, null);
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
+	 * Constructor with a TCP/IP source/destination of the message
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param character
-	 *            The name of the choosen character that <b>MUST</b> be one of
-	 *            the returned by the marauroa.common.net.MessageS2CCharacters
-	 * @see marauroa.common.net.MessageS2CCharacterList
 	 */
-	public MessageC2SChooseCharacter(SocketChannel source, String character) {
-		super(MessageType.C2S_CHOOSECHARACTER, source);
-		this.character = character;
-	}
-
-	/**
-	 * This methods returns the name of the chosen character
-	 * 
-	 * @return the character name
-	 */
-	public String getCharacter() {
-		return character;
+	public MessageS2CLogoutNACK(SocketChannel source) {
+		super(MessageType.S2C_LOGOUT_NACK, source);
 	}
 
 	/**
@@ -61,25 +44,22 @@ public class MessageC2SChooseCharacter extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S ChooseCharacter) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ character + ")";
+		return "Message (S2C Logout NACK) from ("
+				+ getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-		out.write(character);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		character = in.readString();
-		if (type != MessageType.C2S_CHOOSECHARACTER) {
+		if (type != MessageType.S2C_LOGOUT_NACK) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}
-};
+}

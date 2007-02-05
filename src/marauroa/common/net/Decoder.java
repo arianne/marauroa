@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.net.message.Message;
+
 
 /**
  * This class decode a stream of bytes and build a Marauroa message with it.

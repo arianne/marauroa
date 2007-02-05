@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,30 +10,28 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import marauroa.common.game.RPObject;
+import marauroa.common.crypto.Hash;
 
 /**
- * This message indicate the server to create an account.
+ * This message indicate the server that the client wants to login and send the
+ * needed info: username and password to login to server.
  * 
- * @see marauroa.common.net.Message
+ * @see marauroa.common.net.message.Message
  */
-public class MessageC2SCreateAccount extends Message {
+public class MessageC2SLoginSendNonceNameAndPassword extends
+		MessageSendByteArray {
 	private String username;
 
-	private String password;
-
-	private String email;
-	
-	private RPObject template;
+	private byte[] password;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageC2SCreateAccount() {
-		super(MessageType.C2S_CREATEACCOUNT, null);
+	public MessageC2SLoginSendNonceNameAndPassword() {
+		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD);
 	}
 
 	/**
@@ -42,34 +40,34 @@ public class MessageC2SCreateAccount extends Message {
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param character
-	 *            The name of the choosen character that <b>MUST</b> be one of
-	 *            the returned by the marauroa.common.net.MessageS2CCharacters
-	 * @see marauroa.common.net.MessageS2CCharacterList
+	 * @param username
+	 *            the username of the user that wants to login
+	 * @param password
+	 *            the plain password of the user that wants to login
 	 */
-	public MessageC2SCreateAccount(SocketChannel source, String username,
-			String password, String email, RPObject template) {
-		super(MessageType.C2S_CREATEACCOUNT, source);
+	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source,
+			byte[] nonce, String username, byte[] password) {
+		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
 		this.username = username;
 		this.password = password;
-		this.email = email;
-		this.template = template;
 	}
 
+	/**
+	 * This method returns the username
+	 * 
+	 * @return the username
+	 */
 	public String getUsername() {
 		return username;
 	}
 
-	public String getPassword() {
+	/**
+	 * This method returns the encoded password
+	 * 
+	 * @return the password
+	 */
+	public byte[] getPassword() {
 		return password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-	
-	public RPObject getTemplate() {
-		return template;
 	}
 
 	/**
@@ -79,9 +77,10 @@ public class MessageC2SCreateAccount extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateAccount) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ username + ";" + password + ";" + email + ";" + template +")";
+		return "Message (C2S Login) from ("
+				+ getAddress() + ") CONTENTS: (nonce:"
+				+ Hash.toHexString(hash) + "\tusername:" + username
+				+ "\tpassword:" + Hash.toHexString(password) + ")";
 	}
 
 	@Override
@@ -90,8 +89,6 @@ public class MessageC2SCreateAccount extends Message {
 		super.writeObject(out);
 		out.write(username);
 		out.write(password);
-		out.write(email);
-		out.write(template);
 	}
 
 	@Override
@@ -99,12 +96,9 @@ public class MessageC2SCreateAccount extends Message {
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
 		username = in.readString();
-		password = in.readString();
-		email = in.readString();
-		template=(RPObject)in.readObject(new RPObject());
-
-		if (type != MessageType.C2S_CREATEACCOUNT) {
+		password = in.readByteArray();
+		if (type != MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}
-};
+}

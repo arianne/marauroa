@@ -2,7 +2,7 @@ package marauroa.client.net;
 
 import java.net.InetSocketAddress;
 
-import marauroa.common.net.Message;
+import marauroa.common.net.message.Message;
 
 /**
  * All network-communication is done through this interface. There are different

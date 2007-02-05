@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.9 2007/02/05 18:24:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 
 import marauroa.common.game.RPClass;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * The ServerInfo message is sent from server to client to inform client about

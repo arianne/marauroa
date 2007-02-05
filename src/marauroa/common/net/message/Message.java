@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.9 2007/02/05 17:14:53 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,12 +10,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
+import marauroa.common.net.Serializable;
 
 /**
  * Message is a class to represent all the kind of messages that are possible to
@@ -32,9 +37,7 @@ public class Message implements Serializable {
 		C2S_LOGIN_SENDPROMISE, 
 		C2S_LOGOUT, 
 		C2S_OUTOFSYNC, 
-		C2S_PERCEPTION_ACK, 
 		C2S_TRANSFER_ACK, 
-		S2C_ACTION_ACK, 
 		S2C_CHARACTERLIST, 
 		S2C_CHOOSECHARACTER_ACK, 
 		S2C_CHOOSECHARACTER_NACK, 

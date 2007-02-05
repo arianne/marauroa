@@ -1,4 +1,4 @@
-/* $Id: DefaultPerceptionListener.java,v 1.3 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: DefaultPerceptionListener.java,v 1.4 2007/02/05 18:37:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa.client.net;
 
 import marauroa.common.game.RPObject;
-import marauroa.common.net.MessageS2CPerception;
+import marauroa.common.net.message.MessageS2CPerception;
 
 public class DefaultPerceptionListener implements IPerceptionListener {
 	public DefaultPerceptionListener() {

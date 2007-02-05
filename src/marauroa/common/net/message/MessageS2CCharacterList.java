@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.5 2007/02/05 18:24:38 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,63 +10,44 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has reject its login Message
- * 
- * @see marauroa.common.net.Message
+ * The CharacterListMessage is sent from server to client to inform client about
+ * the possible election of character to play with.
  */
-public class MessageS2CCreateAccountNACK extends Message {
-	public enum Reasons {
-		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
-	}
-
-	static private String[] text = { "Unknown reason",
-			"Username already exists.", "Field is too short", };
-
-	private Reasons reason;
+public class MessageS2CCharacterList extends Message {
+	private String[] characters;
 
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CCreateAccountNACK() {
-		super(MessageType.S2C_CREATEACCOUNT_NACK, null);
+	public MessageS2CCharacterList() {
+		super(MessageType.S2C_CHARACTERLIST, null);
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and the name
+	 * of the choosen character.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param resolution
-	 *            the reason to deny the login
+	 * @param characters
+	 *            the list of characters of the player
 	 */
-	public MessageS2CCreateAccountNACK(SocketChannel source,
-			Reasons resolution) {
-		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
-		reason = resolution;
+	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
+		super(MessageType.S2C_CHARACTERLIST, source);
+		this.characters = characters;
 	}
 
 	/**
-	 * This method returns the resolution of the login event
+	 * This method returns the list of characters that the player owns
 	 * 
-	 * @return a byte representing the resolution given.
+	 * @return the list of characters that the player owns
 	 */
-	public Reasons getResolutionCode() {
-		return reason;
-	}
-
-	/**
-	 * This method returns a String that represent the resolution given to the
-	 * login event
-	 * 
-	 * @return a string representing the resolution.
-	 */
-	public String getResolution() {
-		return text[reason.ordinal()];
+	public String[] getCharacters() {
+		return characters;
 	}
 
 	/**
@@ -76,24 +57,29 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Account NACK) from ("
+		StringBuffer text = new StringBuffer(" ");
+
+		for (int i = 0; i < characters.length; ++i) {
+			text.append(characters[i] + ",");
+		}
+		return "Message (S2C Character List) from ("
 				+ getAddress() + ") CONTENTS: ("
-				+ getResolution() + ")";
+				+ text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
-		out.write((byte) reason.ordinal());
+		out.write(characters);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in)
 			throws IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
-		reason = Reasons.values()[in.readByte()];
-		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
+		characters = in.readStringArray();
+		if (type != MessageType.S2C_CHARACTERLIST) {
 			throw new java.lang.ClassNotFoundException();
 		}
 	}
