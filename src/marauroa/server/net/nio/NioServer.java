@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.6 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.7 2007/02/05 18:13:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -272,6 +272,7 @@ class NioServer extends Thread {
 		// Bind the server socket to the specified address and port
 		InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);
 		serverChannel.socket().bind(isa);
+		serverChannel.socket().setPerformancePreferences(0, 2, 1);
 
 		// Register the server socket channel, indicating an interest in 
 		// accepting new connections
