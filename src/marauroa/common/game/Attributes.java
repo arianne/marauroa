@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.22 2007/01/28 20:22:14 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.23 2007/02/05 19:11:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,15 +30,21 @@ public class Attributes implements marauroa.common.net.Serializable,
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(Attributes.class);
 
+	/** This is for Delta^2 algorithm: added attributes */
 	private Map<String, String> added;
 
+	/** This is for Delta^2 algorithm: deleted attributes */
 	private Map<String, String> deleted;
 
 	/** A Map<String,String> that contains the attributes */
 	private Map<String, String> content;
 
+	/** Every attributes has a class */
 	private RPClass rpClass;
 
+	/**
+	 * This method returns a copy of the attribute.
+	 */
 	@Override
 	public Object clone() {
 		Attributes attr = new Attributes(this.rpClass);
@@ -58,6 +64,11 @@ public class Attributes implements marauroa.common.net.Serializable,
 		return attr;
 	}
 
+	/**
+	 * This method fills this object with data from the attributes object passed as param 
+	 * @param attr the attribute object to use to fill this one.
+	 * @return the object itself.
+	 */
 	public Object fill(Attributes attr) {
 		setRPClass(attr.rpClass);
 
@@ -85,6 +96,10 @@ public class Attributes implements marauroa.common.net.Serializable,
 		deleted = new HashMap<String, String>();
 	}
 
+	/**
+	 * This method sets the RPClass of this attributes 
+	 * @param rpclass the rp class
+	 */
 	public void setRPClass(RPClass rpclass) {
 		rpClass = rpclass;
 	}
@@ -128,21 +143,20 @@ public class Attributes implements marauroa.common.net.Serializable,
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
 
+		/* If attribute to set is type we load class value from it */
 		if (attribute.equals("type") && RPClass.hasRPClass(value)) {
 			try {
 				setRPClass(RPClass.getRPClass(value));
 			} catch (RPClass.SyntaxException e) {
 				/* NOTE: Can't ever happen */
-				logger.error("cannot put attribute [" + attribute
-						+ "] value: [" + value + "], Syntax error", e);
+				logger.error("cannot put attribute [" + attribute+ "] value: [" + value + "], Syntax error", e);
 			}
 		}
 
 		content.put(attribute, value);
 	}
 
-	public void add(String attribute, int value)
-			throws AttributeNotFoundException {
+	public void add(String attribute, int value) {
 		if (has(attribute)) {
 			put(attribute, value);
 		} else {

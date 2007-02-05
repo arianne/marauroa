@@ -1,8 +1,27 @@
+/* $Id: AttributeDesc.java,v 1.3 2007/02/05 19:11:14 arianne_rpg Exp $ */
+/***************************************************************************
+ *                      (C) Copyright 2003 - Marauroa                      *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.common.game;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/** 
+ * This class describe an attribute:
+ * - Its type
+ * - its visibility
+ * - If it is storable or volatile
+ * @author miguel
+ */
 class AttributeDesc implements marauroa.common.net.Serializable {
 	private static short lastCode = 0;
 
@@ -13,7 +32,7 @@ class AttributeDesc implements marauroa.common.net.Serializable {
 			attributeIntegerMap.put(name, new Short(++lastCode));
 		}
 
-		return (attributeIntegerMap.get(name)).shortValue();
+		return attributeIntegerMap.get(name);
 	}
 
 	public AttributeDesc() {
@@ -26,12 +45,16 @@ class AttributeDesc implements marauroa.common.net.Serializable {
 		this.flags = flags;
 	}
 
+	/** int value representing attribute */
 	public short code;
 
+	/** attribute name */
 	public String name;
 
+	/** attribute type */
 	public byte type;
 
+	/** attribute visibility and storability */
 	public byte flags;
 
 	public void writeObject(marauroa.common.net.OutputSerializer out)
