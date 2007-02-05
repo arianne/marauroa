@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.2 2007/02/05 18:49:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,6 @@ import java.util.zip.DeflaterOutputStream;
 
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-import marauroa.common.net.TransferContent;
 
 public class MessageS2CTransfer extends Message {
 	/** TODO: Compress all the data that we send */

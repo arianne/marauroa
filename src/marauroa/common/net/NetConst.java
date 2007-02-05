@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.16 2007/02/05 18:24:42 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.17 2007/02/05 18:49:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,7 +31,6 @@ public class NetConst {
 	static {
 		try {
 			Configuration conf = Configuration.getConfiguration();
-
 			marauroa_PORT = Integer.parseInt(conf.get("marauroa_PORT"));
 		} catch (Exception e) {
 			marauroa_PORT = 3214;
@@ -72,6 +71,4 @@ public class NetConst {
 	 * 30 - Marauroa 2.0 refactoring
 	 */
 	final static public byte NETWORK_PROTOCOL_VERSION = 30;
-
-	final static public long PACKET_TIMEOUT_VALUE = 5000;
 }

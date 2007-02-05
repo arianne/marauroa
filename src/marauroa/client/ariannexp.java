@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.33 2007/02/05 18:37:37 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.34 2007/02/05 18:49:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,6 @@ import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.TransferContent;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
@@ -46,6 +45,7 @@ import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.MessageS2CTransferREQ;
+import marauroa.common.net.message.TransferContent;
 
 import org.apache.log4j.Logger;
 

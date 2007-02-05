@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.5 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: TransferContent.java,v 1.1 2007/02/05 18:49:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.common.net;
+package marauroa.common.net.message;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.2 2007/02/05 18:49:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,6 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.common.net.TransferContent;
 
 /** This message is for confirming server the content we want to be transfered to us.
  *  This way client can implement a cache system to save bandwidth.

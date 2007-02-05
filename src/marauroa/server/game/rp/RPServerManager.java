@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.10 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.11 2007/02/05 18:49:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,9 +27,9 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.common.net.TransferContent;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
+import marauroa.common.net.message.TransferContent;
 import marauroa.server.createaccount;
 import marauroa.server.game.ActionInvalidException;
 import marauroa.server.game.Statistics;
