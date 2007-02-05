@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.20 2007/01/18 12:37:46 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.21 2007/02/05 18:24:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -1,7 +1,6 @@
 package marauroa.common.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,7 +14,8 @@ import java.util.Map;
  * @author miguel
  */
 public class Decoder {
-	// TODO: Fix me
+	/** This class handle not completed messages. 
+	 *  TODO: add some kind of timeout.*/
 	class MessageParts {
 		public int size;
 		public List<byte[]> parts;
@@ -25,10 +25,12 @@ public class Decoder {
 			parts=new LinkedList<byte[]>();
 		}
 
+		/** Adds a new part to complete the message */
 		public void add(byte[] data) {
 			parts.add(data);			
 		}
 
+		/** Try to build the message for the channel using the existing parts or return null if it is not completed yet. */
 		public Message build(SocketChannel channel) throws IOException, InvalidVersionException {
 			int length=0;
 			for(byte[] p: parts) {
@@ -73,6 +75,14 @@ public class Decoder {
 		msgFactory = MessageFactory.getFactory();
 	}
 
+	/** 
+	 * Decodes a message from a stream of bytes recieved from channel
+	 * @param channel the socket from where data was recieved
+	 * @param data the data recieved
+	 * @return a message or null if it was not possible
+	 * @throws IOException if there is a problem building the message
+	 * @throws InvalidVersionException if the message version mismatch the expected version
+	 */
 	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
 		Message msg=null;
 
@@ -87,7 +97,7 @@ public class Decoder {
 
 			msg = msgFactory.getMessage(buffer, channel);
 		} else {
-			/* TODO: Size is not the expected: We should store and wait for message completion. */
+			/* Size is not the expected: We should store and wait for message completion. */
 			MessageParts buffers=content.get(channel);
 			
 			if(buffers==null) {

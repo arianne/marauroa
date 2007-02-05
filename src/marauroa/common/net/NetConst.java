@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.15 2007/01/19 08:08:50 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.16 2007/02/05 18:24:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,6 @@ public class NetConst {
 	static public int marauroa_PORT;
 
 	static {
-		Log4J.startMethod(logger, "NetConst [static]");
 		try {
 			Configuration conf = Configuration.getConfiguration();
 
@@ -38,7 +37,6 @@ public class NetConst {
 			marauroa_PORT = 3214;
 			logger.warn("Using default port " + marauroa_PORT, e);
 		}
-		Log4J.finishMethod(logger, "NetConst [static]");
 	}
 
 	/**

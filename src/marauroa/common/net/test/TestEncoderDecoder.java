@@ -1,14 +1,11 @@
 package marauroa.common.net.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Random;
-
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
@@ -17,6 +14,9 @@ import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
 import marauroa.common.net.MessageC2SAction;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 
 public class TestEncoderDecoder {

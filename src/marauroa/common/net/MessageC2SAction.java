@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.5 2007/01/18 12:37:45 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.6 2007/02/05 18:24:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import marauroa.common.game.RPAction;

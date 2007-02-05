@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.14 2007/02/04 17:55:21 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.15 2007/02/05 18:24:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.common.net;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +55,6 @@ public class MessageFactory {
 	}
 
 	private void register() {
-		Log4J.startMethod(logger, "register");
 		register(Message.MessageType.C2S_ACTION, MessageC2SAction.class);
 		register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
 		register(Message.MessageType.C2S_LOGOUT, MessageC2SLogout.class);
@@ -84,7 +82,6 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_CREATEACCOUNT, MessageC2SCreateAccount.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_ACK, MessageS2CCreateAccountACK.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_NACK, MessageS2CCreateAccountNACK.class);
-		Log4J.finishMethod(logger, "register");
 	}
 
 	private void register(Message.MessageType index, Class messageClass) {

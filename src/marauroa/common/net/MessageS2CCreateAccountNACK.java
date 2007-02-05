@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.4 2007/01/18 12:37:46 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.5 2007/02/05 18:24:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@
 package marauroa.common.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 /**

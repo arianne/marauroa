@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.6 2007/01/18 12:37:46 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.7 2007/02/05 18:24:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
