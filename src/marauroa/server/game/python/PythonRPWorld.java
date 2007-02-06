@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.7 2007/02/04 13:37:06 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.8 2007/02/06 21:00:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,8 +29,6 @@ public class PythonRPWorld extends RPWorld {
 	public PythonRPWorld() throws Exception {
 		super();
 
-		Log4J.startMethod(logger, "PythonRPWorld");
-
 		try {
 			gameScript = GameScript.getGameScript();
 			gameScript.setRPWorld(this);
@@ -38,8 +36,6 @@ public class PythonRPWorld extends RPWorld {
 		} catch (Exception e) {
 			logger.error("cannot initialize PythonRPWorld()", e);
 		}
-
-		Log4J.finishMethod(logger, "PythonRPWorld");
 	}
 
 	@Override

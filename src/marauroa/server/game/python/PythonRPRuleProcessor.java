@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.17 2007/02/06 16:43:06 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.18 2007/02/06 21:00:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,54 +97,37 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 			pythonRP.execute(id, action);
 		} catch (Exception e) {
 			logger.error("error in execute()", e);
-		} finally {
-			Log4J.finishMethod(logger, "execute");
 		}
 	}
 
 	/** Notify it when a new turn happens */
 	synchronized public void endTurn() {
-		Log4J.startMethod(logger, "endTurn");
 		pythonRP.endTurn();
-		Log4J.finishMethod(logger, "endTurn");
 	}
 
 	synchronized public void beginTurn() {
-		Log4J.startMethod(logger, "beginTurn");
 		pythonRP.beginTurn();
-		Log4J.finishMethod(logger, "beginTurn");
 	}
 
 	synchronized public boolean onInit(RPObject object)
 			throws RPObjectInvalidException {
-		Log4J.startMethod(logger, "onInit");
-		try {
 			return pythonRP.onInit(object);
-		} finally {
-			Log4J.finishMethod(logger, "onInit");
-		}
 	}
 
 	synchronized public boolean onExit(RPObject.ID id) {
-		Log4J.startMethod(logger, "onExit");
 		try {
 			return pythonRP.onExit(id);
 		} catch (Exception e) {
 			logger.error("onExit() returned with an exeption", e);
 			return true;
-		} finally {
-			Log4J.finishMethod(logger, "onExit");
 		}
 	}
 
 	synchronized public void onTimeout(RPObject.ID id) {
-		Log4J.startMethod(logger, "onTimeout");
 		try {
 			pythonRP.onTimeout(id);
 		} catch (Exception e) {
 			logger.error("onTimeout() returned with an exeption", e);
-		} finally {
-			Log4J.startMethod(logger, "onTimeout");
 		}
 	}
 
