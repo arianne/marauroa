@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.21 2007/02/05 18:37:37 arianne_rpg Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.22 2007/02/06 18:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,8 +66,6 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 	 */
 	public TCPThreadedNetworkClientManager(String host, int port)
 			throws SocketException {
-		Log4J.startMethod(logger, "ThreadedNetworkClientManager");
-
 		try {
 			clientid = 0;
 
@@ -149,8 +147,6 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) {
-		Log4J.startMethod(logger, "getMessage");
-
 		if (processedMessages.size() == 0) {
 			try {
 				wait(timeout);
@@ -163,8 +159,6 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 		if (processedMessages.size() > 0) {
 			message = readManager.getOldestProcessedMessage();
 		}
-
-		Log4J.finishMethod(logger, "getMessage");
 		return message;
 	}
 
@@ -179,13 +173,11 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
 	 */
 	public void addMessage(Message msg) {
-		Log4J.startMethod(logger, "addMessage");
 		if (!writeManager.write(msg)) {
 			connected = false;
 		} else {
 			connected = true;
 		}
-		Log4J.finishMethod(logger, "addMessage");
 	}
 
 	public boolean getConnectionState() {

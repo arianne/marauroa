@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.34 2007/02/05 18:49:02 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.35 2007/02/06 18:25:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,11 +84,7 @@ public abstract class ariannexp {
 	 */
 	public void connect(String host, int port)
 			throws SocketException {
-		Log4J.startMethod(logger, "connect");
-
 		netMan = new TCPThreadedNetworkClientManager(host, port);
-
-		Log4J.finishMethod(logger, "connect");
 	}
 
 	private Message getMessage() throws InvalidVersionException,
@@ -108,10 +104,8 @@ public abstract class ariannexp {
 	}
 
 	public void resync() {
-		Log4J.startMethod(logger, "resync");
 		MessageC2SOutOfSync msg = new MessageC2SOutOfSync();
 		netMan.addMessage(msg);
-		Log4J.startMethod(logger, "resync");
 	}
 
 	/**
@@ -125,7 +119,6 @@ public abstract class ariannexp {
 	 */
 	public synchronized boolean login(String username, String password)
 			throws ariannexpTimeoutException {
-		Log4J.startMethod(logger, "login");
 		try {
 			int received = 0;
 			RSAPublicKey key = null;
@@ -207,8 +200,6 @@ public abstract class ariannexp {
 			event = "Invalid client version to connect to this server.";
 			onError(1, "Invalid client version to connect to this server.");
 			return false;
-		} finally {
-			Log4J.finishMethod(logger, "login");
 		}
 	}
 
@@ -227,7 +218,6 @@ public abstract class ariannexp {
 	 */
 	public synchronized boolean chooseCharacter(String character)
 			throws ariannexpTimeoutException {
-		Log4J.startMethod(logger, "chooseCharacter");
 		try {
 			Message msgCC = new MessageC2SChooseCharacter(null, character);
 
@@ -256,14 +246,11 @@ public abstract class ariannexp {
 							e);
 			onError(1, "Invalid client version to connect to this server.");
 			return false;
-		} finally {
-			Log4J.finishMethod(logger, "chooseCharacter");
 		}
 	}
 
 	public synchronized boolean createAccount(String username, String password,
 			String email, RPObject template) throws ariannexpTimeoutException {
-		Log4J.startMethod(logger, "createAccount");
 		try {
 			Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
 
@@ -293,14 +280,11 @@ public abstract class ariannexp {
 							e);
 			onError(1, "Invalid client version to connect to this server.");
 			return false;
-		} finally {
-			Log4J.finishMethod(logger, "createAccount");
 		}
 	}
 
 	/** Sends a RPAction to server */
-	private synchronized void send(RPAction action)
-	throws ariannexpTimeoutException {
+	public void send(RPAction action) throws ariannexpTimeoutException {
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
 		netMan.addMessage(msgAction);
 	}
@@ -311,8 +295,6 @@ public abstract class ariannexp {
 	 * @return true if we have successfully logout.
 	 */
 	public synchronized boolean logout() {
-		Log4J.startMethod(logger, "logout");
-
 		try {
 			Message msgL = new MessageC2SLogout(null);
 
@@ -343,15 +325,11 @@ public abstract class ariannexp {
 		} catch (ariannexpTimeoutException e) {
 			onError(1, "ariannexp can't connect to server. Server down?");
 			return false;
-		} finally {
-			Log4J.finishMethod(logger, "logout");
 		}
 	}
 
 	/** Call this method to get and apply messages */
 	public synchronized boolean loop(int delta) {
-		Log4J.startMethod(logger, "loop");
-
 		boolean recievedMessages = false;
 
 		try {
@@ -403,14 +381,6 @@ public abstract class ariannexp {
 			messages.clear();
 		} catch (ConcurrentModificationException e) {
 			logger.warn(e);
-		}
-		// catch(InvalidVersionException e)
-		// {
-		// logger.error("Invalid client version to connect to this server.",e);
-		// onError(1,"Invalid client version to connect to this server.");
-		// }
-		finally {
-			Log4J.finishMethod(logger, "loop");
 		}
 
 		return recievedMessages;
