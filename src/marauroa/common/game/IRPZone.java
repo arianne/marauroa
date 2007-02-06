@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.9 2007/01/28 20:22:14 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.10 2007/02/06 16:43:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,9 +22,7 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * Constructor
-		 * 
-		 * @param oid
-		 *            the object id
+		 * @param oid the object id
 		 */
 		public ID(String zid) {
 			id = zid;
@@ -32,7 +30,7 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * This method returns the object id
-		 * 
+		 *
 		 * @return the object id.
 		 */
 		public String getID() {
@@ -41,18 +39,13 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * This method returns true of both ids are equal.
-		 * 
-		 * @param anotherid
-		 *            another id object
+		 *
+		 * @param anotherid another id object
 		 * @return true if they are equal, or false otherwise.
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			if (anotherid != null && anotherid instanceof IRPZone.ID) {
-				return (id.equals(((IRPZone.ID) anotherid).id));
-			} else {
-				return (false);
-			}
+			return (anotherid != null) && (anotherid instanceof IRPZone.ID) && (id.equals(((IRPZone.ID) anotherid).id));
 		}
 
 		/** We need it for HashMap */
@@ -63,7 +56,7 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * This method returns a String that represent the object
-		 * 
+		 *
 		 * @return a string representing the object.
 		 */
 		@Override
@@ -71,17 +64,20 @@ public interface IRPZone extends Iterable<RPObject> {
 			return "IRPZone.ID [id=" + id + "]";
 		}
 
+		/** Serialize the object into a stream of bytes. */
 		public void writeObject(marauroa.common.net.OutputSerializer out)
 				throws java.io.IOException {
 			out.write(id);
 		}
 
+		/** Deserialize the object and fills this object with the data */
 		public void readObject(marauroa.common.net.InputSerializer in)
 				throws java.io.IOException, java.lang.ClassNotFoundException {
 			id = in.readString();
 		}
 	}
 
+	/** Returns the ID of the zone */
 	public ID getID();
 
 	/** This method is called when the zone is created to popullate it */
@@ -121,9 +117,6 @@ public interface IRPZone extends Iterable<RPObject> {
 
 	/** This method returns true if the object exists in the Zone */
 	public boolean has(RPObject.ID id);
-
-	/** This method create a new RPObject with a valid id */
-	public RPObject create();
 
 	/** Assigns a valid RPObject.ID to the object given as parameter */
 	public void assignRPObjectID(RPObject object);

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.16 2007/02/04 13:10:42 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.17 2007/02/06 16:43:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/**
 	 * Set the context where the actions are executed.
-	 * 
+	 *
 	 * @param zone
 	 *            The zone where actions happens.
 	 */
@@ -84,7 +84,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/**
 	 * Execute an action in the name of a player.
-	 * 
+	 *
 	 * @param id
 	 *            the id of the object owner of the actions.
 	 * @param action
@@ -93,14 +93,8 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	 *         please refer to Actions Explained for more info.
 	 */
 	public void execute(RPObject.ID id, RPAction action) {
-		Log4J.startMethod(logger, "execute");
-
-		RPAction.Status status = RPAction.Status.FAIL;
-
 		try {
-			if (pythonRP.execute(id, action) == 1) {
-				status = RPAction.Status.SUCCESS;
-			}
+			pythonRP.execute(id, action);
 		} catch (Exception e) {
 			logger.error("error in execute()", e);
 		} finally {
@@ -161,12 +155,12 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void execute(RPObject object, RPAction action) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {

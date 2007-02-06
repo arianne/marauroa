@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.6 2006/08/20 15:40:08 wikipedian Exp $ */
+/* $Id: Perception.java,v 1.7 2007/02/06 16:43:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,21 +31,29 @@ public class Perception {
 	/** A sync perception sends the whole world */
 	final public static byte SYNC = 1;
 
+	/** The type of the perception: Delta or Sync */
 	public byte type;
 
+	/** The zone.id to which this perception belong*/
 	public IRPZone.ID zoneid;
 
+	/** The added objects */
 	public List<RPObject> addedList;
 
+	/** The modified added objects */
 	public List<RPObject> modifiedAddedAttribsList;
 
+	/** The modified deleted objects */
 	public List<RPObject> modifiedDeletedAttribsList;
 
+	/** The deleted objects */
 	public List<RPObject> deletedList;
 
+	/** Constructor */
 	public Perception(byte type, IRPZone.ID zoneid) {
 		this.type = type;
 		this.zoneid = zoneid;
+
 		addedList = new LinkedList<RPObject>();
 		modifiedAddedAttribsList = new LinkedList<RPObject>();
 		modifiedDeletedAttribsList = new LinkedList<RPObject>();
@@ -105,8 +113,7 @@ public class Perception {
 
 	/** Returns the number of elements of the perception */
 	public int size() {
-		return (addedList.size() + modifiedAddedAttribsList.size()
-				+ modifiedDeletedAttribsList.size() + deletedList.size());
+		return (addedList.size() + modifiedAddedAttribsList.size() + modifiedDeletedAttribsList.size() + deletedList.size());
 	}
 
 	/** Clear the perception */

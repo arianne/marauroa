@@ -52,6 +52,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/** an boolean attribute that either is present or not. */
 	final public static byte FLAG = 8;
 
+	/** This exception is thrown when an attribute is not found */
 	static public class SyntaxException extends RuntimeException {
 		private static final long serialVersionUID = 3724525088825394097L;
 
@@ -64,16 +65,22 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 	}
 
+	/** This is a singleton-like Map that stores classes and their names */
 	private static Map<String, RPClass> rpClassList = new LinkedHashMap<String, RPClass>();
 
+	/** The class name */
 	private String name;
 
+	/** The superclass of this or null if it doesn't have it. */
 	private RPClass parent;
 
+	/** This stores a map of attributes which links the name of the attribute with its description. */
 	private Map<String, AttributeDesc> attributes;
 
+	/** This stores a map of slots which links the name of the slot with its description. */
 	private Map<String, RPSlotDesc> slots;
 
+	/** Constructor */
 	public RPClass() {
 		parent = null;
 		attributes = new HashMap<String, AttributeDesc>();
@@ -87,6 +94,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		attributes = new HashMap<String, AttributeDesc>();
 		slots = new HashMap<String, RPSlotDesc>();
 
+		/* Any class stores these attributes. */
 		add("id", INT);
 		add("clientid", INT, (byte) (HIDDEN | VOLATILE));
 		add("zoneid", STRING, HIDDEN);
@@ -124,6 +132,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return false;
 	}
 
+	/** TODO: Consider removing default empty class. */
 	static RPClass defaultRPClass;
 
 	/**
@@ -193,7 +202,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return add(name, type, VISIBLE);
 	}
 
-	/** Adds a attribute to the rpclass */
+	/** Adds a attribute definition to the rpclass */
 	public boolean add(String name, byte type, byte flags) {
 		AttributeDesc desc = new AttributeDesc(name, type, flags);
 		attributes.put(name, desc);
@@ -201,6 +210,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return true;
 	}
 
+	/** Adds a visible slot definition to the rpclass */
 	public boolean addRPSlot(String name, int capacity) {
 		RPSlotDesc desc = new RPSlotDesc(name, (byte) capacity, VISIBLE);
 		slots.put(name, desc);
@@ -208,6 +218,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return true;
 	}
 
+	/** Adds a slot definition to the rpclass */
 	public boolean addRPSlot(String name, int capacity, byte flags) {
 		RPSlotDesc desc = new RPSlotDesc(name, (byte) capacity, flags);
 		slots.put(name, desc);
@@ -342,43 +353,54 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
 	}
 
+	/**
+	 * Returns true if the attribute is private.
+	 * @param name the name of the attribute.
+	 * @return true if it is private
+	 */
 	public boolean isPrivate(String name) {
 		byte b = getFlags(name);
 		return ((b & RPClass.PRIVATE) == RPClass.PRIVATE);
 	}
 
+	/**
+	 * Returns true if the attribute is Hidden.
+	 * @param name the name of the attribute.
+	 * @return
+	 */
 	public boolean isHidden(String name) {
 		byte b = getFlags(name);
 		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
 	}
 
 	/**
-	 * Return the storability of the attribute whose name is name for this
-	 * rpclass
+	 * Return the storability of the attribute whose name is name for this rpclass
 	 */
 	public boolean isStorable(String name) {
 		byte b = getFlags(name);
 		return ((b & RPClass.VOLATILE) == 0);
 	}
 
+	/** Return true if the slot is visible */
 	public boolean isRPSlotVisible(String name) {
 		byte b = getRPSlotFlags(name);
 		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
 	}
 
+	/** Return true if the slot is private */
 	public boolean isRPSlotPrivate(String name) {
 		byte b = getRPSlotFlags(name);
 		return ((b & RPClass.PRIVATE) == RPClass.PRIVATE);
 	}
 
+	/** Return true if the slot is hidden */
 	public boolean isRPSlotHidden(String name) {
 		byte b = getRPSlotFlags(name);
 		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
 	}
 
 	/**
-	 * Return the storability of the attribute whose name is name for this
-	 * rpclass
+	 * Return the storability of the attribute whose name is name for this rpclass
 	 */
 	public boolean isRPSlotStorable(String name) {
 		byte b = getRPSlotFlags(name);
@@ -429,8 +451,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 		throw new SyntaxException(name);
 	}
 
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws java.io.IOException {
+	/** Serialize the object into the output */
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		out.write(name);
 
 		if (parent == null) {
@@ -451,8 +473,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 	}
 
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws java.io.IOException, java.lang.ClassNotFoundException {
+	/** Fill the object from data deserialized from the serializer */
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
 		name = in.readString();
 
 		byte parentPresent = in.readByte();
@@ -462,8 +484,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		int size = in.readInt();
 		for (int i = 0; i < size; ++i) {
-			AttributeDesc desc = (AttributeDesc) in
-					.readObject(new AttributeDesc());
+			AttributeDesc desc = (AttributeDesc) in.readObject(new AttributeDesc());
 			attributes.put(desc.name, desc);
 		}
 
