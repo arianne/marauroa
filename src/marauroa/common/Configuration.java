@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.11 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.12 2007/02/06 20:56:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,7 +75,7 @@ public class Configuration {
 		return configurationFile;
 	}
 
-	private Configuration() throws FileNotFoundException {
+	private Configuration() throws IOException {
 		try {
 			properties = new Properties();
 
@@ -89,7 +89,7 @@ public class Configuration {
 			throw e;
 		} catch (IOException e) {
 			logger.warn("Error loading Configuration file", e);
-			throw new FileNotFoundException(configurationFile);
+			throw e;
 		}
 	}
 
@@ -97,8 +97,9 @@ public class Configuration {
 	 * This method returns an instance of Configuration
 	 * 
 	 * @return a shared instance of Configuration
+	 * @throws IOException 
 	 */
-	public static Configuration getConfiguration() throws FileNotFoundException {
+	public static Configuration getConfiguration() throws IOException {
 		if (configuration == null) {
 			configuration = new Configuration();
 		}
@@ -114,26 +115,17 @@ public class Configuration {
 	 * @exception PropertyNotFound
 	 *                if the property is not found.
 	 */
-	public String get(String property) throws PropertyNotFoundException {
-		String result = properties.getProperty(property);
-
-		if (result == null) {
-			logger.debug("Property [" + property + "] not found");
-			throw new PropertyNotFoundException(property);
-		}
-
-		logger.debug("Property [" + property + "]=" + result);
-		return result;
+	public String get(String property) {
+		return properties.getProperty(property);
 	}
 
+	/** 
+	 * This method returns true if the property exists. 
+	 * @param property
+	 * @return
+	 */
 	public boolean has(String property) {
-		String result = properties.getProperty(property);
-
-		if (result == null) {
-			return false;
-		}
-
-		return true;
+		return properties.contains(property);
 	}
 
 	/**
@@ -146,7 +138,6 @@ public class Configuration {
 	 */
 	public void set(String property, String value) {
 		try {
-			logger.debug("Property [" + property + "]=" + value);
 			properties.put(property, value);
 
 			if (persistence) {
@@ -155,8 +146,7 @@ public class Configuration {
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile,
-					e);
+			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile, e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
 		}

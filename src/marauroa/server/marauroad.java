@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.47 2007/01/18 12:31:08 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.48 2007/02/06 20:56:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,8 +57,7 @@ public class marauroad extends Thread {
 				try {
 					Configuration.getConfiguration();
 				} catch (Exception e) {
-					logger.fatal("Can't find configuration file: "
-							+ args[i + 1], e);
+					logger.fatal("Can't find configuration file: "+ args[i + 1], e);
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {

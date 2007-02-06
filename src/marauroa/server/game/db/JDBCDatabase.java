@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.3 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.4 2007/02/06 20:56:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.server.game.db;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -102,9 +101,11 @@ public class JDBCDatabase implements IDatabase {
 
 			try {
 				conf=Configuration.getConfiguration();
-			} catch(FileNotFoundException e) {
+			} catch(Exception e) {
 				logger.fatal("Unable to locate Configuration file: "+Configuration.getConfigurationFile(), e);
+				throw new NoDatabaseConfException();
 			}
+
 			Properties props = new Properties();
 
 			props.put("jdbc_url", conf.get("jdbc_url"));

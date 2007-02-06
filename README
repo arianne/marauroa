@@ -27,7 +27,7 @@ Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to buil
 you own online games using Marauroa as a Content Management system.
 
 Marauroa is completly written in Java using a multithreaded server architecture
-with a UDP oriented network protocol, a mySQL based persistence engine and a
+with a TCP oriented network protocol, a mySQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable
 by developers and that is able to run scripts on Python for the game's rules.
 
@@ -166,8 +166,11 @@ Changelog
 - Allowed to send a template object when creating account, so we can customize player object on creation time.
 - Removed incomplete action concept.
 - Simplified RPScheduler.
-- Simplifying and updating Database manager.
+- Simplified Database manager.
 - Moved to object stored as blogs.
+- Added RPEvent structure
+- Simplified RPObject, RPSlot, RPClass and Attributes.
+- Removed many useless exceptions
 
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case

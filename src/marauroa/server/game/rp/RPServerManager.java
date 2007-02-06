@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.11 2007/02/05 18:49:04 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.12 2007/02/06 20:56:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,7 +129,7 @@ public class RPServerManager extends Thread {
 	 * @throws SecurityException 
 	 * @throws IllegalArgumentException 
 	 */
-	protected Configuration initializeExtensions(Configuration conf) throws PropertyNotFoundException, ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	protected Configuration initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
 		// call the get() method without parameters to retrieve the singleton instance
 		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
