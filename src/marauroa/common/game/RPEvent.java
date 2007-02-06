@@ -28,6 +28,14 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	public String getValue() {
 		return value;
 	}
+	
+	public int getInt() {
+		return Integer.parseInt(value);
+	}
+
+	public float getFloat() {
+		return Float.parseFloat(value);
+	}
 
 	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
 		name=in.read255LongString();

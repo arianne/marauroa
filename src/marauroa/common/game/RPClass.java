@@ -80,6 +80,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/** This stores a map of slots which links the name of the slot with its description. */
 	private Map<String, RPSlotDesc> slots;
 
+	/** This stores a map of slots which links the name of the slot with its description. */
+	private Map<String, RPEventDesc> events;
+
 	/** Constructor */
 	public RPClass() {
 		parent = null;
@@ -93,6 +96,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		name = type;
 		attributes = new HashMap<String, AttributeDesc>();
 		slots = new HashMap<String, RPSlotDesc>();
+		events = new HashMap<String, RPEventDesc>();
 
 		/* Any class stores these attributes. */
 		add("id", INT);
@@ -198,24 +202,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/** Adds a visible attribute to the rpclass */
-	public boolean add(String name, byte type) {
-		return add(name, type, VISIBLE);
+	public void add(String name, byte type) {
+		add(name, type, VISIBLE);
 	}
 
 	/** Adds a attribute definition to the rpclass */
-	public boolean add(String name, byte type, byte flags) {
+	public void add(String name, byte type, byte flags) {
 		AttributeDesc desc = new AttributeDesc(name, type, flags);
 		attributes.put(name, desc);
-
-		return true;
 	}
 
 	/** Adds a visible slot definition to the rpclass */
-	public boolean addRPSlot(String name, int capacity) {
-		RPSlotDesc desc = new RPSlotDesc(name, (byte) capacity, VISIBLE);
-		slots.put(name, desc);
-
-		return true;
+	public void addRPSlot(String name, int capacity) {
+		addRPSlot(name, capacity, VISIBLE);
 	}
 
 	/** Adds a slot definition to the rpclass */
@@ -224,6 +223,15 @@ public class RPClass implements marauroa.common.net.Serializable {
 		slots.put(name, desc);
 
 		return true;
+	}
+	
+	public void addRPEvent(String name, byte type) {
+		addRPEvent(name, type, VISIBLE);
+	}
+	
+	public void addRPEvent(String name, byte type, byte flags) {	
+		RPEventDesc desc=new RPEventDesc(name, type, flags);
+		events.put(name,desc);
 	}
 
 	/** Returns the name of the rpclass */
@@ -259,6 +267,20 @@ public class RPClass implements marauroa.common.net.Serializable {
 		throw new SyntaxException("RPSlot " + name);
 	}
 
+	/** Returns the code of the event whose name is name for this rpclass */
+	public short getRPEventCode(String name) throws SyntaxException {
+		if (events.containsKey(name)) {
+			RPEventDesc desc = events.get(name);
+			return desc.code;
+		}
+
+		if (parent != null) {
+			return parent.getRPEventCode(name);
+		}
+
+		throw new SyntaxException(name);
+	}
+	
 	/** Returns the name of the attribute whose code is code for this rpclass */
 	public String getName(short code) throws SyntaxException {
 		for (AttributeDesc desc : attributes.values()) {
@@ -289,6 +311,21 @@ public class RPClass implements marauroa.common.net.Serializable {
 		throw new SyntaxException("RPSlot " + code);
 	}
 
+	/** Returns the name of the attribute whose code is code for this rpclass */
+	public String getRPEventName(short code) throws SyntaxException {
+		for (RPEventDesc desc : events.values()) {
+			if (desc.code == code) {
+				return desc.name;
+			}
+		}
+
+		if (parent != null) {
+			return parent.getRPEventName(code);
+		}
+
+		throw new SyntaxException(code);
+	}	
+	
 	/** Returns the type of the attribute whose name is name for this rpclass */
 	public byte getType(String name) throws SyntaxException {
 		if (attributes.containsKey(name)) {
@@ -303,6 +340,21 @@ public class RPClass implements marauroa.common.net.Serializable {
 		throw new SyntaxException(name);
 	}
 
+	/** Returns the type of the attribute whose name is name for this rpclass */
+	public byte getRPEventType(String name) throws SyntaxException {
+		if (events.containsKey(name)) {
+			RPEventDesc desc = events.get(name);
+			return desc.type;
+		}
+
+		if (parent != null) {
+			return parent.getRPEventType(name);
+		}
+
+		throw new SyntaxException(name);
+	}
+
+	/** Returns the slot capacity of the slot */
 	public int getRPSlotCapacity(String name) throws SyntaxException {
 		if (slots.containsKey(name)) {
 			RPSlotDesc desc = slots.get(name);
@@ -342,6 +394,20 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 
 		throw new SyntaxException("RPSlot " + name);
+	}
+
+	/** Returns the flags of the attribute whose name is name for this rpclass */
+	public byte getRPEventFlags(String name) throws SyntaxException {
+		if (events.containsKey(name)) {
+			RPEventDesc desc = events.get(name);
+			return desc.flags;
+		}
+
+		if (parent != null) {
+			return parent.getRPEventFlags(name);
+		}
+
+		throw new SyntaxException(name);
 	}
 
 	/**
@@ -407,6 +473,18 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return ((b & RPClass.VOLATILE) == 0);
 	}
 
+	/** Return true if the event is visible */
+	public boolean isRPEventVisible(String name) {
+		byte b = getRPEventFlags(name);
+		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
+	}
+	
+	/** Return true if the slot is hidden */
+	public boolean isRPEventHidden(String name) {
+		byte b = getRPEventFlags(name);
+		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
+	}
+
 	/** Returns true if the attribute whose name is name exists for this rpclass */
 	public boolean hasAttribute(String name) {
 		if (attributes.containsKey(name)) {
@@ -428,6 +506,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		if (parent != null) {
 			return parent.hasRPSlot(name);
+		}
+
+		return false;
+	}
+
+	/** Returns true if the event whose name is name exists for this rpclass */
+	public boolean hasRPEvent(String name) {
+		if (events.containsKey(name)) {
+			return true;
+		}
+
+		if (parent != null) {
+			return parent.hasRPEvent(name);
 		}
 
 		return false;
