@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.43 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.44 2007/02/06 21:02:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ import java.util.List;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.common.PropertyNotFoundException;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
@@ -688,12 +687,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			while (props.hasMoreElements()) {
 				String prop_name = String.valueOf(props.nextElement());
 				if (prop_name.startsWith("server_")) {
-					try {
-						l_result.add(config.get(prop_name));
-					} catch (PropertyNotFoundException pnfe) {
-						// cant be. only in multithreaded emvironment possible
-						logger.debug("Property " + prop_name+ " is not set???");
-					}
+					l_result.add(config.get(prop_name));
 				}
 			}
 			String[] result = new String[l_result.size()];

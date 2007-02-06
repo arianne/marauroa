@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.12 2007/02/06 20:56:46 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.13 2007/02/06 21:02:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,6 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.common.PropertyNotFoundException;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPAction;
