@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.28 2007/01/28 20:22:14 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.29 2007/02/06 18:21:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,8 +24,7 @@ import marauroa.common.TimeoutConf;
 import org.apache.log4j.Logger;
 
 /** This class represent a slot in an object */
-public class RPSlot implements marauroa.common.net.Serializable,
-		Iterable<RPObject> {
+public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject> {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(RPSlot.class);
 
@@ -33,6 +32,7 @@ public class RPSlot implements marauroa.common.net.Serializable,
 
 	private List<RPObject> deleted;
 
+	/** Name of the slot */
 	private String name;
 
 	/** The capacity of the slot */
@@ -65,10 +65,12 @@ public class RPSlot implements marauroa.common.net.Serializable,
 		}
 	}
 
+	/** This method sets the owner of the slot */
 	void setOwner(RPObject object) {
 		owner = object;
 	}
 
+	/** This method returns the owner of the object */
 	RPObject getOwner() {
 		return owner;
 	}
@@ -152,7 +154,8 @@ public class RPSlot implements marauroa.common.net.Serializable,
 									// in objects
 	}
 
-	/** Add an object to the slot */
+	/** Add an object to the slot, but object previously should have a valid id by calling
+	 * assignValidID */
 	public void add(RPObject object) {
 		if (isFull()) {
 			throw new SlotIsFullException(name);

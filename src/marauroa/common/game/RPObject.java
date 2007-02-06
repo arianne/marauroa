@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.23 2007/01/28 20:22:14 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.24 2007/02/06 18:21:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,25 +18,22 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 
-import org.apache.log4j.Logger;
-
-/** This class implements an Object. Please refer to "Objects Explained" document */
+/** This class implements an Object. 
+ * Please refer to "Objects Explained" document */
 public class RPObject extends Attributes {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(RPObject.class);
-
 	private List<RPSlot> added;
-
 	private List<RPSlot> deleted;
 
 	/** a List<RPSlot> of slots */
 	private List<RPSlot> slots;
+	private List<RPEvent> events;
 
+	/** Which object contains this one. */
 	private RPObject container;
 
+	/** In which slot are we contained */
 	private RPSlot containerSlot;
 
 	public final static ID INVALID_ID = new ID(-1, "");
@@ -48,9 +45,11 @@ public class RPObject extends Attributes {
 		slots = new LinkedList<RPSlot>();
 		added = new LinkedList<RPSlot>();
 		deleted = new LinkedList<RPSlot>();
-		container = null;
+		events= new LinkedList<RPEvent>();
+		container = null;		
 	}
 
+	/** Copy constructor */
 	public RPObject(RPObject object) {
 		this();
 		fill(object);
@@ -59,15 +58,11 @@ public class RPObject extends Attributes {
 	/**
 	 * Constructor
 	 * 
-	 * @param id
-	 *            the id of the object
+	 * @param id the id of the object
 	 */
 	public RPObject(ID id) {
 		this();
 		setID(id);
-	}
-
-	private void initialize() {
 	}
 
 	/** Returns an ID object representing the id of this object */
@@ -75,6 +70,7 @@ public class RPObject extends Attributes {
 		return new ID(this);
 	}
 
+	/** Set the attributes that define the ID of the object */
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
 		put("zoneid", id.getZoneID());
@@ -86,24 +82,24 @@ public class RPObject extends Attributes {
 		return super.isEmpty() && slots.isEmpty();
 	}
 
+	/** Returns true if this object is contained inside another one. */
 	public boolean isContained() {
 		return container != null;
 	}
 
-	public void setContainer(RPObject object, RPSlot slot) // Package only
-															// access ... if
-															// only Java would
-															// have friendly
-															// declarations...
+	/** This make this object to be contained in the slot of container. */
+	public void setContainer(RPObject object, RPSlot slot)
 	{
 		container = object;
 		containerSlot = slot;
 	}
 
+	/** Returns the container where this object is */
 	public RPObject getContainer() {
 		return container;
 	}
 
+	/** Returns the slot where this object is contained */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
 	}
@@ -179,19 +175,19 @@ public class RPObject extends Attributes {
 	}
 
 	/** This method is used to remove an slot of the object */
-	public void removeSlot(String name) throws NoSlotFoundException {
+	public RPSlot removeSlot(String name) throws NoSlotFoundException {
 		if (hasSlot(name)) {
 			for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
 				RPSlot slot = it.next();
 				if (name.equals(slot.getName())) {
 					deleted.add(slot);
 					it.remove();
-					return;
+					return slot;
 				}
 			}
-		} else {
-			throw new NoSlotFoundException(name);
 		}
+
+		throw new NoSlotFoundException(name);
 	}
 
 	/**
@@ -229,6 +225,23 @@ public class RPObject extends Attributes {
 	public List<RPSlot> slots() {
 		return Collections.unmodifiableList(slots);
 	}
+	
+	/** 
+	 * Add an event to this object 
+	 * @param name the name of the event
+	 * @param value its value
+	 */
+	public void addEvent(String name, String value) {
+		events.add(new RPEvent(name, value));
+	}
+	
+	/**
+	 * Iterate over the events list 
+	 * @return an iterator over the events
+	 */
+	public Iterator<RPEvent> eventsIterator() {
+		return events.iterator();
+	}
 
 	/**
 	 * This method returns a String that represent the object
@@ -249,26 +262,22 @@ public class RPObject extends Attributes {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws java.io.IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out,
-			DetailLevel level) throws java.io.IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
 		RPClass rpClass = getRPClass();
 
 		int size = slots.size();
 		for (RPSlot slot : slots) {
-			if (level == DetailLevel.NORMAL
-					&& (rpClass.isRPSlotVisible(slot.getName()) == false)) {
+			if (level == DetailLevel.NORMAL	&& (rpClass.isRPSlotVisible(slot.getName()) == false)) {
 				// If this attribute is Hidden or private and full data is false
 				--size;
-			} else if (level != DetailLevel.FULL
-					&& rpClass.isRPSlotHidden(slot.getName())) {
+			} else if (level != DetailLevel.FULL && rpClass.isRPSlotHidden(slot.getName())) {
 				// If this attribute is Hidden and full data is true.
 				// This way we hide some attribute to player.
 				--size;
@@ -277,11 +286,32 @@ public class RPObject extends Attributes {
 
 		out.write(size);
 		for (RPSlot slot : slots) {
-			if ((level == DetailLevel.PRIVATE && !rpClass.isRPSlotHidden(slot
-					.getName()))
+			if ((level == DetailLevel.PRIVATE && !rpClass.isRPSlotHidden(slot.getName()))
 					|| (rpClass.isRPSlotVisible(slot.getName()))
 					|| (level == DetailLevel.FULL)) {
 				slot.writeObject(out, level);
+			}
+		}
+
+		// The same now for events... isn't it claiming for a refactoring? :)
+		size = events.size();
+		for (RPEvent event : events) {
+			if (level == DetailLevel.NORMAL	&& (rpClass.isRPEventVisible(event.getKey()) == false)) {
+				// If this attribute is Hidden or private and full data is false
+				--size;
+			} else if (level != DetailLevel.FULL && rpClass.isRPEventHidden(event.getKey())) {
+				// If this attribute is Hidden and full data is true.
+				// This way we hide some attribute to player.
+				--size;
+			}
+		}
+
+		out.write(size);
+		for (RPEvent event : events) {
+			if ((level == DetailLevel.PRIVATE && !rpClass.isRPEventHidden(event.getKey()))
+					|| (rpClass.isRPSlotVisible(event.getKey()))
+					|| (level == DetailLevel.FULL)) {
+				event.writeObject(out);
 			}
 		}
 	}
@@ -294,8 +324,7 @@ public class RPObject extends Attributes {
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Illegal request of an list of "
-					+ String.valueOf(size) + " size");
+			throw new IOException("Illegal request of an list of "+ String.valueOf(size) + " size");
 		}
 
 		slots = new LinkedList<RPSlot>();
@@ -306,6 +335,20 @@ public class RPObject extends Attributes {
 			slot = (RPSlot) in.readObject(slot);
 			slot.setCapacity(getRPClass().getRPSlotCapacity(slot.getName()));
 			slots.add(slot);
+		}
+
+		size = in.readInt();
+
+		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
+			throw new IOException("Illegal request of an list of "+ String.valueOf(size) + " size");
+		}
+
+		events = new LinkedList<RPEvent>();
+
+		for (int i = 0; i < size; ++i) {
+			RPEvent event = new RPEvent();
+			event = (RPEvent) in.readObject(event);
+			events.add(event);
 		}
 	}
 
@@ -333,8 +376,6 @@ public class RPObject extends Attributes {
 
 		for (RPSlot slot : slots) {
 			if (getRPClass().isRPSlotVisible(slot.getName())) {
-				LinkedList<RPObject> objectToRemove = new LinkedList<RPObject>();
-
 				for (RPObject object : slot) {
 					i += object.clearVisible();
 				}
@@ -346,8 +387,7 @@ public class RPObject extends Attributes {
 
 	// TODO: Refactor this method. Looks like it claims for bugs!"
 	/** This method get the changes on added and deleted things from this object */
-	public void getDifferences(RPObject oadded, RPObject odeleted)
-			throws Exception {
+	public void getDifferences(RPObject oadded, RPObject odeleted) throws Exception {
 		/** First we get differences from attributes */
 		oadded.setAddedAttributes(this);
 		odeleted.setDeletedAttributes(this);
@@ -411,7 +451,7 @@ public class RPObject extends Attributes {
 			oadded.put("id", get("id"));
 		}
 
-		if (odeleted.size() > 0) // || odeleted.slots.size()>0)
+		if (odeleted.size() > 0)
 		{
 			odeleted.put("id", get("id"));
 		}
@@ -464,8 +504,7 @@ public class RPObject extends Attributes {
 				/** for each of the objects, add it */
 				for (RPObject object : slot) {
 					if (getSlot(slot.getName()).has(new ID(object))) {
-						getSlot(slot.getName()).get(new ID(object))
-								.applyDifferences(object, null);
+						getSlot(slot.getName()).get(new ID(object)).applyDifferences(object, null);
 					} else {
 						getSlot(slot.getName()).add(object);
 					}
