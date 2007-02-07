@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.25 2007/02/07 16:32:02 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.26 2007/02/07 22:36:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,16 +24,29 @@ import marauroa.common.TimeoutConf;
 
 import org.apache.log4j.Logger;
 
-/** This class hosts a list of Attributes stored as pairs String=String */
-public class Attributes implements marauroa.common.net.Serializable,
-		Iterable<String> {
+/** 
+ * This class hosts a list of Attributes stored as pairs String=String.
+ * There are some important things to remark on Attributes.
+ * 1) This class is more than a Map, as it stores information like its class.
+ * 2) It has several special attributes that should be handle with care like:
+ *   - id
+ *   - zoneid
+ *   - type
+ *   
+ * Attributes also features a part of the implementation of Delta^2 that try
+ * to reduce data send to clients by just sending differences on the objects from a previous
+ * state.
+ * This mainly consists on sending which attributes has been added or modified and what 
+ * attributes has been deleted.
+ */
+public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(Attributes.class);
 
-	/** This is for DeltaÂ² algorithm: added attributes */
+	/** This is for Delta² algorithm: added attributes */
 	private Map<String, String> added;
 
-	/** This is for DeltaÂ² algorithm: deleted attributes */
+	/** This is for Delta² algorithm: deleted attributes */
 	private Map<String, String> deleted;
 
 	/** A Map<String,String> that contains the attributes */
@@ -43,28 +56,6 @@ public class Attributes implements marauroa.common.net.Serializable,
 	private RPClass rpClass;
 
 	/**
-	 * This method returns a copy of the attribute.
-	 */
-	@Override
-	public Object clone() {
-		Attributes attr = new Attributes(this.rpClass);
-
-		for (Map.Entry<String, String> entry : content.entrySet()) {
-			attr.content.put(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : added.entrySet()) {
-			attr.added.put(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : deleted.entrySet()) {
-			attr.deleted.put(entry.getKey(), entry.getValue());
-		}
-
-		return attr;
-	}
-
-	/**
 	 * This method fills this object with data from the attributes object passed as param
 	 * @param attr the attribute object to use to fill this one.
 	 * @return the object itself.
@@ -72,14 +63,17 @@ public class Attributes implements marauroa.common.net.Serializable,
 	public Object fill(Attributes attr) {
 		setRPClass(attr.rpClass);
 
+		content.clear();
 		for (Map.Entry<String, String> entry : attr.content.entrySet()) {
 			content.put(entry.getKey(), entry.getValue());
 		}
 
+		added.clear();
 		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
 			added.put(entry.getKey(), entry.getValue());
 		}
 
+		deleted.clear();
 		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
 			deleted.put(entry.getKey(), entry.getValue());
 		}
@@ -104,7 +98,10 @@ public class Attributes implements marauroa.common.net.Serializable,
 		rpClass = rpclass;
 	}
 
-	/** Returns the RPClass of the attributes */
+	/** 
+	 * Returns the RPClass of the attributes 
+	 * @return the object RPClass 
+	 */
 	public RPClass getRPClass() {
 		return rpClass;
 	}
