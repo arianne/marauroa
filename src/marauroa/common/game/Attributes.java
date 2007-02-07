@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.24 2007/02/06 16:43:04 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.25 2007/02/07 16:32:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -224,14 +224,9 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 *
 	 * @param attribute the attribute we want to get
 	 * @return the value of the attribute
-	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
-	public String get(String attribute) throws AttributeNotFoundException {
-		if (content.containsKey(attribute)) {
-			return content.get(attribute);
-		} else {
-			throw new AttributeNotFoundException(attribute);
-		}
+	public String get(String attribute) {
+		return content.get(attribute);
 	}
 
 	/**
@@ -241,7 +236,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 * @return the value of the attribute
 	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
-	public int getInt(String attribute) throws AttributeNotFoundException {
+	public int getInt(String attribute) {
 		return Integer.parseInt(get(attribute));
 	}
 
@@ -252,7 +247,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 * @return the value of the attribute
 	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
-	public double getDouble(String attribute) throws AttributeNotFoundException {
+	public double getDouble(String attribute) {
 		return Double.parseDouble(get(attribute));
 	}
 
@@ -263,7 +258,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 * @return the value of the attribute
 	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
-	public List<String> getList(String attribute) throws AttributeNotFoundException {
+	public List<String> getList(String attribute) {
 		return StringToList(get(attribute));
 	}
 
@@ -274,19 +269,15 @@ public class Attributes implements marauroa.common.net.Serializable,
 	 * @return the value of the attribute
 	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
-	public String remove(String attribute) throws AttributeNotFoundException {
-		if (content.containsKey(attribute)) {
-			String has=added.remove(attribute);
-			if(has==null) {
-				/* This is for Delta^2 feature, as if it is empty it fails.
-				 * It must be 0 because if attribute is a number it would fail on the serialization */
-				deleted.put(attribute, "0");
-			}
-
-			return content.remove(attribute);
-		} else {
-			throw new AttributeNotFoundException(attribute);
+	public String remove(String attribute) {
+		String has=added.remove(attribute);
+		if(has==null) {
+			/* This is for Delta^2 feature, as if it is empty it fails.
+			 * It must be 0 because if attribute is a number it would fail on the serialization */
+			deleted.put(attribute, "0");
 		}
+
+		return content.remove(attribute);
 	}
 
 	/**
@@ -536,7 +527,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 	/**
 	 * Fills this attribute with the added infomation of the Delta².
 	 */
-	public void setAddedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException {
+	public void setAddedAttributes(Attributes attr) throws RPClass.SyntaxException {
 		rpClass = attr.rpClass;
 		int i = 0;
 		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
@@ -552,7 +543,7 @@ public class Attributes implements marauroa.common.net.Serializable,
 
 	/**
 	 * Fills this attribute with the deleted infomation of the Delta².
-	 */	public void setDeletedAttributes(Attributes attr) throws AttributeNotFoundException, RPClass.SyntaxException {
+	 */	public void setDeletedAttributes(Attributes attr) throws RPClass.SyntaxException {
 		rpClass = attr.rpClass;
 
 		int i = 0;

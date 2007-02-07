@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.4 2007/02/04 13:10:42 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.5 2007/02/07 16:32:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import marauroa.common.Log4J;
-import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 
@@ -69,7 +68,7 @@ public class RPScheduler {
 			}
 			
 			return true;
-		} catch (AttributeNotFoundException e) {
+		} catch (Exception e) {
 			logger.error("cannot add action to RPScheduler, Action(" + action + ") is missing a required attributes", e);
 			return false;
 		}

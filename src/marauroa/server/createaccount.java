@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.19 2007/02/03 17:40:25 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.20 2007/02/07 16:32:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ import java.util.List;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
-import marauroa.common.game.AttributeNotFoundException;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCDatabase;
@@ -88,14 +87,14 @@ public abstract class createaccount {
 		information.add(new Information("-c", "character", 4, 20));
 	}
 
-	protected String get(String name) throws AttributeNotFoundException {
+	protected String get(String name) {
 		for (Information item : information) {
 			if (item.name.equals(name)) {
 				return item.value;
 			}
 		}
 
-		throw new AttributeNotFoundException(name);
+		return null;
 	}
 
 	/**

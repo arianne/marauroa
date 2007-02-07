@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.7 2007/02/06 16:43:04 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.8 2007/02/07 16:32:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,15 +16,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.common.Log4J;
-
-import org.apache.log4j.Logger;
-
 /** The Perception class provides a encapsultated way of managing perceptions */
 public class Perception {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(Perception.class);
-
 	/** A Delta perception sends only changes */
 	final public static byte DELTA = 0;
 
@@ -89,20 +82,16 @@ public class Perception {
 	/** This method adds a removed object of the world */
 	public void removed(RPObject object) {
 		if (addedHas(object)) {
-			try {
-				for (Iterator<RPObject> it = addedList.iterator(); it.hasNext();) {
-					RPObject added = it.next();
-					if (added.get("id").equals(object.get("id"))) {
-						it.remove();
-						/*
-						 * NOTE: If object was added and now remove we simply
-						 * don't mention the object at all
-						 */
-						return;
-					}
+			for (Iterator<RPObject> it = addedList.iterator(); it.hasNext();) {
+				RPObject added = it.next();
+				if (added.get("id").equals(object.get("id"))) {
+					/*
+					 * NOTE: If object was added and now remove we simply
+					 * don't mention the object at all
+					 */
+					it.remove();
+					return;
 				}
-			} catch (AttributeNotFoundException e) {
-				logger.error("error removing an object ", e);
 			}
 		}
 
@@ -125,28 +114,20 @@ public class Perception {
 	}
 
 	private boolean removedHas(RPObject object) {
-		try {
-			for (RPObject deleted : deletedList) {
-				if (deleted.get("id").equals(object.get("id"))) {
-					return true;
-				}
+		for (RPObject deleted : deletedList) {
+			if (deleted.get("id").equals(object.get("id"))) {
+				return true;
 			}
-		} catch (AttributeNotFoundException e) {
 		}
-
 		return false;
 	}
 
 	private boolean addedHas(RPObject object) {
-		try {
-			for (RPObject added : addedList) {
-				if (added.get("id").equals(object.get("id"))) {
-					return true;
-				}
+		for (RPObject added : addedList) {
+			if (added.get("id").equals(object.get("id"))) {
+				return true;
 			}
-		} catch (AttributeNotFoundException e) {
 		}
-
 		return false;
 	}
 }

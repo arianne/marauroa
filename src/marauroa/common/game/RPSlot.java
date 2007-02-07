@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.29 2007/02/06 18:21:14 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.30 2007/02/07 16:32:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -151,7 +151,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		object.put("id", i);
 		object.put("zoneid", ""); // TODO: Remove this and allow zoneless id
-									// in objects
+		// in objects
 	}
 
 	/** Add an object to the slot, but object previously should have a valid id by calling
@@ -161,54 +161,47 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			throw new SlotIsFullException(name);
 		}
 
-		try {
-			boolean found = false;
+		/** TODO: This looks buggy review this code! */
+		boolean found = false;
 
-			Iterator<RPObject> it = objects.iterator();
-			while (!found && it.hasNext()) {
-				RPObject data = it.next();
-				if (data.get("id").equals(object.get("id"))) {
-					it.remove();
-					found = true;
-				}
+		Iterator<RPObject> it = objects.iterator();
+		while (!found && it.hasNext()) {
+			RPObject data = it.next();
+			if (data.get("id").equals(object.get("id"))) {
+				it.remove();
+				found = true;
 			}
-
-			if (!found) {
-				added.add(object);
-			}
-
-			// If the object is on deleted list, remove from there.
-			found = false;
-			it = deleted.iterator();
-			while (!found && it.hasNext()) {
-				RPObject data = it.next();
-				if (data.get("id").equals(object.get("id"))) {
-					it.remove();
-					found = true;
-				}
-			}
-
-			object.setContainer(owner, this);
-			objects.add(object);
-		} catch (AttributeNotFoundException e) {
-			logger.error("error adding object", e);
 		}
+
+		if (!found) {
+			added.add(object);
+		}
+
+		// If the object is on deleted list, remove from there.
+		found = false;
+		it = deleted.iterator();
+		while (!found && it.hasNext()) {
+			RPObject data = it.next();
+			if (data.get("id").equals(object.get("id"))) {
+				it.remove();
+				found = true;
+			}
+		}
+
+		object.setContainer(owner, this);
+		objects.add(object);
 	}
 
 	/** Gets the object from the slot */
-	public RPObject get(RPObject.ID id) throws RPObjectNotFoundException {
-		try {
-			for (RPObject object : objects) {
-				// We compare only the id, as the zone is really irrelevant
-				if (object.getID().getObjectID() == id.getObjectID()) {
-					return object;
-				}
+	public RPObject get(RPObject.ID id) {
+		for (RPObject object : objects) {
+			// We compare only the id, as the zone is really irrelevant
+			if (object.getID().getObjectID() == id.getObjectID()) {
+				return object;
 			}
-			throw new RPObjectNotFoundException(id);
-		} catch (AttributeNotFoundException e) {
-			logger.warn("error getting object", e);
-			throw new RPObjectNotFoundException(id);
 		}
+
+		return null;
 	}
 
 	/** Gets the object from the slot */
@@ -222,57 +215,50 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	/** This method removes the object from the slot */
 	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException {
-		try {
-			Iterator<RPObject> it = objects.iterator();
+		Iterator<RPObject> it = objects.iterator();
 
-			while (it.hasNext()) {
-				RPObject object = it.next();
+		while (it.hasNext()) {
+			RPObject object = it.next();
 
-				/** We compare only the id, as the zone is really irrelevant */
-				if (object.getID().getObjectID() == id.getObjectID()) {
-					/*
-					 * HACK: This is a hack to avoid a problem that happens when
-					 * on the same turn an object is added and deleted, causing
-					 * the client to confuse.
-					 */
-					boolean found_in_added_list = false;
-					Iterator<RPObject> added_it = added.iterator();
-					while (!found_in_added_list && added_it.hasNext()) {
-						RPObject added_object = added_it.next();
-						if (added_object.getID().getObjectID() == id
-								.getObjectID()) {
-							added_it.remove();
-							found_in_added_list = true;
-						}
+			/** We compare only the id, as the zone is really irrelevant */
+			if (object.getID().getObjectID() == id.getObjectID()) {
+				/*
+				 * HACK: This is a hack to avoid a problem that happens when
+				 * on the same turn an object is added and deleted, causing
+				 * the client to confuse.
+				 */
+				boolean found_in_added_list = false;
+				Iterator<RPObject> added_it = added.iterator();
+				while (!found_in_added_list && added_it.hasNext()) {
+					RPObject added_object = added_it.next();
+					if (added_object.getID().getObjectID() == id
+							.getObjectID()) {
+						added_it.remove();
+						found_in_added_list = true;
 					}
-
-					if (!found_in_added_list) {
-						deleted.add(new RPObject(new RPObject.ID(object)));
-					}
-
-					it.remove();
-
-					object.setContainer(null, null);
-
-					return object;
 				}
-			}
 
-			throw new RPObjectNotFoundException(id);
-		} catch (AttributeNotFoundException e) {
-			logger.warn("error removing object", e);
-			throw new RPObjectNotFoundException(id);
+				if (!found_in_added_list) {
+					deleted.add(new RPObject(new RPObject.ID(object)));
+				}
+
+				it.remove();
+
+				object.setContainer(null, null);
+
+				return object;
+			}
 		}
+
+		return null;
+
 	}
 
 	/** This method empty the slot */
 	public void clear() {
 		for (RPObject object : objects) {
-			try {
-				deleted.add(new RPObject(new RPObject.ID(object)));
-				object.setContainer(null, null);
-			} catch (AttributeNotFoundException e) {
-			}
+			deleted.add(new RPObject(new RPObject.ID(object)));
+			object.setContainer(null, null);
 		}
 
 		added.clear();
@@ -281,35 +267,27 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	/** This method returns true if the slot has the object whose id is id */
 	public boolean has(RPObject.ID id) {
-		try {
-			for (RPObject object : objects) {
-				// compare only the id, as the zone is not used for slots
-				if (id.getObjectID() == object.getID().getObjectID()) {
-					return true;
-				}
+		for (RPObject object : objects) {
+			// compare only the id, as the zone is not used for slots
+			if (id.getObjectID() == object.getID().getObjectID()) {
+				return true;
 			}
-			return false;
-		} catch (AttributeNotFoundException e) {
-			return false;
 		}
+		return false;
 	}
 
 	/** traverses up the container tree to see if the item is one of the parents */
 	public boolean hasAsParent(RPObject.ID id) {
-		try {
-			RPObject owner = getOwner();
-			// traverse the owner tree
-			while (owner != null) {
-				// compare only the id, as the zone is not used for slots
-				if (owner.getID().getObjectID() == id.getObjectID()) {
-					return true;
-				}
-				owner = owner.getContainer();
+		RPObject owner = getOwner();
+		// traverse the owner tree
+		while (owner != null) {
+			// compare only the id, as the zone is not used for slots
+			if (owner.getID().getObjectID() == id.getObjectID()) {
+				return true;
 			}
-			return false;
-		} catch (AttributeNotFoundException e) {
-			return false;
+			owner = owner.getContainer();
 		}
+		return false;
 	}
 
 	/** traverses up the container tree and counts all parent container */
@@ -372,8 +350,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	@Override
 	public boolean equals(Object object) {
 		if(object instanceof RPSlot) {
-		  RPSlot slot = (RPSlot) object;
-		  return name.equals(slot.name) && objects.equals(slot.objects);
+			RPSlot slot = (RPSlot) object;
+			return name.equals(slot.name) && objects.equals(slot.objects);
 		} else {
 			return false;
 		}
@@ -399,7 +377,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws java.io.IOException {
+	throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
@@ -435,7 +413,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	public void readObject(marauroa.common.net.InputSerializer in)
-			throws java.io.IOException, java.lang.ClassNotFoundException {
+	throws java.io.IOException, java.lang.ClassNotFoundException {
 		short code = in.readShort();
 		if (code == -1) {
 			name = in.readString();

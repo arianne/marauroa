@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.24 2007/02/06 18:21:14 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.25 2007/02/07 16:32:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,7 +66,7 @@ public class RPObject extends Attributes {
 	}
 
 	/** Returns an ID object representing the id of this object */
-	public RPObject.ID getID() throws AttributeNotFoundException {
+	public RPObject.ID getID() {
 		return new ID(this);
 	}
 
@@ -573,11 +573,7 @@ public class RPObject extends Attributes {
 
 	@Override
 	public int hashCode() {
-		try {
-			return getInt("id");
-		} catch (AttributeNotFoundException e) {
-			return -1;
-		}
+		return getInt("id");
 	}
 
 	/** This class stores the basic identification for a RPObject */
@@ -618,7 +614,7 @@ public class RPObject extends Attributes {
 		 * @param attr
 		 *            an RPObject containing object_id attribute
 		 */
-		public ID(RPObject attr) throws AttributeNotFoundException {
+		public ID(RPObject attr) {
 			this.id = attr.getInt("id");
 			this.zoneid = attr.get("zoneid");
 		}
@@ -629,7 +625,7 @@ public class RPObject extends Attributes {
 		 * @param attr
 		 *            an RPAction containing sourceid attribute
 		 */
-		public ID(RPAction attr) throws AttributeNotFoundException {
+		public ID(RPAction attr) {
 			this.id = attr.getInt("sourceid");
 			this.zoneid = attr.get("zoneid");
 		}
