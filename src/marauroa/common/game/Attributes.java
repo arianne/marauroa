@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.26 2007/02/07 22:36:30 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.27 2007/02/08 09:14:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,10 +145,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This method set the value of an attribute
 	 *
-	 * @param attribute
-	 *            the attribute to be set.
-	 * @param value
-	 *            the value we want to set.
+	 * @param attribute the attribute to be set.
+	 * @param value the value we want to set.
 	 */
 	public void put(String attribute, String value) {
 		/* This is for Delta-delta feature */
@@ -231,10 +229,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @param attribute the attribute we want to get
 	 * @return the value of the attribute
-	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
 	public int getInt(String attribute) {
-		return Integer.parseInt(get(attribute));
+		String val=get(attribute);
+		if(val==null) {
+			throw new IllegalArgumentException("'"+attribute+"' not found");
+		}
+		
+		return Integer.parseInt(val);
 	}
 
 	/**
@@ -242,10 +244,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @param attribute the attribute we want to get
 	 * @return the value of the attribute
-	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
 	public double getDouble(String attribute) {
-		return Double.parseDouble(get(attribute));
+		String val=get(attribute);
+		if(val==null) {
+			throw new IllegalArgumentException("'"+attribute+"' not found");
+		}
+		
+		return Double.parseDouble(val);
 	}
 
 	/**
@@ -253,10 +259,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @param attribute the attribute we want to get
 	 * @return the value of the attribute
-	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
 	public List<String> getList(String attribute) {
-		return StringToList(get(attribute));
+		String val=get(attribute);
+		if(val==null) {
+			throw new IllegalArgumentException("'"+attribute+"' not found");
+		}
+		
+		return StringToList(val);
 	}
 
 	/**
@@ -264,10 +274,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @param attribute the attribute we want to remove
 	 * @return the value of the attribute
-	 * @exception AttributesNotFoundException if the attributes doesn't exist.
 	 */
 	public String remove(String attribute) {
 		String has=added.remove(attribute);
+		/*  We remove from added and if it has been added and remove we tell nothing about the attribute.
+		 *  But if it was not found, we add it to deleted 
+		 */
 		if(has==null) {
 			/* This is for Delta^2 feature, as if it is empty it fails.
 			 * It must be 0 because if attribute is a number it would fail on the serialization */
@@ -451,8 +463,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Illegal request of an list of "
-					+ String.valueOf(size) + " size");
+			throw new IOException("Illegal request of an list of "+ String.valueOf(size) + " size");
 		}
 
 		content.clear();
