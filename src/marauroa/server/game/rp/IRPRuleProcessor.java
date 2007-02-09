@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.4 2007/02/04 13:10:42 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.5 2007/02/09 15:51:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.server.createaccount.Result;
+import marauroa.server.game.AccountResult;
 
 /**
  * Interface for the class that is in charge of executing actions. Implement it
@@ -50,7 +50,7 @@ public interface IRPRuleProcessor {
 	 * @param email the email of the player for notifications or password reminders. 
 	 * @param template the RPObject template we going to create.
 	 * @return the Result of creating the account. */
-	public Result createAccount(String username, String password, String email, RPObject template);
+	public AccountResult createAccount(String username, String password, String email, RPObject template);
 
 	/**
 	 * This method is called *before* adding an action by RPScheduler so you can

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.48 2007/02/06 20:56:46 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.49 2007/02/09 15:51:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,9 +27,112 @@ import marauroa.server.game.Statistics;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
 
-/** The launcher of the whole Marauroa Server. 
- *  Run this class to make your game server run.
+/** 
+ *  The launcher of the whole Marauroa Server.<br>
+ *  Marauroa is an arianne server application with an UDP transport.<br>
  *  Marauroa works by loading core class from your game server.
+ *  <p>
+ *  Marauroa server is and it is built using threads. marauroad has the following set
+ *  of threads:<ul>
+ *  <li> 1 thread to receive data from clients
+ *  <li> 1 thread to send data to clients
+ *  <li> 1 thread to handle the data into server actions
+ *  <li> 1 thread to handle RPG itself.
+ *  </ul>
+ *  
+ *  To denote the active behavior of the thread classes their names include the word Manager.<br> 
+ *  So marauroad has:<ul>
+ *  <li> NetworkManager
+ *  <li> GameManager
+ *  <li> RPManager
+ *  </ul>
+ *  
+ *  NetworkManager is the active thread that handles messages that come from the clients and 
+ *  converts them from a stream of bytes to a real Message object. See the Message Types 
+ *  document to understand what each message is for.<br>
+ *  The pseudo code behind NetworkManager is:
+ *  <pre>
+	forever
+	  {
+	  Read stream from network
+	  Convert to a Message
+	  store in our queue
+	  }
+ * </pre>
+ * 
+ * One level (conceptually) over NetworkManager is the GameManager, this is the part of the 
+ * server that handles everything so that we can make the server work. Its main task is to 
+ * process messages from clients and modify the state on the server to reflect the reply to 
+ * that action, mainly related to:<ul>
+ * <li> Login
+ * <li> Logout
+ * <li> ChooseCharacter
+ * <li> Actions
+ * <li> Transfer Content
+ * </ul>
+ * 
+ * See GameManager for a deeper understanding about what it does exactly.<br> 
+ * The hardest part of the Manager is to consider all the special cases and all the exceptions
+ *  that can happen. The main pseudo code of the GameManager, if we skip exceptions, is:
+ *  <pre>
+	forever
+	  {
+	  Wait for Message to be available
+	
+	  if(Message is Login)
+	    {
+	    check player.
+	    ask for character
+	    }
+	
+	  if(Message is Choose Character)
+	    {
+	    check character
+	    add to game
+	    }
+	
+	  if(Message is Action)
+	    {
+	    add action to game
+	    }
+	  
+	  if(Message is Transfer Request ACK)
+	    {
+	    send client the content requested
+	    }
+	
+	  if(Message is Logout)
+	    {
+	    remove from game
+	    }
+	  }
+ *  </pre>
+ *  
+ *  And finally RPManager is the active thread that keeps executing actions.<br>
+ *  Marauroa is, as you know, turn based, so actions when received are queued for the next
+ *  turn, and when that turn is reached all the actions pending on that turn are executed.
+ *  <p>
+ *  
+ *  The idea in RPManager is to split up complexity as much as possible: we have 2 entities
+ *  to help it: Scheduler and RuleManager.  
+ *  <pre>
+	forever
+	  {
+	  for each action scheduled for this turn
+	    {
+	    run action in RuleManager
+	    }
+	
+	  Send Perceptions
+	
+	  wait until turn is completed
+	  next turn
+	  }
+ *  </pre>
+ *  
+ *  Scheduler handles the actions as they are sent by the GameManager.<br> 
+ *  RuleManager is a class that encapsulates all the implementation related to rules.
+ *    
  */
 public class marauroad extends Thread {
 	/** the logger instance. */

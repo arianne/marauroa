@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.8 2007/02/07 16:32:02 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.9 2007/02/09 15:51:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-/** The Perception class provides a encapsultated way of managing perceptions */
+/** 
+ * The Perception class provides a encapsultated way of managing perceptions.
+ * It is the core implementation of the Delta^2.
+ * 
+ * Perception manages added, modified and removed perceptions.
+ * 
+ * @author miguel
+ */
 public class Perception {
 	/** A Delta perception sends only changes */
 	final public static byte DELTA = 0;
@@ -53,14 +60,21 @@ public class Perception {
 		deletedList = new LinkedList<RPObject>();
 	}
 
-	/** This method adds an added object to the world */
+	/**
+	 * This method adds an added object to the perception
+	 * @param object the object added.
+	 */
 	public void added(RPObject object) {
 		if (!addedHas(object)) {
 			addedList.add(object);
 		}
 	}
 
-	/** This method adds an modified object of the world */
+	/** 
+	 * This method adds an modified object of the world 
+	 * @param modified the modified object
+	 * @throws Exception if there is any problem computing the differences.
+	 */
 	public void modified(RPObject modified) throws Exception {
 		if (!removedHas(modified) && !addedHas(modified)) {
 			RPObject added = new RPObject();
@@ -79,7 +93,10 @@ public class Perception {
 		}
 	}
 
-	/** This method adds a removed object of the world */
+	/** 
+	 * This method adds a removed object of the world
+	 * @param object the removed object
+	 */
 	public void removed(RPObject object) {
 		if (addedHas(object)) {
 			for (Iterator<RPObject> it = addedList.iterator(); it.hasNext();) {
@@ -100,12 +117,17 @@ public class Perception {
 		}
 	}
 
-	/** Returns the number of elements of the perception */
+	/** 
+	 * Returns the number of elements of the perception
+	 * @return the amount of objects 
+	 */
 	public int size() {
 		return (addedList.size() + modifiedAddedAttribsList.size() + modifiedDeletedAttribsList.size() + deletedList.size());
 	}
 
-	/** Clear the perception */
+	/** 
+	 * Clear the perception 
+	 */
 	public void clear() {
 		addedList.clear();
 		modifiedAddedAttribsList.clear();

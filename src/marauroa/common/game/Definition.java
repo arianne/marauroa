@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.2 2007/02/09 12:12:42 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.3 2007/02/09 15:51:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,19 +26,31 @@ import org.apache.log4j.Logger;
  * - type of the attribute or event.
  *   It must be one of the following:
  *   * STRING
+ *     It is a 255 characters long string.
  *   * LONG_STRING
+ *     It is a 65536 characters long string. 
  *   * VERY_LONG_STRING
+ *     It is 2^32 characters string.
+ *     Handle this one with care. *     
  *   * BYTE
- *   * INT
- *   * FLAG
+ *     A 8 bits integer.
  *   * SHORT
+ *     A 16 bits integer
+ *   * INT
+ *     A 32 bits integer
+ *   * FLAG
+ *     A value that is set or not set.
  * - capacity of the slot
  * - flags to decide the visibility of the atttribute, event or slot.
  *   It must be one of the following:
  *   * STANDARD
+ *     It is an attribute that it is storable and visible.
  *   * PRIVATE
+ *     It is an attribute that only owner can know about. 
  *   * HIDDEN
+ *     It is an attribute that none knows about.
  *   * VOLATILE
+ *     It is an attribute that it is not stored at persistence storage.
  * 
  * 
  * @author miguel

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.29 2007/02/09 12:12:42 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.30 2007/02/09 15:51:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,14 +28,19 @@ import marauroa.common.game.Definition.Type;
  * 1) This class is more than a Map, as it stores information like its class.
  * 2) It has several special attributes that should be handle with care like:
  *   - id
+ *     It contains the unique per zone ( @Link marauroa.common.game.IRPZone ) identification of the object.
  *   - zoneid
+ *     It contains the zone identification. Both id and zoneid uniquely identify an object on server runtime.
  *   - type
+ *     It contains the name of the RPClass ( @Link marauroa.common.game.RPClass ) that defines this attributes object.
  *   
  * Attributes also features a part of the implementation of Delta^2 that try
  * to reduce data send to clients by just sending differences on the objects from a previous
- * state.
+ * state. 
  * This mainly consists on sending which attributes has been added or modified and what 
  * attributes has been deleted.
+ * 
+ * @author miguel
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
 	/** This is for Delta² algorithm: added attributes */

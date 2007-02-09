@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.10 2007/02/06 16:43:04 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.11 2007/02/09 15:51:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,19 @@ package marauroa.common.game;
 
 import java.util.Iterator;
 
-/** Interface for managing the objects in a RPZone. */
+/** Interface for managing the objects in a RPZone.
+ * An RPZone is a storage for objects, that has an unique per World associated id.
+ * It <b>must</b> provide at least methods for:
+ * * adding
+ * * removing
+ * * querying
+ * * modifying
+ * 
+ * It almost provide methods that are called on load and on unload of the zone.
+ * And finally it must provide Perception when asked by @See marauroa.server.game.rp.RPServerManager
+ * 
+ * @author miguel
+ */
 public interface IRPZone extends Iterable<RPObject> {
 	/** An unique ID for this zone */
 	public static class ID implements marauroa.common.net.Serializable {
@@ -77,21 +89,29 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 	}
 
-	/** Returns the ID of the zone */
+	/** 
+	 * Returns the ID of the zone
+	 * @return zone id
+	 */
 	public ID getID();
 
-	/** This method is called when the zone is created to popullate it */
+	/**
+	 * This method is called when the zone is created to popullate it 
+	 * @throws Exception if there has been any problem loading zone
+	 */
 	public void onInit() throws Exception;
 
 	/**
 	 * This method is called when the server finish to save the content of the
 	 * zone
+	 * @throws Exception if there has been any problem loading zone
 	 */
 	public void onFinish() throws Exception;
 
 	/**
 	 * This method adds an object to the Zone. Object can be modified after this
 	 * methods and changes are expected to happen too in zone stored object.
+	 * @param object the object
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException;
 
@@ -99,12 +119,15 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method tag an object of the Zone as modified. Object can be modified
 	 * after this methods and changes are expected to happen too in zone stored
 	 * object.
+	 * @param object the object
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException;
 
 	/**
 	 * This method removed an object of the Zone and return it. Object can be
 	 * modified but it is not longer inside zone.
+	 * @param id the object identification
+	 * @return the remove object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
 
@@ -112,24 +135,46 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method returns an object of the Zone. Object can be modified after
 	 * this methods and changes are expected to happen too in zone stored
 	 * object.
+	 * @param id the object identification
+	 * @return the remove object or null if it is not found.
 	 */
 	public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
 
-	/** This method returns true if the object exists in the Zone */
+	/** 
+	 * This method returns true if the object exists in the Zone  
+	 * @param id the object identification
+	 * @return true if object exists
+	 */
 	public boolean has(RPObject.ID id);
 
-	/** Assigns a valid RPObject.ID to the object given as parameter */
+	/** 
+	 * Assigns a valid RPObject.ID to the object given as parameter 
+	 * @param object the object
+	 */
 	public void assignRPObjectID(RPObject object);
 
-	/** Iterates over the elements of the zone */
+	/** 
+	 * Iterates over the elements of the zone
+	 * @return an iterator over zone
+	 */
 	public Iterator<RPObject> iterator();
 
-	/** Returns the number of elements of the zone */
+	/** 
+	 * Returns the number of elements of the zone 
+	 * @return the amount of objects that exists in the zone. 
+	 */
 	public long size();
 
-	/** This method return the perception of a zone for a player */
+	/**
+	 * This method return the perception of a zone for a player
+	 * @param id id of the player
+	 * @param type type of perception
+	 * @return the perception
+	 */
 	public Perception getPerception(RPObject.ID id, byte type);
 
-	/** This method is called to take zone to the next turn */
+	/** 
+	 * This method is called to take zone to the next turn 
+	 */
 	public void nextTurn();
 }

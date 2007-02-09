@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.18 2007/02/06 21:00:39 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.19 2007/02/09 15:51:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,8 +20,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.common.game.RPObject.ID;
-import marauroa.server.createaccount.Result;
+import marauroa.server.game.AccountResult;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
@@ -69,7 +68,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.checkGameVersion(game, version);
 	}
 
-	public Result createAccount(String username, String password, String email, RPObject template) {
+	public AccountResult createAccount(String username, String password, String email, RPObject template) {
 		return pythonRP.createAccount(username, password, email, template);
 	}
 

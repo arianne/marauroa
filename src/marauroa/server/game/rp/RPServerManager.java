@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.13 2007/02/06 21:02:55 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.14 2007/02/09 15:51:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,7 @@ import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.createaccount;
+import marauroa.server.game.AccountResult;
 import marauroa.server.game.ActionInvalidException;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
@@ -195,7 +195,7 @@ public class RPServerManager extends Thread {
 	 * @param template the template we are going to use to create the object.
 	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
 	 */
-	public createaccount.Result createAccount(String username, String password,
+	public AccountResult createAccount(String username, String password,
 			String email, RPObject template) {
 		return ruleProcessor.createAccount(username, password, email, template);
 	}

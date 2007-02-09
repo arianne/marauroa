@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.44 2007/02/06 21:02:55 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.45 2007/02/09 15:51:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,6 @@ import marauroa.common.net.message.MessageS2CLogoutNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.createaccount.Result;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
@@ -432,16 +431,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		try {
-			Result result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
+			AccountResult result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
 			
-			if (result == Result.OK_ACCOUNT_CREATED) {
+			if (result == AccountResult.OK_ACCOUNT_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
 				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				MessageS2CCreateAccountNACK.Reasons reason;
 
-				if (result == Result.FAILED_PLAYER_EXISTS) {
+				if (result == AccountResult.FAILED_PLAYER_EXISTS) {
 					reason = MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS;
 				} else {
 					reason = MessageS2CCreateAccountNACK.Reasons.FIELD_TOO_SHORT;
