@@ -151,7 +151,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Definition def = getDefinition(clazz, name);
 		
 		if(def!=null) {
-			return def.code;
+			return def.getCode();
 		}
 		
 		if(def==null && parent !=null) {
@@ -178,8 +178,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 		
 		for (Definition desc : list.values()) {
-			if (desc.code == code) {
-				return desc.name;
+			if (desc.getCode() == code) {
+				return desc.getName();
 			}
 		}
 
@@ -234,7 +234,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 			int size = in.readInt();
 			for (int i = 0; i < size; ++i) {
 				Definition desc = (Definition) in.readObject(new Definition());
-				definitions.put(desc.name, desc);
+				definitions.put(desc.getName(), desc);
 			}
 		}
 

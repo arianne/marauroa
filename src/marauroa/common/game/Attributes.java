@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.28 2007/02/09 11:47:46 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.29 2007/02/09 12:12:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -479,8 +479,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the deleted infomation of the DeltaÂ².
-	 */	public void setDeletedAttributes(Attributes attr) {
+	 * Fills this attribute with the deleted infomation of the Delta².
+	 */	
+	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 
 		int i = 0;
