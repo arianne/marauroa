@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.30 2007/02/07 16:32:02 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.31 2007/02/09 11:47:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,16 +18,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-
-import org.apache.log4j.Logger;
+import marauroa.common.game.Definition.Type;
 
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject> {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(RPSlot.class);
-
 	private List<RPObject> added;
 
 	private List<RPObject> deleted;
@@ -385,13 +380,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			DetailLevel level) throws java.io.IOException {
 		short code = -1;
 
+		RPClass rpClass = owner.getRPClass();
 		try {
-			RPClass rpClass = owner.getRPClass();
-			code = rpClass.getRPSlotCode(name);
-		} catch (RPClass.SyntaxException e) {
-			logger.error("cannot writeObject, RPSlot [" + name + "] not found",
-					e);
-			code = -1;
+			code=rpClass.getCode(Type.RPSLOT, name);
+		} catch(SyntaxException e) {
+			code=-1;
 		}
 
 		if (level == DetailLevel.FULL) {
@@ -419,7 +412,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			name = in.readString();
 		} else {
 			RPClass rpClass = owner.getRPClass();
-			name = rpClass.getRPSlotName(code);
+			name=rpClass.getName(Type.RPSLOT, code);
 		}
 
 		capacity = in.readByte();

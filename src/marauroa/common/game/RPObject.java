@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.25 2007/02/07 16:32:02 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.26 2007/02/09 11:47:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.TimeoutConf;
+import marauroa.common.game.Definition.Type;
 
 /** This class implements an Object. 
  * Please refer to "Objects Explained" document */
@@ -40,7 +41,7 @@ public class RPObject extends Attributes {
 
 	/** Constructor */
 	public RPObject() {
-		super(RPClass.getBaseRPObjectDefault());
+		super(null);
 
 		slots = new LinkedList<RPSlot>();
 		added = new LinkedList<RPSlot>();
@@ -164,8 +165,9 @@ public class RPObject extends Attributes {
 	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
 		if (!hasSlot(slot.getName())) {
 			slot.setOwner(this);
-
-			slot.setCapacity(getRPClass().getRPSlotCapacity(slot.getName()));
+			
+			Definition def=getRPClass().getDefinition(Type.RPSLOT, slot.getName());
+			slot.setCapacity(def.getCapacity());
 
 			added.add(slot);
 			slots.add(slot);
@@ -270,14 +272,14 @@ public class RPObject extends Attributes {
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
-		RPClass rpClass = getRPClass();
-
 		int size = slots.size();
 		for (RPSlot slot : slots) {
-			if (level == DetailLevel.NORMAL	&& (rpClass.isRPSlotVisible(slot.getName()) == false)) {
+			Definition def=getRPClass().getDefinition(Type.RPSLOT, slot.getName());
+			
+			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
 				// If this attribute is Hidden or private and full data is false
 				--size;
-			} else if (level != DetailLevel.FULL && rpClass.isRPSlotHidden(slot.getName())) {
+			} else if (level != DetailLevel.FULL && def.isHidden()) {
 				// If this attribute is Hidden and full data is true.
 				// This way we hide some attribute to player.
 				--size;
@@ -286,9 +288,9 @@ public class RPObject extends Attributes {
 
 		out.write(size);
 		for (RPSlot slot : slots) {
-			if ((level == DetailLevel.PRIVATE && !rpClass.isRPSlotHidden(slot.getName()))
-					|| (rpClass.isRPSlotVisible(slot.getName()))
-					|| (level == DetailLevel.FULL)) {
+			Definition def=getRPClass().getDefinition(Type.RPSLOT, slot.getName());
+			
+			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
 				slot.writeObject(out, level);
 			}
 		}
@@ -296,10 +298,12 @@ public class RPObject extends Attributes {
 		// The same now for events... isn't it claiming for a refactoring? :)
 		size = events.size();
 		for (RPEvent event : events) {
-			if (level == DetailLevel.NORMAL	&& (rpClass.isRPEventVisible(event.getKey()) == false)) {
+			Definition def=getRPClass().getDefinition(Type.RPEVENT, event.getKey());
+			
+			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
 				// If this attribute is Hidden or private and full data is false
 				--size;
-			} else if (level != DetailLevel.FULL && rpClass.isRPEventHidden(event.getKey())) {
+			} else if (level != DetailLevel.FULL && def.isHidden()) {
 				// If this attribute is Hidden and full data is true.
 				// This way we hide some attribute to player.
 				--size;
@@ -308,9 +312,9 @@ public class RPObject extends Attributes {
 
 		out.write(size);
 		for (RPEvent event : events) {
-			if ((level == DetailLevel.PRIVATE && !rpClass.isRPEventHidden(event.getKey()))
-					|| (rpClass.isRPSlotVisible(event.getKey()))
-					|| (level == DetailLevel.FULL)) {
+			Definition def=getRPClass().getDefinition(Type.RPEVENT, event.getKey());
+			
+			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
 				event.writeObject(out);
 			}
 		}
@@ -333,7 +337,10 @@ public class RPObject extends Attributes {
 			RPSlot slot = new RPSlot();
 			slot.setOwner(this);
 			slot = (RPSlot) in.readObject(slot);
-			slot.setCapacity(getRPClass().getRPSlotCapacity(slot.getName()));
+			
+			Definition def=getRPClass().getDefinition(Type.RPSLOT, slot.getName());
+			slot.setCapacity(def.getCapacity());
+			
 			slots.add(slot);
 		}
 
@@ -375,7 +382,9 @@ public class RPObject extends Attributes {
 		int i = super.clearVisible();
 
 		for (RPSlot slot : slots) {
-			if (getRPClass().isRPSlotVisible(slot.getName())) {
+			Definition def=getRPClass().getDefinition(Type.RPSLOT, slot.getName());
+			
+			if (def.isVisible()) {
 				for (RPObject object : slot) {
 					i += object.clearVisible();
 				}

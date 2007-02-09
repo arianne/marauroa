@@ -3,68 +3,13 @@ package marauroa.common.game;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-/**
- * The RPClass class implements a container of attributes with its code, name,
- * type and visibility. It adds support for strict type definition and class
- * hierarchy
- */
+import marauroa.common.game.Definition.Type;
+
 public class RPClass implements marauroa.common.net.Serializable {
-	/* Visibility */
-	/** The attribute is visible */
-	final public static byte VISIBLE = 0;
-
-	/** The attribute is ONLY visible for owner of the object */
-	final public static byte PRIVATE = 1 << 0;
-
-	/** The attribute is invisible and so only server related */
-	final public static byte HIDDEN = 1 << 1;
-
-	/** The attribute should be stored in the database */
-	final public static byte STORABLE = 0;
-
-	/** The attribute should not be stored in the database */
-	final public static byte VOLATILE = 1 << 2;
-
-	/* Type */
-	/** a string */
-	final public static byte VERY_LONG_STRING = 1;
-
-	/** a string of up to 255 chars long */
-	final public static byte LONG_STRING = 2;
-
-	/** a string of up to 255 chars long */
-	final public static byte STRING = 3;
-
-	/** an float number of 32 bits */
-	final public static byte FLOAT = 4;
-
-	/** an integer of 32 bits */
-	final public static byte INT = 5;
-
-	/** an integer of 16 bits */
-	final public static byte SHORT = 6;
-
-	/** an integer of 8 bits */
-	final public static byte BYTE = 7;
-
-	/** an boolean attribute that either is present or not. */
-	final public static byte FLAG = 8;
-
-	/** This exception is thrown when an attribute is not found */
-	static public class SyntaxException extends RuntimeException {
-		private static final long serialVersionUID = 3724525088825394097L;
-
-		public SyntaxException(String offendingAttribute) {
-			super("attribute " + offendingAttribute + " isn't defined.");
-		}
-
-		public SyntaxException(short offendingAttribute) {
-			super("attribute code " + offendingAttribute + " isn't defined.");
-		}
-	}
-
 	/** This is a singleton-like Map that stores classes and their names */
 	private static Map<String, RPClass> rpClassList = new LinkedHashMap<String, RPClass>();
 
@@ -73,39 +18,43 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/** The superclass of this or null if it doesn't have it. */
 	private RPClass parent;
-
-	/** This stores a map of attributes which links the name of the attribute with its description. */
-	private Map<String, AttributeDesc> attributes;
-
-	/** This stores a map of slots which links the name of the slot with its description. */
-	private Map<String, RPSlotDesc> slots;
-
-	/** This stores a map of slots which links the name of the slot with its description. */
-	private Map<String, RPEventDesc> events;
-
+	
+	private Map<String, Definition> attributes;
+	private Map<String, Definition> rpevents;
+	private Map<String, Definition> rpslots;
+	
 	/** Constructor */
 	public RPClass() {
+		name=null;
 		parent = null;
-		attributes = new HashMap<String, AttributeDesc>();
-		slots = new HashMap<String, RPSlotDesc>();
+		attributes = new HashMap<String, Definition>();
+		rpevents = new HashMap<String, Definition>();
+		rpslots = new HashMap<String, Definition>();
 	}
 
-	/** This constructor adds the rpclass to the global list of rpclasses. */
-	public RPClass(String type) {
-		parent = null;
-		name = type;
-		attributes = new HashMap<String, AttributeDesc>();
-		slots = new HashMap<String, RPSlotDesc>();
-		events = new HashMap<String, RPEventDesc>();
+	public RPClass(String name) {
+		this();
+		
+		this.name=name;
 
 		/* Any class stores these attributes. */
-		add("id", INT);
-		add("clientid", INT, (byte) (HIDDEN | VOLATILE));
-		add("zoneid", STRING, HIDDEN);
-		add("#db_id", INT, HIDDEN);
-		add("type", STRING);
+		add(Type.ATTRIBUTE, "id", Definition.INT, Definition.STANDARD);
+		add(Type.ATTRIBUTE, "clientid", Definition.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
+		add(Type.ATTRIBUTE, "zoneid", Definition.STRING, Definition.HIDDEN);
+		add(Type.ATTRIBUTE, "#db_id", Definition.INT, Definition.HIDDEN);
+		add(Type.ATTRIBUTE, "type", Definition.STRING, Definition.STANDARD);
 
-		rpClassList.put(type, this);
+		rpClassList.put(name, this);
+	}
+
+	/** Returns true if the global list contains the name rpclass */
+	public static boolean hasRPClass(String name) {
+		return rpClassList.containsKey(name);
+	}
+
+	/** Returns the name rpclass from the global list */
+	public static RPClass getRPClass(String name) {
+		return rpClassList.get(name);
 	}
 
 	/** This method sets the parent of this rpclass */
@@ -114,7 +63,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/** This method sets the parent of this rpclass */
-	public void isA(String parent) throws SyntaxException {
+	public void isA(String parent) {
 		this.parent = getRPClass(parent);
 	}
 
@@ -135,412 +84,112 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		return false;
 	}
-
-	/** TODO: Consider removing default empty class. */
-	static RPClass defaultRPClass;
-
-	/**
-	 * Returns a default rpclass for lazy developers. You won't get any
-	 * advantages on the engine by using it.
-	 */
-	public static RPClass getBaseRPObjectDefault() {
-		if (defaultRPClass == null) {
-			defaultRPClass = new RPClass("") {
-				@Override
-				public short getCode(String name) {
-					return -1;
-				}
-
-				@Override
-				public byte getType(String name) {
-					return RPClass.STRING;
-				}
-
-				@Override
-				public byte getFlags(String name) {
-					if (name.charAt(0) == '!') {
-						return RPClass.PRIVATE;
-					} else {
-						return RPClass.VISIBLE;
-					}
-				}
-
-				@Override
-				public short getRPSlotCode(String name) {
-					return -1;
-				}
-
-				@Override
-				public int getRPSlotCapacity(String name) {
-					return -1;
-				}
-
-				@Override
-				public byte getRPSlotFlags(String name) {
-					if (name.charAt(0) == '!') {
-						return RPClass.PRIVATE;
-					} else {
-						return RPClass.VISIBLE;
-					}
-				}
-			};
-		}
-
-		return defaultRPClass;
-	}
-
-	/**
-	 * Returns a default rpclass for lazy developers. You won't get any
-	 * advantages on the engine by using it.
-	 */
-	public static RPClass getBaseRPActionDefault() {
-		if (defaultRPClass == null) {
-			defaultRPClass = getBaseRPObjectDefault();
-		}
-
-		return defaultRPClass;
-	}
-
-	/** Adds a visible attribute to the rpclass */
-	public void add(String name, byte type) {
-		add(name, type, VISIBLE);
-	}
-
-	/** Adds a attribute definition to the rpclass */
-	public void add(String name, byte type, byte flags) {
-		AttributeDesc desc = new AttributeDesc(name, type, flags);
-		attributes.put(name, desc);
-	}
-
-	/** Adds a visible slot definition to the rpclass */
-	public void addRPSlot(String name, int capacity) {
-		addRPSlot(name, capacity, VISIBLE);
-	}
-
-	/** Adds a slot definition to the rpclass */
-	public boolean addRPSlot(String name, int capacity, byte flags) {
-		RPSlotDesc desc = new RPSlotDesc(name, (byte) capacity, flags);
-		slots.put(name, desc);
-
-		return true;
-	}
 	
-	public void addRPEvent(String name, byte type) {
-		addRPEvent(name, type, VISIBLE);
-	}
-	
-	public void addRPEvent(String name, byte type, byte flags) {	
-		RPEventDesc desc=new RPEventDesc(name, type, flags);
-		events.put(name,desc);
-	}
-
 	/** Returns the name of the rpclass */
 	public String getName() {
 		return name;
 	}
+	
 
-	/** Returns the code of the attribute whose name is name for this rpclass */
-	public short getCode(String name) throws SyntaxException {
-		if (attributes.containsKey(name)) {
-			AttributeDesc desc = attributes.get(name);
-			return desc.code;
+	private short lastCode = 0;
+	private List<String> definitions = new LinkedList<String>();
+
+	private short getValidCode(String name) {
+		if (definitions.contains(name)) {
+			throw new SyntaxException(name);
 		}
-
-		if (parent != null) {
-			return parent.getCode(name);
-		}
-
-		throw new SyntaxException(name);
-	}
-
-	/** Returns the code of the slot whose name is name for this rpclass */
-	public short getRPSlotCode(String name) throws SyntaxException {
-		if (slots.containsKey(name)) {
-			RPSlotDesc desc = slots.get(name);
-			return desc.code;
-		}
-
-		if (parent != null) {
-			return parent.getRPSlotCode(name);
-		}
-
-		throw new SyntaxException("RPSlot " + name);
-	}
-
-	/** Returns the code of the event whose name is name for this rpclass */
-	public short getRPEventCode(String name) throws SyntaxException {
-		if (events.containsKey(name)) {
-			RPEventDesc desc = events.get(name);
-			return desc.code;
-		}
-
-		if (parent != null) {
-			return parent.getRPEventCode(name);
-		}
-
-		throw new SyntaxException(name);
+		
+		definitions.add(name);
+		
+		return ++lastCode;
 	}
 	
-	/** Returns the name of the attribute whose code is code for this rpclass */
-	public String getName(short code) throws SyntaxException {
-		for (AttributeDesc desc : attributes.values()) {
-			if (desc.code == code) {
-				return desc.name;
-			}
+	public void add(Definition.Type clazz, String name, byte type, byte flags) {
+		Definition def=null;
+		switch(clazz) {
+		case ATTRIBUTE:
+			def=Definition.defineAttribute(name, type, flags);
+			attributes.put(name,def);
+			break;
+		case RPEVENT:
+			def=Definition.defineEvent(name, type, flags);
+			rpevents.put(name,def);
+			break;
+		case RPSLOT:
+			def=Definition.defineSlot(name,  type, flags);
+			rpslots.put(name,def);
+			break;
+		}
+		
+		def.setCode(getValidCode(name));
+	}
+
+	public Definition getDefinition(Definition.Type clazz, String name) {
+		Definition def=null;
+		
+		switch(clazz) {
+		case ATTRIBUTE:
+			def=attributes.get(name);
+			break;
+		case RPEVENT: 
+			def=rpevents.get(name);
+			break;
+		case RPSLOT:
+			def=rpslots.get(name);
+			break;
 		}
 
-		if (parent != null) {
-			return parent.getName(code);
+		if(def==null && parent !=null) {
+			return parent.getDefinition(clazz, name);
 		}
 
-		throw new SyntaxException(code);
+		return def;
+	}
+
+	/** Returns the code of the attribute/event/slot whose name is name for this rpclass */
+	public short getCode(Definition.Type clazz, String name) {		
+		Definition def = getDefinition(clazz, name);
+		
+		if(def!=null) {
+			return def.code;
+		}
+		
+		if(def==null && parent !=null) {
+			return parent.getCode(clazz, name);
+		}
+		
+		throw new SyntaxException(name);
 	}
 
 	/** Returns the name of the attribute whose code is code for this rpclass */
-	public String getRPSlotName(short code) throws SyntaxException {
-		for (RPSlotDesc desc : slots.values()) {
+	public String getName(Definition.Type clazz, short code) {
+		Map<String,Definition> list=null;
+
+		switch(clazz) {
+		case ATTRIBUTE:
+			list=attributes;
+			break;
+		case RPEVENT: 
+			list=rpevents;
+			break;
+		case RPSLOT:
+			list=rpslots;
+			break;
+		}
+		
+		for (Definition desc : list.values()) {
 			if (desc.code == code) {
 				return desc.name;
 			}
 		}
 
 		if (parent != null) {
-			return parent.getRPSlotName(code);
-		}
-
-		throw new SyntaxException("RPSlot " + code);
-	}
-
-	/** Returns the name of the attribute whose code is code for this rpclass */
-	public String getRPEventName(short code) throws SyntaxException {
-		for (RPEventDesc desc : events.values()) {
-			if (desc.code == code) {
-				return desc.name;
-			}
-		}
-
-		if (parent != null) {
-			return parent.getRPEventName(code);
+			return parent.getName(clazz, code);
 		}
 
 		throw new SyntaxException(code);
 	}	
-	
-	/** Returns the type of the attribute whose name is name for this rpclass */
-	public byte getType(String name) throws SyntaxException {
-		if (attributes.containsKey(name)) {
-			AttributeDesc desc = attributes.get(name);
-			return desc.type;
-		}
 
-		if (parent != null) {
-			return parent.getType(name);
-		}
-
-		throw new SyntaxException(name);
-	}
-
-	/** Returns the type of the attribute whose name is name for this rpclass */
-	public byte getRPEventType(String name) throws SyntaxException {
-		if (events.containsKey(name)) {
-			RPEventDesc desc = events.get(name);
-			return desc.type;
-		}
-
-		if (parent != null) {
-			return parent.getRPEventType(name);
-		}
-
-		throw new SyntaxException(name);
-	}
-
-	/** Returns the slot capacity of the slot */
-	public int getRPSlotCapacity(String name) throws SyntaxException {
-		if (slots.containsKey(name)) {
-			RPSlotDesc desc = slots.get(name);
-			return desc.capacity;
-		}
-
-		if (parent != null) {
-			return parent.getRPSlotCapacity(name);
-		}
-
-		throw new SyntaxException("RPSlot " + name);
-	}
-
-	/** Returns the flags of the attribute whose name is name for this rpclass */
-	public byte getFlags(String name) throws SyntaxException {
-		if (attributes.containsKey(name)) {
-			AttributeDesc desc = attributes.get(name);
-			return desc.flags;
-		}
-
-		if (parent != null) {
-			return parent.getFlags(name);
-		}
-
-		throw new SyntaxException(name);
-	}
-
-	/** Returns the flags of the attribute whose name is name for this rpclass */
-	public byte getRPSlotFlags(String name) throws SyntaxException {
-		if (slots.containsKey(name)) {
-			RPSlotDesc desc = slots.get(name);
-			return desc.flags;
-		}
-
-		if (parent != null) {
-			return parent.getRPSlotFlags(name);
-		}
-
-		throw new SyntaxException("RPSlot " + name);
-	}
-
-	/** Returns the flags of the attribute whose name is name for this rpclass */
-	public byte getRPEventFlags(String name) throws SyntaxException {
-		if (events.containsKey(name)) {
-			RPEventDesc desc = events.get(name);
-			return desc.flags;
-		}
-
-		if (parent != null) {
-			return parent.getRPEventFlags(name);
-		}
-
-		throw new SyntaxException(name);
-	}
-
-	/**
-	 * Return the visibility of the attribute whose name is name for this
-	 * rpclass
-	 */
-	public boolean isVisible(String name) {
-		byte b = getFlags(name);
-		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
-	}
-
-	/**
-	 * Returns true if the attribute is private.
-	 * @param name the name of the attribute.
-	 * @return true if it is private
-	 */
-	public boolean isPrivate(String name) {
-		byte b = getFlags(name);
-		return ((b & RPClass.PRIVATE) == RPClass.PRIVATE);
-	}
-
-	/**
-	 * Returns true if the attribute is Hidden.
-	 * @param name the name of the attribute.
-	 * @return
-	 */
-	public boolean isHidden(String name) {
-		byte b = getFlags(name);
-		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
-	}
-
-	/**
-	 * Return the storability of the attribute whose name is name for this rpclass
-	 */
-	public boolean isStorable(String name) {
-		byte b = getFlags(name);
-		return ((b & RPClass.VOLATILE) == 0);
-	}
-
-	/** Return true if the slot is visible */
-	public boolean isRPSlotVisible(String name) {
-		byte b = getRPSlotFlags(name);
-		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
-	}
-
-	/** Return true if the slot is private */
-	public boolean isRPSlotPrivate(String name) {
-		byte b = getRPSlotFlags(name);
-		return ((b & RPClass.PRIVATE) == RPClass.PRIVATE);
-	}
-
-	/** Return true if the slot is hidden */
-	public boolean isRPSlotHidden(String name) {
-		byte b = getRPSlotFlags(name);
-		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
-	}
-
-	/**
-	 * Return the storability of the attribute whose name is name for this rpclass
-	 */
-	public boolean isRPSlotStorable(String name) {
-		byte b = getRPSlotFlags(name);
-		return ((b & RPClass.VOLATILE) == 0);
-	}
-
-	/** Return true if the event is visible */
-	public boolean isRPEventVisible(String name) {
-		byte b = getRPEventFlags(name);
-		return ((b & (RPClass.HIDDEN | RPClass.PRIVATE)) == 0);
-	}
-	
-	/** Return true if the slot is hidden */
-	public boolean isRPEventHidden(String name) {
-		byte b = getRPEventFlags(name);
-		return ((b & RPClass.HIDDEN) == RPClass.HIDDEN);
-	}
-
-	/** Returns true if the attribute whose name is name exists for this rpclass */
-	public boolean hasAttribute(String name) {
-		if (attributes.containsKey(name)) {
-			return true;
-		}
-
-		if (parent != null) {
-			return parent.hasAttribute(name);
-		}
-
-		return false;
-	}
-
-	/** Returns true if the slot whose name is name exists for this rpclass */
-	public boolean hasRPSlot(String name) {
-		if (slots.containsKey(name)) {
-			return true;
-		}
-
-		if (parent != null) {
-			return parent.hasRPSlot(name);
-		}
-
-		return false;
-	}
-
-	/** Returns true if the event whose name is name exists for this rpclass */
-	public boolean hasRPEvent(String name) {
-		if (events.containsKey(name)) {
-			return true;
-		}
-
-		if (parent != null) {
-			return parent.hasRPEvent(name);
-		}
-
-		return false;
-	}
-
-	/** Returns true if the global list contains the name rpclass */
-	public static boolean hasRPClass(String name) {
-		if (rpClassList.containsKey(name)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/** Returns the name rpclass from the global list */
-	public static RPClass getRPClass(String name) throws SyntaxException {
-		if (rpClassList.containsKey(name)) {
-			return rpClassList.get(name);
-		}
-
-		throw new SyntaxException(name);
-	}
 
 	/** Serialize the object into the output */
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
@@ -553,15 +202,18 @@ public class RPClass implements marauroa.common.net.Serializable {
 			out.write(parent.name);
 		}
 
-		out.write(attributes.size());
-		for (AttributeDesc desc : attributes.values()) {
-			out.write(desc);
+		List<Map<String,Definition>> list=new LinkedList<Map<String,Definition>>();
+		list.add(attributes);
+		list.add(rpslots);
+		list.add(rpevents);
+		
+		for(Map<String,Definition> definitions: list) {
+			out.write(definitions.size());
+			for (Definition desc : definitions.values()) {
+				out.write(desc);
+			}
 		}
 
-		out.write(slots.size());
-		for (RPSlotDesc desc : slots.values()) {
-			out.write(desc);
-		}
 	}
 
 	/** Fill the object from data deserialized from the serializer */
@@ -573,16 +225,17 @@ public class RPClass implements marauroa.common.net.Serializable {
 			isA(in.readString());
 		}
 
-		int size = in.readInt();
-		for (int i = 0; i < size; ++i) {
-			AttributeDesc desc = (AttributeDesc) in.readObject(new AttributeDesc());
-			attributes.put(desc.name, desc);
-		}
-
-		size = in.readInt();
-		for (int i = 0; i < size; ++i) {
-			RPSlotDesc desc = (RPSlotDesc) in.readObject(new RPSlotDesc());
-			slots.put(desc.name, desc);
+		List<Map<String,Definition>> list=new LinkedList<Map<String,Definition>>();
+		list.add(attributes);
+		list.add(rpslots);
+		list.add(rpevents);
+		
+		for(Map<String,Definition> definitions: list) {
+			int size = in.readInt();
+			for (int i = 0; i < size; ++i) {
+				Definition desc = (Definition) in.readObject(new Definition());
+				definitions.put(desc.name, desc);
+			}
 		}
 
 		rpClassList.put(name, this);
@@ -596,5 +249,4 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/** Returns the size of the rpclass global list */
 	public static int size() {
 		return rpClassList.size();
-	}
-}
+	}}

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.27 2007/02/08 09:14:33 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.28 2007/02/09 11:47:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,10 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
-
-import org.apache.log4j.Logger;
+import marauroa.common.game.Definition.Type;
 
 /** 
  * This class hosts a list of Attributes stored as pairs String=String.
@@ -40,9 +38,6 @@ import org.apache.log4j.Logger;
  * attributes has been deleted.
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
-	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(Attributes.class);
-
 	/** This is for Delta� algorithm: added attributes */
 	private Map<String, String> added;
 
@@ -154,12 +149,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		/* If attribute to set is type we load class value from it */
 		if (attribute.equals("type") && RPClass.hasRPClass(value)) {
-			try {
-				setRPClass(RPClass.getRPClass(value));
-			} catch (RPClass.SyntaxException e) {
-				/* NOTE: Can't ever happen */
-				logger.error("cannot put attribute [" + attribute+ "] value: [" + value + "], Syntax error", e);
-			}
+			setRPClass(RPClass.getRPClass(value));
 		}
 
 		content.put(attribute, value);
@@ -374,10 +364,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		/* We need to remove hidden and private attributes to players */
 		for (String key : content.keySet()) {
-			if (level == DetailLevel.NORMAL	&& (rpClass.isVisible(key) == false)) {
+			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
+
+			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
 				// If this attribute is Hidden or private and full data is false
 				--size;
-			} else if (level != DetailLevel.FULL && rpClass.isHidden(key)) {
+			} else if (level != DetailLevel.FULL && def.isHidden()) {
 				// If this attribute is Hidden and full data is true.
 				// This way we hide some attribute to player.
 				--size;
@@ -386,71 +378,23 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		out.write(rpClass.getName());
 		out.write(size);
+		
 		for (Map.Entry<String, String> entry : content.entrySet()) {
 			String key = entry.getKey();
+			
+			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
 
-			if ((level == DetailLevel.PRIVATE && !rpClass.isHidden(key))
-					|| (rpClass.isVisible(key)) || (level == DetailLevel.FULL)) {
-				short code = -1;
+			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
+				boolean serializeKeyText=(level == DetailLevel.FULL);
 
-				try {
-					code = rpClass.getCode(key);
-				} catch (RPClass.SyntaxException e) {
-					logger.error("cannot writeObject, Attribute [" + key+ "] not found", e);
-					code = -1;
+				if (serializeKeyText) {
+					out.write((short)-1);
+					out.write(def.getName());
+				} else {
+					out.write(def.getCode());
 				}
 
-				if (level == DetailLevel.FULL) {
-					// We want to ensure that attribute text is stored.
-					// This is helpful for database storage.
-					code = -1;
-				}
-
-				out.write(code);
-
-				if (code == -1) {
-					out.write(key);
-				}
-
-				try {
-					switch (rpClass.getType(key)) {
-					case RPClass.VERY_LONG_STRING:
-						out.write(entry.getValue());
-						break;
-					case RPClass.LONG_STRING:
-						out.write65536LongString(entry.getValue());
-						break;
-					case RPClass.STRING:
-						out.write255LongString(entry.getValue());
-						break;
-					case RPClass.FLOAT:
-						out.write(Float.parseFloat(entry.getValue()));
-						break;
-					case RPClass.INT:
-						out.write(Integer.parseInt(entry.getValue()));
-						break;
-					case RPClass.SHORT:
-						out.write(Short.parseShort(entry.getValue()));
-						break;
-					case RPClass.BYTE:
-						out.write(Byte.parseByte(entry.getValue()));
-						break;
-					case RPClass.FLAG:
-						/*
-						 * It is empty because it is a flag and so, it is
-						 * already present.
-						 */
-						break;
-					default:
-						/* NOTE: Must never happen */
-						logger.fatal("got unknown attribute type "+ rpClass.getType(key));
-						break;
-					}
-				} catch (Exception e) {
-					String className = (rpClass != null ? rpClass.getName(): null);
-					logger.error("Attribute " + key + " [" + className+ "] caused an exception", e);
-					throw new java.io.IOException(e.getMessage());
-				}
+				def.serialize(entry.getValue(), out);
 			}
 		}
 	}
@@ -476,26 +420,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			if (code == -1) {
 				key = in.readString();
 			} else {
-				key = rpClass.getName(code);
+				key = rpClass.getName(Type.ATTRIBUTE, code);
 			}
-
-			if (rpClass.getType(key) == RPClass.VERY_LONG_STRING) {
-				content.put(key, in.readString());
-			} else if (rpClass.getType(key) == RPClass.LONG_STRING) {
-				content.put(key, in.read65536LongString());
-			} else if (rpClass.getType(key) == RPClass.STRING) {
-				content.put(key, in.read255LongString());
-			} else if (rpClass.getType(key) == RPClass.FLOAT) {
-				content.put(key, Float.toString(in.readFloat()));
-			} else if (rpClass.getType(key) == RPClass.INT) {
-				content.put(key, Integer.toString(in.readInt()));
-			} else if (rpClass.getType(key) == RPClass.SHORT) {
-				content.put(key, Integer.toString(in.readShort()));
-			} else if (rpClass.getType(key) == RPClass.BYTE) {
-				content.put(key, Integer.toString(in.readByte()));
-			} else if (rpClass.getType(key) == RPClass.FLAG) {
-				content.put(key, "");
-			}
+			
+			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
+			String value=def.deserialize(in);
+			content.put(key,value);
 		}
 	}
 
@@ -510,9 +440,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		while (it.hasNext()) {
 			Map.Entry<String, String> entry = it.next();
 
-			if (rpClass.isVisible(entry.getKey())
-					&& !entry.getKey().equals("id")
-					&& !entry.getKey().equals("zoneid")) {
+			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, entry.getKey());
+			if (def.isVisible()	&& !entry.getKey().equals("id")	&& !entry.getKey().equals("zoneid")) {
 				i++;
 				it.remove();
 
@@ -535,7 +464,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * Fills this attribute with the added infomation of the Delta².
 	 */
-	public void setAddedAttributes(Attributes attr) throws RPClass.SyntaxException {
+	public void setAddedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 		int i = 0;
 		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
@@ -551,7 +480,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Fills this attribute with the deleted infomation of the Delta².
-	 */	public void setDeletedAttributes(Attributes attr) throws RPClass.SyntaxException {
+	 */	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 
 		int i = 0;
