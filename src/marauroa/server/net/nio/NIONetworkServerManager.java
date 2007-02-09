@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.11 2007/02/05 18:37:43 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.12 2007/02/09 16:13:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -154,8 +154,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				logger.info(e);
 			}
 		}
-		
-		//TODO: I feel here we should ask PlayerEntryContainer for a new entry.
 	}
 
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {

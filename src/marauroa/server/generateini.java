@@ -1,4 +1,4 @@
-/* $Id: generateini.java,v 1.14 2006/12/11 12:52:34 arianne_rpg Exp $ */
+/* $Id: generateini.java,v 1.15 2007/02/09 16:13:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,10 @@ import marauroa.common.crypto.RSAKey;
 
 /**
  * generates the ini file
+ * 
  */
+//TODO: Allow games to extend this.
+//TODO: Even better, find a better way for game to generate their own .ini file.
 public class generateini {
 	/**
 	 * reads a String from the input. When no String is choosen the defaultValue

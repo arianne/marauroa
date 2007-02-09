@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.2 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.3 2007/02/09 16:13:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 public class MessageS2CTransfer extends Message {
-	/** TODO: Compress all the data that we send */
+	/** A list of the contents to transfer */
 	private List<TransferContent> contents;
 
 	/** Constructor for allowing creation of an empty message */
