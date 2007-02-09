@@ -81,4 +81,21 @@ public class TestRPClass {
 		assertTrue(def.isPrivate());
 		assertFalse(def.isStorable());
 	}
-}
+
+	@Test
+	public void testGlobalDefinitionBug() {
+		RPClass b=new RPClass("G");
+		
+		b.add(Type.ATTRIBUTE, "a", Definition.INT, Definition.STANDARD);
+		b.add(Type.ATTRIBUTE, "b", Definition.FLAG, Definition.STANDARD);
+		
+		RPClass c=new RPClass("H");
+		
+		c.add(Type.ATTRIBUTE, "a", Definition.STRING, Definition.STANDARD);
+		c.add(Type.ATTRIBUTE, "b", Definition.FLOAT, Definition.HIDDEN);
+
+		Definition defb=b.getDefinition(Type.ATTRIBUTE, "a");
+		Definition defc=c.getDefinition(Type.ATTRIBUTE, "a");
+		
+		assertFalse(defb.getType()==defc.getType());
+	}}
