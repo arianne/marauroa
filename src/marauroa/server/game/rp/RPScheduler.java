@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.5 2007/02/07 16:32:03 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,10 @@ import org.apache.log4j.Logger;
  * This class represents a scheduler to deliver action by turns, so every action
  * added to the scheduler is executed on the next turn. Each object can cast as
  * many actions as it wants.
+ * <p>
+ * We have two turns: actual and next one.<br>
+ * When we execute actions on actual turn, next turn become actual turn and the process repeat.
+ * 
  */
 public class RPScheduler {
 	/** the logger instance. */
@@ -50,9 +54,9 @@ public class RPScheduler {
 
 	/**
 	 * Add an RPAction to the scheduler for the next turn
-	 * @param object 
-	 * 
+	 * @param object the object that casted the action.
 	 * @param action the RPAction to add.
+	 * @param ruleProcessor where the actions are going to checked. 
 	 */
 	public synchronized boolean addRPAction(RPObject object, RPAction action,IRPRuleProcessor ruleProcessor) {
 		try {
@@ -77,7 +81,7 @@ public class RPScheduler {
 	/**
 	 * This method clears the actions that may exist in actual turn or the next one for the 
 	 * giver object id.
-	 * @param id object id to remove actions
+	 * @param object object to remove actions from.
 	 */
 	public synchronized void clearRPActions(RPObject object) {
 		nextTurn.remove(object);
@@ -86,8 +90,8 @@ public class RPScheduler {
 
 	/**
 	 * For each action in the actual turn, make it to be run in the
-	 * ruleProcessor Depending on the result the action needs to be added for
-	 * next turn.
+	 * ruleProcessor.
+	 * @param ruleProcessor the class that really run the action.
 	 */
 	public synchronized void visit(IRPRuleProcessor ruleProcessor) {
 		for (Map.Entry<RPObject, List<RPAction>> entry : actualTurn.entrySet()) {

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.14 2007/02/09 15:51:47 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.15 2007/02/10 18:59:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,23 @@ import org.apache.log4j.Logger;
 
 /**
  * This class is responsible for adding actions to scheduler, and to build and
- * sent perceptions
+ * sent perceptions.
+ * <p>
+ * The goal of the RP Manager is to handle the RP of the game. This means:<ul>
+ * <li>run RPActions from clients
+ * <li>manage RPWorld
+ * <li>control triggers for events
+ * <li>control AI
+ * </ul>
+ * <p>
+ * This is a HUGE task that is very complex.<br> 
+ * Hence we split that behaviour in different class:<ul>
+ * <li>IRuleProcessor will handle al the RP logic and run actions from client. This
+ *  class will also implement AI, triggers, events, rules, etc... 
+ * <li>RPWorld will handle all the world storage and management logic.
+ * </ul>
+ * 
+ * @author miguel 
  */
 public class RPServerManager extends Thread {
 	/** the logger instance. */
@@ -119,7 +135,6 @@ public class RPServerManager extends Thread {
 	 * This method loads these class from the class names passed as arguments in Configuration
 	 * 
 	 * @param conf the Configuration class
-	 * @return
 	 * @throws ClassNotFoundException 
 	 * @throws PropertyNotFoundException 
 	 * @throws NoSuchMethodException 
@@ -128,7 +143,7 @@ public class RPServerManager extends Thread {
 	 * @throws SecurityException 
 	 * @throws IllegalArgumentException 
 	 */
-	protected Configuration initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
 		// call the get() method without parameters to retrieve the singleton instance
 		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
@@ -138,7 +153,6 @@ public class RPServerManager extends Thread {
 		// call the get() method without parameters to retrieve the singleton instance
 		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		ruleProcessor.setContext(this);
-		return conf;
 	}
 
 	/** 
@@ -149,7 +163,10 @@ public class RPServerManager extends Thread {
 		return turn;
 	}
 
-	/** This method finish the thread that run the RPServerManager */
+	/** 
+	 * This method finish the thread that run the RPServerManager.
+	 * It calls RPWorld.finish method.
+	 */
 	public void finish() {
 		keepRunning = false;
 
@@ -434,7 +451,10 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** This method disconnects a player from the server. */
+	/** 
+	 * This method disconnects a player from the server.
+	 * @param object the player object that we want to disconnect from world 
+	 */
 	public void disconnectPlayer(RPObject object) {
 		/* We need to adquire the lock because this is handle by another thread */
 		playerContainer.getLock().requestWriteLock();
@@ -448,6 +468,10 @@ public class RPServerManager extends Thread {
 	}
 
 
+	/** 
+	 * This method disconnects a player from the server.
+	 * @param entry the player entry we want to use to disconnect player from world. 
+	 */
 	public void disconnect(PlayerEntry entry) {
 		/* We check that player is not already removed */
 		if(entry==null) {

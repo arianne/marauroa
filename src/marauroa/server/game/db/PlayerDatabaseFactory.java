@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.5 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.6 2007/02/10 18:59:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,9 @@ import marauroa.common.Log4J;
 
 import org.apache.log4j.Logger;
 
-/** Utility class for choosing the right player databese. */
+/** 
+ * Utility class for choosing the right player databese. 
+ */
 public class PlayerDatabaseFactory {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(PlayerDatabaseFactory.class);

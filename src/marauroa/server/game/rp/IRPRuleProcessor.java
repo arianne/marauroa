@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.5 2007/02/09 15:51:46 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,9 +23,26 @@ import marauroa.server.game.AccountResult;
 /**
  * Interface for the class that is in charge of executing actions. Implement it
  * to personalize the game
- * Important: you must implement the method
- *	 public static IRPRuleProcessor get().
- *
+ * <p>
+ * <b>
+ *   Important: you must implement the method<br>
+ *	 <i>public static IRPRuleProcessor get().</i>
+ * </b>
+ * <p>
+ * This interface is the key to extend Marauroa to match your game needs.
+ * First we have setContext that allows us complete access to RP Server Manager, so we can control
+ * some things like disconnect players or send them stuff. It is not possible to access GameServerManager
+ * or NetworkServerManager directly to avoid incorrect manipulation of data structures that could 
+ * place the server in a bad state.
+ * <p>
+ * onActionAdd, execute, beginTurn and endTurn allow you to code behaviour for each of these
+ * events. You can control whenever to allow player to add an action to system, what system should
+ * do when it recieve an action and what to do at the begin and end of each turn.<br>
+ * Perceptions are delivered just after endTurn is called.
+ * <p>
+ * Also your game can handle what to do at player entering, player leaving and decide what to do 
+ * when player timeouts because connection has been dropped for example. 
+ * 
  * TODO: Find a way to enforce this. (The static modifier is not allowed in interfaces.)
  */
 public interface IRPRuleProcessor {	
@@ -85,6 +102,7 @@ public interface IRPRuleProcessor {
 	 * Callback method called when a new player enters in the game
 	 * 
 	 * @param object the new player that enters in the game.
+	 * @return true if object has been added.
 	 */
 	public boolean onInit(RPObject object) throws RPObjectInvalidException;
 

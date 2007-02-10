@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.5 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,15 @@ import org.apache.log4j.Logger;
 
 /**
  * This class is a container of RPZones.
- * TODO: Actually it is poorly implemented the relation of neighbourghoud between zones.
+ * <p>
+ * Worlds in Marauroa can be so big, so huge, that we need to split them in to several pieces. 
+ * Each of these pieces are what we call an IRPZone.
+ * <p>
+ * So our world is made of several IRPZones that are independent of each other.
+ * <p>
+ * RPWorld provides onInit and onFinish methods that are called on server initialisation and 
+ * server finalization to define what to do with the world on these events.<br> 
+ * <b>There is no default behaviour and you need to extend this class to implement the behaviour</b>. 
  * @author miguel
  */
 public class RPWorld implements Iterable<IRPZone> {
@@ -66,22 +74,37 @@ public class RPWorld implements Iterable<IRPZone> {
 	public void onFinish() {
 	}
 
-	/** Adds a new zone to World */
+	/** 
+	 * Adds a new zone to World 
+	 * @param zone a zone to add to world.
+	 */
 	public void addRPZone(IRPZone zone) {
 		zones.put(zone.getID(), zone);
 	}
 
-	/** Returns true if world has such zone */
+	/** 
+	 * Returns true if world has such zone
+	 * @param zoneid the zone to query
+	 * @return true of the zone exists 
+	 */
 	public boolean hasRPZone(IRPZone.ID zoneid) {
 		return zones.containsKey(zoneid);
 	}
 
-	/** Returns the zone or null if it doesn't exists */
+	/** 
+	 * Returns the zone or null if it doesn't exists
+	 * @param zoneid the zone to query
+	 * @return the zone or null if it is not found.
+	 */
 	public IRPZone getRPZone(IRPZone.ID zoneid) {
 		return zones.get(zoneid);
 	}
 
-	/** Returns the zone or null if it doesn't exists */
+	/** 
+	 * Returns the zone or null if it doesn't exists
+	 * @param objectid an id of an object that is in the zone to query
+	 * @return the zone or null if it is not found.
+	 */
 	public IRPZone getRPZone(RPObject.ID objectid) {
 		return zones.get(new IRPZone.ID(objectid.getZoneID()));
 	}
@@ -101,8 +124,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 			/** A player object will have always the clientid attribute. */
 			if (object.has("clientid")) {
-				/** So if object has the attribute, we request a sync perception as we have 
-				 *  entered a new zone. */
+				/** So if object has the attribute, we request a sync perception as we have entered a new zone. */
 				PlayerEntry entry=playerContainer.get(object.getID());
 				if(entry!=null) {
 					entry.requestSync();

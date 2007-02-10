@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.4 2007/02/07 16:32:03 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.5 2007/02/10 18:59:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,11 +29,54 @@ import marauroa.common.game.RPObjectInvalidException;
 import org.apache.log4j.Logger;
 
 /**
- * default implementation of <code>IRPZone</code> 
+ * Default implementation of <code>IRPZone</code>.
  * This class implements the Delta² algorithm to save bandwidth.
- * You should extends this class.
+ * <p>
+ * The idea behind the DPA is to avoid sending ALL the objects to a client each time, 
+ * but only those that have been modified. Imagine that we have 1000 objects, and only 
+ * Object 1 and Object 505 are active objects that are modified each turn.
+ * <pre>
+The Traditional method:
+
+- Get objects that our player should see ( 1000 objects )
+- Send them to player ( 1000 objects )
+- Next turn
+- Get objects that our player should see ( 1000 objects )
+- Send them to player
+- Next turn
+...
+ * </pre>
+ * I hope you see the problem... we are sending objects that haven't changed each turn.
+ * <pre>
+The delta perception algorithm:
+
+- Get objects that our player should see ( 1000 objects )
+- Reduce the list to the modified ones ( 1000 objects )
+- Store also the objects that are not longer visible ( 0 objects )
+- Send them to player ( 1000 objects )
+- Next turn
+- Get objects that our player should see ( 1000 objects )
+- Reduce the list to the modified ones ( 2 objects )
+- Store also the objects that are not longer visible ( 0 objects )
+- Send them to player ( 2 objects )
+- Next turn
+...
+ * </pre>
+ * The next step of the delta perception algorithm is pretty clear: delta2<br>
+ * The idea is to send only what changes of the objects that changed. 
+ * This way we save even more bandwidth, making perceptions around 20% of the 
+ * original delta perception size.
+ * <p>
+ * The delta2 algorithm is based on four containers:<ul>
+ * <li>List of added objects
+ * <li>List of modified added attributes of objects
+ * <li>List of modified deleted attributes of objects
+ * <li>List of deleted objects
+ * </ul>
+ * To make perceptions work, it is important to call the modify method in RPZone,
+ * so this way objects modified are stored in the modified list.
+ * 
  * @author miguel
- *
  */
 public abstract class MarauroaRPZone implements IRPZone {
 	/** the logger instance. */
@@ -80,6 +123,8 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	/** 
 	 * This method adds an object to this zone.
+	 * @param object object to add.
+	 * @throws RPObjectInvalidException if it lacks of mandatory attributes.
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException {
 		try {
@@ -98,6 +143,8 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 * This method notify zone that the object has been modified.
 	 * You should call it only once per turn, even if inside the turn you modify
 	 * it several times.
+	 * @param object object to modify.
+	 * @throws RPObjectInvalidException if it lacks of mandatory attributes.
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
@@ -113,6 +160,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Removes the object from zone.
+	 * @param id identified of the removed object
 	 * @return the removed object
 	 */
 	public RPObject remove(RPObject.ID id) {
@@ -129,6 +177,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Returns the object which id is id.
+	 * @param id identified of the removed object
 	 * @return the object
 	 */
 	public RPObject get(RPObject.ID id) {
@@ -137,6 +186,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 	/** 
 	 * Returns true if the zone has that object.
+	 * @param id identified of the removed object
 	 * @return true if object exists.
 	 */
 	public boolean has(RPObject.ID id) {
@@ -157,7 +207,10 @@ public abstract class MarauroaRPZone implements IRPZone {
 		object.put("zoneid", zoneid.getID());
 	}
 
-	/** Iterates  over all the objects in the zone. */
+	/** 
+	 * Iterates  over all the objects in the zone. 
+	 * @return an iterator
+	 */
 	public Iterator<RPObject> iterator() {
 		return objects.values().iterator();
 	}
