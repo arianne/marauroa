@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.2 2007/02/10 20:50:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,8 +27,10 @@ import marauroa.common.net.Serializable;
  * exist in marauroa.
  */
 public class Message implements Serializable {
+	/** Invalid client identificator constant */
 	public final static byte CLIENTID_INVALID = -1;
 
+	/** Type of message */
 	public enum MessageType {
 		C2S_ACTION, 
 		C2S_CHOOSECHARACTER, 
@@ -57,21 +59,25 @@ public class Message implements Serializable {
 		S2C_CREATEACCOUNT_NACK
 	}
 
+	/** Type of the message */
 	protected MessageType type;
 
+	/** Clientid of the player that generated the message */
 	protected int clientid;
 
+	/** Timestamp about when the message was created */
 	protected int timestampMessage;
 
+	/** The socket channel that the message will use to be send or from where it was recieved */
 	protected SocketChannel channel;
 	
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
 	 * 
-	 * @param source
-	 *            The TCP/IP address associated to this message
+	 * @param type the type of the message
+	 * @param channel The TCP/IP address associated to this message
 	 */
-	public Message(MessageType type, SocketChannel channel) {
+	protected Message(MessageType type, SocketChannel channel) {
 		this.type = type;
 		this.clientid = CLIENTID_INVALID;
 		this.channel = channel;
@@ -81,7 +87,7 @@ public class Message implements Serializable {
 	/**
 	 * Sets the TCP/IP source/destination of the message
 	 * 
-	 * @param source
+	 * @param channel
 	 *            The TCP/IP socket associated to this message
 	 */
 	public void setSocketChannel(SocketChannel channel) {
@@ -97,7 +103,10 @@ public class Message implements Serializable {
 		return channel;
 	}
 	
-	/** Returns the address of the channel associated. */
+	/** 
+	 * Returns the address of the channel associated.
+	 * @return the address of the channel associated. 
+	 */
 	public InetSocketAddress getAddress() {
 		if(channel==null) {
 			return null;
@@ -137,7 +146,10 @@ public class Message implements Serializable {
 		return clientid;
 	}
 
-	/** Returns the timestamp of the message. Usually milliseconds */
+	/** 
+	 * Returns the timestamp of the message. Usually milliseconds 
+	 * @return the timestamp of the message. Usually milliseconds 
+	 */
 	public int getMessageTimestamp() {
 		return timestampMessage;
 	}
@@ -145,6 +157,7 @@ public class Message implements Serializable {
 	/**
 	 * Serialize the object into an ObjectOutput
 	 * 
+	 * @param out the output serializer.
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
@@ -158,6 +171,7 @@ public class Message implements Serializable {
 	/**
 	 * Serialize the object from an ObjectInput
 	 * 
+	 * @param in the input serializer
 	 * @exception IOException
 	 *                if the serializations fails
 	 * @exception java.lang.ClassNotFoundException

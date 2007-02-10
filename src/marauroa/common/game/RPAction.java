@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.8 2007/02/09 15:51:46 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.9 2007/02/10 20:50:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,8 +13,19 @@
 package marauroa.common.game;
 
 
-/** This class represent an Action.
- *  Please refer to "Actions Explained" document */
+/** 
+ * This class represent an Action.
+ * <p>
+ * To express the willingness of a client to do something it must send the server a 
+ * MessageC2SAction message.<br>
+ * An action is composed of several attributes. (an attribute is similar to a variable 
+ * in that it has a name and contains a value).<br>
+ * There are optional and mandatory attributes. If a mandatory attribute is not found,
+ * the message is skipped by the RPServerManager.
+ * <p>
+ * Mandatory Action Attributes are action_id and type.<br>
+ * The action_id is used to identify the action when a resulting response comes in a perception
+ */   
 public class RPAction extends Attributes {
 	/** Constructor */
 	public RPAction() {

@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.9 2007/02/09 15:51:45 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.10 2007/02/10 20:50:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,35 @@ import java.util.List;
  * It is the core implementation of the Delta^2.
  * 
  * Perception manages added, modified and removed perceptions.
- * 
+ * The basic structure for sending world updates to clients is called perceptions.
+ * There are two types of perception:<ul>
+ * <li>Sync perceptions<br>
+ * these are used to synchronize clients with the server world representation. 
+ * This is the only valid way of knowing world's status.
+ * <li>Delta perception<br> 
+ * this is used to send only the changes to the world since the last perception.
+ * </ul>
+ * Our actual Perception system is called Delta2. It is heavily attached to the Marauroa 
+ * core, so I recommend you to use it :)
+ * <p>
+ * How Perceptions and Actions work
+ * Actions are sent from the client to the server in order to make the character perform 
+ * an action. In order for the client to know the result of the action the Server needs 
+ * to send a reply to the client. How will this be done?
+ * <p>
+ * In a first attempt, we send clients back an action that was the result of their action. 
+ * However, this made the code really hard because we had to update two different things, 
+ * perceptions and actions. Instead the solution appears intuitively: Why not join action 
+ * reply and perceptions.
+ * <p>
+ * So the action reply is stored inside each object (that executed the action ) with a set 
+ * of attributes that determine the action return status and the attributes. This way of 
+ * doing replys makes it a bit harder on RPManager but it simplifys the creation of new 
+ * clients alot.
+ * <p>
+ * See RPAction reply in the RPObject documentation to know exactly what is returned. 
+ * However, keep in mind that the return result depends of each particular game.
+ *  
  * @author miguel
  */
 public class Perception {
