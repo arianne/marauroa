@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.4 2007/02/10 18:23:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,12 +16,9 @@ package marauroa.server.game.db;
 import java.sql.SQLException;
 
 /**
- * This class represents a transaction which can be used to
- * retrieve/store/change in PlayerDatabase. Different PlayerDatabase
- * implementaions may requiere different implementations of this class. This
- * dummy implementation can only be used with MemoryPlayerDatabase(which does
- * not support transactions anyway). JDBCPlayerDatabase needs an instance of
- * JDBCTransaction in order to work properly
+ * This class represents a transaction which can be used to retrieve/store/change in Database. 
+ * <p>
+ * Different Database implementaions may requiere different implementations of this class.
  */
 public class Transaction {
 	/** 

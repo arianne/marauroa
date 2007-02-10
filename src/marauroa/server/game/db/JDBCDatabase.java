@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.4 2007/02/06 20:56:46 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.5 2007/02/10 18:23:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -95,6 +95,10 @@ public class JDBCDatabase implements IDatabase {
 	
 	private static JDBCDatabase database;
 	
+	/**
+	 * Returns an unique instance of the Database.
+	 * @return an unique instance of the Database.
+	 */
 	public static JDBCDatabase getDatabase() {
 		if(database==null) {
 			Configuration conf=null;

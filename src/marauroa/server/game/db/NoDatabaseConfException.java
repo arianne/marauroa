@@ -1,4 +1,4 @@
-/* $Id: NoDatabaseConfException.java,v 1.3 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: NoDatabaseConfException.java,v 1.4 2007/02/10 18:23:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,15 @@ package marauroa.server.game.db;
 public class NoDatabaseConfException extends IllegalStateException {
 	private static final long serialVersionUID = -4145441757361358659L;
 
+	/**
+	 * Constructor
+	 * @param cause exception that generated this one.
+	 */
 	public NoDatabaseConfException(Throwable cause) {
 		super("Database configuration file not found.", cause);
 	}
 
+	/** Constructor */
 	public NoDatabaseConfException() {
 		super("Database configuration file not found.");
 	}

@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.4 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.5 2007/02/10 18:23:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,6 +33,10 @@ public class JDBCTransaction extends Transaction {
 
 	private Connection connection;
 
+	/**
+	 * Constructor
+	 * @param connection associated database connection.
+	 */
 	public JDBCTransaction(Connection connection) {
 		this.connection = connection;
 	}
@@ -56,21 +60,39 @@ public class JDBCTransaction extends Transaction {
 		return connection;
 	}
 
+	/** 
+	 * Starts a transaction 
+	 * @throws SQLException 
+	 */
 	public void begin() throws SQLException {
 			Statement stmt = connection.createStatement();
 			stmt.execute("start transaction;");
 	}
 
+	/**
+	 * commits the changes made to backstore.
+	 * 
+	 * @exception TransactionException if the underlaying backstore throws an Exception
+	 * @throws SQLException 
+	 */
 	public void commit() throws SQLException {
 			logger.debug("Commiting");
 			connection.commit();
 	}
 
+	/** 
+	 * Makes previous changes to backstore invalid 
+	 */
 	public void rollback() throws SQLException {
 			logger.debug("Rollback");
 			connection.rollback();
 	}
 
+	/**
+	 * Returns true if the transaction is still valid.
+	 * A transaction could stop to be valid because the associated connnection has been dropped.
+	 * @return true if the transaction is valid.
+	 */
 	boolean isValid() {
 		boolean valid = false;
 

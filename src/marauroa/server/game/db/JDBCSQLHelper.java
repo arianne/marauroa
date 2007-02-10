@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.3 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.4 2007/02/10 18:23:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,10 @@ public class JDBCSQLHelper {
 	private JDBCSQLHelper() {
 	}
 
+	/**
+	 * Returns an unique instance of the helper.
+	 * @return an unique instance of the helper.
+	 */
 	public static JDBCSQLHelper get() {
 		if(sqlHelper==null) {
 			sqlHelper=new JDBCSQLHelper();
