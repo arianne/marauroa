@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.7 2007/02/05 18:13:00 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.8 2007/02/10 16:52:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -121,6 +121,9 @@ class NioServer extends Thread {
 		this.selector.wakeup();
 	}
 
+	/**
+	 * Finisht this thread in a correct way.
+	 */
 	public void finish() {
 		keepRunning = false;
 		

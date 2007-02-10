@@ -1,4 +1,4 @@
-/* $Id: ChangeRequest.java,v 1.3 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: ChangeRequest.java,v 1.4 2007/02/10 16:52:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,10 +22,14 @@ public class ChangeRequest {
 	public static final int REGISTER = 1;
 	public static final int CHANGEOPS = 2;
 	
+	/** Associated socket channel for this request. */
 	public SocketChannel socket;
+	/** Type of request */
 	public int type;
+	/** Extra params */
 	public int ops;
 	
+	/** Constructor */
 	public ChangeRequest(SocketChannel socket, int type, int ops) {
 		this.socket = socket;
 		this.type = type;

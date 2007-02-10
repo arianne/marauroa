@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.5 2007/02/05 18:07:39 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.6 2007/02/10 16:52:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,11 +29,15 @@ import marauroa.server.game.db.JDBCDatabase;
 import org.apache.log4j.Logger;
 
 /**
- * The PacketValidator validates the ariving packets, (currently it can only
- * check if the address is banned, may be it will check more later)
+ * The ConnectionValidator validates the ariving connections, currently it can only
+ * check if the address is banned.
+ * <p>
+ * There are two types of bans:<ul>
+ * <li>Permanent bans<br>That are stored at database and that we offer no interface.
+ * <li>Temportal bans<br>That are not stored but that has a interface for adding, removing and querying bans.
+ * </ul>
  * 
  * FIXME: It WILL appear race conditions if it is accessed from outside the Network thread.
- * 
  */
 public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** the logger instance. */
@@ -68,8 +72,9 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * This adds a temporal ban.
 	 * @param address the address to ban
 	 * @param mask mask to apply to the address
+	 * @param time how many seconds should the ban apply.
 	 */
-	public void addBan(String address, String mask) {
+	public void addBan(String address, String mask, int time) {
 		temporalBans.add(new InetAddressMask(address,mask));
 	}
 	

@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.12 2007/02/09 16:13:28 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.13 2007/02/10 16:52:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,12 +61,18 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	/** checkes if the ip-address is banned */
 	private ConnectionValidator connectionValidator;
 
+	/** We queue here the data events. */
 	private BlockingQueue<DataEvent> queue;
 	
+	/** encoder is in charge of getting a Message and creating a stream of bytes. */
 	private Encoder encoder;
+	/** decoder takes a stream of bytes and create a message */
 	private Decoder decoder;
 
-	
+	/**
+	 * Constructor
+	 * @throws IOException if there any exception when starting the socket server.
+	 */
 	public NIONetworkServerManager() throws IOException {
 		/* init the packet validater (which can now only check if the address is banned)*/
 		connectionValidator = new ConnectionValidator();
@@ -87,6 +93,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		server.start();
 	}
 
+	/** 
+	 * Associate this object with a server.
+	 * This model a master-slave approach for managing network messages.
+	 * @param server the master server.
+	 */
 	public void setServer(NioServer server) {
 		this.server=server;		
 	}
@@ -156,6 +167,13 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 	}
 
+	/**
+	 * This method is called when new data is recieved on server from channel.
+	 * @param server the master server 
+	 * @param channel socket channel associated to the event
+	 * @param data the data recieved
+	 * @param count the amount of data recieved.
+	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		byte[] dataCopy = new byte[count];
 		System.arraycopy(data, 0, dataCopy, 0, count);
@@ -183,6 +201,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 	}
 
+	/**
+	 * This method disconnect a socket.
+	 * @param channel the socket channel to close
+	 */
 	public void disconnectClient(SocketChannel channel) {
 			try {
 			server.close(channel);
@@ -192,10 +214,20 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		
 	}
 
+	/**
+	 * Returns a instance of the connection validator {@link ConnectionValidator} so that other layers can 
+	 * manipulate it for banning IP.
+	 * 
+	 * @return the Connection validator instance
+	 */
 	public ConnectionValidator getValidator() {
 		return connectionValidator;
 	}
 	
+	/**
+	 * Register a listener for disconnection events.
+	 * @param listener a listener for disconnection events. 
+	 */
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
 		server.registerDisconnectedListener(listener);
 	}	

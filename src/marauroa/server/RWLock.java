@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.4 2006/08/20 15:40:09 wikipedian Exp $ */
+/* $Id: RWLock.java,v 1.5 2007/02/10 16:52:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,8 +18,15 @@ import org.apache.log4j.Logger;
 
 /**
  * This class is a Reader/Writters lock A Reader Writer Lock is a
- * synchronization mechanism allowing access to data. It allows multiple threads
- * to read the data simultaneously, but only one thread at a time to update it.
+ * synchronization mechanism allowing access to data.<br>
+ * It allows multiple threads to read the data simultaneously, 
+ * but only one thread at a time to update it.
+ * <p>
+ * Controlling concurrent access to a shared, mutable resource is a classic problem. 
+ * Clients request, and later release, either read-only or read-write access to the resource. 
+ * To preserve consistency but minimize waiting, one usually wishes to allow either any 
+ * number of readers or a single writer, but not both, to have access at any one time.
+ * <p>
  * While a thread is updating, no other thread can read the data. The name is
  * misleading. It may cause you to think there are two locks; in reality there
  * is a single lock that restricts both reading and writing.
@@ -34,12 +41,19 @@ public class RWLock {
 
 	private Object mutex;
 
+	/** 
+	 * Constructor
+	 */
 	public RWLock() {
 		mutex = new Object();
 		givenLocks = 0;
 		waitingWriters = 0;
 	}
 
+	/**
+	 * Request a reader lock.<br>
+	 * Readers can obtain a lock as long as there is no writer.
+	 */
 	public void requestReadLock() {
 		synchronized (mutex) {
 			try {
@@ -53,6 +67,10 @@ public class RWLock {
 		}
 	}
 
+	/**
+	 * Request a Writers lock.
+	 * A writer can obtain the lock as long as there are no more writers nor readers using the lock.
+	 */
 	public void requestWriteLock() {
 		synchronized (mutex) {
 			waitingWriters++;
@@ -68,6 +86,9 @@ public class RWLock {
 		}
 	}
 
+	/**
+	 * This releases the lock for both readers and writers.
+	 */
 	public void releaseLock() {
 		synchronized (mutex) {
 			if (givenLocks == 0) {

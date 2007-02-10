@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.18 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.19 2007/02/10 16:52:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -117,7 +117,7 @@ public class MessageFactory {
 	 * 
 	 * @param data
 	 *            the serialized data
-	 * @param source
+	 * @param channel
 	 *            the source of the message needed to build the object.
 	 * @return a message of the right class
 	 * @throws IOException
@@ -135,7 +135,7 @@ public class MessageFactory {
 	 * 
 	 * @param data
 	 *            the serialized data
-	 * @param source
+	 * @param channel
 	 *            the source of the message needed to build the object.
 	 * @param offset
 	 *            where to start reading in the data-array.

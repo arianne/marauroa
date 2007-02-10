@@ -1,4 +1,4 @@
-/* $Id: DataEvent.java,v 1.3 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: DataEvent.java,v 1.4 2007/02/10 16:52:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,9 +20,12 @@ import java.nio.channels.SocketChannel;
  *
  */
 class DataEvent {
+	/** Associated socket channel */
 	public SocketChannel channel;
+	/** Data associated to the event */
 	public byte[] data;
 	
+	/** Constructor */
 	public DataEvent(SocketChannel socket, byte[] data) {
 		this.channel = socket;
 		this.data = data;
