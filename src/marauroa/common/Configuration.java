@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.12 2007/02/06 20:56:46 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.13 2007/02/10 19:21:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,6 +71,10 @@ public class Configuration {
 		Configuration.persistence = persistence;
 	}
 
+	/**
+	 * Returns the name of the configuration file
+	 * @return the name of the configuration file
+	 */
 	public static String getConfigurationFile() {
 		return configurationFile;
 	}

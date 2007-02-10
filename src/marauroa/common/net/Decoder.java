@@ -63,6 +63,10 @@ public class Decoder {
 
 	private static Decoder instance;
 
+	/**
+	 * Returns an unique instance of decoder 
+	 * @return an unique instance of decoder 
+	 */
 	public static Decoder get() {
 		if(instance==null) {
 			instance=new Decoder();
@@ -71,7 +75,7 @@ public class Decoder {
 		return instance;
 	}
 
-	public Decoder() {
+	private Decoder() {
 		content=new HashMap<SocketChannel, MessageParts>();
 		msgFactory = MessageFactory.getFactory();
 	}

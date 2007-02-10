@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.4 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.5 2007/02/10 19:21:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,10 +17,14 @@ import java.io.OutputStream;
 
 /** This class just counts the bytes written into underlaying outputstream */
 public class ByteCounterOutputStream extends OutputStream {
-	OutputStream os;
+	private OutputStream os;
 
-	long bytesWritten;
+	private long bytesWritten;
 
+	/** 
+	 * Constructor
+	 * @param os the output stream to count.
+	 */
 	public ByteCounterOutputStream(OutputStream os) {
 		if (os == null) {
 			throw new NullPointerException("OutputStream is null!!!");
@@ -41,6 +45,10 @@ public class ByteCounterOutputStream extends OutputStream {
 		bytesWritten += b.length;
 	}
 
+	/**
+	 * Returns the amount of bytes written.
+	 * @return the amount of bytes written.
+	 */
 	public long getBytesWritten() {
 		return (bytesWritten);
 	}

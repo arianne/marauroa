@@ -6,11 +6,19 @@ public class InvalidVersionException extends Exception {
 
 	private int version;
 
+	/**
+	 * Constructor
+	 * @param version the version that caused the exception
+	 */
 	public InvalidVersionException(int version) {
 		super();
 		this.version = version;
 	}
 
+	/**
+	 * Return the version number
+	 * @return the version number
+	 */
 	public int getVersion() {
 		return version;
 	}

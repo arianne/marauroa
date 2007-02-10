@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.8 2007/02/05 18:12:59 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.9 2007/02/10 19:21:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,12 @@
  ***************************************************************************/
 package marauroa.common;
 
+/**
+ * This class stores some constants about server timeout values.
+ * 
+ * @author miguel
+ *
+ */
 public class TimeoutConf {
 	/** This indicate when we stop to wait on the socket. The lower the slower. */
 	final public static int SOCKET_TIMEOUT = 10;
