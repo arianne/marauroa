@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.common.crypto.RSAPublicKey;
 
 /**
  * This message indicate the server that the client wants to login and send the
- * needed info: username and password to login to server.
+ * needed info: server public key
  * 
  * @see marauroa.common.net.message.Message
  */
@@ -33,15 +33,12 @@ public class MessageS2CLoginSendKey extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
+	 * Constructor with a TCP/IP source/destination of the message and the public key server is using.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param username
-	 *            the username of the user that wants to login
-	 * @param password
-	 *            the plain password of the user that wants to login
+	 * @param key
+	 *            the server public key.
 	 */
 	public MessageS2CLoginSendKey(SocketChannel source, RSAPublicKey key) {
 		super(MessageType.S2C_LOGIN_SENDKEY, source);

@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.7 2007/02/10 23:17:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -109,7 +109,7 @@ public interface IRPRuleProcessor {
 	/**
 	 * Callback method called when a player exits the game
 	 * 
-	 * @param id the new player id that exits the game.
+	 * @param object the new player that exits the game.
 	 * @return true to allow player to exit
 	 */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException;
@@ -118,7 +118,7 @@ public interface IRPRuleProcessor {
 	 * Callback method called when a new player time out.
 	 * This method MUST logout the player
 	 * 
-	 * @param id the new player id that timeouts.
+	 * @param object the new player that timeouts.
 	 */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException;
 }

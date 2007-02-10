@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.6 2007/02/10 18:13:39 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.7 2007/02/10 23:17:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -182,7 +182,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	/** Add a new Player entry to the container.
 	 *  This method assigns automatically a random clientid to this player entry.
 	 *  
-	 * @param socketChannel the socket channel associated with the client
+	 * @param channel the socket channel associated with the client
 	 * @return client id resulting
 	 */
 	public PlayerEntry add(SocketChannel channel) {

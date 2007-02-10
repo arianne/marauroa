@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.35 2007/02/06 18:25:00 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.36 2007/02/10 23:17:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,7 @@ public abstract class ariannexp {
 	/**
 	 * Constructor.
 	 * 
-	 * @param logging
+	 * @param loggingProperties
 	 *            ariannexp will write to a file if this is true.
 	 */
 	public ariannexp(String loggingProperties) {

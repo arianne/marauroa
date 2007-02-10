@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.6 2007/02/10 18:59:12 arianne_rpg Exp $ */
+/* $Id: PlayerDatabaseFactory.java,v 1.7 2007/02/10 23:17:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,7 @@ public class PlayerDatabaseFactory {
 	 * This method returns an instance of PlayerDatabase choosen using the
 	 * param.
 	 * 
-	 * @param type
+	 * @param database_type
 	 *            A String containing the type of database
 	 * @return A shared instance of PlayerDatabase
 	 */

@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.3 2007/02/10 23:17:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -204,7 +204,7 @@ public interface IDatabase {
 	 * 
 	 * @param transaction
 	 * @param username
-	 * @return
+	 * @return a List of LoginEvent objects
 	 * @throws SQLException
 	 */
 	public List<LoginEvent> getLoginEvents(JDBCTransaction transaction, String username) throws SQLException;

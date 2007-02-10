@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,7 +43,7 @@ import org.apache.log4j.NDC;
  * that this client is able to see.
  * 
  * @see marauroa.common.net.message.Message
- * @see marauroa.game.RPZone
+ * @see marauroa.common.game.IRPZone
  */
 public class MessageS2CPerception extends Message {
 	/** the logger instance. */
@@ -77,16 +77,12 @@ public class MessageS2CPerception extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
+	 * Constructor with a TCP/IP source/destination of the message and perception to send.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param modifiedRPObjects
-	 *            the list of object that has been modified.
-	 * @param deletedRPObjects
-	 *            the list of object that has been deleted since the last
-	 *            perception.
+	 * @param perception
+	 *            the perception we are going to send.
 	 */
 	public MessageS2CPerception(SocketChannel source, Perception perception) {
 		super(MessageType.S2C_PERCEPTION, source);

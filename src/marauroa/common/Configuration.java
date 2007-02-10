@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.13 2007/02/10 19:21:25 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.14 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,7 +126,7 @@ public class Configuration {
 	/** 
 	 * This method returns true if the property exists. 
 	 * @param property
-	 * @return
+	 * @return true if the property exists
 	 */
 	public boolean has(String property) {
 		return properties.contains(property);

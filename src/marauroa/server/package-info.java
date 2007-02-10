@@ -1,7 +1,7 @@
 /**
  * The server package contains all the classes that are only relevant to Server handling.
  * <p>
- * {@link marauroad} contains the class that inits server.
+ * {@link marauroa.server.marauroad} contains the class that inits server.
  * This class is responsible of starting all the managers:<ul>
  * <li>Network Manager
  * <li>Game Manager

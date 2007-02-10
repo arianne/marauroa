@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.7 2007/02/10 23:17:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -207,8 +207,8 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods make a player/object to change zone.
-	 * @param oldzoneid the old zone id
-	 * @param newzoneid the new zone id
+	 * @param oldzone the old zone id
+	 * @param newzone the new zone id
 	 * @param object the object we are going to change zone to.
 	 */
 	public void changeZone(String oldzone, String newzone, RPObject object) {

@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.5 2007/02/10 18:23:03 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.6 2007/02/10 23:17:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,8 +44,7 @@ public class JDBCTransaction extends Transaction {
 	/**
 	 * Sets Connection
 	 * 
-	 * @param Connection
-	 *            a Connection
+	 * @param connection  a Connection
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;

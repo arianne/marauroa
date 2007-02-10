@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.19 2007/02/09 15:51:46 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.20 2007/02/10 23:17:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,8 +49,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	/**
 	 * Set the context where the actions are executed.
 	 *
-	 * @param zone
-	 *            The zone where actions happens.
+	 * @param rpman the RP Manager object
 	 */
 	public void setContext(RPServerManager rpman) {
 		try {
@@ -88,8 +87,6 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	 *            the id of the object owner of the actions.
 	 * @param action
 	 *            the action to execute
-	 * @return the action status, that can be Success, Fail or incomplete,
-	 *         please refer to Actions Explained for more info.
 	 */
 	public void execute(RPObject.ID id, RPAction action) {
 		try {

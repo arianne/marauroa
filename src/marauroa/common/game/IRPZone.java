@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.11 2007/02/09 15:51:45 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.12 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * Constructor
-		 * @param oid the object id
+		 * @param zid the object id
 		 */
 		public ID(String zid) {
 			id = zid;

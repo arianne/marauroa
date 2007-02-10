@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,14 +38,13 @@ public class MessageC2SCreateAccount extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
+	 * of the choosen character to create.
 	 * 
-	 * @param source
-	 *            The TCP/IP address associated to this message
-	 * @param character
-	 *            The name of the choosen character that <b>MUST</b> be one of
-	 *            the returned by the marauroa.common.net.MessageS2CCharacters
-	 * @see marauroa.common.net.message.MessageS2CCharacterList
+	 * @param source The TCP/IP address associated to this message
+	 * @param username desired username
+	 * @param password desired password
+	 * @param email email of the player
+	 * @param template a RPObject that contains attributes that will be used on the created character.
 	 */
 	public MessageC2SCreateAccount(SocketChannel source, String username,
 			String password, String email, RPObject template) {

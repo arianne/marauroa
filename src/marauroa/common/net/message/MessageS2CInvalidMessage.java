@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the server that the client wants to login and send the
- * needed info: username and password to login to server.
+ * This message indicates the client that it is running an incompatible version of stendhal.
  * 
  * @see marauroa.common.net.message.Message
  */
@@ -31,15 +30,12 @@ public class MessageS2CInvalidMessage extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
+	 * Constructor with a TCP/IP source/destination of the message and reason of the failure.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
-	 * @param username
-	 *            the username of the user that wants to login
-	 * @param password
-	 *            the plain password of the user that wants to login
+	 * @param reason
+	 *            Explains why the message is tagged as invalid.
 	 */
 	public MessageS2CInvalidMessage(SocketChannel source, String reason) {
 		super(MessageType.S2C_INVALIDMESSAGE, source);
