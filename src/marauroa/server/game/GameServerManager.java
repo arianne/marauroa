@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.45 2007/02/09 15:51:46 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.46 2007/02/10 18:13:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,6 +62,103 @@ import org.apache.log4j.Logger;
  * The GameServerManager is a active entity of the marauroa.game package, it is
  * in charge of processing all the messages and modify PlayerEntry Container
  * accordingly.
+ * <p>
+ * The logic is similar to this:
+ * <pre>
+GameManager
+  {
+  NetworkManager read Message
+
+  switch(Message type)
+    {
+    case ...;
+    }
+  }
+ * </pre>
+ * So let's define the reply to each message. First, let's clarify that the best way 
+ * of modelling this system is using finite automates, (a finite state machine) where, 
+ * based on the input, we change the state we are currently in and produce an output.
+ * <p>
+ * Login
+ * <pre>
+Process C2S Login ( STATE_BEGIN_LOGIN )
+  Precondition: The state MUST be NULL
+
+  Test if there is room for more players.
+  if there is no more room
+    {
+    reply S2C Login NACK( SERVER_FULL )
+    state = NULL
+    }
+
+  if check username, password in database is correct
+    {
+    create clientid
+    add PlayerEntry
+    notify database
+
+    reply S2C Login ACK
+
+    get characters list of the player
+    reply S2C CharacterList
+
+    state = STATE_LOGIN_COMPLETE
+    }
+  else
+    {
+    notify database
+
+    reply S2C Login NACK( LOGIN_INCORRECT )
+    state = NULL
+    }
+
+  Postcondition: The state MUST be NULL or STATE_LOGIN_COMPLETE
+    and a we have created a PlayerEntry for this player with a unique clientid.
+ * </pre>
+ * Choose Character 
+ * <pre>
+Process C2S ChooseCharacter ( STATE_LOGIN_COMPLETE )
+  Precondition: The state MUST be STATE_LOGIN_COMPLETE
+
+  if character exists in database
+    {
+    add character to Player's PlayerEntry
+    add character to game
+    reply S2C Choose Character ACK
+
+    state = STATE_GAME_BEGIN
+    }
+  else
+    {
+    reply S2C Choose Character NACK
+    state = STATE_LOGIN_COMPLETE
+    }
+
+  Postcondition: The state MUST be STATE_GAME_BEGIN and the PlayerStructure
+    should be completely filled or if the character choise was wrong the state is STATE_LOGIN_COMPLETE
+ * </pre>
+ * Logout stage
+ * <pre>
+Process C2S Logout ( STATE_GAME_END )
+  Precondition: The state can be anything but STATE_LOGIN_BEGIN
+
+  if( rpEngine allows player to logout )
+    {
+    reply S2C Logout ACK
+    state = NULL
+
+    store character in database
+    remove character from game
+    delete PlayerEntry
+    }
+  else
+    {
+    reply S2C Logout NACK
+    }
+
+  Postcondition: Either the same as the input state or the state currently in
+ * </pre>
+ * @author miguel
  */
 public final class GameServerManager extends Thread implements IDisconnectedListener {
 	/** the logger instance. */
@@ -91,7 +188,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * Constructor that initialize also the RPManager
 	 * 
+	 * @param key the server private key
 	 * @param netMan a NetworkServerManager instance.
+	 * @param rpMan a RPServerManager instance.
+	 * @throws Exception is there is any problem.
 	 */
 	public GameServerManager(RSAKey key, INetworkServerManager netMan, RPServerManager rpMan) throws Exception {
 		super("GameServerManager");
@@ -336,6 +436,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** 
 	 * This method is called by network manager when a client connection is lost
 	 * or even when the client logout correctly.
+	 * @param channel the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
 		/* We need to adquire the lock because this is handle by another thread */

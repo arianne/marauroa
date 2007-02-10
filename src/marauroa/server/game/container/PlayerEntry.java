@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.9 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.10 2007/02/10 18:13:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,7 @@ public class PlayerEntry {
 	/** A object representing the database */
 	protected static IDatabase playerDatabase;
     
+	/** Get the database object. */
     public static void initDatabase() {
     		playerDatabase=PlayerDatabaseFactory.getDatabase();
     }
@@ -52,16 +53,33 @@ public class PlayerEntry {
 		public byte[] password;
 		public RSAKey key;
 
+		/**
+		 *  Constructor
+		 * @param key the server private key
+		 * @param clientNonce the client hash
+		 * @param serverNonce the server hash
+		 */
 		public SecuredLoginInfo(RSAKey key, byte[] clientNonce, byte[] serverNonce) {
 			this.key = key;
 			this.clientNonce=clientNonce;
 			this.serverNonce=serverNonce;
 		}
 
+		/**
+		 * Verify that a player is whom he/she says it is. 
+		 * @return true if it is correct: username and password matches.
+		 * @throws SQLException if there is any database problem.
+		 */
 		public boolean verify() throws SQLException {
 			return playerDatabase.verify(playerDatabase.getTransaction(), this);
 		}
 
+		/**
+		 * Add a login event to database each time player login, even if it fails.
+		 * @param address the IP address that originated the request.
+		 * @param loginResult the result of the login action, where true is login correct and false login failed.
+		 * @throws SQLException if there is any database problem.
+		 */
 		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
     		JDBCTransaction transaction=playerDatabase.getTransaction();
     		
@@ -104,7 +122,10 @@ public class PlayerEntry {
 	/** Contains the content that is going to be transfered to client */
 	public List<TransferContent> contentToTransfer;
 	
-	
+	/**
+	 * Constructor
+	 * @param channel the socket channel
+	 */
 	public PlayerEntry(SocketChannel channel) {
 		this.channel=channel;
 		
@@ -119,7 +140,10 @@ public class PlayerEntry {
 		contentToTransfer=null;
 	}	  
 
-	/** Returns the next perception timestamp. */
+	/** 
+	 * Returns the next perception timestamp. 
+	 * @return the next perception timestamp
+	 */
 	public int getPerceptionTimestamp() {
 		return perception_counter++;
 	}
@@ -129,6 +153,11 @@ public class PlayerEntry {
 		contentToTransfer = null;
 	}
 
+	/**
+	 * Returns the named content or returns null if it is not found.
+	 * @param name name of the content to find
+	 * @return the content or null if it is not found.
+	 */
 	public TransferContent getContent(String name) {
 		if (contentToTransfer == null) {
 			return null;
@@ -145,7 +174,7 @@ public class PlayerEntry {
 
 	/**
 	 * This method stores an object at database backend
-	 * @param object the object to store
+	 * @param player the object to store
 	 * @throws SQLException 
 	 */
 	public void storeRPObject(RPObject player) throws SQLException,IOException {

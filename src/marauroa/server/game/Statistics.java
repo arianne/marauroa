@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.19 2007/02/05 17:39:42 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.20 2007/02/10 18:13:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,14 +36,16 @@ public class Statistics implements StatisticsMBean {
 
 	/**
 	 * This class is very similar to a Map<String, Long> with the extra that 
-	 * adds some comodity methods like: 
-	 * - add
-	 * - print 
+	 * adds some comodity methods like:<ul> 
+	 * <li>add
+	 * <li>print
+	 * </ul> 
 	 * @author miguel
 	 */
 	public static class Variables implements Iterable<String> {
 		private Map<String, Long> content;
 
+		/** Constructor */
 		public Variables() {
 			content = new HashMap<String, Long>();
 		}
@@ -151,6 +153,11 @@ public class Statistics implements StatisticsMBean {
 
 	private static Statistics stats;
 
+	/** 
+	 * Returns an unique instance of Statistics.
+	 * This is a singleton. 
+	 * @return a statistics object
+	 */
 	public static Statistics getStatistics() {
 		if (stats == null) {
 			stats = new Statistics();
@@ -159,16 +166,38 @@ public class Statistics implements StatisticsMBean {
 		return stats;
 	}
 
+	/** 
+	 * Sets an attribute
+	 * @param type attribute name
+	 * @param value its value
+	 */
 	public void set(String type, int value) {
 		now.put(type, value);
 		sinceStart.put(type, value);
 	}
 
+	/**
+	 * Adds an attribute to its existing 
+	 * @param type
+	 * @param value
+	 */
 	public void add(String type, int value) {
 		now.add(type, value);
 		sinceStart.add(type, value);
 	}
 
+	/** 
+	 * Return the value of an attribute since the server start.
+	 * This method is used by the Bean interface.
+	 * @param type the attribute name
+	 */
+	public long get(String type) {
+		return sinceStart == null ? -1 : sinceStart.get(type);
+	}
+
+	/** 
+	 * Print to $(webfolder)/server_stats.xml file the content of the statistics object.  
+	 */
 	public void print() {
 		try {
 			Configuration conf = Configuration.getConfiguration();
@@ -206,10 +235,6 @@ public class Statistics implements StatisticsMBean {
 		} catch (Exception e) {
 			logger.error("error while printing statistics", e);
 		}
-	}
-
-	public long get(String type) {
-		return sinceStart == null ? -1 : sinceStart.get(type);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.5 2007/02/05 17:14:53 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.6 2007/02/10 18:13:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,16 @@ import marauroa.server.RWLock;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
+ * 
  * This class implements the singleton pattern.
+ * PlayerContainer is the data structure that contains all of the information about 
+ * the players while the game is running.
+ * <p>
+ * It consists of a list of PlayerEntry objects and is heavily linked with the 
+ * database, so we can hide its complexity to GameManager. By making PlayerDatabase 
+ * hidden by PlayerContainer we achieve the illusion that managing the runtime behavior 
+ * we modify automatically the permanent one.
+
  * @author miguel
  *
  */
