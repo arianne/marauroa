@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.4 2007/02/11 16:52:52 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.5 2007/02/11 17:34:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.common.game;
 
 import java.io.IOException;
 
+import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -28,6 +29,8 @@ import marauroa.common.net.OutputSerializer;
  * be lost.
  * <p>
  * So solution to this problem is add each them as RPEvent.
+ * <p>
+ * A RPEvent is <b>always</b> linked to an RPObject.
  * 
  * @author miguel
  *
@@ -39,6 +42,9 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	/** Value of the event. */
 	private String value;
 	
+	/** This event is linked to an object: its owner. */
+	private RPObject owner;
+	
 	/**
 	 * Constructor
 	 *
@@ -48,10 +54,12 @@ public class RPEvent implements marauroa.common.net.Serializable {
 
 	/**
 	 * Constructor 
+	 * @param object 
 	 * @param name name of the event
 	 * @param value value of the event
 	 */
-	public RPEvent(String name, String value) {
+	public RPEvent(RPObject object, String name, String value) {
+		owner=object;
 		put(name,value);
 	}
 	
@@ -97,21 +105,52 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		return Double.parseDouble(value);
 	}
 
-	/** 
-	 * Deserialize
-	 * @param in the input serializer
-	 */
-	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
-		name=in.read255LongString();
-		value=in.read255LongString();
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+		writeObject(out, DetailLevel.NORMAL);
 	}
 
 	/** 
 	 * Serialize
 	 * @param the output serializer. 
 	 */
-	public void writeObject(OutputSerializer out) throws IOException {
-		out.write255LongString(name);
+	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
+		RPClass rpClass = owner.getRPClass();
+		
+		short code=-1;
+		try {
+			code=rpClass.getCode(DefinitionClass.RPEVENT, name);
+		} catch(SyntaxException e) {
+			code=-1;
+		}
+
+		if (level == DetailLevel.FULL) {
+			// We want to ensure that event text is stored.
+			code = -1;
+		}
+
+		out.write(code);
+
+		if (code == -1) {
+			out.write255LongString(name);
+		}
+
 		out.write255LongString(value);
 	}
+
+	/** 
+	 * Deserialize
+	 * @param in the input serializer
+	 */
+	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
+		short code = in.readShort();
+		if (code == -1) {
+			name = in.readString();
+		} else {
+			RPClass rpClass = owner.getRPClass();
+			name=rpClass.getName(DefinitionClass.RPEVENT, code);
+		}
+
+		value=in.read255LongString();
+	}
+
 }

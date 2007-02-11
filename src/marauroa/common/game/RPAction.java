@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.9 2007/02/10 20:50:32 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.10 2007/02/11 17:34:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,8 +29,7 @@ package marauroa.common.game;
 public class RPAction extends Attributes {
 	/** Constructor */
 	public RPAction() {
-		// TODO: Default RP Class
-		super(null);
+		super(RPClass.getBaseRPActionDefault());
 	}
 
 	@Override

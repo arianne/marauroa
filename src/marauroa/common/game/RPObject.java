@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.27 2007/02/11 16:36:54 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.28 2007/02/11 17:34:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class RPObject extends Attributes {
 
 	/** Constructor */
 	public RPObject() {
-		super(null);
+		super(RPClass.getBaseRPObjectDefault());
 
 		slots = new LinkedList<RPSlot>();
 		added = new LinkedList<RPSlot>();
@@ -234,7 +234,7 @@ public class RPObject extends Attributes {
 	 * @param value its value
 	 */
 	public void addEvent(String name, String value) {
-		events.add(new RPEvent(name, value));
+		events.add(new RPEvent(this, name, value));
 	}
 	
 	/**
@@ -315,7 +315,7 @@ public class RPObject extends Attributes {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getKey());
 			
 			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
-				event.writeObject(out);
+				event.writeObject(out, level);
 			}
 		}
 	}
