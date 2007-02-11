@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.28 2007/02/11 17:34:23 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.29 2007/02/11 17:47:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -539,6 +539,10 @@ public class RPObject extends Attributes {
 			object.slots.add(copied);
 		}
 
+		for (RPEvent event : events) {
+			object.addEvent(event.getKey(), event.getValue());
+		}
+
 		for (RPSlot slot : added) {
 			RPSlot copied = (RPSlot) slot.clone();
 			copied.setOwner(object);
@@ -560,13 +564,14 @@ public class RPObject extends Attributes {
 		container = object.container;
 		containerSlot = object.containerSlot;
 
-		try {
-			for (RPSlot slot : object.slots) {
-				addSlot((RPSlot) slot.clone());
-			}
-		} catch (SlotAlreadyAddedException e) {
-			// Should never happen
+		for (RPSlot slot : object.slots) {
+			addSlot((RPSlot) slot.clone());
 		}
+
+		for (RPEvent event : object.events) {
+			addEvent(event.getKey(), event.getValue());
+		}
+
 	}
 
 	/** Returns true if two objects are exactly equal */
@@ -574,7 +579,7 @@ public class RPObject extends Attributes {
 	public boolean equals(Object obj) {
 		if(obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots);
+			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events);
 		} else {
 			return false;
 		}		
