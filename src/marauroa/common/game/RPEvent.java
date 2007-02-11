@@ -5,43 +5,99 @@ import java.io.IOException;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
+/**
+ * This class implements an event.
+ * It is something that happens along the turn duration and it is hard to represent as an attribute 
+ * because it just happen and disappear after that or because it happens several times per turn.
+ * <p>
+ * One interesting example of this would be private chat.<br>
+ * When you write private messages, it is added inside the target player, but you can't represent that
+ * as an attribute because it two private chat messages happen at the same time, one of them would 
+ * be lost.
+ * <p>
+ * So solution to this problem is add each them as RPEvent.
+ * 
+ * @author miguel
+ *
+ */
 public class RPEvent implements marauroa.common.net.Serializable {
+	/** Name of the event */
 	private String name;
+	
+	/** Value of the event. */
 	private String value;
 	
+	/**
+	 * Constructor
+	 *
+	 */
 	public RPEvent() {		
 	}
 
+	/**
+	 * Constructor 
+	 * @param name name of the event
+	 * @param value value of the event
+	 */
 	public RPEvent(String name, String value) {
 		put(name,value);
 	}
 	
+	/**
+	 * Sets the value of the event
+	 * @param name name of the event
+	 * @param value this event value.
+	 */
 	public void put(String name, String value) {
 		this.name=name;
 		this.value=value;
 	}
 	
+	/**
+	 * Return the name of the event 
+	 * @return name of the event
+	 */
 	public String getKey() {
 		return name;
 	}
 	
+	/**
+	 * Return the value of the event.
+	 * @return value of the event as a String
+	 */
 	public String getValue() {
 		return value;
 	}
 	
+	/**
+	 * Returns the value of the event as a integer
+	 * @return the integer value or an exception if the number is not convertable.
+	 */
 	public int getInt() {
 		return Integer.parseInt(value);
 	}
 
-	public float getFloat() {
-		return Float.parseFloat(value);
+	/**
+	 * Returns the value of the event as a double
+	 * @return the double value or an exception if the number is not convertable.
+	 */
+	public double getDouble() {
+		return Double.parseDouble(value);
 	}
 
+	/** 
+	 * Deserialize
+	 * @param in the input serializer
+	 */
 	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
 		name=in.read255LongString();
 		value=in.read255LongString();
 	}
 
+	/** 
+	 * Serialize
+	 * @param the output serializer. 
+	 */
 	public void writeObject(OutputSerializer out) throws IOException {
 		out.write255LongString(name);
 		out.write255LongString(value);
