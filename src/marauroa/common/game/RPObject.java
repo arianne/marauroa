@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.29 2007/02/11 17:47:01 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.30 2007/02/11 23:25:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,22 +21,40 @@ import java.util.List;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
-/** This class implements an Object. 
- * Please refer to "Objects Explained" document */
+/** 
+ * This class implements an Object.
+ * <p>
+ * An object is the basic abstraction at marauroa. Players are objects, creatures are objects,
+ * the maze at pacman is an object, each gladiator is an object... everything is an object.<br>
+ * But don't get confused with all the object keyword usage outthere. An object is anything 
+ * that can be though as an object ( physical or logical thing ).
+ * <p>
+ * Objects are stored at IRPZones.
+ * <p>
+ * Objects contains:<ul>
+ * <li>RPSlots
+ * <li>RPEvents
+ * </ul> 
+ */ 
+
 public class RPObject extends Attributes {
+	/** added and modified slots, used at Delta^2 */
 	private List<RPSlot> added;
+	/** delete slots, used at Delta^2 */
 	private List<RPSlot> deleted;
 
-	/** a List<RPSlot> of slots */
+	/** a list of slots that this object contains */
 	private List<RPSlot> slots;
+	/** a list of events that this object contains */
 	private List<RPEvent> events;
 
 	/** Which object contains this one. */
 	private RPObject container;
 
-	/** In which slot are we contained */
+	/** In which slot are this object contained */
 	private RPSlot containerSlot;
 
+	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
 	/** Constructor */
@@ -50,7 +68,10 @@ public class RPObject extends Attributes {
 		container = null;		
 	}
 
-	/** Copy constructor */
+	/** 
+	 * Copy constructor 
+	 * @param object the object that is going to be copied. 
+	 */
 	public RPObject(RPObject object) {
 		this();
 		fill(object);
@@ -66,50 +87,80 @@ public class RPObject extends Attributes {
 		setID(id);
 	}
 
-	/** Returns an ID object representing the id of this object */
+	/** 
+	 * Returns an ID object representing the id of this object
+	 * @return the identificator of the object 
+	 */
 	public RPObject.ID getID() {
 		return new ID(this);
 	}
 
-	/** Set the attributes that define the ID of the object */
+	/** 
+	 * Set the attributes that define the ID of the object
+	 * @param id the object id to set for this object 
+	 */
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
 		put("zoneid", id.getZoneID());
 	}
 
-	/** Returns true if the object is empty */
+	/** 
+	 * Returns true if the object is empty
+	 * @return true if the object lacks of any attribute, slots or events. 
+	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty();
+		return super.isEmpty() && slots.isEmpty() && events.isEmpty();
 	}
 
-	/** Returns true if this object is contained inside another one. */
+	/** 
+	 * Returns true if this object is contained inside another one.
+	 * @return true if this object is contained inside another one. 
+	 */
 	public boolean isContained() {
 		return container != null;
 	}
 
-	/** This make this object to be contained in the slot of container. */
+	/** 
+	 * This make this object to be contained in the slot of container.
+	 * @param object the object that is going to contain this object.
+	 * @param slot the slot of the object that contains this object. 
+	 */
 	public void setContainer(RPObject object, RPSlot slot)
 	{
 		container = object;
 		containerSlot = slot;
 	}
 
-	/** Returns the container where this object is */
+	/** 
+	 * Returns the container where this object is
+	 * @return the container of this object. 
+	 */
 	public RPObject getContainer() {
 		return container;
 	}
 
-	/** Returns the slot where this object is contained */
+	/** 
+	 * Returns the slot where this object is contained
+	 * @param the slot of the object that contains this object. 
+	 */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
 	}
 
+	/**
+	 * Clean delta^2 information about added and deleted.
+	 * It is called by Marauroa, don't use :)
+	 */
 	public void resetAddedAndDeleted() {
 		resetAddedAndDeletedAttributes();
 		resetAddedAndDeletedRPSlot();
 	}
 
+	/**
+	 * Clean delta^2 data in the slots.
+	 * It is called by Marauroa, don't use :)
+	 */
 	public void resetAddedAndDeletedRPSlot() {
 		for (RPSlot slot : slots) {
 			slot.resetAddedAndDeletedRPObjects();
@@ -122,6 +173,11 @@ public class RPObject extends Attributes {
 		deleted.clear();
 	}
 
+	/**
+	 * Set added objects in slots for this object and fill object passed as param.	 * 
+	 * It is called by Marauroa, don't use :)
+	 * @param object the object to fill with added data.
+	 */
 	public void setAddedRPSlot(RPObject object) {
 		for (RPSlot slot : object.added) {
 			RPSlot copied = (RPSlot) slot.clone();
@@ -130,6 +186,11 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	/**
+	 * Set deleted objects in slots for this object and fill object passed as param.	 * 
+	 * It is called by Marauroa, don't use :)
+	 * @param object the object to fill with deleted data.
+	 */
 	public void setDeletedRPSlot(RPObject object) {
 		for (RPSlot slot : object.deleted) {
 			RPSlot copied = new RPSlot(slot.getName());
@@ -141,8 +202,7 @@ public class RPObject extends Attributes {
 	/**
 	 * This method returns true if the object has that slot
 	 * 
-	 * @param name
-	 *            the name of the slot
+	 * @param name the name of the slot
 	 * @return true if slot exists or false otherwise
 	 */
 	public boolean hasSlot(String name) {
@@ -157,57 +217,61 @@ public class RPObject extends Attributes {
 	/**
 	 * This method add the slot to the object
 	 * 
-	 * @param slot
-	 *            the RPSlot object
-	 * @throws SlotAlreadyAddedException
-	 *             if the slot already exists
+	 * @param slot the RPSlot object
+	 * @throws SlotAlreadyAddedException if the slot already exists
 	 */
 	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
-		if (!hasSlot(slot.getName())) {
-			slot.setOwner(this);
-			
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			slot.setCapacity(def.getCapacity());
-
-			added.add(slot);
-			slots.add(slot);
-		} else {
+		if (hasSlot(slot.getName())) {
 			throw new SlotAlreadyAddedException(slot.getName());
 		}
+
+		/** First we set the slot owner, so that slot can get access to RPClass */
+		slot.setOwner(this);
+
+		/** Obtain RPClass to fill slot capacity. */
+		Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+		slot.setCapacity(def.getCapacity());
+		slots.add(slot);
+
+		/** Notify delta^2 about the addition of this slot */ 
+		added.add(slot);			
 	}
 
-	/** This method is used to remove an slot of the object */
-	public RPSlot removeSlot(String name) throws NoSlotFoundException {
-		if (hasSlot(name)) {
-			for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
-				RPSlot slot = it.next();
-				if (name.equals(slot.getName())) {
-					deleted.add(slot);
-					it.remove();
-					return slot;
-				}
+	/** 
+	 * This method is used to remove an slot of the object
+	 * @param name the name of the slot 
+	 * @return the removed slot if it is found or null if it is not found.
+	 */
+	public RPSlot removeSlot(String name) {
+		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
+			RPSlot slot = it.next();
+			if (name.equals(slot.getName())) {
+				/** Notify delta^2 about the removal of this slot. */
+				deleted.add(slot);
+				
+				/* Remove and return it */
+				it.remove();
+				return slot;
 			}
 		}
 
-		throw new NoSlotFoundException(name);
+		return null;
 	}
 
 	/**
 	 * This method returns a slot whose name is name
 	 * 
-	 * @param name
-	 *            the name of the slot
-	 * @return the slot
-	 * @throws NoSlotFoundException
-	 *             if the slot is not found
+	 * @param name the name of the slot
+	 * @return the slot or null if the slot is not found
 	 */
-	public RPSlot getSlot(String name) throws NoSlotFoundException {
+	public RPSlot getSlot(String name) {
 		for (RPSlot slot : slots) {
 			if (name.equals(slot.getName())) {
 				return slot;
 			}
 		}
-		throw new NoSlotFoundException(name);
+		
+		return null;
 	}
 
 	/**
@@ -260,6 +324,12 @@ public class RPObject extends Attributes {
 		for (RPSlot slot : slots) {
 			tmp.append("[" + slot.toString() + "]");
 		}
+
+		tmp.append(" and RPEvents ");
+		for (RPEvent event : events) {
+			tmp.append("[" + event.toString() + "]");
+		}
+		
 		return tmp.toString();
 	}
 
@@ -295,7 +365,7 @@ public class RPObject extends Attributes {
 			}
 		}
 
-		// The same now for events... isn't it claiming for a refactoring? :)
+		// TODO: The same now for events... isn't it claiming for a refactoring? :)
 		size = events.size();
 		for (RPEvent event : events) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getKey());
@@ -321,8 +391,7 @@ public class RPObject extends Attributes {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws java.io.IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
 
 		int size = in.readInt();
@@ -359,7 +428,9 @@ public class RPObject extends Attributes {
 		}
 	}
 
-	/** Returns the size of the object */
+	/** 
+	 * Returns the number of attributes this object is made of. 
+	 */
 	@Override
 	public int size() {
 		try {
@@ -523,7 +594,10 @@ public class RPObject extends Attributes {
 		return this;
 	}
 
-	/** Create a real copy of the object */
+	/** 
+	 * Create a real copy of the object
+	 * @return a copy of this object. 
+	 */
 	@Override
 	public Object clone() {
 		RPObject object = new RPObject();
@@ -564,6 +638,7 @@ public class RPObject extends Attributes {
 		container = object.container;
 		containerSlot = object.containerSlot;
 
+		/** TODO: Check if it is expected to modify Delta^2 information by adding the slot */
 		for (RPSlot slot : object.slots) {
 			addSlot((RPSlot) slot.clone());
 		}
