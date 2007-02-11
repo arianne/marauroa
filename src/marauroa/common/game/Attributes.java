@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.30 2007/02/09 15:51:45 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.31 2007/02/11 15:44:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -390,7 +390,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
 
 			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
-				boolean serializeKeyText=(level == DetailLevel.FULL);
+				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1); 
 
 				if (serializeKeyText) {
 					out.write((short)-1);

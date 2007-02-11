@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.3 2007/02/09 15:51:45 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.4 2007/02/11 15:44:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -249,6 +249,41 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
+	 * Sets the value name
+	 * @param name definition name
+	 */
+	public void setName(String name) {
+		this.name=name;
+		
+	}
+
+	/**
+	 * Sets the type of the definition: BYTE, INT, SHORT, STRING, ...
+	 * @param type the type of the definition
+	 */
+	public void setType(byte type) {
+		this.type=type;		
+	}
+
+	/**
+	 * Sets the slot capacity.
+	 * Use 0 for non limited.
+	 * 
+	 * @param capacity its capacity.
+	 */
+	public void setCapacity(byte capacity) {
+		this.capacity=capacity;		
+	}
+
+	/**
+	 * Set the definition flags: VOLATILE, HIDDEN, PRIVATE, ...
+	 * @param flags the flags to set.
+	 */
+	public void setFlags(byte flags) {
+		this.flags=flags;		
+	}
+
+	/**
 	 * Returns if this definition is visible ( it is not hidden nor private )
 	 * @return true if it is visible 
 	 */
@@ -369,4 +404,5 @@ public class Definition implements marauroa.common.net.Serializable {
 		type = in.readByte();
 		flags = in.readByte();
 	}
+
 }

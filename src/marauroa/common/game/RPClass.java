@@ -332,4 +332,53 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public static int size() {
 		return rpClassList.size();
 	}
+
+	
+	/** TODO: Consider removing default empty class. */
+	static RPClass defaultRPClass;
+
+	/**
+	 * Returns a default rpclass for lazy developers. You won't get any
+	 * advantages on the engine by using it.
+	 */
+	public static RPClass getBaseRPObjectDefault() {
+		if (defaultRPClass == null) {
+			defaultRPClass = new RPClass("") {
+				@Override
+				public short getCode(Definition.Type clazz, String name) {
+					return -1;
+				}
+
+				@Override
+				public Definition getDefinition(Definition.Type clazz, String name) {
+					Definition def=new Definition(clazz);
+
+					def.setCode((short) -1);
+					def.setName(name);
+					def.setType(Definition.STRING);
+					def.setFlags(Definition.STANDARD);
+
+					if(name.charAt(0) == '!') {
+						def.setFlags(Definition.PRIVATE);
+					} 
+					
+					return def;
+				}
+			};
+		}
+
+		return defaultRPClass;
+	}
+
+	/**
+	 * Returns a default rpclass for lazy developers. You won't get any
+	 * advantages on the engine by using it.
+	 */
+	public static RPClass getBaseRPActionDefault() {
+		if (defaultRPClass == null) {
+			defaultRPClass = getBaseRPObjectDefault();
+		}
+
+		return defaultRPClass;
+	}
 }
