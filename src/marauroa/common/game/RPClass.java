@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 
 /**
@@ -60,11 +61,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 		this.name=name;
 
 		/* Any class stores these attributes. */
-		add(Type.ATTRIBUTE, "id", Definition.INT, Definition.STANDARD);
-		add(Type.ATTRIBUTE, "clientid", Definition.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
-		add(Type.ATTRIBUTE, "zoneid", Definition.STRING, Definition.HIDDEN);
-		add(Type.ATTRIBUTE, "#db_id", Definition.INT, Definition.HIDDEN);
-		add(Type.ATTRIBUTE, "type", Definition.STRING, Definition.STANDARD);
+		add(DefinitionClass.ATTRIBUTE, "id", Type.INT, Definition.STANDARD);
+		add(DefinitionClass.ATTRIBUTE, "clientid", Type.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
+		add(DefinitionClass.ATTRIBUTE, "zoneid", Type.STRING, Definition.HIDDEN);
+		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
+		add(DefinitionClass.ATTRIBUTE, "type", Type.STRING, Definition.STANDARD);
 
 		rpClassList.put(name, this);
 	}
@@ -152,7 +153,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param type type or capacity if it is an slot
 	 * @param flags like visibility, storability, etc...
 	 */
-	public void add(Definition.Type clazz, String name, byte type, byte flags) {
+	public void add(Definition.DefinitionClass clazz, String name, Type type, byte flags) {
 		Definition def=null;
 		switch(clazz) {
 		case ATTRIBUTE:
@@ -163,12 +164,27 @@ public class RPClass implements marauroa.common.net.Serializable {
 			def=Definition.defineEvent(name, type, flags);
 			rpevents.put(name,def);
 			break;
-		case RPSLOT:
-			def=Definition.defineSlot(name,  type, flags);
-			rpslots.put(name,def);
-			break;
+		default:
+			throw new SyntaxException(name);
+		}
+		def.setCode(getValidCode(name));
+	}
+
+	/**
+	 * Adds a definition of an attribute, event or slot with the given type and flags.
+	 * @param clazz type of definition ( attribute, event or slot ) 
+	 * @param name name of the definition
+	 * @param type type or capacity if it is an slot
+	 * @param flags like visibility, storability, etc...
+	 */
+	public void add(Definition.DefinitionClass clazz, String name, byte capacity, byte flags) {
+		if(clazz!=DefinitionClass.RPSLOT) {
+			throw new SyntaxException(name);
 		}
 		
+		Definition def=Definition.defineSlot(name, capacity, flags);
+		rpslots.put(name,def);
+
 		def.setCode(getValidCode(name));
 	}
 
@@ -179,7 +195,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param name name of the definition
 	 * @return this definition object or null if it is not found
 	 */
-	public Definition getDefinition(Definition.Type clazz, String name) {
+	public Definition getDefinition(Definition.DefinitionClass clazz, String name) {
 		Definition def=null;
 		
 		switch(clazz) {
@@ -209,7 +225,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @return definition code
 	 * @throws SyntaxException if the definition is not found. 
 	 */
-	public short getCode(Definition.Type clazz, String name) {		
+	public short getCode(Definition.DefinitionClass clazz, String name) {		
 		Definition def = getDefinition(clazz, name);
 		
 		if(def!=null) {
@@ -230,7 +246,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @return name of the definition
 	 * @throws SyntaxException if the definition is not found.
 	 */ 
-	public String getName(Definition.Type clazz, short code) {
+	public String getName(Definition.DefinitionClass clazz, short code) {
 		Map<String,Definition> list=null;
 
 		switch(clazz) {
@@ -333,8 +349,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return rpClassList.size();
 	}
 
-	
-	/** TODO: Consider removing default empty class. */
+
+	/** 
+	 * We need a default class for some cases where attributes used are not known
+	 * at compile time.
+	 */
 	static RPClass defaultRPClass;
 
 	/**
@@ -345,17 +364,17 @@ public class RPClass implements marauroa.common.net.Serializable {
 		if (defaultRPClass == null) {
 			defaultRPClass = new RPClass("") {
 				@Override
-				public short getCode(Definition.Type clazz, String name) {
+				public short getCode(Definition.DefinitionClass clazz, String name) {
 					return -1;
 				}
 
 				@Override
-				public Definition getDefinition(Definition.Type clazz, String name) {
+				public Definition getDefinition(Definition.DefinitionClass clazz, String name) {
 					Definition def=new Definition(clazz);
 
 					def.setCode((short) -1);
 					def.setName(name);
-					def.setType(Definition.STRING);
+					def.setType(Type.STRING);
 					def.setFlags(Definition.STANDARD);
 
 					if(name.charAt(0) == '!') {
@@ -380,5 +399,20 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 
 		return defaultRPClass;
+	}
+	
+	@Override
+	public boolean equals(Object ot) {
+		if(ot==null || !(ot instanceof RPClass)) {
+			return false;
+		}
+	
+		RPClass otc=(RPClass)ot;
+		
+		return name.equals(otc.name) &&
+		  (parent==otc.parent || parent.equals(otc.parent)) &&
+		  attributes.equals(attributes) &&
+		  rpevents.equals(otc.rpevents) &&
+		  rpslots.equals(otc.rpslots);		  
 	}
 }

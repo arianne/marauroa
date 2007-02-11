@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.31 2007/02/11 15:44:27 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.32 2007/02/11 16:36:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import marauroa.common.TimeoutConf;
-import marauroa.common.game.Definition.Type;
+import marauroa.common.game.Definition.DefinitionClass;
 
 /** 
  * This class hosts a list of Attributes stored as pairs String=String.
@@ -369,7 +369,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		/* We need to remove hidden and private attributes to players */
 		for (String key : content.keySet()) {
-			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
+			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 
 			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
 				// If this attribute is Hidden or private and full data is false
@@ -387,7 +387,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		for (Map.Entry<String, String> entry : content.entrySet()) {
 			String key = entry.getKey();
 			
-			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
+			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 
 			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
 				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1); 
@@ -425,10 +425,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			if (code == -1) {
 				key = in.readString();
 			} else {
-				key = rpClass.getName(Type.ATTRIBUTE, code);
+				key = rpClass.getName(DefinitionClass.ATTRIBUTE, code);
 			}
 			
-			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, key);
+			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 			String value=def.deserialize(in);
 			content.put(key,value);
 		}
@@ -445,7 +445,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		while (it.hasNext()) {
 			Map.Entry<String, String> entry = it.next();
 
-			Definition def=rpClass.getDefinition(Type.ATTRIBUTE, entry.getKey());
+			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
 			if (def.isVisible()	&& !entry.getKey().equals("id")	&& !entry.getKey().equals("zoneid")) {
 				i++;
 				it.remove();

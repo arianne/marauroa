@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.31 2007/02/09 11:47:48 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.32 2007/02/11 16:36:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.TimeoutConf;
-import marauroa.common.game.Definition.Type;
+import marauroa.common.game.Definition.DefinitionClass;
 
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject> {
@@ -382,7 +382,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		RPClass rpClass = owner.getRPClass();
 		try {
-			code=rpClass.getCode(Type.RPSLOT, name);
+			code=rpClass.getCode(DefinitionClass.RPSLOT, name);
 		} catch(SyntaxException e) {
 			code=-1;
 		}
@@ -412,7 +412,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			name = in.readString();
 		} else {
 			RPClass rpClass = owner.getRPClass();
-			name=rpClass.getName(Type.RPSLOT, code);
+			name=rpClass.getName(DefinitionClass.RPSLOT, code);
 		}
 
 		capacity = in.readByte();

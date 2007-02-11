@@ -1,10 +1,19 @@
 package marauroa.common.game.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import marauroa.common.game.Definition;
 import marauroa.common.game.RPClass;
+import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 import org.junit.Test;
 
@@ -43,12 +52,12 @@ public class TestRPClass {
 		RPClass b=new RPClass("E");
 		assertEquals(b, RPClass.getRPClass("E"));
 		
-		b.add(Type.ATTRIBUTE, "a", Definition.INT, Definition.STANDARD);
-		b.add(Type.ATTRIBUTE, "b", Definition.FLAG, Definition.STANDARD);
-		b.add(Type.ATTRIBUTE, "c", Definition.STRING, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, Definition.STANDARD);
 		
-		short code=b.getCode(Type.ATTRIBUTE, "a");
-		assertEquals("a",b.getName(Type.ATTRIBUTE, code));
+		short code=b.getCode(DefinitionClass.ATTRIBUTE, "a");
+		assertEquals("a",b.getName(DefinitionClass.ATTRIBUTE, code));
 	}
 
 	@Test
@@ -56,26 +65,26 @@ public class TestRPClass {
 		RPClass b=new RPClass("F");
 		assertEquals(b, RPClass.getRPClass("F"));
 
-		b.add(Type.ATTRIBUTE, "a", Definition.INT, Definition.STANDARD);
-		b.add(Type.ATTRIBUTE, "b", Definition.FLAG, Definition.HIDDEN);
-		b.add(Type.ATTRIBUTE, "c", Definition.STRING, (byte)(Definition.PRIVATE|Definition.VOLATILE));
+		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
+		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte)(Definition.PRIVATE|Definition.VOLATILE));
 
-		Definition def=b.getDefinition(Type.ATTRIBUTE, "a");
-		assertEquals(Definition.INT,def.getType());
+		Definition def=b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		assertEquals(Type.INT,def.getType());
 		assertTrue(def.isVisible());
 		assertFalse(def.isHidden());
 		assertFalse(def.isPrivate());
 		assertTrue(def.isStorable());
 
-		def=b.getDefinition(Type.ATTRIBUTE, "b");
-		assertEquals(Definition.FLAG,def.getType());
+		def=b.getDefinition(DefinitionClass.ATTRIBUTE, "b");
+		assertEquals(Type.FLAG,def.getType());
 		assertFalse(def.isVisible());
 		assertTrue(def.isHidden());
 		assertFalse(def.isPrivate());
 		assertTrue(def.isStorable());
 
-		def=b.getDefinition(Type.ATTRIBUTE, "c");
-		assertEquals(Definition.STRING,def.getType());
+		def=b.getDefinition(DefinitionClass.ATTRIBUTE, "c");
+		assertEquals(Type.STRING,def.getType());
 		assertFalse(def.isVisible());
 		assertFalse(def.isHidden());
 		assertTrue(def.isPrivate());
@@ -86,16 +95,40 @@ public class TestRPClass {
 	public void testGlobalDefinitionBug() {
 		RPClass b=new RPClass("G");
 		
-		b.add(Type.ATTRIBUTE, "a", Definition.INT, Definition.STANDARD);
-		b.add(Type.ATTRIBUTE, "b", Definition.FLAG, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
 		
 		RPClass c=new RPClass("H");
 		
-		c.add(Type.ATTRIBUTE, "a", Definition.STRING, Definition.STANDARD);
-		c.add(Type.ATTRIBUTE, "b", Definition.FLOAT, Definition.HIDDEN);
+		c.add(DefinitionClass.ATTRIBUTE, "a", Type.STRING, Definition.STANDARD);
+		c.add(DefinitionClass.ATTRIBUTE, "b", Type.FLOAT, Definition.HIDDEN);
 
-		Definition defb=b.getDefinition(Type.ATTRIBUTE, "a");
-		Definition defc=c.getDefinition(Type.ATTRIBUTE, "a");
+		Definition defb=b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		Definition defc=c.getDefinition(DefinitionClass.ATTRIBUTE, "a");
 		
 		assertFalse(defb.getType()==defc.getType());
-	}}
+	}
+
+	@Test
+	public void testSerialization() throws IOException, ClassNotFoundException {
+		RPClass expected=new RPClass("I");
+		assertEquals(expected, RPClass.getRPClass("I"));
+
+		expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
+		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte)(Definition.PRIVATE|Definition.VOLATILE));			
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+		
+		os.write(expected);
+		
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+		
+		RPClass result=(RPClass) is.readObject(new RPClass());
+		
+		assertEquals(expected, result);		
+	}
+
+}
