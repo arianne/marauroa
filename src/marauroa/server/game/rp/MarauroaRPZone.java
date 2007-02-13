@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.5 2007/02/10 18:59:15 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.6 2007/02/13 20:32:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -255,6 +255,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	public void reset() {
 		for (RPObject object : objects.values()) {
 			object.resetAddedAndDeleted();
+			object.clearEvents();
 		}
 	}
 

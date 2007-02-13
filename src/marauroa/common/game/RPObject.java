@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.30 2007/02/11 23:25:23 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.31 2007/02/13 20:32:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,9 @@ public class RPObject extends Attributes {
 		added = new LinkedList<RPSlot>();
 		deleted = new LinkedList<RPSlot>();
 		events= new LinkedList<RPEvent>();
-		container = null;		
+		
+		container = null;
+		containerSlot=null;
 	}
 
 	/** 
@@ -105,15 +107,6 @@ public class RPObject extends Attributes {
 	}
 
 	/** 
-	 * Returns true if the object is empty
-	 * @return true if the object lacks of any attribute, slots or events. 
-	 */
-	@Override
-	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && events.isEmpty();
-	}
-
-	/** 
 	 * Returns true if this object is contained inside another one.
 	 * @return true if this object is contained inside another one. 
 	 */
@@ -146,57 +139,6 @@ public class RPObject extends Attributes {
 	 */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
-	}
-
-	/**
-	 * Clean delta^2 information about added and deleted.
-	 * It is called by Marauroa, don't use :)
-	 */
-	public void resetAddedAndDeleted() {
-		resetAddedAndDeletedAttributes();
-		resetAddedAndDeletedRPSlot();
-	}
-
-	/**
-	 * Clean delta^2 data in the slots.
-	 * It is called by Marauroa, don't use :)
-	 */
-	public void resetAddedAndDeletedRPSlot() {
-		for (RPSlot slot : slots) {
-			slot.resetAddedAndDeletedRPObjects();
-			for (RPObject object : slot) {
-				object.resetAddedAndDeleted();
-			}
-		}
-
-		added.clear();
-		deleted.clear();
-	}
-
-	/**
-	 * Set added objects in slots for this object and fill object passed as param.	 * 
-	 * It is called by Marauroa, don't use :)
-	 * @param object the object to fill with added data.
-	 */
-	public void setAddedRPSlot(RPObject object) {
-		for (RPSlot slot : object.added) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(this);
-			slots.add(copied);
-		}
-	}
-
-	/**
-	 * Set deleted objects in slots for this object and fill object passed as param.	 * 
-	 * It is called by Marauroa, don't use :)
-	 * @param object the object to fill with deleted data.
-	 */
-	public void setDeletedRPSlot(RPObject object) {
-		for (RPSlot slot : object.deleted) {
-			RPSlot copied = new RPSlot(slot.getName());
-			copied.setOwner(this);
-			slots.add(copied);
-		}
 	}
 
 	/**
@@ -307,6 +249,15 @@ public class RPObject extends Attributes {
 	 */
 	public Iterator<RPEvent> eventsIterator() {
 		return events.iterator();
+	}
+
+	/**
+	 * Empty the list of events.
+	 * This method is called at the end of each turn.
+	 */
+	public void clearEvents() {
+		events.clear();
+		
 	}
 
 	/**
@@ -428,6 +379,31 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	/** Returns true if two objects are exactly equal */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof RPObject) {
+			RPObject object = (RPObject) obj;
+			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events);
+		} else {
+			return false;
+		}		
+	}
+
+	@Override
+	public int hashCode() {
+		return getInt("id");
+	}
+
+	/** 
+	 * Returns true if the object is empty
+	 * @return true if the object lacks of any attribute, slots or events. 
+	 */
+	@Override
+	public boolean isEmpty() {
+		return super.isEmpty() && slots.isEmpty() && events.isEmpty();
+	}
+
 	/** 
 	 * Returns the number of attributes this object is made of. 
 	 */
@@ -463,6 +439,227 @@ public class RPObject extends Attributes {
 		}
 
 		return i;
+	}
+
+	/** 
+	 * Create a real copy of the object
+	 * @return a copy of this object. 
+	 */
+	@Override
+	public Object clone() {
+		RPObject object = new RPObject();
+
+		object.fill((Attributes) this);
+
+		object.container = container;
+		object.containerSlot = containerSlot;
+
+		for (RPSlot slot : slots) {
+			RPSlot copied = (RPSlot) slot.clone();
+			copied.setOwner(object);
+			object.slots.add(copied);
+		}
+
+		for (RPEvent event : events) {
+			object.addEvent(event.getKey(), event.getValue());
+		}
+
+		for (RPSlot slot : added) {
+			RPSlot copied = (RPSlot) slot.clone();
+			copied.setOwner(object);
+			object.added.add(copied);
+		}
+
+		for (RPSlot slot : deleted) {
+			RPSlot copied = (RPSlot) slot.clone();
+			copied.setOwner(object);
+			object.deleted.add(copied);
+		}
+
+		return object;
+	}
+
+	private void fill(RPObject object) {
+		super.fill(object);
+
+		container = object.container;
+		containerSlot = object.containerSlot;
+
+		/** TODO: Check if it is expected to modify Delta^2 information by adding the slot */
+		for (RPSlot slot : object.slots) {
+			addSlot((RPSlot) slot.clone());
+		}
+
+		for (RPEvent event : object.events) {
+			addEvent(event.getKey(), event.getValue());
+		}
+
+	}
+
+	/** This class stores the basic identification for a RPObject */
+	public static class ID implements marauroa.common.net.Serializable {
+		private int id;
+
+		private String zoneid;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param objectid
+		 *            the object id
+		 * @param zone
+		 *            the zone
+		 */
+		public ID(int objectid, String zone) {
+			this.id = objectid;
+			this.zoneid = zone;
+		}
+
+		/**
+		 * Constructor
+		 * 
+		 * @param objectid
+		 *            the object id
+		 * @param zoneid
+		 *            the zone-id
+		 */
+		public ID(int objectid, IRPZone.ID zoneid) {
+			this.id = objectid;
+			this.zoneid = zoneid.getID();
+		}
+
+		/**
+		 * Constructor
+		 * 
+		 * @param attr
+		 *            an RPObject containing object_id attribute
+		 */
+		public ID(RPObject attr) {
+			this.id = attr.getInt("id");
+			this.zoneid = attr.get("zoneid");
+		}
+
+		/**
+		 * Constructor
+		 * 
+		 * @param attr
+		 *            an RPAction containing sourceid attribute
+		 */
+		public ID(RPAction attr) {
+			this.id = attr.getInt("sourceid");
+			this.zoneid = attr.get("zoneid");
+		}
+
+		/**
+		 * This method returns the object id
+		 * 
+		 * @return the object id.
+		 */
+		public int getObjectID() {
+			return id;
+		}
+
+		public String getZoneID() {
+			return zoneid;
+		}
+
+		/**
+		 * This method returns true of both ids are equal.
+		 * 
+		 * @param anotherid
+		 *            another id object
+		 * @return true if they are equal, or false otherwise.
+		 */
+		@Override
+		public boolean equals(Object anotherid) {
+			if (anotherid != null && anotherid instanceof RPObject.ID) {
+				return (id == ((RPObject.ID) anotherid).id && zoneid
+						.equals(((RPObject.ID) anotherid).zoneid));
+			} else {
+				return false;
+			}
+		}
+
+		/** We need it for HashMap */
+		@Override
+		public int hashCode() {
+			return id * 1500 + zoneid.hashCode();
+		}
+
+		/**
+		 * This method returns a String that represent the object
+		 * 
+		 * @return a string representing the object.
+		 */
+		@Override
+		public String toString() {
+			return "RPObject.ID [id=" + id + " zoneid=" + zoneid + "]";
+		}
+
+		public void writeObject(marauroa.common.net.OutputSerializer out)
+				throws java.io.IOException {
+			out.write(id);
+			out.write(zoneid);
+		}
+
+		public void readObject(marauroa.common.net.InputSerializer in)
+				throws java.io.IOException, java.lang.ClassNotFoundException {
+			id = in.readInt();
+			zoneid = in.readString();
+		}
+	}
+
+
+
+	/**
+	 * Clean delta^2 information about added and deleted.
+	 * It is called by Marauroa, don't use :)
+	 */
+	public void resetAddedAndDeleted() {
+		resetAddedAndDeletedAttributes();
+		resetAddedAndDeletedRPSlot();
+	}
+
+	/**
+	 * Clean delta^2 data in the slots.
+	 * It is called by Marauroa, don't use :)
+	 */
+	public void resetAddedAndDeletedRPSlot() {
+		for (RPSlot slot : slots) {
+			slot.resetAddedAndDeletedRPObjects();
+			for (RPObject object : slot) {
+				object.resetAddedAndDeleted();
+			}
+		}
+
+		added.clear();
+		deleted.clear();
+	}
+
+	/**
+	 * Set added objects in slots for this object and fill object passed as param.	 * 
+	 * It is called by Marauroa, don't use :)
+	 * @param object the object to fill with added data.
+	 */
+	public void setAddedRPSlot(RPObject object) {
+		for (RPSlot slot : object.added) {
+			RPSlot copied = (RPSlot) slot.clone();
+			copied.setOwner(this);
+			slots.add(copied);
+		}
+	}
+
+	/**
+	 * Set deleted objects in slots for this object and fill object passed as param.	 * 
+	 * It is called by Marauroa, don't use :)
+	 * @param object the object to fill with deleted data.
+	 */
+	public void setDeletedRPSlot(RPObject object) {
+		for (RPSlot slot : object.deleted) {
+			RPSlot copied = new RPSlot(slot.getName());
+			copied.setOwner(this);
+			slots.add(copied);
+		}
 	}
 
 	// TODO: Refactor this method. Looks like it claims for bugs!"
@@ -592,189 +789,5 @@ public class RPObject extends Attributes {
 			}
 		}
 		return this;
-	}
-
-	/** 
-	 * Create a real copy of the object
-	 * @return a copy of this object. 
-	 */
-	@Override
-	public Object clone() {
-		RPObject object = new RPObject();
-
-		object.fill((Attributes) this);
-
-		object.container = container;
-		object.containerSlot = containerSlot;
-
-		for (RPSlot slot : slots) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.slots.add(copied);
-		}
-
-		for (RPEvent event : events) {
-			object.addEvent(event.getKey(), event.getValue());
-		}
-
-		for (RPSlot slot : added) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.added.add(copied);
-		}
-
-		for (RPSlot slot : deleted) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.deleted.add(copied);
-		}
-
-		return object;
-	}
-
-	private void fill(RPObject object) {
-		super.fill(object);
-
-		container = object.container;
-		containerSlot = object.containerSlot;
-
-		/** TODO: Check if it is expected to modify Delta^2 information by adding the slot */
-		for (RPSlot slot : object.slots) {
-			addSlot((RPSlot) slot.clone());
-		}
-
-		for (RPEvent event : object.events) {
-			addEvent(event.getKey(), event.getValue());
-		}
-
-	}
-
-	/** Returns true if two objects are exactly equal */
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof RPObject) {
-			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events);
-		} else {
-			return false;
-		}		
-	}
-
-	@Override
-	public int hashCode() {
-		return getInt("id");
-	}
-
-	/** This class stores the basic identification for a RPObject */
-	public static class ID implements marauroa.common.net.Serializable {
-		private int id;
-
-		private String zoneid;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param objectid
-		 *            the object id
-		 * @param zone
-		 *            the zone
-		 */
-		public ID(int objectid, String zone) {
-			this.id = objectid;
-			this.zoneid = zone;
-		}
-
-		/**
-		 * Constructor
-		 * 
-		 * @param objectid
-		 *            the object id
-		 * @param zoneid
-		 *            the zone-id
-		 */
-		public ID(int objectid, IRPZone.ID zoneid) {
-			this.id = objectid;
-			this.zoneid = zoneid.getID();
-		}
-
-		/**
-		 * Constructor
-		 * 
-		 * @param attr
-		 *            an RPObject containing object_id attribute
-		 */
-		public ID(RPObject attr) {
-			this.id = attr.getInt("id");
-			this.zoneid = attr.get("zoneid");
-		}
-
-		/**
-		 * Constructor
-		 * 
-		 * @param attr
-		 *            an RPAction containing sourceid attribute
-		 */
-		public ID(RPAction attr) {
-			this.id = attr.getInt("sourceid");
-			this.zoneid = attr.get("zoneid");
-		}
-
-		/**
-		 * This method returns the object id
-		 * 
-		 * @return the object id.
-		 */
-		public int getObjectID() {
-			return id;
-		}
-
-		public String getZoneID() {
-			return zoneid;
-		}
-
-		/**
-		 * This method returns true of both ids are equal.
-		 * 
-		 * @param anotherid
-		 *            another id object
-		 * @return true if they are equal, or false otherwise.
-		 */
-		@Override
-		public boolean equals(Object anotherid) {
-			if (anotherid != null && anotherid instanceof RPObject.ID) {
-				return (id == ((RPObject.ID) anotherid).id && zoneid
-						.equals(((RPObject.ID) anotherid).zoneid));
-			} else {
-				return false;
-			}
-		}
-
-		/** We need it for HashMap */
-		@Override
-		public int hashCode() {
-			return id * 1500 + zoneid.hashCode();
-		}
-
-		/**
-		 * This method returns a String that represent the object
-		 * 
-		 * @return a string representing the object.
-		 */
-		@Override
-		public String toString() {
-			return "RPObject.ID [id=" + id + " zoneid=" + zoneid + "]";
-		}
-
-		public void writeObject(marauroa.common.net.OutputSerializer out)
-				throws java.io.IOException {
-			out.write(id);
-			out.write(zoneid);
-		}
-
-		public void readObject(marauroa.common.net.InputSerializer in)
-				throws java.io.IOException, java.lang.ClassNotFoundException {
-			id = in.readInt();
-			zoneid = in.readString();
-		}
 	}
 }
