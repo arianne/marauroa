@@ -376,6 +376,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 					def.setName(name);
 					def.setType(Type.STRING);
 					def.setFlags(Definition.STANDARD);
+					def.setCapacity((byte) -1);
 
 					if(name.charAt(0) == '!') {
 						def.setFlags(Definition.PRIVATE);
