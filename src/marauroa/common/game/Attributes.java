@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.32 2007/02/11 16:36:53 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.33 2007/02/14 19:45:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -166,7 +166,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param value the value we want to set.
 	 */
 	public void add(String attribute, int value) {
-		if (has(attribute)) {
+		if (!has(attribute)) {
 			put(attribute, value);
 		} else {
 			put(attribute, getInt(attribute) + value);
@@ -365,6 +365,48 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *  @param level the level of Detail
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
+		/* Obtains the number of attributes to serialize removing hidden and private attributes */
+		int size = numSerializedAttributes(level);
+
+		out.write(rpClass.getName());
+		out.write(size);
+		
+		for (Map.Entry<String, String> entry : content.entrySet()) {
+			String key = entry.getKey();
+			
+			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+
+			if (shouldSerialize(def, level)) {
+				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1); 
+
+				if (serializeKeyText) {
+					out.write((short)-1);
+					out.write(def.getName());
+				} else {
+					out.write(def.getCode());
+				}
+
+				def.serialize(entry.getValue(), out);
+			}
+		}
+	}
+
+	/**
+	 * Returns true if the attribute should be serialized.
+	 * @param def Attribute definition
+	 * @param level level of detail to serialize.
+	 * @return true if it should be serialized.
+	 */
+	boolean shouldSerialize(Definition def, DetailLevel level) {
+		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL);
+	}
+
+	/**
+	 * Returns the amount of attributes to serialize based on the detail level.
+	 * @param level level of detail to serialize.
+	 * @return an integer value between 0 and content.size()
+	 */
+	int numSerializedAttributes(DetailLevel level) {
 		int size = content.size();
 
 		/* We need to remove hidden and private attributes to players */
@@ -380,28 +422,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 				--size;
 			}
 		}
-
-		out.write(rpClass.getName());
-		out.write(size);
-		
-		for (Map.Entry<String, String> entry : content.entrySet()) {
-			String key = entry.getKey();
-			
-			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
-
-			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
-				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1); 
-
-				if (serializeKeyText) {
-					out.write((short)-1);
-					out.write(def.getName());
-				} else {
-					out.write(def.getCode());
-				}
-
-				def.serialize(entry.getValue(), out);
-			}
-		}
+		return size;
 	}
 
 	/**
