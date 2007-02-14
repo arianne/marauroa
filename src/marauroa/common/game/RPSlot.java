@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.32 2007/02/11 16:36:54 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.33 2007/02/14 23:01:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -324,12 +324,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return objects.size();
 	}
 
-	public void setCapacity(int capacity) {
-		this.capacity = (byte) capacity;
-	}
-
 	public byte getCapacity() {
-		return capacity;
+		return owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 	}
 
 	public boolean isFull() {

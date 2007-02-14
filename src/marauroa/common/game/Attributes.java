@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.33 2007/02/14 19:45:23 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.34 2007/02/14 23:01:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -366,7 +367,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		/* Obtains the number of attributes to serialize removing hidden and private attributes */
-		int size = numSerializedAttributes(level);
+		int size = numSerializedAttributes(content.keySet(), level);
 
 		out.write(rpClass.getName());
 		out.write(size);
@@ -406,11 +407,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param level level of detail to serialize.
 	 * @return an integer value between 0 and content.size()
 	 */
-	int numSerializedAttributes(DetailLevel level) {
-		int size = content.size();
+	int numSerializedAttributes(Collection<String> data, DetailLevel level) {
+		int size = data.size();
 
 		/* We need to remove hidden and private attributes to players */
-		for (String key : content.keySet()) {
+		for (String key : data) {
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 
 			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {

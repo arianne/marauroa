@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.31 2007/02/13 20:32:55 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.32 2007/02/14 23:01:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,11 +38,6 @@ import marauroa.common.game.Definition.DefinitionClass;
  */ 
 
 public class RPObject extends Attributes {
-	/** added and modified slots, used at Delta^2 */
-	private List<RPSlot> added;
-	/** delete slots, used at Delta^2 */
-	private List<RPSlot> deleted;
-
 	/** a list of slots that this object contains */
 	private List<RPSlot> slots;
 	/** a list of events that this object contains */
@@ -54,6 +49,11 @@ public class RPObject extends Attributes {
 	/** In which slot are this object contained */
 	private RPSlot containerSlot;
 
+	/** added and modified slots, used at Delta^2 */
+	private List<RPSlot> added;
+	/** delete slots, used at Delta^2 */
+	private List<RPSlot> deleted;
+
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
@@ -64,6 +64,7 @@ public class RPObject extends Attributes {
 		slots = new LinkedList<RPSlot>();
 		added = new LinkedList<RPSlot>();
 		deleted = new LinkedList<RPSlot>();
+		
 		events= new LinkedList<RPEvent>();
 		
 		container = null;
@@ -80,11 +81,11 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param id the id of the object
 	 */
-	public RPObject(ID id) {
+	RPObject(ID id) {
 		this();
 		setID(id);
 	}
@@ -162,17 +163,15 @@ public class RPObject extends Attributes {
 	 * @param slot the RPSlot object
 	 * @throws SlotAlreadyAddedException if the slot already exists
 	 */
-	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
-		if (hasSlot(slot.getName())) {
-			throw new SlotAlreadyAddedException(slot.getName());
+	public void addSlot(String name) throws SlotAlreadyAddedException {
+		if (hasSlot(name)) {
+			throw new SlotAlreadyAddedException(name);
 		}
+		
+		RPSlot slot=new RPSlot(name);
 
 		/** First we set the slot owner, so that slot can get access to RPClass */
 		slot.setOwner(this);
-
-		/** Obtain RPClass to fill slot capacity. */
-		Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-		slot.setCapacity(def.getCapacity());
 		slots.add(slot);
 
 		/** Notify delta^2 about the addition of this slot */ 
@@ -244,14 +243,6 @@ public class RPObject extends Attributes {
 	}
 	
 	/**
-	 * Iterate over the events list 
-	 * @return an iterator over the events
-	 */
-	public Iterator<RPEvent> eventsIterator() {
-		return events.iterator();
-	}
-
-	/**
 	 * Empty the list of events.
 	 * This method is called at the end of each turn.
 	 */
@@ -260,6 +251,23 @@ public class RPObject extends Attributes {
 		
 	}
 
+	/**
+	 * Iterate over the events list 
+	 * @return an iterator over the events
+	 */
+	public Iterator<RPEvent> eventsIterator() {
+		return events.iterator();
+	}
+
+	/**
+	 * Returns an unmodifyable list of the events
+	 * 
+	 * @return a list of the evetns
+	 */
+	public List<RPEvent> events() {
+		return Collections.unmodifiableList(events);
+	}
+	
 	/**
 	 * This method returns a String that represent the object
 	 * 
@@ -311,7 +319,7 @@ public class RPObject extends Attributes {
 		for (RPSlot slot : slots) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
 			
-			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
+			if (shouldSerialize(def, level)) {
 				slot.writeObject(out, level);
 			}
 		}
@@ -335,7 +343,7 @@ public class RPObject extends Attributes {
 		for (RPEvent event : events) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getKey());
 			
-			if ((level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL)) {
+			if (shouldSerialize(def, level)) {
 				event.writeObject(out, level);
 			}
 		}
@@ -357,10 +365,6 @@ public class RPObject extends Attributes {
 			RPSlot slot = new RPSlot();
 			slot.setOwner(this);
 			slot = (RPSlot) in.readObject(slot);
-			
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			slot.setCapacity(def.getCapacity());
-			
 			slots.add(slot);
 		}
 
@@ -485,13 +489,12 @@ public class RPObject extends Attributes {
 		container = object.container;
 		containerSlot = object.containerSlot;
 
-		/** TODO: Check if it is expected to modify Delta^2 information by adding the slot */
 		for (RPSlot slot : object.slots) {
-			addSlot((RPSlot) slot.clone());
+			slots.add((RPSlot) slot.clone());
 		}
 
 		for (RPEvent event : object.events) {
-			addEvent(event.getKey(), event.getValue());
+			events.add((RPEvent) event.clone());
 		}
 
 	}
@@ -681,7 +684,7 @@ public class RPObject extends Attributes {
 			added_slot.setAddedRPObject(slot);
 
 			if (added_slot.size() > 0 && !oadded.hasSlot(added_slot.getName())) {
-				oadded.addSlot(added_slot);
+				oadded.slots.add(added_slot);
 			}
 
 			/** And add also the deleted objects */
@@ -690,7 +693,7 @@ public class RPObject extends Attributes {
 
 			if (deleted_slot.size() > 0
 					&& !odeleted.hasSlot(deleted_slot.getName())) {
-				odeleted.addSlot(deleted_slot);
+				odeleted.slots.add(deleted_slot);
 			}
 
 			/** Now apply recursively to the existing objects in the slot */
@@ -702,7 +705,7 @@ public class RPObject extends Attributes {
 
 				if (object_added.size() > 0) {
 					if (!oadded.hasSlot(slot.getName())) {
-						oadded.addSlot(new RPSlot(slot.getName()));
+						oadded.slots.add(new RPSlot(slot.getName()));
 					}
 
 					if (!oadded.getSlot(slot.getName()).has(new ID(object))) {
@@ -713,7 +716,7 @@ public class RPObject extends Attributes {
 
 				if (object_deleted.size() > 0) {
 					if (!odeleted.hasSlot(slot.getName())) {
-						odeleted.addSlot(new RPSlot(slot.getName()));
+						odeleted.slots.add(new RPSlot(slot.getName()));
 					}
 
 					if (!odeleted.getSlot(slot.getName()).has(new ID(object))) {
@@ -775,7 +778,7 @@ public class RPObject extends Attributes {
 
 			for (RPSlot slot : added.slots) {
 				if (!hasSlot(slot.getName())) {
-					addSlot(new RPSlot(slot.getName()));
+					slots.add(new RPSlot(slot.getName()));
 				}
 
 				/** for each of the objects, add it */

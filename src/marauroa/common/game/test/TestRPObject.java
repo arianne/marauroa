@@ -25,8 +25,8 @@ public class TestRPObject {
 		obj.put("c",2.0);
 		obj.put("d","string of text");
 		
-		obj.addSlot(new RPSlot("lhand"));
-		obj.addSlot(new RPSlot("rhand"));
+		obj.addSlot("lhand");
+		obj.addSlot("rhand");
 		
 		obj.addEvent("chat", "Hi there!");
 		
@@ -56,8 +56,8 @@ public class TestRPObject {
 		obj.put("c",2.0);
 		obj.put("d","string of text");
 		
-		obj.addSlot(new RPSlot("lhand"));
-		obj.addSlot(new RPSlot("rhand"));
+		obj.addSlot("lhand");
+		obj.addSlot("rhand");
 		
 		RPSlot lhand=obj.getSlot("lhand");
 		assertNotNull(lhand);
