@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.34 2007/02/15 18:49:38 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.35 2007/02/15 21:29:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,7 +199,8 @@ public class RPObject extends Attributes {
 		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
 			RPSlot slot = it.next();
 			if (name.equals(slot.getName())) {
-				/** Notify delta^2 about the removal of this slot. */
+				// TODO: if an slot is added and deleted on the same turn it shouldn't be mention on deleted.
+				/** Notify delta^2 about the removal of this slot. */				
 				deleted.add(slot);
 				
 				/* Remove and return it */
@@ -600,7 +601,7 @@ public class RPObject extends Attributes {
 		/** We need it for HashMap */
 		@Override
 		public int hashCode() {
-			return id * 1500 + zoneid.hashCode();
+			return id;
 		}
 
 		/**

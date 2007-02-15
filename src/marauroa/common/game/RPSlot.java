@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.34 2007/02/15 17:28:39 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.35 2007/02/15 21:29:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,6 @@ import marauroa.common.game.Definition.DefinitionClass;
 
 /** This class represent a slot in an object */
 public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject> {
-	private List<RPObject> added;
-
-	private List<RPObject> deleted;
-
 	/** Name of the slot */
 	private String name;
 
@@ -39,38 +35,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/** The maximum amount of objects that we can store at this slot */
 	private byte capacity;
 
-	public void resetAddedAndDeletedRPObjects() {
-		added.clear();
-		deleted.clear();
-	}
+	/** Stores added objects for delta^2 algorithm */
+	private List<RPObject> added;
 
-	public void setAddedRPObject(RPSlot slot) {
-		for (RPObject object : slot.added) {
-			RPObject copied = (RPObject) object.clone();
-			copied.setContainer(owner, slot);
-			objects.add(copied);
-		}
-	}
+	/** Stores deleted objects for delta^2 algorithm */
+	private List<RPObject> deleted;
 
-	public void setDeletedRPObject(RPSlot slot) {
-		for (RPObject object : slot.deleted) {
-			RPObject copied = (RPObject) object.clone();
-			copied.setContainer(owner, slot);
-			objects.add(copied);
-		}
-	}
-
-	/** This method sets the owner of the slot */
-	void setOwner(RPObject object) {
-		owner = object;
-		capacity=owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
-	}
-
-	/** This method returns the owner of the object */
-	RPObject getOwner() {
-		return owner;
-	}
-
+	/** 
+	 * Constructor.
+	 *
+	 */
 	public RPSlot() {
 		name = "";
 		owner = null;
@@ -81,118 +55,92 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		deleted = new LinkedList<RPObject>();
 	}
 
+	/**
+	 * Constructor 
+	 * @param name name of the slot
+	 */
 	public RPSlot(String name) {
 		this();
 		this.name = name;
 	}
 
-	/** This method create a copy of the slot */
-	@Override
-	public Object clone() {
-		RPSlot slot = new RPSlot();
-
-		slot.name = name;
-		slot.owner = owner;
-		slot.capacity=capacity;
-
-		for (RPObject object : objects) {
-			RPObject copied = (RPObject) object.clone();
-			copied.setContainer(owner, slot);
-			slot.objects.add(copied);
-		}
-
-		for (RPObject object : added) {
-			RPObject copied = (RPObject) object.clone();
-			copied.setContainer(owner, slot);
-			slot.added.add(copied);
-		}
-
-		for (RPObject object : deleted) {
-			RPObject copied = (RPObject) object.clone();
-			copied.setContainer(owner, slot);
-			slot.deleted.add(copied);
-		}
-
-		return slot;
+	/** 
+	 * This method sets the owner of the slot.
+	 * Owner is used for having access to RPClass.
+	 * 
+	 * @param object sets the object that owns this slot. 
+	 */
+	void setOwner(RPObject object) {
+		owner = object;
 	}
 
-	/** Sets the name of the slot */
+	/** 
+	 * This method returns the owner of the object
+	 * @return the owner of the slot
+	 */
+	RPObject getOwner() {
+		return owner;
+	}
+
+	/** 
+	 * Sets the name of the slot
+	 * @param name the name of the slot. 
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/** Get the name of the slot */
+	/** 
+	 * Get the name of the slot 
+	 * @return the name of the object. 
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Assigns a valid unique id for this object inside the contained object.
+	 * This assigned id will lack of zoneid attribute.
+	 * @param object object to assign a valid unique id.
+	 */
 	public void assignValidID(RPObject object) {
-		int i = objects.size();
-
-		boolean exists = false;
-
-		do {
-			exists = false;
-
-			for (RPObject obj : objects) {
-				if (obj.getInt("id") == i) {
-					exists = true;
-				}
-			}
-
-			if (exists) {
-				i++;
-			}
-		} while (exists);
-
-		object.put("id", i);
-		object.put("zoneid", ""); // TODO: Remove this and allow zoneless id
-		// in objects
+		//TODO: Code it.
 	}
 
-	/** Add an object to the slot, but object previously should have a valid id by calling
-	 * assignValidID */
+	/** 
+	 * Add an object to the slot, but object previously should have a valid id by calling assignValidID
+	 * @param object the object to add to this slot.
+	 * @throws SlotIsFullException if there is no more room at the slot. 
+	 */
 	public void add(RPObject object) {
 		if (isFull()) {
 			throw new SlotIsFullException(name);
 		}
 
-		/** TODO: This looks buggy review this code! */
-		boolean found = false;
-
-		Iterator<RPObject> it = objects.iterator();
-		while (!found && it.hasNext()) {
-			RPObject data = it.next();
-			if (data.get("id").equals(object.get("id"))) {
-				it.remove();
-				found = true;
-			}
-		}
-
-		if (!found) {
-			added.add(object);
-		}
-
+		// Notify about the addition of the object 
+		added.add(object);
 		// If the object is on deleted list, remove from there.
-		found = false;
-		it = deleted.iterator();
-		while (!found && it.hasNext()) {
-			RPObject data = it.next();
-			if (data.get("id").equals(object.get("id"))) {
-				it.remove();
-				found = true;
-			}
-		}
+		deleted.remove(object);
 
+		/*
+		 * We set the container on object so that it can later do queries on the tree.
+		 */
 		object.setContainer(owner, this);
 		objects.add(object);
 	}
 
-	/** Gets the object from the slot */
+	/** 
+	 * Gets the object from the slot
+	 * @param id the object id. Note that only object_id field is relevant.
+	 * @return the object or null if it is not found. 
+	 */
 	public RPObject get(RPObject.ID id) {
+		int oid=id.getObjectID();
+		
 		for (RPObject object : objects) {
-			// We compare only the id, as the zone is really irrelevant
-			if (object.getID().getObjectID() == id.getObjectID()) {
+			/* We compare only the id, as the zone is really irrelevant
+			 * in a contained object */
+			if (object.getID().getObjectID() == oid) {
 				return object;
 			}
 		}
@@ -200,24 +148,33 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return null;
 	}
 
-	/** Gets the object from the slot */
-	public RPObject getFirst() throws RPObjectNotFoundException {
-		if (objects.size() > 0) {
-			return objects.get(0);
-		} else {
+	/** 
+	 * Gets the first object from the slot.
+	 * @return the first object of the slot or null if it is empty.  
+	 */
+	public RPObject getFirst() {
+		if(objects.isEmpty()) {
 			return null;
 		}
+
+		return objects.get(0);
 	}
 
-	/** This method removes the object from the slot */
-	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException {
+	/** 
+	 * This method removes the object from the slot.
+	 * When an object is removed from the slot, its contained information is set to null.
+	 * @param id the object id. Note that only object_id field is relevant.
+	 * @return the object or null if it is not found. 
+	 */
+	public RPObject remove(RPObject.ID id) {
 		Iterator<RPObject> it = objects.iterator();
+		int oid=id.getObjectID();
 
 		while (it.hasNext()) {
 			RPObject object = it.next();
 
 			/** We compare only the id, as the zone is really irrelevant */
-			if (object.getID().getObjectID() == id.getObjectID()) {
+			if (object.getID().getObjectID() == oid) {
 				/*
 				 * HACK: This is a hack to avoid a problem that happens when
 				 * on the same turn an object is added and deleted, causing
@@ -227,13 +184,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 				Iterator<RPObject> added_it = added.iterator();
 				while (!found_in_added_list && added_it.hasNext()) {
 					RPObject added_object = added_it.next();
-					if (added_object.getID().getObjectID() == id
-							.getObjectID()) {
+					if (added_object.getID().getObjectID() == oid) {
 						added_it.remove();
 						found_in_added_list = true;
 					}
 				}
 
+				/*
+				 * If it was added and it is now deleted on the same turn.
+				 * Simply ignore the delta^2 information.
+				 */
 				if (!found_in_added_list) {
 					deleted.add(new RPObject(new RPObject.ID(object)));
 				}
@@ -250,7 +210,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	}
 
-	/** This method empty the slot */
+	/** 
+	 * This method empty the slot by removing all the objects inside.
+	 */
 	public void clear() {
 		for (RPObject object : objects) {
 			deleted.add(new RPObject(new RPObject.ID(object)));
@@ -261,18 +223,28 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		objects.clear();
 	}
 
-	/** This method returns true if the slot has the object whose id is id */
+	/** 
+	 * This method returns true if the slot has the object whose id is id
+	 * @param id the object id. Note that only object_id field is relevant.
+	 * @return true if it is found or false otherwise.
+	 */
 	public boolean has(RPObject.ID id) {
+		int oid=id.getObjectID();
+		
 		for (RPObject object : objects) {
 			// compare only the id, as the zone is not used for slots
-			if (id.getObjectID() == object.getID().getObjectID()) {
+			if (oid == object.getID().getObjectID()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/** traverses up the container tree to see if the item is one of the parents */
+	/** 
+	 * Traverses up the container tree to see if the slot is owned by id object or by one of its parents
+	 * @param id the object id. Note that only object_id field is relevant.
+	 * @return true if this slot is owned (at any depth) by id or false otherwise. 
+	 */
 	public boolean hasAsParent(RPObject.ID id) {
 		RPObject owner = getOwner();
 		// traverse the owner tree
@@ -286,59 +258,49 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return false;
 	}
 
-	/** traverses up the container tree and counts all parent container */
-	public int getContainedDepth() {
-		int depth = 0;
-		RPObject owner = getOwner();
-		// traverse the owner tree
-		while (owner != null) {
-			depth++;
-			owner = owner.getContainer();
-		}
-		return depth;
-	}
-
-	/**
-	 * returns the number of items in this container and all subcontainers.
-	 * <b>Warning:</b> This method may be very expensive and can lead to a
-	 * stack overflow (if one item is contained in itself)
+	/** 
+	 * Return the number of elements in the slot
+	 * @return the number of elements in the slot
 	 */
-	public int getNumberOfContainedItems() {
-		int numContainedItems = 0;
-
-		// count all
-		for (RPObject object : this) {
-			// this is the item
-			numContainedItems++;
-
-			// all all items inside this one
-			for (RPSlot slot : object.slots()) {
-				numContainedItems += slot.getNumberOfContainedItems();
-			}
-		}
-
-		return numContainedItems;
-	}
-
-	/** Return the number of elements in the slot */
 	public int size() {
 		return objects.size();
 	}
 
+	/**
+	 * Returns the maximum amount of objects that can be stored at the slot.
+	 * When there is no limit we use the -1 value.
+	 * 
+	 * @return the maximum amount of objects that can be stored at the slot.
+	 */
 	public byte getCapacity() {
+		if(capacity==-1) {
+			capacity=owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		}
+		
 		return capacity;
 	}
 
+	/**
+	 * Returns true if the slot is full.
+	 * @return true if the slot is full.
+	 */
 	public boolean isFull() {
 		return size() == capacity;
 	}
 
-	/** Iterate over the objects of the slot */
+	/** 
+	 * Iterate over the objects of the slot.
+	 * We disallow removing objects from the iterator to avoid breaking delta^2 algorithm
+	 * @return an unmodifiable iterator object the objects. 
+	 */
 	public Iterator<RPObject> iterator() {
 		return Collections.unmodifiableList(objects).iterator();
 	}
 
-	/** Returns true if both objects are equal */
+	/** 
+	 * Returns true if both objects are equal
+	 * @return true if both objects are equal
+	 */
 	@Override
 	public boolean equals(Object object) {
 		if(object instanceof RPSlot) {
@@ -351,7 +313,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	@Override
 	public int hashCode() {
-		return name.hashCode() + objects.hashCode();
+		return name.hashCode() * objects.hashCode();
 	}
 
 	@Override
@@ -422,4 +384,60 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			objects.add((RPObject) in.readObject(new RPObject()));
 		}
 	}
+
+
+	/** 
+	 * This method create a copy of the slot
+	 * @return a depth copy of the object.  
+	 */
+	@Override
+	public Object clone() {
+		RPSlot slot = new RPSlot();
+
+		slot.name = name;
+		slot.owner = owner;
+		slot.capacity = capacity;
+
+		for (RPObject object : objects) {
+			RPObject copied = (RPObject) object.clone();
+			copied.setContainer(owner, slot);
+			slot.objects.add(copied);
+		}
+
+		for (RPObject object : added) {
+			RPObject copied = (RPObject) object.clone();
+			copied.setContainer(owner, slot);
+			slot.added.add(copied);
+		}
+
+		for (RPObject object : deleted) {
+			RPObject copied = (RPObject) object.clone();
+			copied.setContainer(owner, slot);
+			slot.deleted.add(copied);
+		}
+
+		return slot;
+	}
+
+	public void resetAddedAndDeletedRPObjects() {
+		added.clear();
+		deleted.clear();
+	}
+
+	public void setAddedRPObject(RPSlot slot) {
+		for (RPObject object : slot.added) {
+			RPObject copied = (RPObject) object.clone();
+			copied.setContainer(owner, slot);
+			objects.add(copied);
+		}
+	}
+
+	public void setDeletedRPObject(RPSlot slot) {
+		for (RPObject object : slot.deleted) {
+			RPObject copied = (RPObject) object.clone();
+			copied.setContainer(owner, slot);
+			objects.add(copied);
+		}
+	}
+
 }
