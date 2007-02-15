@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.32 2007/02/14 23:01:55 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.33 2007/02/15 17:28:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -301,17 +301,10 @@ public class RPObject extends Attributes {
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
-		int size = slots.size();
+		int size = 0;
 		for (RPSlot slot : slots) {
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			
-			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
-				// If this attribute is Hidden or private and full data is false
-				--size;
-			} else if (level != DetailLevel.FULL && def.isHidden()) {
-				// If this attribute is Hidden and full data is true.
-				// This way we hide some attribute to player.
-				--size;
+			if (shouldSerialize(DefinitionClass.RPSLOT, slot.getName(), level)) {
+				size++;
 			}
 		}
 
@@ -325,23 +318,16 @@ public class RPObject extends Attributes {
 		}
 
 		// TODO: The same now for events... isn't it claiming for a refactoring? :)
-		size = events.size();
+		size = 0;
 		for (RPEvent event : events) {
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getKey());
-			
-			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
-				// If this attribute is Hidden or private and full data is false
-				--size;
-			} else if (level != DetailLevel.FULL && def.isHidden()) {
-				// If this attribute is Hidden and full data is true.
-				// This way we hide some attribute to player.
-				--size;
+			if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
+				size++;
 			}
 		}
 
 		out.write(size);
 		for (RPEvent event : events) {
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getKey());
+			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 			
 			if (shouldSerialize(def, level)) {
 				event.writeObject(out, level);
@@ -465,7 +451,7 @@ public class RPObject extends Attributes {
 		}
 
 		for (RPEvent event : events) {
-			object.addEvent(event.getKey(), event.getValue());
+			object.addEvent(event.getName(), event.getValue());
 		}
 
 		for (RPSlot slot : added) {

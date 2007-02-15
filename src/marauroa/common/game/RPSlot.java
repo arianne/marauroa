@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.33 2007/02/14 23:01:55 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.34 2007/02/15 17:28:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,14 +30,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/** Name of the slot */
 	private String name;
 
-	/** The capacity of the slot */
-	private byte capacity;
-
 	/** This slot is linked to an object: its owner. */
 	private RPObject owner;
 
 	/** A List<RPObject> of objects */
 	private List<RPObject> objects;
+
+	/** The maximum amount of objects that we can store at this slot */
+	private byte capacity;
 
 	public void resetAddedAndDeletedRPObjects() {
 		added.clear();
@@ -63,6 +63,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/** This method sets the owner of the slot */
 	void setOwner(RPObject object) {
 		owner = object;
+		capacity=owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 	}
 
 	/** This method returns the owner of the object */
@@ -72,8 +73,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	public RPSlot() {
 		name = "";
-		capacity = -1;
 		owner = null;
+		capacity=-1;
 
 		objects = new LinkedList<RPObject>();
 		added = new LinkedList<RPObject>();
@@ -92,7 +93,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		slot.name = name;
 		slot.owner = owner;
-		slot.capacity = capacity;
+		slot.capacity=capacity;
 
 		for (RPObject object : objects) {
 			RPObject copied = (RPObject) object.clone();
@@ -325,7 +326,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	public byte getCapacity() {
-		return owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		return capacity;
 	}
 
 	public boolean isFull() {
@@ -393,8 +394,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		if (code == -1) {
 			out.write(name);
 		}
-
-		out.write(capacity);
+		
 		out.write(objects.size());
 		for (RPObject object : objects) {
 			object.writeObject(out, level);
@@ -409,12 +409,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		} else {
 			RPClass rpClass = owner.getRPClass();
 			name=rpClass.getName(DefinitionClass.RPSLOT, code);
-		}
-
-		capacity = in.readByte();
-		if (capacity > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Illegal request of an list of " + capacity
-					+ " size");
 		}
 
 		int size = in.readInt();

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.34 2007/02/14 23:01:55 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.35 2007/02/15 17:28:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -231,7 +230,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if(val==null) {
 			throw new IllegalArgumentException("'"+attribute+"' not found");
 		}
-		
+
 		return Integer.parseInt(val);
 	}
 
@@ -246,7 +245,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if(val==null) {
 			throw new IllegalArgumentException("'"+attribute+"' not found");
 		}
-		
+
 		return Double.parseDouble(val);
 	}
 
@@ -261,7 +260,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if(val==null) {
 			throw new IllegalArgumentException("'"+attribute+"' not found");
 		}
-		
+
 		return StringToList(val);
 	}
 
@@ -367,14 +366,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		/* Obtains the number of attributes to serialize removing hidden and private attributes */
-		int size = numSerializedAttributes(content.keySet(), level);
+		int size = 0;
+		for (String key : content.keySet()) {
+			if (shouldSerialize(DefinitionClass.ATTRIBUTE, key, level)) {
+				size++;
+			}
+		}
 
 		out.write(rpClass.getName());
 		out.write(size);
-		
+
 		for (Map.Entry<String, String> entry : content.entrySet()) {
 			String key = entry.getKey();
-			
+
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 
 			if (shouldSerialize(def, level)) {
@@ -393,6 +397,18 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
+	 * Returns true if the element should be serialized.
+	 * @param clazz Element definition type: ATTRIBUTE, RPSLOT or RPEVENT
+	 * @param key the name of the element to test.
+	 * @param level level of detail to serialize.
+	 * @return true if it should be serialized.
+	 */
+	boolean shouldSerialize(DefinitionClass clazz, String key, DetailLevel level) {
+		Definition def=rpClass.getDefinition(clazz, key);
+		return shouldSerialize(def, level);		
+	}
+
+	/**
 	 * Returns true if the attribute should be serialized.
 	 * @param def Attribute definition
 	 * @param level level of detail to serialize.
@@ -400,30 +416,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	boolean shouldSerialize(Definition def, DetailLevel level) {
 		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL);
-	}
-
-	/**
-	 * Returns the amount of attributes to serialize based on the detail level.
-	 * @param level level of detail to serialize.
-	 * @return an integer value between 0 and content.size()
-	 */
-	int numSerializedAttributes(Collection<String> data, DetailLevel level) {
-		int size = data.size();
-
-		/* We need to remove hidden and private attributes to players */
-		for (String key : data) {
-			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
-
-			if (level == DetailLevel.NORMAL	&& (def.isVisible() == false)) {
-				// If this attribute is Hidden or private and full data is false
-				--size;
-			} else if (level != DetailLevel.FULL && def.isHidden()) {
-				// If this attribute is Hidden and full data is true.
-				// This way we hide some attribute to player.
-				--size;
-			}
-		}
-		return size;
 	}
 
 	/**
@@ -449,7 +441,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			} else {
 				key = rpClass.getName(DefinitionClass.ATTRIBUTE, code);
 			}
-			
+
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 			String value=def.deserialize(in);
 			content.put(key,value);

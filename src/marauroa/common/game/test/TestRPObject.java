@@ -43,7 +43,7 @@ public class TestRPObject {
 		
 		for(Iterator<RPEvent> it=obj.eventsIterator(); it.hasNext();) {
 			RPEvent event=it.next();
-			assertEquals("chat", event.getKey());
+			assertEquals("chat", event.getName());
 		}
 	}
 	

@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.6 2007/02/14 23:01:55 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.7 2007/02/15 17:28:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -88,7 +88,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 * Return the name of the event 
 	 * @return name of the event
 	 */
-	public String getKey() {
+	public String getName() {
 		return name;
 	}
 	
