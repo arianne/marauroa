@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.35 2007/02/15 17:28:39 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.36 2007/02/15 18:49:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -452,24 +452,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * Removes all the visible attributes
 	 * @return amount of attributes removed.
 	 */
-	public int clearVisible() {
-		int i = 0;
-
+	public void clearVisible() {
 		Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, String> entry = it.next();
 
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
 			if (def.isVisible()	&& !entry.getKey().equals("id")	&& !entry.getKey().equals("zoneid")) {
-				i++;
 				it.remove();
 
 				deleted.remove(entry.getKey());
 				added.remove(entry.getKey());
 			}
 		}
-
-		return i;
 	}
 
 	/**

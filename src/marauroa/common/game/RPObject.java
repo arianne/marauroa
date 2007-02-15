@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.33 2007/02/15 17:28:39 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.34 2007/02/15 18:49:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,9 +77,21 @@ public class RPObject extends Attributes {
 	 */
 	public RPObject(RPObject object) {
 		this();
-		fill(object);
-	}
 
+		super.fill(object);
+
+		container = object.container;
+		containerSlot = object.containerSlot;
+
+		for (RPSlot slot : object.slots) {
+			slots.add((RPSlot) slot.clone());
+		}
+
+		for (RPEvent event : object.events) {
+			events.add((RPEvent) event.clone());
+		}
+	}
+	
 	/**
 	 * Constructor.
 	 * 
@@ -247,8 +259,7 @@ public class RPObject extends Attributes {
 	 * This method is called at the end of each turn.
 	 */
 	public void clearEvents() {
-		events.clear();
-		
+		events.clear();		
 	}
 
 	/**
@@ -395,12 +406,14 @@ public class RPObject extends Attributes {
 	}
 
 	/** 
-	 * Returns the number of attributes this object is made of. 
+	 * Returns the number of attributes and events this object is made of. 
 	 */
 	@Override
 	public int size() {
 		try {
 			int total = super.size();
+			
+			total+= events.size();
 
 			for (RPSlot slot : slots) {
 				for (RPObject object : slot) {
@@ -414,25 +427,56 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	/**
+	 * Removes the visible attributes and events from this object.
+	 * It iterates through the slots to remove the attributes too of the contained objects if they are empty.
+	 */
 	@Override
-	public int clearVisible() {
-		int i = super.clearVisible();
+	public void clearVisible() {
+		super.clearVisible();
 
-		for (RPSlot slot : slots) {
+		Iterator<RPEvent> eventsit=events.iterator();
+		while(eventsit.hasNext()) {
+			/* Iterate over events and remove all of them that are visible */
+			RPEvent event=eventsit.next();
+			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, event.getName());			
+			if (def.isVisible()) {
+				eventsit.remove();				
+			}
+		}
+		
+		Iterator<RPSlot> slotit=slots.iterator();
+		while(slotit.hasNext()) {
+			RPSlot slot=slotit.next();
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
 			
 			if (def.isVisible()) {
+				List<RPObject.ID> idtoremove=new LinkedList<RPObject.ID>();
 				for (RPObject object : slot) {
-					i += object.clearVisible();
+					object.clearVisible();
+					
+					/* If object is empty remove it. */
+					if(object.size()<=2) {
+						//TODO: zoneid and id are useless inside the slot
+						idtoremove.add(object.getID());
+					}
+				}
+				
+				for(RPObject.ID id: idtoremove) {
+					//TODO: Should check added and removed
+					slot.remove(id);
 				}
 			}
+			
+			/* If slot is empty remove it. */
+			if(slot.size()==0) {
+				slotit.remove();				
+			}
 		}
-
-		return i;
 	}
 
 	/** 
-	 * Create a real copy of the object
+	 * Create a depth copy of the object
 	 * @return a copy of this object. 
 	 */
 	@Override
@@ -467,22 +511,6 @@ public class RPObject extends Attributes {
 		}
 
 		return object;
-	}
-
-	private void fill(RPObject object) {
-		super.fill(object);
-
-		container = object.container;
-		containerSlot = object.containerSlot;
-
-		for (RPSlot slot : object.slots) {
-			slots.add((RPSlot) slot.clone());
-		}
-
-		for (RPEvent event : object.events) {
-			events.add((RPEvent) event.clone());
-		}
-
 	}
 
 	/** This class stores the basic identification for a RPObject */
