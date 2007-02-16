@@ -5,11 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 
 import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 import org.junit.Test;
 
@@ -112,5 +117,46 @@ public class TestRPObject {
 		obj.clearVisible();
 
 		assertTrue(obj.isEmpty());
-		}
+	}
+
+
+	@Test
+	public void testSerialization() throws IOException, ClassNotFoundException {
+		RPObject obj=new RPObject();
+
+		obj.put("a",1);
+		obj.put("b","1");
+		obj.put("c",2.0);
+		obj.put("d","string of text");
+
+		obj.addSlot("lhand");
+		obj.addSlot("rhand");
+
+		RPSlot lhand=obj.getSlot("lhand");
+
+		RPObject pocket=new RPObject();
+		pocket.put("size", 1);
+		pocket.addSlot("container");
+		lhand.add(pocket);
+
+		RPSlot container=pocket.getSlot("container");
+
+		RPObject coin=new RPObject();
+		coin.put("euro", 100);
+		coin.put("value", 100);
+		container.add(coin);
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+
+		os.write(obj);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+
+		RPObject result=(RPObject) is.readObject(new RPObject());
+
+		assertEquals(obj, result);
+	}
+
 }

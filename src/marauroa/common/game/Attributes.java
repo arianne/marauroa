@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.37 2007/02/16 09:04:58 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.38 2007/02/16 11:13:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,17 +43,17 @@ import marauroa.common.game.Definition.DefinitionClass;
  * @author miguel
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
-	/** This is for Delta� algorithm: added attributes */
-	private Map<String, String> added;
-
-	/** This is for Delta� algorithm: deleted attributes */
-	private Map<String, String> deleted;
-
 	/** A Map<String,String> that contains the attributes */
 	private Map<String, String> content;
 
 	/** Every attributes has a class */
 	private RPClass rpClass;
+
+	/** This is for Delta� algorithm: added attributes */
+	private Map<String, String> added;
+
+	/** This is for Delta� algorithm: deleted attributes */
+	private Map<String, String> deleted;
 
 	/**
 	 * This method fills this object with data from the attributes object passed as param
@@ -81,7 +81,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return this;
 	}
 
-	/** Constructor */
+	/**
+	 * Constructor
+	 * @param rpclass class that this attribute belongs too.
+	 */
 	public Attributes(RPClass rpclass) {
 		rpClass = rpclass;
 
@@ -139,7 +142,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return true if it exist or false otherwise
 	 */
 	public boolean has(String attribute) {
-		return content.containsKey(attribute);
+		if(!content.containsKey(attribute)) {
+			if(rpClass==null) return false;
+
+			Definition def=rpClass.getDefinition(DefinitionClass.STATIC, attribute);
+			return (def!=null);
+		}
+
+		return true;
 	}
 
 	/**
@@ -216,7 +226,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return the value of the attribute
 	 */
 	public String get(String attribute) {
-		return content.get(attribute);
+		String value=content.get(attribute);
+
+		if(value==null) {
+			/* If instance doesn't have the attribute, check if RPClass
+			 * has it as a static attribute.
+			 */
+			Definition def=rpClass.getDefinition(DefinitionClass.STATIC, attribute);
+			return def.getValue();
+		}
+
+		return value;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.36 2007/02/16 09:04:58 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.37 2007/02/16 11:13:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,7 +100,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 
 	/**
-	 * Add an object to the slot, but object previously should have a valid id by calling assignValidID
+	 * Add an object to the slot.
+	 * It calls assignSlotID for the object to assign it a valid unique id for
+	 * the object inside the container.
 	 * @param object the object to add to this slot.
 	 * @return the id assigned to the object
 	 * @throws SlotIsFullException if there is no more room at the slot.
@@ -257,6 +259,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	/**
 	 * Return the number of elements in the slot
+	 *
 	 * @return the number of elements in the slot
 	 */
 	public int size() {
