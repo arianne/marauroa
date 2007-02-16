@@ -172,6 +172,7 @@ Changelog
 - Simplified RPObject, RPSlot, RPClass and Attributes.
 - Removed many useless exceptions
 - Fixed a bug in attributes definition that made them to be globally defined to all the classes.
+- Added static attributes to RPClass, so you can define them now instead of adding to each object.
 
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case
