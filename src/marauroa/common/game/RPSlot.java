@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.35 2007/02/15 21:29:59 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.36 2007/02/16 09:04:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,7 +41,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/** Stores deleted objects for delta^2 algorithm */
 	private List<RPObject> deleted;
 
-	/** 
+	/**
 	 * Constructor.
 	 *
 	 */
@@ -56,7 +56,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
-	 * Constructor 
+	 * Constructor
 	 * @param name name of the slot
 	 */
 	public RPSlot(String name) {
@@ -64,17 +64,17 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		this.name = name;
 	}
 
-	/** 
+	/**
 	 * This method sets the owner of the slot.
 	 * Owner is used for having access to RPClass.
-	 * 
-	 * @param object sets the object that owns this slot. 
+	 *
+	 * @param object sets the object that owns this slot.
 	 */
 	void setOwner(RPObject object) {
 		owner = object;
 	}
 
-	/** 
+	/**
 	 * This method returns the owner of the object
 	 * @return the owner of the slot
 	 */
@@ -82,42 +82,37 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return owner;
 	}
 
-	/** 
+	/**
 	 * Sets the name of the slot
-	 * @param name the name of the slot. 
+	 * @param name the name of the slot.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/** 
-	 * Get the name of the slot 
-	 * @return the name of the object. 
+	/**
+	 * Get the name of the slot
+	 * @return the name of the object.
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Assigns a valid unique id for this object inside the contained object.
-	 * This assigned id will lack of zoneid attribute.
-	 * @param object object to assign a valid unique id.
-	 */
-	public void assignValidID(RPObject object) {
-		//TODO: Code it.
-	}
 
-	/** 
+	/**
 	 * Add an object to the slot, but object previously should have a valid id by calling assignValidID
 	 * @param object the object to add to this slot.
-	 * @throws SlotIsFullException if there is no more room at the slot. 
+	 * @return the id assigned to the object
+	 * @throws SlotIsFullException if there is no more room at the slot.
 	 */
-	public void add(RPObject object) {
+	public int add(RPObject object) {
 		if (isFull()) {
 			throw new SlotIsFullException(name);
 		}
 
-		// Notify about the addition of the object 
+		owner.assignSlotID(object);
+
+		// Notify about the addition of the object
 		added.add(object);
 		// If the object is on deleted list, remove from there.
 		deleted.remove(object);
@@ -127,16 +122,18 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		 */
 		object.setContainer(owner, this);
 		objects.add(object);
+
+		return object.getInt("id");
 	}
 
-	/** 
+	/**
 	 * Gets the object from the slot
 	 * @param id the object id. Note that only object_id field is relevant.
-	 * @return the object or null if it is not found. 
+	 * @return the object or null if it is not found.
 	 */
 	public RPObject get(RPObject.ID id) {
 		int oid=id.getObjectID();
-		
+
 		for (RPObject object : objects) {
 			/* We compare only the id, as the zone is really irrelevant
 			 * in a contained object */
@@ -148,9 +145,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return null;
 	}
 
-	/** 
+	/**
 	 * Gets the first object from the slot.
-	 * @return the first object of the slot or null if it is empty.  
+	 * @return the first object of the slot or null if it is empty.
 	 */
 	public RPObject getFirst() {
 		if(objects.isEmpty()) {
@@ -160,11 +157,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return objects.get(0);
 	}
 
-	/** 
+	/**
 	 * This method removes the object from the slot.
 	 * When an object is removed from the slot, its contained information is set to null.
 	 * @param id the object id. Note that only object_id field is relevant.
-	 * @return the object or null if it is not found. 
+	 * @return the object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
 		Iterator<RPObject> it = objects.iterator();
@@ -210,7 +207,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 	}
 
-	/** 
+	/**
 	 * This method empty the slot by removing all the objects inside.
 	 */
 	public void clear() {
@@ -223,14 +220,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		objects.clear();
 	}
 
-	/** 
+	/**
 	 * This method returns true if the slot has the object whose id is id
 	 * @param id the object id. Note that only object_id field is relevant.
 	 * @return true if it is found or false otherwise.
 	 */
 	public boolean has(RPObject.ID id) {
 		int oid=id.getObjectID();
-		
+
 		for (RPObject object : objects) {
 			// compare only the id, as the zone is not used for slots
 			if (oid == object.getID().getObjectID()) {
@@ -240,10 +237,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return false;
 	}
 
-	/** 
+	/**
 	 * Traverses up the container tree to see if the slot is owned by id object or by one of its parents
 	 * @param id the object id. Note that only object_id field is relevant.
-	 * @return true if this slot is owned (at any depth) by id or false otherwise. 
+	 * @return true if this slot is owned (at any depth) by id or false otherwise.
 	 */
 	public boolean hasAsParent(RPObject.ID id) {
 		RPObject owner = getOwner();
@@ -258,7 +255,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return false;
 	}
 
-	/** 
+	/**
 	 * Return the number of elements in the slot
 	 * @return the number of elements in the slot
 	 */
@@ -269,14 +266,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Returns the maximum amount of objects that can be stored at the slot.
 	 * When there is no limit we use the -1 value.
-	 * 
+	 *
 	 * @return the maximum amount of objects that can be stored at the slot.
 	 */
 	public byte getCapacity() {
 		if(capacity==-1) {
 			capacity=owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 		}
-		
+
 		return capacity;
 	}
 
@@ -288,16 +285,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return size() == capacity;
 	}
 
-	/** 
+	/**
 	 * Iterate over the objects of the slot.
 	 * We disallow removing objects from the iterator to avoid breaking delta^2 algorithm
-	 * @return an unmodifiable iterator object the objects. 
+	 * @return an unmodifiable iterator object the objects.
 	 */
 	public Iterator<RPObject> iterator() {
 		return Collections.unmodifiableList(objects).iterator();
 	}
 
-	/** 
+	/**
 	 * Returns true if both objects are equal
 	 * @return true if both objects are equal
 	 */
@@ -330,21 +327,25 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return str.toString();
 	}
 
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-	throws java.io.IOException {
+	/**
+	 * This method serialize the object with the default level of detail, that removes
+	 *  private and hidden attributes
+	 *  @param out the output serializer
+	 */
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
-	public void writeObject(marauroa.common.net.OutputSerializer out,
-			DetailLevel level) throws java.io.IOException {
-		short code = -1;
-
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *  @param out the output serializer
+	 *  @param level the level of Detail
+	 */
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		RPClass rpClass = owner.getRPClass();
-		try {
-			code=rpClass.getCode(DefinitionClass.RPSLOT, name);
-		} catch(SyntaxException e) {
-			code=-1;
-		}
+
+		Definition def=rpClass.getDefinition(DefinitionClass.RPSLOT, name);
+		short code=def.getCode();
 
 		if (level == DetailLevel.FULL) {
 			// We want to ensure that attribute text is stored.
@@ -356,13 +357,17 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		if (code == -1) {
 			out.write(name);
 		}
-		
+
+		//TODO: Consider hidden objects.
 		out.write(objects.size());
 		for (RPObject object : objects) {
 			object.writeObject(out, level);
 		}
 	}
 
+	/**
+	 * Fills this object with the data that has been serialized.
+	 */
 	public void readObject(marauroa.common.net.InputSerializer in)
 	throws java.io.IOException, java.lang.ClassNotFoundException {
 		short code = in.readShort();
@@ -376,9 +381,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Illegal request of an list of " + size
-					+ " size");
+			throw new IOException("Illegal request of an list of " + size+ " size");
 		}
+
 		objects.clear();
 		for (int i = 0; i < size; ++i) {
 			objects.add((RPObject) in.readObject(new RPObject()));
@@ -386,9 +391,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 
-	/** 
+	/**
 	 * This method create a copy of the slot
-	 * @return a depth copy of the object.  
+	 * @return a depth copy of the object.
 	 */
 	@Override
 	public Object clone() {
@@ -419,11 +424,20 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return slot;
 	}
 
+	/**
+	 * Clear stored delta² information.
+	 *
+	 */
 	public void resetAddedAndDeletedRPObjects() {
 		added.clear();
 		deleted.clear();
 	}
 
+	/**
+	 * Copy to given slot the objects added.
+	 * It does a depth copy of the objects.
+	 * @param slot the slot to copy added objects.
+	 */
 	public void setAddedRPObject(RPSlot slot) {
 		for (RPObject object : slot.added) {
 			RPObject copied = (RPObject) object.clone();
@@ -432,6 +446,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		}
 	}
 
+	/**
+	 * Copy to given slot the objects deleted.
+	 * It does a depth copy of the objects.
+	 * @param slot the slot to copy added objects.
+	 */
 	public void setDeletedRPObject(RPSlot slot) {
 		for (RPObject object : slot.deleted) {
 			RPObject copied = (RPObject) object.clone();
@@ -439,5 +458,4 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			objects.add(copied);
 		}
 	}
-
 }

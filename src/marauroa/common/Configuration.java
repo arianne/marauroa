@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.14 2007/02/10 23:17:50 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.15 2007/02/16 09:04:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,7 +39,7 @@ public class Configuration {
 	/**
 	 * This method defines the default configuration file for all the instances
 	 * of Configuration
-	 * 
+	 *
 	 * @param conf the location of the file
 	 */
 	public static void setConfigurationFile(String conf) {
@@ -51,7 +51,7 @@ public class Configuration {
 	/**
 	 * This method defines the default configuration file for all the instances
 	 * of Configuration
-	 * 
+	 *
 	 * @param relativeToHome should this file be placed below the users home directory?
 	 * @param basedir directory prefix which is ignore in webstart environment
 	 * @param conf the location of the file
@@ -64,7 +64,7 @@ public class Configuration {
 
 	/**
 	 * Should the configuration be read from and write to a file?
-	 * 
+	 *
 	 * @param persistence true to use files, false otherwise
 	 */
 	public static void setConfigurationPersitance(boolean persistence) {
@@ -99,9 +99,9 @@ public class Configuration {
 
 	/**
 	 * This method returns an instance of Configuration
-	 * 
+	 *
 	 * @return a shared instance of Configuration
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Configuration getConfiguration() throws IOException {
 		if (configuration == null) {
@@ -112,7 +112,7 @@ public class Configuration {
 
 	/**
 	 * This method returns a String with the value of the property.
-	 * 
+	 *
 	 * @param property
 	 *            the property we want the value
 	 * @return a string containing the value of the propierty
@@ -123,8 +123,8 @@ public class Configuration {
 		return properties.getProperty(property);
 	}
 
-	/** 
-	 * This method returns true if the property exists. 
+	/**
+	 * This method returns true if the property exists.
 	 * @param property
 	 * @return true if the property exists
 	 */
@@ -134,7 +134,7 @@ public class Configuration {
 
 	/**
 	 * This method set a property with the value we pass as parameter
-	 * 
+	 *
 	 * @param property
 	 *            the property we want to set the value
 	 * @param value

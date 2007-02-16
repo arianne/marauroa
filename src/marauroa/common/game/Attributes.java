@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.36 2007/02/15 18:49:38 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.37 2007/02/16 09:04:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import java.util.Map;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
-/** 
+/**
  * This class hosts a list of Attributes stored as pairs String=String.
  * There are some important things to remark on Attributes.
  * 1) This class is more than a Map, as it stores information like its class.
@@ -33,20 +33,20 @@ import marauroa.common.game.Definition.DefinitionClass;
  *     It contains the zone identification. Both id and zoneid uniquely identify an object on server runtime.
  *   - type
  *     It contains the name of the RPClass ( @Link marauroa.common.game.RPClass ) that defines this attributes object.
- *   
+ *
  * Attributes also features a part of the implementation of Delta^2 that try
  * to reduce data send to clients by just sending differences on the objects from a previous
- * state. 
- * This mainly consists on sending which attributes has been added or modified and what 
+ * state.
+ * This mainly consists on sending which attributes has been added or modified and what
  * attributes has been deleted.
- * 
+ *
  * @author miguel
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
-	/** This is for Delta² algorithm: added attributes */
+	/** This is for Deltaï¿½ algorithm: added attributes */
 	private Map<String, String> added;
 
-	/** This is for Delta² algorithm: deleted attributes */
+	/** This is for Deltaï¿½ algorithm: deleted attributes */
 	private Map<String, String> deleted;
 
 	/** A Map<String,String> that contains the attributes */
@@ -98,9 +98,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		rpClass = rpclass;
 	}
 
-	/** 
-	 * Returns the RPClass of the attributes 
-	 * @return the object RPClass 
+	/**
+	 * Returns the RPClass of the attributes
+	 * @return the object RPClass
 	 */
 	public RPClass getRPClass() {
 		return rpClass;
@@ -273,7 +273,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public String remove(String attribute) {
 		String has=added.remove(attribute);
 		/*  We remove from added and if it has been added and remove we tell nothing about the attribute.
-		 *  But if it was not found, we add it to deleted 
+		 *  But if it was not found, we add it to deleted
 		 */
 		if(has==null) {
 			/* This is for Delta^2 feature, as if it is empty it fails.
@@ -359,8 +359,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * This method serialize the object with the default level of detail, that removes
-	 *  private and hidden attributes
+	 * This method serialize the object with the given level of detail.
 	 *  @param out the output serializer
 	 *  @param level the level of Detail
 	 */
@@ -382,7 +381,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 
 			if (shouldSerialize(def, level)) {
-				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1); 
+				boolean serializeKeyText= (level == DetailLevel.FULL) || (def.getCode()==-1);
 
 				if (serializeKeyText) {
 					out.write((short)-1);
@@ -405,7 +404,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	boolean shouldSerialize(DefinitionClass clazz, String key, DetailLevel level) {
 		Definition def=rpClass.getDefinition(clazz, key);
-		return shouldSerialize(def, level);		
+		return shouldSerialize(def, level);
 	}
 
 	/**
@@ -493,8 +492,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the deleted infomation of the Delta².
-	 */	
+	 * Fills this attribute with the deleted infomation of the Deltaï¿½.
+	 */
 	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 

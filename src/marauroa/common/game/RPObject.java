@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.35 2007/02/15 21:29:59 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.36 2007/02/16 09:04:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,12 +21,12 @@ import java.util.List;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
-/** 
+/**
  * This class implements an Object.
  * <p>
  * An object is the basic abstraction at marauroa. Players are objects, creatures are objects,
  * the maze at pacman is an object, each gladiator is an object... everything is an object.<br>
- * But don't get confused with all the object keyword usage outthere. An object is anything 
+ * But don't get confused with all the object keyword usage outthere. An object is anything
  * that can be though as an object ( physical or logical thing ).
  * <p>
  * Objects are stored at IRPZones.
@@ -34,8 +34,8 @@ import marauroa.common.game.Definition.DefinitionClass;
  * Objects contains:<ul>
  * <li>RPSlots
  * <li>RPEvents
- * </ul> 
- */ 
+ * </ul>
+ */
 
 public class RPObject extends Attributes {
 	/** a list of slots that this object contains */
@@ -64,16 +64,16 @@ public class RPObject extends Attributes {
 		slots = new LinkedList<RPSlot>();
 		added = new LinkedList<RPSlot>();
 		deleted = new LinkedList<RPSlot>();
-		
+
 		events= new LinkedList<RPEvent>();
-		
+
 		container = null;
 		containerSlot=null;
 	}
 
-	/** 
-	 * Copy constructor 
-	 * @param object the object that is going to be copied. 
+	/**
+	 * Copy constructor
+	 * @param object the object that is going to be copied.
 	 */
 	public RPObject(RPObject object) {
 		this();
@@ -91,10 +91,10 @@ public class RPObject extends Attributes {
 			events.add((RPEvent) event.clone());
 		}
 	}
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id the id of the object
 	 */
 	RPObject(ID id) {
@@ -102,35 +102,35 @@ public class RPObject extends Attributes {
 		setID(id);
 	}
 
-	/** 
+	/**
 	 * Returns an ID object representing the id of this object
-	 * @return the identificator of the object 
+	 * @return the identificator of the object
 	 */
 	public RPObject.ID getID() {
 		return new ID(this);
 	}
 
-	/** 
+	/**
 	 * Set the attributes that define the ID of the object
-	 * @param id the object id to set for this object 
+	 * @param id the object id to set for this object
 	 */
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
 		put("zoneid", id.getZoneID());
 	}
 
-	/** 
+	/**
 	 * Returns true if this object is contained inside another one.
-	 * @return true if this object is contained inside another one. 
+	 * @return true if this object is contained inside another one.
 	 */
 	public boolean isContained() {
 		return container != null;
 	}
 
-	/** 
+	/**
 	 * This make this object to be contained in the slot of container.
 	 * @param object the object that is going to contain this object.
-	 * @param slot the slot of the object that contains this object. 
+	 * @param slot the slot of the object that contains this object.
 	 */
 	public void setContainer(RPObject object, RPSlot slot)
 	{
@@ -138,25 +138,43 @@ public class RPObject extends Attributes {
 		containerSlot = slot;
 	}
 
-	/** 
+	/**
 	 * Returns the container where this object is
-	 * @return the container of this object. 
+	 * @return the container of this object.
 	 */
 	public RPObject getContainer() {
 		return container;
 	}
 
-	/** 
+	/**
 	 * Returns the slot where this object is contained
-	 * @param the slot of the object that contains this object. 
+	 * @param the slot of the object that contains this object.
 	 */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
 	}
 
+	private int lastassignedID;
+
+	/**
+	 * Assign a valid id for a object to be added to a slot.
+	 * The id is assigned by the base object that contains all.
+	 * @param object object to be added to a slot
+	 */
+	void assignSlotID(RPObject object) {
+		if(container!=null) {
+			container.assignSlotID(object);
+		} else {
+			object.put("id", lastassignedID++);
+			if(object.has("zoneid")) {
+				object.remove("zoneid");
+			}
+		}
+	}
+
 	/**
 	 * This method returns true if the object has that slot
-	 * 
+	 *
 	 * @param name the name of the slot
 	 * @return true if slot exists or false otherwise
 	 */
@@ -171,7 +189,7 @@ public class RPObject extends Attributes {
 
 	/**
 	 * This method add the slot to the object
-	 * 
+	 *
 	 * @param slot the RPSlot object
 	 * @throws SlotAlreadyAddedException if the slot already exists
 	 */
@@ -179,20 +197,20 @@ public class RPObject extends Attributes {
 		if (hasSlot(name)) {
 			throw new SlotAlreadyAddedException(name);
 		}
-		
+
 		RPSlot slot=new RPSlot(name);
 
 		/** First we set the slot owner, so that slot can get access to RPClass */
 		slot.setOwner(this);
 		slots.add(slot);
 
-		/** Notify delta^2 about the addition of this slot */ 
-		added.add(slot);			
+		/** Notify delta^2 about the addition of this slot */
+		added.add(slot);
 	}
 
-	/** 
+	/**
 	 * This method is used to remove an slot of the object
-	 * @param name the name of the slot 
+	 * @param name the name of the slot
 	 * @return the removed slot if it is found or null if it is not found.
 	 */
 	public RPSlot removeSlot(String name) {
@@ -200,9 +218,9 @@ public class RPObject extends Attributes {
 			RPSlot slot = it.next();
 			if (name.equals(slot.getName())) {
 				// TODO: if an slot is added and deleted on the same turn it shouldn't be mention on deleted.
-				/** Notify delta^2 about the removal of this slot. */				
+				/** Notify delta^2 about the removal of this slot. */
 				deleted.add(slot);
-				
+
 				/* Remove and return it */
 				it.remove();
 				return slot;
@@ -214,7 +232,7 @@ public class RPObject extends Attributes {
 
 	/**
 	 * This method returns a slot whose name is name
-	 * 
+	 *
 	 * @param name the name of the slot
 	 * @return the slot or null if the slot is not found
 	 */
@@ -224,13 +242,13 @@ public class RPObject extends Attributes {
 				return slot;
 			}
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * Returns a iterator over the slots
-	 * 
+	 *
 	 * @return an iterator over the slots
 	 */
 	public Iterator<RPSlot> slotsIterator() {
@@ -239,32 +257,32 @@ public class RPObject extends Attributes {
 
 	/**
 	 * Returns an unmodifyable list of the slots
-	 * 
+	 *
 	 * @return a list of the slots
 	 */
 	public List<RPSlot> slots() {
 		return Collections.unmodifiableList(slots);
 	}
-	
-	/** 
-	 * Add an event to this object 
+
+	/**
+	 * Add an event to this object
 	 * @param name the name of the event
 	 * @param value its value
 	 */
 	public void addEvent(String name, String value) {
 		events.add(new RPEvent(this, name, value));
 	}
-	
+
 	/**
 	 * Empty the list of events.
 	 * This method is called at the end of each turn.
 	 */
 	public void clearEvents() {
-		events.clear();		
+		events.clear();
 	}
 
 	/**
-	 * Iterate over the events list 
+	 * Iterate over the events list
 	 * @return an iterator over the events
 	 */
 	public Iterator<RPEvent> eventsIterator() {
@@ -273,16 +291,16 @@ public class RPObject extends Attributes {
 
 	/**
 	 * Returns an unmodifyable list of the events
-	 * 
+	 *
 	 * @return a list of the evetns
 	 */
 	public List<RPEvent> events() {
 		return Collections.unmodifiableList(events);
 	}
-	
+
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -300,7 +318,7 @@ public class RPObject extends Attributes {
 		for (RPEvent event : events) {
 			tmp.append("[" + event.toString() + "]");
 		}
-		
+
 		return tmp.toString();
 	}
 
@@ -323,7 +341,7 @@ public class RPObject extends Attributes {
 		out.write(size);
 		for (RPSlot slot : slots) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			
+
 			if (shouldSerialize(def, level)) {
 				slot.writeObject(out, level);
 			}
@@ -340,7 +358,7 @@ public class RPObject extends Attributes {
 		out.write(size);
 		for (RPEvent event : events) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
-			
+
 			if (shouldSerialize(def, level)) {
 				event.writeObject(out, level);
 			}
@@ -389,7 +407,7 @@ public class RPObject extends Attributes {
 			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events);
 		} else {
 			return false;
-		}		
+		}
 	}
 
 	@Override
@@ -397,23 +415,23 @@ public class RPObject extends Attributes {
 		return getInt("id");
 	}
 
-	/** 
+	/**
 	 * Returns true if the object is empty
-	 * @return true if the object lacks of any attribute, slots or events. 
+	 * @return true if the object lacks of any attribute, slots or events.
 	 */
 	@Override
 	public boolean isEmpty() {
 		return super.isEmpty() && slots.isEmpty() && events.isEmpty();
 	}
 
-	/** 
-	 * Returns the number of attributes and events this object is made of. 
+	/**
+	 * Returns the number of attributes and events this object is made of.
 	 */
 	@Override
 	public int size() {
 		try {
 			int total = super.size();
-			
+
 			total+= events.size();
 
 			for (RPSlot slot : slots) {
@@ -440,45 +458,45 @@ public class RPObject extends Attributes {
 		while(eventsit.hasNext()) {
 			/* Iterate over events and remove all of them that are visible */
 			RPEvent event=eventsit.next();
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, event.getName());			
+			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, event.getName());
 			if (def.isVisible()) {
-				eventsit.remove();				
+				eventsit.remove();
 			}
 		}
-		
+
 		Iterator<RPSlot> slotit=slots.iterator();
 		while(slotit.hasNext()) {
 			RPSlot slot=slotit.next();
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			
+
 			if (def.isVisible()) {
 				List<RPObject.ID> idtoremove=new LinkedList<RPObject.ID>();
 				for (RPObject object : slot) {
 					object.clearVisible();
-					
+
 					/* If object is empty remove it. */
 					if(object.size()<=2) {
 						//TODO: zoneid and id are useless inside the slot
 						idtoremove.add(object.getID());
 					}
 				}
-				
+
 				for(RPObject.ID id: idtoremove) {
 					//TODO: Should check added and removed
 					slot.remove(id);
 				}
 			}
-			
+
 			/* If slot is empty remove it. */
 			if(slot.size()==0) {
-				slotit.remove();				
+				slotit.remove();
 			}
 		}
 	}
 
-	/** 
+	/**
 	 * Create a depth copy of the object
-	 * @return a copy of this object. 
+	 * @return a copy of this object.
 	 */
 	@Override
 	public Object clone() {
@@ -522,7 +540,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param objectid
 		 *            the object id
 		 * @param zone
@@ -535,7 +553,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param objectid
 		 *            the object id
 		 * @param zoneid
@@ -548,7 +566,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param attr
 		 *            an RPObject containing object_id attribute
 		 */
@@ -559,7 +577,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param attr
 		 *            an RPAction containing sourceid attribute
 		 */
@@ -570,7 +588,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * This method returns the object id
-		 * 
+		 *
 		 * @return the object id.
 		 */
 		public int getObjectID() {
@@ -583,7 +601,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * This method returns true of both ids are equal.
-		 * 
+		 *
 		 * @param anotherid
 		 *            another id object
 		 * @return true if they are equal, or false otherwise.
@@ -606,7 +624,7 @@ public class RPObject extends Attributes {
 
 		/**
 		 * This method returns a String that represent the object
-		 * 
+		 *
 		 * @return a string representing the object.
 		 */
 		@Override
@@ -655,7 +673,7 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Set added objects in slots for this object and fill object passed as param.	 * 
+	 * Set added objects in slots for this object and fill object passed as param.	 *
 	 * It is called by Marauroa, don't use :)
 	 * @param object the object to fill with added data.
 	 */
@@ -668,7 +686,7 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Set deleted objects in slots for this object and fill object passed as param.	 * 
+	 * Set deleted objects in slots for this object and fill object passed as param.	 *
 	 * It is called by Marauroa, don't use :)
 	 * @param object the object to fill with deleted data.
 	 */
