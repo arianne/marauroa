@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.38 2007/02/16 11:13:12 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.39 2007/02/17 18:53:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -146,7 +146,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			if(rpClass==null) return false;
 
 			Definition def=rpClass.getDefinition(DefinitionClass.STATIC, attribute);
-			return (def!=null);
+			return (def!=null && def.getValue()!=null);
 		}
 
 		return true;

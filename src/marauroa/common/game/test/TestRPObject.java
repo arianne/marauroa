@@ -20,7 +20,6 @@ import org.junit.Test;
 
 
 public class TestRPObject {
-
 	@Test
 	public void testRPObject() {
 		RPObject obj=new RPObject();
