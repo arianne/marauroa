@@ -33,9 +33,17 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/** The superclass of this or null if it doesn't have it. */
 	private RPClass parent;
 
+	/** Stores static attributes definition */
 	private Map<String, Definition> staticattributes;
+	/** 
+	 * Stores attributes definition. 
+	 * The main difference between static and non-static attributes is that the first one
+	 * are not settable once they are defined at RPClass.
+	 */
 	private Map<String, Definition> attributes;
+	/** Stores RPEvents definitions */
 	private Map<String, Definition> rpevents;
+	/** Stores RPSlots definitions */
 	private Map<String, Definition> rpslots;
 
 	/**
@@ -45,6 +53,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public RPClass() {
 		name=null;
 		parent = null;
+		
 		staticattributes = new HashMap<String, Definition>();
 		attributes = new HashMap<String, Definition>();
 		rpevents = new HashMap<String, Definition>();
@@ -191,12 +200,15 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * TODO: javadoc
+	 * Adds a static definition of an attribute that will be set for any object of the 
+	 * class.
+	 * Its value must be set as a string, but it can be accessed later using Attributes.get method.
+	 * NOTE: This type of attributes can't be set.
 	 *
-	 * @param clazz
-	 * @param name
-	 * @param value
-	 * @param flags
+	 * @param clazz It must be DefinitionClass.STATIC
+	 * @param name name of the static attribute
+	 * @param value value of the attribute
+	 * @param flags like visibility, storability, etc...
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, String value, byte flags) {
 		if(clazz!=DefinitionClass.STATIC) {

@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.6 2007/02/16 11:13:12 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.7 2007/02/17 16:24:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -409,6 +409,8 @@ public class Definition implements marauroa.common.net.Serializable {
 		out.write((byte)clazz.ordinal());
 		out.write(code);
 		out.write(name);
+		
+		/* Serialize value only if it is distinct of null */
 		if(value==null) {
 			out.write((byte)0);
 		} else {
@@ -426,6 +428,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		code = in.readShort();
 		name = in.readString();
 
+		/* If value is 0 that means that attribute is null */
 		if(in.readByte()==1) {
 			value= in.readString();
 		}
