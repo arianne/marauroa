@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.36 2007/02/16 09:04:58 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.37 2007/02/17 19:34:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,6 +144,18 @@ public class RPObject extends Attributes {
 	 */
 	public RPObject getContainer() {
 		return container;
+	}
+
+	/**
+	 * Returns the base container where this object is
+	 * @return the base container of this object.
+	 */
+	public RPObject getBaseContainer() {
+		if(container!=null) {
+			return container.getBaseContainer();
+		} else {
+			return this;
+		}
 	}
 
 	/**
@@ -475,8 +487,8 @@ public class RPObject extends Attributes {
 					object.clearVisible();
 
 					/* If object is empty remove it. */
-					if(object.size()<=2) {
-						//TODO: zoneid and id are useless inside the slot
+					if(object.size()==1) {
+						// If object size is one means only id remains.
 						idtoremove.add(object.getID());
 					}
 				}

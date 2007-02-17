@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.6 2007/02/13 20:32:55 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.7 2007/02/17 19:34:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -252,7 +252,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	/**
 	 * This methods resets the delta² information of objects.
 	 */
-	public void reset() {
+	protected void reset() {
 		for (RPObject object : objects.values()) {
 			object.resetAddedAndDeleted();
 			object.clearEvents();

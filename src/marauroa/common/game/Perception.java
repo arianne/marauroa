@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.10 2007/02/10 20:50:32 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.11 2007/02/17 19:34:34 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -69,10 +69,10 @@ public class Perception {
 	public List<RPObject> addedList;
 
 	/** The modified added objects */
-	public List<RPObject> modifiedAddedAttribsList;
+	public List<RPObject> modifiedAddedList;
 
 	/** The modified deleted objects */
-	public List<RPObject> modifiedDeletedAttribsList;
+	public List<RPObject> modifiedDeletedList;
 
 	/** The deleted objects */
 	public List<RPObject> deletedList;
@@ -83,8 +83,8 @@ public class Perception {
 		this.zoneid = zoneid;
 
 		addedList = new LinkedList<RPObject>();
-		modifiedAddedAttribsList = new LinkedList<RPObject>();
-		modifiedDeletedAttribsList = new LinkedList<RPObject>();
+		modifiedAddedList = new LinkedList<RPObject>();
+		modifiedDeletedList = new LinkedList<RPObject>();
 		deletedList = new LinkedList<RPObject>();
 	}
 
@@ -110,11 +110,11 @@ public class Perception {
 
 			modified.getDifferences(added, deleted);
 			if (added.size() > 0) {
-				modifiedAddedAttribsList.add(added);
+				modifiedAddedList.add(added);
 			}
 
 			if (deleted.size() > 0) {
-				modifiedDeletedAttribsList.add(deleted);
+				modifiedDeletedList.add(deleted);
 			}
 		} else {
 			modified.resetAddedAndDeleted();
@@ -150,7 +150,7 @@ public class Perception {
 	 * @return the amount of objects 
 	 */
 	public int size() {
-		return (addedList.size() + modifiedAddedAttribsList.size() + modifiedDeletedAttribsList.size() + deletedList.size());
+		return (addedList.size() + modifiedAddedList.size() + modifiedDeletedList.size() + deletedList.size());
 	}
 
 	/** 
@@ -158,8 +158,8 @@ public class Perception {
 	 */
 	public void clear() {
 		addedList.clear();
-		modifiedAddedAttribsList.clear();
-		modifiedDeletedAttribsList.clear();
+		modifiedAddedList.clear();
+		modifiedDeletedList.clear();
 		deletedList.clear();
 	}
 

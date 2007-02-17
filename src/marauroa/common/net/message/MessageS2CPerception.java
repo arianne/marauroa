@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.3 2007/02/17 19:34:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -90,8 +90,8 @@ public class MessageS2CPerception extends Message {
 		typePerception = perception.type;
 		zoneid = perception.zoneid;
 		addedRPObjects = perception.addedList;
-		modifiedAddedAttribsRPObjects = perception.modifiedAddedAttribsList;
-		modifiedDeletedAttribsRPObjects = perception.modifiedDeletedAttribsList;
+		modifiedAddedAttribsRPObjects = perception.modifiedAddedList;
+		modifiedDeletedAttribsRPObjects = perception.modifiedDeletedList;
 		deletedRPObjects = perception.deletedList;
 	}
 
