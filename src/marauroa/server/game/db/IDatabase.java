@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.3 2007/02/10 23:17:51 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.4 2007/02/18 22:01:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,20 @@ public interface IDatabase {
 	 */
 	public void addPlayer(JDBCTransaction transaction, String username,
 			byte[] password, String email) throws SQLException;
+	
+	/**
+	 * Generates an unique player id.
+	 * A pattern is a string that where special symbols will be replaced.
+	 * Mainly we have:<ul>
+	 * <li><b>@</b> that will be replaced by a random lowercase letter.
+	 * <li><b>#</b> that will be replaced by a random lowercase number.
+	 * </ul>
+	 * 
+	 * @param transaction the database transaction.
+	 * @param pattern the pattern to follow to genereate the player id 
+	 * @return the generated player id
+	 */
+	public String generatePlayer(JDBCTransaction transaction, String pattern) throws SQLException;
 
 	/**
 	 * Removes a player, its characters and the avatars that represent it from database.

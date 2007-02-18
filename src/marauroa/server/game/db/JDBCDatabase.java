@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.5 2007/02/10 18:23:03 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.6 2007/02/18 22:01:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -203,6 +204,33 @@ public class JDBCDatabase implements IDatabase {
 			logger.error("Can't add player("+username+") to Database", e);
 			throw e;
 		}
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#generatePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 */
+	public String generatePlayer(JDBCTransaction transaction, String pattern) throws SQLException {
+		int length=pattern.length();
+		Random rand=new Random();
+		StringBuffer os=new StringBuffer();
+		
+		for(int i=0;i<length;i++) {
+			char c=pattern.charAt(i);
+			if(c=='#') {
+				// Replaced the # with a number between 0 and 10.
+				os.append(rand.nextInt(10));				
+			} else if(c=='@') {
+				// Replaced @ with a lower case letter between a and z
+				char character=(char)(rand.nextInt(26)+97);
+				os.append(character);				
+			} else {
+				// if it isn't anyone of the above, just add the character.
+				os.append(c);
+			}
+		}
+		
+		return os.toString();
 	}
 	
 	/* (non-Javadoc)
