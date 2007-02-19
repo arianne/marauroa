@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.17 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.18 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,15 +15,13 @@ package marauroa.common.net;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 
-import org.apache.log4j.Logger;
-
 /**
  * This class host several constants related to the network configuration of
  * Marauroa
  */
 public class NetConst {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(NetConst.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
 
 	/** Port that will use the server for listen to incomming packets */
 	static public int marauroa_PORT;

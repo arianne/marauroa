@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.13 2007/02/10 16:52:14 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.14 2007/02/19 18:37:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,8 +30,6 @@ import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * This is the implementation of a worker that send messages, recieve it, ...
@@ -41,7 +39,7 @@ import org.apache.log4j.Logger;
  */
 public class NIONetworkServerManager extends Thread implements IWorker, INetworkServerManager {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
 	
 	/** We store the server for sending stuff. */
 	private NioServer server;

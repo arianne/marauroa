@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.8 2007/02/06 21:00:39 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.9 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,12 +15,10 @@ package marauroa.server.game.python;
 import marauroa.common.Log4J;
 import marauroa.server.game.rp.RPWorld;
 
-import org.apache.log4j.Logger;
-
 @Deprecated
 public class PythonRPWorld extends RPWorld {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(PythonRPWorld.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(PythonRPWorld.class);
 
 	private GameScript gameScript;
 

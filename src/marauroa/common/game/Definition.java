@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.7 2007/02/17 16:24:23 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.8 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,6 @@ package marauroa.common.game;
 import java.io.IOException;
 
 import marauroa.common.Log4J;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class stores the definition of an attributes, event or rpslot.
@@ -57,7 +55,7 @@ import org.apache.log4j.Logger;
  */
 public class Definition implements marauroa.common.net.Serializable {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(Definition.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(Definition.class);
 
 	/**
 	 * This enum determine to which entity the definition belogs: either attributes, event or slot

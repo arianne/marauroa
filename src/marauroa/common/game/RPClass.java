@@ -1,5 +1,6 @@
 package marauroa.common.game;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

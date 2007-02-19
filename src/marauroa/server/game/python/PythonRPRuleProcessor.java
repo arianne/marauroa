@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.20 2007/02/10 23:17:55 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.21 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,8 +25,6 @@ import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
 
-import org.apache.log4j.Logger;
-
 /**
  * FIXME: TODO: Update this class. It is now broken. Document how to use it.
  */
@@ -34,7 +32,7 @@ import org.apache.log4j.Logger;
 @Deprecated
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
+	private static final marauroa.common.Logger logger = Log4J
 			.getLogger(PythonRPRuleProcessor.class);
 
 	private GameScript gameScript;

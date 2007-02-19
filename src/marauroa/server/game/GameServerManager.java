@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.46 2007/02/10 18:13:39 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.47 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,8 +55,6 @@ import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
-
-import org.apache.log4j.Logger;
 
 /**
  * The GameServerManager is a active entity of the marauroa.game package, it is
@@ -162,7 +160,7 @@ Process C2S Logout ( STATE_GAME_END )
  */
 public final class GameServerManager extends Thread implements IDisconnectedListener {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
 
 	/** We need network server manager to be able to send messages */
 	private INetworkServerManager netMan;

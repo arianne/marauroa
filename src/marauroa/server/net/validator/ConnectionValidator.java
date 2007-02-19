@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.6 2007/02/10 16:52:14 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.7 2007/02/19 18:37:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,8 +26,6 @@ import marauroa.common.Log4J;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCDatabase;
 
-import org.apache.log4j.Logger;
-
 /**
  * The ConnectionValidator validates the ariving connections, currently it can only
  * check if the address is banned.
@@ -41,7 +39,7 @@ import org.apache.log4j.Logger;
  */
 public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(ConnectionValidator.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ConnectionValidator.class);
 
 	/** Permanent bans are stored inside the database. */
 	private List<InetAddressMask> permanentBans;

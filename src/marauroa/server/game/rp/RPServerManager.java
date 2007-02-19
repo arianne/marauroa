@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.15 2007/02/10 18:59:15 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.16 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,8 +38,6 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
-import org.apache.log4j.Logger;
-
 /**
  * This class is responsible for adding actions to scheduler, and to build and
  * sent perceptions.
@@ -62,7 +60,7 @@ import org.apache.log4j.Logger;
  */
 public class RPServerManager extends Thread {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(RPServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPServerManager.class);
 
 	/** The thread will be running while keepRunning is true */
 	private volatile boolean keepRunning;

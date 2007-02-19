@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.3 2007/02/17 19:34:36 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.4 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,6 @@ import marauroa.common.game.RPSlot;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 /**
@@ -47,7 +46,7 @@ import org.apache.log4j.NDC;
  */
 public class MessageS2CPerception extends Message {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
+	private static final marauroa.common.Logger logger = Log4J
 			.getLogger(MessageS2CPerception.class);
 
 	private byte typePerception;

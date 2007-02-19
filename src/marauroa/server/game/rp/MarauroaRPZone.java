@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.7 2007/02/17 19:34:36 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.8 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,8 +25,6 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
-
-import org.apache.log4j.Logger;
 
 /**
  * Default implementation of <code>IRPZone</code>.
@@ -80,7 +78,7 @@ The delta perception algorithm:
  */
 public abstract class MarauroaRPZone implements IRPZone {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(MarauroaRPZone.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(MarauroaRPZone.class);
 
 	/** Name of the zone */
 	protected ID zoneid;

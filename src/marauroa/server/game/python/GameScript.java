@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.8 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.9 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,12 +13,12 @@
 
 package marauroa.server.game.python;
 
-import org.python.util.PythonInterpreter;
-import org.python.core.*;
-
 import marauroa.common.Configuration;
 import marauroa.server.game.rp.RPScheduler;
 import marauroa.server.game.rp.RPWorld;
+
+import org.python.core.PyInstance;
+import org.python.util.PythonInterpreter;
 
 /** This class is a wrapper for calling python in a better way. */
 @Deprecated

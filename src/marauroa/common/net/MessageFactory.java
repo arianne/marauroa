@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.19 2007/02/10 16:52:13 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.20 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,7 +48,6 @@ import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 /**
@@ -57,7 +56,7 @@ import org.apache.log4j.NDC;
  */
 public class MessageFactory {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(Attributes.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(Attributes.class);
 
 	private static Map<Integer, Class> factoryArray;
 

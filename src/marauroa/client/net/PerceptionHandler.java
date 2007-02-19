@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.10 2007/02/05 18:37:37 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.11 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,6 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 /**
@@ -33,7 +32,7 @@ import org.apache.log4j.NDC;
  */
 public class PerceptionHandler {
 	/** the logger instance. */
-	private static final Logger logger = Log4J
+	private static final marauroa.common.Logger logger = Log4J
 			.getLogger(PerceptionHandler.class);
 
 	private IPerceptionListener listener;

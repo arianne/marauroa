@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.36 2007/02/10 23:17:48 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.37 2007/02/19 18:37:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,11 +47,9 @@ import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
 
-import org.apache.log4j.Logger;
-
 public abstract class ariannexp {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(ariannexp.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ariannexp.class);
 
 	public final static long TIMEOUT = 10000;
 

@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.7 2007/02/10 23:17:56 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.8 2007/02/19 18:37:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,6 @@ import marauroa.common.game.RPObjectInvalidException;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 
-import org.apache.log4j.Logger;
-
 /**
  * This class is a container of RPZones.
  * <p>
@@ -39,7 +37,7 @@ import org.apache.log4j.Logger;
  */
 public class RPWorld implements Iterable<IRPZone> {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(RPWorld.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPWorld.class);
 
 	/** The Singleton instance */
 	private static RPWorld instance;

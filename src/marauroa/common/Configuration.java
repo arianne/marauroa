@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.15 2007/02/16 09:04:57 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.16 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import marauroa.common.io.Persistence;
 /** This class is a basic configuration file manager */
 public class Configuration {
 	/** the logger instance. */
-	private static final org.apache.log4j.Logger logger = Log4J.getLogger(Configuration.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(Configuration.class);
 
 	private static boolean relativeToHome = false;
 	private static String basedir = "";

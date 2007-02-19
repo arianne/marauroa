@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.6 2007/02/10 18:59:15 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.7 2007/02/19 18:37:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,6 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 
-import org.apache.log4j.Logger;
-
 /**
  * This class represents a scheduler to deliver action by turns, so every action
  * added to the scheduler is executed on the next turn. Each object can cast as
@@ -34,7 +32,7 @@ import org.apache.log4j.Logger;
  */
 public class RPScheduler {
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(RPScheduler.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPScheduler.class);
 
 	/** a HashMap<RPObject,RPActionList> of entries for this turn */
 	private Map<RPObject, List<RPAction>> actualTurn;

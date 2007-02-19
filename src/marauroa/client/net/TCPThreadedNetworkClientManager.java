@@ -1,6 +1,6 @@
 // E X P E R I M E N T A L    TCP    C L I E N T
 
-/* $Id: TCPThreadedNetworkClientManager.java,v 1.22 2007/02/06 18:25:00 arianne_rpg Exp $ */
+/* $Id: TCPThreadedNetworkClientManager.java,v 1.23 2007/02/19 18:37:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,12 +29,10 @@ import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.message.Message;
 
-import org.apache.log4j.Logger;
-
 public final class TCPThreadedNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** the logger instance. */
-	private static final Logger logger = Log4J.getLogger(TCPThreadedNetworkClientManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(TCPThreadedNetworkClientManager.class);
 
 	private int clientid;
 
@@ -186,8 +184,7 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 
 	/** The active thread in charge of recieving messages from the network. */
 	class NetworkClientManagerRead extends Thread {
-		private final Logger logger = Log4J
-				.getLogger(NetworkClientManagerRead.class);
+		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
 
 		private InputStream is = null;
 
@@ -310,7 +307,7 @@ public final class TCPThreadedNetworkClientManager implements INetworkClientMana
 
 	/** A wrapper class for sending messages to clients */
 	class NetworkClientManagerWrite {
-		private final Logger logger = Log4J
+		private final marauroa.common.Logger logger = Log4J
 				.getLogger(NetworkClientManagerWrite.class);
 
 		private OutputStream os = null;

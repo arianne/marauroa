@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -69,7 +68,7 @@ public class Log4J {
 	 *            the Class requesting a logger
 	 * @return the logger instance
 	 */
-	public static Logger getLogger(Class clazz) {
-		return Logger.getLogger(clazz);
+	public static marauroa.common.Logger getLogger(Class clazz) {
+		return new marauroa.common.Logger(clazz);
 	}
 }
