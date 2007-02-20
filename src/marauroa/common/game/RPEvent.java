@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.7 2007/02/15 17:28:39 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.8 2007/02/20 19:54:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,8 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 * Constructor
 	 *
 	 */
-	public RPEvent() {		
+	public RPEvent(RPObject object) {
+		owner=object;
 	}
 
 	/**
@@ -59,14 +60,14 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 * @param value value of the event
 	 */
 	public RPEvent(RPObject object, String name, String value) {
-		owner=object;
+		this(object);
 		put(name,value);
 	}
 	
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
-		RPEvent event = new RPEvent();
+		RPEvent event = new RPEvent(owner);
 		name=event.name;
 		value=event.value;
 		owner=event.owner;
@@ -127,12 +128,8 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
 		
-		short code=-1;
-		try {
-			code=rpClass.getCode(DefinitionClass.RPEVENT, name);
-		} catch(SyntaxException e) {
-			code=-1;
-		}
+		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
+		short code=def.getCode();
 
 		if (level == DetailLevel.FULL) {
 			// We want to ensure that event text is stored.
@@ -144,8 +141,8 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		if (code == -1) {
 			out.write255LongString(name);
 		}
-
-		out.write255LongString(value);
+		
+		def.serialize(value, out);
 	}
 
 	/** 
@@ -154,6 +151,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 */
 	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
 		short code = in.readShort();
+		
 		if (code == -1) {
 			name = in.readString();
 		} else {
@@ -161,7 +159,9 @@ public class RPEvent implements marauroa.common.net.Serializable {
 			name=rpClass.getName(DefinitionClass.RPEVENT, code);
 		}
 
-		value=in.read255LongString();
+		RPClass rpClass = owner.getRPClass();
+		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
+		value=def.deserialize(in);
 	}
 
 }

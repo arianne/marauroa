@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.11 2007/02/17 19:34:34 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.12 2007/02/20 19:54:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -77,7 +77,11 @@ public class Perception {
 	/** The deleted objects */
 	public List<RPObject> deletedList;
 
-	/** Constructor */
+	/** 
+	 * Constructor
+	 * @param type the type of perception, either Delta or Sync perception.
+	 * @param zoneid the zone we are building the perception for. 
+	 */
 	public Perception(byte type, IRPZone.ID zoneid) {
 		this.type = type;
 		this.zoneid = zoneid;
@@ -93,6 +97,7 @@ public class Perception {
 	 * @param object the object added.
 	 */
 	public void added(RPObject object) {
+		/* If the object is already added there is no need to add it again. */
 		if (!addedHas(object)) {
 			addedList.add(object);
 		}
@@ -105,6 +110,10 @@ public class Perception {
 	 */
 	public void modified(RPObject modified) throws Exception {
 		if (!removedHas(modified) && !addedHas(modified)) {
+			/* 
+			 * The object wasn't neither added or removed in this turn.
+			 * So we get the differences.
+			 */
 			RPObject added = new RPObject();
 			RPObject deleted = new RPObject();
 
@@ -117,6 +126,10 @@ public class Perception {
 				modifiedDeletedList.add(deleted);
 			}
 		} else {
+			/*
+			 * Object was added or deleted in the same turn.
+			 * So we just clean the added and deleted of the object.
+			 */
 			modified.resetAddedAndDeleted();
 		}
 	}

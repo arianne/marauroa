@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.10 2007/02/11 17:34:23 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.11 2007/02/20 19:54:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,11 +27,17 @@ package marauroa.common.game;
  * The action_id is used to identify the action when a resulting response comes in a perception
  */   
 public class RPAction extends Attributes {
-	/** Constructor */
+	/** 
+	 * Constructor 
+	 */
 	public RPAction() {
 		super(RPClass.getBaseRPActionDefault());
 	}
 
+	/**
+	 * Create a depth copy of the action
+	 * @return a copy of this action.
+	 */
 	@Override
 	public Object clone() {
 		RPAction action = new RPAction();

@@ -438,6 +438,10 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return defaultRPClass;
 	}
 
+	/** 
+	 * Returns true if two objects are exactly equal 
+	 * @param ot the object to compare with this one.
+	 */
 	@Override
 	public boolean equals(Object ot) {
 		if(ot==null || !(ot instanceof RPClass)) {
@@ -448,7 +452,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		return name.equals(otc.name) &&
 		  (parent==otc.parent || parent.equals(otc.parent)) &&
-		  attributes.equals(attributes) &&
+		  staticattributes.equals(otc.staticattributes) && 
+		  attributes.equals(otc.attributes) &&
 		  rpevents.equals(otc.rpevents) &&
 		  rpslots.equals(otc.rpslots);
 	}

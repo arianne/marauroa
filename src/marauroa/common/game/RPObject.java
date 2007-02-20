@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.37 2007/02/17 19:34:34 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.38 2007/02/20 19:54:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -405,13 +405,16 @@ public class RPObject extends Attributes {
 		events = new LinkedList<RPEvent>();
 
 		for (int i = 0; i < size; ++i) {
-			RPEvent event = new RPEvent();
+			RPEvent event = new RPEvent(this);
 			event = (RPEvent) in.readObject(event);
 			events.add(event);
 		}
 	}
 
-	/** Returns true if two objects are exactly equal */
+	/** 
+	 * Returns true if two objects are exactly equal 
+	 * @param obj the object to compare with this one.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof RPObject) {
