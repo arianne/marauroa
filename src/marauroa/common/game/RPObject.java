@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.38 2007/02/20 19:54:48 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.39 2007/02/20 22:55:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,9 @@ public class RPObject extends Attributes {
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
-	/** Constructor */
+	/** 
+	 * Constructor 
+	 */
 	public RPObject() {
 		super(RPClass.getBaseRPObjectDefault());
 
@@ -166,6 +168,10 @@ public class RPObject extends Attributes {
 		return containerSlot;
 	}
 
+	/** 
+	 * Keep track of the lastest assigned id for any object added to the slot of this
+	 * object or any object that is contained by this object. 
+	 */
 	private int lastassignedID;
 
 	/**
@@ -334,15 +340,29 @@ public class RPObject extends Attributes {
 		return tmp.toString();
 	}
 
+	/**
+	 * This method serialize the object with the default level of detail, that removes
+	 *  private and hidden attributes
+	 *  @param out the output serializer
+	 */
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *  @param out the output serializer
+	 *  @param level the level of Detail
+	 */
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
+		/* 
+		 * We compute the amount of slots to serialize first.
+		 * We don't serialize hidden or private slots unless detail level is full. 
+		 */
 		int size = 0;
 		for (RPSlot slot : slots) {
 			if (shouldSerialize(DefinitionClass.RPSLOT, slot.getName(), level)) {
@@ -350,6 +370,9 @@ public class RPObject extends Attributes {
 			}
 		}
 
+		/*
+		 * Now write it.
+		 */
 		out.write(size);
 		for (RPSlot slot : slots) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
@@ -359,7 +382,10 @@ public class RPObject extends Attributes {
 			}
 		}
 
-		// TODO: The same now for events... isn't it claiming for a refactoring? :)
+		/* 
+		 * We compute the amount of events to serialize first.
+		 * We don't serialize hidden or private slots unless detail level is full. 
+		 */
 		size = 0;
 		for (RPEvent event : events) {
 			if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
@@ -367,6 +393,9 @@ public class RPObject extends Attributes {
 			}
 		}
 
+		/*
+		 * Now write it too.
+		 */
 		out.write(size);
 		for (RPEvent event : events) {
 			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
@@ -377,10 +406,17 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	/**
+	 * Fills this object with the data that has been serialized.
+	 * @param in the input serializer
+	 */
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
 
+		/*
+		 * First we load slots
+		 */
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
@@ -396,6 +432,9 @@ public class RPObject extends Attributes {
 			slots.add(slot);
 		}
 
+		/*
+		 * And now we load events
+		 */
 		size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
@@ -419,7 +458,9 @@ public class RPObject extends Attributes {
 	public boolean equals(Object obj) {
 		if(obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events);
+			return super.equals(obj) &&
+			  slots.equals(object.slots) &&
+			  events.equals(object.events);
 		} else {
 			return false;
 		}
@@ -492,6 +533,8 @@ public class RPObject extends Attributes {
 					/* If object is empty remove it. */
 					if(object.size()==1) {
 						// If object size is one means only id remains.
+						// Objects inside the slot should not contain any other special attribute.
+						// If only id remains, we can remove this object from the slot. 
 						idtoremove.add(object.getID());
 					}
 				}
@@ -522,14 +565,14 @@ public class RPObject extends Attributes {
 		object.container = container;
 		object.containerSlot = containerSlot;
 
+		for (RPEvent event : events) {
+			object.addEvent(event.getName(), event.getValue());
+		}
+
 		for (RPSlot slot : slots) {
 			RPSlot copied = (RPSlot) slot.clone();
 			copied.setOwner(object);
 			object.slots.add(copied);
-		}
-
-		for (RPEvent event : events) {
-			object.addEvent(event.getName(), event.getValue());
 		}
 
 		for (RPSlot slot : added) {

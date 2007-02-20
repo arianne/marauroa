@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.40 2007/02/20 19:24:05 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.41 2007/02/20 22:55:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -434,6 +434,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Fills this object with the data that has been serialized.
+	 * @param in the input serializer
 	 */
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
 		rpClass = RPClass.getRPClass(in.readString());
