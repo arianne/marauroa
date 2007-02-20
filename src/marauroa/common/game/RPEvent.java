@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.8 2007/02/20 19:54:48 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.9 2007/02/20 20:13:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -153,7 +153,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		short code = in.readShort();
 		
 		if (code == -1) {
-			name = in.readString();
+			name = in.read255LongString();
 		} else {
 			RPClass rpClass = owner.getRPClass();
 			name=rpClass.getName(DefinitionClass.RPEVENT, code);
@@ -164,4 +164,18 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		value=def.deserialize(in);
 	}
 
+	/** 
+	 * Returns true if two objects are exactly equal 
+	 * @param obj the object to compare with this one.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof RPEvent) {
+			RPEvent comp=(RPEvent)obj;
+			return name.equals(comp.name) && value.equals(value);
+		} else {
+			return false;
+		}
+	}
+	
 }

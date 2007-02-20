@@ -133,6 +133,9 @@ public class TestRPObject {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
+		obj.addEvent("test", "work!");
+		obj.addEvent("test", "it MUST work!");
+		
 		RPSlot lhand=obj.getSlot("lhand");
 
 		RPObject pocket=new RPObject();
