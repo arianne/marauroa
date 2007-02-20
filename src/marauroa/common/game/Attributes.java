@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.39 2007/02/17 18:53:57 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.40 2007/02/20 19:24:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -161,11 +161,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public void put(String attribute, String value) {
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
-
-		/* If attribute to set is type we load class value from it */
-		if (attribute.equals("type") && RPClass.hasRPClass(value)) {
-			setRPClass(RPClass.getRPClass(value));
-		}
 
 		content.put(attribute, value);
 	}
@@ -495,37 +490,50 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the added infomation of the DeltaÂ².
+	 * Fills this attribute with the added infomation of the Delta².
+	 * @param attr the object whose added attributes we are going to copy. 
 	 */
 	public void setAddedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
+		
 		int i = 0;
+		/* Copy each of the added attributes to this object. */
 		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
 			++i;
 			content.put(entry.getKey(), entry.getValue());
 		}
 
-		if (i > 0) {
+		/* If we have added any attributes, we set the object id */
+		if (i > 0) {			
 			content.put("id", attr.get("id"));
-			content.put("zoneid", attr.get("zoneid"));
+			/* Object stored at slots don't have now the zoneid attribute. */
+			if(attr.has("zoneid")) {
+				content.put("zoneid", attr.get("zoneid"));
+			}
 		}
 	}
 
 	/**
 	 * Fills this attribute with the deleted infomation of the Deltaï¿½.
+	 * @param attr the object whose deleted attributes we are going to copy. 
 	 */
 	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 
 		int i = 0;
+		/* Copy each of the deleted attributes to this object. */
 		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
 			++i;
 			content.put(entry.getKey(), entry.getValue());
 		}
 
+		/* If we have added any attributes, we set the object id */
 		if (i > 0) {
 			content.put("id", attr.get("id"));
-			content.put("zoneid", attr.get("zoneid"));
+			/* Object stored at slots don't have now the zoneid attribute. */
+			if(attr.has("zoneid")) {
+				content.put("zoneid", attr.get("zoneid"));
+			}
 		}
 	}
 }

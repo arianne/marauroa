@@ -77,7 +77,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 		add(DefinitionClass.ATTRIBUTE, "zoneid", Type.STRING, Definition.HIDDEN);
 		add(DefinitionClass.ATTRIBUTE, "clientid", Type.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
-		add(DefinitionClass.ATTRIBUTE, "type", Type.STRING, Definition.STANDARD);
 
 		rpClassList.put(name, this);
 	}
