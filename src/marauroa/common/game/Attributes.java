@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.41 2007/02/20 22:55:37 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.42 2007/02/21 20:46:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -473,7 +473,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Map.Entry<String, String> entry = it.next();
 
 			Definition def=rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-			if (def.isVisible()	&& !entry.getKey().equals("id")	&& !entry.getKey().equals("zoneid")) {
+			if (def.isVisible()	&& !entry.getKey().equals("id")) {
 				it.remove();
 
 				deleted.remove(entry.getKey());

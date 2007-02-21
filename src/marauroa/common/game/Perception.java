@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.12 2007/02/20 19:54:48 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.13 2007/02/21 20:46:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,4 +193,33 @@ public class Perception {
 		}
 		return false;
 	}
+	
+  @Override
+  public String toString() {
+	StringBuffer os=new StringBuffer();
+	os.append("#Added: \n");
+	for(RPObject ob: addedList) {
+		os.append(ob);
+		os.append("\n");
+	}
+
+	os.append("#Modified added: \n");
+	for(RPObject ob: modifiedAddedList) {
+		os.append(ob);	
+		os.append("\n");
+	}
+
+	os.append("#Modifed deleted: \n");
+	for(RPObject ob: modifiedDeletedList) {
+		os.append(ob);	
+		os.append("\n");
+	}
+
+	os.append("#Deleted: \n");
+	for(RPObject ob: deletedList) {
+		os.append(ob);	
+		os.append("\n");
+	}
+	return os.toString();	  
+  }
 }

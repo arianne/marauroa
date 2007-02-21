@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.40 2007/02/21 18:41:29 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.41 2007/02/21 20:46:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -184,6 +184,8 @@ public class RPObject extends Attributes {
 			container.assignSlotID(object);
 		} else {
 			object.put("id", lastassignedID++);
+			
+			// If object has zoneid we remove as it is useless inside a slot.
 			if(object.has("zoneid")) {
 				object.remove("zoneid");
 			}
