@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.41 2007/02/21 20:46:22 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.42 2007/02/21 23:01:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,6 +56,9 @@ public class RPObject extends Attributes {
 
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
+	
+	/** If this variable is true the object is removed from the perception send to client. */
+	private boolean hidden;
 
 	/** 
 	 * Constructor 
@@ -71,6 +74,8 @@ public class RPObject extends Attributes {
 
 		container = null;
 		containerSlot=null;
+		
+		hidden=false;
 	}
 
 	/**
@@ -81,6 +86,8 @@ public class RPObject extends Attributes {
 		this();
 
 		super.fill(object);
+		
+		hidden=object.hidden;
 
 		container = object.container;
 		containerSlot = object.containerSlot;
@@ -119,6 +126,32 @@ public class RPObject extends Attributes {
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
 		put("zoneid", id.getZoneID());
+	}
+	
+	/**
+	 * Makes this object invisible, so it is not added in any perception.
+	 */
+	public void hide(IRPZone zone) {		
+		hidden=true;
+		
+		//TODO: A hidden object should be removed from the perception.
+	}
+	
+	/**
+	 * Makes this object visible again.
+	 */
+	public void unhide(IRPZone zone) {
+		hidden=false;
+
+		//TODO: An object that is now unhidden should be added to the perception.
+	}
+	
+	/**
+	 * Return true if this object is hidden.
+	 * @return true if this object is hidden.
+	 */
+	public boolean isHidden() {
+		return hidden;
 	}
 
 	/**

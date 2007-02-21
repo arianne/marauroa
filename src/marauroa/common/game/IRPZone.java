@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.12 2007/02/10 23:17:50 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.13 2007/02/21 23:01:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ import java.util.Iterator;
  * 
  * @author miguel
  */
+//TODO: Review exceptions
 public interface IRPZone extends Iterable<RPObject> {
 	/** An unique ID for this zone */
 	public static class ID implements marauroa.common.net.Serializable {
@@ -130,6 +131,18 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * @return the remove object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
+
+	/**
+	 * 
+	 * @param object
+	 */
+	public void hide(RPObject object);
+	
+	/**
+	 * 
+	 * @param object
+	 */
+	public void unhide(RPObject object);
 
 	/**
 	 * This method returns an object of the Zone. Object can be modified after
