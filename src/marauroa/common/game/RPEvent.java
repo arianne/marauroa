@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.9 2007/02/20 20:13:12 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.10 2007/02/21 20:50:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -176,6 +176,11 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "["+name+"="+value+"]";
 	}
 	
 }
