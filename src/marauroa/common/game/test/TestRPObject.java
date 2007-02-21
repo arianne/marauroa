@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,13 +18,15 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.rp.MarauroaRPZone;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class TestRPObject {
-	@Test
-	public void testRPObject() {
-		RPObject obj=new RPObject();
+	private RPObject obj;
+	@Before
+	public void createObject() {
+		obj=new RPObject();
 
 		obj.put("a",1);
 		obj.put("b","1");
@@ -38,6 +39,25 @@ public class TestRPObject {
 		obj.addEvent("chat", "Hi there!");
 		obj.addEvent("chat", "Does this work?");
 
+		RPSlot lhand=obj.getSlot("lhand");
+
+		RPObject pocket=new RPObject();
+		pocket.put("size", 1);
+		pocket.addSlot("container");
+		lhand.add(pocket);
+
+		RPSlot container=pocket.getSlot("container");
+
+		RPObject coin=new RPObject();
+		coin.put("euro", 100);
+		coin.put("value", 100);
+		container.add(coin);
+	}
+	
+	@Test
+	public void testRPObject() {
+		assertNotNull(obj);
+		
 		assertTrue(obj.has("a"));
 		assertEquals(1, obj.getInt("a"));
 		assertTrue(obj.has("b"));
@@ -57,100 +77,12 @@ public class TestRPObject {
 
 	@Test
 	public void testRPSlots() {
-		RPObject obj=new RPObject();
-
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
-
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
-
-		RPSlot lhand=obj.getSlot("lhand");
-		assertNotNull(lhand);
-
-		RPObject pocket=new RPObject();
-		pocket.put("size", 1);
-		pocket.addSlot("container");
-		lhand.add(pocket);
-
-		RPSlot container=pocket.getSlot("container");
-
-		RPObject coin=new RPObject();
-		coin.put("euro", 100);
-		coin.put("value", 100);
-
-		int assignedid=container.add(coin);
-
-		assertEquals(coin, obj.getSlot("lhand").getFirst().getSlot("container").getFirst());
-
 		RPObject expected=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(1,expected.getInt("id"));
-		assertEquals(1,assignedid);
 	}
-
-	@Test
-	public void testRPEvents() {
-		RPObject obj=new RPObject();
-
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
-
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
-
-		obj.addEvent("test", "work!");
-		obj.addEvent("test", "it MUST work!");
-		obj.addEvent("test", "OMG! It works!");
-
-		RPSlot lhand=obj.getSlot("lhand");
-		assertNotNull(lhand);
-
-		RPObject coin=new RPObject();
-		coin.setID(new RPObject.ID(1,""));
-		coin.put("euro", 100);
-		coin.put("value", 100);
-
-		lhand.add(coin);
-
-		obj.clearVisible();
-
-		assertTrue(obj.isEmpty());
-	}
-
 
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
-		RPObject obj=new RPObject();
-
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
-
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
-
-		obj.addEvent("test", "work!");
-		obj.addEvent("test", "it MUST work!");
-		
-		RPSlot lhand=obj.getSlot("lhand");
-
-		RPObject pocket=new RPObject();
-		pocket.put("size", 1);
-		pocket.addSlot("container");
-		lhand.add(pocket);
-
-		RPSlot container=pocket.getSlot("container");
-
-		RPObject coin=new RPObject();
-		coin.put("euro", 100);
-		coin.put("value", 100);
-		container.add(coin);
-
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
 
@@ -166,60 +98,13 @@ public class TestRPObject {
 
 	@Test
 	public void testBaseContainer() {
-		RPObject obj=new RPObject();
-
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
-
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
-
-		RPSlot lhand=obj.getSlot("lhand");
-
-		RPObject pocket=new RPObject();
-		pocket.put("size", 1);
-		pocket.addSlot("container");
-		lhand.add(pocket);
-
-		RPSlot container=pocket.getSlot("container");
-
-		RPObject coin=new RPObject();
-		coin.put("euro", 100);
-		coin.put("value", 100);
-		container.add(coin);
-		
+		RPObject coin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(obj,coin.getBaseContainer());
 	}
 
 		
 	@Test
 	public void testDelta2() {
-		RPObject obj=new RPObject();
-
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
-
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
-
-		RPSlot lhand=obj.getSlot("lhand");
-
-		RPObject pocket=new RPObject();
-		pocket.put("size", 1);
-		pocket.addSlot("container");
-		lhand.add(pocket);
-
-		RPSlot container=pocket.getSlot("container");
-
-		RPObject coin=new RPObject();
-		coin.put("euro", 100);
-		coin.put("value", 100);
-		container.add(coin);
-		
 		MarauroaRPZone zone=new MarauroaRPZone("test") {
 			public void onInit() throws Exception {				
 			}
@@ -314,30 +199,54 @@ public class TestRPObject {
 		 * Test Delta^2 on slot object modification.
 		 */
 		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		assertEquals(coin,slotcoin);
-		
+	
 		slotcoin.put("value",200);
 
-		assertEquals(coin,slotcoin);
-
-		zone.modify(coin.getBaseContainer());
+		zone.modify(slotcoin.getBaseContainer());
 
 		expected=zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-		
+		assertTrue(expected.deletedList.isEmpty());		
+
+		/*
+		 * Next turn.
+		 * We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
+		/*
+		 * Test Delta^2 on slot object event addition
+		 */
+		slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+	
+		slotcoin.addEvent("tax","10%");
+
+		zone.modify(slotcoin.getBaseContainer());
+
+		expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		assertTrue(expected.addedList.isEmpty());
+		assertFalse(expected.modifiedAddedList.isEmpty());
+		assertTrue(expected.modifiedDeletedList.isEmpty());
+		assertTrue(expected.deletedList.isEmpty());		
 	}
 
 	@Test
 	public void testClearVisible() {
-		fail();
+		obj.clearVisible();
+		assertTrue(obj.isEmpty());
 	}
 	
 	@Test
-	public void testClearVisibleDelta2() {
-		fail();
+	public void testClearVisibleDelta2() throws Exception {
+		obj.clearVisible();
+		
+		RPObject oadded=new RPObject();
+		RPObject odeleted=new RPObject();
+		obj.getDifferences(oadded, odeleted);
+		
+		assertTrue(oadded.isEmpty());
+		assertTrue(odeleted.isEmpty());
 	}
 	
 }

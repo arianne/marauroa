@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.39 2007/02/20 22:55:39 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.40 2007/02/21 18:41:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -540,7 +540,7 @@ public class RPObject extends Attributes {
 				}
 
 				for(RPObject.ID id: idtoremove) {
-					//TODO: Should check added and removed
+					// Slot.remove code takes care of removing it from added and deleted list.
 					slot.remove(id);
 				}
 			}
@@ -759,47 +759,66 @@ public class RPObject extends Attributes {
 	// TODO: Refactor this method. Looks like it claims for bugs!"
 	/** This method get the changes on added and deleted things from this object */
 	public void getDifferences(RPObject oadded, RPObject odeleted) throws Exception {
-		/** First we get differences from attributes */
+		/* First we get differences from attributes */
 		oadded.setAddedAttributes(this);
 		odeleted.setDeletedAttributes(this);
+		
+		/* 
+		 * We add to the oadded object the events that exists. 
+		 */
+		for(RPEvent event: events) {
+			oadded.events.add((RPEvent)event.clone());
+		}
 
-		/**
+		/*
 		 * Now we compute differences at slots of this object. First we get the
-		 * deleted slots
+		 * deleted slots and add them to the deleted object.
 		 */
 		odeleted.setDeletedRPSlot(this);
 
 		for (RPSlot slot : slots) {
-			/** For each one of the existing slots, add the added objects */
+			/* For each one of the existing slots, add the added objects */
 			RPSlot added_slot = new RPSlot(slot.getName());
 			added_slot.setAddedRPObject(slot);
 
+			/* We only add the object if it is not there or it is not empty. */
 			if (added_slot.size() > 0 && !oadded.hasSlot(added_slot.getName())) {
+				added_slot.setOwner(oadded);
 				oadded.slots.add(added_slot);
 			}
 
-			/** And add also the deleted objects */
+			/* And add also the deleted objects */
 			RPSlot deleted_slot = new RPSlot(slot.getName());
 			deleted_slot.setDeletedRPObject(slot);
 
-			if (deleted_slot.size() > 0
-					&& !odeleted.hasSlot(deleted_slot.getName())) {
+			/* Again, we are only interested in adding the deleted slot if it is not 
+			 * already there or it it is not empty.
+			 */
+			if (deleted_slot.size() > 0 && !odeleted.hasSlot(deleted_slot.getName())) {
+				deleted_slot.setOwner(odeleted);
 				odeleted.slots.add(deleted_slot);
 			}
 
-			/** Now apply recursively to the existing objects in the slot */
+			/* Now apply recursively to the existing objects in the slot */
 			for (RPObject object : slot) {
 				RPObject object_added = new RPObject();
 				RPObject object_deleted = new RPObject();
 
+				/* So for each object in the slot, we get the differences */
 				object.getDifferences(object_added, object_deleted);
-
+				
 				if (object_added.size() > 0) {
+					/* If slot is no there, add it. */
 					if (!oadded.hasSlot(slot.getName())) {
-						oadded.slots.add(new RPSlot(slot.getName()));
+						RPSlot addedslot=new RPSlot(slot.getName());
+						addedslot.setOwner(oadded);
+						oadded.slots.add(addedslot);
 					}
 
-					if (!oadded.getSlot(slot.getName()).has(new ID(object))) {
+					// TODO: Is it possible for the object to previously exist?
+					/* If it is not added, add it */
+					if (!oadded.getSlot(slot.getName()).has(object.getID())) {
+						// TODO: Do we need to set the id?
 						object_added.put("id", object.get("id"));
 						oadded.getSlot(slot.getName()).add(object_added);
 					}
@@ -807,7 +826,9 @@ public class RPObject extends Attributes {
 
 				if (object_deleted.size() > 0) {
 					if (!odeleted.hasSlot(slot.getName())) {
-						odeleted.slots.add(new RPSlot(slot.getName()));
+						RPSlot deletedslot=new RPSlot(slot.getName());
+						deletedslot.setOwner(odeleted);
+						odeleted.slots.add(deletedslot);
 					}
 
 					if (!odeleted.getSlot(slot.getName()).has(new ID(object))) {
@@ -822,8 +843,7 @@ public class RPObject extends Attributes {
 			oadded.put("id", get("id"));
 		}
 
-		if (odeleted.size() > 0)
-		{
+		if (odeleted.size() > 0) {
 			odeleted.put("id", get("id"));
 		}
 	}
