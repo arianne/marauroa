@@ -10,13 +10,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-import marauroa.common.game.Perception;
 import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,134 +101,6 @@ public class TestRPObject {
 	}
 
 		
-	@Test
-	public void testDelta2() {
-		MarauroaRPZone zone=new MarauroaRPZone("test") {
-			public void onInit() throws Exception {				
-			}
-			
-			public void onFinish() throws Exception {				
-			}
-		};
-
-		/* 
-		 * Add object to zone
-		 * Test it has correct attributes values.
-		 */
-		zone.assignRPObjectID(obj);
-		assertTrue(obj.has("id"));
-		assertTrue(obj.has("zoneid"));
-		assertEquals("test",obj.get("zoneid"));
-		
-		/*
-		 * Test if first time modification works as expected. 
-		 */
-		zone.add(obj);
-		obj.put("b",9);
-		zone.modify(obj);
-		
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertFalse(expected.addedList.isEmpty());
-		assertTrue(expected.modifiedAddedList.isEmpty());
-		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-		
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on attribute object modification.
-		 */
-		obj.put("b",19);
-		
-		zone.modify(obj);
-
-		expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertFalse(expected.modifiedAddedList.isEmpty());
-		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-		
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on attribute object addition.
-		 */
-		obj.put("bg","house red");
-		
-		zone.modify(obj);
-
-		expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertFalse(expected.modifiedAddedList.isEmpty());
-		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-		
-
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on attribute object removal.
-		 */
-		obj.remove("b");
-		
-		zone.modify(obj);
-
-		expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertTrue(expected.modifiedAddedList.isEmpty());
-		assertFalse(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-		
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on slot object modification.
-		 */
-		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-	
-		slotcoin.put("value",200);
-
-		zone.modify(slotcoin.getBaseContainer());
-
-		expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertFalse(expected.modifiedAddedList.isEmpty());
-		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());		
-
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on slot object event addition
-		 */
-		slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-	
-		slotcoin.addEvent("tax","10%");
-
-		zone.modify(slotcoin.getBaseContainer());
-
-		expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertFalse(expected.modifiedAddedList.isEmpty());
-		assertTrue(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());		
-	}
-
 	@Test
 	public void testClearVisible() {
 		obj.clearVisible();
