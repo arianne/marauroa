@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.7 2007/02/10 23:17:51 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.8 2007/02/23 10:52:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,14 +24,14 @@ import marauroa.server.RWLock;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
- * 
+ *
  * This class implements the singleton pattern.
- * PlayerContainer is the data structure that contains all of the information about 
+ * PlayerContainer is the data structure that contains all of the information about
  * the players while the game is running.
  * <p>
- * It consists of a list of PlayerEntry objects and is heavily linked with the 
- * database, so we can hide its complexity to GameManager. By making PlayerDatabase 
- * hidden by PlayerContainer we achieve the illusion that managing the runtime behavior 
+ * It consists of a list of PlayerEntry objects and is heavily linked with the
+ * database, so we can hide its complexity to GameManager. By making PlayerDatabase
+ * hidden by PlayerContainer we achieve the illusion that managing the runtime behavior
  * we modify automatically the permanent one.
 
  * @author miguel
@@ -43,10 +43,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 	/** A random number generator instance. */
 	private Random rand;
-	
+
 	/** This map store player entry for fast access using clientid */
 	Map<Integer, PlayerEntry> clientidMap;
-	
+
 	private static PlayerEntryContainer playerEntryContainer;
 
 	/** Constructor */
@@ -54,19 +54,19 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		/* Initialize the random number generator */
 		rand = new Random();
 		rand.setSeed(new Date().getTime());
-		
+
 		lock = new RWLock();
-		
+
 		/* We initialize the list that will help us sort the player entries. */
 		clientidMap = new HashMap<Integer, PlayerEntry>();
-		
+
 		/* Choose the database type using configuration file */
 		PlayerEntry.initDatabase();
 	}
 
 	/**
 	 * This method returns an instance of PlayerEntryContainer
-	 * 
+	 *
 	 * @return A shared instance of PlayerEntryContainer
 	 */
 	public static PlayerEntryContainer getContainer() {
@@ -75,11 +75,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		}
 		return playerEntryContainer;
 	}
-	
+
 	/**
 	 * This method returns an iterator over tha available player entry objects.
 	 * @return the iterator
-	 */	
+	 */
 	public Iterator<PlayerEntry> iterator() {
 		return clientidMap.values().iterator();
 	}
@@ -87,22 +87,22 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	/**
 	 * This method returns the lock so that you can control how the resource is
 	 * used
-	 * 
+	 *
 	 * @return the RWLock of the object
 	 */
 	public RWLock getLock() {
 		return lock;
 	}
-	
-	/** 
+
+	/**
 	 * This method returns the size of the container.
 	 * @return Container's size.
 	 */
 	public int size() {
 		return clientidMap.size();
 	}
-	
-	/** 
+
+	/**
 	 * This method returns true if there is any PlayerEntry which has client id as clientid.
 	 * @param clientid the id of the PlayerEntry we are looking for
 	 * @return true if it is found or false otherwise.
@@ -110,7 +110,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	public boolean has(int clientid) {
 		return clientidMap.containsKey(clientid);
 	}
-	
+
 	/**
 	 * This method returns the PlayerEntry whose client id is clientid or null otherwise.
 	 * @param clientid the id of the PlayerEntry we are looking for
@@ -132,13 +132,13 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 				return entry;
 			}
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * This method returns the entry that has been associated to this player or null
-	 * if it does not exists. 
+	 * if it does not exists.
 	 * @param username the username to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
@@ -149,13 +149,13 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 				return entry;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * This method returns the entry that has been associated to this player or null
-	 * if it does not exists. 
+	 * if it does not exists.
 	 * @param id the RPObject.ID we have to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
@@ -165,10 +165,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 				return entry;
 			}
 		}
-		
+
 		return null;
 	}
-		/** 
+		/**
 	 * This method removed a player entry from the container and return it or null if the entry
 	 * does not exist.
 	 * @param clientid the clientid we want its Player entry to remove.
@@ -176,12 +176,12 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 */
 	public PlayerEntry remove(int clientid) {
 		return clientidMap.remove(clientid);
-		
+
 	}
 
 	/** Add a new Player entry to the container.
 	 *  This method assigns automatically a random clientid to this player entry.
-	 *  
+	 *
 	 * @param channel the socket channel associated with the client
 	 * @return client id resulting
 	 */
@@ -189,10 +189,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		/* We create an entry */
 		PlayerEntry entry=new PlayerEntry(channel);
 		entry.clientid=generateClientID();
-		
+
 		/* Finally adds it to map */
 		clientidMap.put(entry.clientid, entry);
-		
+
 		return entry;
 	}
 
@@ -205,5 +205,21 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 		return clientid;
 	}
-	
+
+	/**
+	 * Obtains an idle player entry from the container.
+	 * We can define an idle player entry like a player that has connected to server
+	 * and requested to login, but never actually completed login stage.
+	 * This client is taking server resources but doing nothing useful at all.
+	 * @return an idle PlayerEntry or null if not found
+	 */
+	public PlayerEntry getIdleEntry() {
+		for(PlayerEntry entry: clientidMap.values()){
+			if(entry.isRemovable()) {
+				return entry;
+			}
+		}
+
+		return null;
+	}
 }

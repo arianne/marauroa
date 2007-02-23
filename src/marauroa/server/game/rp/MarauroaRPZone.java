@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.10 2007/02/21 23:01:26 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.11 2007/02/23 10:52:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,10 +28,10 @@ import marauroa.common.game.RPObjectInvalidException;
 
 /**
  * Default implementation of <code>IRPZone</code>.
- * This class implements the Delta² algorithm to save bandwidth.
+ * This class implements the Deltaï¿½ algorithm to save bandwidth.
  * <p>
- * The idea behind the DPA is to avoid sending ALL the objects to a client each time, 
- * but only those that have been modified. Imagine that we have 1000 objects, and only 
+ * The idea behind the DPA is to avoid sending ALL the objects to a client each time,
+ * but only those that have been modified. Imagine that we have 1000 objects, and only
  * Object 1 and Object 505 are active objects that are modified each turn.
  * <pre>
 The Traditional method:
@@ -61,8 +61,8 @@ The delta perception algorithm:
 ...
  * </pre>
  * The next step of the delta perception algorithm is pretty clear: delta2<br>
- * The idea is to send only what changes of the objects that changed. 
- * This way we save even more bandwidth, making perceptions around 20% of the 
+ * The idea is to send only what changes of the objects that changed.
+ * This way we save even more bandwidth, making perceptions around 20% of the
  * original delta perception size.
  * <p>
  * The delta2 algorithm is based on four containers:<ul>
@@ -73,7 +73,7 @@ The delta perception algorithm:
  * </ul>
  * To make perceptions work, it is important to call the modify method in RPZone,
  * so this way objects modified are stored in the modified list.
- * 
+ *
  * @author miguel
  */
 public abstract class MarauroaRPZone implements IRPZone {
@@ -119,7 +119,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 		return zoneid;
 	}
 
-	/** 
+	/**
 	 * This method adds an object to this zone.
 	 * @param object object to add.
 	 * @throws RPObjectInvalidException if it lacks of mandatory attributes.
@@ -131,7 +131,9 @@ public abstract class MarauroaRPZone implements IRPZone {
 			object.resetAddedAndDeleted();
 			objects.put(id, object);
 
-			perception.added(object);
+			if(!object.isHidden()) {
+				perception.added(object);
+			}
 		} catch (Exception e) {
 			throw new RPObjectInvalidException(e.getMessage());
 		}
@@ -146,6 +148,11 @@ public abstract class MarauroaRPZone implements IRPZone {
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
+			if(object.isHidden()) {
+				// If object is hidden we don't notify any modification
+				return;
+			}
+
 			RPObject.ID id = object.getID();
 
 			if (!modified.containsKey(id) && has(id)) {
@@ -177,9 +184,15 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 		return object;
 	}
-	
+
+	/**
+	 * Hide an object from the perceptions, but it doesn't remove
+	 * it from world.
+	 * Any further calls to modify will be ignored.
+	 * @param object the object to hide.
+	 */
 	public void hide(RPObject object) {
-		object.hide(this);
+		object.hide();
 
 		// If objects has been removed, remove from modified
 		modified.remove(object.getID());
@@ -190,11 +203,16 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 		perception.removed(deleted);
 	}
-	
-	
-	public void unhide(RPObject object) {		
-		object.unhide(this);
-		
+
+
+	/**
+	 * Makes a hidden object to be visible again.
+	 * It will appear on the perception as an added object.
+	 * @param object the object to unhide.
+	 */
+	public void unhide(RPObject object) {
+		object.unhide();
+
 		object.resetAddedAndDeleted();
 		perception.added(object);
 	}
@@ -209,7 +227,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 		return objects.get(id);
 	}
 
-	/** 
+	/**
 	 * Returns true if the zone has that object.
 	 * @param id identified of the removed object
 	 * @return true if object exists.
@@ -232,18 +250,18 @@ public abstract class MarauroaRPZone implements IRPZone {
 		object.put("zoneid", zoneid.getID());
 	}
 
-	/** 
-	 * Iterates  over all the objects in the zone. 
+	/**
+	 * Iterates  over all the objects in the zone.
 	 * @return an iterator
 	 */
 	public Iterator<RPObject> iterator() {
 		return objects.values().iterator();
 	}
 
-	/** 
+	/**
 	 * Returns the perception of given type for that object.
 	 * @param id object whose perception we are going to build
-	 * @param type the type of perception: 
+	 * @param type the type of perception:
 	 * <ul>
 	 * <li>SYNC
 	 * <li>DELTA
@@ -267,7 +285,12 @@ public abstract class MarauroaRPZone implements IRPZone {
 		} else /* type==Perception.SYNC */ {
 			if (prebuildSyncPerception == null) {
 				prebuildSyncPerception = new Perception(Perception.SYNC,getID());
-				prebuildSyncPerception.addedList = new ArrayList<RPObject>(objects.values());
+				prebuildSyncPerception.addedList = new ArrayList<RPObject>(objects.size());
+				for(RPObject obj: objects.values()) {
+					if(!obj.isHidden()) {
+						prebuildSyncPerception.addedList.add(obj);
+					}
+				}
 			}
 
 			return prebuildSyncPerception;
@@ -275,7 +298,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This methods resets the delta² information of objects.
+	 * This methods resets the deltaï¿½ information of objects.
 	 */
 	protected void reset() {
 		for (RPObject object : objects.values()) {
@@ -312,7 +335,7 @@ public abstract class MarauroaRPZone implements IRPZone {
 
 		prebuildSyncPerception = null;
 		prebuildDeltaPerception = null;
-		
+
 		modified.clear();
 		perception.clear();
 	}

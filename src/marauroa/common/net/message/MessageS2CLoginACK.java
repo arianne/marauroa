@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.2 2007/02/23 10:52:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,14 +14,18 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This message indicate the client that the server has accepted its login
  * Message
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CLoginACK extends Message {
+	private List<String> previousLogins;
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CLoginACK() {
 		super(MessageType.S2C_LOGIN_ACK, null);
@@ -29,17 +33,22 @@ public class MessageS2CLoginACK extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CLoginACK(SocketChannel source) {
+	public MessageS2CLoginACK(SocketChannel source, List<String> events) {
 		super(MessageType.S2C_LOGIN_ACK, source);
+		previousLogins=events;
+	}
+
+	public List<String> getPreviousLogins() {
+		return previousLogins;
 	}
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -52,6 +61,11 @@ public class MessageS2CLoginACK extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out)
 			throws IOException {
 		super.writeObject(out);
+
+		out.write((byte)previousLogins.size());
+		for(String event: previousLogins) {
+			out.write255LongString(event);
+		}
 	}
 
 	@Override
@@ -60,6 +74,12 @@ public class MessageS2CLoginACK extends Message {
 		super.readObject(in);
 		if (type != MessageType.S2C_LOGIN_ACK) {
 			throw new java.lang.ClassNotFoundException();
+		}
+
+		int amount=in.readByte();
+		previousLogins=new LinkedList<String>();
+		for(int i=0;i<amount;i++) {
+			previousLogins.add(in.read255LongString());
 		}
 	}
 };

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.47 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.48 2007/02/23 10:52:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,8 +73,8 @@ GameManager
     }
   }
  * </pre>
- * So let's define the reply to each message. First, let's clarify that the best way 
- * of modelling this system is using finite automates, (a finite state machine) where, 
+ * So let's define the reply to each message. First, let's clarify that the best way
+ * of modelling this system is using finite automates, (a finite state machine) where,
  * based on the input, we change the state we are currently in and produce an output.
  * <p>
  * Login
@@ -113,7 +113,7 @@ Process C2S Login ( STATE_BEGIN_LOGIN )
   Postcondition: The state MUST be NULL or STATE_LOGIN_COMPLETE
     and a we have created a PlayerEntry for this player with a unique clientid.
  * </pre>
- * Choose Character 
+ * Choose Character
  * <pre>
 Process C2S ChooseCharacter ( STATE_LOGIN_COMPLETE )
   Precondition: The state MUST be STATE_LOGIN_COMPLETE
@@ -185,7 +185,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	/**
 	 * Constructor that initialize also the RPManager
-	 * 
+	 *
 	 * @param key the server private key
 	 * @param netMan a NetworkServerManager instance.
 	 * @param rpMan a RPServerManager instance.
@@ -195,18 +195,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		super("GameServerManager");
 		keepRunning = true;
 		isfinished=false;
-		
+
 		this.key = key;
 		this.netMan = netMan;
 		this.rpMan = rpMan;
-		
+
 		netMan.registerDisconnectedListener(this);
-		
+
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 	}
 
-	/** 
+	/**
 	 * This method request the active object to finish its execution and store all
 	 * the players back to database.
 	 */
@@ -295,7 +295,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * <li>Completed the login procedure</li>
 	 * <li>Must have the correct IP<->clientid relation </li>
 	 * </ul>
-	 * 
+	 *
 	 * @param msg
 	 *            the message to check
 	 * @return true, the event is valid, else false
@@ -306,7 +306,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
 			return false;
 		}
-				
+
 		if (entry.state != state) {
 			/*
 			 * Error: Player has not completed login yet, or he/she has logout
@@ -315,13 +315,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + state + ")");
 			return false;
 		}
-		
+
 		if (entry.channel!=msg.getSocketChannel()) {
 			/* Info: Player is using a different socket to communicate with server. */
 			logger.info("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -336,7 +336,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			int clientid = msg.getClientID();
 
 			PlayerEntry entry=playerContainer.get(clientid);
-			
+
 			/* verify event so that we can trust that it comes from our player and
 			   that it has completed the login stage. */
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
@@ -359,7 +359,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				/* We ask RP Manager to initialize the object */
 				rpMan.onInit(object);
-				
+
 				/* And finally sets this connection state to GAME_BEGIN */
 				entry.state=ClientState.GAME_BEGIN;
 
@@ -391,7 +391,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private void processLogoutEvent(MessageC2SLogout msg) {
 		try {
 			int clientid = msg.getClientID();
-			
+
 			PlayerEntry entry=playerContainer.get(clientid);
 
 			/* verify event so that we can trust that it comes from our player and
@@ -431,7 +431,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
-	/** 
+	/**
 	 * This method is called by network manager when a client connection is lost
 	 * or even when the client logout correctly.
 	 * @param channel the channel that was closed.
@@ -441,7 +441,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer.getLock().requestWriteLock();
 
 		try{
-			PlayerEntry entry=playerContainer.get(channel);		
+			PlayerEntry entry=playerContainer.get(channel);
 			rpMan.disconnect(entry);
 		} finally {
 			playerContainer.getLock().releaseLock();
@@ -450,7 +450,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	static int lastActionIdGenerated = 0;
 
-	/** 
+	/**
 	 * This method process actions send from client.
 	 * In fact, the action is passed to RPManager that will, when the turn arrives, execute it.
 	 * @param msg the action message
@@ -469,11 +469,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/* Send the action to RP Manager */
 			RPAction action = msg.getRPAction();
 
-			/* We tag each action with an unique action id. */
-			if (!action.has("action_id")) {
-				action.put("action_id", ++lastActionIdGenerated);
-			}
-
 			/* TODO: These are action attributes that are important for RP functionality.
 			 *  Tag them in such way that it is not possible to change them on a buggy
 			 *  RP implementation.
@@ -481,7 +476,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			RPObject object=entry.object;
 			action.put("sourceid", object.get("sourceid"));
 			action.put("zoneid", object.get("zoneid"));
-			action.put("when", rpMan.getTurn());
 
 			stats.add("Actions added", 1);
 
@@ -498,12 +492,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
-	/** 
+	/**
 	 * This method handles the initial login of the client into the server.
 	 * First, it compares the game and version that client is running and if they match
 	 * request the client to send the key to continue login process.
 	 * Otherwise, it rejects client because game is incompatible.
-	 * 
+	 *
 	 * @param msg the login message.
 	 */
 	private void processLoginRequestKey(Message msg) {
@@ -522,16 +516,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
-	/** 
+	/**
 	 * This message is used to create a game account.
 	 * It may fail if the player already exists or if any of the fields are empty.
-	 * 
+	 *
 	 * @param msg The create account message.
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		try {
 			AccountResult result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
-			
+
 			if (result == AccountResult.OK_ACCOUNT_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
 				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel());
@@ -539,6 +533,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			} else {
 				MessageS2CCreateAccountNACK.Reasons reason;
 
+				// TODO: AccountResult should match CreateAccount message Reasons
 				if (result == AccountResult.FAILED_PLAYER_EXISTS) {
 					reason = MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS;
 				} else {
@@ -557,12 +552,29 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * This method is part of the crypto process to login the player.
 	 * It creates a place for the player on the server, so we should handle some timeout here
 	 * to avoid DOS attacks.
-	 * 
+	 *
 	 * @param msg the promise message.
 	 */
 	private void processLoginSendPromise(Message msg) {
 		try {
-			/* TODO: Fix me. This limit leads easily to a DOS attack */
+			/*
+			 * If there is no more room we try to get an idle player that we can disconnect
+			 * We can define an idle player entry like a player that has connected to server
+			 * and requested to login, but never actually completed login stage.
+			 * This client is taking server resources but doing nothing useful at all.
+			 */
+			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
+				/* Let's try to make some room for more players. */
+				PlayerEntry candidate=playerContainer.getIdleEntry();
+
+				if(candidate!=null) {
+					/* Cool!, we got a candidate, so we remove and disconnect it.	 */
+					playerContainer.remove(candidate.clientid);
+					netMan.disconnectClient(candidate.channel);
+				}
+			}
+
+			/* We give a new try to see if we can create a entry for this player. */
 			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
 				/* Error: Too many clients logged on the server. */
 				logger.warn("Server is full, Client("+ msg.getAddress().toString() + ") can't login");
@@ -574,9 +586,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
-			
+
 			byte[] nonce = Hash.random(Hash.hashLength());
-			
+
 			PlayerEntry entry=playerContainer.add(msg.getSocketChannel());
 			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key,msgLoginSendPromise.getHash(),nonce);
 
@@ -588,9 +600,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
-	/** 
+	/**
 	 * This last method completes the login process.
-	 * 
+	 *
 	 * @param msg
 	 */
 	private void processSecuredLoginEvent(Message msg) {
@@ -599,12 +611,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			int clientid = msg.getClientID();
 			PlayerEntry entry=playerContainer.get(clientid);
-			
+
 			// verify event
 			if (!isValidEvent(msg, entry, ClientState.CONNECTION_ACCEPTED)) {
 				return;
 			}
-			
+
 			SecuredLoginInfo info=entry.loginInformations;
 
 			info.clientNonce = msgLogin.getHash();
@@ -626,17 +638,17 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				playerContainer.remove(clientid);
 				return;
 			}
-			
+
 			/* Now we check if this player is previously logged in */
 			PlayerEntry existing=playerContainer.get(msgLogin.getUsername());
-			
+
 			if(existing!=null) {
 				/* Warning: Player is alreay logged. So we proceed to store it and remove from game. */
 				logger.warn("Client(" + msg.getAddress().toString()	+ ") trying to login twice");
 
 				if (existing.state == ClientState.GAME_BEGIN) {
 					RPObject object=existing.object;
-					
+
 					if (rpMan.onExit(object)) {
 						/* NOTE: Set the Object so that it is stored in Database */
 						existing.storeRPObject(object);
@@ -652,21 +664,22 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			/* Correct: The login is correct */
 			entry.username = info.username;
-			
+
+			/* Obtain previous logins attemps */
+			List<String> previousLogins=entry.getPreviousLogins();
+
 			/* Now we store at database the login event */
 			info.addLoginEvent(msg.getAddress(), true);
 
 			/* We clean the login information as it is not longer useful. */
-			entry.loginInformations = null;			
+			entry.loginInformations = null;
 
 			stats.add("Players login", 1);
 
 			/* Send player the Login ACK message */
-			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getSocketChannel());
+			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getSocketChannel(),previousLogins);
 			msgLoginACK.setClientID(clientid);
 			netMan.sendMessage(msgLoginACK);
-			
-			/* TODO: Return also player a list of previous login attemps */
 
 			/* Send player the ServerInfo */
 			MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(msg.getSocketChannel(), ServerInfo.get());
@@ -678,14 +691,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getSocketChannel(), characters);
 			msgCharacters.setClientID(clientid);
 			netMan.sendMessage(msgCharacters);
-			
+
 			entry.state=ClientState.LOGIN_COMPLETE;
 		} catch (Exception e) {
 			logger.error("error while processing SecuredLoginEvent", e);
 		}
 	}
 
-	/** 
+	/**
 	 * This message is send from client to notify that client suffered a network problem
 	 * and request data to be resend again to it.
 	 * @param msg the out of sync message
@@ -708,7 +721,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	/**
-	 * This message is send from client to server to notify server which of the proposed 
+	 * This message is send from client to server to notify server which of the proposed
 	 * transfer has to be done.
 	 * @param msg the transfer ACK message
 	 */
@@ -753,7 +766,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
-	/** 
+	/**
 	 * This class stores Server information like
 	 * <ul>
 	 * <li>Type of game

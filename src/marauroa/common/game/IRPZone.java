@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.13 2007/02/21 23:01:26 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.14 2007/02/23 10:52:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,10 +21,10 @@ import java.util.Iterator;
  * * removing
  * * querying
  * * modifying
- * 
+ *
  * It almost provide methods that are called on load and on unload of the zone.
  * And finally it must provide Perception when asked by @See marauroa.server.game.rp.RPServerManager
- * 
+ *
  * @author miguel
  */
 //TODO: Review exceptions
@@ -90,14 +90,14 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 	}
 
-	/** 
+	/**
 	 * Returns the ID of the zone
 	 * @return zone id
 	 */
 	public ID getID();
 
 	/**
-	 * This method is called when the zone is created to popullate it 
+	 * This method is called when the zone is created to popullate it
 	 * @throws Exception if there has been any problem loading zone
 	 */
 	public void onInit() throws Exception;
@@ -130,17 +130,20 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * @param id the object identification
 	 * @return the remove object or null if it is not found.
 	 */
-	public RPObject remove(RPObject.ID id) throws RPObjectNotFoundException;
+	public RPObject remove(RPObject.ID id);
 
 	/**
-	 * 
-	 * @param object
+	 * Hide an object from the perceptions, but it doesn't remove
+	 * it from world.
+	 * Any further calls to modify will be ignored.
+	 * @param object the object to hide.
 	 */
 	public void hide(RPObject object);
-	
+
 	/**
-	 * 
-	 * @param object
+	 * Makes a hidden object to be visible again.
+	 * It will appear on the perception as an added object.
+	 * @param object the object to unhide.
 	 */
 	public void unhide(RPObject object);
 
@@ -151,30 +154,30 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * @param id the object identification
 	 * @return the remove object or null if it is not found.
 	 */
-	public RPObject get(RPObject.ID id) throws RPObjectNotFoundException;
+	public RPObject get(RPObject.ID id);
 
-	/** 
-	 * This method returns true if the object exists in the Zone  
+	/**
+	 * This method returns true if the object exists in the Zone
 	 * @param id the object identification
 	 * @return true if object exists
 	 */
 	public boolean has(RPObject.ID id);
 
-	/** 
-	 * Assigns a valid RPObject.ID to the object given as parameter 
+	/**
+	 * Assigns a valid RPObject.ID to the object given as parameter
 	 * @param object the object
 	 */
 	public void assignRPObjectID(RPObject object);
 
-	/** 
+	/**
 	 * Iterates over the elements of the zone
 	 * @return an iterator over zone
 	 */
 	public Iterator<RPObject> iterator();
 
-	/** 
-	 * Returns the number of elements of the zone 
-	 * @return the amount of objects that exists in the zone. 
+	/**
+	 * Returns the number of elements of the zone
+	 * @return the amount of objects that exists in the zone.
 	 */
 	public long size();
 
@@ -186,8 +189,8 @@ public interface IRPZone extends Iterable<RPObject> {
 	 */
 	public Perception getPerception(RPObject.ID id, byte type);
 
-	/** 
-	 * This method is called to take zone to the next turn 
+	/**
+	 * This method is called to take zone to the next turn
 	 */
 	public void nextTurn();
 }

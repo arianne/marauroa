@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.4 2007/02/18 22:01:41 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.5 2007/02/23 10:52:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -20,27 +20,26 @@ import java.util.List;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.db.JDBCDatabase.LoginEvent;
 
 /**
  * This interface exposes the methods a database implementation should have.
  * @author miguel
  *
  */
-//TODO: Missing RPZone storable objects interface 
+//TODO: Missing RPZone storable objects interface
 public interface IDatabase {
 	/**
 	 * Adds this player to database with username, password and email.
-	 *  
+	 *
 	 * @param transaction the database transaction.
 	 * @param username player's name
 	 * @param password player's password
 	 * @param email player's email
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void addPlayer(JDBCTransaction transaction, String username,
 			byte[] password, String email) throws SQLException;
-	
+
 	/**
 	 * Generates an unique player id.
 	 * A pattern is a string that where special symbols will be replaced.
@@ -48,9 +47,9 @@ public interface IDatabase {
 	 * <li><b>@</b> that will be replaced by a random lowercase letter.
 	 * <li><b>#</b> that will be replaced by a random lowercase number.
 	 * </ul>
-	 * 
+	 *
 	 * @param transaction the database transaction.
-	 * @param pattern the pattern to follow to genereate the player id 
+	 * @param pattern the pattern to follow to genereate the player id
 	 * @return the generated player id
 	 */
 	public String generatePlayer(JDBCTransaction transaction, String pattern) throws SQLException;
@@ -60,7 +59,7 @@ public interface IDatabase {
 	 * @param transaction the database transaction
 	 * @param username the player to remove.
 	 * @return true if success or false otherwise.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public boolean removePlayer(JDBCTransaction transaction, String username) throws SQLException;
 
@@ -80,7 +79,7 @@ public interface IDatabase {
 	 *   inactive
 	 *   active
 	 *   banned
-	 *   
+	 *
 	 * @param transaction the player database
 	 * @param username player username
 	 * @param status status we are going to set
@@ -91,7 +90,7 @@ public interface IDatabase {
 
 	/**
 	 * Returns the account status of the given player.
-	 * 
+	 *
 	 * @param transaction the player database
 	 * @param username player username
 	 * @return the status of the player
@@ -101,7 +100,7 @@ public interface IDatabase {
 
 	/**
 	 * Adds a character to database for a player.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username player's username
 	 * @param character character's name
@@ -114,7 +113,7 @@ public interface IDatabase {
 
 	/**
 	 * Removes a character of a player. This method also remove the associated RPObject.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username player's username
 	 * @param character character name
@@ -126,7 +125,7 @@ public interface IDatabase {
 
 	/**
 	 * This method returns true if the player has that character or false if it hasn't
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username player's name
 	 * @param character character's name
@@ -138,7 +137,7 @@ public interface IDatabase {
 
 	/**
 	 * Returns the list of characters this player owns.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username player's username
 	 * @return the list of characters.
@@ -147,10 +146,10 @@ public interface IDatabase {
 	public List<String> getCharacters(JDBCTransaction transaction,
 			String username) throws SQLException;
 
-	
+
 	/**
 	 * This method load from database the character's avatar asociated to this character.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username the player's username
 	 * @param character the player's character name
@@ -162,7 +161,7 @@ public interface IDatabase {
 
 	/**
 	 * This method stores a character's avatar at database and update the link with Character table.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username the player's username
 	 * @param character the player's character name
@@ -174,7 +173,7 @@ public interface IDatabase {
 
 	/**
 	 * This method adds a logging game event to database, so later you can query it to get information
-	 * about how game is evolving.  
+	 * about how game is evolving.
 	 * @param trans the database transaction
 	 * @param source the source of the event
 	 * @param event the event itself
@@ -214,14 +213,15 @@ public interface IDatabase {
 			throws SQLException;
 
 	/**
-	 * This method returns a list of the login events and its result. 
-	 * 
-	 * @param transaction
-	 * @param username
+	 * This method returns a list of the login events and its result.
+	 *
+	 * @param transaction the database transaction
+	 * @param username the username to get login events from
+	 * @param events the amount of events to return
 	 * @return a List of LoginEvent objects
 	 * @throws SQLException
 	 */
-	public List<LoginEvent> getLoginEvents(JDBCTransaction transaction, String username) throws SQLException;
+	public List<String> getLoginEvents(JDBCTransaction transaction, String username, int events) throws SQLException;
 
 	/** This method returns a transaction to the database. */
 	// TODO: Generalize it.

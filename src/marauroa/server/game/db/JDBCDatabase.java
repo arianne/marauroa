@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.7 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.8 2007/02/23 10:52:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,7 @@ import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
 
-/** 
+/**
  * This is a JDBC implementation for MySQL is IDatabase interface.
  * @author miguel
  *
@@ -53,18 +53,18 @@ public class JDBCDatabase implements IDatabase {
 
 	/** connection info * */
 	private Properties connInfo;
-	
+
 	protected JDBCSQLHelper sql;
 
 	private JDBCTransaction transaction;
-	
+
 	/**
 	 * Constructor that connect using a set of Properties.
-	 * 
+	 *
 	 * @param connInfo
 	 *            a Properties set with the options to create the database.
 	 *            Properties should have:
-	 *            jdbc_url 
+	 *            jdbc_url
 	 *              Contains the URL of the Database we are going to connect to
 	 *              jdbc:mysql://127.0.0.1/marauroa
 	 *            jdbc_class
@@ -77,10 +77,10 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	protected JDBCDatabase(Properties connInfo) throws NoDatabaseConfException {
 		this.connInfo=connInfo;
-		
-		sql=JDBCSQLHelper.get();		
+
+		sql=JDBCSQLHelper.get();
 		transaction=getTransaction();
-		
+
 		initialize();
 	}
 
@@ -91,9 +91,9 @@ public class JDBCDatabase implements IDatabase {
 	protected void initialize() {
 		sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 	}
-	
+
 	private static JDBCDatabase database;
-	
+
 	/**
 	 * Returns an unique instance of the Database.
 	 * @return an unique instance of the Database.
@@ -118,14 +118,14 @@ public class JDBCDatabase implements IDatabase {
 
 			database=new JDBCDatabase(props);
 		}
-		
-		return database;		
+
+		return database;
 	}
-	
+
 
 	/**
 	 * This method creates the real connection to database.
-	 * 
+	 *
 	 * @param props the database configuration.
 	 * @return a Connection to Database
 	 * @throws NoDatabaseConfException If there is any kind of problem creating the connection.
@@ -150,7 +150,7 @@ public class JDBCDatabase implements IDatabase {
 
 			/* This is for MySQL:
 			 *  We set auto commit to false, so that transactions work
-			 *  We set isolation mode to this so everything works. Google for it 
+			 *  We set isolation mode to this so everything works. Google for it
 			 */
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -162,7 +162,7 @@ public class JDBCDatabase implements IDatabase {
 		}
 	}
 
-	/** 
+	/**
 	 * This method gets a transaction from the connection and check that it is valid.
 	 * @return a valid transaction.
 	 */
@@ -172,8 +172,8 @@ public class JDBCDatabase implements IDatabase {
 		}
 
 		return transaction;
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#addPlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String, byte[], java.lang.String)
 	 */
@@ -182,7 +182,7 @@ public class JDBCDatabase implements IDatabase {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=("+username+") email=("+email+")");
 			}
-			
+
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 
@@ -191,11 +191,11 @@ public class JDBCDatabase implements IDatabase {
 				+ username + "','"
 				+ Hash.toHexString(password) + "','"
 				+ email + "',"
-				+ "NULL," 
+				+ "NULL,"
 				+ "DEFAULT)";
-			
+
 			logger.debug("addPlayer is using query: "+query);
-			
+
 			stmt.execute(query);
 			stmt.close();
 		} catch (SQLException e) {
@@ -203,7 +203,7 @@ public class JDBCDatabase implements IDatabase {
 			throw e;
 		}
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.IDatabase#generatePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
@@ -212,25 +212,25 @@ public class JDBCDatabase implements IDatabase {
 		int length=pattern.length();
 		Random rand=new Random();
 		StringBuffer os=new StringBuffer();
-		
+
 		for(int i=0;i<length;i++) {
 			char c=pattern.charAt(i);
 			if(c=='#') {
 				// Replaced the # with a number between 0 and 10.
-				os.append(rand.nextInt(10));				
+				os.append(rand.nextInt(10));
 			} else if(c=='@') {
 				// Replaced @ with a lower case letter between a and z
 				char character=(char)(rand.nextInt(26)+97);
-				os.append(character);				
+				os.append(character);
 			} else {
 				// if it isn't anyone of the above, just add the character.
 				os.append(c);
 			}
 		}
-		
+
 		return os.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#removePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
@@ -239,26 +239,26 @@ public class JDBCDatabase implements IDatabase {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
 			}
-						
+
 			/* We first remove any characters associated with this player. */
 			for(String character: getCharacters(transaction,username)) {
 			  removeCharacter(transaction,username, character);
 			}
-			
+
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
-			
+
 			String query = "delete from account where username='"+ username + "'";
-			
-			logger.debug("removePlayer is using query: "+query);			
+
+			logger.debug("removePlayer is using query: "+query);
 			stmt.execute(query);
 			stmt.close();
-			
+
 			return true;
 		} catch (SQLException e) {
 			logger.error("Can't remove player("+username+") to Database", e);
 			throw e;
-		}	
+		}
 	}
 
 	/* (non-Javadoc)
@@ -281,7 +281,7 @@ public class JDBCDatabase implements IDatabase {
 			boolean playerExists = false;
 
 			if (result.next() && result.getInt("amount") != 0) {
-				playerExists = true; 
+				playerExists = true;
 			}
 
 			stmt.close();
@@ -291,7 +291,7 @@ public class JDBCDatabase implements IDatabase {
 			throw e;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#setAccountStatus(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
 	 */
@@ -303,18 +303,18 @@ public class JDBCDatabase implements IDatabase {
 
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
-			
+
 			String query = "update account set status='" + status + "' where username like '" + username + "'";
 			logger.debug("setAccountStatus is executing query " + query);
-			
+
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
 			logger.error("Can't udpate account status of player("+username+")",e);
 			throw e;
-		}		
+		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
@@ -411,40 +411,40 @@ public class JDBCDatabase implements IDatabase {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
-			}					
-			
+			}
+
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
-			
+
 			int player_id=getDatabasePlayerId(transaction, username);
-			
+
 			String query = "select object_id from characters where player_id="+ player_id + " and charname='"+ character +"'";
 			ResultSet result = stmt.executeQuery(query);
 
-			if (result.next()) {				
+			if (result.next()) {
 				int id = result.getInt("object_id");
 				removeRPObject(transaction, id);
 			} else {
 				result.close();
 				stmt.close();
-				
+
 				throw new SQLException("Character ("+character+") without object: Database integrity error.");
 			}
 			result.close();
-			
+
 			query = "delete from characters where player_id="+ player_id + " and charname='"+ character +"'";
-			
-			logger.debug("removeCharacter is using query: "+query);			
+
+			logger.debug("removeCharacter is using query: "+query);
 			stmt.execute(query);
 			stmt.close();
-			
+
 			return true;
 		} catch (SQLException e) {
 			logger.error("Can't remove player("+username+") from Database", e);
 			throw e;
-		}	
+		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ICharacterAccess#hasCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
 	 */
@@ -474,13 +474,13 @@ public class JDBCDatabase implements IDatabase {
 			result.close();
 			stmt.close();
 
-			return characterExists;	
+			return characterExists;
 			} catch (SQLException e) {
 				logger.error("Can't query for player("+username+") character("+character+")", e);
 				throw e;
-			} 
+			}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ICharacterAccess#getCharacters(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
@@ -489,13 +489,13 @@ public class JDBCDatabase implements IDatabase {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
 			}
-			
+
 			int id = getDatabasePlayerId(transaction, username);
 			if(id==-1) {
 				/** This should never happen as we should check previously that player exists... */
 				throw new SQLException("Unable to find player("+username+")");
 			}
-			
+
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			String query = "select charname from characters where player_id="+ id;
@@ -518,17 +518,17 @@ public class JDBCDatabase implements IDatabase {
 			throw e;
 		}
 	}
-	
-	
+
+
 	/**
 	 * This method stores a character's avatar at database and update the link with Character table.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username the player's username
 	 * @param character the player's character name
 	 * @param player the RPObject itself.
 	 * @throws SQLException if there is any problem at database.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
 		try {
@@ -542,7 +542,7 @@ public class JDBCDatabase implements IDatabase {
 			int objectid=storeRPObject(transaction, player);
 			String query="update characters set object_id="+objectid+" where charname='"+character+"'";
 			stmt.execute(query);
-			
+
 		} catch (SQLException sqle) {
 			logger.warn("Error storing character: "+player, sqle);
 			throw sqle;
@@ -554,13 +554,13 @@ public class JDBCDatabase implements IDatabase {
 
 	/**
 	 * This method load from database the character's avatar asociated to this character.
-	 * 
+	 *
 	 * @param transaction the database transaction
 	 * @param username the player's username
 	 * @param character the player's character name
 	 * @return The loaded RPObject
 	 * @throws SQLException if there is any problem at database
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException, IOException {
 		try {
@@ -573,17 +573,17 @@ public class JDBCDatabase implements IDatabase {
 
 			String query="select object_id from characters where charname='"+character+"'";
 			ResultSet result=stmt.executeQuery(query);
-			
+
 			RPObject player=null;
 			if(result.next()) {
 				int objectid=result.getInt("object_id");
 				player=loadRPObject(transaction, objectid);
 			}
-			
+
 			result.close();
 			stmt.close();
-			
-			return player;			
+
+			return player;
 		} catch (SQLException sqle) {
 			logger.warn("Error loading character: "+character, sqle);
 			throw sqle;
@@ -627,13 +627,13 @@ public class JDBCDatabase implements IDatabase {
 					+ informations.username + "' and password like '"+ hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
-			
+
 			boolean isplayer=false;
 
 			if (result.next()) {
                 String userNameFromDB = result.getString("username");
 				String account_status = result.getString("status");
-				
+
 				if ("active".equals(account_status)) {
 					isplayer=true;
 				} else {
@@ -646,7 +646,7 @@ public class JDBCDatabase implements IDatabase {
 				}
 
 			}
-			
+
 			result.close();
 			stmt.close();
 
@@ -656,7 +656,7 @@ public class JDBCDatabase implements IDatabase {
 			throw e;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#addLoginEvent(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.net.InetSocketAddress, boolean)
 	 */
@@ -672,7 +672,7 @@ public class JDBCDatabase implements IDatabase {
 				/** This should never happen as we should check previously that player exists... */
 				throw new SQLException("Unable to find player("+username+")");
 			}
-			
+
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			String query = "insert into loginEvent(player_id,address,timedate,result) values("
@@ -695,30 +695,74 @@ public class JDBCDatabase implements IDatabase {
 		public String address;
 
 		/** Time and date of the login event */
-		public java.util.Date time;
+		public String date;
 
 		/** True if login was correct */
 		public boolean correct;
 
 		/**
+		 * Constructor
+		 *
+		 * @param address the address from where the login was tried
+		 * @param date the date at which login was tried
+		 * @param sucessful true if login was sucessful
+		 */
+		public LoginEvent(String address, String date, boolean sucessful) {
+			this.address=address;
+			this.date=date;
+			this.correct=sucessful;
+		}
+
+		/**
 		 * This method returns a String that represent the object
-		 * 
+		 *
 		 * @return a string representing the object.
 		 */
 		@Override
 		public String toString() {
-			return "Login " + (correct ? "SUCESSFULL" : "FAILED") + " at "+ time.toString() + " from " + address;
+			return "Login " + (correct ? "SUCESSFULL" : "FAILED") + " at "+ date + " from " + address;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#getLoginEvents(marauroa.server.game.db.JDBCTransaction, java.lang.String)
 	 */
-	public List<LoginEvent> getLoginEvents(JDBCTransaction transaction, String username) throws SQLException {
-		/** TODO: Do it later and use it. */
-		return null;
+	public List<String> getLoginEvents(JDBCTransaction transaction, String username, int events) throws SQLException {
+		try {
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+")");
+			}
+
+			int id = getDatabasePlayerId(transaction, username);
+			if(id==-1) {
+				/** This should never happen as we should check previously that player exists... */
+				throw new SQLException("Unable to find player("+username+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+			String query = "select address, timedate, result from loginEvent where player_id="+ id+" order by timedate desc limit "+events;
+
+			logger.debug("getLoginEvents is executing query " + query);
+
+			ResultSet eventSet = stmt.executeQuery(query);
+			List<String> list = new LinkedList<String>();
+
+			while (eventSet.next()) {
+				LoginEvent event=new LoginEvent(eventSet.getString("address"),eventSet.getString("timedate"), eventSet.getBoolean("result"));
+				list.add(event.toString());
+			}
+
+			eventSet.close();
+
+			stmt.close();
+			return list;
+		} catch (SQLException e) {
+			logger.error("Can't query for player("+username+")", e);
+			throw e;
+		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addGameEvent(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -741,14 +785,14 @@ public class JDBCDatabase implements IDatabase {
 					+ StringChecker.escapeSQLString(event)+ "','"
 					+ StringChecker.escapeSQLString(firstParam)+ "','"
 					+ StringChecker.escapeSQLString(param.toString()) + "')";
-			
+
 			stmt.execute(query);
 			stmt.close();
 		} catch (SQLException sqle) {
 			logger.warn("Error adding game event: "+event, sqle);
 		}
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addStatisticsEvent(marauroa.server.game.db.Transaction, marauroa.server.game.Statistics.Variables)
 	 */
@@ -769,9 +813,9 @@ public class JDBCDatabase implements IDatabase {
 		} catch (SQLException sqle) {
 			logger.warn("Error adding statistics event", sqle);
 		}
-	}	
-	
-	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) throws SQLException, IOException {		
+	}
+
+	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
 
 		String query = "select data from rpobject where object_id=" + objectid;
@@ -784,7 +828,7 @@ public class JDBCDatabase implements IDatabase {
 			Blob data = rs.getBlob("data");
 			InputStream input = data.getBinaryStream();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			
+
 			// set read buffer size
 			byte[] rb = new byte[1024];
 			int ch = 0;
@@ -804,13 +848,13 @@ public class JDBCDatabase implements IDatabase {
 			stmt.close();
 
 			RPObject object=null;
-			
+
 			try {
 				object = (RPObject) inser.readObject(new RPObject());
 			} catch (ClassNotFoundException e) {
 				/** This will never ever happen. */
 			}
-			
+
 			object.put("#db_id", objectid);
 
 			return object;
@@ -821,12 +865,12 @@ public class JDBCDatabase implements IDatabase {
 		return null;
 	}
 
-	private int removeRPObject(JDBCTransaction transaction, int objectid) {		
+	private int removeRPObject(JDBCTransaction transaction, int objectid) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	private boolean hasRPObject(JDBCTransaction transaction, int objectid) throws SQLException {		
+
+	private boolean hasRPObject(JDBCTransaction transaction, int objectid) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
 		String query = "select count(*) as amount from rpobject where object_id="+ objectid;
@@ -848,7 +892,7 @@ public class JDBCDatabase implements IDatabase {
 
 		return rpObjectExists;
 	}
-	
+
 	private int storeRPObject(JDBCTransaction transaction, RPObject object) throws IOException, SQLException {
 		Connection connection = transaction.getConnection();
 
@@ -898,10 +942,10 @@ public class JDBCDatabase implements IDatabase {
 
 			result.next();
 			object_id = result.getInt("inserted_id");
-			
+
 			// We alter the original object to add the proper db_id
 			object.put("#db_id", object_id);
-			
+
 			result.close();
 			stmt.close();
 		}

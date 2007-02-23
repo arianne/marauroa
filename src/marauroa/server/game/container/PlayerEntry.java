@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.10 2007/02/10 18:13:39 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.11 2007/02/23 10:52:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
@@ -34,13 +35,13 @@ import marauroa.server.game.db.PlayerDatabaseFactory;
 public class PlayerEntry {
 	/** A object representing the database */
 	protected static IDatabase playerDatabase;
-    
+
 	/** Get the database object. */
     public static void initDatabase() {
     		playerDatabase=PlayerDatabaseFactory.getDatabase();
     }
 
-    /** 
+    /**
 	 * This class store the information needed to allow a secure login.
 	 * Once login is completed the information is cleared.
 	 * @author miguel
@@ -66,7 +67,7 @@ public class PlayerEntry {
 		}
 
 		/**
-		 * Verify that a player is whom he/she says it is. 
+		 * Verify that a player is whom he/she says it is.
 		 * @return true if it is correct: username and password matches.
 		 * @throws SQLException if there is any database problem.
 		 */
@@ -82,19 +83,25 @@ public class PlayerEntry {
 		 */
 		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
     		JDBCTransaction transaction=playerDatabase.getTransaction();
-    		
+
     		transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
 			transaction.commit();
 		}
 	}
 
+	/**
+	 * We record when this player entry was created to remove players that don't complete
+	 * login stage but that keep connected.
+	 */
+	public long creationTime;
+
 	/** The state in which this player is */
 	public ClientState state;
 
 	/** The runtime clientid */
 	public int clientid;
-	
+
 	/** The client associated SocketChannel */
 	public SocketChannel channel;
 
@@ -115,20 +122,20 @@ public class PlayerEntry {
 
 	/** A counter to detect dropped packets or bad order at client side */
 	public int perception_counter;
-	
+
 	/** It is true if client notified us that it got out of sync */
 	public boolean requestedSync;
 
 	/** Contains the content that is going to be transfered to client */
 	public List<TransferContent> contentToTransfer;
-	
+
 	/**
 	 * Constructor
 	 * @param channel the socket channel
 	 */
 	public PlayerEntry(SocketChannel channel) {
 		this.channel=channel;
-		
+
 		clientid=Message.CLIENTID_INVALID;
 		state=ClientState.CONNECTION_ACCEPTED;
 		loginInformations=null;
@@ -138,10 +145,12 @@ public class PlayerEntry {
 		perception_counter=0;
 		requestedSync=false;
 		contentToTransfer=null;
-	}	  
 
-	/** 
-	 * Returns the next perception timestamp. 
+		creationTime=System.currentTimeMillis();
+	}
+
+	/**
+	 * Returns the next perception timestamp.
 	 * @return the next perception timestamp
 	 */
 	public int getPerceptionTimestamp() {
@@ -175,11 +184,11 @@ public class PlayerEntry {
 	/**
 	 * This method stores an object at database backend
 	 * @param player the object to store
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void storeRPObject(RPObject player) throws SQLException,IOException {
 		JDBCTransaction transaction=playerDatabase.getTransaction();
-		
+
 		try {
 			transaction.begin();
 
@@ -202,7 +211,7 @@ public class PlayerEntry {
 	/**
 	 * This method query database to check if the player with username given by the entry
 	 * has a character with the name passed as argument.
-	 * 
+	 *
 	 * @param character The name we are querying for.
 	 * @return true if it is found or false otherwise.
 	 * @throws Exception If there is a Database exception.
@@ -215,7 +224,7 @@ public class PlayerEntry {
 	 * This method loads the object pointed by username and character from database
 	 * and assign already it to the entry.
 	 * @return the loaded object
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws Exception if the load fails.
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
@@ -236,6 +245,25 @@ public class PlayerEntry {
 	 * This method forces an update on the next perception sending.
 	 */
 	public void requestSync() {
-		requestedSync=true;		
-	}	
+		requestedSync=true;
+	}
+
+	/**
+	 * Return a list of the previous login attemps.
+	 * @return a list of the previous login attemps.
+	 * @throws SQLException
+	 */
+	public List<String> getPreviousLogins() throws SQLException {
+		return playerDatabase.getLoginEvents(playerDatabase.getTransaction(), username, 1);
+	}
+
+	/**
+	 * This method tag this entry as removable if there is more than UNCOMPLETED_LOGIN_TIMEOUT milliseconds
+	 * since the creation time of the entry and the actual time and the entry has not completed
+	 * the login stage.
+	 * @return
+	 */
+	boolean isRemovable() {
+		return state==ClientState.CONNECTION_ACCEPTED && System.currentTimeMillis()-creationTime>TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
+	}
 }

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.42 2007/02/21 23:01:26 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.43 2007/02/23 10:52:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,12 +56,12 @@ public class RPObject extends Attributes {
 
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
-	
+
 	/** If this variable is true the object is removed from the perception send to client. */
 	private boolean hidden;
 
-	/** 
-	 * Constructor 
+	/**
+	 * Constructor
 	 */
 	public RPObject() {
 		super(RPClass.getBaseRPObjectDefault());
@@ -74,7 +74,7 @@ public class RPObject extends Attributes {
 
 		container = null;
 		containerSlot=null;
-		
+
 		hidden=false;
 	}
 
@@ -86,7 +86,7 @@ public class RPObject extends Attributes {
 		this();
 
 		super.fill(object);
-		
+
 		hidden=object.hidden;
 
 		container = object.container;
@@ -127,25 +127,29 @@ public class RPObject extends Attributes {
 		put("id", id.getObjectID());
 		put("zoneid", id.getZoneID());
 	}
-	
+
 	/**
 	 * Makes this object invisible, so it is not added in any perception.
+	 * This method is not callable directly from the object once it has been added to a zone.
+	 * If it is already added, this method must be called from IRPZone.hide()
 	 */
-	public void hide(IRPZone zone) {		
+	public void hide() {
 		hidden=true;
-		
+
 		//TODO: A hidden object should be removed from the perception.
 	}
-	
+
 	/**
 	 * Makes this object visible again.
+	 * This method is not callable directly from the object once it has been added to a zone.
+	 * If it is already added, this method must be called from IRPZone.unhide()
 	 */
-	public void unhide(IRPZone zone) {
+	public void unhide() {
 		hidden=false;
 
 		//TODO: An object that is now unhidden should be added to the perception.
 	}
-	
+
 	/**
 	 * Return true if this object is hidden.
 	 * @return true if this object is hidden.
@@ -201,9 +205,9 @@ public class RPObject extends Attributes {
 		return containerSlot;
 	}
 
-	/** 
+	/**
 	 * Keep track of the lastest assigned id for any object added to the slot of this
-	 * object or any object that is contained by this object. 
+	 * object or any object that is contained by this object.
 	 */
 	private int lastassignedID;
 
@@ -217,7 +221,7 @@ public class RPObject extends Attributes {
 			container.assignSlotID(object);
 		} else {
 			object.put("id", lastassignedID++);
-			
+
 			// If object has zoneid we remove as it is useless inside a slot.
 			if(object.has("zoneid")) {
 				object.remove("zoneid");
@@ -394,9 +398,9 @@ public class RPObject extends Attributes {
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
-		/* 
+		/*
 		 * We compute the amount of slots to serialize first.
-		 * We don't serialize hidden or private slots unless detail level is full. 
+		 * We don't serialize hidden or private slots unless detail level is full.
 		 */
 		int size = 0;
 		for (RPSlot slot : slots) {
@@ -417,9 +421,9 @@ public class RPObject extends Attributes {
 			}
 		}
 
-		/* 
+		/*
 		 * We compute the amount of events to serialize first.
-		 * We don't serialize hidden or private slots unless detail level is full. 
+		 * We don't serialize hidden or private slots unless detail level is full.
 		 */
 		size = 0;
 		for (RPEvent event : events) {
@@ -485,8 +489,8 @@ public class RPObject extends Attributes {
 		}
 	}
 
-	/** 
-	 * Returns true if two objects are exactly equal 
+	/**
+	 * Returns true if two objects are exactly equal
 	 * @param obj the object to compare with this one.
 	 */
 	@Override
@@ -569,7 +573,7 @@ public class RPObject extends Attributes {
 					if(object.size()==1) {
 						// If object size is one means only id remains.
 						// Objects inside the slot should not contain any other special attribute.
-						// If only id remains, we can remove this object from the slot. 
+						// If only id remains, we can remove this object from the slot.
 						idtoremove.add(object.getID());
 					}
 				}
@@ -797,9 +801,9 @@ public class RPObject extends Attributes {
 		/* First we get differences from attributes */
 		oadded.setAddedAttributes(this);
 		odeleted.setDeletedAttributes(this);
-		
-		/* 
-		 * We add to the oadded object the events that exists. 
+
+		/*
+		 * We add to the oadded object the events that exists.
 		 */
 		for(RPEvent event: events) {
 			oadded.events.add((RPEvent)event.clone());
@@ -826,7 +830,7 @@ public class RPObject extends Attributes {
 			RPSlot deleted_slot = new RPSlot(slot.getName());
 			deleted_slot.setDeletedRPObject(slot);
 
-			/* Again, we are only interested in adding the deleted slot if it is not 
+			/* Again, we are only interested in adding the deleted slot if it is not
 			 * already there or it it is not empty.
 			 */
 			if (deleted_slot.size() > 0 && !odeleted.hasSlot(deleted_slot.getName())) {
@@ -841,7 +845,7 @@ public class RPObject extends Attributes {
 
 				/* So for each object in the slot, we get the differences */
 				object.getDifferences(object_added, object_deleted);
-				
+
 				if (object_added.size() > 0) {
 					/* If slot is no there, add it. */
 					if (!oadded.hasSlot(slot.getName())) {
