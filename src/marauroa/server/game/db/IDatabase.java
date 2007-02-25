@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.5 2007/02/23 10:52:07 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.6 2007/02/25 17:23:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.game.IRPZone;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
@@ -26,7 +27,6 @@ import marauroa.server.game.container.PlayerEntry;
  * @author miguel
  *
  */
-//TODO: Missing RPZone storable objects interface
 public interface IDatabase {
 	/**
 	 * Adds this player to database with username, password and email.
@@ -170,6 +170,23 @@ public interface IDatabase {
 	 * @throws IOException if player can NOT be serialized
 	 */
 	public void storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException;
+
+	/**
+	 * Stores all the objects tagged as storable into database and assign them to the zone
+	 * we are storing.
+	 *
+	 * @param transaction the database transaction
+	 * @param zone the zone we want to store.
+	 */
+	public void storeRPZone(JDBCTransaction transaction, IRPZone zone);
+
+	/**
+	 * Load all the stored objects into a zone.
+	 * Zone must be correctly created before trying to load it.
+	 * @param transaction the database transaction
+	 * @param zone the zone to where we add the loaded objects
+	 */
+	public void loadRPZone(JDBCTransaction transaction, IRPZone zone);
 
 	/**
 	 * This method adds a logging game event to database, so later you can query it to get information

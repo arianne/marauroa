@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.11 2007/02/23 10:52:08 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.12 2007/02/25 17:23:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -76,7 +76,7 @@ The delta perception algorithm:
  *
  * @author miguel
  */
-public abstract class MarauroaRPZone implements IRPZone {
+public class MarauroaRPZone implements IRPZone {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MarauroaRPZone.class);
 
@@ -117,6 +117,21 @@ public abstract class MarauroaRPZone implements IRPZone {
 	/** Returns the zoneid */
 	public ID getID() {
 		return zoneid;
+	}
+
+
+	/**
+	 * Store objects that has been tagged as storable to database.
+	 */
+	public void onFinish() throws Exception {
+		//TODO: Do it.
+	}
+
+	/**
+	 * Load objects in database for this zone that were stored
+	 */
+	public void onInit() throws Exception {
+		//TODO: Do it.
 	}
 
 	/**

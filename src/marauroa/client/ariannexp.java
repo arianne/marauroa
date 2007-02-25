@@ -1,4 +1,4 @@
-/* $Id: ariannexp.java,v 1.37 2007/02/19 18:37:23 arianne_rpg Exp $ */
+/* $Id: ariannexp.java,v 1.38 2007/02/25 17:23:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,14 @@
  ***************************************************************************/
 package marauroa.client;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.client.net.INetworkClientManagerInterface;
-import marauroa.client.net.TCPThreadedNetworkClientManager;
+import marauroa.client.net.TCPNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
@@ -47,21 +48,28 @@ import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
 
+/**
+ * It is a wrapper over all the things that the client should do.
+ * @author miguel
+ *
+ */
 public abstract class ariannexp {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ariannexp.class);
 
+	/** How long we should wait for connect. */
 	public final static long TIMEOUT = 10000;
 
+	/** We keep an instance of network manager to be able to comunicate with server. */
 	private INetworkClientManagerInterface netMan;
 
+	/** We keep a list of all messages waiting for being processed. */
 	private List<Message> messages;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param loggingProperties
-	 *            ariannexp will write to a file if this is true.
+	 *
+	 * @param loggingProperties contains the name of the file that configure the logging system.
 	 */
 	public ariannexp(String loggingProperties) {
 		Log4J.init(loggingProperties);
@@ -72,7 +80,7 @@ public abstract class ariannexp {
 	/**
 	 * Call this method to connect to server. This method just configure the
 	 * connection, it doesn't send anything
-	 * 
+	 *
 	 * @param host
 	 *            server host name
 	 * @param port
@@ -80,9 +88,8 @@ public abstract class ariannexp {
 	 * @throws SocketException
 	 *             if connection is not possible
 	 */
-	public void connect(String host, int port)
-			throws SocketException {
-		netMan = new TCPThreadedNetworkClientManager(host, port);
+	public void connect(String host, int port) throws IOException {
+		netMan = new TCPNetworkClientManager(host, port);
 	}
 
 	private Message getMessage() throws InvalidVersionException,
@@ -108,7 +115,7 @@ public abstract class ariannexp {
 
 	/**
 	 * Login to server using the given username and password.
-	 * 
+	 *
 	 * @param username
 	 *            Player username
 	 * @param password
@@ -209,7 +216,7 @@ public abstract class ariannexp {
 
 	/**
 	 * After login allows you to choose a character to play
-	 * 
+	 *
 	 * @param character
 	 *            name of the character we want to play with.
 	 * @return true if choosing character is successful.
@@ -289,7 +296,7 @@ public abstract class ariannexp {
 
 	/**
 	 * Request logout of server
-	 * 
+	 *
 	 * @return true if we have successfully logout.
 	 */
 	public synchronized boolean logout() {

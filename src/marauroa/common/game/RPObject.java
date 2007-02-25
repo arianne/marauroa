@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.43 2007/02/23 10:52:05 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.44 2007/02/25 17:23:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,6 +60,9 @@ public class RPObject extends Attributes {
 	/** If this variable is true the object is removed from the perception send to client. */
 	private boolean hidden;
 
+	/** Defines if this object should be stored at database. */
+	private boolean storable;
+
 	/**
 	 * Constructor
 	 */
@@ -76,6 +79,7 @@ public class RPObject extends Attributes {
 		containerSlot=null;
 
 		hidden=false;
+		storable=false;
 	}
 
 	/**
@@ -88,6 +92,7 @@ public class RPObject extends Attributes {
 		super.fill(object);
 
 		hidden=object.hidden;
+		storable=object.storable;
 
 		container = object.container;
 		containerSlot = object.containerSlot;
@@ -156,6 +161,23 @@ public class RPObject extends Attributes {
 	 */
 	public boolean isHidden() {
 		return hidden;
+	}
+
+	/**
+	 * Define this object as storable, but it doesn't in fact store the object.
+	 * The object is stored on zone.finish
+	 *
+	 */
+	public void store() {
+		storable=true;
+	}
+
+	/**
+	 * Return true if the object should be stored at database.
+	 * @return
+	 */
+	public boolean isStorable() {
+		return storable;
 	}
 
 	/**
@@ -603,6 +625,9 @@ public class RPObject extends Attributes {
 
 		object.container = container;
 		object.containerSlot = containerSlot;
+
+		object.hidden=hidden;
+		object.storable=storable;
 
 		for (RPEvent event : events) {
 			object.addEvent(event.getName(), event.getValue());

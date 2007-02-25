@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.2 2007/02/10 20:50:33 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.3 2007/02/25 17:23:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,34 +28,34 @@ import marauroa.common.net.Serializable;
  */
 public class Message implements Serializable {
 	/** Invalid client identificator constant */
-	public final static byte CLIENTID_INVALID = -1;
+	public final static int CLIENTID_INVALID = -1;
 
 	/** Type of message */
 	public enum MessageType {
-		C2S_ACTION, 
-		C2S_CHOOSECHARACTER, 
-		C2S_LOGIN_REQUESTKEY, 
-		C2S_LOGIN_SENDNONCENAMEANDPASSWORD, 
-		C2S_LOGIN_SENDPROMISE, 
-		C2S_LOGOUT, 
-		C2S_OUTOFSYNC, 
-		C2S_TRANSFER_ACK, 
-		S2C_CHARACTERLIST, 
-		S2C_CHOOSECHARACTER_ACK, 
-		S2C_CHOOSECHARACTER_NACK, 
-		S2C_INVALIDMESSAGE, 
-		S2C_LOGIN_ACK, 
-		S2C_LOGIN_NACK, 
-		S2C_LOGIN_SENDKEY, 
-		S2C_LOGIN_SENDNONCE, 
-		S2C_LOGOUT_ACK, 
-		S2C_LOGOUT_NACK, 
-		S2C_PERCEPTION, 
-		S2C_SERVERINFO, 
-		S2C_TRANSFER, 
-		S2C_TRANSFER_REQ, 
-		C2S_CREATEACCOUNT, 
-		S2C_CREATEACCOUNT_ACK, 
+		C2S_ACTION,
+		C2S_CHOOSECHARACTER,
+		C2S_LOGIN_REQUESTKEY,
+		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		C2S_LOGIN_SENDPROMISE,
+		C2S_LOGOUT,
+		C2S_OUTOFSYNC,
+		C2S_TRANSFER_ACK,
+		S2C_CHARACTERLIST,
+		S2C_CHOOSECHARACTER_ACK,
+		S2C_CHOOSECHARACTER_NACK,
+		S2C_INVALIDMESSAGE,
+		S2C_LOGIN_ACK,
+		S2C_LOGIN_NACK,
+		S2C_LOGIN_SENDKEY,
+		S2C_LOGIN_SENDNONCE,
+		S2C_LOGOUT_ACK,
+		S2C_LOGOUT_NACK,
+		S2C_PERCEPTION,
+		S2C_SERVERINFO,
+		S2C_TRANSFER,
+		S2C_TRANSFER_REQ,
+		C2S_CREATEACCOUNT,
+		S2C_CREATEACCOUNT_ACK,
 		S2C_CREATEACCOUNT_NACK
 	}
 
@@ -70,10 +70,10 @@ public class Message implements Serializable {
 
 	/** The socket channel that the message will use to be send or from where it was recieved */
 	protected SocketChannel channel;
-	
+
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param type the type of the message
 	 * @param channel The TCP/IP address associated to this message
 	 */
@@ -86,7 +86,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Sets the TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param channel
 	 *            The TCP/IP socket associated to this message
 	 */
@@ -96,22 +96,22 @@ public class Message implements Serializable {
 
 	/**
 	 * Returns the TCP/IP socket associatted with this message
-	 * 
+	 *
 	 * @return the TCP/IP socket associatted with this message
 	 */
 	public SocketChannel getSocketChannel() {
 		return channel;
 	}
-	
-	/** 
+
+	/**
 	 * Returns the address of the channel associated.
-	 * @return the address of the channel associated. 
+	 * @return the address of the channel associated.
 	 */
 	public InetSocketAddress getAddress() {
 		if(channel==null) {
 			return null;
 		}
-		
+
 		//return channel.socket().getInetAddress();
 		Socket socket=channel.socket();
 		return new InetSocketAddress(socket.getInetAddress(), socket.getPort());
@@ -119,7 +119,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Returns the type of the message
-	 * 
+	 *
 	 * @return the type of the message
 	 */
 	public MessageType getType() {
@@ -129,7 +129,7 @@ public class Message implements Serializable {
 	/**
 	 * Set the clientID so that we can identify the client to which the message
 	 * is target, as only IP is easy to Fake
-	 * 
+	 *
 	 * @param clientid
 	 *            a int that reprents the client id.
 	 */
@@ -139,16 +139,16 @@ public class Message implements Serializable {
 
 	/**
 	 * Returns the clientID of the Message.
-	 * 
+	 *
 	 * @return the ClientID
 	 */
 	public int getClientID() {
 		return clientid;
 	}
 
-	/** 
-	 * Returns the timestamp of the message. Usually milliseconds 
-	 * @return the timestamp of the message. Usually milliseconds 
+	/**
+	 * Returns the timestamp of the message. Usually milliseconds
+	 * @return the timestamp of the message. Usually milliseconds
 	 */
 	public int getMessageTimestamp() {
 		return timestampMessage;
@@ -156,7 +156,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Serialize the object into an ObjectOutput
-	 * 
+	 *
 	 * @param out the output serializer.
 	 * @exception IOException
 	 *                if the serializations fails
@@ -170,7 +170,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Serialize the object from an ObjectInput
-	 * 
+	 *
 	 * @param in the input serializer
 	 * @exception IOException
 	 *                if the serializations fails

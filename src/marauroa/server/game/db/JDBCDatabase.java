@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.8 2007/02/23 10:52:08 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.9 2007/02/25 17:23:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.DetailLevel;
+import marauroa.common.game.IRPZone;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
@@ -591,6 +592,23 @@ public class JDBCDatabase implements IDatabase {
 			logger.warn("Error loading character: "+character, e);
 			throw e;
 		}
+	}
+
+
+	/* (non-Javadoc)
+	 *
+	 */
+	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#storeRPZone(marauroa.server.game.db.JDBCTransaction, marauroa.common.game.IRPZone)
+	 */
+	public void storeRPZone(JDBCTransaction transaction, IRPZone zone) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/* (non-Javadoc)
