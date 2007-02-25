@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.1 2007/02/25 17:25:24 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.2 2007/02/25 20:51:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,13 +17,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
+import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 
 /**
@@ -61,7 +61,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	private NetworkClientManagerWrite writeManager;
 
 	/** List of already processed messages what the client will get using getMessage method. */
-	private List<Message> processedMessages;
+	private BlockingQueue<Message> processedMessages;
 
 	/**
 	 * An instance to the encoder class that will build a stream of bytes from a
@@ -89,7 +89,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	public TCPNetworkClientManager(String host, int port) throws IOException {
 		clientid = Message.CLIENTID_INVALID;
 
-		/* Create the socket and set a timeout of 1 second */
+		/* Create the socket */
 		address = new InetSocketAddress(host, port);
 		if (address.getAddress() == null) {
 			throw new IOException("Unknown Host");
@@ -110,7 +110,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 * Because we access the list from several places we create a
 		 * synchronized list.
 		 */
-		processedMessages = Collections.synchronizedList(new LinkedList<Message>());
+		processedMessages = new LinkedBlockingQueue<Message>();
 
 		readManager = new NetworkClientManagerRead();
 		readManager.start();
@@ -137,6 +137,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		try {
 			socket.close();
 		} catch (IOException e) {
+			// We don't care about the error.
 			logger.error(e, e);
 		}
 
@@ -152,35 +153,18 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		return address;
 	}
 
-	private synchronized void newMessageArrived() {
-		notifyAll();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) {
-		//TODO: Use BlockingQueue that should result in a cleaner implementation
-		if (processedMessages.size() == 0) {
-			try {
-				wait(timeout);
-			} catch (InterruptedException e) {
-				// do nothing
-			}
+		try {
+			return processedMessages.poll(timeout, java.util.concurrent.TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			/* If interrupted while waiting we just return null */
+			return null;
 		}
-
-		Message message = null;
-		if (processedMessages.size() > 0) {
-			message = processedMessages.remove(0);
-		}
-		return message;
-	}
-
-	private void clear() {
-		logger.info("Cleaning pending packets and messages");
-		processedMessages.clear();
 	}
 
 	/*
@@ -192,6 +176,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		connected=writeManager.write(msg);
 	}
 
+	/**
+	 * Returns true if the connection is "connected" to server or false otherwise.
+	 * @return true if socket is connected.
+	 */
 	public boolean getConnectionState() {
 		return connected;
 	}
@@ -202,8 +190,13 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	class NetworkClientManagerRead extends Thread {
 		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
 
+		/** We handle the data connection with the socket's input stream */
 		private InputStream is = null;
 
+		/**
+		 * Constructor.
+		 * This constructor doesn't start the thread.
+		 */
 		public NetworkClientManagerRead() {
 			super("NetworkClientManagerRead");
 			try {
@@ -213,101 +206,103 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			}
 		}
 
+		/** 
+		 * Decode a stream of bytes into a Message.
+		 * @param address address the message comes from.
+		 * @param data data that represent the serialized message
+		 */
 		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
 			try {
 				Message msg=decoder.decode(null, data);
 
+				/* If logger is enable, print the message so it shows useful debugging information. */
 				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType()
-							+ ") from "
+					logger.debug("build message(type=" + msg.getType() + ") from "
 							+ msg.getClientID() + " full [" + msg + "]");
 				}
 
+				// Once server assign us a clientid, store it for future messages.
 				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
 					clientid = msg.getClientID();
 				}
 
 				processedMessages.add(msg);
-			} catch (Exception e) {
+			} catch (IOException e) {
 				logger.error("Exception when processing pending packets", e);
+			} catch (InvalidVersionException e) {
+				// TODO: Do something...
 			}
+
+		}
+
+		/**
+		 * Keep reading from TCP stack until the whole Message has been read.
+		 * @return a byte stream representing the message or null if client has requested to exit.
+		 * @throws IOException if there is any problem reading.
+		 */
+		private byte[] readByteStream() throws IOException {
+			byte[] sizebuffer = new byte[4];
+			is.read(sizebuffer);
+			int size = (sizebuffer[0] & 0xFF)
+			+ ((sizebuffer[1] & 0xFF) << 8)
+			+ ((sizebuffer[2] & 0xFF) << 16)
+			+ ((sizebuffer[3] & 0xFF) << 24);
+
+			byte[] buffer = new byte[size];
+			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
+
+			// read until everything is received. We have to call read
+			// in a loop because the data may be split accross several
+			// packets.
+			long startTime = System.currentTimeMillis();
+			int start = 4;
+			int read = 0;
+			long waittime = 10;
+			int counter = 0;
+			do {
+				start = start + read;
+				read = is.read(buffer, start, size - start);
+				if (read < 0) {
+					isfinished = true;
+					return null;
+				}
+
+				if (System.currentTimeMillis() - 2000 > startTime) {
+					waittime = 1000;
+				}
+				try {
+					Thread.sleep(waittime);
+				} catch (InterruptedException e) {
+					logger.error(e, e);
+				}
+				counter++;
+			} while (start + read < size);
+
+			logger.debug("Received TCP Packet");
+
+			return buffer;
 		}
 
 		/** Method that execute the reading. It runs as a active thread forever. */
 		@Override
 		public void run() {
 			logger.debug("run()");
-			int globalcounter = 0;
+
 			while (keepRunning) {
 				try {
-					byte[] sizebuffer = new byte[4];
-					is.read(sizebuffer);
-					int size = (sizebuffer[0] & 0xFF)
-							+ ((sizebuffer[1] & 0xFF) << 8)
-							+ ((sizebuffer[2] & 0xFF) << 16)
-							+ ((sizebuffer[3] & 0xFF) << 24);
-
-					byte[] buffer = new byte[size];
-					System.arraycopy(sizebuffer, 0, buffer, 0, 4);
-
-					// read until everything is received. We have to call read
-					// in a loop because the data may be split accross several
-					// packets.
-					long startTime = System.currentTimeMillis();
-					int start = 4;
-					int read = 0;
-					long waittime = 10;
-					int counter = 0;
-					do {
-						start = start + read;
-						read = is.read(buffer, start, size - start);
-						if (read < 0) {
-							isfinished = true;
-							return;
-						}
-						if (System.currentTimeMillis() - 2000 > startTime) {
-							logger
-									.error("Waiting to long for follow-packets: globalcounter="
-											+ globalcounter
-											+ " counter="
-											+ counter
-											+ " start="
-											+ start
-											+ " read="
-											+ read
-											+ " size="
-											+ size
-											+ " time="
-											+ (System.currentTimeMillis() - startTime));
-							waittime = 1000;
-						}
-						try {
-							Thread.sleep(waittime);
-						} catch (InterruptedException e) {
-							logger.error(e, e);
-						}
-						counter++;
-					} while (start + read < size);
-
-					// logger.debug("size: " + size + "\r\n" +
-					// Utility.dumpByteArray(buffer));
-
-					logger.debug("Received TCP Packet");
-
+					byte[] buffer=readByteStream();
+					if(buffer==null) {
+						/* User has requested exit */
+						return;
+					}
+					
 					storeMessage(address, buffer);
-					newMessageArrived();
-				} catch (java.net.SocketTimeoutException e) {
-					/*
-					 * We need the thread to check from time to time if user has
-					 * requested an exit
-					 */
-					keepRunning = false;
 				} catch (IOException e) {
 					/* Report the exception */
+					// TODO: Isn't this a bit drastic?
 					logger.warn("error while processing tcp-packets", e);
 					keepRunning = false;
 				}
-				globalcounter++;
 			}
 
 			isfinished = true;
@@ -317,11 +312,15 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** A wrapper class for sending messages to clients */
 	class NetworkClientManagerWrite {
-		private final marauroa.common.Logger logger = Log4J
-				.getLogger(NetworkClientManagerWrite.class);
+		/** the logger instance. */
+		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
 
+		/** An output stream that represents the socket. */
 		private OutputStream os = null;
 
+		/**
+		 * Constructor
+		 */
 		public NetworkClientManagerWrite() {
 			try {
 				os = socket.getOutputStream();
@@ -330,7 +329,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			}
 		}
 
-		/** Method that execute the writting */
+		/** 
+		 * Method that execute the writting
+		 * @param msg the message to send to server. 
+		 */
 		public boolean write(Message msg) {
 			try {
 				if (keepRunning) {
@@ -338,8 +340,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					msg.setSocketChannel(null);
 					msg.setClientID(clientid);
 
+					/* If we are sending a out of sync message, clear the queue of messages. */
 					if (msg.getType() == Message.MessageType.C2S_OUTOFSYNC) {
-						clear();
+						processedMessages.clear();
 					}
 
 					os.write(encoder.encode(msg));

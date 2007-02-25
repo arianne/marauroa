@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.2 2007/02/25 20:51:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,12 @@ import marauroa.common.net.NetConst;
 
 public class MessageS2CLoginNACK extends Message {
 	public enum Reasons {
-		UNKNOWN_REASON, USERNAME_WRONG, SERVER_IS_FULL, GAME_MISMATCH, PROTOCOL_MISMATCH, INVALID_NONCE,
+		UNKNOWN_REASON, 
+		USERNAME_WRONG, 
+		SERVER_IS_FULL, 
+		GAME_MISMATCH, 
+		PROTOCOL_MISMATCH, 
+		INVALID_NONCE,
 	}
 
 	static private String[] text = {
