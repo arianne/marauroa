@@ -5,8 +5,8 @@ import java.net.InetSocketAddress;
 import marauroa.common.net.message.Message;
 
 /**
- * All network-communication is done through this interface. There are different
- * implementations.
+ * All network-communication is done through this interface. 
+ * There are different implementations.
  */
 public interface INetworkClientManagerInterface {
 

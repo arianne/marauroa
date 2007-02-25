@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.11 2007/02/19 18:37:24 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.12 2007/02/25 22:57:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,23 +32,34 @@ import org.apache.log4j.NDC;
  */
 public class PerceptionHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-			.getLogger(PerceptionHandler.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(PerceptionHandler.class);
 
+	/** This is the class that interpret the perception contents. */
 	private IPerceptionListener listener;
 
+	/** A list of previous perceptions that are still waiting for being applied. */
 	private List<MessageS2CPerception> previousPerceptions;
 
+	/** the timestamp of last sucessfully applied perception */
 	private int previousTimestamp;
 
+	/** This is true if we are synced with server representation. */
 	private boolean synced;
 
+	/**
+	 * Constructor
+	 *
+	 */
 	public PerceptionHandler() {
 		this.listener = new DefaultPerceptionListener();
 		synced = false;
 		previousPerceptions = new LinkedList<MessageS2CPerception>();
 	}
 
+	/**
+	 * Constructor
+	 * @param listener the listener that will give meaning to perception handler.
+	 */
 	public PerceptionHandler(IPerceptionListener listener) {
 		this.listener = listener;
 		previousPerceptions = new LinkedList<MessageS2CPerception>();
@@ -56,10 +67,15 @@ public class PerceptionHandler {
 		synced = false;
 	}
 
-	public void apply(MessageS2CPerception message,
-			Map<RPObject.ID, RPObject> world_instance) throws Exception {
-		listener.onPerceptionBegin(message.getPerceptionType(), message
-				.getPerceptionTimestamp());
+	/**
+	 * Apply a perception to a world instance.
+	 * @param message the perception message
+	 * @param world_instance a map representing objects stored in a zone.
+	 * @throws Exception
+	 */
+	// TODO: Consider replacing Map with Interface that should be clearer.
+	public void apply(MessageS2CPerception message,	Map<RPObject.ID, RPObject> world_instance) throws Exception {
+		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
 
 		if (message.getPerceptionType() == Perception.SYNC) {
 			try {
