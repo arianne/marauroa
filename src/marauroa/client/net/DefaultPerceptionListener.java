@@ -1,4 +1,4 @@
-/* $Id: DefaultPerceptionListener.java,v 1.4 2007/02/05 18:37:37 arianne_rpg Exp $ */
+/* $Id: DefaultPerceptionListener.java,v 1.5 2007/02/26 20:08:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,23 +47,19 @@ public class DefaultPerceptionListener implements IPerceptionListener {
 		return 0;
 	}
 
-	public int onSynced() {
-		return 0;
+	public void onSynced() {
 	}
 
-	public int onUnsynced() {
-		return 0;
+	public void onUnsynced() {
 	}
 
-	public int onPerceptionBegin(byte type, int timestamp) {
-		return 0;
+	public void onPerceptionBegin(byte type, int timestamp) {
 	}
 
-	public int onPerceptionEnd(byte type, int timestamp) {
-		return 0;
+	public void onPerceptionEnd(byte type, int timestamp) {
 	}
 
-	public int onException(Exception e, MessageS2CPerception perception)
+	public void onException(Exception e, MessageS2CPerception perception)
 			throws Exception {
 		System.out.println(e.getMessage());
 		System.out.println(perception);

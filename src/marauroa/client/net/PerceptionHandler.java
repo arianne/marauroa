@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.14 2007/02/26 19:37:41 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.15 2007/02/26 20:08:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -147,22 +147,26 @@ public class PerceptionHandler {
 			}
 		}
 
+		/* Notify the listener that the perception is applied */
 		listener.onPerceptionEnd(message.getPerceptionType(), message.getPerceptionTimestamp());
 	}
 
 	/**
 	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
 	 * passed as argument. It clears the map if this is a sync perception
+	 * @param message the perception message
+	 * @param world the container of objects
 	 */
-	private void applyPerceptionAddedRPObjects(MessageS2CPerception message,
-			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionAddedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
+			/* If the perception is Sync, we clear the contents of the container. */
 			if (message.getPerceptionType() == Perception.SYNC) {
 				if (!listener.onClear()) {
 					world.clear();
 				}
 			}
 
+			/* Now add the objects to the container. */
 			for (RPObject object : message.getAddedRPObjects()) {
 				if (!listener.onAdded(object)) {
 					world.put(object.getID(), object);
@@ -177,9 +181,10 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions deleted to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
+	 * @param message the perception message
+	 * @param world the container of objects
 	 */
-	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,
-			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			for (RPObject object : message.getDeletedRPObjects()) {
 				if (!listener.onDeleted(object)) {
@@ -195,10 +200,12 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions modified added and modified deleted to the
 	 * Map<RPObject::ID,RPObject> passed as argument.
+	 * @param message the perception message
+	 * @param world the container of objects
 	 */
-	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,
-			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
+			/* First we remove the deleted attributes */
 			for (RPObject object : message.getModifiedDeletedRPObjects()) {
 				RPObject w_object = world.get(object.getID());
 				if (!listener.onModifiedDeleted(w_object, object)) {
@@ -206,6 +213,7 @@ public class PerceptionHandler {
 				}
 			}
 
+			/* And then we add the new and modified attributes */
 			for (RPObject object : message.getModifiedAddedRPObjects()) {
 				RPObject w_object = world.get(object.getID());
 				if (!listener.onModifiedAdded(w_object, object)) {
@@ -228,9 +236,10 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
+	 * @param message the perception message
+	 * @param world the container of objects
 	 */
-	private void applyPerceptionMyRPObject(MessageS2CPerception message,
-			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionMyRPObject(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			RPObject added = message.getMyRPObjectAdded();
 			RPObject deleted = message.getMyRPObjectDeleted();
@@ -254,9 +263,10 @@ public class PerceptionHandler {
 				try {
 					object.applyDifferences(null, deleted);
 				} catch (Exception e) {
+					//TODO: Fix this.
+					//TODO: Write a test case.
 					logger.warn("Exception at applying differences", e);
-					logger
-							.warn("This is a KNOWN bug that happens when a object from a visible slot is removed");
+					logger.warn("This is a KNOWN bug that happens when a object from a visible slot is removed");
 				}
 
 				object.applyDifferences(added, null);
