@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.6 2007/02/25 17:23:56 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.7 2007/02/26 23:00:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -53,6 +53,26 @@ public interface IDatabase {
 	 * @return the generated player id
 	 */
 	public String generatePlayer(JDBCTransaction transaction, String pattern) throws SQLException;
+
+	/**
+	 * Change the password of the associated username.
+	 * @param transaction the database transaction.
+	 * @param username the player's usernam
+	 * @param password the new password
+	 * @return true if the operation is sucessful.
+	 * @throws SQLException
+	 */
+	public void changePassword(JDBCTransaction transaction, String username, byte[] password) throws SQLException;
+
+	/**
+	 * Change the email address of the associated username
+	 * @param transaction the database transaction.
+	 * @param username the player username
+	 * @param email the players new email address
+	 * @return true if the operation is sucessful.
+	 * @throws SQLException
+	 */
+	public void changeEmail(JDBCTransaction transaction, String username, String email) throws SQLException;
 
 	/**
 	 * Removes a player, its characters and the avatars that represent it from database.

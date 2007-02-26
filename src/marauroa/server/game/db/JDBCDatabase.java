@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.9 2007/02/25 17:23:56 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.10 2007/02/26 23:00:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -230,6 +230,56 @@ public class JDBCDatabase implements IDatabase {
 		}
 
 		return os.toString();
+	}
+
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#changeEmail(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
+	 */
+	public void changeEmail(JDBCTransaction transaction, String username, String email) throws SQLException {
+		try {
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+") email=("+email+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			int id = getDatabasePlayerId(transaction, username);
+
+			String query="update player set email='"+email+"' where player_id="+id;
+			logger.debug("changePassword is using query: "+query);
+
+			stmt.execute(query);
+			stmt.close();
+		} catch (SQLException e) {
+			logger.error("Can't remove player("+username+") to Database", e);
+			throw e;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#changePassword(marauroa.server.game.db.JDBCTransaction, java.lang.String, byte[])
+	 */
+	public void changePassword(JDBCTransaction transaction, String username, byte[] password) throws SQLException {
+		try {
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=("+username+")");
+			}
+
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			int id = getDatabasePlayerId(transaction, username);
+
+			String query="update player set password='"+Hash.toHexString(password)+"' where player_id="+id;
+			logger.debug("changePassword is using query: "+query);
+
+			stmt.execute(query);
+			stmt.close();
+		} catch (SQLException e) {
+			logger.error("Can't remove player("+username+") to Database", e);
+			throw e;
+		}
 	}
 
 	/* (non-Javadoc)
