@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.3 2007/02/26 22:24:20 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.4 2007/02/26 22:33:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -154,24 +154,19 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	}
 
 	private boolean shouldThrowException;
-	private Exception storedException;
+	private InvalidVersionException storedException;
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
-	public synchronized Message getMessage(int timeout) throws IOException, InvalidVersionException {
+	public synchronized Message getMessage(int timeout) throws InvalidVersionException {
 		/* As read of message is done in a different thread we lost the exception information,
 		 * so we store it in a variable and throw them now.
 		 */
 		if(shouldThrowException) {
 			shouldThrowException=false;
-			if(storedException instanceof InvalidVersionException) {
-				throw (InvalidVersionException)storedException;
-			}
-			else {
-				throw (IOException)storedException;
-			}
+			throw storedException;
 		}
 
 		try {
@@ -225,8 +220,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 * Decode a stream of bytes into a Message.
 		 * @param address address the message comes from.
 		 * @param data data that represent the serialized message
+		 * @throws IOException
 		 */
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data) {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data) throws IOException {
 			try {
 				Message msg=decoder.decode(null, data);
 
@@ -242,7 +238,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				}
 
 				processedMessages.add(msg);
-			} catch (Exception e) {
+			} catch (InvalidVersionException e) {
 				shouldThrowException=true;
 				storedException=e;
 				logger.error("Exception when processing pending packets", e);
@@ -314,8 +310,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					storeMessage(address, buffer);
 				} catch (IOException e) {
 					/* Report the exception */
-					// TODO: Isn't this a bit drastic?
-					logger.warn("error while processing tcp-packets", e);
+					logger.fatal("error while processing tcp-packets", e);
 					keepRunning = false;
 				}
 			}

@@ -34,7 +34,7 @@ public interface INetworkClientManagerInterface {
 	 * @throws InvalidVersionException
 	 * @throws IOException
 	 */
-	public abstract Message getMessage(int timeout) throws IOException, InvalidVersionException;
+	public abstract Message getMessage(int timeout) throws InvalidVersionException;
 
 	/**
 	 * This method add a message to be delivered to the client the message is

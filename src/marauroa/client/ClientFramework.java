@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.3 2007/02/26 22:24:19 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.4 2007/02/26 22:33:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -96,7 +96,7 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException
 	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
 	 */
-	private Message getMessage() throws InvalidVersionException, IOException, TimeoutException {
+	private Message getMessage() throws InvalidVersionException, TimeoutException {
 		if (messages.isEmpty()) {
 			return messages.remove(0);
 		} else {
@@ -133,7 +133,7 @@ public abstract class ClientFramework {
 	 * @throws LoginFailedException if login is rejected
 	 * @throws IOException
 	 */
-	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException, IOException {
+	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException {
 		int received = 0;
 		RSAPublicKey key = null;
 		byte[] clientNonce = null;
@@ -223,7 +223,7 @@ public abstract class ClientFramework {
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws IOException
 	 */
-	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException, IOException {
+	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
 		netMan.addMessage(msgCC);
 
@@ -263,7 +263,7 @@ public abstract class ClientFramework {
 	 * @throws CreateAccountFailedException
 	 * @throws IOException
 	 */
-	public synchronized void createAccount(String username, String password,	String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException, IOException {
+	public synchronized void createAccount(String username, String password, String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
 
 		netMan.addMessage(msgCA);
@@ -305,7 +305,7 @@ public abstract class ClientFramework {
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws IOException
 	 */
-	public synchronized boolean logout() throws InvalidVersionException, TimeoutException, IOException {
+	public synchronized boolean logout() throws InvalidVersionException, TimeoutException {
 		Message msgL = new MessageC2SLogout(null);
 
 		netMan.addMessage(msgL);
@@ -333,7 +333,7 @@ public abstract class ClientFramework {
 	 * @param delta unused
 	 * @throws IOException
 	 */
-	public synchronized boolean loop(int delta) throws IOException {
+	public synchronized boolean loop(int delta) {
 		boolean recievedMessages = false;
 
 		/* Check network for new messages. */
