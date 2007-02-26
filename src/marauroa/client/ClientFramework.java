@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.1 2007/02/25 20:51:17 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.2 2007/02/26 21:45:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,6 +47,7 @@ import marauroa.common.net.message.TransferContent;
 
 /**
  * It is a wrapper over all the things that the client should do.
+ * You should extend this class at your game.
  * @author miguel
  *
  */
@@ -90,27 +91,27 @@ public abstract class ClientFramework {
 	}
 
 	/**
-	 * Retrieves a message from network manager. 
+	 * Retrieves a message from network manager.
 	 * @return a message
 	 * @throws InvalidVersionException
-	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds. 
+	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
 	 */
 	private Message getMessage() throws InvalidVersionException, TimeoutException {
 		if (messages.isEmpty()) {
 			return messages.remove(0);
 		} else {
 			Message msg=netMan.getMessage(TIMEOUT);
-			
+
 			if(msg==null) {
 				throw new TimeoutException();
 			}
-		
-			return msg;		
+
+			return msg;
 		}
 	}
 
 	/**
-	 * Request a synchronization with server. 
+	 * Request a synchronization with server.
 	 * It shouldn't be needed now that we are using TCP.
 	 */
 	@Deprecated
@@ -127,105 +128,88 @@ public abstract class ClientFramework {
 	 * @param password
 	 *            Player password
 	 * @return true if login is successful.
-	 * @throws InvalidVersionException if we are not using a compatible version 
+	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws LoginFailedException if login is rejected
 	 */
-	public synchronized boolean login(String username, String password) throws InvalidVersionException, TimeoutException {
-		try {
-			int received = 0;
-			RSAPublicKey key = null;
-			byte[] clientNonce = null;
-			byte[] serverNonce = null;
+	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException {
+		int received = 0;
+		RSAPublicKey key = null;
+		byte[] clientNonce = null;
+		byte[] serverNonce = null;
 
-			/* Send to server a login request and indicate the game name and version */
-			netMan.addMessage(new MessageC2SLoginRequestKey(null, getGameName(), getVersionNumber()));
+		/* Send to server a login request and indicate the game name and version */
+		netMan.addMessage(new MessageC2SLoginRequestKey(null, getGameName(), getVersionNumber()));
 
-			while (received < 3) {
-				Message msg = getMessage();
-				
-				switch (msg.getType()) {
-				/* Server sends its public RSA key */
-				case S2C_LOGIN_SENDKEY: {
-					logger.debug("Recieved Key");
-					key = ((MessageS2CLoginSendKey) msg).getKey();
+		while (received < 3) {
+			Message msg = getMessage();
 
-					clientNonce = Hash.random(Hash.hashLength());
-					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
-					break;
-				}
-				/* Server sends a random big integer */
-				case S2C_LOGIN_SENDNONCE: {
-					logger.debug("Recieved Server Nonce");
-					if (serverNonce != null) {
-						return false;
-					}
+			switch (msg.getType()) {
+			/* Server sends its public RSA key */
+			case S2C_LOGIN_SENDKEY: {
+				logger.debug("Recieved Key");
+				key = ((MessageS2CLoginSendKey) msg).getKey();
 
-					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
-					byte[] b1 = Hash.xor(clientNonce, serverNonce);
-					if (b1 == null) {
-						return false;
-					}
-
-					byte[] b2 = Hash.xor(b1, Hash.hash(password));
-					if (b2 == null) {
-						return false;
-					}
-
-					byte[] cryptedPassword = key.encodeByteArray(b2);
-					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null, clientNonce, username, cryptedPassword));
-					break;
-				}
-				/* Server replied with ACK to login operation */
-				case S2C_LOGIN_ACK:
-					logger.debug("Login correct");
-					received++;
-					break;
-				/* Server send the character list */
-				case S2C_CHARACTERLIST:
-					logger.debug("Recieved Character list");
-					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
-					
-					/* We notify client of characters by calling the callback method. */
-					onAvailableCharacters(characters);
-					received++;
-					break;
-				/* Server sends the server info message with information about versions, homepage, etc... */
-				case S2C_SERVERINFO:
-					logger.debug("Recieved Server info");
-					String[] info = ((MessageS2CServerInfo) msg).getContents();
-
-					/* We notify client of this info by calling the callback method. */
-					onServerInfo(info);
-					received++;
-					break;
-				/* Login failed, explain reason on event */
-				case S2C_LOGIN_NACK:
-					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
-					logger.debug("Login failed. Reason: "+ msgNACK.getResolution());
-
-					event = msgNACK.getResolution();
-					// TODO: Return another thing, so that value is useful at client to do anything. 
-					return false;
-				/* If message doesn't match, store it, someone will need it. */
-				default:					
-					messages.add(msg);
-				}
+				clientNonce = Hash.random(Hash.hashLength());
+				netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
+				break;
 			}
-			return true;
-		} catch (InvalidVersionException e) {
-			throw e;
+			/* Server sends a random big integer */
+			case S2C_LOGIN_SENDNONCE: {
+				logger.debug("Recieved Server Nonce");
+				if (serverNonce != null) {
+					throw new LoginFailedException("Already recieved a serverNonce");
+				}
+
+				serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
+				byte[] b1 = Hash.xor(clientNonce, serverNonce);
+				if (b1 == null) {
+					throw new LoginFailedException("Incorrect hash b1");
+				}
+
+				byte[] b2 = Hash.xor(b1, Hash.hash(password));
+				if (b2 == null) {
+					throw new LoginFailedException("Incorrect hash b2");
+				}
+
+				byte[] cryptedPassword = key.encodeByteArray(b2);
+				netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null, clientNonce, username, cryptedPassword));
+				break;
+			}
+			/* Server replied with ACK to login operation */
+			case S2C_LOGIN_ACK:
+				logger.debug("Login correct");
+				received++;
+				break;
+				/* Server send the character list */
+			case S2C_CHARACTERLIST:
+				logger.debug("Recieved Character list");
+				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
+
+				/* We notify client of characters by calling the callback method. */
+				onAvailableCharacters(characters);
+				received++;
+				break;
+				/* Server sends the server info message with information about versions, homepage, etc... */
+			case S2C_SERVERINFO:
+				logger.debug("Recieved Server info");
+				String[] info = ((MessageS2CServerInfo) msg).getContents();
+
+				/* We notify client of this info by calling the callback method. */
+				onServerInfo(info);
+				received++;
+				break;
+				/* Login failed, explain reason on event */
+			case S2C_LOGIN_NACK:
+				MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
+				logger.debug("Login failed. Reason: "+ msgNACK.getResolution());
+
+				throw new LoginFailedException(msgNACK.getResolution());
+				/* If message doesn't match, store it, someone will need it. */
+			default:
+				messages.add(msg);
+			}
 		}
-	}
-
-	/** A string describing an event that the client may believe relevant. */
-	private String event;
-
-	/** 
-	 * Return the event that happened inside the ariannexp framework
-	 * @return an event
-	 */
-	public String getEvent() {
-		return event;
 	}
 
 	/**
@@ -234,7 +218,7 @@ public abstract class ClientFramework {
 	 * @param character
 	 *            name of the character we want to play with.
 	 * @return true if choosing character is successful.
-	 * @throws InvalidVersionException if we are not using a compatible version 
+	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 */
 	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException {
@@ -266,16 +250,17 @@ public abstract class ClientFramework {
 
 	/**
 	 * Request server to create an account on server.
-	 * 
+	 *
 	 * @param username the player desired username
 	 * @param password the player password
 	 * @param email player's email for notifications and/or password reset.
 	 * @param template an object template to create the player avatar.
 	 * @return true if it was sucessful.
-	 * @throws InvalidVersionException if we are not using a compatible version 
+	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws CreateAccountFailedException
 	 */
-	public synchronized boolean createAccount(String username, String password,	String email, RPObject template) throws TimeoutException, InvalidVersionException {
+	public synchronized void createAccount(String username, String password,	String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
 
 		netMan.addMessage(msgCA);
@@ -289,24 +274,19 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
-				return true;
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATEACCOUNT_NACK:
 				logger.debug("Create account NACK");
-				event = ((MessageS2CCreateAccountNACK) msg).getResolution();
-				return false;
+				throw new CreateAccountFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
 			default:
 				messages.add(msg);
 			}
 		}
-
-		// Unreachable, but makes javac happy
-		return false;
 	}
 
-	/** 
+	/**
 	 * Sends a RPAction to server
-	 * @param action the action to send to server. 
+	 * @param action the action to send to server.
 	 */
 	public void send(RPAction action) {
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
@@ -317,8 +297,8 @@ public abstract class ClientFramework {
 	 * Request logout of server
 	 *
 	 * @return true if we have successfully logout or false if server rejects to logout our player
-	 * and maintain it on game world. 
-	 * @throws InvalidVersionException if we are not using a compatible version 
+	 * and maintain it on game world.
+	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 */
 	public synchronized boolean logout() throws InvalidVersionException, TimeoutException {
@@ -344,9 +324,9 @@ public abstract class ClientFramework {
 		return false;
 	}
 
-	/** 
+	/**
 	 * Call this method to get and apply messages
-	 * @param delta unused 
+	 * @param delta unused
 	 */
 	public synchronized boolean loop(int delta) {
 		boolean recievedMessages = false;
@@ -426,24 +406,24 @@ public abstract class ClientFramework {
 
 	/**
 	 * It is called when we get a transfer of content
-	 * @param the transfered items. 
+	 * @param the transfered items.
 	 */
 	abstract protected void onTransfer(List<TransferContent> items);
 
-	/** 
+	/**
 	 * It is called when we get the list of characters
-	 * @param characters the characters we have available at this account. 
+	 * @param characters the characters we have available at this account.
 	 */
 	abstract protected void onAvailableCharacters(String[] characters);
 
-	/** 
+	/**
 	 * It is called when we get the list of server information strings
-	 * @param info the list of server strings with information.  
+	 * @param info the list of server strings with information.
 	 */
 	abstract protected void onServerInfo(String[] info);
 
-	/** 
-	 * Returns the name of the game that this client implements  
+	/**
+	 * Returns the name of the game that this client implements
 	 * @return the name of the game that this client implements
 	 */
 	abstract protected String getGameName();
