@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.6 2007/02/05 18:37:37 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.7 2007/02/26 19:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,12 +57,6 @@ public interface IPerceptionListener {
 	 * on sync perceptions Return true to stop further processing.
 	 */
 	public boolean onClear();
-
-	/**
-	 * onTimeout is called when the client has timeout, that is, when it is 50
-	 * turns far from server
-	 */
-	public int onTimeout();
 
 	/** onSynced is called when the client recover sync */
 	public int onSynced();

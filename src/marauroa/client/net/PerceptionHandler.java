@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.13 2007/02/26 18:58:17 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.14 2007/02/26 19:37:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -73,15 +73,16 @@ public class PerceptionHandler {
 	 * @param world_instance a map representing objects stored in a zone.
 	 * @throws Exception
 	 */
-	public void apply(MessageS2CPerception message,	IRPObjectContainer world_instance) throws Exception {
-		/* Notify the client that we start processing the perception */
+	public void apply(MessageS2CPerception message,	Map<RPObject.ID, RPObject> world_instance) throws Exception {
 		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
 
+		/*
+		 * When we get a sync perception, we set sync flag to true and
+		 * clear the stored data to renew it.
+		 */
 		if (message.getPerceptionType() == Perception.SYNC) {
 			try {
-				/* If we recieve a new sync perception remove all the old stuff waiting
-				 * for being processed.
-				 */
+				/** OnSync: Keep processing */
 				previousTimestamp = message.getPerceptionTimestamp();
 				previousPerceptions.clear();
 
@@ -89,16 +90,19 @@ public class PerceptionHandler {
 				applyPerceptionMyRPObject(message, world_instance);
 
 				if (!synced) {
-					/* If we were unsynced, tell client we are sync again. */
 					synced = true;
 					listener.onSynced();
 				}
 			} catch (Exception e) {
 				listener.onException(e, message);
 			}
-		} else if (message.getPerceptionType() == Perception.DELTA	&& previousTimestamp + 1 == message.getPerceptionTimestamp()) {
-			/* This is the most common case, if the perception is Delta and its timestamp is the expected. */
+		/*
+		 * When we get a delta perception, we need to check that it is the one that we are
+		 * expecting.
+		 */
+		} else if (message.getPerceptionType() == Perception.DELTA && previousTimestamp + 1 == message.getPerceptionTimestamp()) {
 			try {
+				/** OnSync: Keep processing */
 				previousTimestamp = message.getPerceptionTimestamp();
 
 				applyPerceptionDeletedRPObjects(message, world_instance);
@@ -108,6 +112,10 @@ public class PerceptionHandler {
 			} catch (Exception e) {
 				listener.onException(e, message);
 			}
+		/*
+		 * In any other case, store the perception and check if it helps applying any of the
+		 * still to be applied perceptions.
+		 */
 		} else {
 			previousPerceptions.add(message);
 
@@ -129,10 +137,8 @@ public class PerceptionHandler {
 				}
 			}
 
-			/* If there are still perceptions there it means that we are not
-			 * synchronized.
-			 */
-			if (previousPerceptions.size() == 0) {
+			/* If there are no preceptions that means we are synced */
+			if (previousPerceptions.isEmpty()) {
 				synced = true;
 				listener.onSynced();
 			} else {
@@ -141,12 +147,6 @@ public class PerceptionHandler {
 			}
 		}
 
-		/* If we have lost enough perceptions, we mark the client as timedout */
-		if (message.getPerceptionTimestamp() - previousTimestamp > 50) {
-			listener.onTimeout();
-		}
-
-		/* Notify the client we completed the perception processing */
 		listener.onPerceptionEnd(message.getPerceptionType(), message.getPerceptionTimestamp());
 	}
 
@@ -155,7 +155,7 @@ public class PerceptionHandler {
 	 * passed as argument. It clears the map if this is a sync perception
 	 */
 	private void applyPerceptionAddedRPObjects(MessageS2CPerception message,
-			IRPObjectContainer world) throws RPObjectNotFoundException {
+			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			if (message.getPerceptionType() == Perception.SYNC) {
 				if (!listener.onClear()) {
@@ -165,7 +165,7 @@ public class PerceptionHandler {
 
 			for (RPObject object : message.getAddedRPObjects()) {
 				if (!listener.onAdded(object)) {
-					world.add(object);
+					world.put(object.getID(), object);
 				}
 			}
 		} catch (Exception e) {
@@ -179,7 +179,7 @@ public class PerceptionHandler {
 	 * passed as argument.
 	 */
 	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,
-			IRPObjectContainer world) throws RPObjectNotFoundException {
+			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			for (RPObject object : message.getDeletedRPObjects()) {
 				if (!listener.onDeleted(object)) {
@@ -197,7 +197,7 @@ public class PerceptionHandler {
 	 * Map<RPObject::ID,RPObject> passed as argument.
 	 */
 	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,
-			IRPObjectContainer world) throws RPObjectNotFoundException {
+			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			for (RPObject object : message.getModifiedDeletedRPObjects()) {
 				RPObject w_object = world.get(object.getID());
@@ -229,7 +229,8 @@ public class PerceptionHandler {
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
 	 */
-	private void applyPerceptionMyRPObject(MessageS2CPerception message, IRPObjectContainer world) throws RPObjectNotFoundException {
+	private void applyPerceptionMyRPObject(MessageS2CPerception message,
+			Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			RPObject added = message.getMyRPObjectAdded();
 			RPObject deleted = message.getMyRPObjectDeleted();
