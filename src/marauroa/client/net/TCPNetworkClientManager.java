@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.2 2007/02/25 20:51:18 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.3 2007/02/26 22:24:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -153,12 +153,27 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		return address;
 	}
 
+	private boolean shouldThrowException;
+	private Exception storedException;
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
-	public synchronized Message getMessage(int timeout) {
+	public synchronized Message getMessage(int timeout) throws IOException, InvalidVersionException {
+		/* As read of message is done in a different thread we lost the exception information,
+		 * so we store it in a variable and throw them now.
+		 */
+		if(shouldThrowException) {
+			shouldThrowException=false;
+			if(storedException instanceof InvalidVersionException) {
+				throw (InvalidVersionException)storedException;
+			}
+			else {
+				throw (IOException)storedException;
+			}
+		}
+
 		try {
 			return processedMessages.poll(timeout, java.util.concurrent.TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
@@ -206,7 +221,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			}
 		}
 
-		/** 
+		/**
 		 * Decode a stream of bytes into a Message.
 		 * @param address address the message comes from.
 		 * @param data data that represent the serialized message
@@ -227,10 +242,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				}
 
 				processedMessages.add(msg);
-			} catch (IOException e) {
+			} catch (Exception e) {
+				shouldThrowException=true;
+				storedException=e;
 				logger.error("Exception when processing pending packets", e);
-			} catch (InvalidVersionException e) {
-				// TODO: Do something...
 			}
 
 		}
@@ -295,7 +310,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 						/* User has requested exit */
 						return;
 					}
-					
+
 					storeMessage(address, buffer);
 				} catch (IOException e) {
 					/* Report the exception */
@@ -329,9 +344,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			}
 		}
 
-		/** 
+		/**
 		 * Method that execute the writting
-		 * @param msg the message to send to server. 
+		 * @param msg the message to send to server.
 		 */
 		public boolean write(Message msg) {
 			try {

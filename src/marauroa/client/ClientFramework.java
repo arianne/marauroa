@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.2 2007/02/26 21:45:07 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.3 2007/02/26 22:24:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -96,7 +96,7 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException
 	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
 	 */
-	private Message getMessage() throws InvalidVersionException, TimeoutException {
+	private Message getMessage() throws InvalidVersionException, IOException, TimeoutException {
 		if (messages.isEmpty()) {
 			return messages.remove(0);
 		} else {
@@ -131,8 +131,9 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws LoginFailedException if login is rejected
+	 * @throws IOException
 	 */
-	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException {
+	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException, IOException {
 		int received = 0;
 		RSAPublicKey key = null;
 		byte[] clientNonce = null;
@@ -220,8 +221,9 @@ public abstract class ClientFramework {
 	 * @return true if choosing character is successful.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws IOException
 	 */
-	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException {
+	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException, IOException {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
 		netMan.addMessage(msgCC);
 
@@ -259,8 +261,9 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateAccountFailedException
+	 * @throws IOException
 	 */
-	public synchronized void createAccount(String username, String password,	String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
+	public synchronized void createAccount(String username, String password,	String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException, IOException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
 
 		netMan.addMessage(msgCA);
@@ -300,8 +303,9 @@ public abstract class ClientFramework {
 	 * and maintain it on game world.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws IOException
 	 */
-	public synchronized boolean logout() throws InvalidVersionException, TimeoutException {
+	public synchronized boolean logout() throws InvalidVersionException, TimeoutException, IOException {
 		Message msgL = new MessageC2SLogout(null);
 
 		netMan.addMessage(msgL);
@@ -327,12 +331,19 @@ public abstract class ClientFramework {
 	/**
 	 * Call this method to get and apply messages
 	 * @param delta unused
+	 * @throws IOException
 	 */
-	public synchronized boolean loop(int delta) {
+	public synchronized boolean loop(int delta) throws IOException {
 		boolean recievedMessages = false;
 
 		/* Check network for new messages. */
-		Message newmsg = netMan.getMessage(30);
+		Message newmsg=null;
+		try {
+			newmsg = netMan.getMessage(30);
+		} catch (InvalidVersionException e) {
+			logger.warn("This should never happen: ",e);
+		}
+
 		if (newmsg != null) {
 			messages.add(newmsg);
 		}
