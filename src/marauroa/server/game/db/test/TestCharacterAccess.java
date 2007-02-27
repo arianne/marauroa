@@ -1,4 +1,4 @@
-/* $Id: TestCharacterAccess.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
+/* $Id: TestCharacterAccess.java,v 1.2 2007/02/27 16:59:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -33,20 +33,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Test the character related methods of database access.
  * @author miguel
  *
  */
 public class TestCharacterAccess {
 
+	/**
+	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
+	 * JDBC Database and create a proper public constructor.
+	 * @author miguel
+	 *
+	 */
 	static class TestJDBC extends JDBCDatabase {
 		public TestJDBC(Properties props) {
-			super(props);			
+			super(props);
 		}
 	}
 
 	private static TestJDBC database;
 
 	/**
+	 * Setup one time the database.
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -63,6 +71,11 @@ public class TestCharacterAccess {
 		database=new TestJDBC(props);
 	}
 
+	/**
+	 * Add a character to a player account and test it existence with hasCharacter method.
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@Test
 	public void addCharacter() throws SQLException, IOException {
 		String username="testUser";
@@ -71,7 +84,7 @@ public class TestCharacterAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 			database.addCharacter(transaction, username, character, player);
@@ -81,13 +94,18 @@ public class TestCharacterAccess {
 		}
 	}
 
-	@Test(expected=SQLException.class) 
+	/**
+	 * Test that adding two times the same character throws a SQLException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	@Test(expected=SQLException.class)
 	public void doubleAddedCharacter() throws SQLException, IOException {
 		String username="testUser";
 		String character="testCharacter";
 		RPObject player=new RPObject();
 
-		JDBCTransaction transaction=database.getTransaction();			
+		JDBCTransaction transaction=database.getTransaction();
 		try{
 			transaction.begin();
 
@@ -103,6 +121,11 @@ public class TestCharacterAccess {
 		}
 	}
 
+	/**
+	 * Test that remove character removed it and assert with hasCharacter.
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@Test
 	public void removeCharacter() throws SQLException, IOException {
 		String username="testUser";
@@ -111,18 +134,23 @@ public class TestCharacterAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 			database.addCharacter(transaction, username, character, player);
 			assertTrue(database.hasCharacter(transaction, username, character));
-			database.removeCharacter(transaction, username, character);			
+			database.removeCharacter(transaction, username, character);
 			assertFalse(database.hasCharacter(transaction, username, character));
 		} finally {
 			transaction.rollback();
 		}
 	}
 
+	/**
+	 * Check that removing the player does in fact also removes the character that belonged to that player.
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@Test
 	public void removePlayerCharacter() throws SQLException, IOException {
 		String username="testUser";
@@ -131,18 +159,23 @@ public class TestCharacterAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 			database.addCharacter(transaction, username, character, player);
 			assertTrue(database.hasCharacter(transaction, username, character));
-			database.removePlayer(transaction, username);			
+			database.removePlayer(transaction, username);
 			assertFalse(database.hasCharacter(transaction, username, character));
 		} finally {
 			transaction.rollback();
 		}
 	}
 
+	/**
+	 * Check that getCharacters return a list with all the characters that belong to a player.
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@Test
 	public void getCharacters() throws SQLException, IOException {
 		String username="testUser";
@@ -150,20 +183,27 @@ public class TestCharacterAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			for(String character: characters) {
 			  database.addCharacter(transaction, username, character, new RPObject());
 			}
-			
+
 			List<String> result=database.getCharacters(transaction, username);
 			assertEquals(characters, result.toArray());
-			
+
 		} finally {
 			transaction.rollback();
 		}
 	}
 
+	/**
+	 * Check that storing and loading an avatar associated to a character of a player works
+	 * as expected.
+	 * This code depends on RPObject and Serialization.
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@Test
 	public void storeAndLoadCharacter() throws SQLException, IOException {
 		String username="testUser";
@@ -175,7 +215,7 @@ public class TestCharacterAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			database.addCharacter(transaction, username, character, player);
 			RPObject loaded=database.loadCharacter(transaction, username, character);
