@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.13 2007/02/27 17:44:59 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.14 2007/02/27 17:49:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -667,6 +667,16 @@ public class JDBCDatabase implements IDatabase {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer os = new OutputSerializer(out_stream);
+
+		/* compute how many storable objects exists in zone. */
+		int amount=0;
+		for(RPObject object: zone) {
+			if(object.isStorable()) {
+				amount++;
+			}
+		}
+
+		os.write(amount);
 
 		for(RPObject object: zone) {
 			if(object.isStorable()) {
