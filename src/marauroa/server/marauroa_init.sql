@@ -32,6 +32,15 @@ create table if not exists rpobject
   )
   TYPE=INNODB;
 
+create table if not exists rpzone 
+  (
+  zone_id varchar(32) not null,
+  data blob,
+
+  primary key(zone_id)
+  )
+  TYPE=INNODB;
+
 create table if not exists loginEvent
   (
   player_id integer not null,

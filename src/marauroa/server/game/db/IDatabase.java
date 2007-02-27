@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.8 2007/02/27 11:01:54 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.9 2007/02/27 17:44:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -198,8 +198,11 @@ public interface IDatabase {
 	 *
 	 * @param transaction the database transaction
 	 * @param zone the zone we want to store.
+	 * @throws IOException
+	 * @throws IOException
+	 * @throws SQLException
 	 */
-	public void storeRPZone(JDBCTransaction transaction, IRPZone zone);
+	public void storeRPZone(JDBCTransaction transaction, IRPZone zone) throws IOException, SQLException;
 
 	/**
 	 * Load all the stored objects into a zone.

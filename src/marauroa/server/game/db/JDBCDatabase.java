@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.12 2007/02/27 17:13:05 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.13 2007/02/27 17:44:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -658,9 +658,45 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.IDatabase#storeRPZone(marauroa.server.game.db.JDBCTransaction, marauroa.common.game.IRPZone)
 	 */
-	public void storeRPZone(JDBCTransaction transaction, IRPZone zone) {
-		// TODO Auto-generated method stub
+	public void storeRPZone(JDBCTransaction transaction, IRPZone zone) throws IOException, SQLException {
+		String zoneid=zone.getID().getID();
+		if (!StringChecker.validString(zoneid)) {
+			throw new SQLException("Invalid string zoneid=("+zoneid+")");
+		}
 
+		ByteArrayOutputStream array = new ByteArrayOutputStream();
+		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
+		OutputSerializer os = new OutputSerializer(out_stream);
+
+		for(RPObject object: zone) {
+			if(object.isStorable()) {
+				object.writeObject(os,DetailLevel.FULL);
+			}
+		}
+
+		out_stream.close();
+
+		/* Setup the stream for a blob */
+		ByteArrayInputStream inStream = new ByteArrayInputStream(array.toByteArray());
+
+		String query;
+
+		if (hasRPZone(transaction, zone.getID())) {
+			query = "update rpzone data=? where zone_id=" + zone.getID();
+		} else {
+			query = "insert into rpzone(zone_id,data) values('"+zoneid+"',?)";
+		}
+		logger.debug("storeRPZone is executing query " + query);
+
+		Connection connection = transaction.getConnection();
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setBinaryStream(1, inStream, inStream.available());
+		ps.executeUpdate();
+		ps.close();
+	}
+
+	private boolean hasRPZone(JDBCTransaction transaction, IRPZone.ID zone) {
+		return false;
 	}
 
 	/* (non-Javadoc)
