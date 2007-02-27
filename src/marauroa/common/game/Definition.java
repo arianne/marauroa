@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.8 2007/02/19 18:37:24 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.9 2007/02/27 20:02:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -407,13 +407,13 @@ public class Definition implements marauroa.common.net.Serializable {
 		out.write((byte)clazz.ordinal());
 		out.write(code);
 		out.write(name);
-		
+
 		/* Serialize value only if it is distinct of null */
 		if(value==null) {
 			out.write((byte)0);
 		} else {
 			out.write((byte)1);
-			out.write(value);
+			out.write255LongString(value);
 
 		}
 		out.write((byte)type.ordinal());
@@ -428,10 +428,29 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		/* If value is 0 that means that attribute is null */
 		if(in.readByte()==1) {
-			value= in.readString();
+			value= in.read255LongString();
 		}
 
 		type = Type.values()[in.readByte()];
 		flags = in.readByte();
+	}
+
+	@Override
+	public boolean equals(Object ot) {
+		if(ot==null || !(ot instanceof Definition)) {
+			return false;
+		}
+
+		Definition def=(Definition)ot;
+
+		boolean result=clazz.equals(def.clazz) &&
+		   code==def.code &&
+		   capacity==def.capacity &&
+		   flags==def.flags &&
+		   name.equals(def.name) &&
+		   type==def.type &&
+		   (value==def.value || value.equals(def.value));
+
+		return result;
 	}
 }

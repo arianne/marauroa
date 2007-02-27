@@ -36,8 +36,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/** Stores static attributes definition */
 	private Map<String, Definition> staticattributes;
-	/** 
-	 * Stores attributes definition. 
+	/**
+	 * Stores attributes definition.
 	 * The main difference between static and non-static attributes is that the first one
 	 * are not settable once they are defined at RPClass.
 	 */
@@ -54,7 +54,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public RPClass() {
 		name=null;
 		parent = null;
-		
+
 		staticattributes = new HashMap<String, Definition>();
 		attributes = new HashMap<String, Definition>();
 		rpevents = new HashMap<String, Definition>();
@@ -200,7 +200,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Adds a static definition of an attribute that will be set for any object of the 
+	 * Adds a static definition of an attribute that will be set for any object of the
 	 * class.
 	 * Its value must be set as a string, but it can be accessed later using Attributes.get method.
 	 * NOTE: This type of attributes can't be set.
@@ -330,6 +330,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		list.add(attributes);
 		list.add(rpslots);
 		list.add(rpevents);
+		list.add(staticattributes);
 
 		for(Map<String,Definition> definitions: list) {
 			out.write(definitions.size());
@@ -357,6 +358,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		list.add(attributes);
 		list.add(rpslots);
 		list.add(rpevents);
+		list.add(staticattributes);
 
 		for(Map<String,Definition> definitions: list) {
 			int size = in.readInt();
@@ -438,8 +440,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return defaultRPClass;
 	}
 
-	/** 
-	 * Returns true if two objects are exactly equal 
+	/**
+	 * Returns true if two objects are exactly equal
 	 * @param ot the object to compare with this one.
 	 */
 	@Override
@@ -450,11 +452,13 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		RPClass otc=(RPClass)ot;
 
-		return name.equals(otc.name) &&
-		  (parent==otc.parent || parent.equals(otc.parent)) &&
-		  staticattributes.equals(otc.staticattributes) && 
-		  attributes.equals(otc.attributes) &&
-		  rpevents.equals(otc.rpevents) &&
-		  rpslots.equals(otc.rpslots);
+		boolean result=name.equals(otc.name)
+			&& (parent==otc.parent || parent.equals(otc.parent))
+			&& staticattributes.equals(otc.staticattributes)
+			&& attributes.equals(otc.attributes)
+			&& rpevents.equals(otc.rpevents)
+			&& rpslots.equals(otc.rpslots);
+
+		return result;
 	}
 }
