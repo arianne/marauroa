@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.14 2007/02/27 17:49:48 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.15 2007/02/27 18:04:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -650,9 +650,66 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 *
 	 */
-	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) {
-		// TODO Auto-generated method stub
+	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException {
+		String zoneid=zone.getID().getID();
+		if (!StringChecker.validString(zoneid)) {
+			throw new SQLException("Invalid string zoneid=("+zoneid+")");
+		}
 
+		Connection connection = transaction.getConnection();
+
+		String query = "select data from rpzone where zone_id=" + zoneid;
+		logger.debug("loadRPZone is executing query " + query);
+
+		Statement stmt = connection.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+
+		if (rs.next()) {
+			Blob data = rs.getBlob("data");
+			InputStream input = data.getBinaryStream();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+			// set read buffer size
+			byte[] rb = new byte[1024];
+			int ch = 0;
+			// process blob
+			while ((ch = input.read(rb)) != -1) {
+				output.write(rb, 0, ch);
+			}
+			byte[] content = output.toByteArray();
+			input.close();
+			output.close();
+
+			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
+			InflaterInputStream szlib = new InflaterInputStream(inStream,new Inflater());
+			InputSerializer inser = new InputSerializer(szlib);
+
+			rs.close();
+			stmt.close();
+
+
+			int amount=0;
+			try {
+				amount = inser.readInt();
+			} catch (ClassNotFoundException e1) {
+				/* This is not going to happen. Really. */
+			}
+
+			for(int i=0;i<amount;i++) {
+				try {
+					RPObject object=(RPObject)inser.readObject(new RPObject());
+
+					/* We give the object a new valid id and add it */
+					zone.assignRPObjectID(object);
+					zone.add(object);
+				} catch(Exception e) {
+					logger.error("Problem loading RPZone: ", e);
+				}
+			}
+		}
+
+		rs.close();
+		stmt.close();
 	}
 
 	/* (non-Javadoc)
