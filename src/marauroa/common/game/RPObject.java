@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.44 2007/02/25 17:23:56 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.45 2007/02/27 18:17:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -420,6 +420,14 @@ public class RPObject extends Attributes {
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
 		super.writeObject(out, level);
 
+		if(level==DetailLevel.FULL) {
+			out.write((byte)1);
+			out.write((byte)(hidden?1:0));
+			out.write((byte)(storable?1:0));
+		} else {
+			out.write((byte)0);
+		}
+
 		/*
 		 * We compute the amount of slots to serialize first.
 		 * We don't serialize hidden or private slots unless detail level is full.
@@ -474,6 +482,11 @@ public class RPObject extends Attributes {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
 		super.readObject(in);
+
+		if(in.readByte()==1) {
+			hidden=in.readByte()==1;
+			storable=in.readByte()==1;
+		}
 
 		/*
 		 * First we load slots
