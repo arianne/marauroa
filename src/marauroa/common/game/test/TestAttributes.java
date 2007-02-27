@@ -9,7 +9,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import marauroa.common.game.Attributes;
+import marauroa.common.game.Definition;
 import marauroa.common.game.RPClass;
+import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -81,6 +84,51 @@ public class TestAttributes {
 		attr.put("b","2");
 		attr.put("c",3.0);
 		attr.put("e","a short string");
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+
+		os.write(attr);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+
+		Attributes result=(Attributes) is.readObject(new Attributes(null));
+
+		assertEquals(attr, result);
+	}
+
+	/**
+	 * Test the serialization process of an attribute with a defined RPClass
+	 * It serialize the attribute and then deserialize it and check they are the same.
+	 *
+	 * @throws IOException if there is a problem serializing the data.
+	 * @throws ClassNotFoundException
+	 */
+	@Test
+	public void testSerializationWithRPClass() throws IOException, ClassNotFoundException {
+		RPClass clazz=new RPClass("A");
+
+		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "b", Type.STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "c", Type.FLOAT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "d", Type.BYTE, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "e", Type.SHORT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "f", Type.LONG_STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "g", Type.VERY_LONG_STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "h", Type.FLAG, Definition.STANDARD);
+
+		Attributes attr=new Attributes(clazz);
+
+		attr.put("a",1);
+		attr.put("b","2");
+		attr.put("c",3.0);
+		attr.put("d", 120);
+		attr.put("e",15000);
+		attr.put("f","This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
+		attr.put("g","Toooooooo big to even test the limit");
+		attr.put("h","");
+
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
