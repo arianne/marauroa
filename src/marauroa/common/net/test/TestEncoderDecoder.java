@@ -19,31 +19,47 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
+/**
+ * Test the basic serialization schema.
+ *
+ * @author miguel
+ *
+ */
 public class TestEncoderDecoder {
+	/**
+	 * Setup for class.
+	 * It initialize the logger instance
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void initialize() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
 	}
-	
+
+	/**
+	 * Test encoding and decoding works when we use the data as a single chunk.
+	 * @throws IOException
+	 * @throws InvalidVersionException
+	 */
 	@Test
 	public void testEncoderDecoder_single() throws IOException, InvalidVersionException {
 		Encoder enc=Encoder.get();
-		
+
 		RPAction action=new RPAction();
 		action.put("one",1);
 		action.put("two","2");
-		
+
 		MessageC2SAction message=new MessageC2SAction(null,action);
-		
+
 		byte[] result=enc.encode(message);
-		
+
 		Decoder dec=Decoder.get();
-		
+
 		Message decoded=dec.decode(null,result);
 		byte[] reencoded=enc.encode(decoded);
-		
+
 		assertEquals(result.length, reencoded.length);
-		
+
 		/** We verify the assertion by re encoding again the message.
 		 *  Message.equals(Object ) is NOT implemented. */
 		for(int i=0;i<result.length;i++) {
@@ -51,16 +67,21 @@ public class TestEncoderDecoder {
 		}
 	}
 
-	@Test	
+	/**
+	 * Test that encoder and decoder works when we use several chunks of data.
+	 * @throws IOException
+	 * @throws InvalidVersionException
+	 */
+	@Test
 	public void testEncoderDecoder_multiple() throws IOException, InvalidVersionException {
 		Encoder enc=Encoder.get();
-		
+
 		RPAction action=new RPAction();
 		action.put("one",1);
 		action.put("two","2");
-		
+
 		MessageC2SAction message=new MessageC2SAction(null,action);
-		
+
 		byte[] result=enc.encode(message);
 
 		Decoder dec=Decoder.get();
@@ -71,19 +92,19 @@ public class TestEncoderDecoder {
 
 		byte[] part2=new byte[result.length-split];
 		System.arraycopy(result, split , part2, 0, result.length-split);
-		
+
 		assertEquals(result.length, part1.length+part2.length);
-		
+
 		Message decoded=null;
 		decoded=dec.decode(null,part1);
 		assertNull(decoded);
 		decoded=dec.decode(null,part2);
 		assertNotNull(decoded);
-		
+
 		byte[] reencoded=enc.encode(decoded);
-		
+
 		assertEquals(result.length, reencoded.length);
-		
+
 		/** We verify the assertion by re encoding again the message.
 		 *  Message.equals(Object ) is NOT implemented. */
 		for(int i=0;i<result.length;i++) {

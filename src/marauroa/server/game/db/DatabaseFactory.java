@@ -1,4 +1,4 @@
-/* $Id: PlayerDatabaseFactory.java,v 1.8 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: DatabaseFactory.java,v 1.1 2007/02/27 16:54:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,9 +18,9 @@ import marauroa.common.Log4J;
 /** 
  * Utility class for choosing the right player databese. 
  */
-public class PlayerDatabaseFactory {
+public class DatabaseFactory {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(PlayerDatabaseFactory.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(DatabaseFactory.class);
 
 	/**
 	 * This method returns an instance of PlayerDatabase choosen using the

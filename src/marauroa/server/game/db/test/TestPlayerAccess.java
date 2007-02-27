@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.3 2007/02/27 11:10:06 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.4 2007/02/27 16:54:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -30,11 +30,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Test database methods that are related with player like adding a player, removing
+ * it, changing its status, etc...
  * @author miguel
  *
  */
 public class TestPlayerAccess {
 
+	/**
+	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
+	 * JDBC Database and create a proper public constructor.
+	 * @author miguel
+	 *
+	 */
 	static class TestJDBC extends JDBCDatabase {
 		public TestJDBC(Properties props) {
 			super(props);
@@ -44,6 +52,7 @@ public class TestPlayerAccess {
 	private static TestJDBC database;
 
 	/**
+	 * Setup one time the database.
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -60,6 +69,11 @@ public class TestPlayerAccess {
 		database=new TestJDBC(props);
 	}
 
+	/**
+	 * Test if create a player account works by adding it and making sure that the account is
+	 * there using has method.
+	 * @throws SQLException
+	 */
 	@Test
 	public void addPlayer() throws SQLException {
 		String username="testUser";
@@ -74,8 +88,15 @@ public class TestPlayerAccess {
 		}
 	}
 
+	/**
+	 * We test the change password method by changing the password of a existing account
+	 * There is right now no simple way of checking the value, as we would need the
+	 * RSA key of the server to encript the password. ( and this is stored at marauroa.ini )
+	 *
+	 * @throws SQLException
+	 */
 	@Test
-	public void verifyPlayer() throws SQLException {
+	public void changePassword() throws SQLException {
 		String username="testUser";
 
 		JDBCTransaction transaction=database.getTransaction();
@@ -92,6 +113,10 @@ public class TestPlayerAccess {
 		}
 	}
 
+	/**
+	 * Test if adding two times the same player throw a SQLException
+	 * @throws SQLException
+	 */
 	@Test(expected=SQLException.class)
 	public void doubleAddedPlayer() throws SQLException {
 		String username="testUser";
@@ -116,6 +141,10 @@ public class TestPlayerAccess {
 		}
 	}
 
+	/**
+	 * Remove a player and check that it is not anymore at database with has method.
+	 * @throws SQLException
+	 */
 	@Test
 	public void removePlayer() throws SQLException {
 		String username="testUser";
@@ -132,6 +161,11 @@ public class TestPlayerAccess {
 		}
 	}
 
+	/**
+	 * Check get status method.
+	 * Every account is active by default.
+	 * @throws SQLException
+	 */
 	@Test
 	public void getStatus() throws SQLException {
 		String username="testUser";
@@ -147,6 +181,10 @@ public class TestPlayerAccess {
 		}
 	}
 
+	/**
+	 * Check the set status method, it uses getStatus to check the set value.
+	 * @throws SQLException
+	 */
 	@Test
 	public void setStatus() throws SQLException {
 		String username="testUser";
