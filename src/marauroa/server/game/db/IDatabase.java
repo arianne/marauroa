@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.12 2007/02/27 18:39:55 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.13 2007/02/27 22:38:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.net.validator.InetAddressMask;
 
 /**
  * This interface exposes the methods a database implementation should have.
@@ -262,9 +263,18 @@ public interface IDatabase {
 	 * @param username the username to get login events from
 	 * @param events the amount of events to return
 	 * @return a List of LoginEvent objects
-	 * @throws SQLException
+	 * @throws SQLException if there is any database problem.
 	 */
 	public List<String> getLoginEvents(JDBCTransaction transaction, String username, int events) throws SQLException;
+
+	/**
+	 * Retrieve from database the list of banned addresses.
+	 *
+	 * @param transaction the database transaction
+	 * @return list of banned addresses.
+	 * @throws SQLException if there is any database problem.
+	 */
+	public List<InetAddressMask> getBannedAddresses(JDBCTransaction transaction) throws SQLException;
 
 	/** This method returns a transaction to the database. */
 	// TODO: Generalize it.

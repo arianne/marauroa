@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.19 2007/02/27 19:06:10 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.20 2007/02/27 22:38:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,7 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.net.validator.InetAddressMask;
 
 /**
  * This is a JDBC implementation for MySQL is IDatabase interface.
@@ -1133,5 +1134,35 @@ public class JDBCDatabase implements IDatabase {
 		}
 
 		return object_id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#getBannedAddresses(marauroa.server.game.db.JDBCTransaction)
+	 */
+	public List<InetAddressMask> getBannedAddresses(JDBCTransaction transaction) throws SQLException {
+		List<InetAddressMask> permanentBans=new LinkedList<InetAddressMask>();
+
+		/* read ban list from DB */
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+		String query="select address,mask from banlist";
+		logger.debug("getBannedAddresses is executing query " + query);
+
+		ResultSet rs = stmt.executeQuery(query);
+
+		permanentBans.clear();
+		while (rs.next()) {
+			String address = rs.getString("address");
+			String mask = rs.getString("mask");
+			InetAddressMask iam = new InetAddressMask(address, mask);
+			permanentBans.add(iam);
+		}
+
+		// free database resources
+		rs.close();
+		stmt.close();
+
+		return permanentBans;
 	}
 }
