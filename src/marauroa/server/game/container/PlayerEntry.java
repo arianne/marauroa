@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.11 2007/02/23 10:52:07 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.12 2007/02/27 11:17:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game.container;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
@@ -147,6 +148,14 @@ public class PlayerEntry {
 		contentToTransfer=null;
 
 		creationTime=System.currentTimeMillis();
+	}
+
+	/**
+	 * Return the inet address of this PlayerEntry.
+	 * @return the inet address of this PlayerEntry.
+	 */
+	public InetAddress getAddress() {
+		return channel.socket().getInetAddress();
 	}
 
 	/**
