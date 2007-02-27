@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.13 2007/02/27 18:33:50 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.14 2007/02/27 18:39:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -145,19 +144,7 @@ public class MarauroaRPZone implements IRPZone {
 	public void onInit() throws Exception {
 		IDatabase db=DatabaseFactory.getDatabase();
 		JDBCTransaction transaction=db.getTransaction();
-		try {
-			List<RPObject> objects=db.loadRPZone(transaction, this);
-
-			for(RPObject obj: objects) {
-				RPObject real=factory(obj);
-
-				assignRPObjectID(real);
-				add(real);
-			}
-
-		} catch(Exception e){
-			throw e;
-		}
+		db.loadRPZone(transaction, this);
 	}
 
 

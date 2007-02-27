@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.11 2007/02/27 18:33:50 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.12 2007/02/27 18:39:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -212,7 +212,7 @@ public interface IDatabase {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public List<RPObject> loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException;
+	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException;
 
 	/**
 	 * This method adds a logging game event to database, so later you can query it to get information
