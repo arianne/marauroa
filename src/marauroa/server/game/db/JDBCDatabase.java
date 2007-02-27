@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.17 2007/02/27 18:39:55 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.18 2007/02/27 18:55:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -246,7 +246,7 @@ public class JDBCDatabase implements IDatabase {
 
 			int id = getDatabasePlayerId(transaction, username);
 
-			String query="update player set email='"+email+"' where player_id="+id;
+			String query="update account set email='"+email+"' where id="+id;
 			logger.debug("changePassword is using query: "+query);
 
 			stmt.execute(query);
@@ -273,7 +273,7 @@ public class JDBCDatabase implements IDatabase {
 
 			byte[] hashedPassword=Hash.hash(password);
 
-			String query="update player set password='"+Hash.toHexString(hashedPassword)+"' where player_id="+id;
+			String query="update account set password='"+Hash.toHexString(hashedPassword)+"' where id="+id;
 			logger.debug("changePassword is using query: "+query);
 
 			stmt.execute(query);
