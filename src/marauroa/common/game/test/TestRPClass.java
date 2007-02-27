@@ -18,9 +18,17 @@ import marauroa.common.net.OutputSerializer;
 
 import org.junit.Test;
 
-
+/**
+ * This test unit run test over RPClass and make some usage of Attributes too.
+ * @author miguel
+ *
+ */
 public class TestRPClass {
 
+	/**
+	 * This test check that has class works and that RPClass constructor works
+	 * as expected by adding the class to a global definition.
+	 */
 	@Test
 	public void testHasClass() {
 		@SuppressWarnings("unused")
@@ -28,12 +36,22 @@ public class TestRPClass {
 		assertTrue(RPClass.hasRPClass("A"));
 	}
 
+	/**
+	 * In the same way that has test, we test get method so that is must return the
+	 * correct instance of RPClass.
+	 *
+	 */
 	@Test
 	public void testGetClass() {
 		RPClass b=new RPClass("B");
 		assertEquals(b, RPClass.getRPClass("B"));
 	}
 
+	/**
+	 * This test is method isA works, by defining two classes and create one as subclass
+	 * of the other.
+	 * It test both isA methods: String and RPClass.
+	 */
 	@Test
 	public void testisAClass() {
 		RPClass c=new RPClass("C");
@@ -48,6 +66,10 @@ public class TestRPClass {
 		assertTrue(d.subclassOf(c.getName()));
 		}
 
+	/**
+	 * Create some definitions for data in a RPClass and check them.
+	 *
+	 */
 	@Test
 	public void testDefinitions() {
 		RPClass b=new RPClass("E");
@@ -61,6 +83,11 @@ public class TestRPClass {
 		assertEquals("a",b.getName(DefinitionClass.ATTRIBUTE, code));
 	}
 
+	/**
+	 * Check if definition methods: isVisible, isHidden, isPrivate and isStorable
+	 * works as expected by defining some of them.
+	 *
+	 */
 	@Test
 	public void testDefinitionsMethods() {
 		RPClass b=new RPClass("F");
@@ -92,6 +119,18 @@ public class TestRPClass {
 		assertFalse(def.isStorable());
 	}
 
+	/**
+	 * This test case shows a bug fix for a Marauroa 1.3x bug where two attributes
+	 * definition even in diferent classes where created as the same one ( ignoring the
+	 * second definition ).
+	 *
+	 * For example
+	 * A ( id string )
+	 * B ( id int )
+	 *
+	 * They are different attributes and of different type. Check that it is true.
+	 *
+	 */
 	@Test
 	public void testGlobalDefinitionBug() {
 		RPClass b=new RPClass("G");
@@ -110,6 +149,12 @@ public class TestRPClass {
 		assertFalse(defb.getType()==defc.getType());
 	}
 
+	/**
+	 * Test serialization code of RPClass by serializing it and then deserializing the stream again
+	 * and checking that it is the same RPClass.
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
 		RPClass expected=new RPClass("I");
@@ -132,6 +177,11 @@ public class TestRPClass {
 		assertEquals(expected, result);
 	}
 
+	/**
+	 * Test the creation of static attributes for Marauroa 2.0.
+	 * Check they work by creating an attribute object.
+	 *
+	 */
 	@Test
 	public void testStaticAttributes() {
 		RPClass b=new RPClass("J");
