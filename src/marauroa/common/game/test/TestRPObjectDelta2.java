@@ -392,36 +392,87 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
-	}
+	 }
 
-		/**
-		 * Test that an removed object in a object inside a slot works.
-		 * It must appear at modified deleted.
-		 *
-		 */	@Test
-	public void testSlotObjectRemoval() {
-		zone.assignRPObjectID(obj);
-		zone.add(obj);
-		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
-		 */
-		zone.nextTurn();
-		/*
-		 * Test Delta^2 on slot object modification.
-		 */
-		RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		RPObject coin=slot.remove(slot.getFirst().getID());
+	 /**
+	  * Test that an removed object in a object inside a slot works.
+	  * It must appear at modified deleted.
+	  *
+	  */
+	 @Test
+	 public void testSlotObjectRemoval() {
+		 zone.assignRPObjectID(obj);
+		 zone.add(obj);
+		 /*
+		  * Next turn.
+		  * We want to clear Delta^2 data.
+		  */
+		 zone.nextTurn();
+		 /*
+		  * Test Delta^2 on slot object modification.
+		  */
+		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
+		 RPObject coin=slot.remove(slot.getFirst().getID());
 
-		assertNotNull(coin);
-		assertEquals(coin, coin.getBaseContainer());
+		 assertNotNull(coin);
+		 assertEquals(coin, coin.getBaseContainer());
 
-		zone.modify(obj);
+		 zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		assertTrue(expected.addedList.isEmpty());
-		assertTrue(expected.modifiedAddedList.isEmpty());
-		assertFalse(expected.modifiedDeletedList.isEmpty());
-		assertTrue(expected.deletedList.isEmpty());
-	}
+		 Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		 assertTrue(expected.addedList.isEmpty());
+		 assertTrue(expected.modifiedAddedList.isEmpty());
+		 assertFalse(expected.modifiedDeletedList.isEmpty());
+		 assertTrue(expected.deletedList.isEmpty());
+	 }
+
+	 /**
+	  * This is a KNOWN bug that happens when a object from a visible slot is removed
+	  * in the object that has cleared the visible attributes.
+	 * @throws Exception
+	  *
+	  */
+	 @Test
+	 public void testApplyDifferences() throws Exception {
+		 zone.assignRPObjectID(obj);
+		 zone.add(obj);
+		 /*
+		  * Next turn.
+		  * We want to clear Delta^2 data.
+		  */
+		 zone.nextTurn();
+
+		 RPObject result=(RPObject) obj.clone();
+
+		 /*
+		  * Test Delta^2 on slot object modification.
+		  */
+		 /* Remove coin from slot */
+		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
+		 RPObject coin=slot.remove(slot.getFirst().getID());
+
+		 assertNotNull(coin);
+		 assertEquals(coin, coin.getBaseContainer());
+
+		 /* Added another coin to slot */
+		 slot=obj.getSlot("lhand").getFirst().getSlot("container");
+		 RPObject anothercoin=new RPObject();
+		 anothercoin.put("euro", 2);
+		 anothercoin.put("value", "tomato");
+		 slot.add(anothercoin);
+
+
+		 RPObject added = new RPObject();
+		 RPObject deleted = new RPObject();
+
+		 obj.getDifferences(added, deleted);
+
+		 System.out.println(added);
+		 System.out.println(deleted);
+
+		 result.applyDifferences(added, deleted);
+
+
+		 assertEquals(result, obj);
+	 }
 }

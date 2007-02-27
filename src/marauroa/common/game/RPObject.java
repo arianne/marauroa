@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.45 2007/02/27 18:17:09 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.46 2007/02/27 22:19:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -930,8 +930,7 @@ public class RPObject extends Attributes {
 	 * This method apply the changes retrieved from getDifferences and build the
 	 * updated object
 	 */
-	public RPObject applyDifferences(RPObject added, RPObject deleted)
-			throws Exception {
+	public RPObject applyDifferences(RPObject added, RPObject deleted) throws Exception {
 		if (deleted != null) {
 			for (String attrib : deleted) {
 				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
@@ -945,13 +944,10 @@ public class RPObject extends Attributes {
 				} else {
 					/** for each of the objects, delete it */
 					for (RPObject object : slot) {
-						if (object.size() == 2) /** id and zoneid */
-						{
+						if (object.size() == 1) {/** id attribute */
 							getSlot(slot.getName()).remove(new ID(object));
 						} else {
-							RPObject actualObject = getSlot(slot.getName())
-									.get(new ID(object));
-
+							RPObject actualObject = getSlot(slot.getName()).get(new ID(object));
 							actualObject.applyDifferences(null, object);
 						}
 					}
@@ -974,7 +970,9 @@ public class RPObject extends Attributes {
 					if (getSlot(slot.getName()).has(new ID(object))) {
 						getSlot(slot.getName()).get(new ID(object)).applyDifferences(object, null);
 					} else {
+						String id=object.get("id");
 						getSlot(slot.getName()).add(object);
+						object.put("id", id);
 					}
 				}
 			}
