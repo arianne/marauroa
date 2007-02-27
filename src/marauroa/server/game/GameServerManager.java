@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.48 2007/02/23 10:52:06 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.49 2007/02/27 14:05:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -48,6 +48,7 @@ import marauroa.common.net.message.MessageS2CLogoutNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.TransferContent;
+import marauroa.server.game.AccountResult.Result;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
@@ -524,17 +525,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		try {
-			AccountResult result = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
+			AccountResult val= rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
+			Result result=val.getResult();
 
-			if (result == AccountResult.OK_ACCOUNT_CREATED) {
+			if (result == Result.OK_ACCOUNT_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
-				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel());
+				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel(), val.getUsername(), val.getTemplate());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				MessageS2CCreateAccountNACK.Reasons reason;
 
 				// TODO: AccountResult should match CreateAccount message Reasons
-				if (result == AccountResult.FAILED_PLAYER_EXISTS) {
+				if (result == Result.FAILED_PLAYER_EXISTS) {
 					reason = MessageS2CCreateAccountNACK.Reasons.USERNAME_EXISTS;
 				} else {
 					reason = MessageS2CCreateAccountNACK.Reasons.FIELD_TOO_SHORT;
