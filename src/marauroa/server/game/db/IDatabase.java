@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.7 2007/02/26 23:00:49 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.8 2007/02/27 11:01:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -56,13 +56,14 @@ public interface IDatabase {
 
 	/**
 	 * Change the password of the associated username.
+	 *
 	 * @param transaction the database transaction.
 	 * @param username the player's usernam
 	 * @param password the new password
 	 * @return true if the operation is sucessful.
 	 * @throws SQLException
 	 */
-	public void changePassword(JDBCTransaction transaction, String username, byte[] password) throws SQLException;
+	public void changePassword(JDBCTransaction transaction, String username, String password) throws SQLException;
 
 	/**
 	 * Change the email address of the associated username

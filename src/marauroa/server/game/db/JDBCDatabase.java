@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.10 2007/02/26 23:00:49 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.11 2007/02/27 11:01:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -260,7 +260,7 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.IDatabase#changePassword(marauroa.server.game.db.JDBCTransaction, java.lang.String, byte[])
 	 */
-	public void changePassword(JDBCTransaction transaction, String username, byte[] password) throws SQLException {
+	public void changePassword(JDBCTransaction transaction, String username, String password) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -271,7 +271,9 @@ public class JDBCDatabase implements IDatabase {
 
 			int id = getDatabasePlayerId(transaction, username);
 
-			String query="update player set password='"+Hash.toHexString(password)+"' where player_id="+id;
+			byte[] hashedPassword=Hash.hash(password);
+
+			String query="update player set password='"+Hash.toHexString(hashedPassword)+"' where player_id="+id;
 			logger.debug("changePassword is using query: "+query);
 
 			stmt.execute(query);

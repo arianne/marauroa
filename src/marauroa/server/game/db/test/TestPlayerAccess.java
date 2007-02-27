@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.1 2007/02/03 17:41:52 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.2 2007/02/27 11:01:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -34,22 +34,22 @@ import org.junit.Test;
  *
  */
 public class TestPlayerAccess {
-	
+
 	static class TestJDBC extends JDBCDatabase {
 		public TestJDBC(Properties props) {
-			super(props);			
+			super(props);
 		}
 	}
-	
+
 	private static TestJDBC database;
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void createDatabase() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
-		
+
 		Properties props = new Properties();
 
 		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
@@ -66,7 +66,7 @@ public class TestPlayerAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 		} finally {
@@ -74,14 +74,32 @@ public class TestPlayerAccess {
 		}
 	}
 
-	@Test(expected=SQLException.class) 
+	@Test
+	public void verifyPlayer() throws SQLException {
+		String username="testUser";
+
+		JDBCTransaction transaction=database.getTransaction();
+		try {
+			transaction.begin();
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+
+			database.changePassword(transaction, username, Hash.hash("anewtestPassword"));
+
+			/* TODO: There is no way of testing if password is correct or not. */
+		} finally {
+			transaction.rollback();
+		}
+	}
+
+	@Test(expected=SQLException.class)
 	public void doubleAddedPlayer() throws SQLException {
 		String username="testUser";
-		
-		JDBCTransaction transaction=database.getTransaction();			
+
+		JDBCTransaction transaction=database.getTransaction();
 		try{
 			transaction.begin();
-			
+
 			if(database.hasPlayer(transaction, username)) {
 				fail("Player was not expected");
 			}
@@ -91,7 +109,7 @@ public class TestPlayerAccess {
 				fail("Player was expected");
 			}
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			
+
 			fail("Player was added");
 		} finally {
 			transaction.rollback();
@@ -104,7 +122,7 @@ public class TestPlayerAccess {
 
 		JDBCTransaction transaction=database.getTransaction();
 		try {
-			transaction.begin();		
+			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 			database.removePlayer(transaction, username);
@@ -113,11 +131,11 @@ public class TestPlayerAccess {
 			transaction.rollback();
 		}
 	}
-	
+
 	@Test
 	public void getStatus() throws SQLException {
 		String username="testUser";
-		
+
 		JDBCTransaction transaction=database.getTransaction();
 
 		try {
@@ -132,7 +150,7 @@ public class TestPlayerAccess {
 	@Test
 	public void setStatus() throws SQLException {
 		String username="testUser";
-		
+
 		JDBCTransaction transaction=database.getTransaction();
 
 		try {
@@ -140,7 +158,7 @@ public class TestPlayerAccess {
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertEquals("active",database.getAccountStatus(transaction, username));
 			database.setAccountStatus(transaction, username, "banned");
-			assertEquals("banned",database.getAccountStatus(transaction, username));			
+			assertEquals("banned",database.getAccountStatus(transaction, username));
 		} finally {
 			transaction.rollback();
 		}
