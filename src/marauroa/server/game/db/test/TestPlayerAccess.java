@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.2 2007/02/27 11:01:55 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.3 2007/02/27 11:10:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -84,7 +84,7 @@ public class TestPlayerAccess {
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
-			database.changePassword(transaction, username, Hash.hash("anewtestPassword"));
+			database.changePassword(transaction, username, "anewtestPassword");
 
 			/* TODO: There is no way of testing if password is correct or not. */
 		} finally {
