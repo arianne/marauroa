@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.11 2007/02/27 11:01:54 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.12 2007/02/27 17:13:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -935,9 +935,18 @@ public class JDBCDatabase implements IDatabase {
 		return null;
 	}
 
-	private int removeRPObject(JDBCTransaction transaction, int objectid) {
-		// TODO Auto-generated method stub
-		return 0;
+	private int removeRPObject(JDBCTransaction transaction, int objectid) throws SQLException {
+		Connection connection = transaction.getConnection();
+
+		String query = "delete from rpobject where object_id=" + objectid;
+		logger.debug("removeRPObject is executing query " + query);
+
+		Statement stmt = connection.createStatement();
+		stmt.execute(query);
+
+		stmt.close();
+
+		return objectid;
 	}
 
 	private boolean hasRPObject(JDBCTransaction transaction, int objectid) throws SQLException {
