@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.14 2007/02/19 18:37:26 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.15 2007/02/27 22:59:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,7 +40,7 @@ import marauroa.server.net.validator.ConnectionValidator;
 public class NIONetworkServerManager extends Thread implements IWorker, INetworkServerManager {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
-	
+
 	/** We store the server for sending stuff. */
 	private NioServer server;
 
@@ -61,7 +61,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 
 	/** We queue here the data events. */
 	private BlockingQueue<DataEvent> queue;
-	
+
 	/** encoder is in charge of getting a Message and creating a stream of bytes. */
 	private Encoder encoder;
 	/** decoder takes a stream of bytes and create a message */
@@ -76,7 +76,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		connectionValidator = new ConnectionValidator();
 		keepRunning = true;
 		isFinished = false;
-		
+
 		encoder=Encoder.get();
 		decoder=Decoder.get();
 
@@ -84,40 +84,41 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		messages = new LinkedBlockingQueue<Message>();
 		stats = Statistics.getStatistics();
 		queue = new LinkedBlockingQueue<DataEvent>();
-		
+
 		logger.debug("NetworkServerManager started successfully");
-		
+
 		server=new NioServer(null, NetConst.marauroa_PORT, this);
 		server.start();
 	}
 
-	/** 
+	/**
 	 * Associate this object with a server.
 	 * This model a master-slave approach for managing network messages.
 	 * @param server the master server.
 	 */
 	public void setServer(NioServer server) {
-		this.server=server;		
+		this.server=server;
 	}
 
-	/** 
+	/**
 	 * This method notify the thread to finish it execution
 	 */
 	public void finish() {
 		logger.info("shutting down NetworkServerManager");
 		keepRunning = false;
-		
+
+		connectionValidator.finish();
 		server.finish();
 		interrupt();
-		
+
 		while (isFinished == false) {
 			Thread.yield();
-		}		
+		}
 
 		logger.info("NetworkServerManager is down");
 	}
 
-	/** 
+	/**
 	 * This method returns a Message from the list or block for timeout milliseconds
 	 * until a message is available or null if timeout happens.
 	 *
@@ -133,7 +134,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 	}
 
-	/** 
+	/**
 	 * This method blocks until a message is available
 	 *
 	 * @return a Message
@@ -151,10 +152,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	 *  We do it just on connect so we save lots of queries. */
 	public void onConnect(SocketChannel channel) {
 		Socket socket=channel.socket();
-		
+
 		if(connectionValidator.checkBanned(socket)) {
 			logger.info("Reject connect from banned IP: "+socket.getInetAddress());
-			
+
 			/* If address is banned, just close connection */
 			try {
 				server.close(channel);
@@ -167,7 +168,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 
 	/**
 	 * This method is called when new data is recieved on server from channel.
-	 * @param server the master server 
+	 * @param server the master server
 	 * @param channel socket channel associated to the event
 	 * @param data the data recieved
 	 * @param count the amount of data recieved.
@@ -187,7 +188,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 	 * is pointed to.
 	 *
 	 * @param msg the message to be delivered.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void sendMessage(Message msg) {
 		try {
@@ -209,27 +210,27 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 			} catch (Exception e) {
 				logger.error("Unable to disconnect a client "+channel.socket(),e);
 			}
-		
+
 	}
 
 	/**
-	 * Returns a instance of the connection validator {@link ConnectionValidator} so that other layers can 
+	 * Returns a instance of the connection validator {@link ConnectionValidator} so that other layers can
 	 * manipulate it for banning IP.
-	 * 
+	 *
 	 * @return the Connection validator instance
 	 */
 	public ConnectionValidator getValidator() {
 		return connectionValidator;
 	}
-	
+
 	/**
 	 * Register a listener for disconnection events.
-	 * @param listener a listener for disconnection events. 
+	 * @param listener a listener for disconnection events.
 	 */
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
 		server.registerDisconnectedListener(listener);
-	}	
-	
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -248,11 +249,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 				} catch (IOException e) {
 					logger.warn("IOException while building message.",e);
 				}
-			}			
+			}
 		} catch (InterruptedException e) {
 			keepRunning=false;
 		}
-		
+
 		isFinished=true;
 	}
 }

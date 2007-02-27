@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.8 2007/02/27 22:38:21 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.9 2007/02/27 22:59:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,9 +15,12 @@ package marauroa.server.net.validator;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import marauroa.common.Log4J;
 import marauroa.server.game.db.IDatabase;
@@ -45,6 +48,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** Temporal bans are added using the API and are lost on each server reset.
 	 *  Consider using Database for a permanent ban  */
 	private List<InetAddressMask> temporalBans;
+	private Timer timer;
 
 	/* timestamp of last reload */
 	private long lastLoadTS;
@@ -58,20 +62,53 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 */
 	public ConnectionValidator() {
 		permanentBans=new LinkedList<InetAddressMask>();
-		temporalBans=new LinkedList<InetAddressMask>();
+		temporalBans=Collections.synchronizedList(new LinkedList<InetAddressMask>());
 
 		/* read ban list from configuration */
 		loadBannedIPNetworkListFromDB();
+		timer=new Timer();
+	}
+	/**
+	 * Request connection validator to stop all the activity, and stop
+	 * checking if any ban needs to be removed.
+	 *
+	 */
+	public void finish() {
+		timer.cancel();
 	}
 
+	/**
+	 * This class extend timer task to remove bans when the time is reached.
+	 * @author miguel
+	 *
+	 */
+	private class RemoveBan extends TimerTask {
+		private InetAddressMask mask;
+
+		/**
+		 * Constructor
+		 * @param mask
+		 */
+		public RemoveBan(InetAddressMask mask) {
+			this.mask=mask;
+		}
+
+		@Override
+		public void run() {
+			temporalBans.remove(mask);
+		}
+	}
 	/**
 	 * This adds a temporal ban.
 	 * @param address the address to ban
 	 * @param mask mask to apply to the address
 	 * @param time how many seconds should the ban apply.
 	 */
-	public void addBan(String address, String mask, int time) {
-		temporalBans.add(new InetAddressMask(address,mask));
+	public void addBan(String address, String mask, long time) {
+		InetAddressMask inetmask=new InetAddressMask(address,mask);
+
+		timer.schedule(new RemoveBan(inetmask), time);
+		temporalBans.add(inetmask);
 	}
 
 	/**
