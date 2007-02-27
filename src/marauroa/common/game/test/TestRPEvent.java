@@ -13,8 +13,19 @@ import marauroa.common.net.OutputSerializer;
 
 import org.junit.Test;
 
-
+/**
+ * Test unit for RPEvent class
+ * @author miguel
+ *
+ */
 public class TestRPEvent {
+	/**
+	 * Test serialization of a RPEvent by serializing into a stream and deserializing it bak
+	 * again.
+	 * This test uses RPObject as they are needed to obtain the RPEvent code definition.
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
 		RPObject obj=new RPObject();
