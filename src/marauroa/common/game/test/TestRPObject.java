@@ -20,8 +20,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+/**
+ * Test unit for RPObject basic functionality
+ * @author miguel
+ *
+ */
 public class TestRPObject {
 	private RPObject obj;
+
+	/**
+	 * Set up method to create an object that contains some attributes, slots and events.
+	 *
+	 */
 	@Before
 	public void createObject() {
 		obj=new RPObject();
@@ -51,11 +61,16 @@ public class TestRPObject {
 		coin.put("value", 100);
 		container.add(coin);
 	}
-	
+
+	/**
+	 * Do some basic test on has and get methods over attributes, slots and events.
+	 * This test that adding attributes, slots and events works as expected.
+	 *
+	 */
 	@Test
 	public void testRPObject() {
 		assertNotNull(obj);
-		
+
 		assertTrue(obj.has("a"));
 		assertEquals(1, obj.getInt("a"));
 		assertTrue(obj.has("b"));
@@ -73,12 +88,22 @@ public class TestRPObject {
 		}
 	}
 
+	/**
+	 * Test that RPSlot works by retriving the object added to the container.
+	 * It test it by ensuring that the id numering is correct.
+	 *
+	 */
 	@Test
 	public void testRPSlots() {
 		RPObject expected=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(1,expected.getInt("id"));
 	}
 
+	/** Test serialization of the RPObject by serializing it and then deserializing it
+	 * from the stream back again.
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -94,29 +119,45 @@ public class TestRPObject {
 		assertEquals(obj, result);
 	}
 
+	/**
+	 * Test the base container method that should return the base container of any contained
+	 * object.
+	 * The base container is the container of a object that is not contained by anyone.
+	 *
+	 */
 	@Test
 	public void testBaseContainer() {
 		RPObject coin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(obj,coin.getBaseContainer());
 	}
 
-		
+
+	/**
+	 * Test clear visible by removing all the visible attributes, slots and events.
+	 * The object should be empty afterwards.
+	 *
+	 */
 	@Test
 	public void testClearVisible() {
 		obj.clearVisible();
 		assertTrue(obj.isEmpty());
 	}
-	
+
+	/**
+	 * Check that clear visible doesn't break Delta² information.
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testClearVisibleDelta2() throws Exception {
 		obj.clearVisible();
-		
+
 		RPObject oadded=new RPObject();
 		RPObject odeleted=new RPObject();
 		obj.getDifferences(oadded, odeleted);
-		
+
 		assertTrue(oadded.isEmpty());
 		assertTrue(odeleted.isEmpty());
 	}
-	
+
 }
