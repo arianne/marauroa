@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.15 2007/02/27 18:04:26 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.16 2007/02/27 18:33:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -650,11 +650,13 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 *
 	 */
-	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException {
+	public List<RPObject> loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException {
 		String zoneid=zone.getID().getID();
 		if (!StringChecker.validString(zoneid)) {
 			throw new SQLException("Invalid string zoneid=("+zoneid+")");
 		}
+
+		List <RPObject> objects=new LinkedList<RPObject>();
 
 		Connection connection = transaction.getConnection();
 
@@ -699,9 +701,7 @@ public class JDBCDatabase implements IDatabase {
 				try {
 					RPObject object=(RPObject)inser.readObject(new RPObject());
 
-					/* We give the object a new valid id and add it */
-					zone.assignRPObjectID(object);
-					zone.add(object);
+					objects.add(object);
 				} catch(Exception e) {
 					logger.error("Problem loading RPZone: ", e);
 				}
@@ -710,6 +710,8 @@ public class JDBCDatabase implements IDatabase {
 
 		rs.close();
 		stmt.close();
+
+		return objects;
 	}
 
 	/* (non-Javadoc)

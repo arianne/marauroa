@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.14 2007/02/23 10:52:05 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.15 2007/02/27 18:33:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,6 +108,18 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * @throws Exception if there has been any problem loading zone
 	 */
 	public void onFinish() throws Exception;
+
+	/**
+	 * This method is called when object is serialized back from database to zone, so
+	 * you can define which subclass of RPObject we are going to use.
+	 * This implements a factory pattern.
+	 *
+	 * If you are not interested in this feature, just return the object
+	 *
+	 * @param object the original object
+	 * @return the new instance of the object
+	 */
+	public RPObject factory(RPObject object);
 
 	/**
 	 * This method adds an object to the Zone. Object can be modified after this

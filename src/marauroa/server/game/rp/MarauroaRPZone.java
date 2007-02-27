@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.12 2007/02/25 17:23:56 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.13 2007/02/27 18:33:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,6 +26,9 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
+import marauroa.server.game.db.DatabaseFactory;
+import marauroa.server.game.db.IDatabase;
+import marauroa.server.game.db.JDBCTransaction;
 
 /**
  * Default implementation of <code>IRPZone</code>.
@@ -124,14 +128,51 @@ public class MarauroaRPZone implements IRPZone {
 	 * Store objects that has been tagged as storable to database.
 	 */
 	public void onFinish() throws Exception {
-		//TODO: Do it.
+		IDatabase db=DatabaseFactory.getDatabase();
+		JDBCTransaction transaction=db.getTransaction();
+		try {
+			db.storeRPZone(transaction, this);
+			transaction.commit();
+		} catch(Exception e){
+			transaction.rollback();
+			throw e;
+		}
 	}
 
 	/**
 	 * Load objects in database for this zone that were stored
 	 */
 	public void onInit() throws Exception {
-		//TODO: Do it.
+		IDatabase db=DatabaseFactory.getDatabase();
+		JDBCTransaction transaction=db.getTransaction();
+		try {
+			List<RPObject> objects=db.loadRPZone(transaction, this);
+
+			for(RPObject obj: objects) {
+				RPObject real=factory(obj);
+
+				assignRPObjectID(real);
+				add(real);
+			}
+
+		} catch(Exception e){
+			throw e;
+		}
+	}
+
+
+	/**
+	 * This method is called when object is serialized back from database to zone, so
+	 * you can define which subclass of RPObject we are going to use.
+	 * This implements a factory pattern.
+	 *
+	 * If you are not interested in this feature, just return the object
+	 *
+	 * @param object the original object
+	 * @return the new instance of the object
+	 */
+	public RPObject factory(RPObject object) {
+		return object;
 	}
 
 	/**
