@@ -12,11 +12,21 @@ import marauroa.server.game.rp.MarauroaRPZone;
 import org.junit.Before;
 import org.junit.Test;
 
-
+/**
+ * Test delta² algorithm
+ * This test unit needs MarauroaRPZone and RPObject.
+ * @author miguel
+ *
+ */
 public class TestRPObjectDelta2 {
 	private RPObject obj;
 	private MarauroaRPZone zone;
 
+	/**
+	 * Set up an object and create a zone that will contain it.
+	 * It doesn't add the object to the zone.
+	 *
+	 */
 	@Before
 	public void createObject() {
 		obj=new RPObject();
@@ -56,6 +66,14 @@ public class TestRPObjectDelta2 {
 
 	}
 
+	/**
+	 * Test if adding a object to a zone works, by assigning object a correct id
+	 * and retriving object from zone.
+	 *
+	 * Also test that modifications to object after just adding it works as expected, that
+	 * means that modifications are irrelevant to delta²
+	 *
+	 */
 	@Test
 	public void testAddObjectToZone() {
 		/*
@@ -81,6 +99,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test hidden object concept.
+	 * It hide an object and then add it to zone, the object must not appear at the perception.
+	 *
+	 */
 	@Test
 	public void testAddHiddenObjectToZone() {
 		/*
@@ -112,6 +135,10 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test remove object from zone, by adding it and on the next turn removing it.
+	 *
+	 */
 	@Test
 	public void testRemoveObjectFromZone() {
 		zone.assignRPObjectID(obj);
@@ -131,6 +158,11 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test if adding an attribute to an object works as expected in Delta².
+	 * The change must appear at modified added list
+	 *
+	 */
 	@Test
 	public void testAttributeAddition() {
 		zone.assignRPObjectID(obj);
@@ -154,6 +186,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test attribute removal.
+	 * It must appear at modified deleted list.
+	 *
+	 */
 	@Test
 	public void testAttributeRemoval() {
 		zone.assignRPObjectID(obj);
@@ -177,6 +214,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test attribute modification.
+	 * The change must appear at modified added.
+	 *
+	 */
 	@Test
 	public void testAttributeModification() {
 		zone.assignRPObjectID(obj);
@@ -200,6 +242,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test that an added event in a object inside a slot works.
+	 * It must appear at modified added.
+	 *
+	 */
 	@Test
 	public void testAddSlotEventAddition() {
 		zone.assignRPObjectID(obj);
@@ -226,6 +273,11 @@ public class TestRPObjectDelta2 {
 	}
 
 
+	/**
+	 * Test that an modified attribute in a object inside a slot works.
+	 * It must appear at modified added.
+	 *
+	 */
 	@Test
 	public void testSlotObjectAttributeModification() {
 		zone.assignRPObjectID(obj);
@@ -251,6 +303,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test that an added attribute in a object inside a slot works.
+	 * It must appear at modified added.
+	 *
+	 */
 	@Test
 	public void testSlotObjectAttributeAddition() {
 		zone.assignRPObjectID(obj);
@@ -276,6 +333,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
+	/**
+	 * Test that an removed attribute in a object inside a slot works.
+	 * It must appear at modified deleted.
+	 *
+	 */
 	@Test
 	public void testSlotObjectAttributeRemoval() {
 		zone.assignRPObjectID(obj);
@@ -301,7 +363,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
-	@Test
+	/**
+	 * Test that an added object in a object inside a slot works.
+	 * It must appear at modified added.
+	 *
+	 */	@Test
 	public void testSlotObjectAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
@@ -328,7 +394,11 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.deletedList.isEmpty());
 	}
 
-	@Test
+		/**
+		 * Test that an removed object in a object inside a slot works.
+		 * It must appear at modified deleted.
+		 *
+		 */	@Test
 	public void testSlotObjectRemoval() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
