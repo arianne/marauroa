@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.14 2007/02/27 18:39:55 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.15 2007/02/27 19:06:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,7 @@ public class MarauroaRPZone implements IRPZone {
 	private Perception prebuildSyncPerception = null;
 
 	/** This variable stores the last assigned id, that is unique per zone. */
-	private static int lastNonPermanentIdAssigned = 0;
+	private int lastNonPermanentIdAssigned = 0;
 
 	private static Random rand = new Random();
 
@@ -130,6 +130,7 @@ public class MarauroaRPZone implements IRPZone {
 		IDatabase db=DatabaseFactory.getDatabase();
 		JDBCTransaction transaction=db.getTransaction();
 		try {
+			transaction.begin();
 			db.storeRPZone(transaction, this);
 			transaction.commit();
 		} catch(Exception e){

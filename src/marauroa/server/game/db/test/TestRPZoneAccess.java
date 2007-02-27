@@ -8,6 +8,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.server.game.db.JDBCDatabase;
+import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.BeforeClass;
@@ -94,11 +95,20 @@ public class TestRPZoneAccess {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 
-		zone.onFinish();
+		JDBCTransaction transaction=database.getTransaction();
 
-		MarauroaRPZone newzone=new MarauroaRPZone("test");
-		newzone.onInit();
+		try {
+			transaction.begin();
 
-		assertEquals(zone,newzone);
+			database.storeRPZone(transaction, zone);
+
+			MarauroaRPZone newzone=new MarauroaRPZone("test");
+			database.loadRPZone(transaction, newzone);
+
+			RPObject.ID id=new RPObject.ID(1,"test");
+			assertEquals(zone.get(id),newzone.get(id));
+		} finally {
+			transaction.rollback();
+		}
 	}
 }
