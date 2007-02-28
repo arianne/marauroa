@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.15 2007/02/28 22:40:14 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.16 2007/02/28 22:54:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.server.game.container;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.List;
@@ -82,7 +81,7 @@ public class PlayerEntry {
 		 * @param loginResult the result of the login action, where true is login correct and false login failed.
 		 * @throws SQLException if there is any database problem.
 		 */
-		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
+		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
     		Transaction transaction=playerDatabase.getTransaction();
 
     		transaction.begin();

@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.15 2007/02/28 22:40:15 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.16 2007/02/28 22:54:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa.server.game.db;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -263,7 +263,7 @@ public interface IDatabase {
 	 * @throws SQLException if there is any problem such as a player that doesn't exist
 	 */
 	public void addLoginEvent(Transaction transaction,
-			String username, InetSocketAddress source, boolean correctLogin)
+			String username, InetAddress source, boolean correctLogin)
 			throws SQLException;
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.3 2007/02/25 17:23:56 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.4 2007/02/28 22:54:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
@@ -107,14 +107,14 @@ public class Message implements Serializable {
 	 * Returns the address of the channel associated.
 	 * @return the address of the channel associated.
 	 */
-	public InetSocketAddress getAddress() {
+	public InetAddress getAddress() {
 		if(channel==null) {
 			return null;
 		}
 
 		//return channel.socket().getInetAddress();
 		Socket socket=channel.socket();
-		return new InetSocketAddress(socket.getInetAddress(), socket.getPort());
+		return socket.getInetAddress();
 	}
 
 	/**

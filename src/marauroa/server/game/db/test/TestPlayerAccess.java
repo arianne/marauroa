@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.5 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.6 2007/02/28 22:54:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,10 +18,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.Transaction;
@@ -201,4 +204,33 @@ public class TestPlayerAccess {
 			transaction.rollback();
 		}
 	}
-}
+
+	/**
+	 * Test if create a player account works by adding it and making sure that the account is
+	 * there using has method.
+	 * @throws SQLException
+	 * @throws UnknownHostException
+	 */
+	@Test
+	public void blockAccountPlayer() throws SQLException, UnknownHostException {
+		String username="testUser";
+
+		Transaction transaction=database.getTransaction();
+		try {
+			transaction.begin();
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+
+			InetAddress address= InetAddress.getLocalHost();
+
+			assertFalse(database.isAccountBlocked(transaction, username));
+
+			for(int i=0;i<TimeoutConf.FAILED_LOGIN_ATTEMPS+1;i++) {
+				database.addLoginEvent(transaction, username, address, false);
+			}
+
+			assertTrue(database.isAccountBlocked(transaction, username));
+		} finally {
+			transaction.rollback();
+		}
+	}}

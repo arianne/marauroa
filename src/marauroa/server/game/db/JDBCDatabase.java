@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.22 2007/02/28 22:40:15 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.23 2007/02/28 22:54:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -782,7 +782,7 @@ public class JDBCDatabase implements IDatabase {
 		Statement stmt = connection.createStatement();
 
 		int id = getDatabasePlayerId(transaction, username);
-		String query="SELECT count(*) as amount FROM loginevent where player_id="+id+" and timestampdiff(SECOND,timedate,now())<"+TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		String query="SELECT count(*) as amount FROM loginEvent where player_id="+id+" and timestampdiff(SECOND,timedate,now())<"+TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 
 		ResultSet eventSet = stmt.executeQuery(query);
 		boolean blocked=false;
@@ -867,7 +867,7 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#addLoginEvent(marauroa.server.game.db.Transaction, java.lang.String, java.net.InetSocketAddress, boolean)
 	 */
-	public void addLoginEvent(Transaction transaction, String username, InetSocketAddress source, boolean correctLogin) throws SQLException {
+	public void addLoginEvent(Transaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
