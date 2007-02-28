@@ -126,13 +126,13 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an attribute added works, by building it again
+	 * Test if the getDiferences of an object that has an empty slot added works, by building it again
 	 * using applyDifferences.
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void addedRPSlotRPObject() throws Exception {
+	public void addedEmptyRPSlotRPObject() throws Exception {
 		RPObject obj=new RPObject();
 		obj.put("id", 1);
 		obj.addSlot("lhand");
@@ -149,13 +149,13 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an attribute removed works, by building it again
+	 * Test if the getDiferences of an object that has an empty slot removed works, by building it again
 	 * using applyDifferences.
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void removedRPSlotRPObject() throws Exception {
+	public void removedEmptyRPSlotRPObject() throws Exception {
 		RPObject obj=new RPObject();
 		obj.put("id", 1);
 		obj.addSlot("lhand");
