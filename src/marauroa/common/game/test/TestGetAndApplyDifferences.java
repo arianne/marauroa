@@ -216,6 +216,100 @@ public class TestGetAndApplyDifferences {
 		assertEquals(obj, result);
 	}
 
+
+	/**
+	 * Test if the getDiferences of an object that has an slot with
+	 * an object and has another new object added works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void addedRPSlotWithTwoRPObjectOnRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject sword=new RPObject();
+		sword.put("type", "huge sword");
+		obj.getSlot("lhand").add(sword);
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+
+		assertTrue(obj.hasSlot("lhand"));
+		assertTrue(result.hasSlot("lhand"));
+
+		/* Clear the delta² data */
+		obj.resetAddedAndDeleted();
+
+		RPObject abiggersword=new RPObject();
+		abiggersword.put("type", "very huge sword");
+		obj.getSlot("lhand").add(abiggersword);
+
+		deleted=new RPObject();
+		added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
+	/**
+	 * Test if the getDiferences of an object that has an slot with
+	 * an object and it is modified works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void modifiedRPSlotWithRPObjectOnRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject sword=new RPObject();
+		sword.put("type", "huge sword");
+		obj.getSlot("lhand").add(sword);
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+
+		assertTrue(obj.hasSlot("lhand"));
+		assertTrue(result.hasSlot("lhand"));
+
+		/* Clear the delta² data */
+		obj.resetAddedAndDeleted();
+
+		RPObject abiggersword=obj.getSlot("lhand").getFirst();
+		abiggersword.put("weight", 16);
+
+		deleted=new RPObject();
+		added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
 	/**
 	 * Test if the getDiferences of an object that has an empty slot removed works, by building it again
 	 * using applyDifferences.
@@ -227,6 +321,10 @@ public class TestGetAndApplyDifferences {
 		RPObject obj=new RPObject();
 		obj.put("id", 1);
 		obj.addSlot("lhand");
+
+		RPObject sword=new RPObject();
+		sword.put("type", "huge sword");
+		obj.getSlot("lhand").add(sword);
 
 		RPObject deleted=new RPObject();
 		RPObject added=new RPObject();
@@ -253,4 +351,6 @@ public class TestGetAndApplyDifferences {
 		result.applyDifferences(added, deleted);
 
 		assertEquals(obj, result);
-	}}
+	}
+
+}

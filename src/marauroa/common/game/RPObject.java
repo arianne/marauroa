@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.48 2007/02/28 16:45:23 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.49 2007/02/28 18:39:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -882,6 +882,59 @@ public class RPObject extends Attributes {
 			/*
 			 * Finally we process the changes on the objects of the slot.
 			 */
+			for(RPObject rec: slot) {
+				RPObject recAddedChanges=new RPObject();
+				RPObject recDeletedChanges=new RPObject();
+
+				rec.getDifferences(recAddedChanges, recDeletedChanges);
+
+				/*
+				 * If this object is not empty that means that there has been a change
+				 * at it. So we add this object to the slot.
+				 */
+				if(!recAddedChanges.isEmpty()) {
+					/*
+					 * If slot was not created, create it now.
+					 * For example if an object is modified ( that means not added nor deleted ), it
+					 * won't have a slot already created on added.
+					 */
+					if(!addedChanges.hasSlot(slot.getName())) {
+						addedChanges.addSlot(slot.getName());
+					}
+
+					RPSlot recAddedSlot=addedChanges.getSlot(slot.getName());
+					/*
+					 * We need to set the id of the object to be equals to the
+					 * object from which the diff was generated.
+					 */
+					recAddedChanges.put("id", rec.get("id"));
+					recAddedSlot.add(recAddedChanges, false);
+				}
+
+				/*
+				 * Same operation with delete changes
+				 */
+				if(!recDeletedChanges.isEmpty()) {
+					/*
+					 * If slot was not created, create it now.
+					 * For example if an object is modified ( that means not added nor deleted ), it
+					 * won't have a slot already created on added.
+					 */
+					if(!deletedChanges.hasSlot(slot.getName())) {
+						deletedChanges.addSlot(slot.getName());
+					}
+
+					RPSlot recDeletedSlot=deletedChanges.getSlot(slot.getName());
+					/*
+					 * We need to set the id of the object to be equals to the
+					 * object from which the diff was generated.
+					 */
+					recDeletedChanges.put("id", rec.get("id"));
+					recDeletedSlot.add(recDeletedChanges, false);
+				}
+
+
+			}
 		}
 	}
 
@@ -895,31 +948,62 @@ public class RPObject extends Attributes {
 	 */
 	public void applyDifferences(RPObject addedChanges, RPObject deletedChanges) {
 		if (deletedChanges != null) {
+			/*
+			 * We remove attributes stored in deleted Changes.
+			 * Except they are id or zoneid
+			 */
 			for (String attrib : deletedChanges) {
 				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
 					remove(attrib);
 				}
 			}
 
+			/*
+			 * Now we move to slots and remove the slot if it is empty on
+			 * delete changes.
+			 */
 			for (RPSlot slot : deletedChanges.slots) {
 				if (slot.size() == 0) {
 					removeSlot(slot.getName());
 				} else {
 					RPSlot changes=getSlot(slot.getName());
 
-					for(RPObject ad: slot) {
-						changes.remove(ad.getID());
+					/*
+					 * For each of the deletded changes, check if they are already on the object
+					 * so they an update and recursively apply differences to it.
+					 * On the other hand if object is not present, it means it is a new object so
+					 * we can add it directly.
+					 */
+					for(RPObject del: slot) {
+						/*
+						 * If object to remove has more than one attribute that means
+						 * that we want to remove these attributes.
+						 * On the other hand, if only one attribute is there, that means
+						 * that we want to remove the full object from the slot.
+						 */
+						if(del.size()>1) {
+							RPObject recChanges=changes.get(del.getID());
+							recChanges.applyDifferences(null, del);
+						} else {
+							changes.remove(del.getID());
+						}
 					}
 				}
 			}
 		}
 
 		if (addedChanges != null) {
+			/*
+			 * We add the attributes contained at added changes.
+			 */
 			for (String attrib : addedChanges) {
 				put(attrib, addedChanges.get(attrib));
 			}
 
-			/** For each of the added slots we add it and any object that was inside. */
+			/*
+			 * For each of the added slots we add it and any object
+			 * that was inside.
+			 */
 			for (RPSlot slot : addedChanges.slots) {
 				if(!hasSlot(slot.getName())) {
 					addSlot(slot.getName());
@@ -927,8 +1011,19 @@ public class RPObject extends Attributes {
 
 				RPSlot changes=getSlot(slot.getName());
 
+				/*
+				 * For each of the added changes, check if they are already on the object
+				 * so they an update and recursively apply differences to it.
+				 * On the other hand if object is not present, it means it is a new object so
+				 * we can add it directly.
+				 */
 				for(RPObject ad: slot) {
-					changes.add(ad, false);
+					RPObject recChanges=changes.get(ad.getID());
+					if(recChanges!=null) {
+						recChanges.applyDifferences(ad, null);
+					} else {
+						changes.add(ad, false);
+					}
 				}
 			}
 		}
