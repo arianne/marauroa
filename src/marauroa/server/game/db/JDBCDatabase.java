@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.21 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.22 2007/02/28 22:40:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,7 @@ import java.util.zip.InflaterInputStream;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
@@ -764,7 +765,39 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	private boolean hasRPZone(Transaction transaction, IRPZone.ID zone) {
+		// TODO: Do it.
 		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see marauroa.server.game.db.IDatabase#isAccountBlocked(marauroa.server.game.db.Transaction, java.lang.String)
+	 */
+	public boolean isAccountBlocked(Transaction transaction, String username) throws SQLException {
+		if (!StringChecker.validString(username)) {
+			throw new SQLException("Invalid string username=("+username+")");
+		}
+
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+
+		int id = getDatabasePlayerId(transaction, username);
+		String query="SELECT count(*) as amount FROM loginevent where player_id="+id+" and timestampdiff(SECOND,timedate,now())<"+TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+
+		ResultSet eventSet = stmt.executeQuery(query);
+		boolean blocked=false;
+
+		while (eventSet.next()) {
+			int attemps=eventSet.getInt("amount");
+			if(attemps>TimeoutConf.FAILED_LOGIN_ATTEMPS) {
+				blocked=true;
+			}
+		}
+
+		eventSet.close();
+		stmt.close();
+
+		return blocked;
 	}
 
 	/* (non-Javadoc)

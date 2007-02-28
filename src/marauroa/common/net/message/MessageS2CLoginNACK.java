@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.2 2007/02/25 20:51:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.3 2007/02/28 22:40:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,31 +16,31 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.TimeoutConf;
 import marauroa.common.net.NetConst;
 
 /**
  * This message indicate the client that the server has reject its login Message
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 
 public class MessageS2CLoginNACK extends Message {
 	public enum Reasons {
-		UNKNOWN_REASON, 
-		USERNAME_WRONG, 
-		SERVER_IS_FULL, 
-		GAME_MISMATCH, 
-		PROTOCOL_MISMATCH, 
+		USERNAME_WRONG,
+		TOO_MANY_TRIES,
+		SERVER_IS_FULL,
+		GAME_MISMATCH,
+		PROTOCOL_MISMATCH,
 		INVALID_NONCE,
 	}
 
 	static private String[] text = {
-			"Unknown reason",
 			"Username/Password incorrect.",
+			"Username/Password has been failed too many times. Account blocked for "+(TimeoutConf.FAILED_LOGIN_BLOCKTIME/60)+" minutes",
 			"Server is full.",
 			"Server is running an incompatible version of game. Update client",
-			"marauroa.common.network Protocol invalid version: Running "
-					+ Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+			"marauroa.common.network Protocol invalid version: Running " + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
 			"The hash you sent does not correspond to the nonce you sent." };
 
 	private Reasons reason;
@@ -52,7 +52,7 @@ public class MessageS2CLoginNACK extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param resolution
@@ -65,7 +65,7 @@ public class MessageS2CLoginNACK extends Message {
 
 	/**
 	 * This method returns the resolution of the login event
-	 * 
+	 *
 	 * @return a byte representing the resolution given.
 	 */
 	public Reasons getResolutionCode() {
@@ -75,7 +75,7 @@ public class MessageS2CLoginNACK extends Message {
 	/**
 	 * This method returns a String that represent the resolution given to the
 	 * login event
-	 * 
+	 *
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
@@ -84,7 +84,7 @@ public class MessageS2CLoginNACK extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override

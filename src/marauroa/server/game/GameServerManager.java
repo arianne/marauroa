@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.49 2007/02/27 14:05:32 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.50 2007/02/28 22:40:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -624,6 +624,20 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			info.clientNonce = msgLogin.getHash();
 			info.username = msgLogin.getUsername();
 			info.password = msgLogin.getPassword();
+
+			/* We check that player didn't failed too many time the login, if it did, we
+			 * reject the login request until the block pass.
+			 */
+			if(info.isAccountBlocked()) {
+				logger.info("Blocked account for player "+ info.username);
+				/* Send player the Login NACK message */
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+						MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
+
+				netMan.sendMessage(msgLoginNACK);
+				playerContainer.remove(clientid);
+				return;
+			}
 
 			/* We verify the username and the password to make sure player is who he/she says he/she is. */
 			if (!info.verify()) {

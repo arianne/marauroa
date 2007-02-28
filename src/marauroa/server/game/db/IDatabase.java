@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.14 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.15 2007/02/28 22:40:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -242,6 +242,16 @@ public interface IDatabase {
 	 */
 	public boolean verify(Transaction transaction,
 			PlayerEntry.SecuredLoginInfo informations) throws SQLException;
+
+
+	/**
+	 * Returns true if an account is temporally blocked due to too many tries on the defined time frame.
+	 * @param transaction the database transaction
+	 * @param username the username who tried to login
+	 * @return true if account is blocked.
+	 * @throws SQLException
+	 */
+	public boolean isAccountBlocked(Transaction transaction, String username) throws SQLException;
 
 	/**
 	 * This methods adds an entry to the login events table so player can know who has tried to access

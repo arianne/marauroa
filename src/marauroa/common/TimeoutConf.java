@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.10 2007/02/23 10:52:02 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.11 2007/02/28 22:40:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,4 +40,13 @@ public class TimeoutConf {
 
 	/** Maximum size of elements on a array (256K) */
 	final public static int MAX_ARRAY_ELEMENTS = 256 * 1024;
+
+	/**
+	 * The amount of failed login tries before considering the account blocked.
+	 */
+	final public static int FAILED_LOGIN_ATTEMPS=3;
+	/**
+	 * The amount of seconds until being able to retry login after N failed attemps.
+	 */
+	final public static long FAILED_LOGIN_BLOCKTIME = 60;
 }

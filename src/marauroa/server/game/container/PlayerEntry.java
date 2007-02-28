@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.14 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.15 2007/02/28 22:40:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -88,6 +88,16 @@ public class PlayerEntry {
     		transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
 			transaction.commit();
+		}
+
+		/**
+		 * Returns true if an account is temporally blocked due to too many tries on the defined time frame.
+		 * @return true if an account is temporally blocked due to too many tries on the defined time frame.
+		 * @throws SQLException
+		 */
+		public boolean isAccountBlocked() throws SQLException {
+    		Transaction transaction=playerDatabase.getTransaction();
+			return playerDatabase.isAccountBlocked(transaction, username);
 		}
 	}
 
