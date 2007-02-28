@@ -1,4 +1,4 @@
-/* $Id: TestCharacterAccess.java,v 1.2 2007/02/27 16:59:04 arianne_rpg Exp $ */
+/* $Id: TestCharacterAccess.java,v 1.3 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPObject;
 import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,7 +82,7 @@ public class TestCharacterAccess {
 		String character="testCharacter";
 		RPObject player=new RPObject();
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -105,7 +105,7 @@ public class TestCharacterAccess {
 		String character="testCharacter";
 		RPObject player=new RPObject();
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try{
 			transaction.begin();
 
@@ -132,7 +132,7 @@ public class TestCharacterAccess {
 		String character="testCharacter";
 		RPObject player=new RPObject();
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -157,7 +157,7 @@ public class TestCharacterAccess {
 		String character="testCharacter";
 		RPObject player=new RPObject();
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -181,7 +181,7 @@ public class TestCharacterAccess {
 		String username="testUser";
 		String[] characters={"testCharacter1","testCharacter2","testCharacter3"};
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -213,7 +213,7 @@ public class TestCharacterAccess {
 		player.put("two", 2);
 		player.put("three", 3.0);
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");

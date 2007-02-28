@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.13 2007/02/27 16:54:25 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.14 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,9 +24,9 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.JDBCTransaction;
 import marauroa.server.game.db.DatabaseFactory;
+import marauroa.server.game.db.IDatabase;
+import marauroa.server.game.db.Transaction;
 
 /**
  * This class represent a player on game.
@@ -83,7 +83,7 @@ public class PlayerEntry {
 		 * @throws SQLException if there is any database problem.
 		 */
 		public void addLoginEvent(InetSocketAddress address, boolean loginResult) throws SQLException {
-    		JDBCTransaction transaction=playerDatabase.getTransaction();
+    		Transaction transaction=playerDatabase.getTransaction();
 
     		transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
@@ -196,7 +196,7 @@ public class PlayerEntry {
 	 * @throws SQLException
 	 */
 	public void storeRPObject(RPObject player) throws SQLException,IOException {
-		JDBCTransaction transaction=playerDatabase.getTransaction();
+		Transaction transaction=playerDatabase.getTransaction();
 
 		try {
 			transaction.begin();

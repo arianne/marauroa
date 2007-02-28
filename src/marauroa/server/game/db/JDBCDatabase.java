@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.20 2007/02/27 22:38:16 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.21 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -81,7 +81,7 @@ public class JDBCDatabase implements IDatabase {
 		this.connInfo=connInfo;
 
 		sql=JDBCSQLHelper.get();
-		transaction=getTransaction();
+		transaction=(JDBCTransaction)getTransaction();
 
 		initialize();
 	}
@@ -168,7 +168,7 @@ public class JDBCDatabase implements IDatabase {
 	 * This method gets a transaction from the connection and check that it is valid.
 	 * @return a valid transaction.
 	 */
-	public JDBCTransaction getTransaction() {
+	public Transaction getTransaction() {
 		if (transaction == null || !transaction.isValid()) {
 			transaction = new JDBCTransaction(createConnection(connInfo));
 		}
@@ -177,9 +177,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#addPlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String, byte[], java.lang.String)
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#addPlayer(marauroa.server.game.db.Transaction, java.lang.String, byte[], java.lang.String)
 	 */
-	public void addPlayer(JDBCTransaction transaction, String username, byte[] password, String email) throws SQLException {
+	public void addPlayer(Transaction transaction, String username, byte[] password, String email) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=("+username+") email=("+email+")");
@@ -208,9 +208,9 @@ public class JDBCDatabase implements IDatabase {
 
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.IDatabase#generatePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.IDatabase#generatePlayer(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public String generatePlayer(JDBCTransaction transaction, String pattern) throws SQLException {
+	public String generatePlayer(Transaction transaction, String pattern) throws SQLException {
 		int length=pattern.length();
 		Random rand=new Random();
 		StringBuffer os=new StringBuffer();
@@ -234,9 +234,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.IDatabase#changeEmail(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
+	 * @see marauroa.server.game.db.IDatabase#changeEmail(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String)
 	 */
-	public void changeEmail(JDBCTransaction transaction, String username, String email) throws SQLException {
+	public void changeEmail(Transaction transaction, String username, String email) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+") email=("+email+")");
@@ -259,9 +259,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.IDatabase#changePassword(marauroa.server.game.db.JDBCTransaction, java.lang.String, byte[])
+	 * @see marauroa.server.game.db.IDatabase#changePassword(marauroa.server.game.db.Transaction, java.lang.String, byte[])
 	 */
-	public void changePassword(JDBCTransaction transaction, String username, String password) throws SQLException {
+	public void changePassword(Transaction transaction, String username, String password) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -286,9 +286,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#removePlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#removePlayer(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public boolean removePlayer(JDBCTransaction transaction, String username) throws SQLException {
+	public boolean removePlayer(Transaction transaction, String username) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -316,9 +316,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#hasPlayer(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#hasPlayer(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public boolean hasPlayer(JDBCTransaction transaction, String username) throws SQLException {
+	public boolean hasPlayer(Transaction transaction, String username) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -347,9 +347,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#setAccountStatus(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#setAccountStatus(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String)
 	 */
-	public void setAccountStatus(JDBCTransaction transaction, String username, String status) throws SQLException {
+	public void setAccountStatus(Transaction transaction, String username, String status) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(status)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -370,9 +370,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public String getAccountStatus(JDBCTransaction transaction, String username) throws SQLException {
+	public String getAccountStatus(Transaction transaction, String username) throws SQLException {
 		try{
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
@@ -403,7 +403,7 @@ public class JDBCDatabase implements IDatabase {
 		}
 	}
 
-	private int getDatabasePlayerId(JDBCTransaction trans, String username) throws SQLException {
+	private int getDatabasePlayerId(Transaction trans, String username) throws SQLException {
 		Connection connection = trans.getConnection();
 		Statement stmt = connection.createStatement();
 
@@ -430,9 +430,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ICharacterAccess#addCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String, marauroa.common.game.RPObject)
+	 * @see marauroa.server.game.db.nio.ICharacterAccess#addCharacter(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String, marauroa.common.game.RPObject)
 	 */
-	public void addCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
+	public void addCharacter(Transaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
@@ -459,9 +459,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ICharacterAccess#removeCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
+	 * @see marauroa.server.game.db.nio.ICharacterAccess#removeCharacter(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String)
 	 */
-	public boolean removeCharacter(JDBCTransaction transaction, String username, String character) throws SQLException {
+	public boolean removeCharacter(Transaction transaction, String username, String character) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
@@ -500,9 +500,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ICharacterAccess#hasCharacter(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.lang.String)
+	 * @see marauroa.server.game.db.nio.ICharacterAccess#hasCharacter(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String)
 	 */
-	public boolean hasCharacter(JDBCTransaction transaction, String username, String character) throws SQLException {
+	public boolean hasCharacter(Transaction transaction, String username, String character) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
@@ -536,9 +536,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ICharacterAccess#getCharacters(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.nio.ICharacterAccess#getCharacters(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public List<String> getCharacters(JDBCTransaction transaction, String username) throws SQLException {
+	public List<String> getCharacters(Transaction transaction, String username) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -584,7 +584,7 @@ public class JDBCDatabase implements IDatabase {
 	 * @throws SQLException if there is any problem at database.
 	 * @throws IOException
 	 */
-	public void storeCharacter(JDBCTransaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
+	public void storeCharacter(Transaction transaction, String username, String character, RPObject player) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
@@ -616,7 +616,7 @@ public class JDBCDatabase implements IDatabase {
 	 * @throws SQLException if there is any problem at database
 	 * @throws IOException
 	 */
-	public RPObject loadCharacter(JDBCTransaction transaction, String username, String character) throws SQLException, IOException {
+	public RPObject loadCharacter(Transaction transaction, String username, String character) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=("+username+") character=("+character+")");
@@ -651,7 +651,7 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 *
 	 */
-	public void loadRPZone(JDBCTransaction transaction, IRPZone zone) throws SQLException, IOException {
+	public void loadRPZone(Transaction transaction, IRPZone zone) throws SQLException, IOException {
 		String zoneid=zone.getID().getID();
 		if (!StringChecker.validString(zoneid)) {
 			throw new SQLException("Invalid string zoneid=("+zoneid+")");
@@ -714,9 +714,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.IDatabase#storeRPZone(marauroa.server.game.db.JDBCTransaction, marauroa.common.game.IRPZone)
+	 * @see marauroa.server.game.db.IDatabase#storeRPZone(marauroa.server.game.db.Transaction, marauroa.common.game.IRPZone)
 	 */
-	public void storeRPZone(JDBCTransaction transaction, IRPZone zone) throws IOException, SQLException {
+	public void storeRPZone(Transaction transaction, IRPZone zone) throws IOException, SQLException {
 		String zoneid=zone.getID().getID();
 		if (!StringChecker.validString(zoneid)) {
 			throw new SQLException("Invalid string zoneid=("+zoneid+")");
@@ -763,14 +763,14 @@ public class JDBCDatabase implements IDatabase {
 		ps.close();
 	}
 
-	private boolean hasRPZone(JDBCTransaction transaction, IRPZone.ID zone) {
+	private boolean hasRPZone(Transaction transaction, IRPZone.ID zone) {
 		return false;
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#verify(marauroa.server.game.db.JDBCTransaction, marauroa.server.game.container.PlayerEntry.SecuredLoginInfo)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#verify(marauroa.server.game.db.Transaction, marauroa.server.game.container.PlayerEntry.SecuredLoginInfo)
 	 */
-	public boolean verify(JDBCTransaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
+	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		try {
 			if (Hash.compare(Hash.hash(informations.clientNonce),informations.clientNonceHash) != 0) {
 				logger.info("Different hashs for client Nonce");
@@ -832,9 +832,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#addLoginEvent(marauroa.server.game.db.JDBCTransaction, java.lang.String, java.net.InetSocketAddress, boolean)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#addLoginEvent(marauroa.server.game.db.Transaction, java.lang.String, java.net.InetSocketAddress, boolean)
 	 */
-	public void addLoginEvent(JDBCTransaction transaction, String username, InetSocketAddress source, boolean correctLogin) throws SQLException {
+	public void addLoginEvent(Transaction transaction, String username, InetSocketAddress source, boolean correctLogin) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -899,9 +899,9 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#getLoginEvents(marauroa.server.game.db.JDBCTransaction, java.lang.String)
+	 * @see marauroa.server.game.db.nio.ILoginEventsAccess#getLoginEvents(marauroa.server.game.db.Transaction, java.lang.String)
 	 */
-	public List<String> getLoginEvents(JDBCTransaction transaction, String username, int events) throws SQLException {
+	public List<String> getLoginEvents(Transaction transaction, String username, int events) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=("+username+")");
@@ -940,7 +940,7 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addGameEvent(marauroa.server.game.db.Transaction, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void addGameEvent(JDBCTransaction trans, String source, String event, String... params) {
+	public void addGameEvent(Transaction trans, String source, String event, String... params) {
 		try {
 			Connection connection = trans.getConnection();
 			Statement stmt = connection.createStatement();
@@ -970,7 +970,7 @@ public class JDBCDatabase implements IDatabase {
 	/* (non-Javadoc)
 	 * @see marauroa.server.game.db.nio.IEventsAccess#addStatisticsEvent(marauroa.server.game.db.Transaction, marauroa.server.game.Statistics.Variables)
 	 */
-	public void addStatisticsEvent(JDBCTransaction trans, Variables var) {
+	public void addStatisticsEvent(Transaction trans, Variables var) {
 		try {
 			Connection connection = trans.getConnection();
 			Statement stmt = connection.createStatement();
@@ -989,7 +989,7 @@ public class JDBCDatabase implements IDatabase {
 		}
 	}
 
-	private RPObject loadRPObject(JDBCTransaction transaction, int objectid) throws SQLException, IOException {
+	private RPObject loadRPObject(Transaction transaction, int objectid) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
 
 		String query = "select data from rpobject where object_id=" + objectid;
@@ -1039,7 +1039,7 @@ public class JDBCDatabase implements IDatabase {
 		return null;
 	}
 
-	private int removeRPObject(JDBCTransaction transaction, int objectid) throws SQLException {
+	private int removeRPObject(Transaction transaction, int objectid) throws SQLException {
 		Connection connection = transaction.getConnection();
 
 		String query = "delete from rpobject where object_id=" + objectid;
@@ -1053,7 +1053,7 @@ public class JDBCDatabase implements IDatabase {
 		return objectid;
 	}
 
-	private boolean hasRPObject(JDBCTransaction transaction, int objectid) throws SQLException {
+	private boolean hasRPObject(Transaction transaction, int objectid) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
 		String query = "select count(*) as amount from rpobject where object_id="+ objectid;
@@ -1076,7 +1076,7 @@ public class JDBCDatabase implements IDatabase {
 		return rpObjectExists;
 	}
 
-	private int storeRPObject(JDBCTransaction transaction, RPObject object) throws IOException, SQLException {
+	private int storeRPObject(Transaction transaction, RPObject object) throws IOException, SQLException {
 		Connection connection = transaction.getConnection();
 
 		int object_id = -1;
@@ -1138,9 +1138,9 @@ public class JDBCDatabase implements IDatabase {
 
 	/*
 	 * (non-Javadoc)
-	 * @see marauroa.server.game.db.IDatabase#getBannedAddresses(marauroa.server.game.db.JDBCTransaction)
+	 * @see marauroa.server.game.db.IDatabase#getBannedAddresses(marauroa.server.game.db.Transaction)
 	 */
-	public List<InetAddressMask> getBannedAddresses(JDBCTransaction transaction) throws SQLException {
+	public List<InetAddressMask> getBannedAddresses(Transaction transaction) throws SQLException {
 		List<InetAddressMask> permanentBans=new LinkedList<InetAddressMask>();
 
 		/* read ban list from DB */

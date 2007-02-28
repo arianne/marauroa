@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.15 2007/02/27 19:06:11 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.16 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 
 /**
  * Default implementation of <code>IRPZone</code>.
@@ -128,7 +128,7 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	public void onFinish() throws Exception {
 		IDatabase db=DatabaseFactory.getDatabase();
-		JDBCTransaction transaction=db.getTransaction();
+		Transaction transaction=db.getTransaction();
 		try {
 			transaction.begin();
 			db.storeRPZone(transaction, this);
@@ -144,7 +144,7 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	public void onInit() throws Exception {
 		IDatabase db=DatabaseFactory.getDatabase();
-		JDBCTransaction transaction=db.getTransaction();
+		Transaction transaction=db.getTransaction();
 		db.loadRPZone(transaction, this);
 	}
 

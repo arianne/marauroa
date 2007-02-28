@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.21 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.22 2007/02/28 20:37:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,7 +22,7 @@ import java.util.Map;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 
 /**
  * This class encapsulate everything related to the statistics recollection and
@@ -33,11 +33,11 @@ public class Statistics implements StatisticsMBean {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Statistics.class);
 
 	/**
-	 * This class is very similar to a Map<String, Long> with the extra that 
-	 * adds some comodity methods like:<ul> 
+	 * This class is very similar to a Map<String, Long> with the extra that
+	 * adds some comodity methods like:<ul>
 	 * <li>add
 	 * <li>print
-	 * </ul> 
+	 * </ul>
 	 * @author miguel
 	 */
 	public static class Variables implements Iterable<String> {
@@ -84,15 +84,15 @@ public class Statistics implements StatisticsMBean {
 			return content.get(type);
 		}
 
-		/** Iterate over the variables 
+		/** Iterate over the variables
 		 *  @return an iterator over the variables
          */
 		public Iterator<String> iterator() {
 			return content.keySet().iterator();
 		}
 
-		/** 
-		 * Adds to this instance the instance var 
+		/**
+		 * Adds to this instance the instance var
 		 * @param var a instance of Variables to add to this one.
 		 */
 		public void add(Variables var) {
@@ -102,7 +102,7 @@ public class Statistics implements StatisticsMBean {
 		}
 
 		/**
-		 * Prints the variable 
+		 * Prints the variable
 		 * @param out
 		 * @param diff
 		 */
@@ -151,9 +151,9 @@ public class Statistics implements StatisticsMBean {
 
 	private static Statistics stats;
 
-	/** 
+	/**
 	 * Returns an unique instance of Statistics.
-	 * This is a singleton. 
+	 * This is a singleton.
 	 * @return a statistics object
 	 */
 	public static Statistics getStatistics() {
@@ -164,7 +164,7 @@ public class Statistics implements StatisticsMBean {
 		return stats;
 	}
 
-	/** 
+	/**
 	 * Sets an attribute
 	 * @param type attribute name
 	 * @param value its value
@@ -175,7 +175,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	/**
-	 * Adds an attribute to its existing 
+	 * Adds an attribute to its existing
 	 * @param type
 	 * @param value
 	 */
@@ -184,7 +184,7 @@ public class Statistics implements StatisticsMBean {
 		sinceStart.add(type, value);
 	}
 
-	/** 
+	/**
 	 * Return the value of an attribute since the server start.
 	 * This method is used by the Bean interface.
 	 * @param type the attribute name
@@ -193,8 +193,8 @@ public class Statistics implements StatisticsMBean {
 		return sinceStart == null ? -1 : sinceStart.get(type);
 	}
 
-	/** 
-	 * Print to $(webfolder)/server_stats.xml file the content of the statistics object.  
+	/**
+	 * Print to $(webfolder)/server_stats.xml file the content of the statistics object.
 	 */
 	public void print() {
 		try {
@@ -208,7 +208,7 @@ public class Statistics implements StatisticsMBean {
 				lastStatisticsEventAdded = actualTime;
 
 				JDBCDatabase database = JDBCDatabase.getDatabase();
-				JDBCTransaction transaction = database.getTransaction();
+				Transaction transaction = database.getTransaction();
 
 				database.addStatisticsEvent(transaction, now);
 				transaction.commit();
@@ -237,7 +237,7 @@ public class Statistics implements StatisticsMBean {
 
 	/**
 	 * escapes special characerers in XML hand HTML.
-	 * 
+	 *
 	 * @param param
 	 *            string to escape
 	 * @return escaped strings

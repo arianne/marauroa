@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.7 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.8 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,7 +25,7 @@ import marauroa.common.Log4J;
  * @author miguel
  *
  */
-public class JDBCTransaction extends Transaction {
+public class JDBCTransaction implements Transaction {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCTransaction.class);
 
@@ -41,7 +41,7 @@ public class JDBCTransaction extends Transaction {
 
 	/**
 	 * Sets Connection
-	 * 
+	 *
 	 * @param connection  a Connection
 	 */
 	public void setConnection(Connection connection) {
@@ -50,16 +50,16 @@ public class JDBCTransaction extends Transaction {
 
 	/**
 	 * Returns Connection
-	 * 
+	 *
 	 * @return a Connection
 	 */
 	public Connection getConnection() {
 		return connection;
 	}
 
-	/** 
-	 * Starts a transaction 
-	 * @throws SQLException 
+	/**
+	 * Starts a transaction
+	 * @throws SQLException
 	 */
 	public void begin() throws SQLException {
 			Statement stmt = connection.createStatement();
@@ -68,17 +68,17 @@ public class JDBCTransaction extends Transaction {
 
 	/**
 	 * commits the changes made to backstore.
-	 * 
+	 *
 	 * @exception TransactionException if the underlaying backstore throws an Exception
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void commit() throws SQLException {
 			logger.debug("Commiting");
 			connection.commit();
 	}
 
-	/** 
-	 * Makes previous changes to backstore invalid 
+	/**
+	 * Makes previous changes to backstore invalid
 	 */
 	public void rollback() throws SQLException {
 			logger.debug("Rollback");

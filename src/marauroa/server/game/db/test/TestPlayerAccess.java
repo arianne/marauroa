@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.4 2007/02/27 16:54:26 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.5 2007/02/28 20:37:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import java.util.Properties;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,7 +78,7 @@ public class TestPlayerAccess {
 	public void addPlayer() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -99,7 +99,7 @@ public class TestPlayerAccess {
 	public void changePassword() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -121,7 +121,7 @@ public class TestPlayerAccess {
 	public void doubleAddedPlayer() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try{
 			transaction.begin();
 
@@ -149,7 +149,7 @@ public class TestPlayerAccess {
 	public void removePlayer() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -170,7 +170,7 @@ public class TestPlayerAccess {
 	public void getStatus() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 
 		try {
 			transaction.begin();
@@ -189,7 +189,7 @@ public class TestPlayerAccess {
 	public void setStatus() throws SQLException {
 		String username="testUser";
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 
 		try {
 			transaction.begin();

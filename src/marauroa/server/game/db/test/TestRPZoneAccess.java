@@ -1,6 +1,6 @@
 package marauroa.server.game.db.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Properties;
 
@@ -8,7 +8,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.BeforeClass;
@@ -95,7 +95,7 @@ public class TestRPZoneAccess {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 
-		JDBCTransaction transaction=database.getTransaction();
+		Transaction transaction=database.getTransaction();
 
 		try {
 			transaction.begin();

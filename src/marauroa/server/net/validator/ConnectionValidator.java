@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.9 2007/02/27 22:59:14 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.10 2007/02/28 20:37:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,7 +25,7 @@ import java.util.TimerTask;
 import marauroa.common.Log4J;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.JDBCTransaction;
+import marauroa.server.game.db.Transaction;
 
 /**
  * The ConnectionValidator validates the ariving connections, currently it can only
@@ -173,7 +173,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 		try {
 			IDatabase db = JDBCDatabase.getDatabase();
 			permanentBans.clear();
-			JDBCTransaction transaction=db.getTransaction();
+			Transaction transaction=db.getTransaction();
 			permanentBans.addAll(db.getBannedAddresses(transaction));
 		} catch (SQLException sqle) {
 			logger.error("cannot read banned networks database table", sqle);
