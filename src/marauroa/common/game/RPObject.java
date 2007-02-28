@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.50 2007/02/28 18:45:39 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.51 2007/02/28 19:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -597,31 +597,14 @@ public class RPObject extends Attributes {
 		Iterator<RPSlot> slotit=slots.iterator();
 		while(slotit.hasNext()) {
 			RPSlot slot=slotit.next();
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
 
-			if (def.isVisible()) {
-				List<RPObject.ID> idtoremove=new LinkedList<RPObject.ID>();
-				for (RPObject object : slot) {
-					object.clearVisible();
-
-					/* If object is empty remove it. */
-					if(object.size()==1) {
-						// If object size is one means only id remains.
-						// Objects inside the slot should not contain any other special attribute.
-						// If only id remains, we can remove this object from the slot.
-						idtoremove.add(object.getID());
-					}
-				}
-
-				for(RPObject.ID id: idtoremove) {
-					// Slot.remove code takes care of removing it from added and deleted list.
-					slot.remove(id);
-				}
-			}
+			slot.clearVisible();
 
 			/* If slot is empty remove it. */
 			if(slot.size()==0) {
 				slotit.remove();
+				added.remove(slot.getName());
+				deleted.remove(slot.getName());
 			}
 		}
 	}

@@ -154,7 +154,11 @@ public class TestRPObject {
 
 		RPObject oadded=new RPObject();
 		RPObject odeleted=new RPObject();
+
 		obj.getDifferences(oadded, odeleted);
+
+		System.out.println(oadded);
+		System.out.println(odeleted);
 
 		assertTrue(oadded.isEmpty());
 		assertTrue(odeleted.isEmpty());

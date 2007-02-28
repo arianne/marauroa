@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.38 2007/02/28 16:45:23 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.39 2007/02/28 19:40:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -177,9 +177,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
-		Iterator<RPObject> it = objects.iterator();
 		int oid=id.getObjectID();
 
+		Iterator<RPObject> it = objects.iterator();
 		while (it.hasNext()) {
 			RPObject object = it.next();
 
@@ -205,7 +205,15 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 				 * Simply ignore the delta^2 information.
 				 */
 				if (!found_in_added_list) {
-					deleted.add(new RPObject(new RPObject.ID(object)));
+					/*
+					 * Instead of adding the full object we are interested in
+					 * adding only the id.
+					 */
+					RPObject del=new RPObject();
+					del.setRPClass(object.getRPClass());
+					del.put("id", object.get("id"));
+
+					deleted.add(del);
 				}
 
 				it.remove();
@@ -447,6 +455,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		deleted.clear();
 	}
 
+
 	/**
 	 * Copy to given slot the objects added.
 	 * It does a depth copy of the objects.
@@ -479,5 +488,54 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			changes=true;
 		}
 		return changes;
+	}
+
+
+	/**
+	 * Removes the visible objects from this slot.
+	 * It iterates through the slots to remove the attributes too of the contained objects if they are empty.
+	 */
+	public void clearVisible() {
+		Definition def=owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name);
+
+		if (def.isVisible()) {
+			List<RPObject> idtoremove=new LinkedList<RPObject>();
+			for (RPObject object : objects) {
+				object.clearVisible();
+
+				/* If object is empty remove it. */
+				if(object.size()==1) {
+					/*
+					 * If object size is one means only id remains.
+					 * Objects inside the slot should not contain any other special attribute.
+					 * If only id remains, we can remove this object from the slot.
+					 */
+
+					idtoremove.add(object);
+				}
+			}
+
+			for(RPObject obj: idtoremove) {
+				/*
+				 * Remove the object from objects, added and deleted lists.
+				 */
+				objects.remove(obj);
+				added.remove(obj);
+
+				int oid=obj.getID().getObjectID();
+
+				Iterator<RPObject> it = deleted.iterator();
+				while (it.hasNext()) {
+					RPObject object = it.next();
+
+					/** We compare only the id, as the zone is really irrelevant */
+					if (object.getID().getObjectID() == oid) {
+						it.remove();
+						break;
+					}
+				}
+			}
+		}
+
 	}
 }

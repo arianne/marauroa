@@ -16,12 +16,12 @@ import marauroa.common.net.message.Message;
  * @author miguel
  */
 public class Decoder {
-	/** This class handle not completed messages. 
+	/** This class handle not completed messages.
 	 *  TODO: add some kind of timeout.*/
 	class MessageParts {
 		public int size;
 		public List<byte[]> parts;
-		
+
 		public MessageParts(int size) {
 			this.size=size;
 			parts=new LinkedList<byte[]>();
@@ -29,7 +29,7 @@ public class Decoder {
 
 		/** Adds a new part to complete the message */
 		public void add(byte[] data) {
-			parts.add(data);			
+			parts.add(data);
 		}
 
 		/** Try to build the message for the channel using the existing parts or return null if it is not completed yet. */
@@ -38,24 +38,24 @@ public class Decoder {
 			for(byte[] p: parts) {
 				length+=p.length;
 			}
-			
+
 			if(length!=size) {
 				return null;
 			}
-			
+
 			byte[] data=new byte[size];
-			
+
 			int offset=0;
 			for(byte[] p: parts) {
 				System.arraycopy(p, 0 , data, offset, p.length);
-				offset+=p.length;				
+				offset+=p.length;
 			}
-			
+
 			Message msg=msgFactory.getMessage(data, channel,4);
 			return msg;
 		}
 	}
-	
+
 	private Map<SocketChannel, MessageParts> content;
 
 	/** MessageFactory */
@@ -64,8 +64,8 @@ public class Decoder {
 	private static Decoder instance;
 
 	/**
-	 * Returns an unique instance of decoder 
-	 * @return an unique instance of decoder 
+	 * Returns an unique instance of decoder
+	 * @return an unique instance of decoder
 	 */
 	public static Decoder get() {
 		if(instance==null) {
@@ -80,7 +80,7 @@ public class Decoder {
 		msgFactory = MessageFactory.getFactory();
 	}
 
-	/** 
+	/**
 	 * Decodes a message from a stream of bytes recieved from channel
 	 * @param channel the socket from where data was recieved
 	 * @param data the data recieved
@@ -90,6 +90,8 @@ public class Decoder {
 	 */
 	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
 		Message msg=null;
+
+		//TODO: BUG!!!
 
 		int size = (data[0] & 0xFF)
 		+ ((data[1] & 0xFF) << 8)
@@ -101,16 +103,16 @@ public class Decoder {
 		} else {
 			/* Size is not the expected: We should store and wait for message completion. */
 			MessageParts buffers=content.get(channel);
-			
+
 			if(buffers==null) {
 				buffers=new MessageParts(size);
 				content.put(channel, buffers);
 			}
-			
+
 			buffers.add(data);
-			
+
 			msg=buffers.build(channel);
-			
+
 			if(msg!=null) {
 				content.remove(channel);
 			}

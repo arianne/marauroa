@@ -10,6 +10,7 @@ import marauroa.common.game.RPSlot;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -429,8 +430,18 @@ public class TestRPObjectDelta2 {
 	 /**
 	  * This is a KNOWN bug that happens when a object from a visible slot is removed
 	  * in the object that has cleared the visible attributes.
-	 * @throws Exception
+	  * @throws Exception
 	  *
+	  */
+	 @Ignore
+	 @Test
+	 public void testVisibleApplyDifferencesBug() {
+		 //TODO:
+	 }
+
+	 /**
+	  * This test try to show a problem that could happen if you delete and add an object
+	  * on the same turn. It should work correctly.
 	  */
 	 @Test
 	 public void testApplyDifferences() throws Exception {
@@ -466,9 +477,6 @@ public class TestRPObjectDelta2 {
 		 RPObject deleted = new RPObject();
 
 		 obj.getDifferences(added, deleted);
-
-		 System.out.println(added);
-		 System.out.println(deleted);
 
 		 result.applyDifferences(added, deleted);
 
