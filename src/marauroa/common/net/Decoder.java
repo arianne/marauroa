@@ -89,33 +89,36 @@ public class Decoder {
 	 * @throws InvalidVersionException if the message version mismatch the expected version
 	 */
 	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
-		Message msg=null;
+		MessageParts buffers=content.get(channel);
 
-		//TODO: BUG!!!
+		if(buffers==null) {
+			/* First part of the message */
+			/*
+			 * NOTE: On real life we can be *sure* that 4 bytes are at least to
+			 * be recieved...
+			 */
+			int size = (data[0] & 0xFF)
+			+ ((data[1] & 0xFF) << 8)
+			+ ((data[2] & 0xFF) << 16)
+			+ ((data[3] & 0xFF) << 24);
 
-		int size = (data[0] & 0xFF)
-		+ ((data[1] & 0xFF) << 8)
-		+ ((data[2] & 0xFF) << 16)
-		+ ((data[3] & 0xFF) << 24);
-
-		if(data.length==size) {
-			msg = msgFactory.getMessage(data, channel, 4);
-		} else {
-			/* Size is not the expected: We should store and wait for message completion. */
-			MessageParts buffers=content.get(channel);
-
-			if(buffers==null) {
+			if(data.length==size) {
+				/* If we have the full data build the message */
+				Message msg = msgFactory.getMessage(data, channel, 4);
+				return msg;
+			} else {
+				/* If there is still data to store it. */
 				buffers=new MessageParts(size);
 				content.put(channel, buffers);
 			}
+		}
 
-			buffers.add(data);
+		buffers.add(data);
 
-			msg=buffers.build(channel);
+		Message msg=buffers.build(channel);
 
-			if(msg!=null) {
-				content.remove(channel);
-			}
+		if(msg!=null) {
+			content.remove(channel);
 		}
 
 		return msg;
