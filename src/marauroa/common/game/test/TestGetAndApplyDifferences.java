@@ -1,9 +1,9 @@
 package marauroa.common.game.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import marauroa.common.game.RPObject;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.16 2007/02/26 21:46:19 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.17 2007/02/28 20:06:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -259,16 +259,8 @@ public class PerceptionHandler {
 				}
 
 				RPObject object = world.get(id);
-				try {
-					object.applyDifferences(null, deleted);
-				} catch (Exception e) {
-					//TODO: Fix this.
-					//TODO: Write a test case.
-					logger.warn("Exception at applying differences", e);
-					logger.warn("This is a KNOWN bug that happens when a object from a visible slot is removed");
-				}
 
-				object.applyDifferences(added, null);
+				object.applyDifferences(added, deleted);
 			}
 		} catch (Exception e) {
 			logger.error("error in applyPerceptionMyRPObject", e);
