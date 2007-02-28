@@ -3,6 +3,7 @@ package marauroa.common.game.test;
 import static org.junit.Assert.*;
 import marauroa.common.game.RPObject;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -186,4 +187,70 @@ public class TestGetAndApplyDifferences {
 
 		assertEquals(obj, result);
 	}
-}
+
+
+	/**
+	 * Test if the getDiferences of an object that has an empty slot added works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void addedRPSlotWithRPObjectOnRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject sword=new RPObject();
+		sword.put("type", "huge sword");
+		obj.getSlot("lhand").add(sword);
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
+	/**
+	 * Test if the getDiferences of an object that has an empty slot removed works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void removedRPSlotWithRPObjectOnRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+
+		assertTrue(obj.hasSlot("lhand"));
+		assertTrue(result.hasSlot("lhand"));
+
+		/* Clear the delta² data */
+		obj.resetAddedAndDeleted();
+
+		obj.removeSlot("lhand");
+		deleted=new RPObject();
+		added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}}

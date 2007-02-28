@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.47 2007/02/28 14:06:32 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.48 2007/02/28 16:45:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -841,97 +841,47 @@ public class RPObject extends Attributes {
 
 		addedChanges.setAddedRPSlot(this);
 		deletedChanges.setDeletedRPSlot(this);
-	}
-
-	// TODO: Refactor this method. Looks like it claims for bugs!"
-	/** This method get the changes on added and deleted things from this object */
-	public void getDifferences_old(RPObject oadded, RPObject odeleted) throws Exception {
-		/* First we get differences from attributes */
-		oadded.setAddedAttributes(this);
-		odeleted.setDeletedAttributes(this);
-
-		/*
-		 * We add to the oadded object the events that exists.
-		 */
-		for(RPEvent event: events) {
-			oadded.events.add((RPEvent)event.clone());
-		}
-
-		/*
-		 * Now we compute differences at slots of this object. First we get the
-		 * deleted slots and add them to the deleted object.
-		 */
-		odeleted.setDeletedRPSlot(this);
 
 		for (RPSlot slot : slots) {
-			/* For each one of the existing slots, add the added objects */
-			RPSlot added_slot = new RPSlot(slot.getName());
-			added_slot.setAddedRPObject(slot);
-
-			/* We only add the object if it is not there or it is not empty. */
-			if (added_slot.size() > 0 && !oadded.hasSlot(added_slot.getName())) {
-				added_slot.setOwner(oadded);
-				oadded.slots.add(added_slot);
-			}
-
-			/* And add also the deleted objects */
-			RPSlot deleted_slot = new RPSlot(slot.getName());
-			deleted_slot.setDeletedRPObject(slot);
-
-			/* Again, we are only interested in adding the deleted slot if it is not
-			 * already there or it it is not empty.
+			/*
+			 * First we process the added things to slot.
 			 */
-			if (deleted_slot.size() > 0 && !odeleted.hasSlot(deleted_slot.getName())) {
-				deleted_slot.setOwner(odeleted);
-				odeleted.slots.add(deleted_slot);
-			}
-
-			/* Now apply recursively to the existing objects in the slot */
-			for (RPObject object : slot) {
-				RPObject object_added = new RPObject();
-				RPObject object_deleted = new RPObject();
-
-				/* So for each object in the slot, we get the differences */
-				object.getDifferences(object_added, object_deleted);
-
-				if (object_added.size() > 0) {
-					/* If slot is no there, add it. */
-					if (!oadded.hasSlot(slot.getName())) {
-						RPSlot addedslot=new RPSlot(slot.getName());
-						addedslot.setOwner(oadded);
-						oadded.slots.add(addedslot);
-					}
-
-					// TODO: Is it possible for the object to previously exist?
-					/* If it is not added, add it */
-					if (!oadded.getSlot(slot.getName()).has(object.getID())) {
-						// TODO: Do we need to set the id?
-						object_added.put("id", object.get("id"));
-						oadded.getSlot(slot.getName()).add(object_added);
-					}
+			RPSlot addedObjectsInSlot=new RPSlot(slot.getName());
+			if(addedObjectsInSlot.setAddedRPObject(slot)) {
+				/* There is added objects in the slot, so we need to add them to
+				 * addedChanges.
+				 */
+				if(!addedChanges.hasSlot(slot.getName())) {
+					addedChanges.addSlot(slot.getName());
 				}
 
-				if (object_deleted.size() > 0) {
-					if (!odeleted.hasSlot(slot.getName())) {
-						RPSlot deletedslot=new RPSlot(slot.getName());
-						deletedslot.setOwner(odeleted);
-						odeleted.slots.add(deletedslot);
-					}
-
-					if (!odeleted.getSlot(slot.getName()).has(new ID(object))) {
-						object_deleted.put("id", object.get("id"));
-						odeleted.getSlot(slot.getName()).add(object_deleted);
-					}
+				RPSlot changes=addedChanges.getSlot(slot.getName());
+				for(RPObject ad: addedObjectsInSlot) {
+					changes.add(ad, false);
 				}
 			}
-		}
 
-		if (oadded.size() > 0) {
-			oadded.put("id", get("id"));
-		}
+			/*
+			 * Later we process the removed things from the slot.
+			 */
+			RPSlot deletedObjectsInSlot=new RPSlot(slot.getName());
+			if(deletedObjectsInSlot.setDeletedRPObject(slot)) {
+				/* There is deleted objects in the slot, so we need to add them to
+				 * deletedChanges.
+				 */
+				if(!deletedChanges.hasSlot(slot.getName())) {
+					deletedChanges.addSlot(slot.getName());
+				}
 
-		if (odeleted.size() > 0) {
-			odeleted.put("id", get("id"));
+				RPSlot changes=deletedChanges.getSlot(slot.getName());
+				for(RPObject ad: deletedObjectsInSlot) {
+					changes.add(ad, false);
+				}
+			}
+
+			/*
+			 * Finally we process the changes on the objects of the slot.
+			 */
 		}
 	}
 
@@ -954,6 +904,12 @@ public class RPObject extends Attributes {
 			for (RPSlot slot : deletedChanges.slots) {
 				if (slot.size() == 0) {
 					removeSlot(slot.getName());
+				} else {
+					RPSlot changes=getSlot(slot.getName());
+
+					for(RPObject ad: slot) {
+						changes.remove(ad.getID());
+					}
 				}
 			}
 		}
@@ -963,64 +919,18 @@ public class RPObject extends Attributes {
 				put(attrib, addedChanges.get(attrib));
 			}
 
+			/** For each of the added slots we add it and any object that was inside. */
 			for (RPSlot slot : addedChanges.slots) {
-				addSlot(slot.getName());
-			}
-		}
-	}
-
-	// TODO: Refactor this method. Looks like it claims for bugs!"
-	/**
-	 * This method apply the changes retrieved from getDifferences and build the
-	 * updated object
-	 */
-	public RPObject applyDifferences_old(RPObject added, RPObject deleted) throws Exception {
-		if (deleted != null) {
-			for (String attrib : deleted) {
-				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
-					remove(attrib);
+				if(!hasSlot(slot.getName())) {
+					addSlot(slot.getName());
 				}
-			}
 
-			for (RPSlot slot : deleted.slots) {
-				if (slot.size() == 0) {
-					removeSlot(slot.getName());
-				} else {
-					/** for each of the objects, delete it */
-					for (RPObject object : slot) {
-						if (object.size() == 1) {/** id attribute */
-							getSlot(slot.getName()).remove(new ID(object));
-						} else {
-							RPObject actualObject = getSlot(slot.getName()).get(new ID(object));
-							actualObject.applyDifferences(null, object);
-						}
-					}
+				RPSlot changes=getSlot(slot.getName());
+
+				for(RPObject ad: slot) {
+					changes.add(ad, false);
 				}
 			}
 		}
-
-		if (added != null) {
-			for (String attrib : added) {
-				put(attrib, added.get(attrib));
-			}
-
-			for (RPSlot slot : added.slots) {
-				if (!hasSlot(slot.getName())) {
-					slots.add(new RPSlot(slot.getName()));
-				}
-
-				/** for each of the objects, add it */
-				for (RPObject object : slot) {
-					if (getSlot(slot.getName()).has(new ID(object))) {
-						getSlot(slot.getName()).get(new ID(object)).applyDifferences(object, null);
-					} else {
-						String id=object.get("id");
-						getSlot(slot.getName()).add(object);
-						object.put("id", id);
-					}
-				}
-			}
-		}
-		return this;
 	}
 }

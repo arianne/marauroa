@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.37 2007/02/16 11:13:12 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.38 2007/02/28 16:45:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -108,11 +108,17 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @throws SlotIsFullException if there is no more room at the slot.
 	 */
 	public int add(RPObject object) {
+		return add(object, true);
+	}
+
+	int add(RPObject object, boolean assignId) {
 		if (isFull()) {
 			throw new SlotIsFullException(name);
 		}
 
-		owner.assignSlotID(object);
+		if(assignId) {
+			owner.assignSlotID(object);
+		}
 
 		// Notify about the addition of the object
 		added.add(object);
@@ -124,6 +130,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		 */
 		object.setContainer(owner, this);
 		objects.add(object);
+
+		/*
+		 * When object is added to slot we reset its added and delete attributes, slots and events.
+		 */
+		object.resetAddedAndDeleted();
 
 		return object.getInt("id");
 	}
@@ -440,25 +451,33 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * Copy to given slot the objects added.
 	 * It does a depth copy of the objects.
 	 * @param slot the slot to copy added objects.
+	 * @return true if there is any object added.
 	 */
-	public void setAddedRPObject(RPSlot slot) {
+	public boolean setAddedRPObject(RPSlot slot) {
+		boolean changes=false;
 		for (RPObject object : slot.added) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
 			objects.add(copied);
+			changes=true;
 		}
+		return changes;
 	}
 
 	/**
 	 * Copy to given slot the objects deleted.
 	 * It does a depth copy of the objects.
 	 * @param slot the slot to copy added objects.
+	 * @return true if there is any object added.
 	 */
-	public void setDeletedRPObject(RPSlot slot) {
+	public boolean setDeletedRPObject(RPSlot slot) {
+		boolean changes=false;
 		for (RPObject object : slot.deleted) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
 			objects.add(copied);
+			changes=true;
 		}
+		return changes;
 	}
 }
