@@ -16,8 +16,9 @@ import marauroa.common.net.message.Message;
  * @author miguel
  */
 public class Decoder {
-	/** This class handle not completed messages.
-	 *  TODO: add some kind of timeout.*/
+	/**
+	 * This class handle not completed messages.
+	 */
 	class MessageParts {
 		public int size;
 		public List<byte[]> parts;
@@ -78,6 +79,14 @@ public class Decoder {
 	private Decoder() {
 		content=new HashMap<SocketChannel, MessageParts>();
 		msgFactory = MessageFactory.getFactory();
+	}
+
+	/**
+	 * Removes any pending data from a connection
+	 * @param channel the channel to clear data from.
+	 */
+	public void clear(SocketChannel channel) {
+		content.remove(channel);
 	}
 
 	/**

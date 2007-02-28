@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.15 2007/02/27 22:59:11 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.16 2007/02/28 20:25:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ import marauroa.server.net.validator.ConnectionValidator;
  * @author miguel
  *
  */
-public class NIONetworkServerManager extends Thread implements IWorker, INetworkServerManager {
+public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener, INetworkServerManager {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
 
@@ -255,5 +255,13 @@ public class NIONetworkServerManager extends Thread implements IWorker, INetwork
 		}
 
 		isFinished=true;
+	}
+
+	/**
+	 * Removes stored parts of message for this channel at the decoder.
+	 * @param channel the channel to clear
+	 */
+	public void onDisconnect(SocketChannel channel) {
+		decoder.clear(channel);
 	}
 }
