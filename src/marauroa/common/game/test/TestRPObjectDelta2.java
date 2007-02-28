@@ -436,8 +436,39 @@ public class TestRPObjectDelta2 {
 	 @Ignore
 	 @Test
 	 public void testVisibleApplyDifferencesBug() {
-		 //TODO:
-	 }
+		 zone.assignRPObjectID(obj);
+		 zone.add(obj);
+		 /*
+		  * Next turn.
+		  * We want to clear Delta^2 data.
+		  */
+		 zone.nextTurn();
+
+		 RPObject result=(RPObject) obj.clone();
+
+		 /*
+		  * Test Delta^2 on slot object modification.
+		  */
+		 /* Remove coin from slot */
+		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
+		 RPObject coin=slot.remove(slot.getFirst().getID());
+
+		 assertNotNull(coin);
+		 assertEquals(coin, coin.getBaseContainer());
+
+		 obj.clearVisible();
+
+		 RPObject added = new RPObject();
+		 RPObject deleted = new RPObject();
+
+		 obj.getDifferences(added, deleted);
+
+		 result.applyDifferences(added, deleted);
+
+		 result.clearVisible();
+
+
+		 assertEquals(result, obj);	 }
 
 	 /**
 	  * This test try to show a problem that could happen if you delete and add an object
