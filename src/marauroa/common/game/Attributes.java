@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.42 2007/02/21 20:46:22 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.43 2007/02/28 18:45:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -491,12 +491,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the added infomation of the Delta².
-	 * @param attr the object whose added attributes we are going to copy. 
+	 * Fills this attribute with the added infomation of the Deltaï¿½.
+	 * @param attr the object whose added attributes we are going to copy.
 	 */
 	public void setAddedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
-		
+
 		int i = 0;
 		/* Copy each of the added attributes to this object. */
 		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
@@ -505,7 +505,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		}
 
 		/* If we have added any attributes, we set the object id */
-		if (i > 0) {			
+		if (i > 0) {
 			content.put("id", attr.get("id"));
 			/* Object stored at slots don't have now the zoneid attribute. */
 			if(attr.has("zoneid")) {
@@ -516,7 +516,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Fills this attribute with the deleted infomation of the Deltaï¿½.
-	 * @param attr the object whose deleted attributes we are going to copy. 
+	 * @param attr the object whose deleted attributes we are going to copy.
 	 */
 	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;

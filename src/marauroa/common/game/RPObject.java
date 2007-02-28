@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.49 2007/02/28 18:39:36 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.50 2007/02/28 18:45:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -839,6 +839,14 @@ public class RPObject extends Attributes {
 		addedChanges.setAddedAttributes(this);
 		deletedChanges.setDeletedAttributes(this);
 
+		/*
+		 * We add to the oadded object the events that exists.
+		 */
+		for(RPEvent event: events) {
+			addedChanges.events.add((RPEvent)event.clone());
+		}
+
+
 		addedChanges.setAddedRPSlot(this);
 		deletedChanges.setDeletedRPSlot(this);
 
@@ -998,6 +1006,13 @@ public class RPObject extends Attributes {
 			 */
 			for (String attrib : addedChanges) {
 				put(attrib, addedChanges.get(attrib));
+			}
+
+			/*
+			 * We add also the events
+			 */
+			for (RPEvent event: addedChanges.events()) {
+				events.add(event);
 			}
 
 			/*
