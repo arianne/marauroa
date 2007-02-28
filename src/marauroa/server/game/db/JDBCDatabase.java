@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.23 2007/02/28 22:54:38 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.24 2007/02/28 23:21:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -751,7 +751,7 @@ public class JDBCDatabase implements IDatabase {
 		String query;
 
 		if (hasRPZone(transaction, zone.getID())) {
-			query = "update rpzone data=? where zone_id='" + zone.getID() +"'";
+			query = "update rpzone set data=? where zone_id='" + zone.getID() +"'";
 		} else {
 			query = "insert into rpzone(zone_id,data) values('"+zoneid+"',?)";
 		}
@@ -764,9 +764,26 @@ public class JDBCDatabase implements IDatabase {
 		ps.close();
 	}
 
-	private boolean hasRPZone(Transaction transaction, IRPZone.ID zone) {
-		// TODO: Do it.
-		return false;
+	private boolean hasRPZone(Transaction transaction, IRPZone.ID zone) throws SQLException {
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+
+		String query="SELECT count(*) as amount FROM rpzone where zone_id='"+zone.getID()+"'";
+
+		ResultSet eventSet = stmt.executeQuery(query);
+		boolean exists=false;
+
+		while (eventSet.next()) {
+			int has=eventSet.getInt("amount");
+			if(has>0) {
+				exists=true;
+			}
+		}
+
+		eventSet.close();
+		stmt.close();
+
+		return exists;
 	}
 
 	/*
