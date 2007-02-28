@@ -86,7 +86,7 @@ public class TestEncoderDecoder {
 
 		Decoder dec=Decoder.get();
 
-		int split=new Random().nextInt(result.length);
+		int split=new Random().nextInt(result.length-4)+4;
 		byte[] part1=new byte[split];
 		System.arraycopy(result, 0 , part1, 0, split);
 
