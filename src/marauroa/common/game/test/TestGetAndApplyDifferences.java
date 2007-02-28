@@ -90,4 +90,100 @@ public class TestGetAndApplyDifferences {
 
 		assertEquals(obj, result);
 	}
+
+	/**
+	 * Test if the getDiferences of an object that has an attribute removed works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void removedAttributeRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.put("test", "val");
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+
+		obj.remove("test");
+		deleted=new RPObject();
+		added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
+	/**
+	 * Test if the getDiferences of an object that has an attribute added works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void addedRPSlotRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
+	/**
+	 * Test if the getDiferences of an object that has an attribute removed works, by building it again
+	 * using applyDifferences.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void removedRPSlotRPObject() throws Exception {
+		RPObject obj=new RPObject();
+		obj.put("id", 1);
+		obj.addSlot("lhand");
+
+		RPObject deleted=new RPObject();
+		RPObject added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		RPObject result=new RPObject();
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+
+		assertTrue(obj.hasSlot("lhand"));
+		assertTrue(result.hasSlot("lhand"));
+
+		/* Clear the delta² data */
+		obj.resetAddedAndDeleted();
+
+		obj.removeSlot("lhand");
+		deleted=new RPObject();
+		added=new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
 }

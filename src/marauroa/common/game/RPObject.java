@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.46 2007/02/27 22:19:53 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.47 2007/02/28 14:06:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,9 +50,9 @@ public class RPObject extends Attributes {
 	private RPSlot containerSlot;
 
 	/** added and modified slots, used at Delta^2 */
-	private List<RPSlot> added;
+	private List<String> added;
 	/** delete slots, used at Delta^2 */
-	private List<RPSlot> deleted;
+	private List<String> deleted;
 
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
@@ -70,8 +70,8 @@ public class RPObject extends Attributes {
 		super(RPClass.getBaseRPObjectDefault());
 
 		slots = new LinkedList<RPSlot>();
-		added = new LinkedList<RPSlot>();
-		deleted = new LinkedList<RPSlot>();
+		added = new LinkedList<String>();
+		deleted = new LinkedList<String>();
 
 		events= new LinkedList<RPEvent>();
 
@@ -284,7 +284,7 @@ public class RPObject extends Attributes {
 		slots.add(slot);
 
 		/** Notify delta^2 about the addition of this slot */
-		added.add(slot);
+		added.add(name);
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class RPObject extends Attributes {
 			if (name.equals(slot.getName())) {
 				// TODO: if an slot is added and deleted on the same turn it shouldn't be mention on deleted.
 				/** Notify delta^2 about the removal of this slot. */
-				deleted.add(slot);
+				deleted.add(name);
 
 				/* Remove and return it */
 				it.remove();
@@ -652,16 +652,13 @@ public class RPObject extends Attributes {
 			object.slots.add(copied);
 		}
 
-		for (RPSlot slot : added) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.added.add(copied);
+		for (String slot : added) {
+			object.added.add(slot);
 		}
 
-		for (RPSlot slot : deleted) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.deleted.add(copied);
+		for (String slot : deleted) {
+
+			object.deleted.add(slot);
 		}
 
 		return object;
@@ -813,10 +810,8 @@ public class RPObject extends Attributes {
 	 * @param object the object to fill with added data.
 	 */
 	public void setAddedRPSlot(RPObject object) {
-		for (RPSlot slot : object.added) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(this);
-			slots.add(copied);
+		for (String slot : object.added) {
+			addSlot(slot);
 		}
 	}
 
@@ -826,16 +821,31 @@ public class RPObject extends Attributes {
 	 * @param object the object to fill with deleted data.
 	 */
 	public void setDeletedRPSlot(RPObject object) {
-		for (RPSlot slot : object.deleted) {
-			RPSlot copied = new RPSlot(slot.getName());
-			copied.setOwner(this);
-			slots.add(copied);
+		for (String slot : object.deleted) {
+			addSlot(slot);
 		}
+	}
+
+	/**
+	 * Retrieve the differences stored in this object and add them to two new objects
+	 * added changes and delete changes that will contains added and modified attributes,
+	 * slots and events and on the other hand deleted changes that will contain the removes
+	 * slots and attributes.
+	 * We don't care about RP Events because they are removed on each turn.
+	 * @param addedChanges an empty object
+	 * @param deletedChanges an empty object
+	 */
+	public void getDifferences(RPObject addedChanges, RPObject deletedChanges) {
+		addedChanges.setAddedAttributes(this);
+		deletedChanges.setDeletedAttributes(this);
+
+		addedChanges.setAddedRPSlot(this);
+		deletedChanges.setDeletedRPSlot(this);
 	}
 
 	// TODO: Refactor this method. Looks like it claims for bugs!"
 	/** This method get the changes on added and deleted things from this object */
-	public void getDifferences(RPObject oadded, RPObject odeleted) throws Exception {
+	public void getDifferences_old(RPObject oadded, RPObject odeleted) throws Exception {
 		/* First we get differences from attributes */
 		oadded.setAddedAttributes(this);
 		odeleted.setDeletedAttributes(this);
@@ -925,12 +935,46 @@ public class RPObject extends Attributes {
 		}
 	}
 
+
+	/**
+	 * With the diferences computed by getDifferences in added and deleted we build an update
+	 * object by applying the changes.
+	 * @param addedChanges the added and modified attributes, slots and events or null
+	 * @param deletedChanges the deleted attributes and slots or null
+	 * @throws Exception
+	 */
+	public void applyDifferences(RPObject addedChanges, RPObject deletedChanges) {
+		if (deletedChanges != null) {
+			for (String attrib : deletedChanges) {
+				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
+					remove(attrib);
+				}
+			}
+
+			for (RPSlot slot : deletedChanges.slots) {
+				if (slot.size() == 0) {
+					removeSlot(slot.getName());
+				}
+			}
+		}
+
+		if (addedChanges != null) {
+			for (String attrib : addedChanges) {
+				put(attrib, addedChanges.get(attrib));
+			}
+
+			for (RPSlot slot : addedChanges.slots) {
+				addSlot(slot.getName());
+			}
+		}
+	}
+
 	// TODO: Refactor this method. Looks like it claims for bugs!"
 	/**
 	 * This method apply the changes retrieved from getDifferences and build the
 	 * updated object
 	 */
-	public RPObject applyDifferences(RPObject added, RPObject deleted) throws Exception {
+	public RPObject applyDifferences_old(RPObject added, RPObject deleted) throws Exception {
 		if (deleted != null) {
 			for (String attrib : deleted) {
 				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
