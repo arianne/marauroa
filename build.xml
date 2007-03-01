@@ -1,83 +1,82 @@
 <?xml version='1.0'?>
 <project name="marauroa" default="compile" basedir=".">
-  <property name="version" value="2.00"/>
-  <property name="src" value="src"/>
-  <property name="extras" value="extras"/>
-  <property name="build" value="build"/>
-  <property name="lib"  value="lib"/>
-  <property name="libdir"  value="libs"/>
-  <property name="docs" value="javadocs"/>
+	<property file="build.ant.properties"/>
 
-  <!-- EDIT HERE TO CONFIGURE YOUR JAR FILE NAMES -->
-  <property name="connectorJ_jar" value="mysql-connector.jar"/>
-  <property name="jython_jar" value="jython.jar"/>
-  <property name="log4j_jar" value="log4j.jar"/>
-  <property name="jnlp_jar" value="jnlp.jar"/>
-  <!-- [END] -->
+    <property name="jarname" value="marauroa-${version}.jar"/>
 
-  <property name="connectorJ" value="${libdir}/${connectorJ_jar}"/>
-  <property name="jython" value="${libdir}/${jython_jar}"/>
-  <property name="log4j" value="${libdir}/${log4j_jar}"/>
-  <property name="jnlp" value="${libdir}/${jnlp_jar}"/>
+	<!-- Clears the instalation -->
+    <target name="clean">
+        <delete dir="${build}"/>
+        <delete dir="${docs}"/>
+    </target>
 
-  <property name="classpath" value="${build};${connectorJ};${jython};${log4j};${jnlp}"/>
-  
-  <property name="jarname" value="marauroa-${version}.jar"/>
+	<!-- Create the initial folders for the build -->
+    <target name="init">
+        <mkdir dir="${build}" />
+        <mkdir dir="${docs}" />
+    </target>
 
-  <target name="clean">
-    <delete dir="${build}"/>
-    <delete dir="${lib}"/>
-    <delete dir="${docs}"/>
-  </target>
+	<!-- Copy important files to the build folder. -->
+    <target name="installation" depends="init">
+        <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
+        <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
+        <copy todir="${build}/marauroa/server" file="${src}/marauroa/server/log4j.properties"/>
+    </target>
 
-  <target name="init">
-    <mkdir dir="${build}" />
-    <mkdir dir="${lib}" />
-    <mkdir dir="${docs}" />
-  </target>
+	<!-- Compiles the project -->
+    <target name="compile" depends="installation">
+    	<!-- Exclude python support if jython.jar is not present -->
+        <condition property="exclude.python" value="**/python/*.*">
+        	<not>
+        		<available file="${jython_jar}"/>
+        	</not>
+        </condition>
 
-  <target name="installation" depends="init">
-    <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
-    <copy todir="${build}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
-  </target>
+    	<!-- Exclude junit support if junit is not present -->
+        <condition property="exclude.junit" value="**/test/*.*">
+        	<not>
+         		<available file="${junit_jar}"/>
+        	</not>
+        </condition>
 
-  <target name="compile" depends="installation">
-    <condition property="exclude.python" value="**/python/*.*">
-      <not>
-       <available file="${jython}"/>
-      </not>
-    </condition>
-    
-    <replaceregexp file="${src}/marauroa/server/marauroad.java"
+        <replaceregexp file="${src}/marauroa/server/marauroad.java"
                    match="final private static String VERSION=&quot;.*&quot;;"
                    replace="final private static String VERSION=&quot;${version}&quot;;"
                    byline="true"/>
-                   
-    <copy todir="${build}/marauroa/server" file="${src}/marauroa/server/log4j.properties"/>
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python}">
-      <classpath>
-        <pathelement path="${classpath}"/>
-      </classpath>    
-    </javac>
-  </target>
 
-  <target name="docs" depends="compile">
-    <javadoc packagenames="marauroa.*"           
+        <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${excludes.junit}">
+			<classpath>
+				<pathelement path="${log4j_jar}"/>
+				<pathelement path="${junit_jar}"/>
+				<pathelement path="${connectorJ_jar}"/>
+				<pathelement path="${jnlp_jar}"/>
+				<pathelement path="${jython_jar}"/>
+			</classpath>
+    	</javac>
+	</target>
+	<target name="docs" depends="compile">
+    	<javadoc packagenames="marauroa.*"
            defaultexcludes="yes"
            destdir="${docs}"
            author="true"
            version="true"
            use="true"
-	   classpath="${classpath}"
            windowtitle="Marauroa API Documentation Version: ${version}">
-      <fileset dir="${src}">
-          <include name="**/*.java"/>
-      </fileset>
-    </javadoc>
-  </target>
+			<classpath>
+				<pathelement path="${log4j_jar}"/>
+				<pathelement path="${junit_jar}"/>
+				<pathelement path="${connectorJ_jar}"/>
+				<pathelement path="${jnlp_jar}"/>
+				<pathelement path="${jython_jar}"/>
+			</classpath>
+ 			<fileset dir="${src}">
+          		<include name="**/*.java"/>
+      		</fileset>
+    	</javadoc>
+  	</target>
 
   <target name="jar" depends="compile">
-    <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>    
+    <jar jarfile="${lib}/${jarname}" basedir="${build}/"/>
     <copy tofile="${lib}/marauroa.jar" file="${lib}/${jarname}"/> <!-- A link would be better but... -->
     <copy todir="${lib}" file="${src}/marauroa/marauroa.ini"/>
   </target>
@@ -98,7 +97,7 @@
     <copy todir="marauroa-${version}" file="COPYING"/>
     <copy todir="marauroa-${version}" file="LICENSE"/>
     <copy todir="marauroa-${version}" file="README"/>
-    <zip destfile="marauroa-${version}.zip" 
+    <zip destfile="marauroa-${version}.zip"
          basedir="marauroa-${version}"/>
     <delete dir="marauroa-${version}"/>
   </target>
@@ -117,7 +116,7 @@
     <copy todir="marauroa-${version}" file="COPYING"/>
     <copy todir="marauroa-${version}" file="LICENSE"/>
     <copy todir="marauroa-${version}" file="README"/>
-  	
+
     <tar destfile="marauroa-${version}-src.tar.gz" compression="gzip">
        <tarfileset dir="marauroa-${version}" prefix="marauroa-${version}">
          <exclude name="**/CVS/**"/>

@@ -26,6 +26,8 @@ Marauroa
 Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to build
 you own online games using Marauroa as a Content Management system.
 
+Extended Description
+--------------------
 Marauroa is completly written in Java using a multithreaded server architecture
 with a TCP oriented network protocol, a mySQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable
@@ -48,6 +50,20 @@ Current Version
 ---------------
 Version 2.0
 
+Requeriments
+------------
+To actually compile Marauroa you will need:
+- Java SDK 1.5 http://java.sun.com
+- Ant 1.6 http://ant.apache.org
+
+In order to get it working with MySQL you will also need:
+- MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
+
+  NOTE: Unfortunatelly, Marauroa uses some SQL features that make its code
+  slightly incompatible with other DBMS. Join us and help to port SQL code
+  to a real standard complaint DBMS.
+
+- JUnit 4.0 in order to run test cases.
 
 Status
 ------
@@ -62,21 +78,6 @@ Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the P
 Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab game package in order to be able to play it.
-
-
-Requeriments
-------------
-To actually compile Marauroa you will need:
-- Java SDK 1.5 http://java.sun.com
-- Ant 1.6 http://ant.apache.org
-
-In order to get it working with MySQL you will also need:
-- MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
-
-  NOTE: Unfortunatelly, Marauroa uses some SQL features that make its code
-  slightly incompatible with other DBMS. Join us and help to port SQL code
-  to a real standard complaint DBMS.
-
 
 Build
 -----
