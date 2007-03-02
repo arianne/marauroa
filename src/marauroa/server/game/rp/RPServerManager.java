@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.17 2007/03/02 10:02:31 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.18 2007/03/02 23:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -121,7 +121,7 @@ public class RPServerManager extends Thread {
 			 */
 			initializeExtensions(conf);
 
-			String duration = conf.get("rp_turnDuration");
+			String duration = conf.get("turn_lenght");
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {

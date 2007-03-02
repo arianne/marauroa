@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.16 2007/02/28 20:25:44 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.17 2007/03/02 23:26:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,7 +87,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 		logger.debug("NetworkServerManager started successfully");
 
-		server=new NioServer(null, NetConst.marauroa_PORT, this);
+		server=new NioServer(null, NetConst.tcpPort, this);
 		server.start();
 	}
 
