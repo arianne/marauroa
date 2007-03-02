@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.16 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.17 2007/03/02 10:02:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,14 +49,14 @@ import marauroa.server.net.validator.ConnectionValidator;
  * <li>control AI
  * </ul>
  * <p>
- * This is a HUGE task that is very complex.<br> 
+ * This is a HUGE task that is very complex.<br>
  * Hence we split that behaviour in different class:<ul>
  * <li>IRuleProcessor will handle al the RP logic and run actions from client. This
- *  class will also implement AI, triggers, events, rules, etc... 
+ *  class will also implement AI, triggers, events, rules, etc...
  * <li>RPWorld will handle all the world storage and management logic.
  * </ul>
- * 
- * @author miguel 
+ *
+ * @author miguel
  */
 public class RPServerManager extends Thread {
 	/** the logger instance. */
@@ -97,7 +97,7 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param netMan
 	 *            the NetworkServerManager so that we can send message
 	 */
@@ -116,6 +116,9 @@ public class RPServerManager extends Thread {
 			this.netMan = netMan;
 
 			Configuration conf = Configuration.getConfiguration();
+			/*
+			 * This method loads the extensions that implement the game server code.
+			 */
 			initializeExtensions(conf);
 
 			String duration = conf.get("rp_turnDuration");
@@ -129,17 +132,17 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * This method loads the extensions: IRPRuleProcessor and IRPWorld that are going to be used
-	 * to implement your game. 
+	 * to implement your game.
 	 * This method loads these class from the class names passed as arguments in Configuration
-	 * 
+	 *
 	 * @param conf the Configuration class
-	 * @throws ClassNotFoundException 
-	 * @throws PropertyNotFoundException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws SecurityException 
-	 * @throws IllegalArgumentException 
+	 * @throws ClassNotFoundException
+	 * @throws PropertyNotFoundException
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
 	 */
 	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("rp_RPWorldClass"));
@@ -153,15 +156,15 @@ public class RPServerManager extends Thread {
 		ruleProcessor.setContext(this);
 	}
 
-	/** 
+	/**
 	 * This method returns the actual turn number.
 	 * @return actual turn number
-	 */ 
+	 */
 	public int getTurn() {
 		return turn;
 	}
 
-	/** 
+	/**
 	 * This method finish the thread that run the RPServerManager.
 	 * It calls RPWorld.finish method.
 	 */
@@ -179,7 +182,7 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** Adds an action for the next turn 
+	/** Adds an action for the next turn
 	 * @param object the object that casted the action
 	 * @param action the action itself
 	 * @throws ActionInvalidException
@@ -192,7 +195,7 @@ public class RPServerManager extends Thread {
 		scheduler.addRPAction(object, action, ruleProcessor);
 	}
 
-	/** 
+	/**
 	 * This method decide if an client runs a compatible version of the game
 	 * @param game the game name
 	 * @param version the game version as a string
@@ -300,10 +303,10 @@ public class RPServerManager extends Thread {
 				}
 			} catch (RuntimeException e) {
 				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
-				playersToRemove.add(entry);			
+				playersToRemove.add(entry);
 			}
 		}
-		
+
 		for(PlayerEntry entry: playersToRemove) {
 			disconnect(entry);
 		}
@@ -370,7 +373,7 @@ public class RPServerManager extends Thread {
 
 			while (keepRunning) {
 				stop = System.nanoTime();
-				
+
 				try {
 					logger.info("Turn time elapsed: " + ((stop - start) / 1000)	+ " microsecs");
 					delay = turnDuration - ((stop - start) / 1000000);
@@ -392,7 +395,7 @@ public class RPServerManager extends Thread {
 					}
 				} catch (InterruptedException e) {
 				}
-				
+
 				start = System.nanoTime();
 				timeStart = System.currentTimeMillis();
 
@@ -449,9 +452,9 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** 
+	/**
 	 * This method disconnects a player from the server.
-	 * @param object the player object that we want to disconnect from world 
+	 * @param object the player object that we want to disconnect from world
 	 */
 	public void disconnectPlayer(RPObject object) {
 		/* We need to adquire the lock because this is handle by another thread */
@@ -466,14 +469,14 @@ public class RPServerManager extends Thread {
 	}
 
 
-	/** 
+	/**
 	 * This method disconnects a player from the server.
-	 * @param entry the player entry we want to use to disconnect player from world. 
+	 * @param entry the player entry we want to use to disconnect player from world.
 	 */
 	public void disconnect(PlayerEntry entry) {
 		/* We check that player is not already removed */
 		if(entry==null) {
-			/* There is no player entry for such channel 
+			/* There is no player entry for such channel
 			 * This is not necesaryly an error, as the connection could be
 			 * anything else but an arianne client or we are just disconnecting
 			 * a player that logout correctly. */
@@ -494,9 +497,9 @@ public class RPServerManager extends Thread {
 			playerContainer.remove(entry.clientid);
 		}
 	}
-	
-	/** 
-	 * This method exposes network layer connection validator so game logic can handle it.  
+
+	/**
+	 * This method exposes network layer connection validator so game logic can handle it.
 	 * @return the connection validator
 	 */
 	public ConnectionValidator getValidator() {

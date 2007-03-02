@@ -114,6 +114,21 @@
 		<delete dir="marauroa-${version}"/>
 	</target>
 
+	<target name="dist_docs" depends="docs">
+		<mkdir dir="marauroa-${version}"/>
+		<copy todir="marauroa-${version}/${docs}">
+			<fileset dir="${docs}"/>
+		</copy>
+		<copy todir="marauroa-${version}" file="AUTHORS"/>
+		<copy todir="marauroa-${version}" file="BUGS"/>
+		<copy todir="marauroa-${version}" file="COPYING"/>
+		<copy todir="marauroa-${version}" file="LICENSE"/>
+		<copy todir="marauroa-${version}" file="README"/>
+		<zip destfile="${dist}/marauroa-${version}-docs.zip" basedir="marauroa-${version}"/>
+		<delete dir="marauroa-${version}"/>
+	</target>
+
+
 	<target name="dist_source" depends="docs">
 		<mkdir dir="marauroa-${version}"/>
 		<copy todir="marauroa-${version}/src">
@@ -122,10 +137,15 @@
 		<copy todir="marauroa-${version}/extras">
 			<fileset dir="extras"/>
 		</copy>
+		<copy todir="marauroa-${version}/libs">
+			<fileset dir="libs"/>
+		</copy>
 		<copy todir="marauroa-${version}" file="build.xml"/>
+		<copy todir="marauroa-${version}" file="build.ant.properties"/>
 		<copy todir="marauroa-${version}" file="AUTHORS"/>
 		<copy todir="marauroa-${version}" file="BUGS"/>
 		<copy todir="marauroa-${version}" file="COPYING"/>
+		<copy todir="marauroa-${version}" file="HISTORY"/>
 		<copy todir="marauroa-${version}" file="LICENSE"/>
 		<copy todir="marauroa-${version}" file="README"/>
 
@@ -139,5 +159,5 @@
 	</target>
 
 	<!-- builds the whole project for releasing -->
-	<target name="dist" depends="clean, dist_binary,dist_source"/>
+	<target name="dist" depends="clean, dist_binary, dist_docs, dist_source"/>
 </project>

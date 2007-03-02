@@ -8,23 +8,11 @@
 | FOR A PARTICULAR PURPOSE.  See the file LICENSE for more details.
 -------------------------------------------------------------------------------
 
-*******************************************************************************
-**                NOTE - WARNING - IMPORTANT NOTICE                          **
-*******************************************************************************
-**                                                                           **
-**          This version of Marauroa is experimental                         **
-**          Use it at your own risk.                                         **
-**          It doesn't work with any other game yet!                         **
-**                                                                           **
-**          Checkout CVS branch MARAUROA_VERSION_01_MAINTENANCE              **
-**          to the newest bugfixes for Marauroa 1.xx                         **
-**                                                                           **
-*******************************************************************************
-
 Marauroa
 --------
 Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to build
 you own online games using Marauroa as a Content Management system.
+
 
 Extended Description
 --------------------
@@ -50,6 +38,7 @@ Current Version
 ---------------
 Version 2.0
 
+
 Requeriments
 ------------
 To actually compile Marauroa you will need:
@@ -64,50 +53,30 @@ In order to get it working with MySQL you will also need:
   to a real standard complaint DBMS.
 
 - JUnit 4.0 in order to run test cases.
+- Jython for Python support.
+
 
 Status
 ------
 Version > 2.0 doesn't support anything yet. YOU ARE WARNED!.
-
 Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
-
 Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
-
 Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
-
 Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab game package in order to be able to play it.
 
+
 Build
 -----
-First, install Java, Ant, and Jython
-  NOTE: Do not install Jython on a directory path that contains spaces.
+Make sure ant (TODO: Ant homepage link) is installed.
+Now just write:
 
-Second, set log4j, jnlp.jar and jython.jar on the classpath.
-  For Example:
-  set classpath=%classpath%;lib\jnlp.jar;lib\log4j.jar;lib\jython.jar
-  set classpath=%classpath%;C:\junit3.8.1\junit.jar
-
-Third, move to the marauroa directory.
-  cd C:\marauroa (Windows)
-  or
-  cd /foo/bar/marauroa (UNIX)
-
-Fourth, run ant jar.
   ant jar
-  or
-  ant -Dlibdir=./dependencies jar
 
-  Where dependencies is a directory that contains all the libraries, you can omit
-  it if you have correctly configured your classpath.
-  NOTE: This may not work on in the current version or possible on Windows??
+Or for a complete package release write:
 
-  BUILD SUCCESSFUL Total time: 3 seconds
-
-  You will have a marauroa-<version>.jar file in the lib folder. Nice, isn't it?
-
-Last, run ant docs to generate the API documentation.
+  ant
 
 
 Running
@@ -120,41 +89,10 @@ game server or because you are a developer wanting to develop your own game.
 If you don't understand the above it is prone that you are looking for
 http://arianne.sourceforge.net instead.
 
--- Configuration
-Once we have build Arianne the next step is to setup the configuration file.
-Each game features a configuration file that will configure the server to run
-that particular game.
-
-To create a configuration file just use marauroa.server.generateini application
-Answer all the questions and you will have a configuration file generated.
-
--- Running
-Once you have it configured just run the server by doing
-
-  java -classpath marauroa.jar;mysql-connector-java-3.0.7-stable-bin.jar marauroa.server.marauroad -c <game.ini> -l
-
-This will make the server to start
-
--- Creating accounts
-Before anything else happens you MUST create accounts for your players. The idea
-is simple enough to you can even wrap it with a webpage much like we did with
-http://gladiators.game-server.cc
-
-<game>.<game>createaccount -u <user> -p <password> -c <character> -e <email>
-
-For example:
-  � games.stendhal.server.stendhalcreateaccout -u root -p pazzw0rd -c MaSSive -e root@localhost.com
-  � mapacman.mapacmancreateaccount -u root -p pazzw0rd -c MaSSive -e root@localhost.com
-
-Each game has a different number of parameters, check it with the -h parameter.
-
--- Testing
-Read instead the clients pages at http://arianne.sourceforge.net
-
 
 Changelog
 ---------
-2.00
+2.00 Mar 05, 2007
 - Incompatible with Stendhal 0.5x or Jmapacman games.
 - Added non blocking network server.
 - Removed UDP support.
@@ -177,6 +115,8 @@ Changelog
 - RPZone stores and load objects now.
 - RPObject can be defined as storable
 - RPObject can be hidden
+- Simplified build script
+- Generated java docs as a new file
 
 1.34.1
 - fixed a bug which prevented disconnection of players on second login if the username mismatched on case
@@ -452,5 +392,5 @@ Changelog
 
 Legal
 -----
-Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2005
+Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007
 arianne_rpg at users dot sourceforge dot net
