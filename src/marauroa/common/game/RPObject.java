@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.51 2007/02/28 19:40:25 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.52 2007/03/02 08:23:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -174,7 +174,7 @@ public class RPObject extends Attributes {
 
 	/**
 	 * Return true if the object should be stored at database.
-	 * @return
+	 * @return true if the object should be stored at database.
 	 */
 	public boolean isStorable() {
 		return storable;
@@ -221,7 +221,7 @@ public class RPObject extends Attributes {
 
 	/**
 	 * Returns the slot where this object is contained
-	 * @param the slot of the object that contains this object.
+	 * @return the slot of the object that contains this object.
 	 */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
@@ -269,7 +269,7 @@ public class RPObject extends Attributes {
 	/**
 	 * This method add the slot to the object
 	 *
-	 * @param slot the RPSlot object
+	 * @param name the RPSlot name to be added
 	 * @throws SlotAlreadyAddedException if the slot already exists
 	 */
 	public void addSlot(String name) throws SlotAlreadyAddedException {

@@ -93,11 +93,11 @@
 
 	<!-- Prepare the tarball for releases -->
 	<target name="dist_binary" depends="jar">
-		<replaceregexp file="${extras}/marauroad.bat    "
+		<replaceregexp file="${extras}/marauroad.bat"
                    match="set LOCALCLASSPATH=.*"
                    replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar};${log4j_jar}"
                    byline="true"/>
-		
+
 		<mkdir dir="marauroa-${version}"/>
 		<mkdir dir="marauroa-${version}/libs"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>

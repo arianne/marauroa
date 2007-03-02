@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.9 2007/02/27 20:02:31 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.10 2007/03/02 08:23:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,7 +169,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	/**
 	 *  Creates an static attribute definition and give it a value
 	 * @param name the name of the attribute
-	 * @param type the type of the attribute
+	 * @param value the type of the attribute
 	 * @param flags flags options.
 	 * @return an Attribute Definition
 	 */

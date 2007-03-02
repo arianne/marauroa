@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.4 2007/02/26 22:33:11 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.5 2007/03/02 08:23:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -123,11 +123,8 @@ public abstract class ClientFramework {
 	/**
 	 * Login to server using the given username and password.
 	 *
-	 * @param username
-	 *            Player username
-	 * @param password
-	 *            Player password
-	 * @return true if login is successful.
+	 * @param username Player username
+	 * @param password Player password
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws LoginFailedException if login is rejected
@@ -257,7 +254,7 @@ public abstract class ClientFramework {
 	 * @param password the player password
 	 * @param email player's email for notifications and/or password reset.
 	 * @param template an object template to create the player avatar.
-	 * @return true if it was sucessful.
+	 *
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateAccountFailedException
@@ -277,6 +274,7 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
+				//TODO: Do something with the returned values.
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATEACCOUNT_NACK:
 				logger.debug("Create account NACK");
@@ -417,7 +415,7 @@ public abstract class ClientFramework {
 
 	/**
 	 * It is called when we get a transfer of content
-	 * @param the transfered items.
+	 * @param items the transfered items.
 	 */
 	abstract protected void onTransfer(List<TransferContent> items);
 

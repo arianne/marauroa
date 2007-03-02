@@ -185,7 +185,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * Adds a definition of an attribute, event or slot with the given type and flags.
 	 * @param clazz type of definition ( attribute, event or slot )
 	 * @param name name of the definition
-	 * @param type type or capacity if it is an slot
+	 * @param capacity capacity if it is an slot
 	 * @param flags like visibility, storability, etc...
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, byte capacity, byte flags) {

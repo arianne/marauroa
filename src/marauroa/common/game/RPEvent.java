@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.11 2007/02/27 19:06:36 astridemma Exp $ */
+/* $Id: RPEvent.java,v 1.12 2007/03/02 08:23:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,31 +20,31 @@ import marauroa.common.net.OutputSerializer;
 
 /**
  * This class implements an event.
- * It is something that happens along the turn duration and it is hard to represent as an attribute 
+ * It is something that happens along the turn duration and it is hard to represent as an attribute
  * because it just happen and disappear after that or because it happens several times per turn.
  * <p>
  * One interesting example of this would be private chat.<br>
  * When you write private messages, it is added inside the target player, but you can't represent that
- * as an attribute because it two private chat messages happen at the same time, one of them would 
+ * as an attribute because it two private chat messages happen at the same time, one of them would
  * be lost.
  * <p>
  * So solution to this problem is add each them as RPEvent.
  * <p>
  * A RPEvent is <b>always</b> linked to an RPObject.
- * 
+ *
  * @author miguel
  *
  */
 public class RPEvent implements marauroa.common.net.Serializable {
 	/** Name of the event */
 	private String name;
-	
+
 	/** Value of the event. */
 	private String value;
-	
+
 	/** This event is linked to an object: its owner. */
 	private RPObject owner;
-	
+
 	/**
 	 * Constructor
 	 *
@@ -54,8 +54,8 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Constructor 
-	 * @param object 
+	 * Constructor
+	 * @param object
 	 * @param name name of the event
 	 * @param value value of the event
 	 */
@@ -63,7 +63,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		this(object);
 		put(name,value);
 	}
-	
+
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
@@ -71,10 +71,10 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		name=event.name;
 		value=event.value;
 		owner=event.owner;
-		
-		return event;		
+
+		return event;
 	}
-		
+
 	/**
 	 * Sets the value of the event
 	 * @param name name of the event
@@ -84,15 +84,15 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		this.name=name;
 		this.value=value;
 	}
-	
+
 	/**
-	 * Return the name of the event 
+	 * Return the name of the event
 	 * @return name of the event
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Return the value of the event.
 	 * @return value of the event as a String
@@ -100,10 +100,10 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	public String getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Returns the value of the event as a integer
-	 * @return the integer value 
+	 * @return the integer value
 	 * @throws NumberFormatException  if the number is not convertable.
 	 */
 	public int getInt() throws NumberFormatException {
@@ -122,13 +122,14 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
-	/** 
+	/**
 	 * Serialize
-	 * @param the output serializer. 
+	 * @param out the output serializer.
+	 * @param level the detail level of the serialization
 	 */
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
-		
+
 		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
 		short code=def.getCode();
 
@@ -142,17 +143,17 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		if (code == -1) {
 			out.write255LongString(name);
 		}
-		
+
 		def.serialize(value, out);
 	}
 
-	/** 
+	/**
 	 * Deserialize
 	 * @param in the input serializer
 	 */
 	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
 		short code = in.readShort();
-		
+
 		if (code == -1) {
 			name = in.read255LongString();
 		} else {
@@ -165,8 +166,8 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		value=def.deserialize(in);
 	}
 
-	/** 
-	 * Returns true if two objects are exactly equal 
+	/**
+	 * Returns true if two objects are exactly equal
 	 * @param obj the object to compare with this one.
 	 */
 	@Override
@@ -178,10 +179,10 @@ public class RPEvent implements marauroa.common.net.Serializable {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "["+name+"="+value+"]";
 	}
-	
+
 }
