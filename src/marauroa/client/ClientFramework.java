@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.5 2007/03/02 08:23:36 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.6 2007/03/04 22:24:06 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,7 +59,7 @@ public abstract class ClientFramework {
 	public final static int TIMEOUT = 10000;
 
 	/** We keep an instance of network manager to be able to comunicate with server. */
-	private INetworkClientManagerInterface netMan;
+	protected INetworkClientManagerInterface netMan;
 
 	/** We keep a list of all messages waiting for being processed. */
 	private List<Message> messages;
