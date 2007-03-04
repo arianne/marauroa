@@ -1,0 +1,90 @@
+package marauroa.common.net.message.test;
+
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.SelectorProvider;
+
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.Message.MessageType;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class MessageTest {
+  private class MockMessage extends Message{
+
+	public MockMessage(MessageType type, SocketChannel channel) {
+		super(type, channel);
+		}
+	  
+  }
+  
+
+	
+	@Test
+	public final void testGetAddress() throws IOException {
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		assertNull(mm.getAddress());
+		fail("valid address not yet tested");
+	}
+
+	@Test
+	public final void testGetType() throws IOException {
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		assertTrue(MessageType.C2S_ACTION==mm.getType());
+	}
+
+	
+
+	
+
+	@Test
+	public final void testReadWriteObject() throws IOException {
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		mmOut.setClientID(1);
+		mmOut.writeObject(new OutputSerializer(out));
+		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		try {
+			mmInn.readObject(in);
+			assertEquals(mmOut.getClientID(), mmInn.getClientID());
+			assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
+			assertEquals(mmOut.getType(), mmInn.getType());
+			
+		} catch (ClassNotFoundException e) {
+			fail("Class was manually inited and not found");
+		}
+	}
+	
+	@Test
+	public final void testInvalidClientId() throws IOException {
+			MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+			ByteArrayOutputStream out= new ByteArrayOutputStream();
+			mmOut.setClientID(Message.CLIENTID_INVALID);
+			mmOut.writeObject(new OutputSerializer(out));
+			InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
+			MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+			try {
+				mmInn.readObject(in);
+				assertEquals(mmOut.getClientID(), mmInn.getClientID());
+				assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
+				assertEquals(mmOut.getType(), mmInn.getType());
+				fail("I would expect an Invalid client ID to fail, but it does not");
+			} catch (ClassNotFoundException e) {
+				assertTrue("Invalid Class Id failed",true);
+			}
+
+	}
+
+}
