@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.6 2007/03/04 22:24:06 astridemma Exp $ */
+/* $Id: ClientFramework.java,v 1.7 2007/03/04 22:39:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,7 +97,7 @@ public abstract class ClientFramework {
 	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
 	 */
 	private Message getMessage() throws InvalidVersionException, TimeoutException {
-		if (messages.isEmpty()) {
+		if (!messages.isEmpty()) {
 			return messages.remove(0);
 		} else {
 			Message msg=netMan.getMessage(TIMEOUT);
