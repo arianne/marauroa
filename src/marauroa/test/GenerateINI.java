@@ -8,12 +8,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Date;
 
+import marauroa.common.crypto.RSAKey;
+
 public class GenerateINI {
 	/** Where data is read from */
 	private static BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
 
 	/** The name of the output file */
-	final static String filename="test.ini";
+	final static String filename="server.ini";
 
 	/**
 	 * reads a String from the input. When no String is choosen the defaultValue
@@ -83,6 +85,8 @@ public class GenerateINI {
 
 	private static String statisticsFilename;
 
+	private static RSAKey rsakey;
+
 
 	public static void main(String[] args) throws FileNotFoundException {
 		gameName="test";
@@ -116,11 +120,22 @@ public class GenerateINI {
 
 		statisticsFilename= getStatisticsFilename();
 
+		/* The size of the RSA Key  in bits, usually 512 */
+		String keySize = getRSAKeyBits();
+		System.out.println("Using key of " + keySize + " bits.");
+		System.out.println("Please wait while the key is generated.");
+		rsakey = RSAKey.generateKey(Integer.valueOf(keySize));
 		PrintWriter out=new PrintWriter(new FileOutputStream(filename));
 		write(out);
 		out.close();
 	}
 
+	private static String getRSAKeyBits() {
+		System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+		String keySize = getStringWithDefault(in, "512");
+		return keySize;
+	}
+	
 	private static String getStatisticsFilename() {
 		return "./server_stats.xml";
 	}
@@ -167,6 +182,8 @@ public class GenerateINI {
 		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);
+		out.println();
+		rsakey.print(out);
 	}
 
 	protected static String getDatabasePassword() {

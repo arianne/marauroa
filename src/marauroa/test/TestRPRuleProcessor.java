@@ -12,6 +12,23 @@ import marauroa.server.game.rp.RPServerManager;
 
 public class TestRPRuleProcessor implements IRPRuleProcessor{
 
+	private static TestRPRuleProcessor rules;
+	
+	/**
+	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
+	 * There is no way of enforcing static methods on a Interface, so just keep this in mind when 
+	 * writting your own game.
+	 *  
+	 * @return an unique instance of world.
+	 */
+	public static IRPRuleProcessor get() {
+		if(rules==null) {
+			rules = new TestRPRuleProcessor();
+		}
+		
+		return rules;
+	}
+	
 	public void beginTurn() {
 		// TODO Auto-generated method stub
 		
