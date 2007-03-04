@@ -56,17 +56,6 @@ In order to get it working with MySQL you will also need:
 - Jython for Python support.
 
 
-Status
-------
-Version > 2.0 doesn't support anything yet. YOU ARE WARNED!.
-Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
-Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
-Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
-Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
-
-You need to grab game package in order to be able to play it.
-
-
 Build
 -----
 Make sure ant (TODO: Ant homepage link) is installed.
@@ -77,6 +66,17 @@ Now just write:
 Or for a complete package release write:
 
   ant
+
+
+Status
+------
+Version > 2.0 doesn't support anything yet. YOU ARE WARNED!.
+Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
+Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
+Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
+Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
+
+You need to grab game package in order to be able to play it.
 
 
 Running

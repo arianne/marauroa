@@ -163,7 +163,7 @@ public class GenerateINI {
 		out.println();
 		out.println("server_typeGame=" + gameName);
 		out.println("server_name=" + gameName + " Marauroa server");
-		out.println("server_version=testing framework");
+		out.println("server_version=0.01");
 		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);

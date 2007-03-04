@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.22 2007/02/28 20:37:46 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.23 2007/03/04 13:30:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,7 +199,7 @@ public class Statistics implements StatisticsMBean {
 	public void print() {
 		try {
 			Configuration conf = Configuration.getConfiguration();
-			String webfolder = conf.get("server_stats_directory");
+			String webfolder = conf.get("statistics_filename");
 
 			Date actualTime = new Date();
 			double diff = (actualTime.getTime() - startTime.getTime()) / 1000;
@@ -217,7 +217,7 @@ public class Statistics implements StatisticsMBean {
 				init();
 			}
 
-			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder+ "server_stats.xml"));
+			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder));
 			out.println("<statistics time=\"" + (actualTime.getTime() / 1000)+ "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
