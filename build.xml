@@ -85,10 +85,14 @@
 
 	<!-- Create jar file for Marauroa -->
 	<target name="jar" depends="compile">
-		<jar jarfile="${build-archive}/${jarname}" basedir="${buildroot}/"/>
+		<jar jarfile="${build-archive}/${jarname}" basedir="${buildroot}/">
+			<manifest>
+				<attribute name="Main-Class" value="games.stendhal.client.update.Starter"/>
+			</manifest>
+		</jar>
 		<copy tofile="${build-archive}/marauroa.jar" file="${build-archive}/${jarname}"/>
 		<!-- A link would be better but... -->
-		<copy todir="${build-archive}" file="${src}/marauroa/marauroa.ini"/>
+		<copy todir="${build-archive}" file="${src}/marauroa/server.ini"/>
 	</target>
 
 	<!-- Prepare the tarball for releases -->

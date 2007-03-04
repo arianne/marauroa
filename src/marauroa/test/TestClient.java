@@ -10,19 +10,16 @@ public class TestClient extends ClientFramework {
 
 	public TestClient(String loggingProperties) {
 		super(loggingProperties);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected String getGameName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "TestFramework";
 	}
 
 	@Override
 	protected String getVersionNumber() {
-		// TODO Auto-generated method stub
-		return null;
+		return "0.00";
 	}
 
 	@Override

@@ -1,16 +1,29 @@
 package marauroa.test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.server.game.AccountResult;
+import marauroa.server.game.AccountResult.Result;
+import marauroa.server.game.db.DatabaseFactory;
+import marauroa.server.game.db.IDatabase;
+import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 
 public class TestRPRuleProcessor implements IRPRuleProcessor{
+
+	private IDatabase db;
+	
+	public TestRPRuleProcessor() {
+		db=DatabaseFactory.getDatabase();
+	}
 
 	private static TestRPRuleProcessor rules;
 	
@@ -35,13 +48,31 @@ public class TestRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean checkGameVersion(String game, String version) {
-		// TODO Auto-generated method stub
-		return false;
+		Test.assertEquals("TestFramework", game);
+		Test.assertEquals("0.00", version);
+		
+		return game.equals("TestFramework") && version.equals("0.00");		
 	}
 
 	public AccountResult createAccount(String username, String password, String email, RPObject template) {
-		// TODO Auto-generated method stub
-		return null;
+		Transaction trans=db.getTransaction();
+		try {
+			trans.begin();
+
+			if(db.hasPlayer(trans,username)) {
+				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username, null);
+			}
+			
+			db.addPlayer(trans, username, Hash.hash(password), email);
+			db.addCharacter(trans, username, username, template);
+			
+			return null;
+		} catch(SQLException e) {
+			Test.fail();
+			return new AccountResult(Result.FAILED_EXCEPTION, username, null);
+		} catch (IOException e) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public void endTurn() {
