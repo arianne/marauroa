@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.50 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.51 2007/03/04 13:44:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -161,6 +161,7 @@ public class marauroad extends Thread {
 					Configuration.getConfiguration();
 				} catch (Exception e) {
 					logger.fatal("Can't find configuration file: "+ args[i + 1], e);
+					logger.fatal("Run game configuration to get a valid \"server.ini\" file");
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {

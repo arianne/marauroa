@@ -1,5 +1,7 @@
 package marauroa.test;
 
-public class TestRPWorld {
+import marauroa.server.game.rp.RPWorld;
+
+public class TestRPWorld extends RPWorld{
 
 }

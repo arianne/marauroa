@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.16 2007/02/19 18:37:24 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.17 2007/03/04 13:44:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,7 +28,9 @@ public class Configuration {
 
 	private static boolean relativeToHome = false;
 	private static String basedir = "";
-	private static String configurationFile = "marauroa.ini";
+	
+	/** Default name of configuration file */
+	private static String configurationFile = "server.ini";
 
 	private Properties properties;
 
