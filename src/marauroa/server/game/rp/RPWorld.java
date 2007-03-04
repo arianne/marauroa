@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.8 2007/02/19 18:37:26 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.9 2007/03/04 16:44:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -119,14 +119,20 @@ public class RPWorld implements Iterable<IRPZone> {
 			zone.assignRPObjectID(object);
 
 			zone.add(object);
+		}
+	}
 
-			/** A player object will have always the clientid attribute. */
-			if (object.has("clientid")) {
-				/** So if object has the attribute, we request a sync perception as we have entered a new zone. */
-				PlayerEntry entry=playerContainer.get(object.getID());
-				if(entry!=null) {
-					entry.requestSync();
-				}
+	/**
+	 * When a player is added to a zone, it needs his status to be synced.
+	 * @param object the player object
+	 */
+	public void requestSync(RPObject object) {
+		/* A player object will have always the clientid attribute. */
+		if (object.has("clientid")) {
+			/* So if object has the attribute, we request a sync perception as we have entered a new zone. */
+			PlayerEntry entry=playerContainer.get(object.getID());
+			if(entry!=null) {
+				entry.requestSync();
 			}
 		}
 	}
@@ -180,23 +186,24 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods make a player/object to change zone.
-	 * @param oldzoneid the old zone id
 	 * @param newzoneid the new zone id
 	 * @param object the object we are going to change zone to.
 	 * @throws RPObjectInvalidException
 	 */
-	public void changeZone(IRPZone.ID oldzoneid, IRPZone.ID newzoneid, RPObject object) {
+	public void changeZone(IRPZone.ID newzoneid, RPObject object) {
 		try {
-			if (newzoneid.equals(oldzoneid)) {
+			if (newzoneid.equals(object.get("zoneid"))) {
 				return;
 			}
 
-			IRPZone oldzone = getRPZone(oldzoneid);
-
-			oldzone.remove(object.getID());
+			remove(object.getID());
+			
 			object.put("zoneid", newzoneid.getID());
 
 			add(object);
+			
+			requestSync(object);
+			
 		} catch (Exception e) {
 			logger.error("error changing Zone", e);
 			throw new RPObjectInvalidException("zoneid");
@@ -205,12 +212,11 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods make a player/object to change zone.
-	 * @param oldzone the old zone id
 	 * @param newzone the new zone id
 	 * @param object the object we are going to change zone to.
 	 */
-	public void changeZone(String oldzone, String newzone, RPObject object) {
-		changeZone(new IRPZone.ID(oldzone), new IRPZone.ID(newzone), object);
+	public void changeZone(String newzone, RPObject object) {
+		changeZone(new IRPZone.ID(newzone), object);
 	}
 
 	/**
