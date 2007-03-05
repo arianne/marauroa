@@ -1,6 +1,6 @@
 package marauroa.test;
 
-public class Test {
+public class TestHelper {
 
 	public static void assertEquals(Object expected, Object val) {
 		if(!expected.equals(val)) {
