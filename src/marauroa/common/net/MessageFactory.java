@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.20 2007/02/19 18:37:24 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.21 2007/03/05 18:18:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -36,6 +37,8 @@ import marauroa.common.net.message.MessageS2CChooseCharacterACK;
 import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.common.net.message.MessageS2CInvalidMessage;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
@@ -105,6 +108,9 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_CREATEACCOUNT, MessageC2SCreateAccount.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_ACK, MessageS2CCreateAccountACK.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_NACK, MessageS2CCreateAccountNACK.class);
+		register(Message.MessageType.C2S_CREATECHARACTER, MessageC2SCreateCharacter.class);
+		register(Message.MessageType.S2C_CREATECHARACTER_ACK, MessageS2CCreateCharacterACK.class);
+		register(Message.MessageType.S2C_CREATECHARACTER_NACK, MessageS2CCreateCharacterNACK.class);
 	}
 
 	private void register(Message.MessageType index, Class messageClass) {

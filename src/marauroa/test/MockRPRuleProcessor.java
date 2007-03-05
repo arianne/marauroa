@@ -9,7 +9,8 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.server.game.AccountResult;
-import marauroa.server.game.AccountResult.Result;
+import marauroa.server.game.CharacterResult;
+import marauroa.server.game.Result;
 import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.Transaction;
@@ -64,14 +65,14 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 			
 			db.addPlayer(trans, username, Hash.hash(password), email);
 			
-			return new AccountResult(Result.OK_ACCOUNT_CREATED, username);
+			return new AccountResult(Result.OK_CREATED, username);
 		} catch(SQLException e) {
 			TestHelper.fail();
 			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}
 	}
 
-	public AccountResult createCharacter(String username, String character, RPObject template) {
+	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.21 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.22 2007/03/05 18:18:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.server.game.AccountResult;
+import marauroa.server.game.CharacterResult;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
@@ -65,8 +66,8 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.checkGameVersion(game, version);
 	}
 
-	public AccountResult createAccount(String username, String password, String email, RPObject template) {
-		return pythonRP.createAccount(username, password, email, template);
+	public AccountResult createAccount(String username, String password, String email) {
+		return pythonRP.createAccount(username, password, email);
 	}
 
 	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
@@ -143,5 +144,10 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public CharacterResult createCharacter(String username, String character, RPObject template) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

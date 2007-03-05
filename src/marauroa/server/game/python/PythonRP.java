@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.12 2007/02/27 14:05:33 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.13 2007/03/05 18:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.AccountResult;
-import marauroa.server.game.AccountResult.Result;
+import marauroa.server.game.Result;
 import marauroa.server.game.rp.RPServerManager;
 
 @Deprecated
@@ -43,8 +43,8 @@ public class PythonRP {
 		return true;
 	}
 
-	public AccountResult createAccount(String username, String password, String email, RPObject template) {
-		return new AccountResult(Result.FAILED_EXCEPTION, username, template);
+	public AccountResult createAccount(String username, String password, String email) {
+		return new AccountResult(Result.FAILED_EXCEPTION, username);
 	}
 
 	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {

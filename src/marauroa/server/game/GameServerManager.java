@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.50 2007/02/28 22:40:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.51 2007/03/05 18:18:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -39,6 +40,8 @@ import marauroa.common.net.message.MessageS2CChooseCharacterACK;
 import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
@@ -48,7 +51,6 @@ import marauroa.common.net.message.MessageS2CLogoutNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.AccountResult.Result;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
@@ -272,6 +274,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					case C2S_CREATEACCOUNT:
 						logger.debug("Processing C2S Create Account Message");
 						processCreateAccount((MessageC2SCreateAccount) msg);
+						break;
+					case C2S_CREATECHARACTER:
+						logger.debug("Processing C2S Create Character Message");
+						processCreateCharacter((MessageC2SCreateCharacter) msg);
 						break;
 					default:
 						logger.debug("Unknown Message[" + msg.getType() + "]");
@@ -525,12 +531,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		try {
-			AccountResult val= rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getTemplate());
+			AccountResult val= rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail());
 			Result result=val.getResult();
 
-			if (result == Result.OK_ACCOUNT_CREATED) {
+			if (result == Result.OK_CREATED) {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
-				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel(), val.getUsername(), val.getTemplate());
+				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel(), val.getUsername());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				MessageS2CCreateAccountNACK.Reasons reason;
@@ -544,6 +550,48 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(msg.getSocketChannel(), reason);
 				netMan.sendMessage(msgCreateAccountNACK);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
+
+
+	/**
+	 * This message is used to create a character in a game account.
+	 * It may fail if the player already exists or if any of the fields are empty.
+	 *
+	 * @param msg The create account message.
+	 */
+	private void processCreateCharacter(MessageC2SCreateCharacter msg) {
+		try {
+			int clientid = msg.getClientID();
+			PlayerEntry entry=playerContainer.get(clientid);
+
+			// verify event
+			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
+				return;
+			}
+
+			CharacterResult val= rpMan.createCharacter(entry.username, msg.getCharacter(), msg.getTemplate());
+			Result result=val.getResult();
+
+			if (result == Result.OK_CREATED) {
+				logger.debug("Character (" + msg.getCharacter() + ") created for account "+entry.username);
+				MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(msg.getSocketChannel(), val.getCharacter(), val.getTemplate());
+				netMan.sendMessage(msgCreateCharacterACK);
+			} else {
+				MessageS2CCreateCharacterNACK.Reasons reason;
+
+				// TODO: AccountResult should match CreateAccount message Reasons
+				if (result == Result.FAILED_PLAYER_EXISTS) {
+					reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
+				} else {
+					reason = MessageS2CCreateCharacterNACK.Reasons.FIELD_TOO_SHORT;
+				}
+
+				MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(msg.getSocketChannel(), reason);
+				netMan.sendMessage(msgCreateCharacterNACK);
 			}
 		} catch (Exception e) {
 			logger.error(e);

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.19 2007/03/04 13:30:41 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.20 2007/03/05 18:18:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.AccountResult;
 import marauroa.server.game.ActionInvalidException;
+import marauroa.server.game.CharacterResult;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -210,14 +211,25 @@ public class RPServerManager extends Thread {
 	 * @param username player's username
 	 * @param password player's password
 	 * @param email player's email
+	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
+	 */
+	public AccountResult createAccount(String username, String password, String email) {
+		return ruleProcessor.createAccount(username, password, email);
+	}
+
+
+	/**
+	 * Creates a character for a account of a player
+	 * 
+	 * @param username player's username
+	 * @param character
 	 * @param template the template we are going to use to create the object.
 	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
 	 */
-	public AccountResult createAccount(String username, String password,
-			String email, RPObject template) {
-		return ruleProcessor.createAccount(username, password, email, template);
+	public CharacterResult createCharacter(String username, String character, RPObject template) {
+		return ruleProcessor.createCharacter(username, character, template);
 	}
-
+	
 	private Perception getPlayerPerception(PlayerEntry entry) {
 		Perception perception = null;
 

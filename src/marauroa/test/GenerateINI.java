@@ -145,11 +145,11 @@ public class GenerateINI {
 	}
 
 	private static String getRuleProcessorImplementation() {
-		return "marauroa.test.TestRPRuleProcessor";
+		return "marauroa.test.MockRPRuleProcessor";
 	}
 
 	private static String getWorldImplementation() {
-		return "marauroa.test.TestRPWorld";
+		return "marauroa.test.MockRPWorld";
 	}
 
 	private static String getTCPPort() {

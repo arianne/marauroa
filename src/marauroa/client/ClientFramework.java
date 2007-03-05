@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.7 2007/03/04 22:39:00 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.8 2007/03/05 18:18:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -253,15 +254,14 @@ public abstract class ClientFramework {
 	 * @param username the player desired username
 	 * @param password the player password
 	 * @param email player's email for notifications and/or password reset.
-	 * @param template an object template to create the player avatar.
 	 *
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateAccountFailedException
 	 * @throws IOException
 	 */
-	public synchronized void createAccount(String username, String password, String email, RPObject template) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
-		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, template);
+	public synchronized void createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
+		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 		netMan.addMessage(msgCA);
 
@@ -275,6 +275,7 @@ public abstract class ClientFramework {
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
 				//TODO: Do something with the returned values.
+				
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATEACCOUNT_NACK:
 				logger.debug("Create account NACK");
@@ -284,6 +285,47 @@ public abstract class ClientFramework {
 			}
 		}
 	}
+
+	/**
+	 * Request server to create an account on server.
+	 *
+	 * @param username the player desired username
+	 * @param password the player password
+	 * @param email player's email for notifications and/or password reset.
+	 * @param template an object template to create the player avatar.
+	 *
+	 * @throws InvalidVersionException if we are not using a compatible version
+	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws CreateAccountFailedException
+	 * @throws CreateCharacterFailedException 
+	 * @throws IOException
+	 */
+	public synchronized void createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException {
+		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
+
+		netMan.addMessage(msgCA);
+
+		int recieved = 0;
+
+		while (recieved != 1) {
+			Message msg = getMessage();
+
+			switch (msg.getType()) {
+			/* Account was created */
+			case S2C_CREATECHARACTER_ACK:
+				logger.debug("Create character ACK");
+				//TODO: Do something with the returned values.
+				
+			/* Account was not created. Reason explained on event. */
+			case S2C_CREATECHARACTER_NACK:
+				logger.debug("Create character NACK");
+				throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
+			default:
+				messages.add(msg);
+			}
+		}
+	}
+
 
 	/**
 	 * Sends a RPAction to server
