@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.8 2007/03/05 18:18:25 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.9 2007/03/05 18:27:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,8 +70,8 @@ public interface IRPRuleProcessor {
 	public AccountResult createAccount(String username, String password, String email);
 
 	/** 
-	 * Creates an account for the game 
-	 * @param username the username who is going to be added.
+	 * Creates an new character for an account already logged into the game 
+	 * @param username the username who owns the account of the character to be added.
 	 * @param character the character to create 
 	 * @param template the desired values of the avatar representing the character. 
 	 * @return the Result of creating the character. */

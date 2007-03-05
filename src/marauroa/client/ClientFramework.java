@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.8 2007/03/05 18:18:19 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.9 2007/03/05 18:31:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -287,11 +287,10 @@ public abstract class ClientFramework {
 	}
 
 	/**
-	 * Request server to create an account on server.
+	 * Request server to create a character on server.
+	 * You must have successfully logged into server before invoking this method.
 	 *
-	 * @param username the player desired username
-	 * @param password the player password
-	 * @param email player's email for notifications and/or password reset.
+	 * @param character the character to create
 	 * @param template an object template to create the player avatar.
 	 *
 	 * @throws InvalidVersionException if we are not using a compatible version

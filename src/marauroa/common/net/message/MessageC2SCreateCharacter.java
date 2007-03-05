@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateCharacter.java,v 1.1 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateCharacter.java,v 1.2 2007/03/05 18:31:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,9 +38,7 @@ public class MessageC2SCreateCharacter extends Message {
 	 * of the choosen character to create.
 	 * 
 	 * @param source The TCP/IP address associated to this message
-	 * @param username desired username
-	 * @param password desired password
-	 * @param email email of the player
+	 * @param character the desired character name
 	 * @param template a RPObject that contains attributes that will be used on the created character.
 	 */
 	public MessageC2SCreateCharacter(SocketChannel source, String character, RPObject template) {
@@ -49,10 +47,18 @@ public class MessageC2SCreateCharacter extends Message {
 		this.template = template;
 	}
 
+	/**
+	 * Returns the character name
+	 * @return the character name
+	 */
 	public String getCharacter() {
 		return character;
 	}
 
+	/**
+	 * Returns the object template
+	 * @return the object template
+	 */
 	public RPObject getTemplate() {
 		return template;
 	}
