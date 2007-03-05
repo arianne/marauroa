@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.10 2007/03/05 18:53:51 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.11 2007/03/05 19:13:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -275,6 +275,7 @@ public abstract class ClientFramework {
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
 				//TODO: Do something with the returned values.
+				recieved++;
 				break;
 				
 			/* Account was not created. Reason explained on event. */
