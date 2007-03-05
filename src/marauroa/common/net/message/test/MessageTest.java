@@ -65,23 +65,18 @@ public class MessageTest {
 	}
 	
 	@Test
-	public final void testInvalidClientId() throws IOException {
+	public final void testInvalidClientId() throws IOException, ClassNotFoundException {
 			MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
 			ByteArrayOutputStream out= new ByteArrayOutputStream();
 			mmOut.setClientID(Message.CLIENTID_INVALID);
 			mmOut.writeObject(new OutputSerializer(out));
 			InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 			MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
-			try {
-				mmInn.readObject(in);
-				assertEquals(mmOut.getClientID(), mmInn.getClientID());
-				assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
-				assertEquals(mmOut.getType(), mmInn.getType());
-				fail("I would expect an Invalid client ID to fail, but it does not");
-			} catch (ClassNotFoundException e) {
-				assertTrue("Invalid Class Id failed",true);
-			}
 
+			mmInn.readObject(in);
+			assertEquals(mmOut.getClientID(), mmInn.getClientID());
+			assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
+			assertEquals(mmOut.getType(), mmInn.getType());
 	}
 
 }

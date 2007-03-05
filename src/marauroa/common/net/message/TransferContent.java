@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.1 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.2 2007/03/05 16:51:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,11 @@ public class TransferContent {
 	public boolean ack;
 
 	public TransferContent() {
+		ack=false;
+		cacheable=false;
+		data=null;
+		name=null;
+		timestamp=0;
 	}
 
 	@Override

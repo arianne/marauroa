@@ -1,7 +1,6 @@
 package marauroa.test;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.fail;
 import marauroa.client.LoginFailedException;
 import marauroa.client.TimeoutException;
 import marauroa.common.net.InvalidVersionException;
@@ -12,8 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ClientFrameworkTest {
-    MockClientFramework client ;
-    
+	MockClientFramework client ;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -21,10 +20,11 @@ public class ClientFrameworkTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
-@Before
-public void setup() throws Exception {
-	client = new MockClientFramework("");
-}
+	
+	@Before
+	public void setup() throws Exception {
+		client = new MockClientFramework("");
+	}
 
 	@Test
 	public final void testClientFramework() {
@@ -47,11 +47,11 @@ public void setup() throws Exception {
 			e.printStackTrace();
 			fail(e.toString());
 		} catch (LoginFailedException e) {
-			
+
 			e.printStackTrace();
 			fail(e.toString());
 		}
-		
+
 	}
 
 	@Test

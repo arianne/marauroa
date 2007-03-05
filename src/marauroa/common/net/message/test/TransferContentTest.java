@@ -1,6 +1,7 @@
 package marauroa.common.net.message.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,7 +9,6 @@ import java.io.IOException;
 
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
 
 import org.junit.After;
@@ -33,7 +33,6 @@ public class TransferContentTest {
 		assertEquals(null, tc.data);
 		assertEquals(null, tc.name);
 		assertEquals(0, tc.timestamp);
-		fail("is this what we want?");
 	}
 
 	@Test
@@ -58,8 +57,8 @@ public class TransferContentTest {
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
 		tcOut.readREQ(in);
-		assertTrue(tcInn.ack=tcOut.ack);
-		assertTrue(tcInn.cacheable=tcOut.cacheable);
+		assertTrue(tcInn.ack==tcOut.ack);
+		assertTrue(tcInn.cacheable==tcOut.cacheable);
 		assertTrue(tcInn.data.equals(tcOut.data));
 		assertTrue(tcInn.name.equals(tcOut.name));
 		
@@ -92,8 +91,8 @@ public class TransferContentTest {
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
 		tcOut.readFULL(in);
-		assertTrue(tcInn.ack=tcOut.ack);
-		assertTrue(tcInn.cacheable=tcOut.cacheable);
+		assertTrue(tcInn.ack==tcOut.ack);
+		assertTrue(tcInn.cacheable==tcOut.cacheable);
 		assertTrue(tcInn.data.equals(tcOut.data));
 		assertTrue(tcInn.name.equals(tcOut.name));
 		
