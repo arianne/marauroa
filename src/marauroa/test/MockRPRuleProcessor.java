@@ -1,6 +1,5 @@
 package marauroa.test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,15 +16,15 @@ import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 
-public class TestRPRuleProcessor implements IRPRuleProcessor{
+public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	private IDatabase db;
 	
-	public TestRPRuleProcessor() {
+	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
 	}
 
-	private static TestRPRuleProcessor rules;
+	private static MockRPRuleProcessor rules;
 	
 	/**
 	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
@@ -36,7 +35,7 @@ public class TestRPRuleProcessor implements IRPRuleProcessor{
 	 */
 	public static IRPRuleProcessor get() {
 		if(rules==null) {
-			rules = new TestRPRuleProcessor();
+			rules = new MockRPRuleProcessor();
 		}
 		
 		return rules;
@@ -48,31 +47,33 @@ public class TestRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean checkGameVersion(String game, String version) {
-		Test.assertEquals("TestFramework", game);
-		Test.assertEquals("0.00", version);
+		TestHelper.assertEquals("TestFramework", game);
+		TestHelper.assertEquals("0.00", version);
 		
 		return game.equals("TestFramework") && version.equals("0.00");		
 	}
 
-	public AccountResult createAccount(String username, String password, String email, RPObject template) {
+	public AccountResult createAccount(String username, String password, String email) {
 		Transaction trans=db.getTransaction();
 		try {
 			trans.begin();
 
 			if(db.hasPlayer(trans,username)) {
-				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username, null);
+				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 			
 			db.addPlayer(trans, username, Hash.hash(password), email);
-			db.addCharacter(trans, username, username, template);
 			
-			return null;
+			return new AccountResult(Result.OK_ACCOUNT_CREATED, username);
 		} catch(SQLException e) {
-			Test.fail();
-			return new AccountResult(Result.FAILED_EXCEPTION, username, null);
-		} catch (IOException e) {
-			throw new IllegalArgumentException();
+			TestHelper.fail();
+			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}
+	}
+
+	public AccountResult createCharacter(String username, String character, RPObject template) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void endTurn() {
@@ -109,5 +110,4 @@ public class TestRPRuleProcessor implements IRPRuleProcessor{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

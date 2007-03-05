@@ -2,9 +2,9 @@ package marauroa.test;
 
 import marauroa.server.game.rp.RPWorld;
 
-public class TestRPWorld extends RPWorld{
+public class MockRPWorld extends RPWorld{
 
-	private static TestRPWorld world;
+	private static MockRPWorld world;
 	
 	/**
 	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
@@ -15,7 +15,7 @@ public class TestRPWorld extends RPWorld{
 	 */
 	public static RPWorld get() {
 		if(world==null) {
-			world = new TestRPWorld();
+			world = new MockRPWorld();
 		}
 		
 		return world;

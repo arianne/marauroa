@@ -6,9 +6,9 @@ import marauroa.client.ClientFramework;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.TransferContent;
 
-public class TestClient extends ClientFramework {
+public class MockClient extends ClientFramework {
 
-	public TestClient(String loggingProperties) {
+	public MockClient(String loggingProperties) {
 		super(loggingProperties);
 	}
 
