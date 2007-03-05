@@ -3,6 +3,7 @@ package marauroa.test;
 import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
@@ -18,6 +19,8 @@ import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 
 public class MockRPRuleProcessor implements IRPRuleProcessor{
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(MockRPRuleProcessor.class);
 
 	private IDatabase db;
 	
@@ -59,14 +62,23 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		try {
 			trans.begin();
 
+			logger.info("Creating account: "+ username);
 			if(db.hasPlayer(trans,username)) {
+				logger.warn("Account already exist: "+username);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 			
 			db.addPlayer(trans, username, Hash.hash(password), email);
+			logger.info("Account '"+username+"' CREATED");
 			
+			trans.commit();			
 			return new AccountResult(Result.OK_CREATED, username);
 		} catch(SQLException e) {
+			try {
+				trans.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			TestHelper.fail();
 			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}

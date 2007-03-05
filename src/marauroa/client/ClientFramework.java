@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.9 2007/03/05 18:31:29 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.10 2007/03/05 18:53:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -275,6 +275,7 @@ public abstract class ClientFramework {
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
 				//TODO: Do something with the returned values.
+				break;
 				
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATEACCOUNT_NACK:
@@ -295,7 +296,6 @@ public abstract class ClientFramework {
 	 *
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
-	 * @throws CreateAccountFailedException
 	 * @throws CreateCharacterFailedException 
 	 * @throws IOException
 	 */
@@ -314,6 +314,7 @@ public abstract class ClientFramework {
 			case S2C_CREATECHARACTER_ACK:
 				logger.debug("Create character ACK");
 				//TODO: Do something with the returned values.
+				break;
 				
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATECHARACTER_NACK:
