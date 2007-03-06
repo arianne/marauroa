@@ -72,8 +72,7 @@ public class TestSecureLogin {
 		byte[] clientNonce=Hash.random(Hash.hashLength());
 		
 		byte[] clientNonceHash=Hash.hash(clientNonce);
-		byte[] serverNonceHash=Hash.hash(serverNonce);
-		
+
 		PlayerEntry.SecuredLoginInfo login=new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
 
 		byte[] b1 = Hash.xor(clientNonceHash, serverNonce);
