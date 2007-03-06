@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.27 2007/03/06 22:42:26 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.28 2007/03/06 22:45:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -847,8 +847,6 @@ public class JDBCDatabase implements IDatabase {
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			String hexPassword = Hash.toHexString(password);
-			
-			System.out.println(hexPassword);
 			
 			String query = "select status, username from account where username like '"
 					+ informations.username + "' and password like '"+ hexPassword + "'";
