@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.51 2007/03/05 18:18:24 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.52 2007/03/06 18:25:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -614,6 +614,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * This client is taking server resources but doing nothing useful at all.
 			 */
 			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
+				logger.info("Server is full, making room now");
 				/* Let's try to make some room for more players. */
 				PlayerEntry candidate=playerContainer.getIdleEntry();
 

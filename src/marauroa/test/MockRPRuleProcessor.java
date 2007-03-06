@@ -23,38 +23,40 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MockRPRuleProcessor.class);
 
 	private IDatabase db;
-	
+
 	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
 	}
 
 	private static MockRPRuleProcessor rules;
-	
+
 	/**
 	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
-	 * There is no way of enforcing static methods on a Interface, so just keep this in mind when 
+	 * There is no way of enforcing static methods on a Interface, so just keep this in mind when
 	 * writting your own game.
-	 *  
+	 *
 	 * @return an unique instance of world.
 	 */
 	public static IRPRuleProcessor get() {
 		if(rules==null) {
 			rules = new MockRPRuleProcessor();
 		}
-		
+
 		return rules;
 	}
-	
+
 	public void beginTurn() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean checkGameVersion(String game, String version) {
 		TestHelper.assertEquals("TestFramework", game);
 		TestHelper.assertEquals("0.00", version);
-		
-		return game.equals("TestFramework") && version.equals("0.00");		
+
+		logger.info("Client uses:"+game+":"+version);
+
+		return game.equals("TestFramework") && version.equals("0.00");
 	}
 
 	public AccountResult createAccount(String username, String password, String email) {
@@ -67,11 +69,11 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 				logger.warn("Account already exist: "+username);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
-			
+
 			db.addPlayer(trans, username, Hash.hash(password), email);
 			logger.info("Account '"+username+"' CREATED");
-			
-			trans.commit();			
+
+			trans.commit();
 			return new AccountResult(Result.OK_CREATED, username);
 		} catch(SQLException e) {
 			try {
@@ -91,12 +93,12 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	public void endTurn() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void execute(RPObject object, RPAction action) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
@@ -116,11 +118,11 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setContext(RPServerManager rpman) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
