@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.25 2007/03/06 19:06:22 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.26 2007/03/06 20:41:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -822,10 +822,6 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		try {
-			logger.info(informations.clientNonce);
-			logger.info(Hash.hash(informations.clientNonce));
-			logger.info(informations.clientNonceHash);
-			
 			if (Hash.compare(Hash.hash(informations.clientNonce),informations.clientNonceHash) != 0) {
 				logger.info("Different hashs for client Nonce");
 				return false;
@@ -840,7 +836,7 @@ public class JDBCDatabase implements IDatabase {
 
 			byte[] password = Hash.xor(b1, b2);
 			if (password == null) {
-				logger.debug("Password is null");
+				logger.info("Password is null");
 				return false;
 			}
 
@@ -853,7 +849,7 @@ public class JDBCDatabase implements IDatabase {
 			String hexPassword = Hash.toHexString(Hash.hash(password));
 			String query = "select status, username from account where username like '"
 					+ informations.username + "' and password like '"+ hexPassword + "'";
-			logger.debug("verifyAccount is executing query " + query);
+			logger.info("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
 			boolean isplayer=false;

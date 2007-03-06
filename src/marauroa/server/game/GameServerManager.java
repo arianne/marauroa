@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.53 2007/03/06 19:06:21 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.54 2007/03/06 20:41:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -638,12 +638,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 
-			byte[] nonce = Hash.random(Hash.hashLength());
 
-			PlayerEntry entry=playerContainer.add(msg.getSocketChannel());
-			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key,msgLoginSendPromise.getHash(),nonce);
+			PlayerEntry entry=playerContainer.add(msgLoginSendPromise.getSocketChannel());
+			
+			byte[] serverNonce = Hash.random(Hash.hashLength());
+			byte[] clientNonceHash=msgLoginSendPromise.getHash();
 
-			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getSocketChannel(), nonce);
+			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
+
+			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg.getSocketChannel(), serverNonce);
 			msgLoginSendNonce.setClientID(entry.clientid);
 			netMan.sendMessage(msgLoginSendNonce);
 		} catch (Exception e) {

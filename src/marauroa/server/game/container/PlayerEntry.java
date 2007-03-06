@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.16 2007/02/28 22:54:38 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.17 2007/03/06 20:41:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -57,12 +57,12 @@ public class PlayerEntry {
 		/**
 		 *  Constructor
 		 * @param key the server private key
-		 * @param clientNonce the client hash
-		 * @param serverNonce the server hash
+		 * @param clientNonceHash the client hash
+		 * @param serverNonce the server random bigint
 		 */
-		public SecuredLoginInfo(RSAKey key, byte[] clientNonce, byte[] serverNonce) {
+		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce) {
 			this.key = key;
-			this.clientNonce=clientNonce;
+			this.clientNonceHash=clientNonceHash;
 			this.serverNonce=serverNonce;
 		}
 

@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.12 2007/03/06 18:25:31 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.13 2007/03/06 20:41:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -146,7 +146,7 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			/* Server sends its public RSA key */
 			case S2C_LOGIN_SENDKEY: {
-				logger.debug("Recieved Key");
+				logger.info("Recieved Key");
 				key = ((MessageS2CLoginSendKey) msg).getKey();
 
 				clientNonce = Hash.random(Hash.hashLength());
@@ -155,7 +155,7 @@ public abstract class ClientFramework {
 			}
 			/* Server sends a random big integer */
 			case S2C_LOGIN_SENDNONCE: {
-				logger.debug("Recieved Server Nonce");
+				logger.info("Recieved Server Nonce");
 				if (serverNonce != null) {
 					throw new LoginFailedException("Already recieved a serverNonce");
 				}
@@ -177,12 +177,12 @@ public abstract class ClientFramework {
 			}
 			/* Server replied with ACK to login operation */
 			case S2C_LOGIN_ACK:
-				logger.debug("Login correct");
+				logger.info("Login correct");
 				received++;
 				break;
 				/* Server send the character list */
 			case S2C_CHARACTERLIST:
-				logger.debug("Recieved Character list");
+				logger.info("Recieved Character list");
 				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 				/* We notify client of characters by calling the callback method. */
@@ -191,7 +191,7 @@ public abstract class ClientFramework {
 				break;
 				/* Server sends the server info message with information about versions, homepage, etc... */
 			case S2C_SERVERINFO:
-				logger.debug("Recieved Server info");
+				logger.info("Recieved Server info");
 				String[] info = ((MessageS2CServerInfo) msg).getContents();
 
 				/* We notify client of this info by calling the callback method. */
@@ -201,7 +201,7 @@ public abstract class ClientFramework {
 				/* Login failed, explain reason on event */
 			case S2C_LOGIN_NACK:
 				MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
-				logger.debug("Login failed. Reason: "+ msgNACK.getResolution());
+				logger.info("Login failed. Reason: "+ msgNACK.getResolution());
 
 				throw new LoginFailedException(msgNACK.getResolution());
 				/* If message doesn't match, store it, someone will need it. */

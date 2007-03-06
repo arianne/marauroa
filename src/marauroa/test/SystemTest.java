@@ -1,17 +1,17 @@
 package marauroa.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
+import marauroa.client.CreateAccountFailedException;
+import marauroa.client.TimeoutException;
+import marauroa.common.net.InvalidVersionException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import marauroa.client.CreateAccountFailedException;
-import marauroa.client.LoginFailedException;
-import marauroa.client.TimeoutException;
-import marauroa.common.net.InvalidVersionException;
 
 public class SystemTest {
 	private MockClient client;
@@ -43,9 +43,14 @@ public class SystemTest {
 	}
 
 	@Test
-	public void login() throws IOException, InvalidVersionException, TimeoutException, LoginFailedException {
-		client.connect("localhost",3217);
-		client.login("testUsername", "password");
+	public void login() throws Exception {
+		try {
+			client.connect("localhost",3217);
+			client.login("testUsername", "password");
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 }
