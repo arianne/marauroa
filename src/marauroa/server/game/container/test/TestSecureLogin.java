@@ -1,6 +1,7 @@
 package marauroa.server.game.container.test;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -16,8 +17,13 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test the secure login procedure in the same way. 
+ * 
+ * @author miguel
+ *
+ */
 public class TestSecureLogin {
-	private static PlayerEntryContainer cont;
 	private static RSAKey key;	
 	
 	/**
@@ -27,7 +33,10 @@ public class TestSecureLogin {
 	 */
 	@BeforeClass
 	public static void setUp() throws IOException {
-		cont=PlayerEntryContainer.getContainer();
+		/*
+		 * Make sure database is initialized-
+		 */
+		PlayerEntryContainer.getContainer();
 
 		key = new RSAKey(
 				new BigInteger(Configuration.getConfiguration().get("n")), 
@@ -39,14 +48,16 @@ public class TestSecureLogin {
 	public void testLogin() throws SQLException {
 		try {
 		String password="password";
+		
 		byte[] serverNonce=Hash.random(Hash.hashLength());
 		byte[] clientNonce=Hash.random(Hash.hashLength());
 		
 		byte[] clientNonceHash=Hash.hash(clientNonce);
+		byte[] serverNonceHash=Hash.hash(serverNonce);
 		
 		PlayerEntry.SecuredLoginInfo login=new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
 
-		byte[] b1 = Hash.xor(clientNonce, Hash.hash(serverNonce));
+		byte[] b1 = Hash.xor(clientNonceHash, serverNonce);
 		if (b1 == null) {
 			fail("B1 is null");
 		}
@@ -64,9 +75,52 @@ public class TestSecureLogin {
 		
 		boolean result=login.verify();
 		
+		System.out.println(Hash.toHexString(Hash.hash("password")));
+		
 		assertTrue(result);
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail();
+		}
+	}
+
+	@Test
+	public void testLoginFailure() throws SQLException {
+		try {
+		String password="badpassword";
+		
+		byte[] serverNonce=Hash.random(Hash.hashLength());
+		byte[] clientNonce=Hash.random(Hash.hashLength());
+		
+		byte[] clientNonceHash=Hash.hash(clientNonce);
+		byte[] serverNonceHash=Hash.hash(serverNonce);
+		
+		PlayerEntry.SecuredLoginInfo login=new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
+
+		byte[] b1 = Hash.xor(clientNonceHash, serverNonce);
+		if (b1 == null) {
+			fail("B1 is null");
+		}
+
+		byte[] b2 = Hash.xor(b1, Hash.hash(password));
+		if (b2 == null) {
+			fail("B2 is null");
+		}
+
+		byte[] cryptedPassword = key.encodeByteArray(b2);
+		
+		login.username="testUsername";
+		login.clientNonce=clientNonce;
+		login.password=cryptedPassword;
+		
+		boolean result=login.verify();
+		
+		System.out.println(Hash.toHexString(Hash.hash("password")));
+		
+		assertFalse(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
 		}
 	}
 }
