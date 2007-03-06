@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.54 2007/03/06 20:41:47 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.55 2007/03/06 23:24:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -449,7 +449,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		try{
 			PlayerEntry entry=playerContainer.get(channel);
-			rpMan.disconnect(entry);
+			if(entry!=null && entry.state==ClientState.GAME_BEGIN) {
+				/*
+				 * If client was playing the game request the RP to disconnected it.
+				 * Otherwise just ignore this client as it was not yet logged.
+				 */
+				rpMan.disconnect(entry);
+			} else {
+				logger.info("Disconnecting "+channel+" with: "+entry);
+			}
 		} finally {
 			playerContainer.getLock().releaseLock();
 		}
