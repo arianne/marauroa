@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.8 2007/02/23 10:52:07 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.9 2007/03/06 23:17:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -145,7 +145,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	public PlayerEntry get(String username) {
 		for(PlayerEntry entry: clientidMap.values()) {
 			/* NOTE: Bug fix: We use ignore case to detect already logged players better. */
-			if(entry.username.equalsIgnoreCase(username)) {
+			if(username.equalsIgnoreCase(entry.username)) {
 				return entry;
 			}
 		}

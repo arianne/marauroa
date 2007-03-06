@@ -1,7 +1,6 @@
 package marauroa.server.game.container.test;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -52,8 +51,10 @@ public class TestSecureLogin {
 	@Test
 	public void testLogin() throws SQLException {
 		String password="password";
-		
-		assertTrue(simulateSecureLogin(password));
+		System.out.println(Hash.toHexString(Hash.hash(password)));
+
+		for(int i=0;i<10;i++)
+		simulateSecureLogin(password);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class TestSecureLogin {
 
 		PlayerEntry.SecuredLoginInfo login=new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
 
-		byte[] b1 = Hash.xor(clientNonceHash, serverNonce);
+		byte[] b1 = Hash.xor(clientNonce, serverNonce);
 		if (b1 == null) {
 			fail("B1 is null");
 		}

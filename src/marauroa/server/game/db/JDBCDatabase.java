@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.28 2007/03/06 22:45:48 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.29 2007/03/06 23:17:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -828,7 +828,7 @@ public class JDBCDatabase implements IDatabase {
 			}
 
 			byte[] b1 = informations.key.decodeByteArray(informations.password);
-			byte[] b2 = Hash.xor(informations.clientNonceHash,informations.serverNonce);
+			byte[] b2 = Hash.xor(informations.clientNonce,informations.serverNonce);
 			if (b2 == null) {
 				logger.info("B2 is null");
 				return false;
@@ -850,7 +850,7 @@ public class JDBCDatabase implements IDatabase {
 			
 			String query = "select status, username from account where username like '"
 					+ informations.username + "' and password like '"+ hexPassword + "'";
-			logger.info("verifyAccount is executing query " + query);
+			logger.debug("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
 			boolean isplayer=false;
