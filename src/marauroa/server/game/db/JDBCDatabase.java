@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.24 2007/02/28 23:21:36 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.25 2007/03/06 19:06:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -822,6 +822,10 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		try {
+			logger.info(informations.clientNonce);
+			logger.info(Hash.hash(informations.clientNonce));
+			logger.info(informations.clientNonceHash);
+			
 			if (Hash.compare(Hash.hash(informations.clientNonce),informations.clientNonceHash) != 0) {
 				logger.info("Different hashs for client Nonce");
 				return false;

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.52 2007/03/06 18:25:31 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.53 2007/03/06 19:06:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -500,30 +500,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	/**
-	 * This method handles the initial login of the client into the server.
-	 * First, it compares the game and version that client is running and if they match
-	 * request the client to send the key to continue login process.
-	 * Otherwise, it rejects client because game is incompatible.
-	 *
-	 * @param msg the login message.
-	 */
-	private void processLoginRequestKey(Message msg) {
-		MessageC2SLoginRequestKey msgRequest = (MessageC2SLoginRequestKey) msg;
-		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
-			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getSocketChannel(), key);
-			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
-			netMan.sendMessage(msgLoginSendKey);
-		} else {
-			/* Error: Incompatible game version. Update client */
-			logger.debug("Client is running an incompatible game version. Client("+ msg.getAddress().toString() + ") can't login");
-
-			/* Notify player of the event. */
-			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
-			netMan.sendMessage(msgLoginNACK);
-		}
-	}
-
-	/**
 	 * This message is used to create a game account.
 	 * It may fail if the player already exists or if any of the fields are empty.
 	 *
@@ -595,6 +571,30 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		} catch (Exception e) {
 			logger.error(e);
+		}
+	}
+
+	/**
+	 * This method handles the initial login of the client into the server.
+	 * First, it compares the game and version that client is running and if they match
+	 * request the client to send the key to continue login process.
+	 * Otherwise, it rejects client because game is incompatible.
+	 *
+	 * @param msg the login message.
+	 */
+	private void processLoginRequestKey(Message msg) {
+		MessageC2SLoginRequestKey msgRequest = (MessageC2SLoginRequestKey) msg;
+		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
+			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getSocketChannel(), key);
+			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+			netMan.sendMessage(msgLoginSendKey);
+		} else {
+			/* Error: Incompatible game version. Update client */
+			logger.debug("Client is running an incompatible game version. Client("+ msg.getAddress().toString() + ") can't login");
+
+			/* Notify player of the event. */
+			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
+			netMan.sendMessage(msgLoginNACK);
 		}
 	}
 
