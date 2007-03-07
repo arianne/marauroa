@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.9 2007/03/04 16:44:44 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.10 2007/03/07 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -64,12 +64,22 @@ public class RPWorld implements Iterable<IRPZone> {
 		return instance;
 	}
 
-	/** This method is called when RPWorld is created */
+	/** This method is called when RPWorld is created by RPServerManager*/
 	public void onInit() {
 	}
 
 	/** This method is called when server is going to shutdown. */
 	public void onFinish() {
+		/*
+		 * Call onFinish for each of the zones.
+		 */
+		for(IRPZone zone: zones.values()) {
+			try {
+				zone.onFinish();
+			} catch (Exception e) {
+				logger.warn("Exception at onFinish",e);
+			}
+		}
 	}
 
 	/** 
