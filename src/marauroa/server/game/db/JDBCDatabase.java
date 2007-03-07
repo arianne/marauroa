@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.29 2007/03/06 23:17:20 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.30 2007/03/07 13:44:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -799,7 +799,7 @@ public class JDBCDatabase implements IDatabase {
 		Statement stmt = connection.createStatement();
 
 		int id = getDatabasePlayerId(transaction, username);
-		String query="SELECT count(*) as amount FROM loginEvent where player_id="+id+" and timestampdiff(SECOND,timedate,now())<"+TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		String query="SELECT count(*) as amount FROM loginEvent where player_id="+id+" and result=0 and timestampdiff(SECOND,timedate,now())<"+TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 
 		ResultSet eventSet = stmt.executeQuery(query);
 		boolean blocked=false;
@@ -847,7 +847,7 @@ public class JDBCDatabase implements IDatabase {
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 			String hexPassword = Hash.toHexString(password);
-			
+
 			String query = "select status, username from account where username like '"
 					+ informations.username + "' and password like '"+ hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);

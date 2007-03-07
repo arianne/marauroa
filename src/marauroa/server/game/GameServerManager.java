@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.55 2007/03/06 23:24:47 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.56 2007/03/07 13:44:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -226,7 +226,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	private void storeConnectedPlayers() {
 		for(PlayerEntry entry: playerContainer) {
-			rpMan.disconnect(entry);
+			/*
+			 * It may be a bit slower than disconnecting here, but server is going down
+			 * so there is no hurry.
+			 */
+			onDisconnect(entry.channel);
 		}
 	}
 
@@ -449,14 +453,28 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		try{
 			PlayerEntry entry=playerContainer.get(channel);
-			if(entry!=null && entry.state==ClientState.GAME_BEGIN) {
+			if(entry==null) {
+				/*
+				 * If connection has not even started login it won't have a entry and
+				 * it will be null
+				 */
+				return;
+			}
+
+			playerContainer.remove(entry.clientid);
+
+			if(entry.state==ClientState.GAME_BEGIN) {
 				/*
 				 * If client was playing the game request the RP to disconnected it.
 				 * Otherwise just ignore this client as it was not yet logged.
 				 */
 				rpMan.disconnect(entry);
 			} else {
-				logger.info("Disconnecting "+channel+" with: "+entry);
+				/*
+				 * If client is still logging, don't notify RP as it knows nothing about
+				 * this client
+				 */
+				logger.info("GAME Disconnecting "+channel+" with: "+entry);
 			}
 		} finally {
 			playerContainer.getLock().releaseLock();
@@ -536,7 +554,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				netMan.sendMessage(msgCreateAccountNACK);
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Unable to create an account", e);
 		}
 	}
 
@@ -578,7 +596,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				netMan.sendMessage(msgCreateCharacterNACK);
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Unable to create a character", e);
 		}
 	}
 
@@ -648,7 +666,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 
 			PlayerEntry entry=playerContainer.add(msgLoginSendPromise.getSocketChannel());
-			
+
 			byte[] serverNonce = Hash.random(Hash.hashLength());
 			byte[] clientNonceHash=msgLoginSendPromise.getHash();
 
@@ -729,10 +747,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						/* NOTE: Set the Object so that it is stored in Database */
 						existing.storeRPObject(object);
 					}
-				} else {
-					logger.info("Player trying to logout without choosing character");
 				}
-
+				logger.info("Disconnecting PREVIOUS "+existing.channel+" with "+existing);
 				playerContainer.remove(existing.clientid);
 			}
 

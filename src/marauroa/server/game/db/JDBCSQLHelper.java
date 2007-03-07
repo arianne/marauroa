@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.5 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.6 2007/03/07 13:44:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -23,16 +23,16 @@ import java.sql.Statement;
 import marauroa.common.Log4J;
 
 /**
- * A helper class that runs SQL scripts. 
+ * A helper class that runs SQL scripts.
  * @author miguel
  *
  */
 public class JDBCSQLHelper {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
-	
+
 	private static JDBCSQLHelper sqlHelper;
-		
+
 	private JDBCSQLHelper() {
 	}
 
@@ -51,24 +51,24 @@ public class JDBCSQLHelper {
 	/**
 	 * This method runs a SQL file using the given transaction.
 	 * You are resposible of begining the transaction and commiting the changes or rollback on error.
-	 * 
+	 *
 	 * @param transaction The JDBC Transaction that we are going to use.
 	 * @param file The file name that contains the SQL commands.
 	 * @return true if the whole file was executed or false in any other error.
 	 */
-	public boolean runDBScript(JDBCTransaction transaction, String file) {
+	public boolean runDBScript(Transaction transaction, String file) {
 		boolean ret = true;
 		Connection con = transaction.getConnection();
 		BufferedReader in = null;
 
 		try {
 			Statement stmt = con.createStatement();
-			
+
 			InputStream init_file = getClass().getClassLoader().getResourceAsStream(file);
 			in = new BufferedReader(new InputStreamReader(init_file));
 
 			StringBuffer is = new StringBuffer();
-			
+
 			String line;
 			while ((line = in.readLine()) != null) {
 				is.append(line);

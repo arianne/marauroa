@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.17 2007/03/02 23:26:15 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.18 2007/03/07 13:44:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -262,6 +262,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * @param channel the channel to clear
 	 */
 	public void onDisconnect(SocketChannel channel) {
+		logger.info("NET Disconnecting "+channel);
 		decoder.clear(channel);
 	}
 }
