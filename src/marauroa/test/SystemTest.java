@@ -1,5 +1,6 @@
 package marauroa.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -77,6 +78,9 @@ public class SystemTest {
 		try {
 			client.connect("localhost",3217);
 			client.login("testUsername", "password");
+			
+			String[] characters=client.getCharacters();
+			assertEquals(0, characters.length);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -112,6 +116,9 @@ public class SystemTest {
 			client.connect("localhost",3217);
 			client.login("testUsername", "password");
 			client.login("testUsername", "password");
+
+			String[] characters=client.getCharacters();
+			assertEquals(0, characters.length);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -130,8 +137,13 @@ public class SystemTest {
 			client.login("testUsername", "password");
 
 			RPObject template=new RPObject();
+			template.put("client", "junit");
 
 			client.createCharacter("testCharacter", template);
+
+			String[] characters=client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;

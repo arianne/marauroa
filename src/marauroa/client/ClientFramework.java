@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.14 2007/03/07 13:41:11 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.15 2007/03/07 19:30:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -180,7 +180,7 @@ public abstract class ClientFramework {
 				logger.info("Login correct");
 				received++;
 				break;
-				/* Server send the character list */
+			/* Server send the character list */
 			case S2C_CHARACTERLIST:
 				logger.info("Recieved Character list");
 				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
@@ -189,7 +189,7 @@ public abstract class ClientFramework {
 				onAvailableCharacters(characters);
 				received++;
 				break;
-				/* Server sends the server info message with information about versions, homepage, etc... */
+			/* Server sends the server info message with information about versions, homepage, etc... */
 			case S2C_SERVERINFO:
 				logger.info("Recieved Server info");
 				String[] info = ((MessageS2CServerInfo) msg).getContents();
@@ -198,13 +198,13 @@ public abstract class ClientFramework {
 				onServerInfo(info);
 				received++;
 				break;
-				/* Login failed, explain reason on event */
+			/* Login failed, explain reason on event */
 			case S2C_LOGIN_NACK:
 				MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
 				logger.info("Login failed. Reason: "+ msgNACK.getResolution());
 
 				throw new LoginFailedException(msgNACK.getResolution());
-				/* If message doesn't match, store it, someone will need it. */
+			/* If message doesn't match, store it, someone will need it. */
 			default:
 				messages.add(msg);
 			}
@@ -305,9 +305,9 @@ public abstract class ClientFramework {
 
 		netMan.addMessage(msgCA);
 
-		int recieved = 0;
+		int received = 0;
 
-		while (recieved != 1) {
+		while (received != 2) {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
@@ -315,9 +315,19 @@ public abstract class ClientFramework {
 			case S2C_CREATECHARACTER_ACK:
 				logger.info("Create character ACK");
 				//TODO: Do something with the returned values.
-				recieved++;
+				received++;
 				break;
 
+				/* Server send the character list */
+			case S2C_CHARACTERLIST:
+				logger.info("Recieved Character list");
+				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
+
+				/* We notify client of characters by calling the callback method. */
+				onAvailableCharacters(characters);
+				received++;
+				break;
+				
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATECHARACTER_NACK:
 				logger.info("Create character NACK");
@@ -352,9 +362,9 @@ public abstract class ClientFramework {
 		Message msgL = new MessageC2SLogout(null);
 
 		netMan.addMessage(msgL);
-		int recieved = 0;
+		int received = 0;
 
-		while (recieved != 1) {
+		while (received != 1) {
 			Message msg = getMessage();
 			switch (msg.getType()) {
 			case S2C_LOGOUT_ACK:
@@ -377,7 +387,7 @@ public abstract class ClientFramework {
 	 * @throws IOException
 	 */
 	public synchronized boolean loop(int delta) {
-		boolean recievedMessages = false;
+		boolean receivedMessages = false;
 
 		/* Check network for new messages. */
 		Message newmsg=null;
@@ -391,9 +401,9 @@ public abstract class ClientFramework {
 			messages.add(newmsg);
 		}
 
-		/* For all the recieved messages do */
+		/* For all the received messages do */
 		for (Message msg : messages) {
-			recievedMessages = true;
+			receivedMessages = true;
 
 			switch (msg.getType()) {
 			/* It can be a perception message */
@@ -431,7 +441,7 @@ public abstract class ClientFramework {
 
 		messages.clear();
 
-		return recievedMessages;
+		return receivedMessages;
 	}
 
 	/**

@@ -8,8 +8,14 @@ import marauroa.common.net.message.TransferContent;
 
 public class MockClient extends ClientFramework {
 
+	private String[] characters;
+
 	public MockClient(String loggingProperties) {
 		super(loggingProperties);
+	}
+	
+	public String[] getCharacters() {
+		return characters;
 	}
 
 	@Override
@@ -24,8 +30,7 @@ public class MockClient extends ClientFramework {
 
 	@Override
 	protected void onAvailableCharacters(String[] characters) {
-		// TODO Auto-generated method stub
-		
+		this.characters=characters;		
 	}
 
 	@Override
