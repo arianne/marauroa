@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.23 2007/03/04 13:30:41 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.24 2007/03/07 19:04:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,7 @@ package marauroa.server.game;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,6 +29,8 @@ import marauroa.server.game.db.Transaction;
  * storage.
  */
 public class Statistics implements StatisticsMBean {
+	private static final int DATABASE_STATISTICS_LAPSUS = 60000;
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Statistics.class);
 
@@ -43,12 +45,16 @@ public class Statistics implements StatisticsMBean {
 	public static class Variables implements Iterable<String> {
 		private Map<String, Long> content;
 
-		/** Constructor */
+		/** 
+		 * Constructor 
+		 */
 		public Variables() {
 			content = new HashMap<String, Long>();
 		}
 
-		/** Clear all the variables */
+		/** 
+		 * Clear all the variables 
+		 */
 		public void clear() {
 			content.clear();
 		}
@@ -108,7 +114,7 @@ public class Statistics implements StatisticsMBean {
 		 */
 		public void print(PrintWriter out, double diff) {
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeML(type) + "\" value=\""
+				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\""
 						+ content.get(type) + "\" />");
 			}
 		}
@@ -121,15 +127,14 @@ public class Statistics implements StatisticsMBean {
 	private Variables sinceStart;
 
 	/** Server start time */
-	private Date startTime;
+	private long startTime;
 
 	/** The date of the last statistics event added to database */
-	private Date lastStatisticsEventAdded;
+	private long lastStatisticsEventAdded;
 
 	private Statistics() {
-		startTime = new Date();
-
-		lastStatisticsEventAdded = new Date();
+		startTime = System.currentTimeMillis();
+		lastStatisticsEventAdded = startTime;
 
 		now = new Variables();
 		sinceStart = new Variables();
@@ -194,31 +199,23 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	/**
-	 * Print to $(webfolder)/server_stats.xml file the content of the statistics object.
+	 * Print to $statistics_filename file the content of the statistics object.
 	 */
 	public void print() {
 		try {
 			Configuration conf = Configuration.getConfiguration();
 			String webfolder = conf.get("statistics_filename");
 
-			Date actualTime = new Date();
-			double diff = (actualTime.getTime() - startTime.getTime()) / 1000;
-
-			if ((actualTime.getTime() - lastStatisticsEventAdded.getTime()) > 60000) {
-				lastStatisticsEventAdded = actualTime;
-
-				JDBCDatabase database = JDBCDatabase.getDatabase();
-				Transaction transaction = database.getTransaction();
-
-				database.addStatisticsEvent(transaction, now);
-				transaction.commit();
-
-				now.clear();
-				init();
-			}
+			long actualTime = System.currentTimeMillis();
+			/*
+			 * Store statistics to database. 
+			 */
+			addStatisticsEventRow(actualTime);
 
 			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder));
-			out.println("<statistics time=\"" + (actualTime.getTime() / 1000)+ "\">");
+
+			double diff = (actualTime - startTime) / 1000;
+			out.println("<statistics time=\"" + (actualTime / 1000)+ "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
 			long totalMemory = Runtime.getRuntime().totalMemory() / 1024;
@@ -231,7 +228,22 @@ public class Statistics implements StatisticsMBean {
 			out.println("</statistics>");
 			out.close();
 		} catch (Exception e) {
-			logger.error("error while printing statistics", e);
+			logger.warn("error while printing statistics", e);
+		}
+	}
+
+	private void addStatisticsEventRow(long actualTime) throws SQLException {
+		if ((actualTime - lastStatisticsEventAdded) > DATABASE_STATISTICS_LAPSUS) {
+			lastStatisticsEventAdded = actualTime;
+
+			JDBCDatabase database = JDBCDatabase.getDatabase();
+			Transaction transaction = database.getTransaction();
+
+			database.addStatisticsEvent(transaction, now);
+			transaction.commit();
+
+			now.clear();
+			init();
 		}
 	}
 
@@ -242,7 +254,7 @@ public class Statistics implements StatisticsMBean {
 	 *            string to escape
 	 * @return escaped strings
 	 */
-	private static String escapeML(String param) {
+	private static String escapeXML(String param) {
 		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 }
