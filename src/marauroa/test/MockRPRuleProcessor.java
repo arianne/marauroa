@@ -14,6 +14,7 @@ import marauroa.server.game.CharacterResult;
 import marauroa.server.game.Result;
 import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
+import marauroa.server.game.db.JDBCSQLHelper;
 import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
@@ -26,6 +27,18 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
+		JDBCSQLHelper sql=JDBCSQLHelper.get();
+
+		try {
+			Transaction transaction=db.getTransaction();
+			transaction.begin();
+			sql.runDBScript(transaction, "marauroa/test/clear.sql");
+			sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
+			transaction.commit();
+		} catch(SQLException e) {
+			e.printStackTrace();
+			TestHelper.fail();
+		}
 	}
 
 	private static MockRPRuleProcessor rules;
@@ -50,6 +63,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	}
 
+	/**
+	 * Checks if game is correct.
+	 * We expect TestFramework at 0.00 version.
+	 */
 	public boolean checkGameVersion(String game, String version) {
 		TestHelper.assertEquals("TestFramework", game);
 		TestHelper.assertEquals("0.00", version);
@@ -59,19 +76,20 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		return game.equals("TestFramework") && version.equals("0.00");
 	}
 
+	/**
+	 * Create an account for a player.
+	 */
 	public AccountResult createAccount(String username, String password, String email) {
 		Transaction trans=db.getTransaction();
 		try {
 			trans.begin();
 
-			logger.info("Creating account: "+ username);
 			if(db.hasPlayer(trans,username)) {
 				logger.warn("Account already exist: "+username);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 
 			db.addPlayer(trans, username, Hash.hash(password), email);
-			logger.info("Account '"+username+"' CREATED");
 
 			trans.commit();
 			return new AccountResult(Result.OK_CREATED, username);
@@ -86,9 +104,30 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		}
 	}
 
+	/**
+	 * Create a character for a player
+	 */
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
-		// TODO Auto-generated method stub
-		return null;
+		Transaction trans=db.getTransaction();
+		try {
+			RPObject player=new RPObject(template);
+
+			if(db.hasCharacter(trans, username, character)) {
+				logger.warn("Character already exist: "+character);
+				return new CharacterResult(Result.FAILED_PLAYER_EXISTS, character, player);
+			}
+
+			db.addCharacter(trans, username, character, player);
+			return new CharacterResult(Result.OK_CREATED, character, player);
+		} catch(Exception e) {
+			try {
+				trans.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			TestHelper.fail();
+			return new CharacterResult(Result.FAILED_EXCEPTION, character, template);
+		}
 	}
 
 	public void endTurn() {
