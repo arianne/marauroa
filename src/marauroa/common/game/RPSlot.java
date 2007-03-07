@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.39 2007/02/28 19:40:25 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.40 2007/03/07 19:12:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -380,10 +380,26 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			out.write(name);
 		}
 
-		//TODO: Consider hidden objects.
-		out.write(objects.size());
+		int size=0;
+		/*
+		 * Count the amount of non hidden objects.
+		 */
 		for (RPObject object : objects) {
-			object.writeObject(out, level);
+			if(!object.isHidden()) {
+				size++;
+			}
+		}
+		
+		if(level==DetailLevel.FULL) {
+			size=objects.size();
+		}
+		
+		out.write(size);
+		
+		for (RPObject object : objects) {
+			if(level==DetailLevel.FULL || !object.isHidden()) {
+				object.writeObject(out, level);
+			}
 		}
 	}
 

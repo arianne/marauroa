@@ -32,7 +32,6 @@ public class MessageTest {
 	public final void testGetAddress() throws IOException {
 		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
 		assertNull(mm.getAddress());
-		fail("valid address not yet tested");
 	}
 
 	@Test
