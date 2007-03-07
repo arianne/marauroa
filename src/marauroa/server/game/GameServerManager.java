@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.58 2007/03/07 18:28:25 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.59 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,11 @@ import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.Result;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterACK.java,v 1.1 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterACK.java,v 1.2 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,21 @@ public class MessageS2CCreateCharacterACK extends Message {
 		this.template=template;
 	}
 	
+	/**
+	 * Returns the name of the character the server finally assigned us.
+	 * @return the name of the character the server finally assigned us.
+	 */
+	public String getCharacter() {
+		return character;
+	}
+	
+	/**
+	 * The modifications of the template that the server did.
+	 * @return The modifications of the template that the server did.
+	 */
+	public RPObject getTemplate() {
+		return template;
+	}
 	/**
 	 * This method returns a String that represent the object
 	 *

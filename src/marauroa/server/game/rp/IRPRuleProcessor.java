@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.10 2007/03/07 17:24:16 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.11 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,12 +14,12 @@ package marauroa.server.game.rp;
 
 import java.util.List;
 
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.server.game.AccountResult;
-import marauroa.server.game.CharacterResult;
 
 /**
  * Interface for the class that is in charge of executing actions. Implement it

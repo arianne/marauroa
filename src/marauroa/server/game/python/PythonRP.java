@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.13 2007/03/05 18:18:24 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.14 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,12 +15,12 @@ package marauroa.server.game.python;
 
 import java.util.List;
 
+import marauroa.common.game.AccountResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
+import marauroa.common.game.Result;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.AccountResult;
-import marauroa.server.game.Result;
 import marauroa.server.game.rp.RPServerManager;
 
 @Deprecated

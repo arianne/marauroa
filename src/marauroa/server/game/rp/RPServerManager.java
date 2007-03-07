@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.20 2007/03/05 18:18:25 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.21 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPAction;
@@ -29,9 +31,7 @@ import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.AccountResult;
 import marauroa.server.game.ActionInvalidException;
-import marauroa.server.game.CharacterResult;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;

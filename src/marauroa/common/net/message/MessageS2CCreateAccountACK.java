@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.3 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.4 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,14 @@ public class MessageS2CCreateAccountACK extends Message {
 	public MessageS2CCreateAccountACK(SocketChannel source, String username) {
 		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
 		this.username=username;
+	}
+
+	/**
+	 * Returns the username created by the server.
+	 * @return the username created by the server.
+	 */
+	public String getUsername() {
+		return username;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.1 2007/02/05 18:37:41 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.2 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,9 @@ import java.nio.channels.SocketChannel;
  */
 public class MessageS2CCreateAccountNACK extends Message {
 	public enum Reasons {
-		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
+		UNKNOWN_REASON, 
+		USERNAME_EXISTS, 
+		FIELD_TOO_SHORT,
 	}
 
 	static private String[] text = { "Unknown reason",

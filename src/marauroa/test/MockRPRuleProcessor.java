@@ -5,13 +5,13 @@ import java.util.List;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.server.game.AccountResult;
-import marauroa.server.game.CharacterResult;
-import marauroa.server.game.Result;
+import marauroa.common.game.Result;
 import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCSQLHelper;

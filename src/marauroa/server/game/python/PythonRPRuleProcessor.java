@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.22 2007/03/05 18:18:25 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.23 2007/03/07 19:50:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,12 +16,12 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import marauroa.common.Log4J;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
-import marauroa.server.game.AccountResult;
-import marauroa.server.game.CharacterResult;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;

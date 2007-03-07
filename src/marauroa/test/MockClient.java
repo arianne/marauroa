@@ -41,8 +41,9 @@ public class MockClient extends ClientFramework {
 
 	@Override
 	protected void onServerInfo(String[] info) {
-		// TODO Auto-generated method stub
-		
+		/* 
+		 * I don't care about them 
+		 */
 	}
 
 	@Override

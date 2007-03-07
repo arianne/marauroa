@@ -1,4 +1,4 @@
-package marauroa.server.game;
+package marauroa.common.game;
 
 /** This enum represent the possible values returned by the create account process.
  *  Caller should verify that the process ended in OK_ACCOUNT_CREATED.

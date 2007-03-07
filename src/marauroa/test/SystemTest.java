@@ -9,6 +9,8 @@ import java.io.IOException;
 import marauroa.client.CreateAccountFailedException;
 import marauroa.client.LoginFailedException;
 import marauroa.client.TimeoutException;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
 
@@ -55,7 +57,9 @@ public class SystemTest {
 	@Test
 	public void createAccount() throws IOException, TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		client.connect("localhost", 3217);
-		client.createAccount("testUsername", "password", "email");
+		AccountResult res=client.createAccount("testUsername", "password", "email");
+		
+		assertEquals("testUsername",res.getUsername());
 
 		/*
 		 * Doing a second time should fail
@@ -139,8 +143,15 @@ public class SystemTest {
 			RPObject template=new RPObject();
 			template.put("client", "junit");
 
-			client.createCharacter("testCharacter", template);
-
+			CharacterResult res=client.createCharacter("testCharacter", template);
+			assertEquals("testCharacter",res.getCharacter());
+			
+			RPObject result=res.getTemplate();
+			assertTrue(result.has("client"));
+			assertEquals("junit", result.get("client"));
+			assertTrue(result.has("name"));
+			assertEquals("testCharacter", result.get("name"));
+			
 			String[] characters=client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
@@ -149,5 +160,4 @@ public class SystemTest {
 			throw e;
 		}
 	}
-
 }

@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.15 2007/03/07 19:30:00 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.16 2007/03/07 19:50:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,11 @@ import marauroa.client.net.TCPNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAPublicKey;
+import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
@@ -36,7 +39,9 @@ import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
 import marauroa.common.net.message.MessageC2STransferACK;
 import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
@@ -260,12 +265,14 @@ public abstract class ClientFramework {
 	 * @throws CreateAccountFailedException
 	 * @throws IOException
 	 */
-	public synchronized void createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
+	public synchronized AccountResult createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 		netMan.addMessage(msgCA);
 
 		int recieved = 0;
+		
+		AccountResult result=null;
 
 		while (recieved != 1) {
 			Message msg = getMessage();
@@ -274,7 +281,10 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
-				//TODO: Do something with the returned values.
+				
+				MessageS2CCreateAccountACK msgack=(MessageS2CCreateAccountACK)msg;				
+				result=new AccountResult(Result.OK_CREATED, msgack.getUsername());
+				
 				recieved++;
 				break;
 
@@ -286,6 +296,8 @@ public abstract class ClientFramework {
 				messages.add(msg);
 			}
 		}
+		
+		return result;
 	}
 
 	/**
@@ -300,12 +312,14 @@ public abstract class ClientFramework {
 	 * @throws CreateCharacterFailedException
 	 * @throws IOException
 	 */
-	public synchronized void createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException {
+	public synchronized CharacterResult createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException {
 		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
 
 		netMan.addMessage(msgCA);
 
 		int received = 0;
+		
+		CharacterResult result=null;
 
 		while (received != 2) {
 			Message msg = getMessage();
@@ -314,7 +328,10 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATECHARACTER_ACK:
 				logger.info("Create character ACK");
-				//TODO: Do something with the returned values.
+				
+				MessageS2CCreateCharacterACK msgack=(MessageS2CCreateCharacterACK)msg;
+				
+				result=new CharacterResult(Result.OK_CREATED, msgack.getCharacter(), msgack.getTemplate());
 				received++;
 				break;
 
@@ -337,6 +354,8 @@ public abstract class ClientFramework {
 				messages.add(msg);
 			}
 		}
+		
+		return result;
 	}
 
 
