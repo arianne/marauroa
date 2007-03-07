@@ -18,16 +18,19 @@ import marauroa.server.game.db.JDBCSQLHelper;
 import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
+import marauroa.server.game.rp.RPWorld;
 
 public class MockRPRuleProcessor implements IRPRuleProcessor{
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MockRPRuleProcessor.class);
 
 	private IDatabase db;
+	private RPWorld world;
 
 	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
 		JDBCSQLHelper sql=JDBCSQLHelper.get();
+		world=MockRPWorld.get();
 
 		try {
 			Transaction transaction=db.getTransaction();
@@ -150,13 +153,16 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
-		// TODO Auto-generated method stub
-		return false;
+		RPObject result=world.remove(object.getID());
+		TestHelper.assertNotNull(result);
+		return true;
 	}
 
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
-		// TODO Auto-generated method stub
-		return false;
+		object.put("zoneid","test");
+		world.add(object);
+		
+		return true;
 	}
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
@@ -166,6 +172,5 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	public void setContext(RPServerManager rpman) {
 		// TODO Auto-generated method stub
-
 	}
 }

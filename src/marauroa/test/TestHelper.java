@@ -1,5 +1,6 @@
 package marauroa.test;
 
+
 public class TestHelper {
 
 	public static void assertEquals(Object expected, Object val) {
@@ -10,6 +11,12 @@ public class TestHelper {
 
 	public static void fail() {
 		throw new FailedException("Forced fail.");
+	}
+
+	public static void assertNotNull(Object result) {
+		if(result==null) {
+			throw new FailedException("expected null but got "+result);
+		}		
 	}
 
 }

@@ -160,4 +160,29 @@ public class SystemTest {
 			throw e;
 		}
 	}
+
+	/**
+	 * Test the create character process.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void chooseCharacter() throws Exception {
+		try {
+			client.connect("localhost",3217);
+			client.login("testUsername", "password");
+
+			String[] characters=client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
+			
+			boolean choosen=client.chooseCharacter("testCharacter");
+			assertTrue(choosen);
+			
+			client.logout();
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }
