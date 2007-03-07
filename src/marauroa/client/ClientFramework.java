@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.13 2007/03/06 20:41:46 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.14 2007/03/07 13:41:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -313,15 +313,17 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			/* Account was created */
 			case S2C_CREATECHARACTER_ACK:
-				logger.debug("Create character ACK");
+				logger.info("Create character ACK");
 				//TODO: Do something with the returned values.
+				recieved++;
 				break;
 
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATECHARACTER_NACK:
-				logger.debug("Create character NACK");
+				logger.info("Create character NACK");
 				throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
 			default:
+				logger.info(msg);
 				messages.add(msg);
 			}
 		}
@@ -356,10 +358,10 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 			switch (msg.getType()) {
 			case S2C_LOGOUT_ACK:
-				logger.debug("Logout ACK");
+				logger.info("Logout ACK");
 				return true;
 			case S2C_LOGOUT_NACK:
-				logger.debug("Logout NACK");
+				logger.info("Logout NACK");
 				return false;
 			default:
 				messages.add(msg);
