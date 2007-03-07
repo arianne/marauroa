@@ -1,5 +1,6 @@
 package marauroa.server.game.container.test;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
@@ -36,7 +37,10 @@ public class TestSecureLogin {
 		 * Make sure database is initialized-
 		 */
 		PlayerEntryContainer.getContainer();
+		loadRSAKey();
+	}
 
+	public static void loadRSAKey() throws IOException {
 		key = new RSAKey(
 				new BigInteger(Configuration.getConfiguration().get("n")), 
 				new BigInteger(Configuration.getConfiguration().get("d")), 
@@ -53,8 +57,8 @@ public class TestSecureLogin {
 		String password="password";
 		System.out.println(Hash.toHexString(Hash.hash(password)));
 
-		for(int i=0;i<10;i++)
-		simulateSecureLogin(password);
+		PlayerEntry.SecuredLoginInfo login=simulateSecureLogin("testUsername",password);
+		assertTrue(login.verify());
 	}
 
 	/**
@@ -66,9 +70,11 @@ public class TestSecureLogin {
 	public void testLoginFailure() throws SQLException {
 		String password="badpassword";
 
-		assertFalse(simulateSecureLogin(password));
+		PlayerEntry.SecuredLoginInfo login=simulateSecureLogin("testUsername",password);
+		assertFalse(login.verify());
 	}
-	private boolean simulateSecureLogin(String password) throws SQLException {
+	
+	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password) throws SQLException {
 		byte[] serverNonce=Hash.random(Hash.hashLength());
 		byte[] clientNonce=Hash.random(Hash.hashLength());
 		
@@ -88,10 +94,10 @@ public class TestSecureLogin {
 
 		byte[] cryptedPassword = key.encodeByteArray(b2);
 		
-		login.username="testUsername";
+		login.username=username;
 		login.clientNonce=clientNonce;
 		login.password=cryptedPassword;
 		
-		return login.verify();
+		return login;
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.6 2007/02/28 22:54:38 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.7 2007/03/07 17:22:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,14 +18,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.RSAKey;
+import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.test.TestSecureLogin;
 import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.Transaction;
 
@@ -97,10 +103,13 @@ public class TestPlayerAccess {
 	 * RSA key of the server to encript the password. ( and this is stored at marauroa.ini )
 	 *
 	 * @throws SQLException
+	 * @throws IOException 
 	 */
 	@Test
-	public void changePassword() throws SQLException {
+	public void changePassword() throws SQLException, IOException {
 		String username="testUser";
+		
+		TestSecureLogin.loadRSAKey();
 
 		Transaction transaction=database.getTransaction();
 		try {
@@ -108,9 +117,15 @@ public class TestPlayerAccess {
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
+			PlayerEntry.SecuredLoginInfo login=TestSecureLogin.simulateSecureLogin(username,"testPassword");
+			assertTrue(database.verify(transaction, login));
+
 			database.changePassword(transaction, username, "anewtestPassword");
 
-			/* TODO: There is no way of testing if password is correct or not. */
+			/* To test if password is correct we need to use the Secure login test unit */
+			login=TestSecureLogin.simulateSecureLogin(username,"anewtestPassword");
+			assertTrue(database.verify(transaction, login));
+			
 		} finally {
 			transaction.rollback();
 		}
