@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.59 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.60 2007/03/07 20:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -429,7 +429,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
-				netMan.disconnectClient(msg.getSocketChannel());
+				// TODO: It is causing a deadlock problem
+				// As soon as client close the connection, the socket will be free.
+				// And there will be no problems at all.
+				//netMan.disconnectClient(msg.getSocketChannel());
 			} else {
 				/* If RPManager returned false, that means that logout is not allowed right now, so
 				 * player request is rejected.

@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.8 2007/02/10 16:52:14 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.9 2007/03/07 20:26:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,6 +71,8 @@ class NioServer extends Thread {
 	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
+		super("NioServer");
+		
 		keepRunning = true;
 		isFinished = false;
 		
@@ -122,7 +124,7 @@ class NioServer extends Thread {
 	}
 
 	/**
-	 * Finisht this thread in a correct way.
+	 * Finish this thread in a correct way.
 	 */
 	public void finish() {
 		keepRunning = false;
