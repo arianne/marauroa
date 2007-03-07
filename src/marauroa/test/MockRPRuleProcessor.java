@@ -111,6 +111,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		Transaction trans=db.getTransaction();
 		try {
 			RPObject player=new RPObject(template);
+			
+			player.put("name", character);
+			player.put("version", "0.00");
+			player.put("ATK",50);
 
 			if(db.hasCharacter(trans, username, character)) {
 				logger.warn("Character already exist: "+character);

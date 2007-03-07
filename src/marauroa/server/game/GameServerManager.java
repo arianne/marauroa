@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.57 2007/03/07 17:24:16 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.58 2007/03/07 18:28:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -581,7 +581,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			if (result == Result.OK_CREATED) {
 				logger.debug("Character (" + msg.getCharacter() + ") created for account "+entry.username);
 				MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(msg.getSocketChannel(), val.getCharacter(), val.getTemplate());
+				msgCreateCharacterACK.setClientID(clientid);
 				netMan.sendMessage(msgCreateCharacterACK);
+
+				/* Build player character list and send it to client */
+				String[] characters = entry.getCharacters().toArray(new String[0]);
+				MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getSocketChannel(), characters);
+				msgCharacters.setClientID(clientid);
+				netMan.sendMessage(msgCharacters);
 			} else {
 				MessageS2CCreateCharacterNACK.Reasons reason;
 
