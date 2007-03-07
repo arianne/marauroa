@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.52 2007/03/02 08:23:37 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.53 2007/03/07 17:22:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -141,7 +141,10 @@ public class RPObject extends Attributes {
 	public void hide() {
 		hidden=true;
 
-		//TODO: A hidden object should be removed from the perception.
+		/*
+		 * NOTE: A hidden object should be removed from the perception.
+		 * So either call hide before adding object to a zone or call IRPZone.hide() instead.
+		 */		
 	}
 
 	/**
@@ -152,7 +155,10 @@ public class RPObject extends Attributes {
 	public void unhide() {
 		hidden=false;
 
-		//TODO: An object that is now unhidden should be added to the perception.
+		/*
+		 * NOTE: An object that is now unhidden should be added to the perception.
+		 * So either call unhide before adding object to a zone or call IRPZone.unhide() instead.
+		 */		
 	}
 
 	/**

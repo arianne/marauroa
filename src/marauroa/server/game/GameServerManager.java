@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.56 2007/03/07 13:44:42 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.57 2007/03/07 17:24:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -502,9 +502,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/* Send the action to RP Manager */
 			RPAction action = msg.getRPAction();
 
-			/* TODO: These are action attributes that are important for RP functionality.
+			/* NOTE: These are action attributes that are important for RP functionality.
 			 *  Tag them in such way that it is not possible to change them on a buggy
-			 *  RP implementation.
+			 *  RP implementation or it will cause problems at server.
 			 */
 			RPObject object=entry.object;
 			action.put("sourceid", object.get("sourceid"));

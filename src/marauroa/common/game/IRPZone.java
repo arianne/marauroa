@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.15 2007/02/27 18:33:50 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.16 2007/03/07 17:25:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,7 +27,6 @@ import java.util.Iterator;
  *
  * @author miguel
  */
-//TODO: Review exceptions
 public interface IRPZone extends Iterable<RPObject> {
 	/** An unique ID for this zone */
 	public static class ID implements marauroa.common.net.Serializable {

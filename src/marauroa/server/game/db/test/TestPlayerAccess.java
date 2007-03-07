@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.7 2007/03/07 17:22:41 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.8 2007/03/07 17:29:30 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -19,17 +19,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
-import marauroa.common.crypto.RSAKey;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.test.TestSecureLogin;
 import marauroa.server.game.db.JDBCDatabase;

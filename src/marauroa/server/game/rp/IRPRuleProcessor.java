@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.9 2007/03/05 18:27:30 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.10 2007/03/07 17:24:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,6 @@ import marauroa.server.game.CharacterResult;
  * Also your game can handle what to do at player entering, player leaving and decide what to do 
  * when player timeouts because connection has been dropped for example. 
  * 
- * TODO: Find a way to enforce this. (The static modifier is not allowed in interfaces.)
  */
 public interface IRPRuleProcessor {	
 	/**

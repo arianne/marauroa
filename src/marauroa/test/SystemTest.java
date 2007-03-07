@@ -13,7 +13,6 @@ import marauroa.common.net.InvalidVersionException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test the whole system.

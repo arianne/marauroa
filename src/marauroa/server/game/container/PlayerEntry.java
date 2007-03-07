@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.19 2007/03/07 13:44:42 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.20 2007/03/07 17:22:41 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -282,8 +282,11 @@ public class PlayerEntry {
 	 * @return
 	 */
 	boolean isRemovable() {
-		// TODO: Add logged players that didn't choose a character.
-		return state==ClientState.CONNECTION_ACCEPTED && System.currentTimeMillis()-creationTime>TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
+		/*
+		 * Add logged players that didn't choose a character or that have not even login yet.
+		 */
+		boolean isInOKState=(state==ClientState.CONNECTION_ACCEPTED || state==ClientState.LOGIN_COMPLETE);
+		return isInOKState && System.currentTimeMillis()-creationTime>TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
 	}
 
 	@Override
