@@ -21,8 +21,9 @@ public class CharacterResult {
 
 	/**
 	 * Constructor
-	 * @param result the result of creating the account.
-	 * @param username the username generated.
+	 * @param result the result of creating the character.
+	 * @param character the username generated.
+	 * @param template the template of the object to create
 	 */
 	public CharacterResult(Result result, String character, RPObject template) {
 		this.result=result;
