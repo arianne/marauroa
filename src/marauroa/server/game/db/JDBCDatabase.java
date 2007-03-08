@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.32 2007/03/08 17:05:54 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.33 2007/03/08 17:44:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1139,8 +1139,6 @@ public class JDBCDatabase implements IDatabase {
 	private int storeRPObject(Transaction transaction, RPObject object) throws IOException, SQLException {
 		Connection connection = transaction.getConnection();
 
-		int object_id = -1;
-
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
@@ -1156,16 +1154,16 @@ public class JDBCDatabase implements IDatabase {
 		// setup stream for blob
 		ByteArrayInputStream inStream = new ByteArrayInputStream(array.toByteArray());
 
-		String objectid = null;
+		int object_id = -1;
 
 		if (object.has("#db_id")) {
-			objectid = object.get("#db_id");
+			object_id = object.getInt("#db_id");
 		}
 
 		String query;
 
-		if (objectid != null && hasRPObject(transaction, object_id)) {
-			query = "update rpobject data=? where object_id=" + objectid;
+		if (object_id != -1 && hasRPObject(transaction, object_id)) {
+			query = "update rpobject set data=? where object_id=" + object_id;
 		} else {
 			query = "insert into rpobject(object_id,data) values(null,?)";
 		}
@@ -1177,7 +1175,7 @@ public class JDBCDatabase implements IDatabase {
 		ps.close();
 
 		// If object is new, get the objectid we gave it.
-		if (objectid == null) {
+		if (object_id == -1) {
 			Statement stmt = connection.createStatement();
 			query = "select LAST_INSERT_ID() as inserted_id from rpobject";
 			logger.debug("storeRPObject is executing query " + query);
