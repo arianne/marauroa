@@ -1,4 +1,4 @@
-/* $Id: TestCharacterAccess.java,v 1.3 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: TestCharacterAccess.java,v 1.4 2007/03/08 18:08:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -216,8 +216,12 @@ public class TestCharacterAccess {
 		Transaction transaction=database.getTransaction();
 		try {
 			transaction.begin();
+			assertFalse(database.hasPlayer(transaction, username));
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			
+			assertFalse(database.hasCharacter(transaction, username, character));
 			database.addCharacter(transaction, username, character, player);
+			
 			RPObject loaded=database.loadCharacter(transaction, username, character);
 			assertEquals(player,loaded);
 		} finally {

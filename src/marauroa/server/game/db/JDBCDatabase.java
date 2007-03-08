@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.33 2007/03/08 17:44:19 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.34 2007/03/08 18:08:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -598,10 +598,12 @@ public class JDBCDatabase implements IDatabase {
 			Statement stmt = connection.createStatement();
 
 			int objectid=storeRPObject(transaction, player);
-			String query="update characters set object_id="+objectid+" where charname='"+character+"'";
+			int id = getDatabasePlayerId(transaction, username);
+			
+			String query="update characters set object_id="+objectid+" where charname='"+character+"' and player_id="+id;
 			logger.info("storeCharacter is executing query " + query);
 			logger.info("Character: "+player);
-			// TODO: Not correct. It should use too the username.
+
 			stmt.execute(query);
 
 		} catch (SQLException sqle) {
@@ -632,8 +634,8 @@ public class JDBCDatabase implements IDatabase {
 			Connection connection = transaction.getConnection();
 			Statement stmt = connection.createStatement();
 
-			// TODO: Not correct. It should use too the username.
-			String query="select object_id from characters where charname='"+character+"'";
+			int id = getDatabasePlayerId(transaction, username);
+			String query="select object_id from characters where charname='"+character+"' and player_id="+id;
 			logger.info("loadCharacter is executing query " + query);
 			ResultSet result=stmt.executeQuery(query);
 
