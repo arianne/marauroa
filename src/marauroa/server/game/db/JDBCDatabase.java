@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.31 2007/03/08 11:00:22 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.32 2007/03/08 17:05:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -447,6 +447,8 @@ public class JDBCDatabase implements IDatabase {
 
 			String query = "insert into characters(player_id,charname,object_id) values("
 				+ id + ",'" + character + "'," + object_id + ")";
+			logger.info("addCharacter is executing query " + query);
+			logger.info("Character: "+player);
 			stmt.execute(query);
 			stmt.close();
 
@@ -597,6 +599,8 @@ public class JDBCDatabase implements IDatabase {
 
 			int objectid=storeRPObject(transaction, player);
 			String query="update characters set object_id="+objectid+" where charname='"+character+"'";
+			logger.info("storeCharacter is executing query " + query);
+			logger.info("Character: "+player);
 			// TODO: Not correct. It should use too the username.
 			stmt.execute(query);
 
@@ -630,13 +634,15 @@ public class JDBCDatabase implements IDatabase {
 
 			// TODO: Not correct. It should use too the username.
 			String query="select object_id from characters where charname='"+character+"'";
+			logger.info("loadCharacter is executing query " + query);
 			ResultSet result=stmt.executeQuery(query);
 
 			RPObject player=null;
 			if(result.next()) {
 				int objectid=result.getInt("object_id");
 				player=loadRPObject(transaction, objectid);
-			}
+				logger.info("Character: " + player);
+				}
 
 			result.close();
 			stmt.close();
@@ -1047,7 +1053,7 @@ public class JDBCDatabase implements IDatabase {
 		Connection connection = transaction.getConnection();
 
 		String query = "select data from rpobject where object_id=" + objectid;
-		logger.debug("loadRPObject is executing query " + query);
+		logger.info("loadRPObject is executing query " + query);
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
@@ -1163,7 +1169,7 @@ public class JDBCDatabase implements IDatabase {
 		} else {
 			query = "insert into rpobject(object_id,data) values(null,?)";
 		}
-		logger.debug("storeRPObject is executing query " + query);
+		logger.info("storeRPObject is executing query " + query);
 
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setBinaryStream(1, inStream, inStream.available());
@@ -1185,6 +1191,8 @@ public class JDBCDatabase implements IDatabase {
 
 			result.close();
 			stmt.close();
+		} else {
+			object_id=object.getInt("#db_id");
 		}
 
 		return object_id;
