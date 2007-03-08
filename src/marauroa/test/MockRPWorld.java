@@ -15,7 +15,7 @@ public class MockRPWorld extends RPWorld{
 	}
 	
 	protected void populate() {
-		IRPZone zone=new MarauroaRPZone("test");
+		IRPZone zone=new MarauroaRPZone("testOne");
 		addRPZone(zone);
 	}
 	/**
