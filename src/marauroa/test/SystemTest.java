@@ -58,7 +58,7 @@ public class SystemTest {
 	public void createAccount() throws IOException, TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		client.connect("localhost", 3217);
 		AccountResult res=client.createAccount("testUsername", "password", "email");
-		
+
 		assertEquals("testUsername",res.getUsername());
 
 		/*
@@ -82,7 +82,7 @@ public class SystemTest {
 		try {
 			client.connect("localhost",3217);
 			client.login("testUsername", "password");
-			
+
 			String[] characters=client.getCharacters();
 			assertEquals(0, characters.length);
 		} catch(Exception e) {
@@ -145,13 +145,13 @@ public class SystemTest {
 
 			CharacterResult res=client.createCharacter("testCharacter", template);
 			assertEquals("testCharacter",res.getCharacter());
-			
+
 			RPObject result=res.getTemplate();
 			assertTrue(result.has("client"));
 			assertEquals("junit", result.get("client"));
 			assertTrue(result.has("name"));
 			assertEquals("testCharacter", result.get("name"));
-			
+
 			String[] characters=client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
@@ -175,10 +175,37 @@ public class SystemTest {
 			String[] characters=client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
-			
+
 			boolean choosen=client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
-			
+
+			client.logout();
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * Test the perception management in game.
+	 */
+	@Test
+	public void receivePerceptions() throws Exception {
+		try {
+			client.connect("localhost",3217);
+			client.login("testUsername", "password");
+
+			String[] characters=client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
+
+			boolean choosen=client.chooseCharacter("testCharacter");
+			assertTrue(choosen);
+
+			while(client.getPerceptions()<5) {
+				client.loop(0);
+			}
+
 			client.logout();
 		} catch(Exception e) {
 			e.printStackTrace();
