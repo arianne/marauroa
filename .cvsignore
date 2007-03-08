@@ -21,3 +21,4 @@ marauroa-*.zip
 .fbprefs
 .checkstyle
 .pmd
+server.log*
