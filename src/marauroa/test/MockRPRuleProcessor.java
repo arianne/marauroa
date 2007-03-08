@@ -159,7 +159,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
-		object.put("zoneid","testOne");
+		object.put("zoneid","test");
 		world.add(object);
 		
 		return true;

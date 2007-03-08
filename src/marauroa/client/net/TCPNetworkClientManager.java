@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.4 2007/02/26 22:33:13 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.5 2007/03/08 22:43:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -316,7 +316,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			}
 
 			isfinished = true;
-			logger.debug("run() finished");
+			logger.warn("run() finished");
 		}
 	}
 
