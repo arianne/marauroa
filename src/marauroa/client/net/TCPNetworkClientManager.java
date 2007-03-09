@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.5 2007/03/08 22:43:22 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.6 2007/03/09 09:09:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -128,17 +128,18 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		keepRunning = false;
 		connected=false;
 
-		readManager.interrupt();
-
-		while (isfinished == false) {
-			Thread.yield();
-		}
 
 		try {
 			socket.close();
 		} catch (IOException e) {
 			// We don't care about the error.
 			logger.error(e, e);
+		}
+
+		readManager.interrupt();
+
+		while (isfinished == false) {
+			Thread.yield();
 		}
 
 		logger.debug("NetworkClientManager is down");
@@ -253,7 +254,12 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 */
 		private byte[] readByteStream() throws IOException {
 			byte[] sizebuffer = new byte[4];
-			is.read(sizebuffer);
+
+			if (is.read(sizebuffer) < 0) {
+				isfinished = true;
+				return null;
+			}
+
 			int size = (sizebuffer[0] & 0xFF)
 			+ ((sizebuffer[1] & 0xFF) << 8)
 			+ ((sizebuffer[2] & 0xFF) << 16)

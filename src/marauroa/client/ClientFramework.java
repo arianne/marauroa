@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.16 2007/03/07 19:50:14 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.17 2007/03/09 09:09:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -271,7 +271,7 @@ public abstract class ClientFramework {
 		netMan.addMessage(msgCA);
 
 		int recieved = 0;
-		
+
 		AccountResult result=null;
 
 		while (recieved != 1) {
@@ -281,10 +281,10 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATEACCOUNT_ACK:
 				logger.debug("Create account ACK");
-				
-				MessageS2CCreateAccountACK msgack=(MessageS2CCreateAccountACK)msg;				
+
+				MessageS2CCreateAccountACK msgack=(MessageS2CCreateAccountACK)msg;
 				result=new AccountResult(Result.OK_CREATED, msgack.getUsername());
-				
+
 				recieved++;
 				break;
 
@@ -296,7 +296,7 @@ public abstract class ClientFramework {
 				messages.add(msg);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -318,7 +318,7 @@ public abstract class ClientFramework {
 		netMan.addMessage(msgCA);
 
 		int received = 0;
-		
+
 		CharacterResult result=null;
 
 		while (received != 2) {
@@ -328,9 +328,9 @@ public abstract class ClientFramework {
 			/* Account was created */
 			case S2C_CREATECHARACTER_ACK:
 				logger.info("Create character ACK");
-				
+
 				MessageS2CCreateCharacterACK msgack=(MessageS2CCreateCharacterACK)msg;
-				
+
 				result=new CharacterResult(Result.OK_CREATED, msgack.getCharacter(), msgack.getTemplate());
 				received++;
 				break;
@@ -344,7 +344,7 @@ public abstract class ClientFramework {
 				onAvailableCharacters(characters);
 				received++;
 				break;
-				
+
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATECHARACTER_NACK:
 				logger.info("Create character NACK");
@@ -354,7 +354,7 @@ public abstract class ClientFramework {
 				messages.add(msg);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -388,6 +388,9 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			case S2C_LOGOUT_ACK:
 				logger.info("Logout ACK");
+
+				netMan.finish();
+
 				return true;
 			case S2C_LOGOUT_NACK:
 				logger.info("Logout NACK");

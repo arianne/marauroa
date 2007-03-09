@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.34 2007/03/08 18:08:55 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.35 2007/03/09 09:09:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -447,8 +447,8 @@ public class JDBCDatabase implements IDatabase {
 
 			String query = "insert into characters(player_id,charname,object_id) values("
 				+ id + ",'" + character + "'," + object_id + ")";
-			logger.info("addCharacter is executing query " + query);
-			logger.info("Character: "+player);
+			logger.debug("addCharacter is executing query " + query);
+			logger.debug("Character: "+player);
 			stmt.execute(query);
 			stmt.close();
 
@@ -599,10 +599,10 @@ public class JDBCDatabase implements IDatabase {
 
 			int objectid=storeRPObject(transaction, player);
 			int id = getDatabasePlayerId(transaction, username);
-			
+
 			String query="update characters set object_id="+objectid+" where charname='"+character+"' and player_id="+id;
-			logger.info("storeCharacter is executing query " + query);
-			logger.info("Character: "+player);
+			logger.debug("storeCharacter is executing query " + query);
+			logger.debug("Character: "+player);
 
 			stmt.execute(query);
 
@@ -636,14 +636,14 @@ public class JDBCDatabase implements IDatabase {
 
 			int id = getDatabasePlayerId(transaction, username);
 			String query="select object_id from characters where charname='"+character+"' and player_id="+id;
-			logger.info("loadCharacter is executing query " + query);
+			logger.debug("loadCharacter is executing query " + query);
 			ResultSet result=stmt.executeQuery(query);
 
 			RPObject player=null;
 			if(result.next()) {
 				int objectid=result.getInt("object_id");
 				player=loadRPObject(transaction, objectid);
-				logger.info("Character: " + player);
+				logger.debug("Character: " + player);
 				}
 
 			result.close();
@@ -834,20 +834,20 @@ public class JDBCDatabase implements IDatabase {
 	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		try {
 			if (Hash.compare(Hash.hash(informations.clientNonce),informations.clientNonceHash) != 0) {
-				logger.info("Different hashs for client Nonce");
+				logger.debug("Different hashs for client Nonce");
 				return false;
 			}
 
 			byte[] b1 = informations.key.decodeByteArray(informations.password);
 			byte[] b2 = Hash.xor(informations.clientNonce,informations.serverNonce);
 			if (b2 == null) {
-				logger.info("B2 is null");
+				logger.debug("B2 is null");
 				return false;
 			}
 
 			byte[] password = Hash.xor(b1, b2);
 			if (password == null) {
-				logger.info("Password is null");
+				logger.debug("Password is null");
 				return false;
 			}
 
@@ -873,7 +873,7 @@ public class JDBCDatabase implements IDatabase {
 				if ("active".equals(account_status)) {
 					isplayer=true;
 				} else {
-					logger.info("Username/password is ok, but account is in status {"+ account_status + "}");
+					logger.debug("Username/password is ok, but account is in status {"+ account_status + "}");
 				}
 
 				if(!userNameFromDB.equals(informations.username)) {
@@ -1055,7 +1055,7 @@ public class JDBCDatabase implements IDatabase {
 		Connection connection = transaction.getConnection();
 
 		String query = "select data from rpobject where object_id=" + objectid;
-		logger.info("loadRPObject is executing query " + query);
+		logger.debug("loadRPObject is executing query " + query);
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
@@ -1169,7 +1169,7 @@ public class JDBCDatabase implements IDatabase {
 		} else {
 			query = "insert into rpobject(object_id,data) values(null,?)";
 		}
-		logger.info("storeRPObject is executing query " + query);
+		logger.debug("storeRPObject is executing query " + query);
 
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setBinaryStream(1, inStream, inStream.available());

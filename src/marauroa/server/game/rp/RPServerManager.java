@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.21 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.22 2007/03/09 09:09:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -220,7 +220,7 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * Creates a character for a account of a player
-	 * 
+	 *
 	 * @param username player's username
 	 * @param character
 	 * @param template the template we are going to use to create the object.
@@ -229,7 +229,7 @@ public class RPServerManager extends Thread {
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		return ruleProcessor.createCharacter(username, character, template);
 	}
-	
+
 	private Perception getPlayerPerception(PlayerEntry entry) {
 		Perception perception = null;
 
@@ -387,7 +387,7 @@ public class RPServerManager extends Thread {
 				stop = System.nanoTime();
 
 				try {
-					logger.info("Turn time elapsed: " + ((stop - start) / 1000)	+ " microsecs");
+					logger.debug("Turn time elapsed: " + ((stop - start) / 1000)	+ " microsecs");
 					delay = turnDuration - ((stop - start) / 1000000);
 					if (delay < 0) {
 						StringBuilder sb = new StringBuilder();
