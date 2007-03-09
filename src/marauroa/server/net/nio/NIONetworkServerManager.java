@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.18 2007/03/07 13:44:43 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.19 2007/03/09 20:29:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -192,6 +192,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 */
 	public void sendMessage(Message msg) {
 		try {
+			logger.info("send message(type=" + msg.getType() + ") from "
+					+ msg.getClientID() + " full [" + msg + "]");
+
 			byte[] data = encoder.encode(msg);
 			server.send(msg.getSocketChannel(), data);
 		} catch (IOException e) {
@@ -240,6 +243,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				try {
 					Message msg = decoder.decode(event.channel, event.data);
 					if(msg!=null) {
+						logger.info("recv message(type=" + msg.getType() + ") from "
+								+ msg.getClientID() + " full [" + msg + "]");
+
 						messages.add(msg);
 					}
 				} catch (InvalidVersionException e) {

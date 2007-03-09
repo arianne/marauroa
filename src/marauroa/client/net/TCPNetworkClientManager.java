@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.6 2007/03/09 09:09:26 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.7 2007/03/09 20:29:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -133,7 +133,6 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			socket.close();
 		} catch (IOException e) {
 			// We don't care about the error.
-			logger.error(e, e);
 		}
 
 		readManager.interrupt();
@@ -228,8 +227,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				Message msg=decoder.decode(null, data);
 
 				/* If logger is enable, print the message so it shows useful debugging information. */
-				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from "
+				if (true || logger.isDebugEnabled()) {
+					logger.info("build message(type=" + msg.getType() + ") from "
 							+ msg.getClientID() + " full [" + msg + "]");
 				}
 
@@ -295,7 +294,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				counter++;
 			} while (start + read < size);
 
-			logger.debug("Received TCP Packet");
+			logger.info("Received Marauroa Packet");
 
 			return buffer;
 		}
@@ -316,7 +315,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					storeMessage(address, buffer);
 				} catch (IOException e) {
 					/* Report the exception */
-					logger.fatal("error while processing tcp-packets", e);
+					logger.fatal("Connection broken.", e);
 					keepRunning = false;
 				}
 			}
@@ -360,6 +359,13 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					if (msg.getType() == Message.MessageType.C2S_OUTOFSYNC) {
 						processedMessages.clear();
 					}
+
+					/* If logger is enable, print the message so it shows useful debugging information. */
+					if (true || logger.isDebugEnabled()) {
+						logger.info("build message(type=" + msg.getType() + ") from "
+								+ msg.getClientID() + " full [" + msg + "]");
+					}
+
 
 					os.write(encoder.encode(msg));
 				}

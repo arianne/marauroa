@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.17 2007/03/09 09:09:25 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.18 2007/03/09 20:29:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -389,8 +389,6 @@ public abstract class ClientFramework {
 			case S2C_LOGOUT_ACK:
 				logger.info("Logout ACK");
 
-				netMan.finish();
-
 				return true;
 			case S2C_LOGOUT_NACK:
 				logger.info("Logout NACK");
@@ -401,6 +399,14 @@ public abstract class ClientFramework {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Disconnect the socket and finish the network communications.
+	 *
+	 */
+	public void close() {
+		netMan.finish();
 	}
 
 	/**

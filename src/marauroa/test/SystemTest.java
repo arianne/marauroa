@@ -42,7 +42,7 @@ public class SystemTest {
 	 */
 	@After
 	public void disconnectClient() {
-		client=null;
+		client.close();
 	}
 
 	/**
