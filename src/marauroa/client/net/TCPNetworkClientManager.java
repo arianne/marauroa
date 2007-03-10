@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.7 2007/03/09 20:29:28 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.8 2007/03/10 13:10:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -227,8 +227,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				Message msg=decoder.decode(null, data);
 
 				/* If logger is enable, print the message so it shows useful debugging information. */
-				if (true || logger.isDebugEnabled()) {
-					logger.info("build message(type=" + msg.getType() + ") from "
+				if (logger.isDebugEnabled()) {
+					logger.debug("build message(type=" + msg.getType() + ") from "
 							+ msg.getClientID() + " full [" + msg + "]");
 				}
 
@@ -294,7 +294,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				counter++;
 			} while (start + read < size);
 
-			logger.info("Received Marauroa Packet");
+			logger.debug("Received Marauroa Packet");
 
 			return buffer;
 		}
@@ -362,7 +362,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 					/* If logger is enable, print the message so it shows useful debugging information. */
 					if (true || logger.isDebugEnabled()) {
-						logger.info("build message(type=" + msg.getType() + ") from "
+						logger.debug("build message(type=" + msg.getType() + ") from "
 								+ msg.getClientID() + " full [" + msg + "]");
 					}
 

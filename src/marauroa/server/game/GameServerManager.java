@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.61 2007/03/10 13:02:32 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.62 2007/03/10 13:10:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -459,6 +459,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		
 		/* We need to adquire the lock because this is handle by another thread */
 		playerContainer.getLock().requestWriteLock();
+		logger.info("GAME Disconnecting "+channel);
 
 		try{
 			PlayerEntry entry=playerContainer.get(channel);
@@ -472,18 +473,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			playerContainer.remove(entry.clientid);
 
+			/*
+			 * If client is still logging, don't notify RP as it knows nothing about
+			 * this client. That means state != of GAME_BEGIN
+			 */
 			if(entry.state==ClientState.GAME_BEGIN) {
 				/*
 				 * If client was playing the game request the RP to disconnected it.
 				 * Otherwise just ignore this client as it was not yet logged.
 				 */
 				rpMan.disconnect(entry);
-			} else {
-				/*
-				 * If client is still logging, don't notify RP as it knows nothing about
-				 * this client
-				 */
-				logger.info("GAME Disconnecting "+channel+" with: "+entry);
 			}
 		} finally {
 			playerContainer.getLock().releaseLock();
@@ -723,7 +722,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * reject the login request until the block pass.
 			 */
 			if(info.isAccountBlocked()) {
-				logger.info("Blocked account for player "+ info.username);
+				logger.debug("Blocked account for player "+ info.username);
 				/* Send player the Login NACK message */
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
 						MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
@@ -736,7 +735,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/* We verify the username and the password to make sure player is who he/she says he/she is. */
 			if (!info.verify()) {
 				/* If the verification fails we send player a NACK and record the event */
-				logger.info("Incorrect username/password for player "+ info.username);
+				logger.debug("Incorrect username/password for player "+ info.username);
 				stats.add("Players invalid login", 1);
 				info.addLoginEvent(msg.getAddress(), false);
 
@@ -764,7 +763,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						existing.storeRPObject(object);
 					}
 				}
-				logger.info("Disconnecting PREVIOUS "+existing.channel+" with "+existing);
+				logger.debug("Disconnecting PREVIOUS "+existing.channel+" with "+existing);
 				playerContainer.remove(existing.clientid);
 			}
 

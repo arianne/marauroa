@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.19 2007/03/09 20:29:28 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.20 2007/03/10 13:10:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,7 +104,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * This method notify the thread to finish it execution
 	 */
 	public void finish() {
-		logger.info("shutting down NetworkServerManager");
+		logger.debug("shutting down NetworkServerManager");
 		keepRunning = false;
 
 		connectionValidator.finish();
@@ -115,7 +115,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 			Thread.yield();
 		}
 
-		logger.info("NetworkServerManager is down");
+		logger.debug("NetworkServerManager is down");
 	}
 
 	/**
@@ -154,14 +154,13 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		Socket socket=channel.socket();
 
 		if(connectionValidator.checkBanned(socket)) {
-			logger.info("Reject connect from banned IP: "+socket.getInetAddress());
+			logger.debug("Reject connect from banned IP: "+socket.getInetAddress());
 
 			/* If address is banned, just close connection */
 			try {
 				server.close(channel);
 			} catch (IOException e) {
 				/* I don't think I want to listen to complains... */
-				logger.info(e);
 			}
 		}
 	}
@@ -192,8 +191,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 */
 	public void sendMessage(Message msg) {
 		try {
-			logger.info("send message(type=" + msg.getType() + ") from "
-					+ msg.getClientID() + " full [" + msg + "]");
+			if(logger.isDebugEnabled()) {
+				logger.debug("send message(type=" + msg.getType() + ") from "
+						+ msg.getClientID() + " full [" + msg + "]");
+			}
 
 			byte[] data = encoder.encode(msg);
 			server.send(msg.getSocketChannel(), data);
@@ -243,8 +244,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				try {
 					Message msg = decoder.decode(event.channel, event.data);
 					if(msg!=null) {
-						logger.info("recv message(type=" + msg.getType() + ") from "
-								+ msg.getClientID() + " full [" + msg + "]");
+						if(logger.isDebugEnabled()) {
+							logger.debug("recv message(type=" + msg.getType() + ") from "
+									+ msg.getClientID() + " full [" + msg + "]");
+						}
 
 						messages.add(msg);
 					}

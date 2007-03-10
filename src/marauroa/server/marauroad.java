@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.52 2007/03/07 19:21:13 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.53 2007/03/10 13:10:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -320,7 +320,7 @@ public class marauroad extends Thread {
 				// Note: Log4J ist shutdown already at this point
 				logger.warn("User requesting shutdown");
 				finish();
-				logger.warn("Shutdown completed. See you later");
+				logger.info("Shutdown completed. See you later!");
 			}
 		});
 
