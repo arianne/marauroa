@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.63 2007/03/10 17:56:39 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.64 2007/03/10 18:11:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -452,10 +452,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
-				// TODO: It is causing a deadlock problem
-				// As soon as client close the connection, the socket will be free.
-				// And there will be no problems at all.
-				//netMan.disconnectClient(msg.getSocketChannel());
 			} else {
 				/* If RPManager returned false, that means that logout is not allowed right now, so
 				 * player request is rejected.
@@ -474,30 +470,23 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This method is called by network manager when a client connection is lost
 	 * or even when the client logout correctly.
+	 * 
 	 * @param channel the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		// TODO: Deadlock on lock.
-		
 		/* We need to adquire the lock because this is handle by another thread */
-		playerContainer.getLock().requestWriteLock();
 		logger.info("GAME Disconnecting "+channel);
 
-		try{
-			PlayerEntry entry=playerContainer.get(channel);
-			if(entry==null) {
-				/*
-				 * If connection has not even started login it won't have a entry and
-				 * it will be null
-				 */
-				return;
-			}
-			
-			disconnect(entry);
-
-		} finally {
-			playerContainer.getLock().releaseLock();
+		PlayerEntry entry=playerContainer.get(channel);
+		if(entry==null) {
+			/*
+			 * If connection has not even started login it won't have a entry and
+			 * it will be null
+			 */
+			return;
 		}
+
+		disconnect(entry);
 	}
 	
 	/**
