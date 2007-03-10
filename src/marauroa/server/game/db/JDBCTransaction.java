@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.8 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.9 2007/03/10 22:21:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -105,10 +105,11 @@ public class JDBCTransaction implements Transaction {
 					stmt.close();
 					valid = true;
 				} else {
-					logger.error("connection invalid, already closed.");
+					logger.warn("connection invalid, already closed.");
 				}
 			} catch (SQLException sqle) {
-				logger.error("cannot validate connection", sqle);
+				logger.warn("cannot validate connection", sqle);
+				logger.warn("Now server will try to reconnecto to MySQL");
 			}
 		}
 		return valid;
