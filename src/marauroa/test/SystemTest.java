@@ -246,7 +246,6 @@ public class SystemTest {
 	/**
 	 * Test the perception management in game.
 	 */
-	@Ignore
 	@Test
 	public void stressServer() throws Exception {
 		for(int i=0;i<128;i++) {

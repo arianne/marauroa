@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.60 2007/03/07 20:26:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.61 2007/03/10 13:02:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -228,6 +228,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	private void storeConnectedPlayers() {
+		// TODO: ConcurrentModificationException
 		for(PlayerEntry entry: playerContainer) {
 			/*
 			 * It may be a bit slower than disconnecting here, but server is going down
@@ -454,6 +455,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param channel the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
+		// TODO: Deadlock on lock.
+		
 		/* We need to adquire the lock because this is handle by another thread */
 		playerContainer.getLock().requestWriteLock();
 
