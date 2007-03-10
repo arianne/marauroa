@@ -5,17 +5,24 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Random;
 
 import marauroa.client.CreateAccountFailedException;
 import marauroa.client.LoginFailedException;
 import marauroa.client.TimeoutException;
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
+import marauroa.server.marauroad;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test the whole system.
@@ -26,7 +33,28 @@ import org.junit.Test;
  */
 public class SystemTest {
 	private MockClient client;
+	private static marauroad server;
 
+	@BeforeClass
+	public static void createServer() {
+		Log4J.init("marauroa/server/log4j.properties");
+		server = marauroad.getMarauroa();
+		Configuration.setConfigurationFile("src/marauroa/test/server.ini");
+
+		try {
+			Configuration.getConfiguration();
+		} catch (Exception e) {
+			fail("Unable to find configuration file");
+		}
+		
+		server.start();
+	}
+
+	@AfterClass
+	public static void takeDownServer() {
+		server.finish();
+	}
+	
 	/**
 	 * Create a new client each time
 	 *
@@ -211,5 +239,66 @@ public class SystemTest {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	private int index;
+
+	/**
+	 * Test the perception management in game.
+	 */
+	@Ignore
+	@Test
+	public void stressServer() throws Exception {
+		for(int i=0;i<128;i++) {
+			new Thread() {
+				public void run() {
+					try {
+						int i=index++;
+						MockClient client=new MockClient("log4j.properties");
+
+						Thread.sleep(Math.abs(new Random().nextInt()%20000));
+						client.connect("localhost",3217);
+						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
+						assertEquals("testUsername"+i,resAcc.getUsername());
+
+						client.login("testUsername"+i, "password");
+
+						RPObject template=new RPObject();
+						template.put("client", "junit"+i);
+						CharacterResult resChar=client.createCharacter("testCharacter", template);
+						assertEquals("testCharacter",resChar.getCharacter());
+
+						RPObject result=resChar.getTemplate();
+						assertTrue(result.has("client"));
+						assertEquals("junit"+i, result.get("client"));
+
+						String[] characters=client.getCharacters();
+						assertEquals(1, characters.length);
+						assertEquals("testCharacter", characters[0]);
+
+						boolean choosen=client.chooseCharacter("testCharacter");
+						assertTrue(choosen);
+
+						int amount=new Random().nextInt()%30;
+						while(client.getPerceptions()<amount) {
+							client.loop(0);
+						}
+
+						client.logout();
+						client.close();
+					} catch(Exception e) {
+						e.printStackTrace();
+						fail("Exception");
+					}
+				}
+			}.start();
+		}
+		
+		/*
+		 *   20000 ms of random sleep
+		 * +  5000 ms of thread execution time 
+		 * + 15000 ms of safety.
+		 */
+		Thread.sleep(40000); 
 	}
 }

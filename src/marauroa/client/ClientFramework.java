@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.18 2007/03/09 20:29:27 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.19 2007/03/10 12:59:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -406,7 +406,12 @@ public abstract class ClientFramework {
 	 *
 	 */
 	public void close() {
-		netMan.finish();
+		if(netMan!=null) {
+			/*
+			 * Netman is null while we don't call connect method.
+			 */
+			netMan.finish();
+		}
 	}
 
 	/**
