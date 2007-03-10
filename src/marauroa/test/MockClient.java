@@ -68,12 +68,10 @@ public class MockClient extends ClientFramework {
 		}
 
 		public void onPerceptionBegin(byte type, int timestamp) {
-			System.out.println("Begin perception");
 			perceptions++;
 		}
 
 		public void onPerceptionEnd(byte type, int timestamp) {
-			System.out.println("End perception");
 		}
 
 		public void onSynced() {

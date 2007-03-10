@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.19 2007/03/10 12:59:31 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.20 2007/03/10 13:30:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -151,7 +151,7 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			/* Server sends its public RSA key */
 			case S2C_LOGIN_SENDKEY: {
-				logger.info("Recieved Key");
+				logger.debug("Recieved Key");
 				key = ((MessageS2CLoginSendKey) msg).getKey();
 
 				clientNonce = Hash.random(Hash.hashLength());
@@ -160,7 +160,7 @@ public abstract class ClientFramework {
 			}
 			/* Server sends a random big integer */
 			case S2C_LOGIN_SENDNONCE: {
-				logger.info("Recieved Server Nonce");
+				logger.debug("Recieved Server Nonce");
 				if (serverNonce != null) {
 					throw new LoginFailedException("Already recieved a serverNonce");
 				}
@@ -182,12 +182,12 @@ public abstract class ClientFramework {
 			}
 			/* Server replied with ACK to login operation */
 			case S2C_LOGIN_ACK:
-				logger.info("Login correct");
+				logger.debug("Login correct");
 				received++;
 				break;
 			/* Server send the character list */
 			case S2C_CHARACTERLIST:
-				logger.info("Recieved Character list");
+				logger.debug("Recieved Character list");
 				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 				/* We notify client of characters by calling the callback method. */
@@ -196,7 +196,7 @@ public abstract class ClientFramework {
 				break;
 			/* Server sends the server info message with information about versions, homepage, etc... */
 			case S2C_SERVERINFO:
-				logger.info("Recieved Server info");
+				logger.debug("Recieved Server info");
 				String[] info = ((MessageS2CServerInfo) msg).getContents();
 
 				/* We notify client of this info by calling the callback method. */
@@ -206,7 +206,7 @@ public abstract class ClientFramework {
 			/* Login failed, explain reason on event */
 			case S2C_LOGIN_NACK:
 				MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
-				logger.info("Login failed. Reason: "+ msgNACK.getResolution());
+				logger.debug("Login failed. Reason: "+ msgNACK.getResolution());
 
 				throw new LoginFailedException(msgNACK.getResolution());
 			/* If message doesn't match, store it, someone will need it. */
@@ -327,7 +327,7 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			/* Account was created */
 			case S2C_CREATECHARACTER_ACK:
-				logger.info("Create character ACK");
+				logger.debug("Create character ACK");
 
 				MessageS2CCreateCharacterACK msgack=(MessageS2CCreateCharacterACK)msg;
 
@@ -337,7 +337,7 @@ public abstract class ClientFramework {
 
 				/* Server send the character list */
 			case S2C_CHARACTERLIST:
-				logger.info("Recieved Character list");
+				logger.debug("Recieved Character list");
 				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 				/* We notify client of characters by calling the callback method. */
@@ -347,10 +347,9 @@ public abstract class ClientFramework {
 
 			/* Account was not created. Reason explained on event. */
 			case S2C_CREATECHARACTER_NACK:
-				logger.info("Create character NACK");
+				logger.debug("Create character NACK");
 				throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
 			default:
-				logger.info(msg);
 				messages.add(msg);
 			}
 		}
@@ -387,11 +386,11 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 			switch (msg.getType()) {
 			case S2C_LOGOUT_ACK:
-				logger.info("Logout ACK");
+				logger.debug("Logout ACK");
 
 				return true;
 			case S2C_LOGOUT_NACK:
-				logger.info("Logout NACK");
+				logger.debug("Logout NACK");
 				return false;
 			default:
 				messages.add(msg);

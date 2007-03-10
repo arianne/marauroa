@@ -22,7 +22,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test the whole system.
@@ -248,7 +247,7 @@ public class SystemTest {
 	 */
 	@Test
 	public void stressServer() throws Exception {
-		for(int i=0;i<128;i++) {
+		for(int i=0;i<10;i++) {
 			new Thread() {
 				public void run() {
 					try {
