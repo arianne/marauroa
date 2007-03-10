@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.35 2007/03/09 09:09:27 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.36 2007/03/10 18:31:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -671,7 +671,7 @@ public class JDBCDatabase implements IDatabase {
 
 		Connection connection = transaction.getConnection();
 
-		String query = "select data from rpzone where zone_id='" + zoneid+"'";
+		String query = "select data from rpzone where zone_id='" + zoneid +"'";
 		logger.debug("loadRPZone is executing query " + query);
 
 		Statement stmt = connection.createStatement();
@@ -762,9 +762,9 @@ public class JDBCDatabase implements IDatabase {
 		String query;
 
 		if (hasRPZone(transaction, zone.getID())) {
-			query = "update rpzone set data=? where zone_id='" + zone.getID() +"'";
+			query = "update rpzone set data=? where zone_id='" + zoneid +"'";
 		} else {
-			query = "insert into rpzone(zone_id,data) values('"+zoneid+"',?)";
+			query = "insert into rpzone(zone_id,data) values('"+ zoneid +"',?)";
 		}
 		logger.debug("storeRPZone is executing query " + query);
 

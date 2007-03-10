@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.64 2007/03/10 18:11:24 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.65 2007/03/10 18:31:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -452,6 +452,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
+				
+				//TODO: Close connection here.
+				//Not done because it enters in a deadlock
 			} else {
 				/* If RPManager returned false, that means that logout is not allowed right now, so
 				 * player request is rejected.
@@ -474,7 +477,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param channel the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		/* We need to adquire the lock because this is handle by another thread */
+		/* We need to adquire the lock because this is handle by another thread */		
+		playerContainer.getLock().requestWriteLock();					
+
+		try {
 		logger.info("GAME Disconnecting "+channel);
 
 		PlayerEntry entry=playerContainer.get(channel);
@@ -487,6 +493,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 
 		disconnect(entry);
+		} finally {
+			playerContainer.getLock().releaseLock();					
+		}
 	}
 	
 	/**
