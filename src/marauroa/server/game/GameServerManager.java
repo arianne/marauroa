@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.62 2007/03/10 13:10:03 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.63 2007/03/10 17:56:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.game;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Configuration;
@@ -189,6 +190,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
 
+	/** A list of player entries to remove. */
+	private List<PlayerEntry> entriesToRemove;
+
 	/**
 	 * Constructor that initialize also the RPManager
 	 *
@@ -210,6 +214,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
+		entriesToRemove=new LinkedList<PlayerEntry>();
 	}
 
 	/**
@@ -228,13 +233,20 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	private void storeConnectedPlayers() {
-		// TODO: ConcurrentModificationException
 		for(PlayerEntry entry: playerContainer) {
 			/*
 			 * It may be a bit slower than disconnecting here, but server is going down
 			 * so there is no hurry.
 			 */
 			onDisconnect(entry.channel);
+		}
+
+		/*
+		 * Clean the entry to be removed.
+		 * We need to do in this way to avoid ConcurrentModificationException
+		 */
+		for(PlayerEntry entry: entriesToRemove) {
+			playerContainer.remove(entry.clientid);
 		}
 	}
 
@@ -245,7 +257,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
 
 				if (msg != null) {
-					playerContainer.getLock().requestWriteLock();
+					playerContainer.getLock().requestWriteLock();					
 					switch (msg.getType()) {
 					case C2S_LOGIN_REQUESTKEY:
 						logger.debug("Processing C2S Login Request Key Message");
@@ -291,6 +303,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						logger.debug("Unknown Message[" + msg.getType() + "]");
 						break;
 					}
+					
+					/*
+					 * Clean the entry to be removed.
+					 * We need to do in this way to avoid ConcurrentModificationException
+					 */
+					for(PlayerEntry entry: entriesToRemove) {
+						playerContainer.remove(entry.clientid);
+					}
+					entriesToRemove.clear();
+					
 					playerContainer.getLock().releaseLock();
 				}
 				stats.set("Players online", playerContainer.size());
@@ -470,22 +492,36 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 */
 				return;
 			}
+			
+			disconnect(entry);
 
-			playerContainer.remove(entry.clientid);
-
-			/*
-			 * If client is still logging, don't notify RP as it knows nothing about
-			 * this client. That means state != of GAME_BEGIN
-			 */
-			if(entry.state==ClientState.GAME_BEGIN) {
-				/*
-				 * If client was playing the game request the RP to disconnected it.
-				 * Otherwise just ignore this client as it was not yet logged.
-				 */
-				rpMan.disconnect(entry);
-			}
 		} finally {
 			playerContainer.getLock().releaseLock();
+		}
+	}
+	
+	/**
+	 * This method is used mainly by onDisconnect and RPServerManager to force the disconnection
+	 * of a player entry.
+	 * @param entry the player entry to remove.
+	 */
+	public void disconnect(PlayerEntry entry) {
+		entriesToRemove.add(entry);
+
+		/*
+		 * If client is still login, don't notify RP as it knows nothing about
+		 * this client. That means state != of GAME_BEGIN
+		 */
+		if(entry.state==ClientState.GAME_BEGIN) {
+			/*
+			 * If client was playing the game request the RP to disconnected it.
+			 */
+			try {
+				rpMan.onTimeout(entry.object);
+				entry.storeRPObject(entry.object);
+			} catch (Exception e) {
+				logger.error("Error disconnecting player"+entry, e);
+			}
 		}
 	}
 

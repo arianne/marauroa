@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.22 2007/03/09 09:09:27 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.23 2007/03/10 17:56:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.ActionInvalidException;
+import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -97,6 +98,11 @@ public class RPServerManager extends Thread {
 	private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
 
 	/**
+	 * The game manager pointer to disconnect players the good way.
+	 */
+	private GameServerManager gameMan;
+
+	/**
 	 * Constructor
 	 *
 	 * @param netMan
@@ -155,6 +161,10 @@ public class RPServerManager extends Thread {
 		// call the get() method without parameters to retrieve the singleton instance
 		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		ruleProcessor.setContext(this);
+	}
+	
+	public void setGameManager(GameServerManager gameMan) {
+		this.gameMan=gameMan;
 	}
 
 	/**
@@ -320,7 +330,7 @@ public class RPServerManager extends Thread {
 		}
 
 		for(PlayerEntry entry: playersToRemove) {
-			disconnect(entry);
+			gameMan.disconnect(entry);
 		}
 	}
 
@@ -469,24 +479,7 @@ public class RPServerManager extends Thread {
 	 * @param object the player object that we want to disconnect from world
 	 */
 	public void disconnectPlayer(RPObject object) {
-		/* We need to adquire the lock because this is handle by another thread */
-		playerContainer.getLock().requestWriteLock();
-
-		try {
-			PlayerEntry entry=playerContainer.get(object.getID());
-			disconnect(entry);
-		} finally {
-			playerContainer.getLock().releaseLock();
-		}
-	}
-
-
-	/**
-	 * This method disconnects a player from the server.
-	 * @param entry the player entry we want to use to disconnect player from world.
-	 */
-	public void disconnect(PlayerEntry entry) {
-		/* We check that player is not already removed */
+		PlayerEntry entry=playerContainer.get(object.getID());
 		if(entry==null) {
 			/* There is no player entry for such channel
 			 * This is not necesaryly an error, as the connection could be
@@ -495,21 +488,9 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		try {
-			RPObject object=entry.object;
-			/* We request to logout of game */
-			onTimeout(object);
-
-			entry.storeRPObject(object);
-		} catch (Exception e) {
-			logger.error("Error disconnecting player("+entry.username+"): ",e);
-		} finally {
-			stats.add("Players logout", 1);
-			/* Finally we remove the entry */
-			playerContainer.remove(entry.clientid);
-		}
+		gameMan.disconnect(entry);
 	}
-
+	
 	/**
 	 * This method exposes network layer connection validator so game logic can handle it.
 	 * @return the connection validator
