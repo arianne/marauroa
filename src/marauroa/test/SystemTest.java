@@ -247,7 +247,7 @@ public class SystemTest {
 	 */
 	@Test
 	public void stressServer() throws Exception {
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<60;i++) {
 			new Thread() {
 				public void run() {
 					try {

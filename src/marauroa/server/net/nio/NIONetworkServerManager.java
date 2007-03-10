@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.20 2007/03/10 13:10:03 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.21 2007/03/10 17:01:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -89,6 +89,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 		server=new NioServer(null, NetConst.tcpPort, this);
 		server.start();
+		
+		/*
+		 * Register network listener.
+		 */
+		server.registerDisconnectedListener(this);
 	}
 
 	/**
