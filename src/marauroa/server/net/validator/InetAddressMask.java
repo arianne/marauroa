@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.1 2007/01/18 12:42:40 arianne_rpg Exp $ */
+/* $Id: InetAddressMask.java,v 1.2 2007/03/11 21:17:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,6 +62,15 @@ public class InetAddressMask {
 		// was false and what part was true...
 
 		return (ret);
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + Arrays.hashCode(address);
+		result = PRIME * result + Arrays.hashCode(mask);
+		return result;
 	}
 
 	@Override

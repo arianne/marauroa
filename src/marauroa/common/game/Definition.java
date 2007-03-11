@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.10 2007/03/02 08:23:37 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.11 2007/03/11 21:17:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -436,6 +436,18 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((clazz == null) ? 0 : clazz.hashCode());
+		result = PRIME * result + code;
+		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
+		result = PRIME * result + ((type == null) ? 0 : type.hashCode());
+		result = PRIME * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object ot) {
 		if(ot==null || !(ot instanceof Definition)) {
 			return false;
@@ -453,4 +465,5 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		return result;
 	}
+
 }

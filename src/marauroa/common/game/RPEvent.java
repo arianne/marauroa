@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.12 2007/03/02 08:23:37 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.13 2007/03/11 21:17:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -164,6 +164,15 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		RPClass rpClass = owner.getRPClass();
 		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
 		value=def.deserialize(in);
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
+		result = PRIME * result + ((value == null) ? 0 : value.hashCode());
+		return result;
 	}
 
 	/**

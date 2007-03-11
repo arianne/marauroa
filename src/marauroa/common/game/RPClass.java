@@ -440,6 +440,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return defaultRPClass;
 	}
 
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
+		result = PRIME * result + ((parent == null) ? 0 : parent.hashCode());
+		result = PRIME * result + ((rpevents == null) ? 0 : rpevents.hashCode());
+		result = PRIME * result + ((rpslots == null) ? 0 : rpslots.hashCode());
+		result = PRIME * result + ((staticattributes == null) ? 0 : staticattributes.hashCode());
+		return result;
+	}
+
 	/**
 	 * Returns true if two objects are exactly equal
 	 * @param ot the object to compare with this one.
@@ -461,4 +474,5 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		return result;
 	}
+
 }
