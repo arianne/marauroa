@@ -31,8 +31,7 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testHasClass() {
-		@SuppressWarnings("unused")
-		RPClass a=new RPClass("A");
+		new RPClass("A");
 		assertTrue(RPClass.hasRPClass("A"));
 	}
 
