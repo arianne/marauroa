@@ -1,6 +1,7 @@
 package marauroa.test;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -26,6 +27,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 	private IDatabase db;
 	private RPWorld world;
+	private List<RPObject> players;
 
 	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
@@ -42,6 +44,8 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 			e.printStackTrace();
 			TestHelper.fail();
 		}
+		
+		players=new LinkedList<RPObject>();
 	}
 
 	private static MockRPRuleProcessor rules;
@@ -62,8 +66,15 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void beginTurn() {
-		// TODO Auto-generated method stub
-
+		for(RPObject player: players) {
+			int x=0;
+			if(player.has("x")) {
+				x=player.getInt("x");
+			}
+			
+			player.put("x", x+1);
+			world.modify(player);
+		}
 	}
 
 	/**
@@ -143,18 +154,21 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void execute(RPObject object, RPAction action) {
-		// TODO Auto-generated method stub
-
+		logger.info(object.get("name")+" running "+action);	
+		
+		object.addEvent("text", action.get("text"));		
+		world.modify(object);
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		RPObject result=world.remove(object.getID());
 		TestHelper.assertNotNull(result);
+		
+		players.remove(object);
 		return true;
 	}
 
@@ -162,12 +176,14 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		object.put("zoneid","test");
 		world.add(object);
 		
+		players.add(object);
+		
 		return true;
 	}
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
-		// TODO Auto-generated method stub
-
+		logger.warn("Client "+object.get("name")+" timeout");
+		onExit(object);
 	}
 
 	public void setContext(RPServerManager rpman) {
