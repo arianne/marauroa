@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.9 2007/03/10 22:21:28 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.10 2007/03/11 20:59:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,27 +62,26 @@ public class JDBCTransaction implements Transaction {
 	 * @throws SQLException
 	 */
 	public void begin() throws SQLException {
-			Statement stmt = connection.createStatement();
-			stmt.execute("start transaction;");
+		Statement stmt = connection.createStatement();
+		stmt.execute("start transaction;");
 	}
 
 	/**
 	 * commits the changes made to backstore.
 	 *
-	 * @exception TransactionException if the underlaying backstore throws an Exception
-	 * @throws SQLException
+	 * @throws SQLException if the underlaying backstore throws an Exception
 	 */
 	public void commit() throws SQLException {
-			logger.debug("Commiting");
-			connection.commit();
+		logger.debug("Commiting");
+		connection.commit();
 	}
 
 	/**
 	 * Makes previous changes to backstore invalid
 	 */
 	public void rollback() throws SQLException {
-			logger.debug("Rollback");
-			connection.rollback();
+		logger.debug("Rollback");
+		connection.rollback();
 	}
 
 	/**

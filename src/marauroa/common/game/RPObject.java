@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.53 2007/03/07 17:22:41 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.54 2007/03/11 20:59:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -939,9 +939,9 @@ public class RPObject extends Attributes {
 	/**
 	 * With the diferences computed by getDifferences in added and deleted we build an update
 	 * object by applying the changes.
+	 *
 	 * @param addedChanges the added and modified attributes, slots and events or null
 	 * @param deletedChanges the deleted attributes and slots or null
-	 * @throws Exception
 	 */
 	public void applyDifferences(RPObject addedChanges, RPObject deletedChanges) {
 		if (deletedChanges != null) {

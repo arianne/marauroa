@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.20 2007/03/10 13:30:26 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.21 2007/03/11 20:59:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -134,7 +134,6 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws LoginFailedException if login is rejected
-	 * @throws IOException
 	 */
 	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException {
 		int received = 0;
@@ -224,7 +223,6 @@ public abstract class ClientFramework {
 	 * @return true if choosing character is successful.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
-	 * @throws IOException
 	 */
 	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
@@ -263,7 +261,6 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateAccountFailedException
-	 * @throws IOException
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
@@ -310,7 +307,6 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateCharacterFailedException
-	 * @throws IOException
 	 */
 	public synchronized CharacterResult createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException {
 		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
@@ -374,7 +370,6 @@ public abstract class ClientFramework {
 	 * and maintain it on game world.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
-	 * @throws IOException
 	 */
 	public synchronized boolean logout() throws InvalidVersionException, TimeoutException {
 		Message msgL = new MessageC2SLogout(null);
@@ -415,8 +410,8 @@ public abstract class ClientFramework {
 
 	/**
 	 * Call this method to get and apply messages
+	 *
 	 * @param delta unused
-	 * @throws IOException
 	 */
 	public synchronized boolean loop(int delta) {
 		boolean receivedMessages = false;

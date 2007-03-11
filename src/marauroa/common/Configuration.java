@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.17 2007/03/04 13:44:25 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.18 2007/03/11 20:59:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,8 +118,6 @@ public class Configuration {
 	 * @param property
 	 *            the property we want the value
 	 * @return a string containing the value of the propierty
-	 * @exception PropertyNotFound
-	 *                if the property is not found.
 	 */
 	public String get(String property) {
 		return properties.getProperty(property);

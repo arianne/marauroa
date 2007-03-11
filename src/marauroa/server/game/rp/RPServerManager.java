@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.23 2007/03/10 17:56:39 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.24 2007/03/11 20:59:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,7 +144,6 @@ public class RPServerManager extends Thread {
 	 *
 	 * @param conf the Configuration class
 	 * @throws ClassNotFoundException
-	 * @throws PropertyNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException

@@ -32,7 +32,6 @@ public interface INetworkClientManagerInterface {
 	 *            timeout time in milliseconds
 	 * @return a Message or null if timeout happens
 	 * @throws InvalidVersionException
-	 * @throws IOException
 	 */
 	public abstract Message getMessage(int timeout) throws InvalidVersionException;
 

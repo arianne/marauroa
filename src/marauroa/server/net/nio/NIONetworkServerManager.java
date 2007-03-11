@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.21 2007/03/10 17:01:29 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.22 2007/03/11 20:59:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -192,7 +192,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * is pointed to.
 	 *
 	 * @param msg the message to be delivered.
-	 * @throws IOException
 	 */
 	public void sendMessage(Message msg) {
 		try {

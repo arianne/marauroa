@@ -430,8 +430,6 @@ public class TestRPObjectDelta2 {
 	 /**
 	  * This is a KNOWN bug that happens when a object from a visible slot is removed
 	  * in the object that has cleared the visible attributes.
-	  * @throws Exception
-	  *
 	  */
 	 @Ignore
 	 @Test

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.20 2007/03/07 17:22:41 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.21 2007/03/11 20:59:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -243,7 +243,8 @@ public class PlayerEntry {
 	 * and assign already it to the entry.
 	 * @return the loaded object
 	 * @throws IOException
-	 * @throws Exception if the load fails.
+	 * @throws IOException if the load fails.
+	 * @thorws SQLException in case of an database error
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
 		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(),username, character);
@@ -279,7 +280,8 @@ public class PlayerEntry {
 	 * This method tag this entry as removable if there is more than UNCOMPLETED_LOGIN_TIMEOUT milliseconds
 	 * since the creation time of the entry and the actual time and the entry has not completed
 	 * the login stage.
-	 * @return
+	 *
+	 * @return true, if it is removeable, false otherwise
 	 */
 	boolean isRemovable() {
 		/*

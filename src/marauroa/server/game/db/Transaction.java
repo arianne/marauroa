@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.5 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.6 2007/03/11 20:59:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,13 +37,14 @@ public interface Transaction {
 	/**
 	 * commits the changes made to backstore.
 	 *
-	 * @exception TransactionException if the underlaying backstore throws an Exception
-	 * @throws SQLException
+	 * @throws SQLException if the underlaying backstore throws an Exception
 	 */
 	public void commit() throws SQLException;
 
 	/**
 	 * Makes previous changes to backstore invalid
+	 *
+	 * @throws SQLException if the underlaying backstore throws an Exception
 	 */
 	public void rollback() throws SQLException;
 }
