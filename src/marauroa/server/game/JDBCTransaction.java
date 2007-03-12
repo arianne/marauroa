@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.8 2006/08/26 20:00:31 nhnb Exp $ */
+/* $Id: JDBCTransaction.java,v 1.8.6.1 2007/03/12 19:48:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,7 +92,7 @@ public class JDBCTransaction extends Transaction {
 					String query = "show tables";
 
 					logger.debug("isValid (" + query + ")");
-					ResultSet result = stmt.executeQuery(query);
+					stmt.executeQuery(query);
 
 					stmt.close();
 					valid = true;

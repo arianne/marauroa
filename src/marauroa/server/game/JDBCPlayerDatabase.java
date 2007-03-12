@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32 2006/12/10 19:37:42 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.1 2007/03/12 19:48:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -501,7 +501,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			ResultSet result = stmt.executeQuery(query);
 
 			if (result.next()) {
-                String userNameFromDB = result.getString("username");
 				String account_status = result.getString("status");
 				result.close();
 				stmt.close();

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.22 2006/08/26 20:00:28 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.22.6.1 2007/03/12 19:48:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -333,7 +333,6 @@ public class RPObject extends Attributes {
 
 		for (RPSlot slot : slots) {
 			if (getRPClass().isRPSlotVisible(slot.getName())) {
-				LinkedList<RPObject> objectToRemove = new LinkedList<RPObject>();
 
 				for (RPObject object : slot) {
 					i += object.clearVisible();
