@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.22 2007/03/12 19:31:16 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.23 2007/03/12 19:32:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -105,14 +105,14 @@ public abstract class ClientFramework {
 	private Message getMessage() throws InvalidVersionException, TimeoutException {
 		Message msg=null;
 
-		if (!messages.isEmpty()) {
-			msg=messages.remove(0);
-		} else {
+		if (messages.isEmpty()) {
 			msg=netMan.getMessage(TIMEOUT);
 
 			if(msg==null) {
 				throw new TimeoutException();
 			}
+		} else {
+			msg=messages.remove(0);
 		}
 
 		logger.debug("CF getMessage: "+ msg);
