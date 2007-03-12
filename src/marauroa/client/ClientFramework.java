@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.21 2007/03/11 20:59:21 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.22 2007/03/12 19:31:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,17 +103,20 @@ public abstract class ClientFramework {
 	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
 	 */
 	private Message getMessage() throws InvalidVersionException, TimeoutException {
+		Message msg=null;
+
 		if (!messages.isEmpty()) {
-			return messages.remove(0);
+			msg=messages.remove(0);
 		} else {
-			Message msg=netMan.getMessage(TIMEOUT);
+			msg=netMan.getMessage(TIMEOUT);
 
 			if(msg==null) {
 				throw new TimeoutException();
 			}
-
-			return msg;
 		}
+
+		logger.debug("CF getMessage: "+ msg);
+		return msg;
 	}
 
 	/**
@@ -289,8 +292,6 @@ public abstract class ClientFramework {
 			case S2C_CREATEACCOUNT_NACK:
 				logger.debug("Create account NACK");
 				throw new CreateAccountFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
-			default:
-				messages.add(msg);
 			}
 		}
 
@@ -345,8 +346,6 @@ public abstract class ClientFramework {
 			case S2C_CREATECHARACTER_NACK:
 				logger.debug("Create character NACK");
 				throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
-			default:
-				messages.add(msg);
 			}
 		}
 
@@ -382,13 +381,10 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 			case S2C_LOGOUT_ACK:
 				logger.debug("Logout ACK");
-
 				return true;
 			case S2C_LOGOUT_NACK:
 				logger.debug("Logout NACK");
 				return false;
-			default:
-				messages.add(msg);
 			}
 		}
 

@@ -21,30 +21,35 @@ import org.junit.Test;
 public class StressServer {
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 2;
+	private static final int NUM_CLIENTS = 1;
 
+	private static final boolean DETACHED_SERVER=true;
 	private static marauroad server;
 
-  	@BeforeClass
-  	public static void createServer() throws InterruptedException {
-  		Log4J.init("marauroa/server/log4j.properties");
-  		server = marauroad.getMarauroa();
-  		Configuration.setConfigurationFile("src/marauroa/test/server.ini");
+	@BeforeClass
+	public static void createServer() throws InterruptedException {
+		if(!DETACHED_SERVER) {
+			Log4J.init("log4j.properties");
+			server = marauroad.getMarauroa();
+			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
-  		try {
-  			Configuration.getConfiguration();
-  		} catch (Exception e) {
-  			fail("Unable to find configuration file");
-  		}
+			try {
+				Configuration.getConfiguration();
+			} catch (Exception e) {
+				fail("Unable to find configuration file");
+			}
 
-  		server.start();
-  		Thread.sleep(2000);
-  	}
+			server.start();
+			Thread.sleep(2000);
+		}
+	}
 
-  	@AfterClass
-  	public static void takeDownServer() {
-  		server.finish();
-  	}
+	@AfterClass
+	public static void takeDownServer() {
+		if(!DETACHED_SERVER) {
+			server.finish();
+		}
+	}
 
 	/**
 	 * Test the perception management in game.
@@ -57,7 +62,7 @@ public class StressServer {
 					try {
 						System.out.println("Initing client");
 						int i=index++;
-						MockClient client=new MockClient("log4j.properties");
+						MockClient client=new MockClient("client.properties");
 
 						Thread.sleep(Math.abs(new Random().nextInt()%2000));
 						client.connect("localhost",3217);
@@ -91,12 +96,12 @@ public class StressServer {
 							}
 
 							Thread.sleep(1000);
+							}
 
-
-						}
-
-						client.logout();
+						System.out.println("Trying to leave server");
+						assertTrue(client.logout());
 						client.close();
+						System.out.println("Leaved the server");
 					} catch(Exception e) {
 						e.printStackTrace();
 						fail("Exception");
@@ -111,6 +116,7 @@ public class StressServer {
 		/*
 		 */
 		while(completed!=NUM_CLIENTS) {
+			System.out.println("Completed: "+completed);
 			Thread.sleep(1000);
 		}
 	}
