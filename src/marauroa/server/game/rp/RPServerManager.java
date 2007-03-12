@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.24 2007/03/11 20:59:20 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.25 2007/03/12 22:27:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -161,7 +161,7 @@ public class RPServerManager extends Thread {
 		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		ruleProcessor.setContext(this);
 	}
-	
+
 	public void setGameManager(GameServerManager gameMan) {
 		this.gameMan=gameMan;
 	}
@@ -329,6 +329,7 @@ public class RPServerManager extends Thread {
 		}
 
 		for(PlayerEntry entry: playersToRemove) {
+			logger.warn("RP Disconnecting entry: "+entry);
 			gameMan.disconnect(entry);
 		}
 	}
@@ -489,7 +490,7 @@ public class RPServerManager extends Thread {
 
 		gameMan.disconnect(entry);
 	}
-	
+
 	/**
 	 * This method exposes network layer connection validator so game logic can handle it.
 	 * @return the connection validator

@@ -21,7 +21,7 @@ import org.junit.Test;
 public class StressServer {
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 1;
+	private static final int NUM_CLIENTS = 3;
 
 	private static final boolean DETACHED_SERVER=true;
 	private static marauroad server;
@@ -64,10 +64,11 @@ public class StressServer {
 						int i=index++;
 						MockClient client=new MockClient("client.properties");
 
-						Thread.sleep(Math.abs(new Random().nextInt()%2000));
 						client.connect("localhost",3217);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
 						assertEquals("testUsername"+i,resAcc.getUsername());
+
+						Thread.sleep(Math.abs(new Random().nextInt()%20)*1000);
 
 						client.login("testUsername"+i, "password");
 
@@ -87,7 +88,7 @@ public class StressServer {
 						boolean choosen=client.chooseCharacter("testCharacter");
 						assertTrue(choosen);
 
-						int amount=new Random().nextInt()%30+20;
+						int amount=Math.abs(new Random().nextInt()%30)+10;
 						while(client.getPerceptions()<amount) {
 							client.loop(0);
 

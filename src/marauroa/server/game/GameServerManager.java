@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.66 2007/03/12 16:32:08 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.67 2007/03/12 22:27:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -303,18 +303,21 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						logger.debug("Unknown Message[" + msg.getType() + "]");
 						break;
 					}
-
-					/*
-					 * Clean the entry to be removed.
-					 * We need to do in this way to avoid ConcurrentModificationException
-					 */
-					for(PlayerEntry entry: entriesToRemove) {
-						playerContainer.remove(entry.clientid);
-					}
-					entriesToRemove.clear();
-
 					playerContainer.getLock().releaseLock();
 				}
+
+				playerContainer.getLock().requestWriteLock();
+				/*
+				 * Clean the entry to be removed.
+				 * We need to do in this way to avoid ConcurrentModificationException
+				 */
+				for(PlayerEntry entry: entriesToRemove) {
+					playerContainer.remove(entry.clientid);
+				}
+				entriesToRemove.clear();
+
+				playerContainer.getLock().releaseLock();
+				logger.debug("PlayerEntryContainer size: "+ playerContainer.size());
 				stats.set("Players online", playerContainer.size());
 			}
 		} catch (Throwable e) {
@@ -521,6 +524,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				logger.error("Error disconnecting player"+entry, e);
 			}
 		}
+
+		entry.state=ClientState.LOGOUT_ACCEPTED;
 	}
 
 	static int lastActionIdGenerated = 0;
