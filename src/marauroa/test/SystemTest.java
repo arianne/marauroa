@@ -34,30 +34,31 @@ import org.junit.Test;
  */
 public class SystemTest {
 	private static final int NUM_CLIENTS = 60;
-	
+
 	private MockClient client;
   	private static marauroad server;
-  
+
   	@BeforeClass
-  	public static void createServer() {
+  	public static void createServer() throws InterruptedException {
   		Log4J.init("marauroa/server/log4j.properties");
   		server = marauroad.getMarauroa();
   		Configuration.setConfigurationFile("src/marauroa/test/server.ini");
-  
+
   		try {
   			Configuration.getConfiguration();
   		} catch (Exception e) {
   			fail("Unable to find configuration file");
   		}
-  		
+
   		server.start();
+  		Thread.sleep(2000);
   	}
-  
+
   	@AfterClass
   	public static void takeDownServer() {
   		server.finish();
   	}
-	
+
 	/**
 	 * Create a new client each time
 	 *
@@ -250,6 +251,7 @@ public class SystemTest {
 	/**
 	 * Test the perception management in game.
 	 */
+	@Ignore
 	@Test
 	public void stressServer() throws Exception {
 		for(int i=0;i<NUM_CLIENTS;i++) {
@@ -298,14 +300,14 @@ public class SystemTest {
 				}
 			}.start();
 		}
-		
+
 		/*
 		 *   20000 ms of random sleep
-		 * +  5000 ms of thread execution time 
+		 * +  5000 ms of thread execution time
 		 * + 15000 ms of safety.
 		 */
 		while(completed!=NUM_CLIENTS) {
-			Thread.sleep(1000); 
+			Thread.sleep(1000);
 		}
 	}
 
@@ -323,7 +325,7 @@ public class SystemTest {
 						MockClient client=new MockClient("log4j.properties");
 
 						Thread.sleep(Math.abs(new Random().nextInt()%200)*60000);
-						
+
 						client.connect("localhost",3217);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
 						assertEquals("testUsername"+i,resAcc.getUsername());
@@ -358,13 +360,13 @@ public class SystemTest {
 								if(new Random().nextInt()%10==0) {
 									/*
 									 * Send an action to server.
-									 */							
+									 */
 									RPAction action=new RPAction();
 									action.put("type","chat");
 									action.put("text","Hello world");
 									client.send(action);
 								}
-								
+
 								if(new Random().nextInt()%1000==0) {
 									/*
 									 * Randomly close the connection
@@ -382,11 +384,11 @@ public class SystemTest {
 					} catch(Exception e) {
 						e.printStackTrace();
 						fail("Exception");
-					}					
+					}
 				}
 			}.start();
 		}
 
-		Thread.sleep(3600000); 
+		Thread.sleep(3600000);
 	}
 }

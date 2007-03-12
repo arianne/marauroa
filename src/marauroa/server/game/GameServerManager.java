@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.65 2007/03/10 18:31:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.66 2007/03/12 16:32:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -257,7 +257,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
 
 				if (msg != null) {
-					playerContainer.getLock().requestWriteLock();					
+					playerContainer.getLock().requestWriteLock();
 					switch (msg.getType()) {
 					case C2S_LOGIN_REQUESTKEY:
 						logger.debug("Processing C2S Login Request Key Message");
@@ -303,7 +303,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						logger.debug("Unknown Message[" + msg.getType() + "]");
 						break;
 					}
-					
+
 					/*
 					 * Clean the entry to be removed.
 					 * We need to do in this way to avoid ConcurrentModificationException
@@ -312,7 +312,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						playerContainer.remove(entry.clientid);
 					}
 					entriesToRemove.clear();
-					
+
 					playerContainer.getLock().releaseLock();
 				}
 				stats.set("Players online", playerContainer.size());
@@ -392,7 +392,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 * We set the clientid attribute to link easily the object with
 				 * is player runtime information
 				 */
-				object.put("clientid", clientid);
+				object.put("#clientid", clientid);
 
 				/* We ask RP Manager to initialize the object */
 				rpMan.onInit(object);
@@ -452,7 +452,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
-				
+
 				//TODO: Close connection here.
 				//Not done because it enters in a deadlock
 			} else {
@@ -473,12 +473,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This method is called by network manager when a client connection is lost
 	 * or even when the client logout correctly.
-	 * 
+	 *
 	 * @param channel the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		/* We need to adquire the lock because this is handle by another thread */		
-		playerContainer.getLock().requestWriteLock();					
+		/* We need to adquire the lock because this is handle by another thread */
+		playerContainer.getLock().requestWriteLock();
 
 		try {
 		logger.info("GAME Disconnecting "+channel);
@@ -494,10 +494,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		disconnect(entry);
 		} finally {
-			playerContainer.getLock().releaseLock();					
+			playerContainer.getLock().releaseLock();
 		}
 	}
-	
+
 	/**
 	 * This method is used mainly by onDisconnect and RPServerManager to force the disconnection
 	 * of a player entry.

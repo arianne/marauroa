@@ -75,7 +75,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		/* Any class stores these attributes. */
 		add(DefinitionClass.ATTRIBUTE, "id", Type.INT, Definition.STANDARD);
 		add(DefinitionClass.ATTRIBUTE, "zoneid", Type.STRING, Definition.HIDDEN);
-		add(DefinitionClass.ATTRIBUTE, "clientid", Type.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
+		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT, (byte)(Definition.HIDDEN |Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
 
 		rpClassList.put(name, this);
@@ -413,7 +413,15 @@ public class RPClass implements marauroa.common.net.Serializable {
 					def.setCode((short) -1);
 					def.setName(name);
 					def.setType(Type.STRING);
-					def.setFlags(Definition.STANDARD);
+					/*
+					 * On Default RPClass we assume that strings that start with # are hidden.
+					 */
+					if(name.startsWith("#")) {
+						def.setFlags(Definition.HIDDEN);
+					} else {
+						def.setFlags(Definition.STANDARD);
+					}
+
 					def.setCapacity((byte) -1);
 
 					if(name.charAt(0) == '!') {

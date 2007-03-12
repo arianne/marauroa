@@ -44,7 +44,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 			e.printStackTrace();
 			TestHelper.fail();
 		}
-		
+
 		players=new LinkedList<RPObject>();
 	}
 
@@ -71,7 +71,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 			if(player.has("x")) {
 				x=player.getInt("x");
 			}
-			
+
 			player.put("x", x+1);
 			world.modify(player);
 		}
@@ -125,7 +125,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		Transaction trans=db.getTransaction();
 		try {
 			RPObject player=new RPObject(template);
-			
+
 			player.put("name", character);
 			player.put("version", "0.00");
 			player.put("ATK",50);
@@ -149,14 +149,14 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void endTurn() {
-		// TODO Auto-generated method stub
+		logger.info("There are "+ players.size()+" players in server");
 
 	}
 
 	public void execute(RPObject object, RPAction action) {
-		logger.info(object.get("name")+" running "+action);	
-		
-		object.addEvent("text", action.get("text"));		
+		logger.info(object.get("name")+" running "+action);
+
+		object.addEvent("text", action.get("text"));
 		world.modify(object);
 	}
 
@@ -167,7 +167,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		RPObject result=world.remove(object.getID());
 		TestHelper.assertNotNull(result);
-		
+
 		players.remove(object);
 		return true;
 	}
@@ -175,9 +175,9 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
 		object.put("zoneid","test");
 		world.add(object);
-		
+
 		players.add(object);
-		
+
 		return true;
 	}
 
