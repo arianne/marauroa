@@ -33,8 +33,6 @@ import org.junit.Test;
  *
  */
 public class SystemTest {
-	private static final int NUM_CLIENTS = 60;
-
 	private MockClient client;
   	private static marauroad server;
 
@@ -246,70 +244,6 @@ public class SystemTest {
 	}
 
 	private static int index;
-	private int completed;
-
-	/**
-	 * Test the perception management in game.
-	 */
-	@Ignore
-	@Test
-	public void stressServer() throws Exception {
-		for(int i=0;i<NUM_CLIENTS;i++) {
-			new Thread() {
-				public void run() {
-					try {
-						int i=index++;
-						MockClient client=new MockClient("log4j.properties");
-
-						Thread.sleep(Math.abs(new Random().nextInt()%20000));
-						client.connect("localhost",3217);
-						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
-						assertEquals("testUsername"+i,resAcc.getUsername());
-
-						client.login("testUsername"+i, "password");
-
-						RPObject template=new RPObject();
-						template.put("client", "junit"+i);
-						CharacterResult resChar=client.createCharacter("testCharacter", template);
-						assertEquals("testCharacter",resChar.getCharacter());
-
-						RPObject result=resChar.getTemplate();
-						assertTrue(result.has("client"));
-						assertEquals("junit"+i, result.get("client"));
-
-						String[] characters=client.getCharacters();
-						assertEquals(1, characters.length);
-						assertEquals("testCharacter", characters[0]);
-
-						boolean choosen=client.chooseCharacter("testCharacter");
-						assertTrue(choosen);
-
-						int amount=new Random().nextInt()%30;
-						while(client.getPerceptions()<amount) {
-							client.loop(0);
-						}
-
-						client.logout();
-						client.close();
-					} catch(Exception e) {
-						e.printStackTrace();
-						fail("Exception");
-					} finally {
-						completed++;
-					}
-				}
-			}.start();
-		}
-
-		/*
-		 *   20000 ms of random sleep
-		 * +  5000 ms of thread execution time
-		 * + 15000 ms of safety.
-		 */
-		while(completed!=NUM_CLIENTS) {
-			Thread.sleep(1000);
-		}
-	}
 
 	/**
 	 * Test the perception management in game.
