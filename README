@@ -103,6 +103,8 @@ Changelog
 - Fixed default RPClass.
 - Fixed server sending messages after connection closed.
 - Fixed a problem with RPEvent.
+- Marauroa can be run as java -jar marauroa.jar
+- Configuration file now defaults to server.ini
 
 1.90 Mar 08, 2007
 - Incompatible with Stendhal 0.5x or Jmapacman games.
