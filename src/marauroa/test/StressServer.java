@@ -103,6 +103,12 @@ public class StressServer {
 								client.send(action);
 							}
 
+							for(RPObject object: client.getObjects().values()) {
+								if(object.has("hidden")) {
+									fail("Not expected hidden object");
+								}
+							}
+
 
 							Thread.sleep(1000);
 							}
