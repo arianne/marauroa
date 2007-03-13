@@ -92,6 +92,18 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+1.91 Mar 13, 2007
+- Fixed bug at database methods for loading, storing and query for a character.
+- Fixed store and load zone database methods.
+- Fixed logout race condition.
+- Fixed network disconnect callback method not being called.
+- Fixed Player being removed twice from internal data structure.
+- Fixed Perception exception at client.
+- Fixed sync flag not correctly set at server.
+- Fixed default RPClass.
+- Fixed server sending messages after connection closed.
+- Fixed a problem with RPEvent.
+
 1.90 Mar 08, 2007
 - Incompatible with Stendhal 0.5x or Jmapacman games.
 - Added non blocking network server.

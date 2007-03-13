@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.14 2007/03/13 17:19:03 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.15 2007/03/13 18:32:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -107,7 +107,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 * @return the integer value
 	 * @throws NumberFormatException  if the number is not convertable.
 	 */
-	public int getInt() throws NumberFormatException {
+	public int getInt() {
 		return Integer.parseInt(value);
 	}
 
