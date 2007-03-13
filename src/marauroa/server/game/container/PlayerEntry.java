@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.21 2007/03/11 20:59:21 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.22 2007/03/13 12:11:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -153,7 +153,7 @@ public class PlayerEntry {
 		character=null;
 		object=null;
 		perception_counter=0;
-		requestedSync=false;
+		requestedSync=true;
 		contentToTransfer=null;
 
 		creationTime=System.currentTimeMillis();

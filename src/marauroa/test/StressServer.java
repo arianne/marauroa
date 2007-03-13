@@ -21,7 +21,7 @@ import org.junit.Test;
 public class StressServer {
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 3;
+	private static final int NUM_CLIENTS = 2;
 
 	private static final boolean DETACHED_SERVER=true;
 	private static marauroad server;
