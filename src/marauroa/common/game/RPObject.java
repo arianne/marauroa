@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.54 2007/03/11 20:59:21 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.55 2007/03/13 17:15:33 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,7 +144,7 @@ public class RPObject extends Attributes {
 		/*
 		 * NOTE: A hidden object should be removed from the perception.
 		 * So either call hide before adding object to a zone or call IRPZone.hide() instead.
-		 */		
+		 */
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class RPObject extends Attributes {
 		/*
 		 * NOTE: An object that is now unhidden should be added to the perception.
 		 * So either call unhide before adding object to a zone or call IRPZone.unhide() instead.
-		 */		
+		 */
 	}
 
 	/**
@@ -594,7 +594,7 @@ public class RPObject extends Attributes {
 		while(eventsit.hasNext()) {
 			/* Iterate over events and remove all of them that are visible */
 			RPEvent event=eventsit.next();
-			Definition def=getRPClass().getDefinition(DefinitionClass.RPSLOT, event.getName());
+			Definition def=getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 			if (def.isVisible()) {
 				eventsit.remove();
 			}
