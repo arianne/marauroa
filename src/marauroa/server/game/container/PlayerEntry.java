@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.22 2007/03/13 12:11:16 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.23 2007/03/13 18:13:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -244,7 +244,7 @@ public class PlayerEntry {
 	 * @return the loaded object
 	 * @throws IOException
 	 * @throws IOException if the load fails.
-	 * @thorws SQLException in case of an database error
+	 * @throws SQLException in case of an database error
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
 		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(),username, character);
