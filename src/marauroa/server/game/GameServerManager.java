@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.67 2007/03/12 22:27:31 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.68 2007/03/13 17:43:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -554,7 +554,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 *  RP implementation or it will cause problems at server.
 			 */
 			RPObject object=entry.object;
-			action.put("sourceid", object.get("sourceid"));
+			action.put("sourceid", object.get("id"));
 			action.put("zoneid", object.get("zoneid"));
 
 			stats.add("Actions added", 1);

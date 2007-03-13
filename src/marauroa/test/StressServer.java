@@ -10,6 +10,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
+import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.server.marauroad;
 
@@ -21,7 +22,7 @@ import org.junit.Test;
 public class StressServer {
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 2;
+	private static final int NUM_CLIENTS = 10;
 
 	private static final boolean DETACHED_SERVER=true;
 	private static marauroad server;
@@ -92,9 +93,16 @@ public class StressServer {
 						while(client.getPerceptions()<amount) {
 							client.loop(0);
 
-							for(RPObject object: client.getObjects().values()) {
-								System.out.println(i+": "+object);
+							if(new Random().nextInt()%10==0) {
+								/*
+								 * Send an action to server.
+								 */
+								RPAction action=new RPAction();
+								action.put("type","chat");
+								action.put("text","Hello world");
+								client.send(action);
 							}
+
 
 							Thread.sleep(1000);
 							}
