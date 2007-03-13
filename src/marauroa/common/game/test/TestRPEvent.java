@@ -24,6 +24,27 @@ import org.junit.Test;
  */
 public class TestRPEvent {
 	/**
+	 * Test the methods provided by RPEvent
+	 *
+	 */
+	@Test
+	public void methods() {
+		RPEvent event=new RPEvent(null, "test","val");
+		assertEquals("test",event.getName());
+		assertEquals("val", event.getValue());
+	}
+
+	/**
+	 * Test the clone method.
+	 *
+	 */
+	@Test
+	public void testClone() {
+		RPEvent event=new RPEvent(null, "test","val");
+		assertEquals(event, event.clone());
+	}
+
+	/**
 	 * Test serialization of a RPEvent by serializing into a stream and deserializing it bak
 	 * again.
 	 * This test uses RPObject as they are needed to obtain the RPEvent code definition.
