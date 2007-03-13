@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.13 2007/03/11 21:17:13 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.14 2007/03/13 17:19:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,16 +61,17 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 */
 	public RPEvent(RPObject object, String name, String value) {
 		this(object);
-		put(name,value);
+		this.name=name;
+		this.value=value;
 	}
 
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
 		RPEvent event = new RPEvent(owner);
-		name=event.name;
-		value=event.value;
-		owner=event.owner;
+		event.name=name;
+		event.value=value;
+		event.owner=owner;
 
 		return event;
 	}
