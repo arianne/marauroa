@@ -24,7 +24,7 @@ public class StressServer {
 	private int completed;
 	private static final int NUM_CLIENTS = 10;
 
-	private static final boolean DETACHED_SERVER=true;
+	private static final boolean DETACHED_SERVER=false;
 	private static marauroad server;
 
 	@BeforeClass
