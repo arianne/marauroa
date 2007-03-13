@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.68 2007/03/13 17:43:17 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.69 2007/03/13 17:45:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -560,6 +560,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			stats.add("Actions added", 1);
 
 			if (action.has("type")) {
+				// TODO: This is causing problems with Website.
 				stats.add("Actions " + action.get("type"), 1);
 			} else {
 				stats.add("Actions invalid", 1);
