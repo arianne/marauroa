@@ -44,8 +44,13 @@ public class TestRPObject {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
-		obj.addEvent("chat", "Hi there!");
-		obj.addEvent("chat", "Does this work?");
+		RPEvent chat=new RPEvent("chat");
+		chat.put("text","Hi there");		
+		obj.addEvent(chat);
+
+		chat=new RPEvent("chat");
+		chat.put("text","Does this work?");		
+		obj.addEvent(chat);
 
 		RPSlot lhand=obj.getSlot("lhand");
 

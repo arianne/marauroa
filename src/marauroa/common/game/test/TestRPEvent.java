@@ -1,6 +1,7 @@
 package marauroa.common.game.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,9 +30,12 @@ public class TestRPEvent {
 	 */
 	@Test
 	public void methods() {
-		RPEvent event=new RPEvent(null, "test","val");
+		RPEvent event=new RPEvent("test");
+		event.put("value","val");
+		
 		assertEquals("test",event.getName());
-		assertEquals("val", event.getValue());
+		assertTrue(event.has("value"));
+		assertEquals("val", event.get("value"));
 	}
 
 	/**
@@ -40,7 +44,9 @@ public class TestRPEvent {
 	 */
 	@Test
 	public void testClone() {
-		RPEvent event=new RPEvent(null, "test","val");
+		RPEvent event=new RPEvent("test");
+		event.put("value","val");
+		
 		assertEquals(event, event.clone());
 	}
 
@@ -55,7 +61,9 @@ public class TestRPEvent {
 	public void testSerialization() throws IOException, ClassNotFoundException {
 		RPObject obj=new RPObject();
 
-		RPEvent expected=new RPEvent(obj, "test", "work!");
+		RPEvent expected=new RPEvent("test");
+		expected.put("value", "work!");
+		expected.setOwner(obj);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -65,7 +73,7 @@ public class TestRPEvent {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPEvent result=(RPEvent) is.readObject(new RPEvent(obj));
+		RPEvent result=(RPEvent) is.readObject(new RPEvent());
 
 		assertEquals(expected, result);
 	}
@@ -87,7 +95,9 @@ public class TestRPEvent {
 		RPObject obj=new RPObject();
 		obj.setRPClass(clazz);
 
-		RPEvent expected=new RPEvent(obj, "test", "work!");
+		RPEvent expected=new RPEvent("test");
+		expected.put("value", "work!");
+		expected.setOwner(obj);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -97,7 +107,7 @@ public class TestRPEvent {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPEvent result=(RPEvent) is.readObject(new RPEvent(obj));
+		RPEvent result=(RPEvent) is.readObject(new RPEvent());
 
 		assertEquals(expected, result);
 	}}

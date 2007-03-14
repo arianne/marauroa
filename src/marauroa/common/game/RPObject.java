@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.55 2007/03/13 17:15:33 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.56 2007/03/14 16:33:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -350,12 +350,13 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Add an event to this object
+	 * Add an event to this object and set event's owner to this object.
 	 * @param name the name of the event
 	 * @param value its value
 	 */
-	public void addEvent(String name, String value) {
-		events.add(new RPEvent(this, name, value));
+	public void addEvent(RPEvent event) {
+		event.setOwner(this);
+		events.add(event);		
 	}
 
 	/**
@@ -524,7 +525,7 @@ public class RPObject extends Attributes {
 		events = new LinkedList<RPEvent>();
 
 		for (int i = 0; i < size; ++i) {
-			RPEvent event = new RPEvent(this);
+			RPEvent event = new RPEvent();
 			event = (RPEvent) in.readObject(event);
 			events.add(event);
 		}
@@ -632,7 +633,7 @@ public class RPObject extends Attributes {
 		object.storable=storable;
 
 		for (RPEvent event : events) {
-			object.addEvent(event.getName(), event.getValue());
+			object.addEvent((RPEvent) event.clone());
 		}
 
 		for (RPSlot slot : slots) {

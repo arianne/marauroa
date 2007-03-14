@@ -9,6 +9,7 @@ import marauroa.common.crypto.Hash;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
+import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
@@ -156,7 +157,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	public void execute(RPObject object, RPAction action) {
 		logger.info(object.get("name")+" running "+action);
 
-		object.addEvent("text", action.get("text"));
+		RPEvent chat=new RPEvent("chat");
+		chat.put("text", action.get("text"));		
+		object.addEvent(chat);
+		
 		world.modify(object);
 	}
 

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import marauroa.common.game.Perception;
+import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.server.game.rp.MarauroaRPZone;
@@ -40,8 +41,13 @@ public class TestRPObjectDelta2 {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
-		obj.addEvent("chat", "Hi there!");
-		obj.addEvent("chat", "Does this work?");
+		RPEvent chat=new RPEvent("chat");
+		chat.put("text","Hi there");		
+		obj.addEvent(chat);
+
+		chat=new RPEvent("chat");
+		chat.put("text","Does this work?");		
+		obj.addEvent(chat);
 
 		RPSlot lhand=obj.getSlot("lhand");
 
@@ -262,7 +268,9 @@ public class TestRPObjectDelta2 {
 		 */
 		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
-		slotcoin.addEvent("tax","10%");
+		RPEvent tax=new RPEvent("tax");
+		tax.put("bill", "10%");		
+		slotcoin.addEvent(tax);
 
 		zone.modify(slotcoin.getBaseContainer());
 

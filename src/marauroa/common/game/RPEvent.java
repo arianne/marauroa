@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.16 2007/03/14 16:05:11 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.17 2007/03/14 16:33:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,19 +46,36 @@ public class RPEvent extends Attributes {
 	 * Constructor
 	 *
 	 */
-	public RPEvent(RPObject owner, String name) {
+	public RPEvent(String name) {
 		super(null);
-		this.owner=owner;
 		this.name=name;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 */
+	public RPEvent() {
+		super(null);
+		// Only used by serialization.
 	}
 
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
-		RPEvent event = new RPEvent(owner, name);
+		RPEvent event = new RPEvent(name);
+		event.owner=owner;
 		event.fill(this);
 
 		return event;
+	}
+	
+	/**
+	 * Set the owner of this RPEvent.
+	 * @param owner
+	 */
+	public void setOwner(RPObject owner) {
+		this.owner=owner;		
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package marauroa.client.net;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import marauroa.common.net.InvalidVersionException;

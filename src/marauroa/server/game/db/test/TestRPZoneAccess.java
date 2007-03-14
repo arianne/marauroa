@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
+import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
 import marauroa.server.game.db.JDBCDatabase;
@@ -69,8 +70,13 @@ public class TestRPZoneAccess {
 		object.addSlot("lhand");
 		object.addSlot("rhand");
 
-		object.addEvent("chat", "Hi there!");
-		object.addEvent("chat", "Does this work?");
+		RPEvent chat=new RPEvent("chat");
+		chat.put("text","Hi there");		
+		object.addEvent(chat);
+
+		chat=new RPEvent("chat");
+		chat.put("text","Does this work?");		
+		object.addEvent(chat);
 
 		RPSlot lhand=object.getSlot("lhand");
 
