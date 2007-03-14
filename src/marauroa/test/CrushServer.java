@@ -20,6 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class CrushServer {
+	private static final int TIMES_TO_LOGIN = 10;
 	private static int index;
 	private int completed;
 	private static final int NUM_CLIENTS = 200;
@@ -66,7 +67,7 @@ public class CrushServer {
 						int i=index++;
 						MockClient client=new MockClient("log4j.properties");
 
-						Thread.sleep(Math.abs(new Random().nextInt()%200)*60000);
+						Thread.sleep(Math.abs(new Random().nextInt()%100)*6000);
 
 						client.connect("localhost",3217);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
@@ -89,7 +90,8 @@ public class CrushServer {
 
 						client.logout();
 
-						for(int j=0;j<10;j++) {
+						for(int j=0;j<TIMES_TO_LOGIN;j++) {
+							Thread.sleep(Math.abs(new Random().nextInt()%1000)*600);
 							client.login("testUsername"+i, "password");
 
 							boolean choosen=client.chooseCharacter("testCharacter");

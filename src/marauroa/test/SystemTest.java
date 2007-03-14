@@ -17,6 +17,8 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.server.marauroad;
+import marauroa.server.game.rp.IRPRuleProcessor;
+import marauroa.server.net.validator.ConnectionValidator;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -239,6 +241,25 @@ public class SystemTest {
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+	
+	@Test
+	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException, LoginFailedException {
+		MockRPRuleProcessor rp=(MockRPRuleProcessor)MockRPRuleProcessor.get();
+		ConnectionValidator conn=rp.getValidator();
+		
+		conn.addBan("127.0.0.1", "0.0.0.0", 20);
+
+		try {
+			client.connect("localhost",3217);
+			client.login("testUsername", "password");
+			
+			fail();
+		} catch(BannedAddressException e) {
+			/*
+			 * Good.
+			 */
 		}
 	}
 }

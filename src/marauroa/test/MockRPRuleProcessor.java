@@ -21,6 +21,7 @@ import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
+import marauroa.server.net.validator.ConnectionValidator;
 
 public class MockRPRuleProcessor implements IRPRuleProcessor{
 	/** the logger instance. */
@@ -29,6 +30,8 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	private IDatabase db;
 	private RPWorld world;
 	private List<RPObject> players;
+
+	private RPServerManager rpman;
 
 	public MockRPRuleProcessor() {
 		db=DatabaseFactory.getDatabase();
@@ -191,6 +194,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void setContext(RPServerManager rpman) {
-		// TODO Auto-generated method stub
+		this.rpman=rpman;
+	}
+	
+	public ConnectionValidator getValidator() {
+		return rpman.getValidator();
 	}
 }
