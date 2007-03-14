@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.56 2007/03/14 16:33:11 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.57 2007/03/14 16:46:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -526,6 +526,7 @@ public class RPObject extends Attributes {
 
 		for (int i = 0; i < size; ++i) {
 			RPEvent event = new RPEvent();
+			event.setOwner(this);
 			event = (RPEvent) in.readObject(event);
 			events.add(event);
 		}

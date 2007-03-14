@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.17 2007/03/14 16:33:11 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.18 2007/03/14 16:46:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class RPEvent extends Attributes {
 	 *
 	 */
 	public RPEvent(String name) {
-		super(null);
+		super(RPClass.getBaseRPObjectDefault());
 		this.name=name;
 	}
 
@@ -56,7 +56,7 @@ public class RPEvent extends Attributes {
 	 *
 	 */
 	public RPEvent() {
-		super(null);
+		super(RPClass.getBaseRPObjectDefault());
 		// Only used by serialization.
 	}
 

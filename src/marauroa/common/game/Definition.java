@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.11 2007/03/11 21:17:13 nhnb Exp $ */
+/* $Id: Definition.java,v 1.12 2007/03/14 16:46:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,7 +75,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	/** Define the possible types of an attribute or event */
 	public enum Type {
 		/** No type */
-		INVALID,
+		NOTYPE,
 		/** a string */
 		VERY_LONG_STRING,
 		/** a string of up to 255 chars long */
@@ -177,7 +177,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		Definition def=new Definition(DefinitionClass.STATIC);
 		def.name=name;
 		def.value=value;
-		def.type=Type.INVALID;
+		def.type=Type.NOTYPE;
 		def.flags=flags;
 		def.capacity=0;
 		return def;
@@ -211,7 +211,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		def.name=name;
 		def.capacity=capacity;
 		def.flags=flags;
-		def.type=Type.INVALID;
+		def.type=Type.NOTYPE;
 		return def;
 	}
 

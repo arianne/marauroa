@@ -107,7 +107,9 @@ public class TestRPEvent {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPEvent result=(RPEvent) is.readObject(new RPEvent());
+		RPEvent result=new RPEvent();
+		result.setOwner(obj);
+		result=(RPEvent) is.readObject(result);
 
 		assertEquals(expected, result);
 	}}
