@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.23 2007/03/12 19:32:38 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.24 2007/03/14 18:42:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,7 @@ import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
 import marauroa.common.net.message.MessageC2STransferACK;
 import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.common.net.message.MessageS2CConnectNACK;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
@@ -101,12 +102,17 @@ public abstract class ClientFramework {
 	 * @return a message
 	 * @throws InvalidVersionException
 	 * @throws TimeoutException if there is no message available in TIMEOUT miliseconds.
+	 * @throws BannedAddressException 
 	 */
-	private Message getMessage() throws InvalidVersionException, TimeoutException {
+	private Message getMessage() throws InvalidVersionException, TimeoutException, BannedAddressException {
 		Message msg=null;
 
 		if (messages.isEmpty()) {
 			msg=netMan.getMessage(TIMEOUT);
+			
+			if(msg instanceof MessageS2CConnectNACK) {
+				throw new BannedAddressException();
+			}
 
 			if(msg==null) {
 				throw new TimeoutException();
@@ -137,8 +143,9 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws LoginFailedException if login is rejected
+	 * @throws BannedAddressException 
 	 */
-	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException {
+	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException, LoginFailedException, BannedAddressException {
 		int received = 0;
 		RSAPublicKey key = null;
 		byte[] clientNonce = null;
@@ -226,8 +233,9 @@ public abstract class ClientFramework {
 	 * @return true if choosing character is successful.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws BannedAddressException 
 	 */
-	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException {
+	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException, BannedAddressException {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
 		netMan.addMessage(msgCC);
 
@@ -264,8 +272,9 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateAccountFailedException
+	 * @throws BannedAddressException 
 	 */
-	public synchronized AccountResult createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException {
+	public synchronized AccountResult createAccount(String username, String password, String email) throws TimeoutException, InvalidVersionException, CreateAccountFailedException, BannedAddressException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 		netMan.addMessage(msgCA);
@@ -308,8 +317,9 @@ public abstract class ClientFramework {
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
 	 * @throws CreateCharacterFailedException
+	 * @throws BannedAddressException 
 	 */
-	public synchronized CharacterResult createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException {
+	public synchronized CharacterResult createCharacter(String character, RPObject template) throws TimeoutException, InvalidVersionException, CreateCharacterFailedException, BannedAddressException {
 		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
 
 		netMan.addMessage(msgCA);
@@ -369,8 +379,9 @@ public abstract class ClientFramework {
 	 * and maintain it on game world.
 	 * @throws InvalidVersionException if we are not using a compatible version
 	 * @throws TimeoutException  if timeout happens while waiting for the message.
+	 * @throws BannedAddressException 
 	 */
-	public synchronized boolean logout() throws InvalidVersionException, TimeoutException {
+	public synchronized boolean logout() throws InvalidVersionException, TimeoutException, BannedAddressException {
 		Message msgL = new MessageC2SLogout(null);
 
 		netMan.addMessage(msgL);
