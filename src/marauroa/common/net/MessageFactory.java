@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.21 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.22 2007/03/14 18:31:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,6 +35,7 @@ import marauroa.common.net.message.MessageC2STransferACK;
 import marauroa.common.net.message.MessageS2CCharacterList;
 import marauroa.common.net.message.MessageS2CChooseCharacterACK;
 import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
+import marauroa.common.net.message.MessageS2CConnectNACK;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
@@ -111,6 +112,7 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_CREATECHARACTER, MessageC2SCreateCharacter.class);
 		register(Message.MessageType.S2C_CREATECHARACTER_ACK, MessageS2CCreateCharacterACK.class);
 		register(Message.MessageType.S2C_CREATECHARACTER_NACK, MessageS2CCreateCharacterNACK.class);
+		register(Message.MessageType.S2C_CONNECT_NACK, MessageS2CConnectNACK.class);
 	}
 
 	private void register(Message.MessageType index, Class messageClass) {

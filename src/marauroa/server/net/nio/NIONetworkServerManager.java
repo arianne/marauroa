@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.22 2007/03/11 20:59:21 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.23 2007/03/14 18:31:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageS2CConnectNACK;
 import marauroa.common.net.message.MessageS2CInvalidMessage;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.IDisconnectedListener;
@@ -160,6 +161,13 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 		if(connectionValidator.checkBanned(socket)) {
 			logger.debug("Reject connect from banned IP: "+socket.getInetAddress());
+			
+			/*
+			 * Sends a connect NACK message if the address is banned. 
+			 */
+			MessageS2CConnectNACK msg=new MessageS2CConnectNACK();
+			msg.setSocketChannel(channel);
+			sendMessage(msg);
 
 			/* If address is banned, just close connection */
 			try {
