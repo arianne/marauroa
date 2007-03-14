@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.9 2007/03/07 20:26:14 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.10 2007/03/14 22:26:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -154,7 +154,9 @@ class NioServer extends Thread {
 							switch (change.type) {
 							case ChangeRequest.CHANGEOPS:
 								SelectionKey key = change.socket.keyFor(this.selector);
-								key.interestOps(change.ops);
+								if(key.isValid()) {
+									key.interestOps(change.ops);
+								}
 							}
 						}
 					}
