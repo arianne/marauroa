@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.15 2007/03/13 18:32:50 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.16 2007/03/14 16:05:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,12 +35,9 @@ import marauroa.common.net.OutputSerializer;
  * @author miguel
  *
  */
-public class RPEvent implements marauroa.common.net.Serializable {
+public class RPEvent extends Attributes {
 	/** Name of the event */
 	private String name;
-
-	/** Value of the event. */
-	private String value;
 
 	/** This event is linked to an object: its owner. */
 	private RPObject owner;
@@ -49,41 +46,19 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 * Constructor
 	 *
 	 */
-	public RPEvent(RPObject object) {
-		owner=object;
-	}
-
-	/**
-	 * Constructor
-	 * @param object
-	 * @param name name of the event
-	 * @param value value of the event
-	 */
-	public RPEvent(RPObject object, String name, String value) {
-		this(object);
+	public RPEvent(RPObject owner, String name) {
+		super(null);
+		this.owner=owner;
 		this.name=name;
-		this.value=value;
 	}
 
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
-		RPEvent event = new RPEvent(owner);
-		event.name=name;
-		event.value=value;
-		event.owner=owner;
+		RPEvent event = new RPEvent(owner, name);
+		event.fill(this);
 
 		return event;
-	}
-
-	/**
-	 * Sets the value of the event
-	 * @param name name of the event
-	 * @param value this event value.
-	 */
-	public void put(String name, String value) {
-		this.name=name;
-		this.value=value;
 	}
 
 	/**
@@ -92,31 +67,6 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Return the value of the event.
-	 * @return value of the event as a String
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * Returns the value of the event as a integer
-	 * @return the integer value
-	 * @throws NumberFormatException  if the number is not convertable.
-	 */
-	public int getInt() {
-		return Integer.parseInt(value);
-	}
-
-	/**
-	 * Returns the value of the event as a double
-	 * @return the double value or an exception if the number is not convertable.
-	 */
-	public double getDouble() {
-		return Double.parseDouble(value);
 	}
 
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
@@ -145,7 +95,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 			out.write255LongString(name);
 		}
 
-		def.serialize(value, out);
+		super.writeObject(out, level);
 	}
 
 	/**
@@ -162,9 +112,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 			name=rpClass.getName(DefinitionClass.RPEVENT, code);
 		}
 
-		RPClass rpClass = owner.getRPClass();
-		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
-		value=def.deserialize(in);
+		super.readObject(in);
 	}
 
 	@Override
@@ -172,7 +120,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 		final int PRIME = 31;
 		int result = 1;
 		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
-		result = PRIME * result + ((value == null) ? 0 : value.hashCode());
+		result = PRIME * result + super.hashCode();
 		return result;
 	}
 
@@ -184,7 +132,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 	public boolean equals(Object obj) {
 		if(obj instanceof RPEvent) {
 			RPEvent comp=(RPEvent)obj;
-			return name.equals(comp.name) && value.equals(value);
+			return name.equals(comp.name) && super.equals(this);
 		} else {
 			return false;
 		}
@@ -192,7 +140,7 @@ public class RPEvent implements marauroa.common.net.Serializable {
 
 	@Override
 	public String toString() {
-		return "["+name+"="+value+"]";
+		return "["+name+"="+super.toString()+"]";
 	}
 
 }
