@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.25 2007/03/12 22:27:32 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.26 2007/03/14 17:27:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -95,7 +95,7 @@ public class RPServerManager extends Thread {
 
 	private List<PlayerEntry> playersToRemove;
 
-	private Map<RPObject.ID, List<TransferContent>> contentsToTransfer;
+	private Map<RPObject, List<TransferContent>> contentsToTransfer;
 
 	/**
 	 * The game manager pointer to disconnect players the good way.
@@ -116,7 +116,7 @@ public class RPServerManager extends Thread {
 			isfinished = false;
 
 			scheduler = new RPScheduler();
-			contentsToTransfer = new HashMap<RPObject.ID, List<TransferContent>>();
+			contentsToTransfer = new HashMap<RPObject, List<TransferContent>>();
 			playerContainer = PlayerEntryContainer.getContainer();
 
 			playersToRemove = new LinkedList<PlayerEntry>();
@@ -353,9 +353,11 @@ public class RPServerManager extends Thread {
 
 	private void deliverTransferContent() {
 		synchronized (contentsToTransfer) {
-			for (RPObject.ID id : contentsToTransfer.keySet()) {
-				List<TransferContent> content = contentsToTransfer.get(id);
-				PlayerEntry entry= playerContainer.get(id);
+			for (Map.Entry<RPObject,List<TransferContent>> val : contentsToTransfer.entrySet()) {
+				RPObject target= val.getKey();
+				List<TransferContent> content = val.getValue();
+				
+				PlayerEntry entry= playerContainer.get(target);
 
 				entry.contentToTransfer = content;
 
@@ -370,18 +372,18 @@ public class RPServerManager extends Thread {
 	}
 
 	/** This method is triggered to send content to the clients */
-	public void transferContent(RPObject.ID id, List<TransferContent> content) {
+	public void transferContent(RPObject target, List<TransferContent> content) {
 		synchronized (contentsToTransfer) {
-			contentsToTransfer.put(id, content);
+			contentsToTransfer.put(target, content);
 		}
 	}
 
 	/** This method is triggered to send content to the clients */
-	public void transferContent(RPObject.ID id, TransferContent content) {
+	public void transferContent(RPObject target, TransferContent content) {
 		List<TransferContent> list = new LinkedList<TransferContent>();
 		list.add(content);
 
-		transferContent(id, list);
+		transferContent(target, list);
 	}
 
 	@Override
@@ -479,7 +481,7 @@ public class RPServerManager extends Thread {
 	 * @param object the player object that we want to disconnect from world
 	 */
 	public void disconnectPlayer(RPObject object) {
-		PlayerEntry entry=playerContainer.get(object.getID());
+		PlayerEntry entry=playerContainer.get(object);
 		if(entry==null) {
 			/* There is no player entry for such channel
 			 * This is not necesaryly an error, as the connection could be

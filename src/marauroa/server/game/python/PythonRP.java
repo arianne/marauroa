@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.14 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.15 2007/03/14 17:27:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,9 +34,8 @@ public class PythonRP {
 		this.rpMan = rpMan;
 	}
 
-	public final void transferContent(RPObject.ID id,
-			List<TransferContent> content) {
-		rpMan.transferContent(id, content);
+	public final void transferContent(RPObject target, List<TransferContent> content) {
+		rpMan.transferContent(target, content);
 	}
 
 	public boolean checkGameVersion(String game, String version) {

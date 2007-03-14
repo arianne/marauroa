@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.9 2007/03/06 23:17:20 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.10 2007/03/14 17:27:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -159,9 +159,12 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @param id the RPObject.ID we have to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
-	public PlayerEntry get(RPObject.ID id) {
+	public PlayerEntry get(RPObject object) {
 		for(PlayerEntry entry: clientidMap.values()) {
-			if(entry.object.getID().equals(id)) {
+			/*
+			 * We want really to do a fast comparasion 
+			 */
+			if(entry.object==object) {
 				return entry;
 			}
 		}
