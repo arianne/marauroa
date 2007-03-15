@@ -1,0 +1,4 @@
+#!/bin/bash
+
+set LOCALCLASSPATH=/opt/marauroa/libs/jython.jar:/opt/marauroa/libs/mysql-connector.jar:/opt/marauroa/libs/log4j.jar
+java -cp "$LOCALCLASSPATH" -jar /opt/marauroa/libs/marauroa-1.92.jar -c server.ini -l
