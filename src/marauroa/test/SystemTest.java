@@ -17,7 +17,6 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.server.marauroad;
-import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.net.validator.ConnectionValidator;
 
 import org.junit.After;
@@ -34,28 +33,33 @@ import org.junit.Test;
  */
 public class SystemTest {
 	private MockClient client;
-  	private static marauroad server;
+	private static final boolean DETACHED_SERVER=false;
+	private static marauroad server;
 
-  	@BeforeClass
-  	public static void createServer() throws InterruptedException {
-  		Log4J.init("marauroa/server/log4j.properties");
-  		server = marauroad.getMarauroa();
-  		Configuration.setConfigurationFile("src/marauroa/test/server.ini");
+	@BeforeClass
+	public static void createServer() throws InterruptedException {
+		if(!DETACHED_SERVER) {
+			Log4J.init("log4j.properties");
+			server = marauroad.getMarauroa();
+			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
-  		try {
-  			Configuration.getConfiguration();
-  		} catch (Exception e) {
-  			fail("Unable to find configuration file");
-  		}
+			try {
+				Configuration.getConfiguration();
+			} catch (Exception e) {
+				fail("Unable to find configuration file");
+			}
 
-  		server.start();
-  		Thread.sleep(2000);
-  	}
+			server.start();
+			Thread.sleep(2000);
+		}
+	}
 
-  	@AfterClass
-  	public static void takeDownServer() {
-  		server.finish();
-  	}
+	@AfterClass
+	public static void takeDownServer() {
+		if(!DETACHED_SERVER) {
+			server.finish();
+		}
+	}
 
 	/**
 	 * Create a new client each time

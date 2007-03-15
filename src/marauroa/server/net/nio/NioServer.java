@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.10 2007/03/14 22:26:10 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.11 2007/03/15 11:37:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Log4J;
 import marauroa.server.net.IDisconnectedListener;
 
 /**
@@ -37,6 +38,9 @@ import marauroa.server.net.IDisconnectedListener;
  *
  */
 class NioServer extends Thread {
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(NioServer.class);
+
 	/** The host:port combination to listen on */
 	private InetAddress hostAddress;
 	private int port;
@@ -63,6 +67,7 @@ class NioServer extends Thread {
 
 	/** A list of PendingChange instances */
 	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
+	private List<ChangeRequest> pendingClosed;
 
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
 	private Map<SocketChannel,List<ByteBuffer>> pendingData = new HashMap<SocketChannel,List<ByteBuffer>>();
@@ -82,6 +87,7 @@ class NioServer extends Thread {
 		this.worker = worker;
 		this.worker.setServer(this);
 		
+		pendingClosed=new LinkedList<ChangeRequest>();
 		listeners=new LinkedList<IDisconnectedListener>();
 	}
 
@@ -90,12 +96,15 @@ class NioServer extends Thread {
 	 * @param channel the channel to close.
 	 * @throws IOException @see SocketChannel.close()
 	 */
-	public void close(SocketChannel channel) throws IOException {
+	public void close(SocketChannel channel) {
 		for(IDisconnectedListener listener: listeners) {
 			listener.onDisconnect(channel);
 		}
 
-		channel.close();		
+		/*
+		 * We ask the server to close the channel
+		 */
+		pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
 	}
 
 	/**
@@ -163,6 +172,39 @@ class NioServer extends Thread {
 					this.pendingChanges.clear();
 				}
 
+
+				synchronized (this.pendingClosed) {
+					Iterator it = pendingClosed.iterator();
+					while (it.hasNext()) {
+						ChangeRequest change = (ChangeRequest) it.next();
+						if(change.socket.isConnected()) {
+							switch (change.type) {
+							case ChangeRequest.CLOSE:
+								/*
+								 * Close the socket
+								 */
+								try {
+									/*
+									 * Force data to be sent if there is data waiting.
+									 */
+									if(pendingData.containsKey(change.socket)) {
+										SelectionKey key = change.socket.keyFor(selector);
+										if(key.isValid()) {
+											write(key);
+										}
+									}
+									
+									change.socket.close();
+								} catch (Exception e) {
+									logger.info("Exception happend when closing socket", e);
+								}
+								break;
+							}
+						}
+					}
+					pendingClosed.clear();
+				}
+				
 				// Wait for an event one of the registered channels
 				this.selector.select();
 

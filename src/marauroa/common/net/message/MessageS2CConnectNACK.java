@@ -1,4 +1,4 @@
-/* $Id: MessageS2CConnectNACK.java,v 1.1 2007/03/14 18:33:26 arianne_rpg Exp $ */
+/* $Id: MessageS2CConnectNACK.java,v 1.2 2007/03/15 11:36:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import java.nio.channels.SocketChannel;
 public class MessageS2CConnectNACK extends Message {
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CConnectNACK() {
-		super(MessageType.S2C_LOGOUT_NACK, null);
+		super(MessageType.S2C_CONNECT_NACK, null);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class MessageS2CConnectNACK extends Message {
 	 *            The TCP/IP address associated to this message
 	 */
 	public MessageS2CConnectNACK(SocketChannel source) {
-		super(MessageType.S2C_LOGOUT_NACK, source);
+		super(MessageType.S2C_CONNECT_NACK, source);
 	}
 
 	/**
