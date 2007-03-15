@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.24 2007/03/14 22:27:16 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.25 2007/03/15 11:06:46 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -168,17 +168,14 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 			MessageS2CConnectNACK msg=new MessageS2CConnectNACK();
 			msg.setSocketChannel(channel);
 			sendMessage(msg);
+			
 			/*
 			 * TODO: We should wait a bit to close the channel... to make sure message is send *before*
 			 * closing it, otherwise client won't know about it.
 			 */
 
 			/* If address is banned, just close connection */
-			try {
-				server.close(channel);
-			} catch (IOException e) {
-				/* I don't think I want to listen to complains... */
-			}
+			server.close(channel);
 		}
 	}
 
