@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.57 2007/03/14 16:46:20 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.58 2007/03/15 15:58:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -351,8 +351,7 @@ public class RPObject extends Attributes {
 
 	/**
 	 * Add an event to this object and set event's owner to this object.
-	 * @param name the name of the event
-	 * @param value its value
+	 * @param event the event to add.
 	 */
 	public void addEvent(RPEvent event) {
 		event.setOwner(this);
