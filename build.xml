@@ -111,6 +111,7 @@
 		<mkdir dir="marauroa-${version}/libs"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad"/>
+		<copy todir="marauroa-${version}" file="${extras}/Makefile"/>
 		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname}"/>
 		<copy todir="marauroa-${version}/libs" file="${connectorJ_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
