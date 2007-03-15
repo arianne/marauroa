@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.3 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: Hash.java,v 1.4 2007/03/15 18:43:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -86,7 +86,7 @@ public class Hash {
 		return res;
 	}
 
-	public static final byte[] BigIntToBytes(BigInteger b) {
+	public static final byte[] bigIntToBytes(BigInteger b) {
 		byte[] preRes = b.toByteArray();
 		if (preRes[0] != 1) {
 			return preRes;
@@ -98,7 +98,7 @@ public class Hash {
 		return res;
 	}
 
-	public static final BigInteger BytesToBigInt(byte[] b) {
+	public static final BigInteger bytesToBigInt(byte[] b) {
 		if (b[0] > 1) {
 			return new BigInteger(b);
 		}

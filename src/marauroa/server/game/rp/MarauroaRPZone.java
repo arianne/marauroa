@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.16 2007/02/28 20:37:50 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.17 2007/03/15 18:43:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -114,7 +114,7 @@ public class MarauroaRPZone implements IRPZone {
 		objects = new LinkedHashMap<RPObject.ID, RPObject>();
 		modified = new LinkedHashMap<RPObject.ID, RPObject>();
 
-		perception = new Perception(Perception.DELTA, getID());
+		perception = new Perception(Perception.DELTA, this.zoneid);
 	}
 
 	/** Returns the zoneid */

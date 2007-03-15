@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.5 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: RSAKey.java,v 1.6 2007/03/15 18:43:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -126,7 +126,7 @@ public class RSAKey extends RSAPublicKey {
 	}
 
 	public byte[] decodeByteArray(byte[] message) {
-		return Hash.BigIntToBytes(decode(new BigInteger(message)));
+		return Hash.bigIntToBytes(decode(new BigInteger(message)));
 	}
 
 	public BigInteger sign(BigInteger message) {

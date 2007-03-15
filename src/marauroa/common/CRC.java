@@ -1,4 +1,4 @@
-/* $Id: CRC.java,v 1.2 2006/08/20 15:40:16 wikipedian Exp $ */
+/* $Id: CRC.java,v 1.3 2007/03/15 18:43:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ public class CRC {
 	/**
 	 * generator polynomial
 	 */
-	private static final int poly = 0x1021; /*
+	private static final int POLY = 0x1021; /*
 											 * x16 + x12 + x5 + 1 generator
 											 * polynomial
 											 */
@@ -36,7 +36,7 @@ public class CRC {
 			int d = i << 8;
 			for (int k = 0; k < 8; k++) {
 				if (((fcs ^ d) & 0x8000) != 0) {
-					fcs = (fcs << 1) ^ poly;
+					fcs = (fcs << 1) ^ POLY;
 				} else {
 					fcs = (fcs << 1);
 				}

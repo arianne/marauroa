@@ -42,7 +42,7 @@ public class TestEncoderDecoder {
 	 * @throws InvalidVersionException
 	 */
 	@Test
-	public void testEncoderDecoder_single() throws IOException, InvalidVersionException {
+	public void testEncoderDecoderSingle() throws IOException, InvalidVersionException {
 		Encoder enc=Encoder.get();
 
 		RPAction action=new RPAction();
@@ -73,7 +73,7 @@ public class TestEncoderDecoder {
 	 * @throws InvalidVersionException
 	 */
 	@Test
-	public void testEncoderDecoder_multiple() throws IOException, InvalidVersionException {
+	public void testEncoderDecoderMultiple() throws IOException, InvalidVersionException {
 		Encoder enc=Encoder.get();
 
 		RPAction action=new RPAction();

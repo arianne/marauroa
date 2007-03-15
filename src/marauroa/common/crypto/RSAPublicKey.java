@@ -1,4 +1,4 @@
-/* $Id: RSAPublicKey.java,v 1.5 2006/08/20 15:40:17 wikipedian Exp $ */
+/* $Id: RSAPublicKey.java,v 1.6 2007/03/15 18:43:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,7 @@ public class RSAPublicKey {
 	}
 
 	public byte[] encodeByteArray(byte[] message) {
-		return encode(Hash.BytesToBigInt(message)).toByteArray();
+		return encode(Hash.bytesToBigInt(message)).toByteArray();
 	}
 
 	public boolean verifySignature(BigInteger message, BigInteger signature) {

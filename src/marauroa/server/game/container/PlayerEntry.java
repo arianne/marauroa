@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.23 2007/03/13 18:13:10 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.24 2007/03/15 18:43:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,7 @@ public class PlayerEntry {
 	public RPObject object;
 
 	/** A counter to detect dropped packets or bad order at client side */
-	public int perception_counter;
+	public int perceptionCounter;
 
 	/** It is true if client notified us that it got out of sync */
 	public boolean requestedSync;
@@ -152,7 +152,7 @@ public class PlayerEntry {
 		username=null;
 		character=null;
 		object=null;
-		perception_counter=0;
+		perceptionCounter=0;
 		requestedSync=true;
 		contentToTransfer=null;
 
@@ -172,7 +172,7 @@ public class PlayerEntry {
 	 * @return the next perception timestamp
 	 */
 	public int getPerceptionTimestamp() {
-		return perception_counter++;
+		return perceptionCounter++;
 	}
 
 	/** Clears the contents to be transfered */

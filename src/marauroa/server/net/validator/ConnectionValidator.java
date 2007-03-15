@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.10 2007/02/28 20:37:51 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.11 2007/03/15 18:43:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	private long lastLoadTS;
 
 	/* How often do we reload ban information from database? Each 5 minutes*/
-	private final static long reloadAfter=5 * 60 * 1000;
+	private final static long RELOAD_PERMANENT_BANS=5 * 60 * 1000;
 
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -186,7 +186,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * checks if reload is necessary and performs it
 	 */
 	public synchronized void checkReload() {
-		if (System.currentTimeMillis() - lastLoadTS >= reloadAfter) {
+		if (System.currentTimeMillis() - lastLoadTS >= RELOAD_PERMANENT_BANS) {
 			loadBannedIPNetworkListFromDB();
 		}
 	}

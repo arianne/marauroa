@@ -27,10 +27,13 @@ public class Utility {
 	 * @return the expected number
 	 */
 	public static String addLeadingZeros(String number, int maxDigits) {
+		String result=number;
+		
 		while (number.length() < maxDigits) {
-			number = "0" + number;
+			result = "0" + result;
 		}
-		return number;
+		
+		return result;
 	}
 
 	/** 

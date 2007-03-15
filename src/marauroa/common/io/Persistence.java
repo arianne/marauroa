@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author hendrik
  */
 public abstract class Persistence {
-	private static Logger logger = Logger.getLogger(Persistence.class);
+	private final static Logger logger = Logger.getLogger(Persistence.class);
 	private static Persistence instance = null;
 	private static boolean WEB_START_SANDBOX = false;
 

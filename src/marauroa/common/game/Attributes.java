@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.44 2007/03/02 08:23:36 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.45 2007/03/15 18:43:25 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -211,7 +211,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *            the value we want to set.
 	 */
 	public void put(String attribute, List<String> value) {
-		put(attribute, Attributes.ListToString(value));
+		put(attribute, Attributes.listToString(value));
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			throw new IllegalArgumentException("'"+attribute+"' not found");
 		}
 
-		return StringToList(val);
+		return stringToList(val);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return tmp.toString();
 	}
 
-	private static String ListToString(List<String> list) {
+	private static String listToString(List<String> list) {
 		StringBuffer buffer = new StringBuffer("[");
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
@@ -348,7 +348,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return buffer.toString();
 	}
 
-	private static List<String> StringToList(String list) {
+	private static List<String> stringToList(String list) {
 		String[] array = list.substring(1, list.length() - 1).split("\t");
 		List<String> result = new LinkedList<String>();
 
