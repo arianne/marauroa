@@ -2,7 +2,7 @@
 
 if [ $# -eq 0 ]; then
   echo "Missing params."
-  echo "Usage: $0 <game-server-plugin> <server.ini>
+  echo "Usage: $0 <game-server-plugin> <server.ini>"
   exit 1
 fi
 
