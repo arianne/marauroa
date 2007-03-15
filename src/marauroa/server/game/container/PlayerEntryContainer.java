@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.10 2007/03/14 17:27:44 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.11 2007/03/15 16:00:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -156,7 +156,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	/**
 	 * This method returns the entry that has been associated to this player or null
 	 * if it does not exists.
-	 * @param id the RPObject.ID we have to look for
+	 * @param object the RPObject we have to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(RPObject object) {
