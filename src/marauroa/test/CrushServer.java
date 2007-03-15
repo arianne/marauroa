@@ -134,7 +134,8 @@ public class CrushServer {
 		}
 
 		while(completed!=NUM_CLIENTS) {
-			Thread.sleep(1000);
+			Thread.sleep(10000);
+			System.out.println("Still missing to complete: "+(NUM_CLIENTS-completed));
 		}
 	}
 }

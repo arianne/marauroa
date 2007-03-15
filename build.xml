@@ -102,9 +102,15 @@
                    replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar};${log4j_jar}"
                    byline="true"/>
 
+		<replaceregexp file="${extras}/marauroad"
+                   match="java -cp"
+                   replace="java -cp $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-${version}.jar -c server.ini -l"
+                   byline="true"/>
+
 		<mkdir dir="marauroa-${version}"/>
 		<mkdir dir="marauroa-${version}/libs"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>
+		<copy todir="marauroa-${version}" file="${extras}/marauroad"/>
 		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname}"/>
 		<copy todir="marauroa-${version}/libs" file="${connectorJ_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
