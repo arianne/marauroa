@@ -18,16 +18,14 @@ import marauroa.common.net.message.Message.MessageType;
 import org.junit.Test;
 
 public class MessageTest {
-  private class MockMessage extends Message{
-
-	public MockMessage(MessageType type, SocketChannel channel) {
-		super(type, channel);
+	private static class MockMessage extends Message{
+		public MockMessage(MessageType type, SocketChannel channel) {
+			super(type, channel);
 		}
-	  
-  }
-  
 
-	
+	}  
+
+
 	@Test
 	public final void testGetAddress() throws IOException {
 		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
@@ -40,9 +38,9 @@ public class MessageTest {
 		assertTrue(MessageType.C2S_ACTION==mm.getType());
 	}
 
-	
 
-	
+
+
 
 	@Test
 	public final void testReadWriteObject() throws IOException {
@@ -57,25 +55,25 @@ public class MessageTest {
 			assertEquals(mmOut.getClientID(), mmInn.getClientID());
 			assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
 			assertEquals(mmOut.getType(), mmInn.getType());
-			
+
 		} catch (ClassNotFoundException e) {
 			fail("Class was manually inited and not found");
 		}
 	}
-	
+
 	@Test
 	public final void testInvalidClientId() throws IOException, ClassNotFoundException {
-			MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
-			ByteArrayOutputStream out= new ByteArrayOutputStream();
-			mmOut.setClientID(Message.CLIENTID_INVALID);
-			mmOut.writeObject(new OutputSerializer(out));
-			InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
-			MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		mmOut.setClientID(Message.CLIENTID_INVALID);
+		mmOut.writeObject(new OutputSerializer(out));
+		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
 
-			mmInn.readObject(in);
-			assertEquals(mmOut.getClientID(), mmInn.getClientID());
-			assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
-			assertEquals(mmOut.getType(), mmInn.getType());
+		mmInn.readObject(in);
+		assertEquals(mmOut.getClientID(), mmInn.getClientID());
+		assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
+		assertEquals(mmOut.getType(), mmInn.getType());
 	}
 
 }

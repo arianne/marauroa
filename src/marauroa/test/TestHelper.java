@@ -15,7 +15,7 @@ public class TestHelper {
 
 	public static void assertNotNull(Object result) {
 		if(result==null) {
-			throw new FailedException("expected null but got "+result);
+			throw new FailedException("Unexpected null value");
 		}		
 	}
 

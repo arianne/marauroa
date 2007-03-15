@@ -8,8 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
+import marauroa.server.game.GameServerManager;
 
 /**
  * An RPClass is a entity that define the attributes, events and slots of an Object.
@@ -25,6 +27,9 @@ import marauroa.common.game.Definition.Type;
  * @author miguel
  */
 public class RPClass implements marauroa.common.net.Serializable {
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPClass.class);
+
 	/** This is a singleton-like Map that stores classes and their names */
 	private static Map<String, RPClass> rpClassList = new LinkedHashMap<String, RPClass>();
 
@@ -295,6 +300,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 		case RPSLOT:
 			list=rpslots;
 			break;
+		}
+		
+		if(list==null) {
+			logger.warn("Unexpected type of Definition: "+clazz);
+			throw new SyntaxException(code);
 		}
 
 		for (Definition desc : list.values()) {

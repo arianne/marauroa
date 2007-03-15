@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.36 2007/03/10 18:31:14 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.37 2007/03/15 23:32:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -605,6 +605,8 @@ public class JDBCDatabase implements IDatabase {
 			logger.debug("Character: "+player);
 
 			stmt.execute(query);
+			
+			stmt.close();
 
 		} catch (SQLException sqle) {
 			logger.warn("Error storing character: "+player, sqle);
@@ -914,7 +916,7 @@ public class JDBCDatabase implements IDatabase {
 			String query = "insert into loginEvent(player_id,address,timedate,result) values("
 					+ id
 					+ ",'"
-					+ source.getAddress()
+					+ source.getHostAddress()
 					+ "',NULL," + (correctLogin ? 1 : 0) + ")";
 			stmt.execute(query);
 

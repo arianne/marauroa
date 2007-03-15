@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.19 2007/03/02 23:26:14 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.20 2007/03/15 23:32:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ public class NetConst {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
 
 	/** Port that will use the server for listen to incomming packets */
-	static public int tcpPort;
+	public static int tcpPort;
 
 	static {
 		try {

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.69 2007/03/13 17:45:29 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.70 2007/03/15 23:32:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -899,7 +899,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						msgTransfer.setClientID(clientid);
 						netMan.sendMessage(msgTransfer);
 					} else {
-						logger.debug("CAN'T transfer content " + content);
+						logger.debug("CAN'T transfer content because it is null");
 					}
 				} else {
 					stats.add("Transfer content cache", 1);

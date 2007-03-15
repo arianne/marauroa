@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.12 2007/03/14 17:27:48 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.13 2007/03/15 23:32:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,13 +202,14 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public void changeZone(IRPZone.ID newzoneid, RPObject object) {
 		try {
-			if (newzoneid.equals(object.get("zoneid"))) {
+			String targetZoneid=newzoneid.getID();
+			if (targetZoneid.equals(object.get("zoneid"))) {
 				return;
 			}
 
 			remove(object.getID());
 
-			object.put("zoneid", newzoneid.getID());
+			object.put("zoneid", targetZoneid);
 
 			add(object);
 

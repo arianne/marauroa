@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.23 2007/03/15 18:43:25 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.24 2007/03/15 23:32:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -67,7 +67,6 @@ public class MessageFactory {
 	private static MessageFactory messageFactory;
 
 	private MessageFactory() {
-		factoryArray = new HashMap<Integer, Class>();
 		register();
 	}
 
@@ -78,6 +77,7 @@ public class MessageFactory {
 	 */
 	public static MessageFactory getFactory() {
 		if (messageFactory == null) {
+			factoryArray = new HashMap<Integer, Class>();
 			messageFactory = new MessageFactory();
 		}
 		return messageFactory;
@@ -154,10 +154,11 @@ public class MessageFactory {
 	 */
 	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException, InvalidVersionException {
 		if (data[offset] == NetConst.NETWORK_PROTOCOL_VERSION) {
-			if (factoryArray.containsKey(data[1])) {
+			int messageTypeIndex=data[offset+1];
+			if (factoryArray.containsKey(messageTypeIndex)) {
 				Message tmp = null;
 				try {
-					Class messageType = factoryArray.get(data[offset + 1]);
+					Class messageType = factoryArray.get(messageTypeIndex);
 					tmp = (Message) messageType.newInstance();
 					ByteArrayInputStream in = new ByteArrayInputStream(data);
 					if (offset > 0) {

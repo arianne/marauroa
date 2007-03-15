@@ -62,7 +62,7 @@ public class TransferContentTest {
 		tcOut.readREQ(in);
 		assertTrue(tcInn.ack==tcOut.ack);
 		assertTrue(tcInn.cacheable==tcOut.cacheable);
-		assertTrue(tcInn.data.equals(tcOut.data));
+		assertTrue(tcInn.data==tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
 		
 	}
@@ -81,7 +81,7 @@ public class TransferContentTest {
 		tcOut.readACK(in);
 		assertTrue(tcInn.ack=tcOut.ack);
 		assertTrue(tcInn.cacheable=tcOut.cacheable);
-		assertTrue(tcInn.data.equals(tcOut.data));
+		assertTrue(tcInn.data==tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
 	}
 
@@ -100,7 +100,7 @@ public class TransferContentTest {
 		tcOut.readFULL(in);
 		assertTrue(tcInn.ack==tcOut.ack);
 		assertTrue(tcInn.cacheable==tcOut.cacheable);
-		assertTrue(tcInn.data.equals(tcOut.data));
+		assertTrue(tcInn.data==tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
 		
 	}

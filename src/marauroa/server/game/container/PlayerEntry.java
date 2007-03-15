@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.24 2007/03/15 18:43:25 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.25 2007/03/15 23:32:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ import marauroa.server.game.db.Transaction;
  */
 public class PlayerEntry {
 	/** A object representing the database */
-	protected static IDatabase playerDatabase;
+	static IDatabase playerDatabase;
 
 	/** Get the database object. */
     public static void initDatabase() {
