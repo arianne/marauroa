@@ -23,7 +23,7 @@ public class CrushServer {
 	private static final int TIMES_TO_LOGIN = 10;
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 200;
+	private static final int NUM_CLIENTS = 100;
 
 	private static final boolean DETACHED_SERVER=false;
 	private static marauroad server;
@@ -57,21 +57,23 @@ public class CrushServer {
 	/**
 	 * Test the perception management in game.
 	 */
-	@Ignore
 	@Test
 	public void crushServer() throws Exception {
 		for(int i=0;i<NUM_CLIENTS;i++) {
 			new Thread() {
 				public void run() {
 					try {
+						System.out.println("Initing client");
 						int i=index++;
-						MockClient client=new MockClient("log4j.properties");
+						MockClient client=new MockClient("client.properties");
 
-						Thread.sleep(Math.abs(new Random().nextInt()%100)*6000);
+						Thread.sleep(Math.abs(new Random().nextInt()%20)*1000);
 
 						client.connect("localhost",3217);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
 						assertEquals("testUsername"+i,resAcc.getUsername());
+
+						Thread.sleep(Math.abs(new Random().nextInt()%200)*1000+15000);
 
 						client.login("testUsername"+i, "password");
 
@@ -88,43 +90,39 @@ public class CrushServer {
 						assertEquals(1, characters.length);
 						assertEquals("testCharacter", characters[0]);
 
-						client.logout();
+						boolean choosen=client.chooseCharacter("testCharacter");
+						assertTrue(choosen);
 
-						for(int j=0;j<TIMES_TO_LOGIN;j++) {
-							Thread.sleep(Math.abs(new Random().nextInt()%1000)*600);
-							client.login("testUsername"+i, "password");
+						int amount=Math.abs(new Random().nextInt()%30)+10;
+						while(client.getPerceptions()<amount) {
+							client.loop(0);
 
-							boolean choosen=client.chooseCharacter("testCharacter");
-							assertTrue(choosen);
-
-							int amount=new Random().nextInt()%4000;
-							while(client.getPerceptions()<amount) {
-								client.loop(0);
-
-								if(new Random().nextInt()%10==0) {
-									/*
-									 * Send an action to server.
-									 */
-									RPAction action=new RPAction();
-									action.put("type","chat");
-									action.put("text","Hello world");
-									client.send(action);
-								}
-
-								if(new Random().nextInt()%1000==0) {
-									/*
-									 * Randomly close the connection
-									 */
-									System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
-									client.close();
-									return;
-								}
+							if(new Random().nextInt()%10==0) {
+								/*
+								 * Send an action to server.
+								 */
+								RPAction action=new RPAction();
+								action.put("type","chat");
+								action.put("text","Hello world");
+								client.send(action);
 							}
 
-							client.logout();
-							client.close();
-							Thread.sleep(Math.abs(new Random().nextInt()%60)*1000);
+							if(new Random().nextInt()%1000==0) {
+								/*
+								 * Randomly close the connection
+								 */
+								System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
+								client.close();
+								return;
+							}
+
+							Thread.sleep(1000);
 						}
+
+						client.logout();
+						client.close();
+						Thread.sleep(Math.abs(new Random().nextInt()%60)*1000);
+
 					} catch(Exception e) {
 						e.printStackTrace();
 						fail("Exception");
