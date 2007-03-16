@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.30 2006/12/18 20:08:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.27.6.1 2007/03/16 21:27:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,7 @@ import marauroa.common.net.MessageS2CServerInfo;
 import marauroa.common.net.MessageS2CTransfer;
 import marauroa.common.net.TransferContent;
 import marauroa.server.createaccount.Result;
-import marauroa.server.net.INetworkServerManager;
+import marauroa.server.net.NetworkServerManager;
 
 import org.apache.log4j.Logger;
 
@@ -64,7 +64,7 @@ public final class GameServerManager extends Thread {
 	private static final Logger logger = Log4J
 			.getLogger(GameServerManager.class);
 
-	private INetworkServerManager netMan;
+	private NetworkServerManager netMan;
 
 	private RPServerManager rpMan;
 
@@ -86,7 +86,7 @@ public final class GameServerManager extends Thread {
 	 * @param netMan
 	 *            a NetworkServerManager instance.
 	 */
-	public GameServerManager(RSAKey key, INetworkServerManager netMan,
+	public GameServerManager(RSAKey key, NetworkServerManager netMan,
 			RPServerManager rpMan) throws Exception {
 		super("GameServerManager");
 		Log4J.startMethod(logger, "GameServerManager");
@@ -96,6 +96,7 @@ public final class GameServerManager extends Thread {
 		this.rpMan = rpMan;
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
+		start();
 		Log4J.finishMethod(logger, "GameServerManager");
 	}
 
@@ -104,7 +105,10 @@ public final class GameServerManager extends Thread {
 		rpMan.finish();
 		keepRunning = false;
 		while (isfinished == false) {
-			Thread.yield();
+			try {
+				Thread.sleep(1000);
+			} catch (java.lang.InterruptedException e) {
+			}
 		}
 
 		PlayerEntryContainer.ClientIDIterator it = playerContainer.iterator();
@@ -383,7 +387,7 @@ public final class GameServerManager extends Thread {
 			stats.add("Actions added", 1);
 
 			if (action.has("type")) {
-				stats.add("Actions " + action.get("type"), 1);
+//				stats.add("Actions " + action.get("type"), 1);
 			} else {
 				stats.add("Actions invalid", 1);
 			}
