@@ -6,5 +6,5 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-set LOCALCLASSPATH=$1:/opt/marauroa/libs/jython.jar:/opt/marauroa/libs/mysql-connector.jar:/opt/marauroa/libs/log4j.jar
-java -cp $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-1.92.jar -c server.ini -l $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-1.92.jar -c server.ini -l $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-1.92.jar -c server.ini -l "$LOCALCLASSPATH" -jar /opt/marauroa/libs/marauroa-1.92.jar -c $2 -l
+export LOCALCLASSPATH="$1:/opt/marauroa/libs/jython.jar:/opt/marauroa/libs/mysql-connector.jar:/opt/marauroa/libs/log4j.jar"
+java -cp $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-1.92.jar -c server.ini -l
