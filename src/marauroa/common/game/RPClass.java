@@ -11,7 +11,6 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
-import marauroa.server.game.GameServerManager;
 
 /**
  * An RPClass is a entity that define the attributes, events and slots of an Object.
