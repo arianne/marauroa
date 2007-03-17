@@ -87,7 +87,7 @@
 	<target name="jar" depends="compile">
 		<jar jarfile="${build-archive}/${jarname}" basedir="${buildroot}/">
 			<manifest>
-				<attribute name="Main-Class" value="games.stendhal.client.update.Starter"/>
+				<attribute name="Main-Class" value="marauroa.server.marauroad"/>
 			</manifest>
 		</jar>
 		<copy tofile="${build-archive}/marauroa.jar" file="${build-archive}/${jarname}"/>
