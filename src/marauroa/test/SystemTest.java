@@ -41,7 +41,6 @@ public class SystemTest {
 
 	@BeforeClass
 	public static void createServer() throws InterruptedException {
-		System.out.println("hola mundo");
 		if(!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
 			server = new MockMarauroad();
