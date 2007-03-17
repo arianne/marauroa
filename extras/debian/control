@@ -7,7 +7,8 @@ Standards-Version: 3.7.2
 
 Package: marauroa
 Architecture: any
-Depends: sun-java5-bin, mysql-server, ${shlibs:Depends}, ${misc:Depends}
+Recomends: mysql-server
+Depends: sun-java5-bin, ${shlibs:Depends}, ${misc:Depends}
 Description: arianne java multiplayer online framework server.
   Marauroa is completly written in Java using a multithreaded server
   architecture with a TCP oriented network protocol, a mySQL based
