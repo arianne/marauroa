@@ -12,25 +12,29 @@ import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
-import marauroa.server.marauroad;
+import marauroa.common.net.NetConst;
+import marauroa.test.CrushServer.MockMarauroad;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class StressServer {
+	private static final int PORT= 3219;
 	private static int index;
 	private int completed;
 	private static final int NUM_CLIENTS = 10;
 
 	private static final boolean DETACHED_SERVER=false;
-	private static marauroad server;
+	private static MockMarauroad server;
+
 
 	@BeforeClass
 	public static void createServer() throws InterruptedException {
+		System.out.println("hola mundo");
 		if(!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
-			server = marauroad.getMarauroa();
+			server = new MockMarauroad();
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
 			try {
@@ -39,15 +43,21 @@ public class StressServer {
 				fail("Unable to find configuration file");
 			}
 
+			/*
+			 * Ugly hack, but junit does runs test cases in parallel 
+			 */
+			NetConst.tcpPort=PORT;
+
 			server.start();
 			Thread.sleep(2000);
 		}
 	}
 
 	@AfterClass
-	public static void takeDownServer() {
+	public static void takeDownServer() throws InterruptedException {
 		if(!DETACHED_SERVER) {
 			server.finish();
+			Thread.sleep(2000);
 		}
 	}
 
@@ -64,7 +74,7 @@ public class StressServer {
 						int i=index++;
 						MockClient client=new MockClient("client.properties");
 
-						client.connect("localhost",3217);
+						client.connect("localhost",PORT);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
 						assertEquals("testUsername"+i,resAcc.getUsername());
 

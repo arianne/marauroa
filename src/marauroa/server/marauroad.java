@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.53 2007/03/10 13:10:03 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.54 2007/03/17 20:00:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -228,9 +228,8 @@ public class marauroad extends Thread {
 		createBeanForStatistics();
 
 		boolean finish = false;
-		marauroad instance = marauroad.getMarauroa();
 
-		if (!instance.init()) {
+		if (!init()) {
 			// initialize failed
 			System.exit(-1);
 		}
@@ -245,11 +244,11 @@ public class marauroad extends Thread {
 			}
 		}
 
-		instance.finish();
+		finish();
 		logger.debug("exiting marauroad thread");
 	}
 
-	private marauroad() {
+	protected marauroad() {
 		super("marauroad");
 	}
 

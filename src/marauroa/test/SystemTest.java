@@ -16,8 +16,9 @@ import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.server.marauroad;
+import marauroa.common.net.NetConst;
 import marauroa.server.net.validator.ConnectionValidator;
+import marauroa.test.CrushServer.MockMarauroad;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,15 +33,18 @@ import org.junit.Test;
  *
  */
 public class SystemTest {
+	private static final int PORT= 3218;
+
 	private MockClient client;
 	private static final boolean DETACHED_SERVER=false;
-	private static marauroad server;
+	private static MockMarauroad server;
 
 	@BeforeClass
 	public static void createServer() throws InterruptedException {
+		System.out.println("hola mundo");
 		if(!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
-			server = marauroad.getMarauroa();
+			server = new MockMarauroad();
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
 			try {
@@ -49,15 +53,21 @@ public class SystemTest {
 				fail("Unable to find configuration file");
 			}
 
+			/*
+			 * Ugly hack, but junit does runs test cases in parallel 
+			 */
+			NetConst.tcpPort=PORT;
+
 			server.start();
 			Thread.sleep(2000);
 		}
 	}
 
 	@AfterClass
-	public static void takeDownServer() {
+	public static void takeDownServer() throws InterruptedException {
 		if(!DETACHED_SERVER) {
 			server.finish();
+			Thread.sleep(2000);
 		}
 	}
 
@@ -91,7 +101,7 @@ public class SystemTest {
 	 */
 	@Test
 	public void createAccount() throws IOException, TimeoutException, InvalidVersionException, CreateAccountFailedException, BannedAddressException {
-		client.connect("localhost", 3217);
+		client.connect("localhost", PORT);
 		AccountResult res=client.createAccount("testUsername", "password", "email");
 
 		assertEquals("testUsername",res.getUsername());
@@ -115,7 +125,7 @@ public class SystemTest {
 	@Test
 	public void login() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 
 			String[] characters=client.getCharacters();
@@ -135,7 +145,7 @@ public class SystemTest {
 	@Test
 	public void loginBadCase() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testusername", "password");
 			fail("It must not login");
 		} catch(LoginFailedException e) {
@@ -152,7 +162,7 @@ public class SystemTest {
 	@Test
 	public void loginDouble() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 			client.login("testUsername", "password");
 
@@ -172,7 +182,7 @@ public class SystemTest {
 	@Test
 	public void createCharacter() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 
 			RPObject template=new RPObject();
@@ -204,7 +214,7 @@ public class SystemTest {
 	@Test
 	public void chooseCharacter() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 
 			String[] characters=client.getCharacters();
@@ -227,7 +237,7 @@ public class SystemTest {
 	@Test
 	public void receivePerceptions() throws Exception {
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 
 			String[] characters=client.getCharacters();
@@ -256,7 +266,7 @@ public class SystemTest {
 		conn.addBan("127.0.0.1", "0.0.0.0", 20);
 
 		try {
-			client.connect("localhost",3217);
+			client.connect("localhost",PORT);
 			client.login("testUsername", "password");
 			
 			fail();

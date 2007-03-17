@@ -12,6 +12,7 @@ import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.NetConst;
 import marauroa.server.marauroad;
 
 import org.junit.AfterClass;
@@ -19,19 +20,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CrushServer {
+	private static final int PORT= 3217;
 	private static final int TIMES_TO_LOGIN = 10;
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 100;
+	private static final int NUM_CLIENTS = 20;
 
 	private static final boolean DETACHED_SERVER=false;
-	private static marauroad server;
+	private static MockMarauroad server;
+	
+	static class MockMarauroad extends marauroad {
+		public MockMarauroad() {
+			super();
+		}
+		
+	}
 
 	@BeforeClass
 	public static void createServer() throws InterruptedException {
 		if(!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
-			server = marauroad.getMarauroa();
+			server = new MockMarauroad();
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
 			try {
@@ -39,6 +48,11 @@ public class CrushServer {
 			} catch (Exception e) {
 				fail("Unable to find configuration file");
 			}
+			
+			/*
+			 * Ugly hack, but junit does runs test cases in parallel 
+			 */
+			NetConst.tcpPort=PORT;
 
 			server.start();
 			Thread.sleep(2000);
@@ -46,9 +60,10 @@ public class CrushServer {
 	}
 
 	@AfterClass
-	public static void takeDownServer() {
+	public static void takeDownServer() throws InterruptedException {
 		if(!DETACHED_SERVER) {
 			server.finish();
+			Thread.sleep(2000);
 		}
 	}
 
@@ -68,11 +83,11 @@ public class CrushServer {
 
 						Thread.sleep(Math.abs(new Random().nextInt()%20)*1000);
 
-						client.connect("localhost",3217);
+						client.connect("localhost",PORT);
 						AccountResult resAcc=client.createAccount("testUsername"+i, "password", "email");
 						assertEquals("testUsername"+i,resAcc.getUsername());
 
-						Thread.sleep(Math.abs(new Random().nextInt()%200)*1000+15000);
+						Thread.sleep(Math.abs(new Random().nextInt()%100)*1000+5000);
 
 						client.login("testUsername"+i, "password");
 
