@@ -146,6 +146,7 @@ public class CrushServer {
 						Thread.sleep(Math.abs(new Random().nextInt()%60)*1000);
 
 					} catch(Exception e) {
+						System.out.println("Problem for player: testUsername"+i);
 						e.printStackTrace();
 						fail("Exception");
 					} finally {
