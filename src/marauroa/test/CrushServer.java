@@ -75,10 +75,11 @@ public class CrushServer {
 	public void crushServer() throws Exception {
 		for(int i=0;i<NUM_CLIENTS;i++) {
 			new Thread() {
+				int i;
 				public void run() {
 					try {
 						System.out.println("Initing client");
-						int i=index++;
+						i=index++;
 						MockClient client=new MockClient("client.properties");
 
 						Thread.sleep(Math.abs(new Random().nextInt()%20)*1000);
@@ -148,7 +149,7 @@ public class CrushServer {
 					} catch(Exception e) {
 						System.out.println("Problem for player: testUsername"+i);
 						e.printStackTrace();
-						fail("Exception");
+						System.exit(-1);
 					} finally {
 						completed++;
 					}
