@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.71 2007/03/19 23:05:47 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.72 2007/03/19 23:32:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -453,11 +453,26 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			RPObject object = entry.object;
 
-			/* We request to logout of game */
-			if (rpMan.onExit(object)) {
-				/* NOTE: Set the Object so that it is stored in Database */
-				entry.storeRPObject(object);
+			boolean shouldLogout=true;
 
+			/* 
+			 * We request to logout of game.
+			 * If may be succesful or fail and we keep on game.
+			 */
+			if (entry.state==ClientState.GAME_BEGIN) {
+				if(rpMan.onExit(object)) {
+					/* NOTE: Set the Object so that it is stored in Database */
+					entry.storeRPObject(object);
+				} else {
+					/* If RPManager returned false, that means that logout is not allowed right now, so
+					 * player request is rejected.
+					 * This can be useful to disallow logout on some situations.
+					 */
+					shouldLogout=false;
+				}
+			}
+			
+			if(shouldLogout) {				
 				stats.add("Players logout", 1);
 				playerContainer.remove(clientid);
 
@@ -467,17 +482,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
 
-				//TODO: Close connection here.
-				//Not done because it enters in a deadlock
+				entry.state=ClientState.LOGOUT_ACCEPTED;
 			} else {
-				/* If RPManager returned false, that means that logout is not allowed right now, so
-				 * player request is rejected.
-				 * This can be useful to disallow logout on some situations.
-				 */
 				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getSocketChannel());
 				msgLogout.setClientID(clientid);
 				netMan.sendMessage(msgLogout);
-				return;
 			}
 		} catch (Exception e) {
 			logger.error("error while processing LogoutEvent", e);
