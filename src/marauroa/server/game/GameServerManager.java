@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.70 2007/03/15 23:32:28 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.71 2007/03/19 23:05:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -340,20 +340,31 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the message to check
 	 * @return true, the event is valid, else false
 	 */
-	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState state) {
+	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState... states) {
 		if(entry==null) {
 			/* Error: Player didn't login. */
 			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
 			return false;
 		}
 
-		if (entry.state != state) {
+		boolean isInCorrectState=false;
+		for(ClientState state: states) {
+			if (entry.state == state) {
+				isInCorrectState=true;
+			}
+		}
+		
+		if(!isInCorrectState) {
 			/*
 			 * Error: Player has not completed login yet, or he/she has logout
 			 * already.
 			 */
-			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + state + ")");
-			return false;
+			StringBuffer statesString=new StringBuffer();
+			for(ClientState state: states) {
+				statesString.append(state+" ");
+			}
+			
+			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + statesString.toString() + ")");
 		}
 
 		if (entry.channel!=msg.getSocketChannel()) {
@@ -436,7 +447,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			/* verify event so that we can trust that it comes from our player and
 			   that it has completed the login stage. */
-			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE, ClientState.GAME_BEGIN)) {
 				return;
 			}
 

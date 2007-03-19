@@ -24,7 +24,7 @@ public class CrushServer {
 	private static final int TIMES_TO_LOGIN = 10;
 	private static int index;
 	private int completed;
-	private static final int NUM_CLIENTS = 20;
+	private static final int NUM_CLIENTS = 50;
 
 	private static final boolean DETACHED_SERVER=false;
 	private static MockMarauroad server;
@@ -100,40 +100,48 @@ public class CrushServer {
 						assertTrue(result.has("client"));
 						assertEquals("junit"+i, result.get("client"));
 
-						String[] characters=client.getCharacters();
-						assertEquals(1, characters.length);
-						assertEquals("testCharacter", characters[0]);
+						client.logout();
 
-						boolean choosen=client.chooseCharacter("testCharacter");
-						assertTrue(choosen);
+						for(int logins=0;logins<TIMES_TO_LOGIN;logins++) {
+							Thread.sleep(Math.abs(new Random().nextInt()%30)*1000+5000);
+							client.login("testUsername"+i, "password");
 
-						int amount=Math.abs(new Random().nextInt()%30)+10;
-						while(client.getPerceptions()<amount) {
-							client.loop(0);
+							String[] characters=client.getCharacters();
+							assertEquals(1, characters.length);
+							assertEquals("testCharacter", characters[0]);
 
-							if(new Random().nextInt()%10==0) {
-								/*
-								 * Send an action to server.
-								 */
-								RPAction action=new RPAction();
-								action.put("type","chat");
-								action.put("text","Hello world");
-								client.send(action);
+							boolean choosen=client.chooseCharacter("testCharacter");
+							assertTrue(choosen);
+
+							int amount=Math.abs(new Random().nextInt()%30)+10;
+							while(client.getPerceptions()<amount) {
+								client.loop(0);
+
+								if(new Random().nextInt()%10==0) {
+									/*
+									 * Send an action to server.
+									 */
+									RPAction action=new RPAction();
+									action.put("type","chat");
+									action.put("text","Hello world");
+									client.send(action);
+								}
+
+								if(new Random().nextInt()%1000==0) {
+									/*
+									 * Randomly close the connection
+									 */
+									System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
+									client.close();
+									return;
+								}
+
+								Thread.sleep(1000);
 							}
 
-							if(new Random().nextInt()%1000==0) {
-								/*
-								 * Randomly close the connection
-								 */
-								System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
-								client.close();
-								return;
-							}
-
-							Thread.sleep(1000);
+							client.logout();
 						}
 
-						client.logout();
 						client.close();
 						Thread.sleep(Math.abs(new Random().nextInt()%60)*1000);
 
