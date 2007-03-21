@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.1 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.2 2007/03/21 19:23:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,18 +18,22 @@ import java.nio.channels.SocketChannel;
 
 /**
  * This message indicate the client that the server has reject its login Message
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterNACK extends Message {
 	public enum Reasons {
-		UNKNOWN_REASON, 
-		CHARACTER_EXISTS, 
+		UNKNOWN_REASON,
+		CHARACTER_EXISTS,
 		FIELD_TOO_SHORT,
+		TEMPLATE_INVALID
 	}
 
-	static private String[] text = { "Unknown reason",
-			"Character already exists.", "Field is too short", };
+	static private String[] text = {
+		"Unknown reason",
+		"Character already exists.",
+		"Field is too short",
+		"Template is invalid"};
 
 	private Reasons reason;
 
@@ -40,7 +44,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param resolution
@@ -54,7 +58,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 
 	/**
 	 * This method returns the resolution of the login event
-	 * 
+	 *
 	 * @return a byte representing the resolution given.
 	 */
 	public Reasons getResolutionCode() {
@@ -64,7 +68,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	/**
 	 * This method returns a String that represent the resolution given to the
 	 * login event
-	 * 
+	 *
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
@@ -73,7 +77,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override

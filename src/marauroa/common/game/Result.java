@@ -16,6 +16,10 @@ public enum Result {
 	/** Account was not created because because this account already exists. */
 	FAILED_PLAYER_EXISTS,
 	/** Account was not created because there was an unspecified exception. */
-	FAILED_EXCEPTION
+	FAILED_EXCEPTION,
+	/** The template passed to the create character method is not valid because
+	 * it fails to pass the RP rules.
+	 */
+	FAILED_INVALID_TEMPLATE
 }
 

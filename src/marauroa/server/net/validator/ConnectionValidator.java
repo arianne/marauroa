@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.11 2007/03/15 18:43:26 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.12 2007/03/21 19:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,8 +35,6 @@ import marauroa.server.game.db.Transaction;
  * <li>Permanent bans<br>That are stored at database and that we offer no interface.
  * <li>Temportal bans<br>That are not stored but that has a interface for adding, removing and querying bans.
  * </ul>
- *
- * FIXME: It WILL appear race conditions if it is accessed from outside the Network thread.
  */
 public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** the logger instance. */
@@ -48,6 +46,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** Temporal bans are added using the API and are lost on each server reset.
 	 *  Consider using Database for a permanent ban  */
 	private List<InetAddressMask> temporalBans;
+	/** A timer to remove ban when it is done. */
 	private Timer timer;
 
 	/* timestamp of last reload */
@@ -57,8 +56,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	private final static long RELOAD_PERMANENT_BANS=5 * 60 * 1000;
 
 	/**
-	 * Constructor that opens the socket on the marauroa_PORT and start the
-	 * thread to recieve new messages from the network.
+	 * Constructor.
+	 * It loads permanent bans from database.
 	 */
 	public ConnectionValidator() {
 		permanentBans=new LinkedList<InetAddressMask>();

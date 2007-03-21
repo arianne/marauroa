@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.72 2007/03/19 23:32:51 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.73 2007/03/21 19:23:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -232,6 +232,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		storeConnectedPlayers();
 	}
 
+	/*
+	 * Disconnect any connected player and if the player has already login and was
+	 * playing game it is stored back to database.
+	 */
 	private void storeConnectedPlayers() {
 		for(PlayerEntry entry: playerContainer) {
 			/*
@@ -250,6 +254,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
+	/**
+	 * Runs the game glue logic.
+	 * This class is responsible of recieving messages from clients and intruct
+	 * RP about actions clients did.
+	 */
 	@Override
 	public void run() {
 		try {
@@ -257,45 +266,89 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
 
 				if (msg != null) {
+					//TODO: Bootleneck because of synchronization.
 					playerContainer.getLock().requestWriteLock();
 					switch (msg.getType()) {
 					case C2S_LOGIN_REQUESTKEY:
+						/*
+						 * Process the C2S Login request key message.
+						 */
 						logger.debug("Processing C2S Login Request Key Message");
 						processLoginRequestKey(msg);
 						break;
 					case C2S_LOGIN_SENDPROMISE:
+						/*
+						 * Recieve the client hash promise of the password.
+						 * Now client has a PlayerEntry container.
+						 */
 						logger.debug("Processing C2S Login Send Promise Message");
 						processLoginSendPromise(msg);
 						break;
 					case C2S_LOGIN_SENDNONCENAMEANDPASSWORD:
+						/*
+						 * Complete the login stage.
+						 * It will either success and game continue or fail and
+						 * resources for this player are freed.
+						 */
 						logger.debug("Processing C2S Secured Login Message");
 						processSecuredLoginEvent(msg);
 						break;
 					case C2S_CHOOSECHARACTER:
+						/*
+						 * Process the choose character message from client.
+						 * This message is the one that move the player from
+						 * login stage to game stage.
+						 */
 						logger.debug("Processing C2S Choose Character Message");
 						processChooseCharacterEvent((MessageC2SChooseCharacter) msg);
 						break;
 					case C2S_LOGOUT:
+						/*
+						 * Request server to exit and free resources associated.
+						 * It may fail if RP decides not to allow player logout.
+						 */
 						logger.debug("Processing C2S Logout Message");
 						processLogoutEvent((MessageC2SLogout) msg);
 						break;
 					case C2S_ACTION:
+						/*
+						 * Process an action recieved from client and pass it directly
+						 * to RP manager.
+						 */
 						logger.debug("Processing C2S Action Message");
 						processActionEvent((MessageC2SAction) msg);
 						break;
 					case C2S_OUTOFSYNC:
+						//TODO: Consider removing this message as with TCP it won't fail.
+						/*
+						 * When client get out of sync because it has lost part of the messages
+						 * stream, it can request a synchronization to continue game.
+						 */
 						logger.debug("Processing C2S Out Of Sync Message");
 						processOutOfSyncEvent((MessageC2SOutOfSync) msg);
 						break;
 					case C2S_TRANSFER_ACK:
+						/*
+						 * This message is recieved when client get data at server
+						 * request and it confirms the data to be sent.
+						 */
 						logger.debug("Processing C2S Transfer ACK Message");
 						processTransferACK((MessageC2STransferACK) msg);
 						break;
 					case C2S_CREATEACCOUNT:
+						/*
+						 * This is a create account request.
+						 * It just create the account, it doesn't login us into it.
+						 */
 						logger.debug("Processing C2S Create Account Message");
 						processCreateAccount((MessageC2SCreateAccount) msg);
 						break;
 					case C2S_CREATECHARACTER:
+						/*
+						 * This is a create character request.
+						 * It require that client has correctly logged to server.
+						 * Once client create character a new Choose Character message is sent.
+						 */
 						logger.debug("Processing C2S Create Character Message");
 						processCreateCharacter((MessageC2SCreateCharacter) msg);
 						break;
@@ -317,6 +370,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				entriesToRemove.clear();
 
 				playerContainer.getLock().releaseLock();
+
+				/*
+				 * Finally store stats about logged players.
+				 */
 				logger.debug("PlayerEntryContainer size: "+ playerContainer.size());
 				stats.set("Players online", playerContainer.size());
 			}
@@ -342,44 +399,59 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private boolean isValidEvent(Message msg, PlayerEntry entry, ClientState... states) {
 		if(entry==null) {
-			/* Error: Player didn't login. */
+			/*
+			 * Error: Player didn't login.
+			 */
 			logger.warn("Client(" + msg.getAddress()+ ") has not login yet");
 			return false;
 		}
 
+		/*
+		 * Now we check if client is in any of the valid states
+		 */
 		boolean isInCorrectState=false;
 		for(ClientState state: states) {
 			if (entry.state == state) {
 				isInCorrectState=true;
 			}
 		}
-		
+
+		/*
+		 * And it it is not in the correct state, return false.
+		 */
 		if(!isInCorrectState) {
-			/*
-			 * Error: Player has not completed login yet, or he/she has logout
-			 * already.
-			 */
 			StringBuffer statesString=new StringBuffer();
 			for(ClientState state: states) {
 				statesString.append(state+" ");
 			}
-			
-			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + statesString.toString() + ")");
-		}
 
-		if (entry.channel!=msg.getSocketChannel()) {
-			/* Info: Player is using a different socket to communicate with server. */
-			logger.info("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
+			logger.warn("Client(" + msg.getAddress()+ ") is not in the required state (" + statesString.toString() + ")");
 			return false;
 		}
 
+		/*
+		 * Finally we check if another player is trying to inject messages into a different
+		 * player avatar.
+		 */
+		if (entry.channel!=msg.getSocketChannel()) {
+			/* Info: Player is using a different socket to communicate with server. */
+			logger.warn("Client(" + msg.getAddress()+ ") has not correct IP<->clientid relation");
+			return false;
+		}
+
+		/*
+		 * If nothing of the above happens, it means this event is valid and we
+		 * keep processing it.
+		 */
 		return true;
 	}
 
 	/**
 	 * This methods handles the logic when a Choose Character message is recieved from
 	 * client, checking the message and choosing the character.
+	 *
 	 * This method will send also the reply ACK or NACK to the message.
+	 *
 	 * @param msg The ChooseCharacter message
 	 */
 	private void processChooseCharacterEvent(MessageC2SChooseCharacter msg) {
@@ -419,8 +491,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				msgChooseCharacterACK.setClientID(clientid);
 				netMan.sendMessage(msgChooseCharacterACK);
 			} else {
-				/** This account doesn't own that character */
-				logger.debug("Client(" + msg.getAddress().toString()+ ") hasn't character(" + msg.getCharacter() + ")");
+				/* This account doesn't own that character */
+				logger.info("Client(" + msg.getAddress().toString()+ ") hasn't character(" + msg.getCharacter() + ")");
+
+				/*
+				 * So we return it back to login complete stage.
+				 */
 				entry.state=ClientState.LOGIN_COMPLETE;
 
 				/* Error: There is no such character */
@@ -437,6 +513,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This method is called when server recieves a logout message from a player.
 	 * It handles all the logic to effectively logout the player and free the associated resources.
+	 *
 	 * @param msg the logout message
 	 */
 	private void processLogoutEvent(MessageC2SLogout msg) {
@@ -445,8 +522,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			PlayerEntry entry=playerContainer.get(clientid);
 
-			/* verify event so that we can trust that it comes from our player and
-			   that it has completed the login stage. */
+			/*
+			 * verify event so that we can trust that it comes from our player
+			 * and that it has completed the login stage.
+			 */
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE, ClientState.GAME_BEGIN)) {
 				return;
 			}
@@ -455,8 +534,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			boolean shouldLogout=true;
 
-			/* 
-			 * We request to logout of game.
+			/*
+			 * We request to logout of game to RP Manager
 			 * If may be succesful or fail and we keep on game.
 			 */
 			if (entry.state==ClientState.GAME_BEGIN) {
@@ -471,8 +550,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					shouldLogout=false;
 				}
 			}
-			
-			if(shouldLogout) {				
+
+			if(shouldLogout) {
 				stats.add("Players logout", 1);
 				playerContainer.remove(clientid);
 
@@ -504,18 +583,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer.getLock().requestWriteLock();
 
 		try {
-		logger.info("GAME Disconnecting "+channel);
+			logger.info("GAME Disconnecting "+channel);
 
-		PlayerEntry entry=playerContainer.get(channel);
-		if(entry==null) {
-			/*
-			 * If connection has not even started login it won't have a entry and
-			 * it will be null
-			 */
-			return;
-		}
+			PlayerEntry entry=playerContainer.get(channel);
+			if(entry==null) {
+				/*
+				 * If connection has not even started login it won't have a entry and
+				 * it will be null
+				 */
+				return;
+			}
 
-		disconnect(entry);
+			disconnect(entry);
 		} finally {
 			playerContainer.getLock().releaseLock();
 		}
@@ -524,9 +603,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This method is used mainly by onDisconnect and RPServerManager to force the disconnection
 	 * of a player entry.
+	 *
 	 * @param entry the player entry to remove.
 	 */
 	public void disconnect(PlayerEntry entry) {
+		/*
+		 * We request the entry removal.
+		 * We can't remove ourselves because we may cause a comodification.
+		 */
 		entriesToRemove.add(entry);
 
 		/*
@@ -545,6 +629,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		}
 
+		/*
+		 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
+		 * GameServerManager to make room for new players.
+		 */
 		entry.state=ClientState.LOGOUT_ACCEPTED;
 	}
 
@@ -553,6 +641,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This method process actions send from client.
 	 * In fact, the action is passed to RPManager that will, when the turn arrives, execute it.
+	 *
 	 * @param msg the action message
 	 */
 	private void processActionEvent(MessageC2SAction msg) {
@@ -561,7 +650,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			PlayerEntry entry=playerContainer.get(clientid);
 
-			// verify event
+			/*
+			 * verify event
+			 */
 			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
@@ -579,13 +670,19 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			stats.add("Actions added", 1);
 
+			/*
+			 * Log the action into statistics system.
+			 * Or if the action didn't have type, log it as an invalid action.
+			 */
 			if (action.has("type")) {
-				// TODO: This is causing problems with Website.
 				stats.add("Actions " + action.get("type"), 1);
 			} else {
 				stats.add("Actions invalid", 1);
 			}
 
+			/*
+			 * Finally pass the action to the RP Manager
+			 */
 			rpMan.addRPAction(object, action);
 		} catch (Exception e) {
 			stats.add("Actions invalid", 1);
@@ -596,19 +693,32 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This message is used to create a game account.
 	 * It may fail if the player already exists or if any of the fields are empty.
+	 * This method does not make room for the player at the server.
 	 *
 	 * @param msg The create account message.
 	 */
 	private void processCreateAccount(MessageC2SCreateAccount msg) {
 		try {
+			/*
+			 * We request RP Manager to create an account for our player.
+			 * This will return a <b>result<7b> of the operation.
+			 */
 			AccountResult val= rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail());
 			Result result=val.getResult();
 
 			if (result == Result.OK_CREATED) {
+				/*
+				 * If result is OK then the account was created and we notify player
+				 * about that.
+				 */
 				logger.debug("Account (" + msg.getUsername() + ") created.");
 				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg.getSocketChannel(), val.getUsername());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
+				/*
+				 * Account creation may also fail.
+				 * So expose the reasons of the failure.
+				 */
 				MessageS2CCreateAccountNACK.Reasons reason;
 
 				// TODO: AccountResult should match CreateAccount message Reasons
@@ -643,30 +753,51 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				return;
 			}
 
+			/*
+			 * We request the creation of an account for a logged player.
+			 * It will also return a result of the character that we must follow to player.
+			 */
 			CharacterResult val= rpMan.createCharacter(entry.username, msg.getCharacter(), msg.getTemplate());
 			Result result=val.getResult();
 
 			if (result == Result.OK_CREATED) {
+				/*
+				 * If the character is created notify player and send him a Character list message.
+				 */
 				logger.debug("Character (" + msg.getCharacter() + ") created for account "+entry.username);
 				MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(msg.getSocketChannel(), val.getCharacter(), val.getTemplate());
 				msgCreateCharacterACK.setClientID(clientid);
 				netMan.sendMessage(msgCreateCharacterACK);
 
-				/* Build player character list and send it to client */
+				/*
+				 * Build player character list and send it to client
+				 */
 				String[] characters = entry.getCharacters().toArray(new String[0]);
 				MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg.getSocketChannel(), characters);
 				msgCharacters.setClientID(clientid);
 				netMan.sendMessage(msgCharacters);
 			} else {
+				/*
+				 * It also may fail to create the character.
+				 * Explain the reasons to player.
+				 */
 				MessageS2CCreateCharacterNACK.Reasons reason;
 
 				// TODO: AccountResult should match CreateAccount message Reasons
-				if (result == Result.FAILED_PLAYER_EXISTS) {
+				switch(result) {
+				case FAILED_PLAYER_EXISTS:
 					reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
-				} else {
+					break;
+				case FAILED_INVALID_TEMPLATE:
+					reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
+					break;
+				default:
 					reason = MessageS2CCreateCharacterNACK.Reasons.FIELD_TOO_SHORT;
 				}
 
+				/*
+				 * Notify player about the event.
+				 */
 				MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(msg.getSocketChannel(), reason);
 				netMan.sendMessage(msgCreateCharacterNACK);
 			}
@@ -679,13 +810,23 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * This method handles the initial login of the client into the server.
 	 * First, it compares the game and version that client is running and if they match
 	 * request the client to send the key to continue login process.
+	 *
 	 * Otherwise, it rejects client because game is incompatible.
 	 *
 	 * @param msg the login message.
 	 */
 	private void processLoginRequestKey(Message msg) {
 		MessageC2SLoginRequestKey msgRequest = (MessageC2SLoginRequestKey) msg;
+
+		/*
+		 * Check game version with data suplied by client.
+		 * The RP may decide to deny login to this player.
+		 */
 		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
+			/*
+			 * If this is correct we send player the server key so it can sign the
+			 * password.
+			 */
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg.getSocketChannel(), key);
 			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
 			netMan.sendMessage(msgLoginSendKey);
@@ -693,7 +834,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/* Error: Incompatible game version. Update client */
 			logger.debug("Client is running an incompatible game version. Client("+ msg.getAddress().toString() + ") can't login");
 
-			/* Notify player of the event. */
+			/* Notify player of the event by denying the login. */
 			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(), MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
 			netMan.sendMessage(msgLoginNACK);
 		}
