@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.26 2007/03/21 19:23:15 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.27 2007/03/22 16:52:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,8 @@ import marauroa.server.game.db.Transaction;
 /**
  * This class represent a player on game.
  * It handles all the bussiness glue that it is needed by the server.
- * @author miguel *
+ *
+ * @author miguel
  */
 public class PlayerEntry {
 	/** A object representing the database */
@@ -44,18 +45,24 @@ public class PlayerEntry {
     /**
 	 * This class store the information needed to allow a secure login.
 	 * Once login is completed the information is cleared.
-	 * @author miguel
 	 */
 	static public class SecuredLoginInfo {
-		public byte[] clientNonceHash;
+		/** A long array of bytes that represent the Hash of a random value. */
 		public byte[] serverNonce;
+		/** A long array of bytes that represent a random value. */
 		public byte[] clientNonce;
+		/** A long byte array that represetn the hash of the client Nonce field */
+		public byte[] clientNonceHash;
+		/** Username of the player */
 		public String username;
+		/** An array that represent the hash of the password xor ClientNonce xor ServerNonce. */
 		public byte[] password;
+		/** The server RSA key. */
 		public RSAKey key;
 
 		/**
 		 *  Constructor
+		 *
 		 * @param key the server private key
 		 * @param clientNonceHash the client hash
 		 * @param serverNonce the server random bigint
@@ -68,6 +75,7 @@ public class PlayerEntry {
 
 		/**
 		 * Verify that a player is whom he/she says it is.
+		 *
 		 * @return true if it is correct: username and password matches.
 		 * @throws SQLException if there is any database problem.
 		 */
@@ -77,6 +85,7 @@ public class PlayerEntry {
 
 		/**
 		 * Add a login event to database each time player login, even if it fails.
+		 *
 		 * @param address the IP address that originated the request.
 		 * @param loginResult the result of the login action, where true is login correct and false login failed.
 		 * @throws SQLException if there is any database problem.
@@ -91,8 +100,9 @@ public class PlayerEntry {
 
 		/**
 		 * Returns true if an account is temporally blocked due to too many tries on the defined time frame.
+		 *
 		 * @return true if an account is temporally blocked due to too many tries on the defined time frame.
-		 * @throws SQLException
+		 * @throws SQLException if there is any database problem.
 		 */
 		public boolean isAccountBlocked() throws SQLException {
     		Transaction transaction=playerDatabase.getTransaction();
@@ -130,7 +140,11 @@ public class PlayerEntry {
 	/** The object of the player */
 	public RPObject object;
 
-	/** A counter to detect dropped packets or bad order at client side */
+	/** A counter to detect dropped packets or bad order at client side.
+	 * We enumerate each perception so client can know in which order it is
+	 * expected to apply them.
+	 * When using TCP there is no problem as delivery is guaranted.
+	 */
 	public int perceptionCounter;
 
 	/** It is true if client notified us that it got out of sync */
@@ -153,6 +167,10 @@ public class PlayerEntry {
 		character=null;
 		object=null;
 		perceptionCounter=0;
+		/*
+		 * We set this to true so that RP Manager will send a sync perception to player
+		 * as soon as possible.
+		 */
 		requestedSync=true;
 		contentToTransfer=null;
 
@@ -161,6 +179,7 @@ public class PlayerEntry {
 
 	/**
 	 * Return the inet address of this PlayerEntry.
+	 *
 	 * @return the inet address of this PlayerEntry.
 	 */
 	public InetAddress getAddress() {
@@ -169,19 +188,23 @@ public class PlayerEntry {
 
 	/**
 	 * Returns the next perception timestamp.
+	 *
 	 * @return the next perception timestamp
 	 */
 	public int getPerceptionTimestamp() {
 		return perceptionCounter++;
 	}
 
-	/** Clears the contents to be transfered */
+	/**
+	 * Clears the contents to be transfered
+	 */
 	public void clearContent() {
 		contentToTransfer = null;
 	}
 
 	/**
 	 * Returns the named content or returns null if it is not found.
+	 *
 	 * @param name name of the content to find
 	 * @return the content or null if it is not found.
 	 */

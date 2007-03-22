@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.73 2007/03/21 19:23:15 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.74 2007/03/22 16:52:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -789,7 +789,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
 					break;
 				case FAILED_INVALID_TEMPLATE:
-					reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
+					reason = MessageS2CCreateCharacterNACK.Reasons.TEMPLATE_INVALID;
 					break;
 				default:
 					reason = MessageS2CCreateCharacterNACK.Reasons.FIELD_TOO_SHORT;
@@ -863,7 +863,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				if(candidate!=null) {
 					/* Cool!, we got a candidate, so we remove and disconnect it.	 */
 					playerContainer.remove(candidate.clientid);
-					netMan.disconnectClient(candidate.channel);
+					// TODO: notify forced disconnection without locking server.
+					// netMan.disconnectClient(candidate.channel);
+					// BUG: It will cause server to enter in a dead lock
+					// But we need to close the connection.
 				}
 			}
 
@@ -899,7 +902,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This last method completes the login process.
 	 *
-	 * @param msg
+	 * @param msg the final message the contains the encrypted password.
 	 */
 	private void processSecuredLoginEvent(Message msg) {
 		try {
@@ -924,11 +927,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 */
 			if(info.isAccountBlocked()) {
 				logger.debug("Blocked account for player "+ info.username);
+
 				/* Send player the Login NACK message */
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
 						MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
 
 				netMan.sendMessage(msgLoginNACK);
+
+				//TODO: should use disconnect.
 				playerContainer.remove(clientid);
 				return;
 			}
@@ -959,12 +965,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				if (existing.state == ClientState.GAME_BEGIN) {
 					RPObject object=existing.object;
 
-					if (rpMan.onExit(object)) {
-						/* NOTE: Set the Object so that it is stored in Database */
-						existing.storeRPObject(object);
-					}
+					rpMan.onTimeout(object);
+					existing.storeRPObject(object);
 				}
 				logger.debug("Disconnecting PREVIOUS "+existing.channel+" with "+existing);
+
+				// TODO: May it need to call instead to disconnect.
 				playerContainer.remove(existing.clientid);
 			}
 
@@ -1009,6 +1015,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This message is send from client to notify that client suffered a network problem
 	 * and request data to be resend again to it.
+	 *
 	 * @param msg the out of sync message
 	 */
 	private void processOutOfSyncEvent(MessageC2SOutOfSync msg) {
@@ -1021,7 +1028,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				return;
 			}
 
-			/** Notify Player Entry that this player is out of Sync */
+			/*
+			 * Notify Player Entry that this player is out of Sync
+			 */
 			entry.requestSync();
 		} catch (Exception e) {
 			logger.error("error while processing OutOfSyncEvent", e);
@@ -1044,11 +1053,19 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				return;
 			}
 
-			/** Handle Transfer ACK here */
+			/*
+			 * Handle Transfer ACK here.
+			 * We iterate over the contents and send them to client for those of them
+			 * which client told us ACK.
+			 */
 			for (TransferContent content : msg.getContents()) {
 				if (content.ack == true) {
 					logger.debug("Trying transfer content " + content);
 
+					/*
+					 * We get the content from those of that this client are waiting for
+					 * being sent to it.
+					 */
 					content = entry.getContent(content.name);
 					if (content != null) {
 						stats.add("Transfer content", 1);
@@ -1060,14 +1077,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 						msgTransfer.setClientID(clientid);
 						netMan.sendMessage(msgTransfer);
 					} else {
-						logger.debug("CAN'T transfer content because it is null");
+						logger.info("CAN'T transfer content ("+content.name+") because it is null");
 					}
 				} else {
 					stats.add("Transfer content cache", 1);
 				}
 			}
 
-			/** We clear the content pending to be sent */
+			/*
+			 * We clear the content pending to be sent
+			 */
 			entry.clearContent();
 		} catch (Exception e) {
 			logger.error("error while processing TransferACK", e);

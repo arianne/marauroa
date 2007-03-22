@@ -1,4 +1,4 @@
-/* $Id: ClientState.java,v 1.2 2007/02/03 17:33:40 arianne_rpg Exp $ */
+/* $Id: ClientState.java,v 1.3 2007/03/22 16:52:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -12,12 +12,21 @@
  ***************************************************************************/
 package marauroa.server.game.container;
 
-/** This enum describe one of the possible state of the client. */
+/**
+ * This enum describe one of the possible state of the client.
+ *
+ * When the client starts it has no state, once it connects to server
+ * it is assigned connection accepted state until it login sucessfully
+ * so it is moved to login complete.
+ *
+ * As soon as it choose a character it is moved to game begin state which
+ * it will only leave when logout is accepted.
+ */
 public enum ClientState {
 	/** Connection is accepted but login stage is not completed. */
-	CONNECTION_ACCEPTED, 
+	CONNECTION_ACCEPTED,
 	/** Login identification is completed but still choosing character- */
-	LOGIN_COMPLETE, 
+	LOGIN_COMPLETE,
 	/** Client is already playing. */
 	GAME_BEGIN,
 	/** The client has requested logout and the petition is accepted */
