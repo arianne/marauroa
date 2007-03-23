@@ -6,3 +6,4 @@
  * Help us to get it up to date.
  */
 package marauroa.server.game.python;
+

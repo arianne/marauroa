@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.27 2007/03/22 16:52:24 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.28 2007/03/23 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -34,29 +34,36 @@ import marauroa.server.game.db.Transaction;
  * @author miguel
  */
 public class PlayerEntry {
+
 	/** A object representing the database */
 	static IDatabase playerDatabase;
 
 	/** Get the database object. */
-    public static void initDatabase() {
-    		playerDatabase=DatabaseFactory.getDatabase();
-    }
+	public static void initDatabase() {
+		playerDatabase = DatabaseFactory.getDatabase();
+	}
 
-    /**
+	/**
 	 * This class store the information needed to allow a secure login.
 	 * Once login is completed the information is cleared.
 	 */
 	static public class SecuredLoginInfo {
+
 		/** A long array of bytes that represent the Hash of a random value. */
 		public byte[] serverNonce;
+
 		/** A long array of bytes that represent a random value. */
 		public byte[] clientNonce;
+
 		/** A long byte array that represetn the hash of the client Nonce field */
 		public byte[] clientNonceHash;
+
 		/** Username of the player */
 		public String username;
+
 		/** An array that represent the hash of the password xor ClientNonce xor ServerNonce. */
 		public byte[] password;
+
 		/** The server RSA key. */
 		public RSAKey key;
 
@@ -69,8 +76,8 @@ public class PlayerEntry {
 		 */
 		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce) {
 			this.key = key;
-			this.clientNonceHash=clientNonceHash;
-			this.serverNonce=serverNonce;
+			this.clientNonceHash = clientNonceHash;
+			this.serverNonce = serverNonce;
 		}
 
 		/**
@@ -91,9 +98,9 @@ public class PlayerEntry {
 		 * @throws SQLException if there is any database problem.
 		 */
 		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
-    		Transaction transaction=playerDatabase.getTransaction();
+			Transaction transaction = playerDatabase.getTransaction();
 
-    		transaction.begin();
+			transaction.begin();
 			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
 			transaction.commit();
 		}
@@ -105,7 +112,7 @@ public class PlayerEntry {
 		 * @throws SQLException if there is any database problem.
 		 */
 		public boolean isAccountBlocked() throws SQLException {
-    		Transaction transaction=playerDatabase.getTransaction();
+			Transaction transaction = playerDatabase.getTransaction();
 			return playerDatabase.isAccountBlocked(transaction, username);
 		}
 	}
@@ -158,23 +165,23 @@ public class PlayerEntry {
 	 * @param channel the socket channel
 	 */
 	public PlayerEntry(SocketChannel channel) {
-		this.channel=channel;
+		this.channel = channel;
 
-		clientid=Message.CLIENTID_INVALID;
-		state=ClientState.CONNECTION_ACCEPTED;
-		loginInformations=null;
-		username=null;
-		character=null;
-		object=null;
-		perceptionCounter=0;
+		clientid = Message.CLIENTID_INVALID;
+		state = ClientState.CONNECTION_ACCEPTED;
+		loginInformations = null;
+		username = null;
+		character = null;
+		object = null;
+		perceptionCounter = 0;
 		/*
 		 * We set this to true so that RP Manager will send a sync perception to player
 		 * as soon as possible.
 		 */
-		requestedSync=true;
-		contentToTransfer=null;
+		requestedSync = true;
+		contentToTransfer = null;
 
-		creationTime=System.currentTimeMillis();
+		creationTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -227,8 +234,8 @@ public class PlayerEntry {
 	 * @param player the object to store
 	 * @throws SQLException
 	 */
-	public void storeRPObject(RPObject player) throws SQLException,IOException {
-		Transaction transaction=playerDatabase.getTransaction();
+	public void storeRPObject(RPObject player) throws SQLException, IOException {
+		Transaction transaction = playerDatabase.getTransaction();
 
 		try {
 			transaction.begin();
@@ -237,7 +244,7 @@ public class PlayerEntry {
 			playerDatabase.storeCharacter(transaction, username, character, player);
 
 			/* And update the entry */
-			object=player;
+			object = player;
 
 			transaction.commit();
 		} catch (SQLException e) {
@@ -270,7 +277,7 @@ public class PlayerEntry {
 	 * @throws SQLException in case of an database error
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
-		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(),username, character);
+		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(), username, character);
 		return object;
 	}
 
@@ -287,7 +294,7 @@ public class PlayerEntry {
 	 * This method forces an update on the next perception sending.
 	 */
 	public void requestSync() {
-		requestedSync=true;
+		requestedSync = true;
 	}
 
 	/**
@@ -310,17 +317,18 @@ public class PlayerEntry {
 		/*
 		 * Add logged players that didn't choose a character or that have not even login yet.
 		 */
-		boolean isInOKState=(state==ClientState.GAME_BEGIN);
-		return !isInOKState && System.currentTimeMillis()-creationTime>TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
+		boolean isInOKState = (state == ClientState.GAME_BEGIN);
+		return !isInOKState
+		        && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
 	}
 
 	@Override
 	public String toString() {
-		StringBuffer os=new StringBuffer("PlayerEntry");
-		os.append("[clientid="+clientid+"]");
-		os.append("[state="+state+"]");
-		os.append("[username="+username+"]");
-		os.append("[character="+character+"]");
+		StringBuffer os = new StringBuffer("PlayerEntry");
+		os.append("[clientid=" + clientid + "]");
+		os.append("[state=" + state + "]");
+		os.append("[username=" + username + "]");
+		os.append("[character=" + character + "]");
 
 		return os.toString();
 	}

@@ -1,4 +1,4 @@
-/* $Id: CRC.java,v 1.3 2007/03/15 18:43:24 arianne_rpg Exp $ */
+/* $Id: CRC.java,v 1.4 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,15 +13,16 @@
 package marauroa.common;
 
 public class CRC {
+
 	// calculating 16-bit CRC
 
 	/**
 	 * generator polynomial
 	 */
 	private static final int POLY = 0x1021; /*
-											 * x16 + x12 + x5 + 1 generator
-											 * polynomial
-											 */
+	 * x16 + x12 + x5 + 1 generator
+	 * polynomial
+	 */
 
 	/* 0x8408 used in European X.25 */
 

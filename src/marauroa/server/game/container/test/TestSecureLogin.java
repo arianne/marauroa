@@ -24,8 +24,9 @@ import org.junit.Test;
  *
  */
 public class TestSecureLogin {
-	private static RSAKey key;	
-	
+
+	private static RSAKey key;
+
 	/**
 	 * Initialize the container.
 	 * @throws IOException 
@@ -41,10 +42,9 @@ public class TestSecureLogin {
 	}
 
 	public static void loadRSAKey() throws IOException {
-		key = new RSAKey(
-				new BigInteger(Configuration.getConfiguration().get("n")), 
-				new BigInteger(Configuration.getConfiguration().get("d")), 
-				new BigInteger(Configuration.getConfiguration().get("e")));
+		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
+		        Configuration.getConfiguration().get("d")), new BigInteger(Configuration
+		        .getConfiguration().get("e")));
 	}
 
 	/**
@@ -54,10 +54,10 @@ public class TestSecureLogin {
 	 */
 	@Test
 	public void testLogin() throws SQLException {
-		String password="password";
+		String password = "password";
 		System.out.println(Hash.toHexString(Hash.hash(password)));
 
-		PlayerEntry.SecuredLoginInfo login=simulateSecureLogin("testUsername",password);
+		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		assertTrue(login.verify());
 	}
 
@@ -68,19 +68,21 @@ public class TestSecureLogin {
 	 */
 	@Test
 	public void testLoginFailure() throws SQLException {
-		String password="badpassword";
+		String password = "badpassword";
 
-		PlayerEntry.SecuredLoginInfo login=simulateSecureLogin("testUsername",password);
+		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		assertFalse(login.verify());
 	}
-	
-	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password) throws SQLException {
-		byte[] serverNonce=Hash.random(Hash.hashLength());
-		byte[] clientNonce=Hash.random(Hash.hashLength());
-		
-		byte[] clientNonceHash=Hash.hash(clientNonce);
 
-		PlayerEntry.SecuredLoginInfo login=new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
+	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password)
+	        throws SQLException {
+		byte[] serverNonce = Hash.random(Hash.hashLength());
+		byte[] clientNonce = Hash.random(Hash.hashLength());
+
+		byte[] clientNonceHash = Hash.hash(clientNonce);
+
+		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
+		        serverNonce);
 
 		byte[] b1 = Hash.xor(clientNonce, serverNonce);
 		if (b1 == null) {
@@ -93,11 +95,11 @@ public class TestSecureLogin {
 		}
 
 		byte[] cryptedPassword = key.encodeByteArray(b2);
-		
-		login.username=username;
-		login.clientNonce=clientNonce;
-		login.password=cryptedPassword;
-		
+
+		login.username = username;
+		login.clientNonce = clientNonce;
+		login.password = cryptedPassword;
+
 		return login;
 	}
 }

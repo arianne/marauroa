@@ -18,7 +18,6 @@ import marauroa.common.net.message.MessageC2SAction;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 /**
  * Test the basic serialization schema.
  *
@@ -26,6 +25,7 @@ import org.junit.Test;
  *
  */
 public class TestEncoderDecoder {
+
 	/**
 	 * Setup for class.
 	 * It initialize the logger instance
@@ -43,26 +43,26 @@ public class TestEncoderDecoder {
 	 */
 	@Test
 	public void testEncoderDecoderSingle() throws IOException, InvalidVersionException {
-		Encoder enc=Encoder.get();
+		Encoder enc = Encoder.get();
 
-		RPAction action=new RPAction();
-		action.put("one",1);
-		action.put("two","2");
+		RPAction action = new RPAction();
+		action.put("one", 1);
+		action.put("two", "2");
 
-		MessageC2SAction message=new MessageC2SAction(null,action);
+		MessageC2SAction message = new MessageC2SAction(null, action);
 
-		byte[] result=enc.encode(message);
+		byte[] result = enc.encode(message);
 
-		Decoder dec=Decoder.get();
+		Decoder dec = Decoder.get();
 
-		Message decoded=dec.decode(null,result);
-		byte[] reencoded=enc.encode(decoded);
+		Message decoded = dec.decode(null, result);
+		byte[] reencoded = enc.encode(decoded);
 
 		assertEquals(result.length, reencoded.length);
 
 		/** We verify the assertion by re encoding again the message.
 		 *  Message.equals(Object ) is NOT implemented. */
-		for(int i=0;i<result.length;i++) {
+		for (int i = 0; i < result.length; i++) {
 			assertEquals(result[i], reencoded[i]);
 		}
 	}
@@ -74,40 +74,40 @@ public class TestEncoderDecoder {
 	 */
 	@Test
 	public void testEncoderDecoderMultiple() throws IOException, InvalidVersionException {
-		Encoder enc=Encoder.get();
+		Encoder enc = Encoder.get();
 
-		RPAction action=new RPAction();
-		action.put("one",1);
-		action.put("two","2");
+		RPAction action = new RPAction();
+		action.put("one", 1);
+		action.put("two", "2");
 
-		MessageC2SAction message=new MessageC2SAction(null,action);
+		MessageC2SAction message = new MessageC2SAction(null, action);
 
-		byte[] result=enc.encode(message);
+		byte[] result = enc.encode(message);
 
-		Decoder dec=Decoder.get();
+		Decoder dec = Decoder.get();
 
-		int split=new Random().nextInt(result.length-4)+4;
-		byte[] part1=new byte[split];
-		System.arraycopy(result, 0 , part1, 0, split);
+		int split = new Random().nextInt(result.length - 4) + 4;
+		byte[] part1 = new byte[split];
+		System.arraycopy(result, 0, part1, 0, split);
 
-		byte[] part2=new byte[result.length-split];
-		System.arraycopy(result, split , part2, 0, result.length-split);
+		byte[] part2 = new byte[result.length - split];
+		System.arraycopy(result, split, part2, 0, result.length - split);
 
-		assertEquals(result.length, part1.length+part2.length);
+		assertEquals(result.length, part1.length + part2.length);
 
-		Message decoded=null;
-		decoded=dec.decode(null,part1);
+		Message decoded = null;
+		decoded = dec.decode(null, part1);
 		assertNull(decoded);
-		decoded=dec.decode(null,part2);
+		decoded = dec.decode(null, part2);
 		assertNotNull(decoded);
 
-		byte[] reencoded=enc.encode(decoded);
+		byte[] reencoded = enc.encode(decoded);
 
 		assertEquals(result.length, reencoded.length);
 
 		/** We verify the assertion by re encoding again the message.
 		 *  Message.equals(Object ) is NOT implemented. */
-		for(int i=0;i<result.length;i++) {
+		for (int i = 0; i < result.length; i++) {
 			assertEquals(result[i], reencoded[i]);
 		}
 	}

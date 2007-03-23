@@ -16,6 +16,7 @@ import java.io.InputStream;
  * @author Matthias Totz
  */
 public class Utility {
+
 	/** no instance allowed */
 	private Utility() {
 	}
@@ -27,12 +28,12 @@ public class Utility {
 	 * @return the expected number
 	 */
 	public static String addLeadingZeros(String number, int maxDigits) {
-		String result=number;
-		
+		String result = number;
+
 		while (number.length() < maxDigits) {
 			result = "0" + result;
 		}
-		
+
 		return result;
 	}
 
@@ -57,13 +58,11 @@ public class Utility {
 			StringBuilder chars = new StringBuilder();
 
 			int theByte = byteStream.read();
-			result.append(addLeadingZeros(Integer.toHexString(index), 8))
-					.append(' ');
+			result.append(addLeadingZeros(Integer.toHexString(index), 8)).append(' ');
 			index++;
 
 			while (theByte != -1) {
-				result.append(addLeadingZeros(Integer.toHexString(theByte), 2))
-						.append(' ');
+				result.append(addLeadingZeros(Integer.toHexString(theByte), 2)).append(' ');
 
 				// show chars < 32 and > 127 as '.'
 				if (theByte > 31 && theByte < 128) {
@@ -74,8 +73,7 @@ public class Utility {
 
 				if (index > 0 && (index % 16 == 0)) {
 					result.append(chars).append('\n').append(
-							addLeadingZeros(Integer.toHexString(index), 8))
-							.append(' ');
+					        addLeadingZeros(Integer.toHexString(index), 8)).append(' ');
 
 					chars = new StringBuilder();
 				}

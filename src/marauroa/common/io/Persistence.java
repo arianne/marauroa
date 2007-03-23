@@ -14,8 +14,11 @@ import org.apache.log4j.Logger;
  * @author hendrik
  */
 public abstract class Persistence {
+
 	private final static Logger logger = Logger.getLogger(Persistence.class);
+
 	private static Persistence instance = null;
+
 	private static boolean WEB_START_SANDBOX = false;
 
 	/**
@@ -47,7 +50,7 @@ public abstract class Persistence {
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * Gets an input stream to this "virtual" file
 	 *
@@ -57,7 +60,8 @@ public abstract class Persistence {
 	 * @return InputStream
 	 * @throws IOException on io error
 	 */
-	public abstract InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException;
+	public abstract InputStream getInputStream(boolean relativeToHome, String basedir,
+	        String filename) throws IOException;
 
 	/**
 	 * Gets an output stream to this "virtual" file
@@ -68,6 +72,7 @@ public abstract class Persistence {
 	 * @return OutputStream
 	 * @throws IOException on io error
 	 */
-	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException;
+	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir,
+	        String filename) throws IOException;
 
 }

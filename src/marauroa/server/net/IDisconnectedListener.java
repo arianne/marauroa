@@ -1,4 +1,4 @@
-/* $Id: IDisconnectedListener.java,v 1.4 2007/02/10 16:52:13 arianne_rpg Exp $ */
+/* $Id: IDisconnectedListener.java,v 1.5 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.nio.channels.SocketChannel;
  *
  */
 public interface IDisconnectedListener {
+
 	/** 
 	 * This method is called when a connection is closed.
 	 * @param channel the channel that was closed. 

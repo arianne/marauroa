@@ -1,4 +1,4 @@
-/* $Id: MessageC2SOutOfSync.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SOutOfSync.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.nio.channels.SocketChannel;
  * finish the session.
  */
 public class MessageC2SOutOfSync extends Message {
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SOutOfSync() {
 		super(MessageType.C2S_OUTOFSYNC, null);
@@ -43,19 +44,17 @@ public class MessageC2SOutOfSync extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Out of Sync) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (C2S Out of Sync) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		if (type != MessageType.C2S_OUTOFSYNC) {
 			throw new java.lang.ClassNotFoundException();

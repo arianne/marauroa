@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,7 @@ import marauroa.common.net.OutputSerializer;
  * <attribute>=<value>
  */
 public class MessageS2CServerInfo extends Message {
+
 	private String[] contents;
 
 	/** Constructor for allowing creation of an empty message */
@@ -71,14 +72,12 @@ public class MessageS2CServerInfo extends Message {
 		for (int i = 0; i < contents.length; ++i) {
 			text.append("[" + contents[i] + "],");
 		}
-		return "Message (S2C Server Info) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ text.substring(0, text.length() - 1) + ")";
+		return "Message (S2C Server Info) from (" + getAddress() + ") CONTENTS: ("
+		        + text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -101,7 +100,7 @@ public class MessageS2CServerInfo extends Message {
 		for (Iterator<RPClass> it = RPClass.iterator(); it.hasNext();) {
 			RPClass rp_class = it.next();
 			if (!"".equals(rp_class.getName())) // sort out default class if it
-												// is there
+			// is there
 			{
 				serializer.write(rp_class);
 			}
@@ -113,14 +112,13 @@ public class MessageS2CServerInfo extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 
-		ByteArrayInputStream array = new ByteArrayInputStream(in
-				.readByteArray());
-		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(
-				array, new java.util.zip.Inflater());
+		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
+		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
+		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		contents = serializer.readStringArray();

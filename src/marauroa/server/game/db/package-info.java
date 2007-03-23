@@ -5,3 +5,4 @@
  * Feel free to create a new implementation for MySQL.
  */
 package marauroa.server.game.db;
+

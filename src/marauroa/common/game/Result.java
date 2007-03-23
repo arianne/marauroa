@@ -22,4 +22,3 @@ public enum Result {
 	 */
 	FAILED_INVALID_TEMPLATE
 }
-

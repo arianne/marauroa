@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.2 2007/02/23 10:52:06 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import java.util.List;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CLoginACK extends Message {
+
 	private List<String> previousLogins;
 
 	/** Constructor for allowing creation of an empty message */
@@ -39,7 +40,7 @@ public class MessageS2CLoginACK extends Message {
 	 */
 	public MessageS2CLoginACK(SocketChannel source, List<String> events) {
 		super(MessageType.S2C_LOGIN_ACK, source);
-		previousLogins=events;
+		previousLogins = events;
 	}
 
 	public List<String> getPreviousLogins() {
@@ -53,32 +54,30 @@ public class MessageS2CLoginACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login ACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (S2C Login ACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 
-		out.write((byte)previousLogins.size());
-		for(String event: previousLogins) {
+		out.write((byte) previousLogins.size());
+		for (String event : previousLogins) {
 			out.write255LongString(event);
 		}
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		if (type != MessageType.S2C_LOGIN_ACK) {
 			throw new java.lang.ClassNotFoundException();
 		}
 
-		int amount=in.readByte();
-		previousLogins=new LinkedList<String>();
-		for(int i=0;i<amount;i++) {
+		int amount = in.readByte();
+		previousLogins = new LinkedList<String>();
+		for (int i = 0; i < amount; i++) {
 			previousLogins.add(in.read255LongString());
 		}
 	}

@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.17 2007/03/02 08:23:37 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.18 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,7 @@ import marauroa.server.net.validator.InetAddressMask;
  *
  */
 public interface IDatabase {
+
 	/**
 	 * Adds this player to database with username, password and email.
 	 *
@@ -38,8 +39,8 @@ public interface IDatabase {
 	 * @param email player's email
 	 * @throws SQLException
 	 */
-	public void addPlayer(Transaction transaction, String username,
-			byte[] password, String email) throws SQLException;
+	public void addPlayer(Transaction transaction, String username, byte[] password, String email)
+	        throws SQLException;
 
 	/**
 	 * Generates an unique player id.
@@ -63,7 +64,8 @@ public interface IDatabase {
 	 * @param password the new password
 	 * @throws SQLException
 	 */
-	public void changePassword(Transaction transaction, String username, String password) throws SQLException;
+	public void changePassword(Transaction transaction, String username, String password)
+	        throws SQLException;
 
 	/**
 	 * Change the email address of the associated username
@@ -72,7 +74,8 @@ public interface IDatabase {
 	 * @param email the players new email address
 	 * @throws SQLException
 	 */
-	public void changeEmail(Transaction transaction, String username, String email) throws SQLException;
+	public void changeEmail(Transaction transaction, String username, String email)
+	        throws SQLException;
 
 	/**
 	 * Removes a player, its characters and the avatars that represent it from database.
@@ -90,8 +93,7 @@ public interface IDatabase {
 	 * @return true if player is found or false if it is not.
 	 * @throws SQLException if there is a database problem.
 	 */
-	public boolean hasPlayer(Transaction transaction, String username)
-			throws SQLException;
+	public boolean hasPlayer(Transaction transaction, String username) throws SQLException;
 
 	/**
 	 * Set the status account of a player. On account creating it is set to active.
@@ -105,8 +107,8 @@ public interface IDatabase {
 	 * @param status status we are going to set
 	 * @throws SQLException if there is a database problem
 	 */
-	public void setAccountStatus(Transaction transaction, String username,
-			String status) throws SQLException;
+	public void setAccountStatus(Transaction transaction, String username, String status)
+	        throws SQLException;
 
 	/**
 	 * Returns the account status of the given player.
@@ -128,8 +130,8 @@ public interface IDatabase {
 	 * @throws SQLException if there is any kind of database problem.
 	 * @throws IOException if RPObject can NOT be serialized
 	 */
-	public void addCharacter(Transaction transaction, String username,
-			String character, RPObject player) throws SQLException, IOException;
+	public void addCharacter(Transaction transaction, String username, String character,
+	        RPObject player) throws SQLException, IOException;
 
 	/**
 	 * Removes a character of a player. This method also remove the associated RPObject.
@@ -140,8 +142,8 @@ public interface IDatabase {
 	 * @return true if it is removed or false otherwise
 	 * @throws SQLException if there is any database problem
 	 */
-	public boolean removeCharacter(Transaction transaction,
-			String username, String character) throws SQLException;
+	public boolean removeCharacter(Transaction transaction, String username, String character)
+	        throws SQLException;
 
 	/**
 	 * This method returns true if the player has that character or false if it hasn't
@@ -152,8 +154,8 @@ public interface IDatabase {
 	 * @return true if character is found or false otherwise
 	 * @throws SQLException if there is any problem with database
 	 */
-	public boolean hasCharacter(Transaction transaction, String username,
-			String character) throws SQLException;
+	public boolean hasCharacter(Transaction transaction, String username, String character)
+	        throws SQLException;
 
 	/**
 	 * Returns the list of characters this player owns.
@@ -163,9 +165,7 @@ public interface IDatabase {
 	 * @return the list of characters.
 	 * @throws SQLException if there is any database problem.
 	 */
-	public List<String> getCharacters(Transaction transaction,
-			String username) throws SQLException;
-
+	public List<String> getCharacters(Transaction transaction, String username) throws SQLException;
 
 	/**
 	 * This method load from database the character's avatar asociated to this character.
@@ -177,7 +177,8 @@ public interface IDatabase {
 	 * @throws SQLException if there is any problem at database
 	 * @throws IOException if player can NOT be serialized
 	 */
-	public RPObject loadCharacter(Transaction transaction, String username, String character) throws SQLException, IOException;
+	public RPObject loadCharacter(Transaction transaction, String username, String character)
+	        throws SQLException, IOException;
 
 	/**
 	 * This method stores a character's avatar at database and update the link with Character table.
@@ -189,7 +190,8 @@ public interface IDatabase {
 	 * @throws SQLException if there is any problem at database.
 	 * @throws IOException if player can NOT be serialized
 	 */
-	public void storeCharacter(Transaction transaction, String username, String character, RPObject player) throws SQLException, IOException;
+	public void storeCharacter(Transaction transaction, String username, String character,
+	        RPObject player) throws SQLException, IOException;
 
 	/**
 	 * Stores all the objects tagged as storable into database and assign them to the zone
@@ -230,7 +232,6 @@ public interface IDatabase {
 	 */
 	public void addStatisticsEvent(Transaction trans, Variables var);
 
-
 	/**
 	 * This method returns true if the player match in database matches the given password and the account is active.
 	 * @param transaction the database transaction
@@ -238,9 +239,8 @@ public interface IDatabase {
 	 * @return true if account information is correct or false otherwise
 	 * @throws SQLException if there is any database problem.
 	 */
-	public boolean verify(Transaction transaction,
-			PlayerEntry.SecuredLoginInfo informations) throws SQLException;
-
+	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations)
+	        throws SQLException;
 
 	/**
 	 * Returns true if an account is temporally blocked due to too many tries on the defined time frame.
@@ -260,9 +260,8 @@ public interface IDatabase {
 	 * @param correctLogin the result of the action
 	 * @throws SQLException if there is any problem such as a player that doesn't exist
 	 */
-	public void addLoginEvent(Transaction transaction,
-			String username, InetAddress source, boolean correctLogin)
-			throws SQLException;
+	public void addLoginEvent(Transaction transaction, String username, InetAddress source,
+	        boolean correctLogin) throws SQLException;
 
 	/**
 	 * This method returns a list of the login events and its result.
@@ -273,7 +272,8 @@ public interface IDatabase {
 	 * @return a List of LoginEvent objects
 	 * @throws SQLException if there is any database problem.
 	 */
-	public List<String> getLoginEvents(Transaction transaction, String username, int events) throws SQLException;
+	public List<String> getLoginEvents(Transaction transaction, String username, int events)
+	        throws SQLException;
 
 	/**
 	 * Retrieve from database the list of banned addresses.

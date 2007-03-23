@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.8 2007/02/10 16:52:13 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.9 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,20 +40,21 @@ import marauroa.server.net.validator.ConnectionValidator;
  * @author miguel
  */
 public interface INetworkServerManager {
+
 	/**
 	 * Register a listener that will be called when a disconnected event happens.
 	 * It is up to the implementer if this call add or replace the actual listener.
 	 * @param listener a listener of disconnection events.
 	 */
 	public abstract void registerDisconnectedListener(IDisconnectedListener listener);
-	
+
 	/**
 	 * This method provides the connection validator object.
 	 * You can use it to ban connection IP.
 	 * @return validator.
 	 */
 	public abstract ConnectionValidator getValidator();
-	
+
 	/** 
 	 * This method returns a Message from the list or block for timeout milliseconds
 	 * until a message is available or null if timeout happens.
@@ -89,11 +90,10 @@ public interface INetworkServerManager {
 	 * This method inits the active object 
 	 */
 	public abstract void start();
-	
+
 	/** 
 	 * This method notify the active object to finish it execution
 	 */
 	public abstract void finish();
-
 
 }

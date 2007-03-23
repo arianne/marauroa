@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.nio.channels.SocketChannel;
  * the possible election of character to play with.
  */
 public class MessageS2CCharacterList extends Message {
+
 	private String[] characters;
 
 	/** Constructor for allowing creation of an empty message */
@@ -62,21 +63,19 @@ public class MessageS2CCharacterList extends Message {
 		for (int i = 0; i < characters.length; ++i) {
 			text.append(characters[i] + ",");
 		}
-		return "Message (S2C Character List) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ text.substring(0, text.length() - 1) + ")";
+		return "Message (S2C Character List) from (" + getAddress() + ") CONTENTS: ("
+		        + text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(characters);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		characters = in.readStringArray();
 		if (type != MessageType.S2C_CHARACTERLIST) {

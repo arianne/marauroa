@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.17 2007/03/15 18:43:26 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.18 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,31 +37,31 @@ import marauroa.server.game.db.Transaction;
  * but only those that have been modified. Imagine that we have 1000 objects, and only
  * Object 1 and Object 505 are active objects that are modified each turn.
  * <pre>
-The Traditional method:
+ The Traditional method:
 
-- Get objects that our player should see ( 1000 objects )
-- Send them to player ( 1000 objects )
-- Next turn
-- Get objects that our player should see ( 1000 objects )
-- Send them to player
-- Next turn
-...
+ - Get objects that our player should see ( 1000 objects )
+ - Send them to player ( 1000 objects )
+ - Next turn
+ - Get objects that our player should see ( 1000 objects )
+ - Send them to player
+ - Next turn
+ ...
  * </pre>
  * I hope you see the problem... we are sending objects that haven't changed each turn.
  * <pre>
-The delta perception algorithm:
+ The delta perception algorithm:
 
-- Get objects that our player should see ( 1000 objects )
-- Reduce the list to the modified ones ( 1000 objects )
-- Store also the objects that are not longer visible ( 0 objects )
-- Send them to player ( 1000 objects )
-- Next turn
-- Get objects that our player should see ( 1000 objects )
-- Reduce the list to the modified ones ( 2 objects )
-- Store also the objects that are not longer visible ( 0 objects )
-- Send them to player ( 2 objects )
-- Next turn
-...
+ - Get objects that our player should see ( 1000 objects )
+ - Reduce the list to the modified ones ( 1000 objects )
+ - Store also the objects that are not longer visible ( 0 objects )
+ - Send them to player ( 1000 objects )
+ - Next turn
+ - Get objects that our player should see ( 1000 objects )
+ - Reduce the list to the modified ones ( 2 objects )
+ - Store also the objects that are not longer visible ( 0 objects )
+ - Send them to player ( 2 objects )
+ - Next turn
+ ...
  * </pre>
  * The next step of the delta perception algorithm is pretty clear: delta2<br>
  * The idea is to send only what changes of the objects that changed.
@@ -80,6 +80,7 @@ The delta perception algorithm:
  * @author miguel
  */
 public class MarauroaRPZone implements IRPZone {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MarauroaRPZone.class);
 
@@ -122,18 +123,17 @@ public class MarauroaRPZone implements IRPZone {
 		return zoneid;
 	}
 
-
 	/**
 	 * Store objects that has been tagged as storable to database.
 	 */
 	public void onFinish() throws Exception {
-		IDatabase db=DatabaseFactory.getDatabase();
-		Transaction transaction=db.getTransaction();
+		IDatabase db = DatabaseFactory.getDatabase();
+		Transaction transaction = db.getTransaction();
 		try {
 			transaction.begin();
 			db.storeRPZone(transaction, this);
 			transaction.commit();
-		} catch(Exception e){
+		} catch (Exception e) {
 			transaction.rollback();
 			throw e;
 		}
@@ -143,11 +143,10 @@ public class MarauroaRPZone implements IRPZone {
 	 * Load objects in database for this zone that were stored
 	 */
 	public void onInit() throws Exception {
-		IDatabase db=DatabaseFactory.getDatabase();
-		Transaction transaction=db.getTransaction();
+		IDatabase db = DatabaseFactory.getDatabase();
+		Transaction transaction = db.getTransaction();
 		db.loadRPZone(transaction, this);
 	}
-
 
 	/**
 	 * This method is called when object is serialized back from database to zone, so
@@ -175,7 +174,7 @@ public class MarauroaRPZone implements IRPZone {
 			object.resetAddedAndDeleted();
 			objects.put(id, object);
 
-			if(!object.isHidden()) {
+			if (!object.isHidden()) {
 				perception.added(object);
 			}
 		} catch (Exception e) {
@@ -192,7 +191,7 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
-			if(object.isHidden()) {
+			if (object.isHidden()) {
 				// If object is hidden we don't notify any modification
 				return;
 			}
@@ -215,11 +214,11 @@ public class MarauroaRPZone implements IRPZone {
 	public RPObject remove(RPObject.ID id) {
 		RPObject object = objects.remove(id);
 
-		if(object!=null) {
+		if (object != null) {
 			// If objects has been removed, remove from modified
 			modified.remove(object.getID());
 			/* We create an empty copy of the object */
-			RPObject deleted=new RPObject();
+			RPObject deleted = new RPObject();
 			deleted.setID(object.getID());
 			deleted.setRPClass(object.getRPClass());
 
@@ -241,13 +240,12 @@ public class MarauroaRPZone implements IRPZone {
 		// If objects has been removed, remove from modified
 		modified.remove(object.getID());
 		/* We create an empty copy of the object */
-		RPObject deleted=new RPObject();
+		RPObject deleted = new RPObject();
 		deleted.setID(object.getID());
 		deleted.setRPClass(object.getRPClass());
 
 		perception.removed(deleted);
 	}
-
 
 	/**
 	 * Makes a hidden object to be visible again.
@@ -260,7 +258,6 @@ public class MarauroaRPZone implements IRPZone {
 		object.resetAddedAndDeleted();
 		perception.added(object);
 	}
-
 
 	/**
 	 * Returns the object which id is id.
@@ -320,18 +317,19 @@ public class MarauroaRPZone implements IRPZone {
 					try {
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
-						logger.error("cannot add object to modified list (object is: ["	+ modified_obj + "])", e);
+						logger.error("cannot add object to modified list (object is: ["
+						        + modified_obj + "])", e);
 					}
 				}
 			}
 
 			return prebuildDeltaPerception;
-		} else /* type==Perception.SYNC */ {
+		} else /* type==Perception.SYNC */{
 			if (prebuildSyncPerception == null) {
-				prebuildSyncPerception = new Perception(Perception.SYNC,getID());
+				prebuildSyncPerception = new Perception(Perception.SYNC, getID());
 				prebuildSyncPerception.addedList = new ArrayList<RPObject>(objects.size());
-				for(RPObject obj: objects.values()) {
-					if(!obj.isHidden()) {
+				for (RPObject obj : objects.values()) {
+					if (!obj.isHidden()) {
 						prebuildSyncPerception.addedList.add(obj);
 					}
 				}

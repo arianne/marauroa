@@ -25,6 +25,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * Test the whole system.
  * Mostly from the client perspective.
@@ -33,15 +34,18 @@ import org.junit.Test;
  *
  */
 public class SystemTest {
-	private static final int PORT= 3218;
+
+	private static final int PORT = 3218;
 
 	private MockClient client;
-	private static final boolean DETACHED_SERVER=false;
+
+	private static final boolean DETACHED_SERVER = false;
+
 	private static MockMarauroad server;
 
 	@BeforeClass
 	public static void createServer() throws InterruptedException {
-		if(!DETACHED_SERVER) {
+		if (!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
 			server = new MockMarauroad();
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
@@ -55,7 +59,7 @@ public class SystemTest {
 			/*
 			 * Ugly hack, but junit does runs test cases in parallel 
 			 */
-			NetConst.tcpPort=PORT;
+			NetConst.tcpPort = PORT;
 
 			server.start();
 			Thread.sleep(2000);
@@ -64,7 +68,7 @@ public class SystemTest {
 
 	@AfterClass
 	public static void takeDownServer() throws InterruptedException {
-		if(!DETACHED_SERVER) {
+		if (!DETACHED_SERVER) {
 			server.finish();
 			Thread.sleep(2000);
 		}
@@ -76,7 +80,7 @@ public class SystemTest {
 	 */
 	@Before
 	public void createClient() {
-		client=new MockClient("log4j.properties");
+		client = new MockClient("log4j.properties");
 	}
 
 	/**
@@ -99,11 +103,12 @@ public class SystemTest {
 	 * @throws BannedAddressException 
 	 */
 	@Test
-	public void createAccount() throws IOException, TimeoutException, InvalidVersionException, CreateAccountFailedException, BannedAddressException {
+	public void createAccount() throws IOException, TimeoutException, InvalidVersionException,
+	        CreateAccountFailedException, BannedAddressException {
 		client.connect("localhost", PORT);
-		AccountResult res=client.createAccount("testUsername", "password", "email");
+		AccountResult res = client.createAccount("testUsername", "password", "email");
 
-		assertEquals("testUsername",res.getUsername());
+		assertEquals("testUsername", res.getUsername());
 
 		/*
 		 * Doing a second time should fail
@@ -111,7 +116,7 @@ public class SystemTest {
 		try {
 			client.createAccount("testUsername", "password", "email");
 			fail("Created two accounts with the same name");
-		} catch(CreateAccountFailedException e) {
+		} catch (CreateAccountFailedException e) {
 			assertTrue("Account should not be created as it already exists.", true);
 		}
 	}
@@ -124,12 +129,12 @@ public class SystemTest {
 	@Test
 	public void login() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
-			String[] characters=client.getCharacters();
+			String[] characters = client.getCharacters();
 			assertEquals(0, characters.length);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -144,10 +149,10 @@ public class SystemTest {
 	@Test
 	public void loginBadCase() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testusername", "password");
 			fail("It must not login");
-		} catch(LoginFailedException e) {
+		} catch (LoginFailedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -161,13 +166,13 @@ public class SystemTest {
 	@Test
 	public void loginDouble() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 			client.login("testUsername", "password");
 
-			String[] characters=client.getCharacters();
+			String[] characters = client.getCharacters();
 			assertEquals(0, characters.length);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -181,25 +186,25 @@ public class SystemTest {
 	@Test
 	public void createCharacter() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
-			RPObject template=new RPObject();
+			RPObject template = new RPObject();
 			template.put("client", "junit");
 
-			CharacterResult res=client.createCharacter("testCharacter", template);
-			assertEquals("testCharacter",res.getCharacter());
+			CharacterResult res = client.createCharacter("testCharacter", template);
+			assertEquals("testCharacter", res.getCharacter());
 
-			RPObject result=res.getTemplate();
+			RPObject result = res.getTemplate();
 			assertTrue(result.has("client"));
 			assertEquals("junit", result.get("client"));
 			assertTrue(result.has("name"));
 			assertEquals("testCharacter", result.get("name"));
 
-			String[] characters=client.getCharacters();
+			String[] characters = client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -213,18 +218,18 @@ public class SystemTest {
 	@Test
 	public void chooseCharacter() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
-			String[] characters=client.getCharacters();
+			String[] characters = client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
 
-			boolean choosen=client.chooseCharacter("testCharacter");
+			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
 
 			client.logout();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -236,40 +241,41 @@ public class SystemTest {
 	@Test
 	public void receivePerceptions() throws Exception {
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
-			String[] characters=client.getCharacters();
+			String[] characters = client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
 
-			boolean choosen=client.chooseCharacter("testCharacter");
+			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
 
-			while(client.getPerceptions()<5) {
+			while (client.getPerceptions() < 5) {
 				client.loop(0);
 			}
 
 			client.logout();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
+
 	@Test
-	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException, LoginFailedException {
-		MockRPRuleProcessor rp=(MockRPRuleProcessor)MockRPRuleProcessor.get();
-		ConnectionValidator conn=rp.getValidator();
-		
+	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
+	        LoginFailedException {
+		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
+		ConnectionValidator conn = rp.getValidator();
+
 		conn.addBan("127.0.0.1", "0.0.0.0", 20);
 
 		try {
-			client.connect("localhost",PORT);
+			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
-			
+
 			fail();
-		} catch(BannedAddressException e) {
+		} catch (BannedAddressException e) {
 			/*
 			 * Good.
 			 */

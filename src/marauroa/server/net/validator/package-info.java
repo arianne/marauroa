@@ -6,14 +6,15 @@
  * 
  * Connection valiator stores at database some permanent bans.
  * <pre>
-	create table if not exists banlist
-	  (
-	  id integer auto_increment not null,
-	  address varchar(15),
-	  mask    varchar(15),
-	
-	  PRIMARY KEY(id)
-	  );
+ create table if not exists banlist
+ (
+ id integer auto_increment not null,
+ address varchar(15),
+ mask    varchar(15),
+ 
+ PRIMARY KEY(id)
+ );
  * </pre>
  */
 package marauroa.server.net.validator;
+

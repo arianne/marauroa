@@ -23,33 +23,36 @@ import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
 import marauroa.server.net.validator.ConnectionValidator;
 
-public class MockRPRuleProcessor implements IRPRuleProcessor{
+public class MockRPRuleProcessor implements IRPRuleProcessor {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MockRPRuleProcessor.class);
 
 	private IDatabase db;
+
 	private RPWorld world;
+
 	private List<RPObject> players;
 
 	private RPServerManager rpman;
 
 	public MockRPRuleProcessor() {
-		db=DatabaseFactory.getDatabase();
-		JDBCSQLHelper sql=JDBCSQLHelper.get();
-		world=MockRPWorld.get();
+		db = DatabaseFactory.getDatabase();
+		JDBCSQLHelper sql = JDBCSQLHelper.get();
+		world = MockRPWorld.get();
 
 		try {
-			Transaction transaction=db.getTransaction();
+			Transaction transaction = db.getTransaction();
 			transaction.begin();
 			sql.runDBScript(transaction, "marauroa/test/clear.sql");
 			sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 			transaction.commit();
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			TestHelper.fail();
 		}
 
-		players=new LinkedList<RPObject>();
+		players = new LinkedList<RPObject>();
 	}
 
 	private static MockRPRuleProcessor rules;
@@ -62,7 +65,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	 * @return an unique instance of world.
 	 */
 	public static IRPRuleProcessor get() {
-		if(rules==null) {
+		if (rules == null) {
 			rules = new MockRPRuleProcessor();
 		}
 
@@ -70,13 +73,13 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void beginTurn() {
-		for(RPObject player: players) {
-			int x=0;
-			if(player.has("x")) {
-				x=player.getInt("x");
+		for (RPObject player : players) {
+			int x = 0;
+			if (player.has("x")) {
+				x = player.getInt("x");
 			}
 
-			player.put("x", x+1);
+			player.put("x", x + 1);
 			world.modify(player);
 		}
 	}
@@ -89,7 +92,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 		TestHelper.assertEquals("TestFramework", game);
 		TestHelper.assertEquals("0.00", version);
 
-		logger.info("Client uses:"+game+":"+version);
+		logger.info("Client uses:" + game + ":" + version);
 
 		return game.equals("TestFramework") && version.equals("0.00");
 	}
@@ -98,12 +101,12 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	 * Create an account for a player.
 	 */
 	public AccountResult createAccount(String username, String password, String email) {
-		Transaction trans=db.getTransaction();
+		Transaction trans = db.getTransaction();
 		try {
 			trans.begin();
 
-			if(db.hasPlayer(trans,username)) {
-				logger.warn("Account already exist: "+username);
+			if (db.hasPlayer(trans, username)) {
+				logger.warn("Account already exist: " + username);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 
@@ -111,7 +114,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 
 			trans.commit();
 			return new AccountResult(Result.OK_CREATED, username);
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			try {
 				trans.rollback();
 			} catch (SQLException e1) {
@@ -126,22 +129,22 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	 * Create a character for a player
 	 */
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
-		Transaction trans=db.getTransaction();
+		Transaction trans = db.getTransaction();
 		try {
-			RPObject player=new RPObject(template);
+			RPObject player = new RPObject(template);
 
 			player.put("name", character);
 			player.put("version", "0.00");
-			player.put("ATK",50);
+			player.put("ATK", 50);
 
-			if(db.hasCharacter(trans, username, character)) {
-				logger.warn("Character already exist: "+character);
+			if (db.hasCharacter(trans, username, character)) {
+				logger.warn("Character already exist: " + character);
 				return new CharacterResult(Result.FAILED_PLAYER_EXISTS, character, player);
 			}
 
 			db.addCharacter(trans, username, character, player);
 			return new CharacterResult(Result.OK_CREATED, character, player);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			try {
 				trans.rollback();
 			} catch (SQLException e1) {
@@ -153,17 +156,17 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void endTurn() {
-		logger.info("There are "+ players.size()+" players in server");
+		logger.info("There are " + players.size() + " players in server");
 
 	}
 
 	public void execute(RPObject object, RPAction action) {
-		logger.info(object.get("name")+" running "+action);
+		logger.info(object.get("name") + " running " + action);
 
-		RPEvent chat=new RPEvent("chat");
-		chat.put("text", action.get("text"));		
+		RPEvent chat = new RPEvent("chat");
+		chat.put("text", action.get("text"));
 		object.addEvent(chat);
-		
+
 		world.modify(object);
 	}
 
@@ -172,7 +175,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
-		RPObject result=world.remove(object.getID());
+		RPObject result = world.remove(object.getID());
 		TestHelper.assertNotNull(result);
 
 		players.remove(object);
@@ -180,7 +183,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
-		object.put("zoneid","test");
+		object.put("zoneid", "test");
 		world.add(object);
 
 		players.add(object);
@@ -189,14 +192,14 @@ public class MockRPRuleProcessor implements IRPRuleProcessor{
 	}
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
-		logger.warn("Client "+object.get("name")+" timeout");
+		logger.warn("Client " + object.get("name") + " timeout");
 		onExit(object);
 	}
 
 	public void setContext(RPServerManager rpman) {
-		this.rpman=rpman;
+		this.rpman = rpman;
 	}
-	
+
 	public ConnectionValidator getValidator() {
 		return rpman.getValidator();
 	}

@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.5 2006/08/20 15:40:12 wikipedian Exp $ */
+/* $Id: InputSerializer.java,v 1.6 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import marauroa.common.TimeoutConf;
  * interface from a InputStream.
  */
 public class InputSerializer {
+
 	private InputStream in;
 
 	/**
@@ -47,8 +48,8 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public Object readObject(marauroa.common.net.Serializable obj)
-			throws IOException, java.lang.ClassNotFoundException {
+	public Object readObject(marauroa.common.net.Serializable obj) throws IOException,
+	        java.lang.ClassNotFoundException {
 		obj.readObject(this);
 		return obj;
 	}
@@ -80,13 +81,11 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public byte[] readByteArray() throws IOException,
-			java.lang.ClassNotFoundException {
+	public byte[] readByteArray() throws IOException, java.lang.ClassNotFoundException {
 		int size = readInt();
 
 		if (size > TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS) {
-			throw new IOException("Ilegal request of an array of " + size
-					+ " size");
+			throw new IOException("Ilegal request of an array of " + size + " size");
 		}
 
 		byte[] buffer = new byte[size];
@@ -94,14 +93,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
@@ -115,13 +112,11 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public byte[] read255LongByteArray() throws IOException,
-			java.lang.ClassNotFoundException {
+	public byte[] read255LongByteArray() throws IOException, java.lang.ClassNotFoundException {
 		int size = readByte();
 
 		if (size > Byte.MAX_VALUE) {
-			throw new IOException("Ilegal request of an array of " + size
-					+ " size");
+			throw new IOException("Ilegal request of an array of " + size + " size");
 		}
 
 		byte[] buffer = new byte[size];
@@ -129,25 +124,21 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
 
-	public byte[] read65536LongByteArray() throws IOException,
-			java.lang.ClassNotFoundException {
+	public byte[] read65536LongByteArray() throws IOException, java.lang.ClassNotFoundException {
 		int size = readShort();
 
 		if (size > Short.MAX_VALUE) {
-			throw new IOException("Ilegal request of an array of " + size
-					+ " size");
+			throw new IOException("Ilegal request of an array of " + size + " size");
 		}
 
 		byte[] buffer = new byte[size];
@@ -155,14 +146,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
@@ -176,22 +165,19 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public short readShort() throws IOException,
-			java.lang.ClassNotFoundException {
+	public short readShort() throws IOException, java.lang.ClassNotFoundException {
 		int size = 2;
 		byte[] data = new byte[size];
 		int bytes_read_total = 0;
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -216,14 +202,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -243,22 +227,19 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public float readFloat() throws IOException,
-			java.lang.ClassNotFoundException {
+	public float readFloat() throws IOException, java.lang.ClassNotFoundException {
 		int size = 4;
 		byte[] data = new byte[size];
 		int bytes_read_total = 0;
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size
-						- bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
 			throw new IOException("Declared array size=" + size
-					+ " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -278,8 +259,8 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public String readString() throws IOException,
-			java.lang.ClassNotFoundException, UnsupportedEncodingException {
+	public String readString() throws IOException, java.lang.ClassNotFoundException,
+	        UnsupportedEncodingException {
 		return new String(readByteArray(), "UTF-8");
 	}
 
@@ -293,13 +274,13 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public String read255LongString() throws IOException,
-			java.lang.ClassNotFoundException, UnsupportedEncodingException {
+	public String read255LongString() throws IOException, java.lang.ClassNotFoundException,
+	        UnsupportedEncodingException {
 		return new String(read255LongByteArray(), "UTF-8");
 	}
 
-	public String read65536LongString() throws IOException,
-			java.lang.ClassNotFoundException, UnsupportedEncodingException {
+	public String read65536LongString() throws IOException, java.lang.ClassNotFoundException,
+	        UnsupportedEncodingException {
 		return new String(read65536LongByteArray(), "UTF-8");
 	}
 
@@ -312,13 +293,11 @@ public class InputSerializer {
 	 * @throws java.lang.ClassNotFoundException
 	 *             if the class to serialize doesn't exist.
 	 */
-	public String[] readStringArray() throws IOException,
-			java.lang.ClassNotFoundException {
+	public String[] readStringArray() throws IOException, java.lang.ClassNotFoundException {
 		int size = readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Ilegal request of an array of "
-					+ String.valueOf(size) + " size");
+			throw new IOException("Ilegal request of an array of " + String.valueOf(size) + " size");
 		}
 
 		String[] buffer = new String[size];

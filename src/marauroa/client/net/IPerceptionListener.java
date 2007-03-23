@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.8 2007/02/26 20:08:11 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.9 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import marauroa.common.net.message.MessageS2CPerception;
  * applying the perception
  */
 public interface IPerceptionListener {
+
 	/**
 	 * onAdded is called when an object is added to the world for first time or
 	 * after a sync perception.

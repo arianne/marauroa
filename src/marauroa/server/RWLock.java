@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.6 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: RWLock.java,v 1.7 2007/03/23 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,7 @@ import marauroa.common.Log4J;
  * is a single lock that restricts both reading and writing.
  */
 public class RWLock {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RWLock.class);
 

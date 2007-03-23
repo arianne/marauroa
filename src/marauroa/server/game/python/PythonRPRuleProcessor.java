@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.23 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.24 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,9 +32,10 @@ import marauroa.server.game.rp.RPWorld;
 @SuppressWarnings("unused")
 @Deprecated
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J
-			.getLogger(PythonRPRuleProcessor.class);
+	        .getLogger(PythonRPRuleProcessor.class);
 
 	private GameScript gameScript;
 
@@ -74,8 +75,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.onActionAdd(action, actionList);
 	}
 
-	public boolean onIncompleteActionAdd(RPAction action,
-			List<RPAction> actionList) {
+	public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList) {
 		return pythonRP.onIncompleteActionAdd(action, actionList);
 	}
 
@@ -104,9 +104,8 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		pythonRP.beginTurn();
 	}
 
-	synchronized public boolean onInit(RPObject object)
-			throws RPObjectInvalidException {
-			return pythonRP.onInit(object);
+	synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException {
+		return pythonRP.onInit(object);
 	}
 
 	synchronized public boolean onExit(RPObject.ID id) {

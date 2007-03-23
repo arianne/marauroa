@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.7 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.8 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ import marauroa.common.game.RPObject;
  * 
  */
 public class RPScheduler {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPScheduler.class);
 
@@ -56,22 +57,24 @@ public class RPScheduler {
 	 * @param action the RPAction to add.
 	 * @param ruleProcessor where the actions are going to checked. 
 	 */
-	public synchronized boolean addRPAction(RPObject object, RPAction action,IRPRuleProcessor ruleProcessor) {
+	public synchronized boolean addRPAction(RPObject object, RPAction action,
+	        IRPRuleProcessor ruleProcessor) {
 		try {
-			List<RPAction> list=nextTurn.get(object);
-			
-			if(list==null) {
-				list=new LinkedList<RPAction>();
+			List<RPAction> list = nextTurn.get(object);
+
+			if (list == null) {
+				list = new LinkedList<RPAction>();
 				nextTurn.put(object, list);
 			}
 
 			if (ruleProcessor.onActionAdd(object, action, list)) {
 				list.add(action);
 			}
-			
+
 			return true;
 		} catch (Exception e) {
-			logger.error("cannot add action to RPScheduler, Action(" + action + ") is missing a required attributes", e);
+			logger.error("cannot add action to RPScheduler, Action(" + action
+			        + ") is missing a required attributes", e);
 			return false;
 		}
 	}
@@ -98,7 +101,7 @@ public class RPScheduler {
 
 			for (RPAction action : list) {
 				try {
-					ruleProcessor.execute(object,action);
+					ruleProcessor.execute(object, action);
 				} catch (Exception e) {
 					logger.error("error in visit()", e);
 				}

@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.18 2007/03/11 20:59:20 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.19 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,12 +23,14 @@ import marauroa.common.io.Persistence;
 
 /** This class is a basic configuration file manager */
 public class Configuration {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Configuration.class);
 
 	private static boolean relativeToHome = false;
+
 	private static String basedir = "";
-	
+
 	/** Default name of configuration file */
 	private static String configurationFile = "server.ini";
 
@@ -86,7 +88,8 @@ public class Configuration {
 			properties = new Properties();
 
 			if (persistence) {
-				InputStream is =  Persistence.get().getInputStream(relativeToHome, basedir, configurationFile);
+				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir,
+				        configurationFile);
 				properties.load(is);
 				is.close();
 			}
@@ -145,12 +148,14 @@ public class Configuration {
 			properties.put(property, value);
 
 			if (persistence) {
-				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir, configurationFile);
+				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir,
+				        configurationFile);
 				properties.store(os, null);
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile, e);
+			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " "
+			        + configurationFile, e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
 		}

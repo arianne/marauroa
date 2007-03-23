@@ -17,8 +17,11 @@ import javax.jnlp.UnavailableServiceException;
  * @author hendrik
  */
 public class WebstartPersistence extends Persistence {
+
 	private PersistenceService ps = null;
+
 	private BasicService bs = null;
+
 	private URL codebase = null;
 
 	/**
@@ -26,10 +29,8 @@ public class WebstartPersistence extends Persistence {
 	 */
 	public WebstartPersistence() {
 		try {
-			ps = (PersistenceService) ServiceManager
-					.lookup("javax.jnlp.PersistenceService");
-			bs = (BasicService) ServiceManager
-					.lookup("javax.jnlp.BasicService");
+			ps = (PersistenceService) ServiceManager.lookup("javax.jnlp.PersistenceService");
+			bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
 
 			if (ps != null && bs != null) {
 				codebase = bs.getCodeBase();
@@ -50,7 +51,8 @@ public class WebstartPersistence extends Persistence {
 	 * @throws IOException on io error
 	 */
 	@Override
-	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		FileContents fc = ps.get(muffinURL);
 		InputStream is = fc.getInputStream();
@@ -65,7 +67,8 @@ public class WebstartPersistence extends Persistence {
 	 * @throws IOException on io error
 	 */
 	@Override
-	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		try {
 			ps.delete(muffinURL);

@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.11 2007/02/20 19:54:48 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.12 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.common.game;
 
-
 /** 
  * This class represent an Action.
  * <p>
@@ -25,8 +24,9 @@ package marauroa.common.game;
  * <p>
  * Mandatory Action Attributes are action_id and type.<br>
  * The action_id is used to identify the action when a resulting response comes in a perception
- */   
+ */
 public class RPAction extends Attributes {
+
 	/** 
 	 * Constructor 
 	 */

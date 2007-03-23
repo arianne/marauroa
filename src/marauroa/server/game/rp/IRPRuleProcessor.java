@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.11 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.12 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,8 @@ import marauroa.common.game.RPObjectNotFoundException;
  * when player timeouts because connection has been dropped for example. 
  * 
  */
-public interface IRPRuleProcessor {	
+public interface IRPRuleProcessor {
+
 	/**
 	 * Set the context where the actions are executed.
 	 * 

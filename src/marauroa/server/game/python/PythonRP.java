@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.15 2007/03/14 17:27:47 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.16 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.server.game.rp.RPServerManager;
 
 @Deprecated
 public class PythonRP {
+
 	public PythonRP() {
 	}
 
@@ -50,8 +51,7 @@ public class PythonRP {
 		return true;
 	}
 
-	public boolean onIncompleteActionAdd(RPAction action,
-			List<RPAction> actionList) {
+	public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList) {
 		return true;
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.1 2007/02/05 18:37:42 arianne_rpg Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageSendByteArray extends Message {
+
 	protected byte[] hash;
 
 	/** Constructor for allowing creation of an empty message */
@@ -37,7 +38,7 @@ public class MessageSendByteArray extends Message {
 	 * @param hash
 	 *            The byte array you want to send.
 	 */
-	public MessageSendByteArray(MessageType type, SocketChannel source,	byte[] hash) {
+	public MessageSendByteArray(MessageType type, SocketChannel source, byte[] hash) {
 		super(type, source);
 		this.hash = hash;
 	}
@@ -52,15 +53,14 @@ public class MessageSendByteArray extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(hash);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		hash = in.readByteArray();
 	}

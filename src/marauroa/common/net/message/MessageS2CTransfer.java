@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.3 2007/02/09 16:13:28 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.4 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 public class MessageS2CTransfer extends Message {
+
 	/** A list of the contents to transfer */
 	private List<TransferContent> contents;
 
@@ -45,8 +46,8 @@ public class MessageS2CTransfer extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer) from ("
-				+ getAddress() + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress()
+		        + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -60,8 +61,7 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -81,14 +81,13 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        ClassNotFoundException {
 		super.readObject(in);
 
-		ByteArrayInputStream array = new ByteArrayInputStream(in
-				.readByteArray());
-		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(
-				array, new java.util.zip.Inflater());
+		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
+		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
+		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		int size = serializer.readInt();

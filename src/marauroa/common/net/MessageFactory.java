@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.24 2007/03/15 23:32:27 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.25 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,6 +59,7 @@ import org.apache.log4j.NDC;
  * the stream of bytes.
  */
 public class MessageFactory {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Attributes.class);
 
@@ -85,9 +86,9 @@ public class MessageFactory {
 
 	private void register() {
 		register(Message.MessageType.C2S_ACTION, MessageC2SAction.class);
-		register(Message.MessageType.C2S_CHOOSECHARACTER,MessageC2SChooseCharacter.class);
+		register(Message.MessageType.C2S_CHOOSECHARACTER, MessageC2SChooseCharacter.class);
 		register(Message.MessageType.C2S_LOGOUT, MessageC2SLogout.class);
-		register(Message.MessageType.S2C_CHARACTERLIST,	MessageS2CCharacterList.class);
+		register(Message.MessageType.S2C_CHARACTERLIST, MessageS2CCharacterList.class);
 		register(Message.MessageType.S2C_CHOOSECHARACTER_ACK, MessageS2CChooseCharacterACK.class);
 		register(Message.MessageType.S2C_CHOOSECHARACTER_NACK, MessageS2CChooseCharacterNACK.class);
 		register(Message.MessageType.S2C_LOGIN_ACK, MessageS2CLoginACK.class);
@@ -102,8 +103,9 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_TRANSFER_ACK, MessageC2STransferACK.class);
 		register(Message.MessageType.S2C_TRANSFER, MessageS2CTransfer.class);
 		register(Message.MessageType.C2S_LOGIN_REQUESTKEY, MessageC2SLoginRequestKey.class);
-		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, MessageC2SLoginSendNonceNameAndPassword.class);
-		register(Message.MessageType.S2C_LOGIN_SENDKEY,	MessageS2CLoginSendKey.class);
+		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		        MessageC2SLoginSendNonceNameAndPassword.class);
+		register(Message.MessageType.S2C_LOGIN_SENDKEY, MessageS2CLoginSendKey.class);
 		register(Message.MessageType.S2C_LOGIN_SENDNONCE, MessageS2CLoginSendNonce.class);
 		register(Message.MessageType.C2S_LOGIN_SENDPROMISE, MessageC2SLoginSendPromise.class);
 		register(Message.MessageType.C2S_CREATEACCOUNT, MessageC2SCreateAccount.class);
@@ -132,8 +134,8 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel)
-			throws IOException, InvalidVersionException {
+	public Message getMessage(byte[] data, SocketChannel channel) throws IOException,
+	        InvalidVersionException {
 		return getMessage(data, channel, 0);
 	}
 
@@ -152,9 +154,10 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException, InvalidVersionException {
+	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException,
+	        InvalidVersionException {
 		if (data[offset] == NetConst.NETWORK_PROTOCOL_VERSION) {
-			int messageTypeIndex=data[offset+1];
+			int messageTypeIndex = data[offset + 1];
 			if (factoryArray.containsKey(messageTypeIndex)) {
 				Message tmp = null;
 				try {
@@ -171,18 +174,22 @@ public class MessageFactory {
 					return tmp;
 				} catch (Exception e) {
 					NDC.push("message is [" + tmp + "]\n");
-					NDC.push("message dump is [\n"+ Utility.dumpByteArray(data) + "\n] (offset: "+ offset + ")\n");
+					NDC.push("message dump is [\n" + Utility.dumpByteArray(data) + "\n] (offset: "
+					        + offset + ")\n");
 					logger.error("error in getMessage", e);
 					NDC.pop();
 					NDC.pop();
 					throw new IOException(e.getMessage());
 				}
 			} else {
-				logger.warn("Message type [" + data[1]+ "] is not registered in the MessageFactory");
-				throw new IOException("Message type [" + data[1]+ "] is not registered in the MessageFactory");
+				logger.warn("Message type [" + data[1]
+				        + "] is not registered in the MessageFactory");
+				throw new IOException("Message type [" + data[1]
+				        + "] is not registered in the MessageFactory");
 			}
 		} else {
-			logger.warn("Message has incorrect protocol version(" + data[0]+ ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION+ ")");
+			logger.warn("Message has incorrect protocol version(" + data[0] + ") expected ("
+			        + NetConst.NETWORK_PROTOCOL_VERSION + ")");
 			logger.debug("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[0]);
 		}

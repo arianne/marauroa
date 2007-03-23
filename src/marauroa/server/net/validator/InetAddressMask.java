@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.2 2007/03/11 21:17:13 nhnb Exp $ */
+/* $Id: InetAddressMask.java,v 1.3 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.util.Arrays;
  * It works only for IPv4 addresses
  */
 public class InetAddressMask {
+
 	private byte address[];
 
 	private byte mask[];
@@ -75,8 +76,8 @@ public class InetAddressMask {
 
 	@Override
 	public boolean equals(Object object) {
-		if(object instanceof InetAddressMask) {
-			InetAddressMask other=(InetAddressMask)object;
+		if (object instanceof InetAddressMask) {
+			InetAddressMask other = (InetAddressMask) object;
 			return Arrays.equals(address, other.address) && Arrays.equals(mask, other.mask);
 		}
 		return false;
@@ -86,7 +87,7 @@ public class InetAddressMask {
 	public String toString() {
 		try {
 			return (InetAddress.getByAddress(address).getHostAddress() + "/" + InetAddress
-					.getByAddress(mask).getHostAddress());
+			        .getByAddress(mask).getHostAddress());
 		} catch (UnknownHostException e) {
 			return ("");
 		}

@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.16 2007/03/07 17:25:54 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.17 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,8 +28,10 @@ import java.util.Iterator;
  * @author miguel
  */
 public interface IRPZone extends Iterable<RPObject> {
+
 	/** An unique ID for this zone */
 	public static class ID implements marauroa.common.net.Serializable {
+
 		private String id;
 
 		/**
@@ -57,7 +59,8 @@ public interface IRPZone extends Iterable<RPObject> {
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			return (anotherid != null) && (anotherid instanceof IRPZone.ID) && (id.equals(((IRPZone.ID) anotherid).id));
+			return (anotherid != null) && (anotherid instanceof IRPZone.ID)
+			        && (id.equals(((IRPZone.ID) anotherid).id));
 		}
 
 		/** We need it for HashMap */
@@ -78,13 +81,13 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/** Serialize the object into a stream of bytes. */
 		public void writeObject(marauroa.common.net.OutputSerializer out)
-				throws java.io.IOException {
+		        throws java.io.IOException {
 			out.write(id);
 		}
 
 		/** Deserialize the object and fills this object with the data */
-		public void readObject(marauroa.common.net.InputSerializer in)
-				throws java.io.IOException, java.lang.ClassNotFoundException {
+		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
+		        java.lang.ClassNotFoundException {
 			id = in.readString();
 		}
 	}

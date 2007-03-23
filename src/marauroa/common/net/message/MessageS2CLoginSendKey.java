@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.crypto.RSAPublicKey;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CLoginSendKey extends Message {
+
 	private RSAPublicKey key;
 
 	/** Constructor for allowing creation of an empty message */
@@ -61,22 +62,20 @@ public class MessageS2CLoginSendKey extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login Send key) from ("
-				+getAddress() + ") CONTENTS: (n:"
-				+ key.getN() + "\te:" + key.getE() + ")";
+		return "Message (S2C Login Send key) from (" + getAddress() + ") CONTENTS: (n:"
+		        + key.getN() + "\te:" + key.getE() + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(key.getN().toByteArray());
 		out.write(key.getE().toByteArray());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		BigInteger n = new BigInteger(in.readByteArray());
 		BigInteger e = new BigInteger(in.readByteArray());

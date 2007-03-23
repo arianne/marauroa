@@ -9,23 +9,25 @@ import java.util.Map;
 
 import marauroa.common.net.message.Message;
 
-
 /**
  * This class decode a stream of bytes and build a Marauroa message with it.
  * Decoder follow singleton pattern.
  * @author miguel
  */
 public class Decoder {
+
 	/**
 	 * This class handle not completed messages.
 	 */
 	class MessageParts {
+
 		public int size;
+
 		public List<byte[]> parts;
 
 		public MessageParts(int size) {
-			this.size=size;
-			parts=new LinkedList<byte[]>();
+			this.size = size;
+			parts = new LinkedList<byte[]>();
 		}
 
 		/** Adds a new part to complete the message */
@@ -35,24 +37,24 @@ public class Decoder {
 
 		/** Try to build the message for the channel using the existing parts or return null if it is not completed yet. */
 		public Message build(SocketChannel channel) throws IOException, InvalidVersionException {
-			int length=0;
-			for(byte[] p: parts) {
-				length+=p.length;
+			int length = 0;
+			for (byte[] p : parts) {
+				length += p.length;
 			}
 
-			if(length!=size) {
+			if (length != size) {
 				return null;
 			}
 
-			byte[] data=new byte[size];
+			byte[] data = new byte[size];
 
-			int offset=0;
-			for(byte[] p: parts) {
-				System.arraycopy(p, 0 , data, offset, p.length);
-				offset+=p.length;
+			int offset = 0;
+			for (byte[] p : parts) {
+				System.arraycopy(p, 0, data, offset, p.length);
+				offset += p.length;
 			}
 
-			Message msg=msgFactory.getMessage(data, channel,4);
+			Message msg = msgFactory.getMessage(data, channel, 4);
 			return msg;
 		}
 	}
@@ -69,15 +71,15 @@ public class Decoder {
 	 * @return an unique instance of decoder
 	 */
 	public static Decoder get() {
-		if(instance==null) {
-			instance=new Decoder();
+		if (instance == null) {
+			instance = new Decoder();
 		}
 
 		return instance;
 	}
 
 	private Decoder() {
-		content=new HashMap<SocketChannel, MessageParts>();
+		content = new HashMap<SocketChannel, MessageParts>();
 		msgFactory = MessageFactory.getFactory();
 	}
 
@@ -97,36 +99,35 @@ public class Decoder {
 	 * @throws IOException if there is a problem building the message
 	 * @throws InvalidVersionException if the message version mismatch the expected version
 	 */
-	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
-		MessageParts buffers=content.get(channel);
+	public Message decode(SocketChannel channel, byte[] data) throws IOException,
+	        InvalidVersionException {
+		MessageParts buffers = content.get(channel);
 
-		if(buffers==null) {
+		if (buffers == null) {
 			/* First part of the message */
 			/*
 			 * NOTE: On real life we can be *sure* that 4 bytes are at least to
 			 * be recieved...
 			 */
-			int size = (data[0] & 0xFF)
-			+ ((data[1] & 0xFF) << 8)
-			+ ((data[2] & 0xFF) << 16)
-			+ ((data[3] & 0xFF) << 24);
+			int size = (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
+			        + ((data[3] & 0xFF) << 24);
 
-			if(data.length==size) {
+			if (data.length == size) {
 				/* If we have the full data build the message */
 				Message msg = msgFactory.getMessage(data, channel, 4);
 				return msg;
 			} else {
 				/* If there is still data to store it. */
-				buffers=new MessageParts(size);
+				buffers = new MessageParts(size);
 				content.put(channel, buffers);
 			}
 		}
 
 		buffers.add(data);
 
-		Message msg=buffers.build(channel);
+		Message msg = buffers.build(channel);
 
-		if(msg!=null) {
+		if (msg != null) {
 			content.remove(channel);
 		}
 

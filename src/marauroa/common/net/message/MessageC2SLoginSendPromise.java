@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendPromise.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendPromise.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.common.crypto.Hash;
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SLoginSendPromise extends MessageSendByteArray {
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginSendPromise() {
 		super(MessageType.C2S_LOGIN_SENDPROMISE);
@@ -44,14 +45,13 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 
 	@Override
 	public String toString() {
-		return "Message (C2S Login Send Promise) from ("
-				+ getAddress() + ") CONTENTS: (hash:"
-				+ Hash.toHexString(hash) + ")";
+		return "Message (C2S Login Send Promise) from (" + getAddress() + ") CONTENTS: (hash:"
+		        + Hash.toHexString(hash) + ")";
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		if (type != MessageType.C2S_LOGIN_SENDPROMISE) {
 			throw new java.lang.ClassNotFoundException();

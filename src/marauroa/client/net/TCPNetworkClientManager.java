@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.9 2007/03/10 13:30:26 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.10 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,8 +32,10 @@ import marauroa.common.net.message.Message;
  * @author hendrik
  */
 public class TCPNetworkClientManager implements INetworkClientManagerInterface {
+
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(TCPNetworkClientManager.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(TCPNetworkClientManager.class);
 
 	/**
 	 * Server will assign us a clientid, so we store it so that we remind it for the messages
@@ -103,8 +105,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		isfinished = false;
 		connected = true;
 
-		encoder=Encoder.get();
-		decoder=Decoder.get();
+		encoder = Encoder.get();
+		decoder = Decoder.get();
 
 		/*
 		 * Because we access the list from several places we create a
@@ -126,8 +128,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	public void finish() {
 		logger.debug("shutting down NetworkClientManager");
 		keepRunning = false;
-		connected=false;
-
+		connected = false;
 
 		try {
 			socket.close();
@@ -154,7 +155,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	}
 
 	private boolean shouldThrowException;
+
 	private InvalidVersionException storedException;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -164,8 +167,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		/* As read of message is done in a different thread we lost the exception information,
 		 * so we store it in a variable and throw them now.
 		 */
-		if(shouldThrowException) {
-			shouldThrowException=false;
+		if (shouldThrowException) {
+			shouldThrowException = false;
 			throw storedException;
 		}
 
@@ -183,7 +186,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
 	 */
 	public void addMessage(Message msg) {
-		connected=writeManager.write(msg);
+		connected = writeManager.write(msg);
 	}
 
 	/**
@@ -198,7 +201,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 * The active thread in charge of recieving messages from the network.
 	 */
 	class NetworkClientManagerRead extends Thread {
-		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
+
+		private final marauroa.common.Logger logger = Log4J
+		        .getLogger(NetworkClientManagerRead.class);
 
 		/** We handle the data connection with the socket's input stream */
 		private InputStream is = null;
@@ -222,14 +227,15 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 * @param data data that represent the serialized message
 		 * @throws IOException
 		 */
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data) throws IOException {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data)
+		        throws IOException {
 			try {
-				Message msg=decoder.decode(null, data);
+				Message msg = decoder.decode(null, data);
 
 				/* If logger is enable, print the message so it shows useful debugging information. */
 				if (logger.isDebugEnabled()) {
 					logger.debug("build message(type=" + msg.getType() + ") from "
-							+ msg.getClientID() + " full [" + msg + "]");
+					        + msg.getClientID() + " full [" + msg + "]");
 				}
 
 				// Once server assign us a clientid, store it for future messages.
@@ -239,8 +245,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 				processedMessages.add(msg);
 			} catch (InvalidVersionException e) {
-				shouldThrowException=true;
-				storedException=e;
+				shouldThrowException = true;
+				storedException = e;
 				logger.error("Exception when processing pending packets", e);
 			}
 
@@ -259,10 +265,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				return null;
 			}
 
-			int size = (sizebuffer[0] & 0xFF)
-			+ ((sizebuffer[1] & 0xFF) << 8)
-			+ ((sizebuffer[2] & 0xFF) << 16)
-			+ ((sizebuffer[3] & 0xFF) << 24);
+			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8)
+			        + ((sizebuffer[2] & 0xFF) << 16) + ((sizebuffer[3] & 0xFF) << 24);
 
 			byte[] buffer = new byte[size];
 			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
@@ -306,8 +310,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 			while (keepRunning) {
 				try {
-					byte[] buffer=readByteStream();
-					if(buffer==null) {
+					byte[] buffer = readByteStream();
+					if (buffer == null) {
 						/* User has requested exit */
 						return;
 					}
@@ -328,8 +332,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** A wrapper class for sending messages to clients */
 	class NetworkClientManagerWrite {
+
 		/** the logger instance. */
-		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
+		private final marauroa.common.Logger logger = Log4J
+		        .getLogger(NetworkClientManagerWrite.class);
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
@@ -364,9 +370,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					/* If logger is enable, print the message so it shows useful debugging information. */
 					if (true || logger.isDebugEnabled()) {
 						logger.debug("build message(type=" + msg.getType() + ") from "
-								+ msg.getClientID() + " full [" + msg + "]");
+						        + msg.getClientID() + " full [" + msg + "]");
 					}
-
 
 					os.write(encoder.encode(msg));
 				}

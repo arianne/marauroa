@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.25 2007/03/15 23:32:28 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.26 2007/03/23 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,7 @@ import marauroa.server.game.db.Transaction;
  * storage.
  */
 public class Statistics implements StatisticsMBean {
+
 	private static final int DATABASE_STATISTICS_LAPSUS = 60000;
 
 	/** the logger instance. */
@@ -43,6 +44,7 @@ public class Statistics implements StatisticsMBean {
 	 * @author miguel
 	 */
 	public static class Variables implements Iterable<String> {
+
 		private Map<String, Long> content;
 
 		/** 
@@ -92,7 +94,7 @@ public class Statistics implements StatisticsMBean {
 
 		/** Iterate over the variables
 		 *  @return an iterator over the variables
-         */
+		 */
 		public Iterator<String> iterator() {
 			return content.keySet().iterator();
 		}
@@ -114,8 +116,8 @@ public class Statistics implements StatisticsMBean {
 		 */
 		public void print(PrintWriter out, double diff) {
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\""
-						+ content.get(type) + "\" />");
+				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type)
+				        + "\" />");
 			}
 		}
 	}
@@ -215,13 +217,13 @@ public class Statistics implements StatisticsMBean {
 			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder));
 
 			double diff = (actualTime - startTime) / 1000.0;
-			out.println("<statistics time=\"" + (actualTime / 1000)+ "\">");
+			out.println("<statistics time=\"" + (actualTime / 1000) + "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
 			long totalMemory = Runtime.getRuntime().totalMemory() / 1024;
-			long usedMemory = totalMemory- (Runtime.getRuntime().freeMemory() / 1024);
+			long usedMemory = totalMemory - (Runtime.getRuntime().freeMemory() / 1024);
 
-			out.println("  <memory total=\"" + totalMemory + "\" used=\""+ usedMemory + "\"/>");
+			out.println("  <memory total=\"" + totalMemory + "\" used=\"" + usedMemory + "\"/>");
 			logger.info("Total/Used memory: " + totalMemory + "/" + usedMemory);
 
 			sinceStart.print(out, diff);
@@ -255,6 +257,7 @@ public class Statistics implements StatisticsMBean {
 	 * @return escaped strings
 	 */
 	private static String escapeXML(String param) {
-		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
+		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
+		        ">", "&gt;");
 	}
 }

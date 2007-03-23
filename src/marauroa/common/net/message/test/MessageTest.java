@@ -18,38 +18,35 @@ import marauroa.common.net.message.Message.MessageType;
 import org.junit.Test;
 
 public class MessageTest {
-	private static class MockMessage extends Message{
+
+	private static class MockMessage extends Message {
+
 		public MockMessage(MessageType type, SocketChannel channel) {
 			super(type, channel);
 		}
 
-	}  
-
+	}
 
 	@Test
 	public final void testGetAddress() throws IOException {
-		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
 		assertNull(mm.getAddress());
 	}
 
 	@Test
 	public final void testGetType() throws IOException {
-		MockMessage mm = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
-		assertTrue(MessageType.C2S_ACTION==mm.getType());
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		assertTrue(MessageType.C2S_ACTION == mm.getType());
 	}
-
-
-
-
 
 	@Test
 	public final void testReadWriteObject() throws IOException {
-		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		mmOut.setClientID(1);
 		mmOut.writeObject(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
-		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
 		try {
 			mmInn.readObject(in);
 			assertEquals(mmOut.getClientID(), mmInn.getClientID());
@@ -63,12 +60,12 @@ public class MessageTest {
 
 	@Test
 	public final void testInvalidClientId() throws IOException, ClassNotFoundException {
-		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		mmOut.setClientID(Message.CLIENTID_INVALID);
 		mmOut.writeObject(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
-		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION,SocketChannel.open());
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
 
 		mmInn.readObject(in);
 		assertEquals(mmOut.getClientID(), mmInn.getClientID());

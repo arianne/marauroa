@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.6 2007/03/07 13:44:43 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.7 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import marauroa.common.Log4J;
  *
  */
 public class JDBCSQLHelper {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
 
@@ -41,8 +42,8 @@ public class JDBCSQLHelper {
 	 * @return an unique instance of the helper.
 	 */
 	public static JDBCSQLHelper get() {
-		if(sqlHelper==null) {
-			sqlHelper=new JDBCSQLHelper();
+		if (sqlHelper == null) {
+			sqlHelper = new JDBCSQLHelper();
 		}
 
 		return sqlHelper;

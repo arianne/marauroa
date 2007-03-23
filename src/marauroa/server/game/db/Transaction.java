@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.6 2007/03/11 20:59:20 nhnb Exp $ */
+/* $Id: Transaction.java,v 1.7 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.sql.SQLException;
  * Different Database implementaions may requiere different implementations of this class.
  */
 public interface Transaction {
+
 	/**
 	 * Returns Connection
 	 *

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterACK.java,v 1.2 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.common.game.RPObject;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterACK extends Message {
+
 	private String character;
 
 	private RPObject template;
@@ -41,10 +42,10 @@ public class MessageS2CCreateCharacterACK extends Message {
 	 */
 	public MessageS2CCreateCharacterACK(SocketChannel source, String character, RPObject template) {
 		super(MessageType.S2C_CREATECHARACTER_ACK, source);
-		this.character=character;
-		this.template=template;
+		this.character = character;
+		this.template = template;
 	}
-	
+
 	/**
 	 * Returns the name of the character the server finally assigned us.
 	 * @return the name of the character the server finally assigned us.
@@ -52,7 +53,7 @@ public class MessageS2CCreateCharacterACK extends Message {
 	public String getCharacter() {
 		return character;
 	}
-	
+
 	/**
 	 * The modifications of the template that the server did.
 	 * @return The modifications of the template that the server did.
@@ -60,6 +61,7 @@ public class MessageS2CCreateCharacterACK extends Message {
 	public RPObject getTemplate() {
 		return template;
 	}
+
 	/**
 	 * This method returns a String that represent the object
 	 *
@@ -67,25 +69,23 @@ public class MessageS2CCreateCharacterACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C CreateCharacter ACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (S2C CreateCharacter ACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(character);
 		out.write(template);
-		}
+	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 
 		character = in.readString();
-		template=(RPObject)in.readObject(new RPObject());
+		template = (RPObject) in.readObject(new RPObject());
 
 		if (type != MessageType.S2C_CREATECHARACTER_ACK) {
 			throw new java.lang.ClassNotFoundException();

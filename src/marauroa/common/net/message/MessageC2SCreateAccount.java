@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.3 2007/03/05 18:18:23 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.4 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SCreateAccount extends Message {
+
 	private String username;
 
 	private String password;
@@ -41,8 +42,8 @@ public class MessageC2SCreateAccount extends Message {
 	 * @param password desired password
 	 * @param email email of the player
 	 */
-	public MessageC2SCreateAccount(SocketChannel source, String username,
-			String password, String email) {
+	public MessageC2SCreateAccount(SocketChannel source, String username, String password,
+	        String email) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
 		this.password = password;
@@ -68,14 +69,12 @@ public class MessageC2SCreateAccount extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateAccount) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ username + ";" + password + ";" + email + ")";
+		return "Message (C2S CreateAccount) from (" + getAddress() + ") CONTENTS: (" + username
+		        + ";" + password + ";" + email + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
 		out.write(password);
@@ -83,8 +82,8 @@ public class MessageC2SCreateAccount extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		username = in.readString();
 		password = in.readString();

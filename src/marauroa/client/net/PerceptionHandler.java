@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.17 2007/02/28 20:06:10 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.18 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,7 @@ import org.apache.log4j.NDC;
  * complex task that is easy to do in the wrong way.
  */
 public class PerceptionHandler {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(PerceptionHandler.class);
 
@@ -72,7 +73,8 @@ public class PerceptionHandler {
 	 * @param world_instance a map representing objects stored in a zone.
 	 * @throws Exception
 	 */
-	public void apply(MessageS2CPerception message,	Map<RPObject.ID, RPObject> world_instance) throws Exception {
+	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance)
+	        throws Exception {
 		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
 
 		/*
@@ -95,11 +97,12 @@ public class PerceptionHandler {
 			} catch (Exception e) {
 				listener.onException(e, message);
 			}
-		/*
-		 * When we get a delta perception, we need to check that it is the one that we are
-		 * expecting.
-		 */
-		} else if (message.getPerceptionType() == Perception.DELTA && previousTimestamp + 1 == message.getPerceptionTimestamp()) {
+			/*
+			 * When we get a delta perception, we need to check that it is the one that we are
+			 * expecting.
+			 */
+		} else if (message.getPerceptionType() == Perception.DELTA
+		        && previousTimestamp + 1 == message.getPerceptionTimestamp()) {
 			try {
 				/** OnSync: Keep processing */
 				previousTimestamp = message.getPerceptionTimestamp();
@@ -111,10 +114,10 @@ public class PerceptionHandler {
 			} catch (Exception e) {
 				listener.onException(e, message);
 			}
-		/*
-		 * In any other case, store the perception and check if it helps applying any of the
-		 * still to be applied perceptions.
-		 */
+			/*
+			 * In any other case, store the perception and check if it helps applying any of the
+			 * still to be applied perceptions.
+			 */
 		} else {
 			previousPerceptions.add(message);
 
@@ -156,7 +159,8 @@ public class PerceptionHandler {
 	 * @param message the perception message
 	 * @param world the container of objects
 	 */
-	private void applyPerceptionAddedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionAddedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			/* If the perception is Sync, we clear the contents of the container. */
 			if (message.getPerceptionType() == Perception.SYNC) {
@@ -183,7 +187,8 @@ public class PerceptionHandler {
 	 * @param message the perception message
 	 * @param world the container of objects
 	 */
-	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			for (RPObject object : message.getDeletedRPObjects()) {
 				if (!listener.onDeleted(object)) {
@@ -202,7 +207,8 @@ public class PerceptionHandler {
 	 * @param message the perception message
 	 * @param world the container of objects
 	 */
-	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			/* First we remove the deleted attributes */
 			for (RPObject object : message.getModifiedDeletedRPObjects()) {
@@ -238,7 +244,8 @@ public class PerceptionHandler {
 	 * @param message the perception message
 	 * @param world the container of objects
 	 */
-	private void applyPerceptionMyRPObject(MessageS2CPerception message, Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
+	private void applyPerceptionMyRPObject(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			RPObject added = message.getMyRPObjectAdded();
 			RPObject deleted = message.getMyRPObjectDeleted();

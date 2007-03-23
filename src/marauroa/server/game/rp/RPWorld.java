@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.13 2007/03/15 23:32:28 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.14 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ import marauroa.server.game.container.PlayerEntryContainer;
  * @author miguel
  */
 public class RPWorld implements Iterable<IRPZone> {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPWorld.class);
 
@@ -50,7 +51,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	protected RPWorld() {
 		zones = new HashMap<IRPZone.ID, IRPZone>();
-		playerContainer=PlayerEntryContainer.getContainer();
+		playerContainer = PlayerEntryContainer.getContainer();
 	}
 
 	/**
@@ -73,11 +74,11 @@ public class RPWorld implements Iterable<IRPZone> {
 		/*
 		 * Call onFinish for each of the zones.
 		 */
-		for(IRPZone zone: zones.values()) {
+		for (IRPZone zone : zones.values()) {
 			try {
 				zone.onFinish();
 			} catch (Exception e) {
-				logger.warn("Exception at onFinish",e);
+				logger.warn("Exception at onFinish", e);
 			}
 		}
 	}
@@ -140,8 +141,8 @@ public class RPWorld implements Iterable<IRPZone> {
 		/* A player object will have always the clientid attribute. */
 		if (object.has("#clientid")) {
 			/* So if object has the attribute, we request a sync perception as we have entered a new zone. */
-			PlayerEntry entry=playerContainer.get(object);
-			if(entry!=null) {
+			PlayerEntry entry = playerContainer.get(object);
+			if (entry != null) {
 				entry.requestSync();
 			}
 		}
@@ -202,7 +203,7 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public void changeZone(IRPZone.ID newzoneid, RPObject object) {
 		try {
-			String targetZoneid=newzoneid.getID();
+			String targetZoneid = newzoneid.getID();
 			if (targetZoneid.equals(object.get("zoneid"))) {
 				return;
 			}

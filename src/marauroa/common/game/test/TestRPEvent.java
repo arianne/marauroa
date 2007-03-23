@@ -24,16 +24,17 @@ import org.junit.Test;
  *
  */
 public class TestRPEvent {
+
 	/**
 	 * Test the methods provided by RPEvent
 	 *
 	 */
 	@Test
 	public void methods() {
-		RPEvent event=new RPEvent("test");
-		event.put("value","val");
-		
-		assertEquals("test",event.getName());
+		RPEvent event = new RPEvent("test");
+		event.put("value", "val");
+
+		assertEquals("test", event.getName());
 		assertTrue(event.has("value"));
 		assertEquals("val", event.get("value"));
 	}
@@ -44,9 +45,9 @@ public class TestRPEvent {
 	 */
 	@Test
 	public void testClone() {
-		RPEvent event=new RPEvent("test");
-		event.put("value","val");
-		
+		RPEvent event = new RPEvent("test");
+		event.put("value", "val");
+
 		assertEquals(event, event.clone());
 	}
 
@@ -59,9 +60,9 @@ public class TestRPEvent {
 	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
-		RPObject obj=new RPObject();
+		RPObject obj = new RPObject();
 
-		RPEvent expected=new RPEvent("test");
+		RPEvent expected = new RPEvent("test");
 		expected.put("value", "work!");
 		expected.setOwner(obj);
 
@@ -73,7 +74,7 @@ public class TestRPEvent {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPEvent result=(RPEvent) is.readObject(new RPEvent());
+		RPEvent result = (RPEvent) is.readObject(new RPEvent());
 
 		assertEquals(expected, result);
 	}
@@ -88,14 +89,14 @@ public class TestRPEvent {
 	 */
 	@Test
 	public void testSerializationWithRPClass() throws IOException, ClassNotFoundException {
-		RPClass clazz=new RPClass("A");
+		RPClass clazz = new RPClass("A");
 
 		clazz.add(DefinitionClass.RPEVENT, "test", Type.STRING, Definition.STANDARD);
 
-		RPObject obj=new RPObject();
+		RPObject obj = new RPObject();
 		obj.setRPClass(clazz);
 
-		RPEvent expected=new RPEvent("test");
+		RPEvent expected = new RPEvent("test");
 		expected.put("value", "work!");
 		expected.setOwner(obj);
 
@@ -107,9 +108,10 @@ public class TestRPEvent {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPEvent result=new RPEvent();
+		RPEvent result = new RPEvent();
 		result.setOwner(obj);
-		result=(RPEvent) is.readObject(result);
+		result = (RPEvent) is.readObject(result);
 
 		assertEquals(expected, result);
-	}}
+	}
+}

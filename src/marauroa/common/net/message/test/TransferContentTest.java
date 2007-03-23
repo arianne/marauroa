@@ -38,9 +38,9 @@ public class TransferContentTest {
 
 	@Test
 	public final void testTransferContentStringIntByteArray() {
-		byte[] bytearray = new byte[]{1,2,3};
+		byte[] bytearray = new byte[] { 1, 2, 3 };
 		int timestamp = 2;
-		TransferContent tc = new TransferContent("name",timestamp,bytearray);
+		TransferContent tc = new TransferContent("name", timestamp, bytearray);
 		assertEquals(false, tc.ack);
 		assertEquals(true, tc.cacheable);
 		assertEquals(bytearray, tc.data);
@@ -54,17 +54,17 @@ public class TransferContentTest {
 		//TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeREQ(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
 		tcOut.readREQ(in);
-		assertTrue(tcInn.ack==tcOut.ack);
-		assertTrue(tcInn.cacheable==tcOut.cacheable);
-		assertTrue(tcInn.data==tcOut.data);
+		assertTrue(tcInn.ack == tcOut.ack);
+		assertTrue(tcInn.cacheable == tcOut.cacheable);
+		assertTrue(tcInn.data == tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
-		
+
 	}
 
 	@Ignore
@@ -73,37 +73,35 @@ public class TransferContentTest {
 		//TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeACK(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
 		tcOut.readACK(in);
-		assertTrue(tcInn.ack=tcOut.ack);
-		assertTrue(tcInn.cacheable=tcOut.cacheable);
-		assertTrue(tcInn.data==tcOut.data);
+		assertTrue(tcInn.ack = tcOut.ack);
+		assertTrue(tcInn.cacheable = tcOut.cacheable);
+		assertTrue(tcInn.data == tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
 	}
 
-	
 	@Ignore
 	@Test
 	public final void testReadWriteFULL() throws IOException, ClassNotFoundException {
 		//TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeFULL(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
 		tcOut.readFULL(in);
-		assertTrue(tcInn.ack==tcOut.ack);
-		assertTrue(tcInn.cacheable==tcOut.cacheable);
-		assertTrue(tcInn.data==tcOut.data);
+		assertTrue(tcInn.ack == tcOut.ack);
+		assertTrue(tcInn.cacheable == tcOut.cacheable);
+		assertTrue(tcInn.data == tcOut.data);
 		assertTrue(tcInn.name.equals(tcOut.name));
-		
-	}
 
+	}
 
 }

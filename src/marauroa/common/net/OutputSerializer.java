@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.5 2006/08/26 20:00:30 nhnb Exp $ */
+/* $Id: OutputSerializer.java,v 1.6 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
  * interface into a OutputStream.
  */
 public class OutputSerializer {
+
 	OutputStream out;
 
 	/**
@@ -149,8 +150,7 @@ public class OutputSerializer {
 	 * @param a
 	 *            the String to serialize
 	 */
-	public void write(String a) throws IOException,
-			UnsupportedEncodingException {
+	public void write(String a) throws IOException, UnsupportedEncodingException {
 		write(a.getBytes("UTF-8"));
 	}
 
@@ -160,13 +160,11 @@ public class OutputSerializer {
 	 * @param a
 	 *            the String to serialize
 	 */
-	public void write255LongString(String a) throws IOException,
-			UnsupportedEncodingException {
+	public void write255LongString(String a) throws IOException, UnsupportedEncodingException {
 		write255LongArray(a.getBytes("UTF-8"));
 	}
 
-	public void write65536LongString(String a) throws IOException,
-			UnsupportedEncodingException {
+	public void write65536LongString(String a) throws IOException, UnsupportedEncodingException {
 		write65536LongArray(a.getBytes("UTF-8"));
 	}
 

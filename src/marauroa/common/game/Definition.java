@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.12 2007/03/14 16:46:20 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.13 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,7 @@ import marauroa.common.Log4J;
  * @author miguel
  */
 public class Definition implements marauroa.common.net.Serializable {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Definition.class);
 
@@ -123,10 +124,12 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * otherwise it is 0.
 	 */
 	private byte capacity;
+
 	/** if it is a RPEVENT or an ATTRIBUTE, this define the type of the data associated with
 	 * this definition.
 	 */
 	private Type type;
+
 	/** the flags to show if it is visible, hidden, private, storable or volatile. */
 	private byte flags;
 
@@ -137,8 +140,8 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	protected Definition(DefinitionClass clazz) {
-		this.clazz=clazz;
-		code=-1;
+		this.clazz = clazz;
+		code = -1;
 	}
 
 	/**
@@ -147,7 +150,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param code the code to assign to the definition.
 	 */
 	void setCode(short code) {
-		this.code=code;
+		this.code = code;
 	}
 
 	/**
@@ -158,11 +161,11 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @return an Attribute Definition
 	 */
 	public static Definition defineAttribute(String name, Type type, byte flags) {
-		Definition def=new Definition(DefinitionClass.ATTRIBUTE);
-		def.name=name;
-		def.type=type;
-		def.flags=flags;
-		def.capacity=0;
+		Definition def = new Definition(DefinitionClass.ATTRIBUTE);
+		def.name = name;
+		def.type = type;
+		def.flags = flags;
+		def.capacity = 0;
 		return def;
 	}
 
@@ -174,12 +177,12 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @return an Attribute Definition
 	 */
 	public static Definition defineStaticAttribute(String name, String value, byte flags) {
-		Definition def=new Definition(DefinitionClass.STATIC);
-		def.name=name;
-		def.value=value;
-		def.type=Type.NOTYPE;
-		def.flags=flags;
-		def.capacity=0;
+		Definition def = new Definition(DefinitionClass.STATIC);
+		def.name = name;
+		def.value = value;
+		def.type = Type.NOTYPE;
+		def.flags = flags;
+		def.capacity = 0;
 		return def;
 	}
 
@@ -191,11 +194,11 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @return an Event Definition
 	 */
 	public static Definition defineEvent(String name, Type type, byte flags) {
-		Definition def=new Definition(DefinitionClass.RPEVENT);
-		def.name=name;
-		def.type=type;
-		def.flags=flags;
-		def.capacity=0;
+		Definition def = new Definition(DefinitionClass.RPEVENT);
+		def.name = name;
+		def.type = type;
+		def.flags = flags;
+		def.capacity = 0;
 		return def;
 	}
 
@@ -207,11 +210,11 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @return an RPSlot Definition
 	 */
 	public static Definition defineSlot(String name, byte capacity, byte flags) {
-		Definition def=new Definition(DefinitionClass.RPSLOT);
-		def.name=name;
-		def.capacity=capacity;
-		def.flags=flags;
-		def.type=Type.NOTYPE;
+		Definition def = new Definition(DefinitionClass.RPSLOT);
+		def.name = name;
+		def.capacity = capacity;
+		def.flags = flags;
+		def.type = Type.NOTYPE;
 		return def;
 	}
 
@@ -268,7 +271,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param name definition name
 	 */
 	public void setName(String name) {
-		this.name=name;
+		this.name = name;
 
 	}
 
@@ -277,7 +280,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param type the type of the definition
 	 */
 	public void setType(Type type) {
-		this.type=type;
+		this.type = type;
 	}
 
 	/**
@@ -287,7 +290,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param capacity its capacity.
 	 */
 	public void setCapacity(byte capacity) {
-		this.capacity=capacity;
+		this.capacity = capacity;
 	}
 
 	/**
@@ -295,7 +298,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param flags the flags to set.
 	 */
 	public void setFlags(byte flags) {
-		this.flags=flags;
+		this.flags = flags;
 	}
 
 	/**
@@ -337,24 +340,25 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @throws java.io.IOException if there is any problem deserializing the object
 	 * @throws ClassNotFoundException
 	 */
-	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException, ClassNotFoundException {
+	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException,
+	        ClassNotFoundException {
 		switch (type) {
-		case VERY_LONG_STRING:
-			return in.readString();
-		case LONG_STRING:
-			return in.read65536LongString();
-		case STRING:
-			return in.read255LongString();
-		case FLOAT:
-			return Float.toString(in.readFloat());
-		case INT:
-			return Integer.toString(in.readInt());
-		case SHORT:
-			return Integer.toString(in.readShort());
-		case BYTE:
-			return Integer.toString(in.readByte());
-		case FLAG:
-			return "";
+			case VERY_LONG_STRING:
+				return in.readString();
+			case LONG_STRING:
+				return in.read65536LongString();
+			case STRING:
+				return in.read255LongString();
+			case FLOAT:
+				return Float.toString(in.readFloat());
+			case INT:
+				return Integer.toString(in.readInt());
+			case SHORT:
+				return Integer.toString(in.readShort());
+			case BYTE:
+				return Integer.toString(in.readByte());
+			case FLAG:
+				return "";
 		}
 
 		return null;
@@ -366,69 +370,71 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param out the output serializer
 	 * @throws IOException if there is any problem on the serialization
 	 */
-	public void serialize(String value, marauroa.common.net.OutputSerializer out) throws IOException {
+	public void serialize(String value, marauroa.common.net.OutputSerializer out)
+	        throws IOException {
 		switch (type) {
-		case VERY_LONG_STRING:
-			out.write(value);
-			break;
-		case LONG_STRING:
-			out.write65536LongString(value);
-			break;
-		case STRING:
-			out.write255LongString(value);
-			break;
-		case FLOAT:
-			out.write(Float.parseFloat(value));
-			break;
-		case INT:
-			out.write(Integer.parseInt(value));
-			break;
-		case SHORT:
-			out.write(Short.parseShort(value));
-			break;
-		case BYTE:
-			out.write(Byte.parseByte(value));
-			break;
-		case FLAG:
-			/*
-			 * It is empty because it is a flag and so, it is
-			 * already present.
-			 */
-			break;
-		default:
-			/* NOTE: Must never happen */
-			logger.fatal("got unknown attribute("+name+") type:"+ code);
-		break;
+			case VERY_LONG_STRING:
+				out.write(value);
+				break;
+			case LONG_STRING:
+				out.write65536LongString(value);
+				break;
+			case STRING:
+				out.write255LongString(value);
+				break;
+			case FLOAT:
+				out.write(Float.parseFloat(value));
+				break;
+			case INT:
+				out.write(Integer.parseInt(value));
+				break;
+			case SHORT:
+				out.write(Short.parseShort(value));
+				break;
+			case BYTE:
+				out.write(Byte.parseByte(value));
+				break;
+			case FLAG:
+				/*
+				 * It is empty because it is a flag and so, it is
+				 * already present.
+				 */
+				break;
+			default:
+				/* NOTE: Must never happen */
+				logger.fatal("got unknown attribute(" + name + ") type:" + code);
+				break;
 		}
 	}
 
 	/** Serialize the object into the output */
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
-		out.write((byte)clazz.ordinal());
+		out.write((byte) clazz.ordinal());
 		out.write(code);
 		out.write(name);
 
 		/* Serialize value only if it is distinct of null */
-		if(value==null) {
-			out.write((byte)0);
+		if (value == null) {
+			out.write((byte) 0);
 		} else {
-			out.write((byte)1);
+			out.write((byte) 1);
 			out.write255LongString(value);
 
 		}
-		out.write((byte)type.ordinal());
+		out.write((byte) type.ordinal());
 		out.write(flags);
 	}
 
 	/** Fill the object from data deserialized from the serializer */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
+	        java.lang.ClassNotFoundException {
 		clazz = DefinitionClass.values()[in.readByte()];
 		code = in.readShort();
 		name = in.readString();
 
 		/* If value is 0 that means that attribute is null */
-		if(in.readByte()==1) {
-			value= in.read255LongString();
+		if (in.readByte() == 1) {
+			value = in.read255LongString();
 		}
 
 		type = Type.values()[in.readByte()];
@@ -449,19 +455,15 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	@Override
 	public boolean equals(Object ot) {
-		if(ot==null || !(ot instanceof Definition)) {
+		if (ot == null || !(ot instanceof Definition)) {
 			return false;
 		}
 
-		Definition def=(Definition)ot;
+		Definition def = (Definition) ot;
 
-		boolean result=clazz.equals(def.clazz) &&
-		   code==def.code &&
-		   capacity==def.capacity &&
-		   flags==def.flags &&
-		   name.equals(def.name) &&
-		   type==def.type &&
-		   (value==def.value || value.equals(def.value));
+		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity
+		        && flags == def.flags && name.equals(def.name) && type == def.type
+		        && (value == def.value || value.equals(def.value));
 
 		return result;
 	}

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.4 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.5 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,9 +45,10 @@ import org.apache.log4j.NDC;
  * @see marauroa.common.game.IRPZone
  */
 public class MessageS2CPerception extends Message {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J
-			.getLogger(MessageS2CPerception.class);
+	        .getLogger(MessageS2CPerception.class);
 
 	private byte typePerception;
 
@@ -67,8 +68,7 @@ public class MessageS2CPerception extends Message {
 
 	private RPObject myRPObjectModifiedDeleted;
 
-	private static CachedCompressedPerception cache = CachedCompressedPerception
-			.get();
+	private static CachedCompressedPerception cache = CachedCompressedPerception.get();
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CPerception() {
@@ -167,8 +167,8 @@ public class MessageS2CPerception extends Message {
 	@Override
 	public String toString() {
 		StringBuilder perception_string = new StringBuilder();
-		perception_string.append("Type: " + typePerception + " Timestamp: "
-				+ timestampPerception + ") contents: ");
+		perception_string.append("Type: " + typePerception + " Timestamp: " + timestampPerception
+		        + ") contents: ");
 
 		perception_string.append("\n  zoneid: " + zoneid + "\n");
 		perception_string.append("\n  added: \n");
@@ -200,8 +200,7 @@ public class MessageS2CPerception extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("writing Object: [" + this + "]");
 		}
@@ -224,14 +223,14 @@ public class MessageS2CPerception extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 
 		byte[] byteArray = in.readByteArray();
 		ByteArrayInputStream array = new ByteArrayInputStream(byteArray);
-		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(
-				array, new java.util.zip.Inflater());
+		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
+		        new java.util.zip.Inflater());
 		InputSerializer ser = new InputSerializer(szlib);
 
 		try {
@@ -245,8 +244,8 @@ public class MessageS2CPerception extends Message {
 			int added = ser.readInt();
 
 			if (added > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of "
-						+ String.valueOf(added) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(added)
+				        + " size");
 			}
 			logger.debug(added + "added objects.");
 			for (int i = 0; i < added; ++i) {
@@ -258,8 +257,8 @@ public class MessageS2CPerception extends Message {
 			int modAdded = ser.readInt();
 
 			if (modAdded > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of "
-						+ String.valueOf(modAdded) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(modAdded)
+				        + " size");
 			}
 			logger.debug(modAdded + " modified Added objects..");
 			for (int i = 0; i < modAdded; ++i) {
@@ -271,8 +270,8 @@ public class MessageS2CPerception extends Message {
 			int modDeleted = ser.readInt();
 
 			if (modDeleted > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of "
-						+ String.valueOf(modDeleted) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(modDeleted)
+				        + " size");
 			}
 			logger.debug(modDeleted + " modified Deleted objects..");
 			for (int i = 0; i < modDeleted; ++i) {
@@ -284,8 +283,8 @@ public class MessageS2CPerception extends Message {
 			int del = ser.readInt();
 
 			if (del > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of "
-						+ String.valueOf(del) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(del)
+				        + " size");
 			}
 			logger.debug(del + " deleted objects..");
 			for (int i = 0; i < del; ++i) {
@@ -294,12 +293,10 @@ public class MessageS2CPerception extends Message {
 				deletedRPObjects.add(object);
 			}
 		} catch (IOException ioe) {
-			InputStream stream = new java.util.zip.InflaterInputStream(
-					new ByteArrayInputStream(byteArray),
-					new java.util.zip.Inflater());
+			InputStream stream = new java.util.zip.InflaterInputStream(new ByteArrayInputStream(
+			        byteArray), new java.util.zip.Inflater());
 			NDC.push("message is [" + this + "]\n");
-			NDC.push("message dump is [\n" + Utility.dumpInputStream(stream)
-					+ "\n]\n");
+			NDC.push("message dump is [\n" + Utility.dumpInputStream(stream) + "\n]\n");
 			logger.error("error in getMessage", ioe);
 			NDC.pop();
 			NDC.pop();
@@ -323,8 +320,7 @@ public class MessageS2CPerception extends Message {
 
 		byte modifiedDeletedMyRPObjectPresent = ser.readByte();
 		if (modifiedDeletedMyRPObjectPresent == 1) {
-			myRPObjectModifiedDeleted = (RPObject) ser
-					.readObject(new RPObject());
+			myRPObjectModifiedDeleted = (RPObject) ser.readObject(new RPObject());
 			setZoneid(myRPObjectModifiedDeleted, zoneid.getID());
 		} else {
 			myRPObjectModifiedDeleted = null;
@@ -332,7 +328,9 @@ public class MessageS2CPerception extends Message {
 	}
 
 	static class CachedCompressedPerception {
+
 		static class CacheKey {
+
 			byte type;
 
 			IRPZone.ID zoneid;
@@ -380,16 +378,13 @@ public class MessageS2CPerception extends Message {
 			cachedContent.clear();
 		}
 
-		synchronized public byte[] get(MessageS2CPerception perception)
-				throws IOException {
-			CacheKey key = new CacheKey(perception.typePerception,
-					perception.zoneid);
+		synchronized public byte[] get(MessageS2CPerception perception) throws IOException {
+			CacheKey key = new CacheKey(perception.typePerception, perception.zoneid);
 
 			if (!cachedContent.containsKey(key)) {
 				logger.debug("Perception not found in cache");
 				ByteArrayOutputStream array = new ByteArrayOutputStream();
-				DeflaterOutputStream out_stream = new DeflaterOutputStream(
-						array);
+				DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 				OutputSerializer serializer = new OutputSerializer(out_stream);
 
 				perception.computeStaticPartPerception(serializer);
@@ -422,23 +417,20 @@ public class MessageS2CPerception extends Message {
 			serializer.write((byte) 0);
 		} else {
 			serializer.write((byte) 1);
-			myRPObjectModifiedAdded
-					.writeObject(serializer, DetailLevel.PRIVATE);
+			myRPObjectModifiedAdded.writeObject(serializer, DetailLevel.PRIVATE);
 		}
 
 		if (myRPObjectModifiedDeleted == null) {
 			serializer.write((byte) 0);
 		} else {
 			serializer.write((byte) 1);
-			myRPObjectModifiedDeleted.writeObject(serializer,
-					DetailLevel.PRIVATE);
+			myRPObjectModifiedDeleted.writeObject(serializer, DetailLevel.PRIVATE);
 		}
 
 		return array.toByteArray();
 	}
 
-	private void computeStaticPartPerception(OutputSerializer ser)
-			throws IOException {
+	private void computeStaticPartPerception(OutputSerializer ser) throws IOException {
 		ser.write(typePerception);
 		ser.write(zoneid);
 

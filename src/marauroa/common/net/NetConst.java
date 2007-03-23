@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.20 2007/03/15 23:32:27 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.21 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import marauroa.common.Log4J;
  * Marauroa
  */
 public class NetConst {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
 

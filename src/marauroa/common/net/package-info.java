@@ -5,3 +5,4 @@
  * Also it contains a subclass with all the Message classes.
  */
 package marauroa.common.net;
+

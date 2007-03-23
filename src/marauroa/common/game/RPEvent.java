@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.18 2007/03/14 16:46:20 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.19 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ import marauroa.common.net.OutputSerializer;
  *
  */
 public class RPEvent extends Attributes {
+
 	/** Name of the event */
 	private String name;
 
@@ -48,7 +49,7 @@ public class RPEvent extends Attributes {
 	 */
 	public RPEvent(String name) {
 		super(RPClass.getBaseRPObjectDefault());
-		this.name=name;
+		this.name = name;
 	}
 
 	/**
@@ -64,18 +65,18 @@ public class RPEvent extends Attributes {
 	@Override
 	public Object clone() {
 		RPEvent event = new RPEvent(name);
-		event.owner=owner;
+		event.owner = owner;
 		event.fill(this);
 
 		return event;
 	}
-	
+
 	/**
 	 * Set the owner of this RPEvent.
 	 * @param owner
 	 */
 	public void setOwner(RPObject owner) {
-		this.owner=owner;		
+		this.owner = owner;
 	}
 
 	/**
@@ -98,8 +99,8 @@ public class RPEvent extends Attributes {
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
 
-		Definition def=rpClass.getDefinition(DefinitionClass.RPEVENT, name);
-		short code=def.getCode();
+		Definition def = rpClass.getDefinition(DefinitionClass.RPEVENT, name);
+		short code = def.getCode();
 
 		if (level == DetailLevel.FULL) {
 			// We want to ensure that event text is stored.
@@ -126,7 +127,7 @@ public class RPEvent extends Attributes {
 			name = in.read255LongString();
 		} else {
 			RPClass rpClass = owner.getRPClass();
-			name=rpClass.getName(DefinitionClass.RPEVENT, code);
+			name = rpClass.getName(DefinitionClass.RPEVENT, code);
 		}
 
 		super.readObject(in);
@@ -147,8 +148,8 @@ public class RPEvent extends Attributes {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof RPEvent) {
-			RPEvent comp=(RPEvent)obj;
+		if (obj instanceof RPEvent) {
+			RPEvent comp = (RPEvent) obj;
 			return name.equals(comp.name) && super.equals(this);
 		} else {
 			return false;
@@ -157,7 +158,7 @@ public class RPEvent extends Attributes {
 
 	@Override
 	public String toString() {
-		return "["+name+"="+super.toString()+"]";
+		return "[" + name + "=" + super.toString() + "]";
 	}
 
 }

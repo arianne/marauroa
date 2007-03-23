@@ -18,17 +18,18 @@ import org.junit.Test;
  *
  */
 public class TestPlayerEntryContainer {
+
 	private static PlayerEntryContainer cont;
-	
+
 	/**
 	 * Initialize the container.
 	 *
 	 */
 	@BeforeClass
 	public static void setUp() {
-		cont=PlayerEntryContainer.getContainer();
+		cont = PlayerEntryContainer.getContainer();
 	}
-	
+
 	/**
 	 * Add an entry to the container and test if it is added correctly and if it can be retrieved
 	 * using the available methods.
@@ -36,12 +37,12 @@ public class TestPlayerEntryContainer {
 	 */
 	@Test
 	public void testAdd() {
-		PlayerEntry entry=cont.add(null);
-		
-		entry.username="test0";
-		
+		PlayerEntry entry = cont.add(null);
+
+		entry.username = "test0";
+
 		assertTrue(cont.has(entry.clientid));
-		assertFalse(cont.has(entry.clientid+1));
+		assertFalse(cont.has(entry.clientid + 1));
 
 		assertEquals(entry, cont.get(entry.clientid));
 		assertEquals(entry, cont.get(entry.username));
@@ -53,9 +54,9 @@ public class TestPlayerEntryContainer {
 	 */
 	@Test
 	public void testGet() {
-		PlayerEntry entry=cont.add(null);
-		entry.username="test1";
-		
+		PlayerEntry entry = cont.add(null);
+		entry.username = "test1";
+
 		assertEquals(entry, cont.get(entry.clientid));
 		assertEquals(entry, cont.get(entry.username));
 		assertNull(cont.get("aDifferentOne"));
@@ -67,14 +68,14 @@ public class TestPlayerEntryContainer {
 	 */
 	@Test
 	public void testRemove() {
-		PlayerEntry entry=cont.add(null);
-		entry.username="test2";
-		
-		PlayerEntry removed=cont.remove(entry.clientid);
+		PlayerEntry entry = cont.add(null);
+		entry.username = "test2";
+
+		PlayerEntry removed = cont.remove(entry.clientid);
 		assertNotNull(removed);
 		assertEquals(entry, removed);
 
-		removed=cont.remove(entry.clientid);
+		removed = cont.remove(entry.clientid);
 		assertNull(removed);
 	}
 

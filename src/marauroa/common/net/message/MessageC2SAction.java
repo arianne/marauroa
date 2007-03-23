@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import marauroa.common.game.RPAction;
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SAction extends Message {
+
 	private RPAction action;
 
 	/** Constructor for allowing creation of an empty message */
@@ -60,21 +61,19 @@ public class MessageC2SAction extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Action) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ action.toString() + ")";
+		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString()
+		        + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		action.writeObject(out);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		action = (RPAction) in.readObject(new RPAction());
 		if (type != MessageType.C2S_ACTION) {

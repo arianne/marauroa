@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.9 2007/02/19 18:37:25 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.10 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import org.python.util.PythonInterpreter;
 /** This class is a wrapper for calling python in a better way. */
 @Deprecated
 class GameScript {
+
 	private PythonInterpreter interpreter;
 
 	private Configuration conf;
@@ -56,15 +57,13 @@ class GameScript {
 
 	public PythonWorld getWorld() throws Exception {
 		String pythonZoneClass = conf.get("python_script_world_class");
-		PyInstance object = (PyInstance) interpreter.eval(pythonZoneClass
-				+ "()");
+		PyInstance object = (PyInstance) interpreter.eval(pythonZoneClass + "()");
 		return (PythonWorld) object.__tojava__(PythonWorld.class);
 	}
 
 	public PythonRP getGameRules() throws Exception {
 		String pythonRPClass = conf.get("python_script_rules_class");
-		PyInstance object = (PyInstance) interpreter.eval(pythonRPClass
-				+ "(gamescript__world)");
+		PyInstance object = (PyInstance) interpreter.eval(pythonRPClass + "(gamescript__world)");
 		return (PythonRP) object.__tojava__(PythonRP.class);
 	}
 }

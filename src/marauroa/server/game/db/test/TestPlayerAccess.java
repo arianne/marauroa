@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.8 2007/03/07 17:29:30 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.9 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -11,7 +11,6 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.server.game.db.test;
-
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,6 +49,7 @@ public class TestPlayerAccess {
 	 *
 	 */
 	static class TestJDBC extends JDBCDatabase {
+
 		public TestJDBC(Properties props) {
 			super(props);
 		}
@@ -72,7 +72,7 @@ public class TestPlayerAccess {
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
 
-		database=new TestJDBC(props);
+		database = new TestJDBC(props);
 	}
 
 	/**
@@ -82,9 +82,9 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void addPlayer() throws SQLException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -104,25 +104,26 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void changePassword() throws SQLException, IOException {
-		String username="testUser";
-		
+		String username = "testUser";
+
 		TestSecureLogin.loadRSAKey();
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
-			PlayerEntry.SecuredLoginInfo login=TestSecureLogin.simulateSecureLogin(username,"testPassword");
+			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username,
+			        "testPassword");
 			assertTrue(database.verify(transaction, login));
 
 			database.changePassword(transaction, username, "anewtestPassword");
 
 			/* To test if password is correct we need to use the Secure login test unit */
-			login=TestSecureLogin.simulateSecureLogin(username,"anewtestPassword");
+			login = TestSecureLogin.simulateSecureLogin(username, "anewtestPassword");
 			assertTrue(database.verify(transaction, login));
-			
+
 		} finally {
 			transaction.rollback();
 		}
@@ -132,20 +133,20 @@ public class TestPlayerAccess {
 	 * Test if adding two times the same player throw a SQLException
 	 * @throws SQLException
 	 */
-	@Test(expected=SQLException.class)
+	@Test(expected = SQLException.class)
 	public void doubleAddedPlayer() throws SQLException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
-		try{
+		Transaction transaction = database.getTransaction();
+		try {
 			transaction.begin();
 
-			if(database.hasPlayer(transaction, username)) {
+			if (database.hasPlayer(transaction, username)) {
 				fail("Player was not expected");
 			}
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 
-			if(!database.hasPlayer(transaction, username)) {
+			if (!database.hasPlayer(transaction, username)) {
 				fail("Player was expected");
 			}
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -162,9 +163,9 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void removePlayer() throws SQLException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
@@ -183,14 +184,14 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void getStatus() throws SQLException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active",database.getAccountStatus(transaction, username));
+			assertEquals("active", database.getAccountStatus(transaction, username));
 		} finally {
 			transaction.rollback();
 		}
@@ -202,16 +203,16 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void setStatus() throws SQLException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active",database.getAccountStatus(transaction, username));
+			assertEquals("active", database.getAccountStatus(transaction, username));
 			database.setAccountStatus(transaction, username, "banned");
-			assertEquals("banned",database.getAccountStatus(transaction, username));
+			assertEquals("banned", database.getAccountStatus(transaction, username));
 		} finally {
 			transaction.rollback();
 		}
@@ -225,19 +226,19 @@ public class TestPlayerAccess {
 	 */
 	@Test
 	public void blockAccountPlayer() throws SQLException, UnknownHostException {
-		String username="testUser";
+		String username = "testUser";
 
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
-			InetAddress address= InetAddress.getLocalHost();
+			InetAddress address = InetAddress.getLocalHost();
 
 			assertFalse(database.isAccountBlocked(transaction, username));
 
-			for(int i=0;i<TimeoutConf.FAILED_LOGIN_ATTEMPS+1;i++) {
+			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS + 1; i++) {
 				database.addLoginEvent(transaction, username, address, false);
 			}
 
@@ -245,4 +246,5 @@ public class TestPlayerAccess {
 		} finally {
 			transaction.rollback();
 		}
-	}}
+	}
+}

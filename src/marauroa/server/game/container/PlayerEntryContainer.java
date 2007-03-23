@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.11 2007/03/15 16:00:15 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.12 2007/03/23 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -38,6 +38,7 @@ import marauroa.server.RWLock;
  *
  */
 public class PlayerEntryContainer implements Iterable<PlayerEntry> {
+
 	/** A reader/writers lock for controlling the access */
 	private RWLock lock;
 
@@ -127,8 +128,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found.
 	 */
 	public PlayerEntry get(SocketChannel channel) {
-		for(PlayerEntry entry: clientidMap.values()) {
-			if(entry.channel==channel) {
+		for (PlayerEntry entry : clientidMap.values()) {
+			if (entry.channel == channel) {
 				return entry;
 			}
 		}
@@ -143,9 +144,9 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(String username) {
-		for(PlayerEntry entry: clientidMap.values()) {
+		for (PlayerEntry entry : clientidMap.values()) {
 			/* NOTE: Bug fix: We use ignore case to detect already logged players better. */
-			if(username.equalsIgnoreCase(entry.username)) {
+			if (username.equalsIgnoreCase(entry.username)) {
 				return entry;
 			}
 		}
@@ -160,18 +161,19 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(RPObject object) {
-		for(PlayerEntry entry: clientidMap.values()) {
+		for (PlayerEntry entry : clientidMap.values()) {
 			/*
 			 * We want really to do a fast comparasion 
 			 */
-			if(entry.object==object) {
+			if (entry.object == object) {
 				return entry;
 			}
 		}
 
 		return null;
 	}
-		/**
+
+	/**
 	 * This method removed a player entry from the container and return it or null if the entry
 	 * does not exist.
 	 * @param clientid the clientid we want its Player entry to remove.
@@ -190,8 +192,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 */
 	public PlayerEntry add(SocketChannel channel) {
 		/* We create an entry */
-		PlayerEntry entry=new PlayerEntry(channel);
-		entry.clientid=generateClientID();
+		PlayerEntry entry = new PlayerEntry(channel);
+		entry.clientid = generateClientID();
 
 		/* Finally adds it to map */
 		clientidMap.put(entry.clientid, entry);
@@ -217,8 +219,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return an idle PlayerEntry or null if not found
 	 */
 	public PlayerEntry getIdleEntry() {
-		for(PlayerEntry entry: clientidMap.values()){
-			if(entry.isRemovable()) {
+		for (PlayerEntry entry : clientidMap.values()) {
+			if (entry.isRemovable()) {
 				return entry;
 			}
 		}

@@ -9,12 +9,12 @@
  * Role Playing Design tries to be generic and game agnostic (independant of the game being made).
  * The very basic idea behind RPManager is:
  * <pre>
-  forever
-    {
-    Execute Actions
-    Send Perceptions
-    Wait for next turn
-    }
+ forever
+ {
+ Execute Actions
+ Send Perceptions
+ Wait for next turn
+ }
  * </pre>
  * To achieve this we use several classes:<ul>
  * <li>RPManager is coded in Marauroa and doesn't need to be modified.
@@ -24,3 +24,4 @@
  * </ul>
  */
 package marauroa.server.game.rp;
+

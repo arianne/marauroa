@@ -6,3 +6,4 @@
  * There is no implementation of versioning. 
  */
 package marauroa.common.net.message;
+

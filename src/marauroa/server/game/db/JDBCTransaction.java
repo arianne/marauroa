@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.10 2007/03/11 20:59:20 nhnb Exp $ */
+/* $Id: JDBCTransaction.java,v 1.11 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,7 @@ import marauroa.common.Log4J;
  *
  */
 public class JDBCTransaction implements Transaction {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCTransaction.class);
 

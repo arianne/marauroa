@@ -1,4 +1,4 @@
-/* $Id: ChangeRequest.java,v 1.5 2007/03/15 11:06:46 arianne_rpg Exp $ */
+/* $Id: ChangeRequest.java,v 1.6 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -11,6 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.server.net.nio;
+
 import java.nio.channels.SocketChannel;
 
 /** 
@@ -19,17 +20,22 @@ import java.nio.channels.SocketChannel;
  *
  */
 public class ChangeRequest {
+
 	public static final int REGISTER = 1;
+
 	public static final int CHANGEOPS = 2;
+
 	public static final int CLOSE = 3;
-	
+
 	/** Associated socket channel for this request. */
 	public SocketChannel socket;
+
 	/** Type of request */
 	public int type;
+
 	/** Extra params */
 	public int ops;
-	
+
 	/** Constructor */
 	public ChangeRequest(SocketChannel socket, int type, int ops) {
 		this.socket = socket;

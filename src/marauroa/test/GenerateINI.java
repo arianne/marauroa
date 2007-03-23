@@ -11,11 +11,12 @@ import java.util.Date;
 import marauroa.common.crypto.RSAKey;
 
 public class GenerateINI {
+
 	/** Where data is read from */
-	private static BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 	/** The name of the output file */
-	final static String filename="server.ini";
+	final static String filename = "server.ini";
 
 	/**
 	 * reads a String from the input. When no String is choosen the defaultValue
@@ -24,7 +25,7 @@ public class GenerateINI {
 	 * @param defaultValue if no value is written.
 	 * @return the string readed or default if none was read.
 	 */
-	public static String getStringWithDefault(BufferedReader input,	String defaultValue) {
+	public static String getStringWithDefault(BufferedReader input, String defaultValue) {
 		String ret = "";
 		try {
 			ret = input.readLine();
@@ -68,17 +69,25 @@ public class GenerateINI {
 	 */
 	public static String uppcaseFirstLetter(String source) {
 		return (source.length() > 0) ? Character.toUpperCase(source.charAt(0))
-				+ source.substring(1) : source;
+		        + source.substring(1) : source;
 	}
 
 	private static String gameName;
+
 	private static String databaseName;
+
 	private static String databaseHost;
+
 	private static String databaseUsername;
+
 	private static String databasePassword;
+
 	private static String databaseImplementation;
+
 	private static String tcpPort;
+
 	private static String worldImplementation;
+
 	private static String ruleprocessorImplementation;
 
 	private static String turnLength;
@@ -87,9 +96,8 @@ public class GenerateINI {
 
 	private static RSAKey rsakey;
 
-
 	public static void main(String[] args) throws FileNotFoundException {
-		gameName="test";
+		gameName = "test";
 
 		/** Write configuration for database */
 		databaseImplementation = getDatabaseImplementation();
@@ -101,41 +109,41 @@ public class GenerateINI {
 		System.out.println("Using \"" + databaseName + "\" as database name\n");
 		System.out.println("Using \"" + databaseHost + "\" as database host\n");
 		System.out.println("Using \"" + databaseUsername + "\" as database user\n");
-		System.out.println("Using \"" + databasePassword+ "\" as database user password\n");
+		System.out.println("Using \"" + databasePassword + "\" as database user password\n");
 
 		System.out.println("In order to make efective these options please run:");
 		System.out.println("# mysql");
 		System.out.println("  create database " + databaseName + ";");
-		System.out.println("  grant all on " + databaseName + ".* to "
-				+ databaseUsername + "@localhost identified by '"
-				+ databasePassword + "';");
+		System.out.println("  grant all on " + databaseName + ".* to " + databaseUsername
+		        + "@localhost identified by '" + databasePassword + "';");
 		System.out.println("  exit");
 
 		tcpPort = getTCPPort();
 
-		worldImplementation=getWorldImplementation();
-		ruleprocessorImplementation=getRuleProcessorImplementation();
+		worldImplementation = getWorldImplementation();
+		ruleprocessorImplementation = getRuleProcessorImplementation();
 
-		turnLength=getTurnLength();
+		turnLength = getTurnLength();
 
-		statisticsFilename= getStatisticsFilename();
+		statisticsFilename = getStatisticsFilename();
 
 		/* The size of the RSA Key  in bits, usually 512 */
 		String keySize = getRSAKeyBits();
 		System.out.println("Using key of " + keySize + " bits.");
 		System.out.println("Please wait while the key is generated.");
 		rsakey = RSAKey.generateKey(Integer.valueOf(keySize));
-		PrintWriter out=new PrintWriter(new FileOutputStream(filename));
+		PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 		write(out);
 		out.close();
 	}
 
 	private static String getRSAKeyBits() {
-		System.out.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+		System.out
+		        .print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
 		String keySize = getStringWithDefault(in, "512");
 		return keySize;
 	}
-	
+
 	private static String getStatisticsFilename() {
 		return "./server_stats.xml";
 	}
@@ -161,25 +169,26 @@ public class GenerateINI {
 	}
 
 	private static void write(PrintWriter out) {
-		out.println("# Generated .ini file for Test Game at "+new Date());
+		out.println("# Generated .ini file for Test Game at " + new Date());
 		out.println("database_implementation=" + databaseImplementation);
 		out.println();
-		out.println("jdbc_url=jdbc:mysql://" + databaseHost + "/"+ databaseName);
+		out.println("jdbc_url=jdbc:mysql://" + databaseHost + "/" + databaseName);
 		out.println("jdbc_class=com.mysql.jdbc.Driver");
 		out.println("jdbc_user=" + databaseUsername);
 		out.println("jdbc_pwd=" + databasePassword);
 		out.println();
-		out.println("tcp_port="+ tcpPort);
+		out.println("tcp_port=" + tcpPort);
 		out.println();
-		out.println("world="+ worldImplementation);
-		out.println("ruleprocessor="+ ruleprocessorImplementation);
+		out.println("world=" + worldImplementation);
+		out.println("ruleprocessor=" + ruleprocessorImplementation);
 		out.println();
-		out.println("turn_length="+ turnLength);
+		out.println("turn_length=" + turnLength);
 		out.println();
 		out.println("server_typeGame=" + gameName);
 		out.println("server_name=" + gameName + " Marauroa server");
 		out.println("server_version=0.01");
-		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
+		out
+		        .println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);
 		out.println();
@@ -188,13 +197,13 @@ public class GenerateINI {
 
 	protected static String getDatabasePassword() {
 		System.out.print("Write value of the database user password: ");
-		String databasepassword = getStringWithoutDefault(in,"Please enter a database password");
+		String databasepassword = getStringWithoutDefault(in, "Please enter a database password");
 		return databasepassword;
 	}
 
 	protected static String getDatabaseUsername() {
 		System.out.print("Write name of the database user: ");
-		String databaseuser = getStringWithoutDefault(in,"Please enter a database user");
+		String databaseuser = getStringWithoutDefault(in, "Please enter a database user");
 		return databaseuser;
 	}
 

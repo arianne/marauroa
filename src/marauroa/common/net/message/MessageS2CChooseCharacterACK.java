@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CChooseCharacterACK extends Message {
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CChooseCharacterACK() {
 		super(MessageType.S2C_CHOOSECHARACTER_ACK, null);
@@ -44,19 +45,17 @@ public class MessageS2CChooseCharacterACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Choose Character ACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (S2C Choose Character ACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 
 		if (type != MessageType.S2C_CHOOSECHARACTER_ACK) {

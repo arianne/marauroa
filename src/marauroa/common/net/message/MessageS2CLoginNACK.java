@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.3 2007/02/28 22:40:13 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.4 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,22 +26,20 @@ import marauroa.common.net.NetConst;
  */
 
 public class MessageS2CLoginNACK extends Message {
+
 	public enum Reasons {
-		USERNAME_WRONG,
-		TOO_MANY_TRIES,
-		SERVER_IS_FULL,
-		GAME_MISMATCH,
-		PROTOCOL_MISMATCH,
-		INVALID_NONCE,
+		USERNAME_WRONG, TOO_MANY_TRIES, SERVER_IS_FULL, GAME_MISMATCH, PROTOCOL_MISMATCH, INVALID_NONCE,
 	}
 
 	static private String[] text = {
-			"Username/Password incorrect.",
-			"Username/Password has been failed too many times. Account blocked for "+(TimeoutConf.FAILED_LOGIN_BLOCKTIME/60)+" minutes",
-			"Server is full.",
-			"Server is running an incompatible version of game. Update client",
-			"marauroa.common.network Protocol invalid version: Running " + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
-			"The hash you sent does not correspond to the nonce you sent." };
+	        "Username/Password incorrect.",
+	        "Username/Password has been failed too many times. Account blocked for "
+	                + (TimeoutConf.FAILED_LOGIN_BLOCKTIME / 60) + " minutes",
+	        "Server is full.",
+	        "Server is running an incompatible version of game. Update client",
+	        "marauroa.common.network Protocol invalid version: Running "
+	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+	        "The hash you sent does not correspond to the nonce you sent." };
 
 	private Reasons reason;
 
@@ -89,21 +87,19 @@ public class MessageS2CLoginNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login NACK) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ getResolution() + ")";
+		return "Message (S2C Login NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution()
+		        + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write((byte) reason.ordinal());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		reason = Reasons.values()[in.readByte()];
 		if (type != MessageType.S2C_LOGIN_NACK) {

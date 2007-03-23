@@ -33,20 +33,20 @@ public class TestAttributes {
 	 */
 	@Test
 	public void testPutHasGet() {
-		Attributes attr=new Attributes(null);
+		Attributes attr = new Attributes(null);
 
-		attr.put("a",1);
-		attr.put("b","2");
-		attr.put("c",3.0);
+		attr.put("a", 1);
+		attr.put("b", "2");
+		attr.put("c", 3.0);
 
 		assertTrue(attr.has("a"));
 		assertTrue(attr.has("b"));
 		assertTrue(attr.has("c"));
 		assertFalse(attr.has("d"));
 
-		assertEquals(1,attr.getInt("a"));
-		assertEquals("2",attr.get("b"));
-		assertEquals(3.0,attr.getDouble("c"));
+		assertEquals(1, attr.getInt("a"));
+		assertEquals("2", attr.get("b"));
+		assertEquals(3.0, attr.getDouble("c"));
 	}
 
 	/**
@@ -56,9 +56,9 @@ public class TestAttributes {
 	 */
 	@Test
 	public void testRemove() {
-		Attributes attr=new Attributes(null);
+		Attributes attr = new Attributes(null);
 
-		attr.put("a",1);
+		attr.put("a", 1);
 
 		assertTrue(attr.has("a"));
 		assertFalse(attr.has("b"));
@@ -78,12 +78,12 @@ public class TestAttributes {
 	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
-		Attributes attr=new Attributes(RPClass.getBaseRPObjectDefault());
+		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
-		attr.put("a",1);
-		attr.put("b","2");
-		attr.put("c",3.0);
-		attr.put("e","a short string");
+		attr.put("a", 1);
+		attr.put("b", "2");
+		attr.put("c", 3.0);
+		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -93,7 +93,7 @@ public class TestAttributes {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		Attributes result=(Attributes) is.readObject(new Attributes(null));
+		Attributes result = (Attributes) is.readObject(new Attributes(null));
 
 		assertEquals(attr, result);
 	}
@@ -107,7 +107,7 @@ public class TestAttributes {
 	 */
 	@Test
 	public void testSerializationWithRPClass() throws IOException, ClassNotFoundException {
-		RPClass clazz=new RPClass("A");
+		RPClass clazz = new RPClass("A");
 
 		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		clazz.add(DefinitionClass.ATTRIBUTE, "b", Type.STRING, Definition.STANDARD);
@@ -118,17 +118,19 @@ public class TestAttributes {
 		clazz.add(DefinitionClass.ATTRIBUTE, "g", Type.VERY_LONG_STRING, Definition.STANDARD);
 		clazz.add(DefinitionClass.ATTRIBUTE, "h", Type.FLAG, Definition.STANDARD);
 
-		Attributes attr=new Attributes(clazz);
+		Attributes attr = new Attributes(clazz);
 
-		attr.put("a",1);
-		attr.put("b","2");
-		attr.put("c",3.0);
+		attr.put("a", 1);
+		attr.put("b", "2");
+		attr.put("c", 3.0);
 		attr.put("d", 120);
-		attr.put("e",15000);
-		attr.put("f","This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
-		attr.put("g","Toooooooo big to even test the limit");
-		attr.put("h","");
-
+		attr.put("e", 15000);
+		attr
+		        .put(
+		                "f",
+		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
+		attr.put("g", "Toooooooo big to even test the limit");
+		attr.put("h", "");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -138,7 +140,7 @@ public class TestAttributes {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		Attributes result=(Attributes) is.readObject(new Attributes(null));
+		Attributes result = (Attributes) is.readObject(new Attributes(null));
 
 		assertEquals(attr, result);
 	}
@@ -148,15 +150,18 @@ public class TestAttributes {
 	 * @throws IOException the expected exception
 	 * @throws ClassNotFoundException
 	 */
-	@Test(expected=IOException.class)
+	@Test(expected = IOException.class)
 	public void testSerializationException() throws IOException, ClassNotFoundException {
-		Attributes attr=new Attributes(RPClass.getBaseRPObjectDefault());
+		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
-		attr.put("a",1);
-		attr.put("b","2");
-		attr.put("c",3.0);
-		attr.put("d","a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
-		attr.put("e","a short string");
+		attr.put("a", 1);
+		attr.put("b", "2");
+		attr.put("c", 3.0);
+		attr
+		        .put(
+		                "d",
+		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
+		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);

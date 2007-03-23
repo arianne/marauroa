@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.2 2007/03/02 23:26:14 arianne_rpg Exp $ */
+/* $Id: DatabaseFactory.java,v 1.3 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import marauroa.common.Log4J;
  * Utility class for choosing the right player databese.
  */
 public class DatabaseFactory {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(DatabaseFactory.class);
 
@@ -48,8 +49,7 @@ public class DatabaseFactory {
 	 *            A String containing the type of database
 	 * @return A shared instance of PlayerDatabase
 	 */
-	public static IDatabase getDatabase(String database_type)
-			throws NoDatabaseConfException {
+	public static IDatabase getDatabase(String database_type) throws NoDatabaseConfException {
 		try {
 			Class databaseClass = Class.forName(database_type);
 			java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getDatabase");

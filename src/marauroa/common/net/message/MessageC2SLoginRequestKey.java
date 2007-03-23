@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginRequestKey.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginRequestKey.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import marauroa.common.net.OutputSerializer;
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SLoginRequestKey extends Message {
+
 	private String game;
 
 	private String version;
@@ -38,8 +39,7 @@ public class MessageC2SLoginRequestKey extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SLoginRequestKey(SocketChannel source, String game,
-			String version) {
+	public MessageC2SLoginRequestKey(SocketChannel source, String game, String version) {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
 		this.game = game;
 		this.version = version;
@@ -60,8 +60,7 @@ public class MessageC2SLoginRequestKey extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login Request Key) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (C2S Login Request Key) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
@@ -72,8 +71,8 @@ public class MessageC2SLoginRequestKey extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		game = in.read255LongString();
 		version = in.read255LongString();

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.2 2007/02/05 18:49:03 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,8 +17,8 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class MessageS2CTransferREQ extends Message {
+
 	private List<TransferContent> contents;
 
 	/** Constructor for allowing creation of an empty message */
@@ -38,8 +38,8 @@ public class MessageS2CTransferREQ extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from ("
-				+ getAddress() + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress()
+		        + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -53,8 +53,7 @@ public class MessageS2CTransferREQ extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 
 		int size = contents.size();
@@ -66,8 +65,8 @@ public class MessageS2CTransferREQ extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        ClassNotFoundException {
 		super.readObject(in);
 
 		int size = in.readInt();

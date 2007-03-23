@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.2 2007/02/10 23:17:50 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CInvalidMessage extends Message {
+
 	private String reason;
 
 	/** Constructor for allowing creation of an empty message */
@@ -58,21 +59,19 @@ public class MessageS2CInvalidMessage extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Message Invalid) from ("
-				+ getAddress() + ") CONTENTS: (reason:"
-				+ reason + ")";
+		return "Message (S2C Message Invalid) from (" + getAddress() + ") CONTENTS: (reason:"
+		        + reason + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(reason);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		reason = in.readString();
 

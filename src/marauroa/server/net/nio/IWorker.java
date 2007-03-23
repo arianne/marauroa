@@ -1,4 +1,4 @@
-/* $Id: IWorker.java,v 1.5 2007/01/19 08:08:54 arianne_rpg Exp $ */
+/* $Id: IWorker.java,v 1.6 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,10 +21,13 @@ import java.nio.channels.SocketChannel;
  *
  */
 public interface IWorker {
+
 	/** This method associate this worker with a NIO Server. */
 	public abstract void setServer(NioServer server);
-    /** This is a callback method that is called onConnect */
+
+	/** This is a callback method that is called onConnect */
 	public abstract void onConnect(SocketChannel socket);
-    /** This method is called when data is recieved from a socket channel */
-	public abstract void onData(NioServer server, SocketChannel socket,	byte[] data, int count);
+
+	/** This method is called when data is recieved from a socket channel */
+	public abstract void onData(NioServer server, SocketChannel socket, byte[] data, int count);
 }

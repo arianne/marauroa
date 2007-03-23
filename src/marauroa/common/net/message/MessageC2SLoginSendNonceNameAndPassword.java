@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.1 2007/02/05 18:37:40 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,8 @@ import marauroa.common.crypto.Hash;
  * 
  * @see marauroa.common.net.message.Message
  */
-public class MessageC2SLoginSendNonceNameAndPassword extends
-		MessageSendByteArray {
+public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArray {
+
 	private String username;
 
 	private byte[] password;
@@ -45,8 +45,8 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source,
-			byte[] nonce, String username, byte[] password) {
+	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source, byte[] nonce,
+	        String username, byte[] password) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
 		this.username = username;
 		this.password = password;
@@ -77,23 +77,21 @@ public class MessageC2SLoginSendNonceNameAndPassword extends
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login) from ("
-				+ getAddress() + ") CONTENTS: (nonce:"
-				+ Hash.toHexString(hash) + "\tusername:" + username
-				+ "\tpassword:" + Hash.toHexString(password) + ")";
+		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
+		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
+		        + Hash.toHexString(password) + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
 		out.write(password);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		username = in.readString();
 		password = in.readByteArray();

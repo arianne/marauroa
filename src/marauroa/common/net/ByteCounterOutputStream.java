@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.6 2007/03/15 18:43:25 arianne_rpg Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.7 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.io.OutputStream;
 
 /** This class just counts the bytes written into underlaying outputstream */
 public class ByteCounterOutputStream extends OutputStream {
+
 	private OutputStream os;
 
 	private long bytesWritten;

@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.6 2007/03/15 18:43:25 arianne_rpg Exp $ */
+/* $Id: RSAKey.java,v 1.7 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 public class RSAKey extends RSAPublicKey {
+
 	private BigInteger d;
 
 	public RSAKey(BigInteger n, BigInteger d, BigInteger e) {
@@ -76,8 +77,7 @@ public class RSAKey extends RSAPublicKey {
 		// a highly-probable prime number is
 		// found.
 
-		while (!(p.isProbablePrime(1000) && p.multiply(big2).add(big1)
-				.isProbablePrime(1000))) {
+		while (!(p.isProbablePrime(1000) && p.multiply(big2).add(big1).isProbablePrime(1000))) {
 			p = p.add(big6);
 		}// end while loop
 
@@ -90,8 +90,7 @@ public class RSAKey extends RSAPublicKey {
 		// the required conditions, but may not be
 		// a prime number. Get the next prime number
 		// smaller than the current value of q.
-		while (!(q.isProbablePrime(1000) && q.multiply(big2).add(big1)
-				.isProbablePrime(1000))) {
+		while (!(q.isProbablePrime(1000) && q.multiply(big2).add(big1).isProbablePrime(1000))) {
 			q = q.subtract(big6);
 		}// end while loop
 

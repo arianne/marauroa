@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.2 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,14 +22,13 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateAccountNACK extends Message {
+
 	public enum Reasons {
-		UNKNOWN_REASON, 
-		USERNAME_EXISTS, 
-		FIELD_TOO_SHORT,
+		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
 	}
 
-	static private String[] text = { "Unknown reason",
-			"Username already exists.", "Field is too short", };
+	static private String[] text = { "Unknown reason", "Username already exists.",
+	        "Field is too short", };
 
 	private Reasons reason;
 
@@ -46,8 +45,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateAccountNACK(SocketChannel source,
-			Reasons resolution) {
+	public MessageS2CCreateAccountNACK(SocketChannel source, Reasons resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
 		reason = resolution;
 	}
@@ -78,21 +76,19 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Account NACK) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ getResolution() + ")";
+		return "Message (S2C Create Account NACK) from (" + getAddress() + ") CONTENTS: ("
+		        + getResolution() + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write((byte) reason.ordinal());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		reason = Reasons.values()[in.readByte()];
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {

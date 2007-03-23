@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.2 2007/02/04 12:57:00 arianne_rpg Exp $ */
+/* $Id: StringChecker.java,v 1.3 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ package marauroa.server.game.db;
  *
  */
 public class StringChecker {
+
 	/** 
 	 * This method returns if a string is valid because it lacks of any kind of control
 	 * or escape character. 
@@ -60,7 +61,7 @@ public class StringChecker {
 	 * Escapes ' and \ in a string so that the result can be passed into an
 	 * SQL command. The parameter has be quoted using ' in the sql. Most
 	 * database engines accept single quotes around numbers as well.
-     * <p>Please note that special characters for LIKE and other matching
+	 * <p>Please note that special characters for LIKE and other matching
 	 * commands are not quotes. The result of this method is suiteable for
 	 * INSERT, UPDATE and an "=" operator in the WHERE part.
 	 * 
@@ -72,6 +73,6 @@ public class StringChecker {
 			return param;
 		}
 		return param.replace("'", "''").replace("\\", "\\\\");
-	}	
+	}
 
 }

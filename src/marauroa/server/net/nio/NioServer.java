@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.11 2007/03/15 11:37:00 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.12 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,13 +38,15 @@ import marauroa.server.net.IDisconnectedListener;
  *
  */
 class NioServer extends Thread {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NioServer.class);
 
 	/** The host:port combination to listen on */
 	private InetAddress hostAddress;
+
 	private int port;
-	
+
 	/** While keepRunning is true, we keep recieving messages */
 	private boolean keepRunning;
 
@@ -67,28 +69,29 @@ class NioServer extends Thread {
 
 	/** A list of PendingChange instances */
 	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
+
 	private List<ChangeRequest> pendingClosed;
 
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
-	private Map<SocketChannel,List<ByteBuffer>> pendingData = new HashMap<SocketChannel,List<ByteBuffer>>();
-	
+	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
+
 	/** A list of the listener to the onDisconnect event. */
 	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		super("NioServer");
-		
+
 		keepRunning = true;
 		isFinished = false;
-		
+
 		this.hostAddress = hostAddress;
 		this.port = port;
 		this.selector = this.initSelector();
 		this.worker = worker;
 		this.worker.setServer(this);
-		
-		pendingClosed=new LinkedList<ChangeRequest>();
-		listeners=new LinkedList<IDisconnectedListener>();
+
+		pendingClosed = new LinkedList<ChangeRequest>();
+		listeners = new LinkedList<IDisconnectedListener>();
 	}
 
 	/** This method closes a channel.
@@ -97,7 +100,7 @@ class NioServer extends Thread {
 	 * @throws IOException @see SocketChannel.close()
 	 */
 	public void close(SocketChannel channel) {
-		for(IDisconnectedListener listener: listeners) {
+		for (IDisconnectedListener listener : listeners) {
 			listener.onDisconnect(channel);
 		}
 
@@ -115,7 +118,8 @@ class NioServer extends Thread {
 	public void send(SocketChannel socket, byte[] data) {
 		synchronized (this.pendingChanges) {
 			// Indicate we want the interest ops set changed
-			this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+			this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS,
+			        SelectionKey.OP_WRITE));
 
 			// And queue the data we want written
 			synchronized (this.pendingData) {
@@ -137,13 +141,13 @@ class NioServer extends Thread {
 	 */
 	public void finish() {
 		keepRunning = false;
-		
+
 		selector.wakeup();
 
 		while (isFinished == false) {
 			Thread.yield();
 		}
-		
+
 		try {
 			selector.close();
 		} catch (IOException e) {
@@ -159,52 +163,51 @@ class NioServer extends Thread {
 					Iterator changes = this.pendingChanges.iterator();
 					while (changes.hasNext()) {
 						ChangeRequest change = (ChangeRequest) changes.next();
-						if(change.socket.isConnected()) {
+						if (change.socket.isConnected()) {
 							switch (change.type) {
-							case ChangeRequest.CHANGEOPS:
-								SelectionKey key = change.socket.keyFor(this.selector);
-								if(key.isValid()) {
-									key.interestOps(change.ops);
-								}
+								case ChangeRequest.CHANGEOPS:
+									SelectionKey key = change.socket.keyFor(this.selector);
+									if (key.isValid()) {
+										key.interestOps(change.ops);
+									}
 							}
 						}
 					}
 					this.pendingChanges.clear();
 				}
 
-
 				synchronized (this.pendingClosed) {
 					Iterator it = pendingClosed.iterator();
 					while (it.hasNext()) {
 						ChangeRequest change = (ChangeRequest) it.next();
-						if(change.socket.isConnected()) {
+						if (change.socket.isConnected()) {
 							switch (change.type) {
-							case ChangeRequest.CLOSE:
-								/*
-								 * Close the socket
-								 */
-								try {
+								case ChangeRequest.CLOSE:
 									/*
-									 * Force data to be sent if there is data waiting.
+									 * Close the socket
 									 */
-									if(pendingData.containsKey(change.socket)) {
-										SelectionKey key = change.socket.keyFor(selector);
-										if(key.isValid()) {
-											write(key);
+									try {
+										/*
+										 * Force data to be sent if there is data waiting.
+										 */
+										if (pendingData.containsKey(change.socket)) {
+											SelectionKey key = change.socket.keyFor(selector);
+											if (key.isValid()) {
+												write(key);
+											}
 										}
+
+										change.socket.close();
+									} catch (Exception e) {
+										logger.info("Exception happend when closing socket", e);
 									}
-									
-									change.socket.close();
-								} catch (Exception e) {
-									logger.info("Exception happend when closing socket", e);
-								}
-								break;
+									break;
 							}
 						}
 					}
 					pendingClosed.clear();
 				}
-				
+
 				// Wait for an event one of the registered channels
 				this.selector.select();
 
@@ -231,8 +234,8 @@ class NioServer extends Thread {
 				e.printStackTrace();
 			}
 		}
-		
-		isFinished=true;
+
+		isFinished = true;
 	}
 
 	private void accept(SelectionKey key) throws IOException {
@@ -246,7 +249,7 @@ class NioServer extends Thread {
 		// Register the new SocketChannel with our Selector, indicating
 		// we'd like to be notified when there's data waiting to be read
 		socketChannel.register(this.selector, SelectionKey.OP_READ);
-		
+
 		worker.onConnect(socketChannel);
 	}
 
@@ -264,7 +267,7 @@ class NioServer extends Thread {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
 			key.cancel();
-			
+
 			close(socketChannel);
 
 			return;
@@ -285,7 +288,7 @@ class NioServer extends Thread {
 
 	private void write(SelectionKey key) throws IOException {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
-		
+
 		synchronized (this.pendingData) {
 			List queue = (List) this.pendingData.get(socketChannel);
 
@@ -330,9 +333,8 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
-	
 	/** Register a listener to notify about disconnected events */
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
-		this.listeners.add(listener);		
+		this.listeners.add(listener);
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.26 2007/03/14 17:27:48 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.27 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,6 +61,7 @@ import marauroa.server.net.validator.ConnectionValidator;
  * @author miguel
  */
 public class RPServerManager extends Thread {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPServerManager.class);
 
@@ -132,7 +133,8 @@ public class RPServerManager extends Thread {
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {
-			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",	e);
+			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",
+			        e);
 			throw e;
 		}
 	}
@@ -150,20 +152,24 @@ public class RPServerManager extends Thread {
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
 	 */
-	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException,
+	        IllegalArgumentException, SecurityException, IllegalAccessException,
+	        InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("world"));
 		// call the get() method without parameters to retrieve the singleton instance
-		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null,
+		        (Object[]) null);
 		world.onInit();
 
 		Class ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
 		// call the get() method without parameters to retrieve the singleton instance
-		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass
+		        .getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		ruleProcessor.setContext(this);
 	}
 
 	public void setGameManager(GameServerManager gameMan) {
-		this.gameMan=gameMan;
+		this.gameMan = gameMan;
 	}
 
 	/**
@@ -226,7 +232,6 @@ public class RPServerManager extends Thread {
 		return ruleProcessor.createAccount(username, password, email);
 	}
 
-
 	/**
 	 * Creates a character for a account of a player
 	 *
@@ -242,15 +247,15 @@ public class RPServerManager extends Thread {
 	private Perception getPlayerPerception(PlayerEntry entry) {
 		Perception perception = null;
 
-		RPObject.ID id=entry.object.getID();
+		RPObject.ID id = entry.object.getID();
 		IRPZone zone = world.getRPZone(id);
 
 		if (entry.requestedSync == false) {
-			logger.debug("Perception DELTA for player ("+ id + ")");
+			logger.debug("Perception DELTA for player (" + id + ")");
 			perception = zone.getPerception(id, Perception.DELTA);
 		} else {
 			entry.requestedSync = false;
-			logger.debug("Perception SYNC for player ("+ id + ")");
+			logger.debug("Perception SYNC for player (" + id + ")");
 			perception = zone.getPerception(id, Perception.SYNC);
 		}
 
@@ -263,9 +268,10 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel, perception);
+		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel,
+		        perception);
 
-		stats.add("Perceptions "+ (perception.type == 0 ? "DELTA" : "SYNC"), 1);
+		stats.add("Perceptions " + (perception.type == 0 ? "DELTA" : "SYNC"), 1);
 
 		/* The perception is build of two parts: the general information and the private information
 		 *  about our object.
@@ -316,20 +322,21 @@ public class RPServerManager extends Thread {
 		/** We reset the cache at Perceptions */
 		MessageS2CPerception.clearPrecomputedPerception();
 
-		for(PlayerEntry entry: playerContainer) {
+		for (PlayerEntry entry : playerContainer) {
 			try {
 				if (entry.state == ClientState.GAME_BEGIN) {
 					Perception perception = getPlayerPerception(entry);
 					sendPlayerPerception(entry, perception, entry.object);
 				}
 			} catch (RuntimeException e) {
-				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
+				logger.error("Removing player(" + entry.clientid
+				        + ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
 			}
 		}
 
-		for(PlayerEntry entry: playersToRemove) {
-			logger.warn("RP Disconnecting entry: "+entry);
+		for (PlayerEntry entry : playersToRemove) {
+			logger.warn("RP Disconnecting entry: " + entry);
 			gameMan.disconnect(entry);
 		}
 	}
@@ -353,11 +360,11 @@ public class RPServerManager extends Thread {
 
 	private void deliverTransferContent() {
 		synchronized (contentsToTransfer) {
-			for (Map.Entry<RPObject,List<TransferContent>> val : contentsToTransfer.entrySet()) {
-				RPObject target= val.getKey();
+			for (Map.Entry<RPObject, List<TransferContent>> val : contentsToTransfer.entrySet()) {
+				RPObject target = val.getKey();
 				List<TransferContent> content = val.getValue();
-				
-				PlayerEntry entry= playerContainer.get(target);
+
+				PlayerEntry entry = playerContainer.get(target);
 
 				entry.contentToTransfer = content;
 
@@ -399,7 +406,7 @@ public class RPServerManager extends Thread {
 				stop = System.nanoTime();
 
 				try {
-					logger.debug("Turn time elapsed: " + ((stop - start) / 1000)	+ " microsecs");
+					logger.debug("Turn time elapsed: " + ((stop - start) / 1000) + " microsecs");
 					delay = turnDuration - ((stop - start) / 1000000);
 					if (delay < 0) {
 						StringBuilder sb = new StringBuilder();
@@ -407,9 +414,11 @@ public class RPServerManager extends Thread {
 							sb.append(" " + (timeEnd - timeStart));
 						}
 
-						logger.warn("Turn duration overflow by " + (-delay)	+ " ms: " + sb.toString());
+						logger.warn("Turn duration overflow by " + (-delay) + " ms: "
+						        + sb.toString());
 					} else if (delay > turnDuration) {
-						logger.error("Delay bigger than Turn duration. [delay: "+ delay+ "] [turnDuration:"+ turnDuration + "]");
+						logger.error("Delay bigger than Turn duration. [delay: " + delay
+						        + "] [turnDuration:" + turnDuration + "]");
 						delay = 0;
 					}
 
@@ -481,8 +490,8 @@ public class RPServerManager extends Thread {
 	 * @param object the player object that we want to disconnect from world
 	 */
 	public void disconnectPlayer(RPObject object) {
-		PlayerEntry entry=playerContainer.get(object);
-		if(entry==null) {
+		PlayerEntry entry = playerContainer.get(object);
+		if (entry == null) {
 			/* There is no player entry for such channel
 			 * This is not necesaryly an error, as the connection could be
 			 * anything else but an arianne client or we are just disconnecting

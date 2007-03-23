@@ -21,7 +21,9 @@ import org.junit.Test;
  *
  */
 public class TestRPObjectDelta2 {
+
 	private RPObject obj;
+
 	private MarauroaRPZone zone;
 
 	/**
@@ -31,39 +33,40 @@ public class TestRPObjectDelta2 {
 	 */
 	@Before
 	public void createObject() {
-		obj=new RPObject();
+		obj = new RPObject();
 
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
+		obj.put("a", 1);
+		obj.put("b", "1");
+		obj.put("c", 2.0);
+		obj.put("d", "string of text");
 
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
-		RPEvent chat=new RPEvent("chat");
-		chat.put("text","Hi there");		
+		RPEvent chat = new RPEvent("chat");
+		chat.put("text", "Hi there");
 		obj.addEvent(chat);
 
-		chat=new RPEvent("chat");
-		chat.put("text","Does this work?");		
+		chat = new RPEvent("chat");
+		chat.put("text", "Does this work?");
 		obj.addEvent(chat);
 
-		RPSlot lhand=obj.getSlot("lhand");
+		RPSlot lhand = obj.getSlot("lhand");
 
-		RPObject pocket=new RPObject();
+		RPObject pocket = new RPObject();
 		pocket.put("size", 1);
 		pocket.addSlot("container");
 		lhand.add(pocket);
 
-		RPSlot container=pocket.getSlot("container");
+		RPSlot container = pocket.getSlot("container");
 
-		RPObject coin=new RPObject();
+		RPObject coin = new RPObject();
 		coin.put("euro", 100);
 		coin.put("value", 100);
 		container.add(coin);
 
-		zone=new MarauroaRPZone("test") {
+		zone = new MarauroaRPZone("test") {
+
 			public void onInit() throws Exception {
 			}
 
@@ -90,16 +93,16 @@ public class TestRPObjectDelta2 {
 		zone.assignRPObjectID(obj);
 		assertTrue(obj.has("id"));
 		assertTrue(obj.has("zoneid"));
-		assertEquals("test",obj.get("zoneid"));
+		assertEquals("test", obj.get("zoneid"));
 
 		/*
 		 * Test if first time modification works as expected.
 		 */
 		zone.add(obj);
-		obj.put("b",9);
+		obj.put("b", 9);
 		zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertFalse(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -120,7 +123,7 @@ public class TestRPObjectDelta2 {
 		zone.assignRPObjectID(obj);
 		assertTrue(obj.has("id"));
 		assertTrue(obj.has("zoneid"));
-		assertEquals("test",obj.get("zoneid"));
+		assertEquals("test", obj.get("zoneid"));
 
 		/*
 		 * Hide the object
@@ -132,10 +135,10 @@ public class TestRPObjectDelta2 {
 		 */
 		zone.add(obj);
 
-		obj.put("b",9);
+		obj.put("b", 9);
 		zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -158,7 +161,7 @@ public class TestRPObjectDelta2 {
 
 		zone.remove(obj.getID());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -182,11 +185,11 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on attribute object addition.
 		 */
-		obj.put("bg","house red");
+		obj.put("bg", "house red");
 
 		zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -214,7 +217,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
@@ -238,11 +241,11 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on attribute object modification.
 		 */
-		obj.put("b",19);
+		obj.put("b", 19);
 
 		zone.modify(obj);
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -266,21 +269,20 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on slot object event addition
 		 */
-		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		RPObject slotcoin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
-		RPEvent tax=new RPEvent("tax");
-		tax.put("bill", "10%");		
+		RPEvent tax = new RPEvent("tax");
+		tax.put("bill", "10%");
 		slotcoin.addEvent(tax);
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
 	}
-
 
 	/**
 	 * Test that an modified attribute in a object inside a slot works.
@@ -299,13 +301,13 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on slot object modification.
 		 */
-		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		RPObject slotcoin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
-		slotcoin.put("value",200);
+		slotcoin.put("value", 200);
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -329,13 +331,13 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on slot object modification.
 		 */
-		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		RPObject slotcoin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
-		slotcoin.put("pesetas",4000);
+		slotcoin.put("pesetas", 4000);
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -359,13 +361,13 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on slot object modification.
 		 */
-		RPObject slotcoin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		RPObject slotcoin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
 		slotcoin.remove("value");
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
@@ -376,7 +378,8 @@ public class TestRPObjectDelta2 {
 	 * Test that an added object in a object inside a slot works.
 	 * It must appear at modified added.
 	 *
-	 */	@Test
+	 */
+	@Test
 	public void testSlotObjectAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
@@ -388,136 +391,134 @@ public class TestRPObjectDelta2 {
 		/*
 		 * Test Delta^2 on slot object modification.
 		 */
-		RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		RPObject anothercoin=new RPObject();
+		RPSlot slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject anothercoin = new RPObject();
 		anothercoin.put("euro", 2);
 		anothercoin.put("value", "tomato");
 		slot.add(anothercoin);
 
 		zone.modify(anothercoin.getBaseContainer());
 
-		Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
-	 }
+	}
 
-	 /**
-	  * Test that an removed object in a object inside a slot works.
-	  * It must appear at modified deleted.
-	  *
-	  */
-	 @Test
-	 public void testSlotObjectRemoval() {
-		 zone.assignRPObjectID(obj);
-		 zone.add(obj);
-		 /*
-		  * Next turn.
-		  * We want to clear Delta^2 data.
-		  */
-		 zone.nextTurn();
-		 /*
-		  * Test Delta^2 on slot object modification.
-		  */
-		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		 RPObject coin=slot.remove(slot.getFirst().getID());
+	/**
+	 * Test that an removed object in a object inside a slot works.
+	 * It must appear at modified deleted.
+	 *
+	 */
+	@Test
+	public void testSlotObjectRemoval() {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		/*
+		 * Next turn.
+		 * We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
+		/*
+		 * Test Delta^2 on slot object modification.
+		 */
+		RPSlot slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject coin = slot.remove(slot.getFirst().getID());
 
-		 assertNotNull(coin);
-		 assertEquals(coin, coin.getBaseContainer());
+		assertNotNull(coin);
+		assertEquals(coin, coin.getBaseContainer());
 
-		 zone.modify(obj);
+		zone.modify(obj);
 
-		 Perception expected=zone.getPerception(obj.getID(), Perception.DELTA);
-		 assertTrue(expected.addedList.isEmpty());
-		 assertTrue(expected.modifiedAddedList.isEmpty());
-		 assertFalse(expected.modifiedDeletedList.isEmpty());
-		 assertTrue(expected.deletedList.isEmpty());
-	 }
+		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		assertTrue(expected.addedList.isEmpty());
+		assertTrue(expected.modifiedAddedList.isEmpty());
+		assertFalse(expected.modifiedDeletedList.isEmpty());
+		assertTrue(expected.deletedList.isEmpty());
+	}
 
-	 /**
-	  * This is a KNOWN bug that happens when a object from a visible slot is removed
-	  * in the object that has cleared the visible attributes.
-	  */
-	 @Ignore
-	 @Test
-	 public void testVisibleApplyDifferencesBug() {
-		 zone.assignRPObjectID(obj);
-		 zone.add(obj);
-		 /*
-		  * Next turn.
-		  * We want to clear Delta^2 data.
-		  */
-		 zone.nextTurn();
+	/**
+	 * This is a KNOWN bug that happens when a object from a visible slot is removed
+	 * in the object that has cleared the visible attributes.
+	 */
+	@Ignore
+	@Test
+	public void testVisibleApplyDifferencesBug() {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		/*
+		 * Next turn.
+		 * We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
 
-		 RPObject result=(RPObject) obj.clone();
+		RPObject result = (RPObject) obj.clone();
 
-		 /*
-		  * Test Delta^2 on slot object modification.
-		  */
-		 /* Remove coin from slot */
-		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		 RPObject coin=slot.remove(slot.getFirst().getID());
+		/*
+		 * Test Delta^2 on slot object modification.
+		 */
+		/* Remove coin from slot */
+		RPSlot slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject coin = slot.remove(slot.getFirst().getID());
 
-		 assertNotNull(coin);
-		 assertEquals(coin, coin.getBaseContainer());
+		assertNotNull(coin);
+		assertEquals(coin, coin.getBaseContainer());
 
-		 obj.clearVisible();
+		obj.clearVisible();
 
-		 RPObject added = new RPObject();
-		 RPObject deleted = new RPObject();
+		RPObject added = new RPObject();
+		RPObject deleted = new RPObject();
 
-		 obj.getDifferences(added, deleted);
+		obj.getDifferences(added, deleted);
 
-		 result.applyDifferences(added, deleted);
+		result.applyDifferences(added, deleted);
 
-		 result.clearVisible();
+		result.clearVisible();
 
+		assertEquals(result, obj);
+	}
 
-		 assertEquals(result, obj);	 }
+	/**
+	 * This test try to show a problem that could happen if you delete and add an object
+	 * on the same turn. It should work correctly.
+	 */
+	@Test
+	public void testApplyDifferences() throws Exception {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		/*
+		 * Next turn.
+		 * We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
 
-	 /**
-	  * This test try to show a problem that could happen if you delete and add an object
-	  * on the same turn. It should work correctly.
-	  */
-	 @Test
-	 public void testApplyDifferences() throws Exception {
-		 zone.assignRPObjectID(obj);
-		 zone.add(obj);
-		 /*
-		  * Next turn.
-		  * We want to clear Delta^2 data.
-		  */
-		 zone.nextTurn();
+		RPObject result = (RPObject) obj.clone();
 
-		 RPObject result=(RPObject) obj.clone();
+		/*
+		 * Test Delta^2 on slot object modification.
+		 */
+		/* Remove coin from slot */
+		RPSlot slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject coin = slot.remove(slot.getFirst().getID());
 
-		 /*
-		  * Test Delta^2 on slot object modification.
-		  */
-		 /* Remove coin from slot */
-		 RPSlot slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		 RPObject coin=slot.remove(slot.getFirst().getID());
+		assertNotNull(coin);
+		assertEquals(coin, coin.getBaseContainer());
 
-		 assertNotNull(coin);
-		 assertEquals(coin, coin.getBaseContainer());
+		/* Added another coin to slot */
+		slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject anothercoin = new RPObject();
+		anothercoin.put("euro", 2);
+		anothercoin.put("value", "tomato");
+		slot.add(anothercoin);
 
-		 /* Added another coin to slot */
-		 slot=obj.getSlot("lhand").getFirst().getSlot("container");
-		 RPObject anothercoin=new RPObject();
-		 anothercoin.put("euro", 2);
-		 anothercoin.put("value", "tomato");
-		 slot.add(anothercoin);
+		RPObject added = new RPObject();
+		RPObject deleted = new RPObject();
 
+		obj.getDifferences(added, deleted);
 
-		 RPObject added = new RPObject();
-		 RPObject deleted = new RPObject();
+		result.applyDifferences(added, deleted);
 
-		 obj.getDifferences(added, deleted);
-
-		 result.applyDifferences(added, deleted);
-
-
-		 assertEquals(result, obj);
-	 }
+		assertEquals(result, obj);
+	}
 }

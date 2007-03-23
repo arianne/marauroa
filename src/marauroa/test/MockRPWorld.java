@@ -5,7 +5,7 @@ import marauroa.common.game.RPObject;
 import marauroa.server.game.rp.MarauroaRPZone;
 import marauroa.server.game.rp.RPWorld;
 
-public class MockRPWorld extends RPWorld{
+public class MockRPWorld extends RPWorld {
 
 	private static MockRPWorld world;
 
@@ -16,15 +16,16 @@ public class MockRPWorld extends RPWorld{
 	}
 
 	protected void populate() {
-		IRPZone zone=new MarauroaRPZone("test");
+		IRPZone zone = new MarauroaRPZone("test");
 		addRPZone(zone);
 
-		RPObject hidden=new RPObject();
+		RPObject hidden = new RPObject();
 		zone.assignRPObjectID(hidden);
-		hidden.put("hidden","You don't see this object");
+		hidden.put("hidden", "You don't see this object");
 		hidden.hide();
 		zone.add(hidden);
 	}
+
 	/**
 	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
 	 * There is no way of enforcing static methods on a Interface, so just keep this in mind when
@@ -33,7 +34,7 @@ public class MockRPWorld extends RPWorld{
 	 * @return an unique instance of world.
 	 */
 	public static RPWorld get() {
-		if(world==null) {
+		if (world == null) {
 			world = new MockRPWorld();
 		}
 

@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.4 2007/03/15 18:43:25 arianne_rpg Exp $ */
+/* $Id: Hash.java,v 1.5 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class Hash {
+
 	private static String hex = "0123456789ABCDEF";
 
 	static private MessageDigest md;

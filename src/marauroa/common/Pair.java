@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.3 2006/08/26 20:00:32 nhnb Exp $ */
+/* $Id: Pair.java,v 1.4 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.common;
 
 public class Pair<T1, T2> {
+
 	private T1 first;
 
 	private T2 second;
@@ -43,22 +44,21 @@ public class Pair<T1, T2> {
 		if (o instanceof Pair) {
 			Pair object = (Pair) o;
 			if (first != null && first.equals(object.first) && second != null
-					&& second.equals(object.second)) {
+			        && second.equals(object.second)) {
 				return true;
 			}
 
 			if (first == null && first == object.first && second != null
-					&& second.equals(object.second)) {
+			        && second.equals(object.second)) {
 				return true;
 			}
 
 			if (second == null && second == object.second && first != null
-					&& first.equals(object.first)) {
+			        && first.equals(object.first)) {
 				return true;
 			}
 
-			if (first == null && first == object.first && second == null
-					&& second == object.second) {
+			if (first == null && first == object.first && second == null && second == object.second) {
 				return true;
 			}
 		}

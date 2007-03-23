@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.6 2007/03/14 18:31:22 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.7 2007/03/23 20:39:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,40 +27,13 @@ import marauroa.common.net.Serializable;
  * exist in marauroa.
  */
 public class Message implements Serializable {
+
 	/** Invalid client identificator constant */
 	public final static int CLIENTID_INVALID = -1;
 
 	/** Type of message */
 	public enum MessageType {
-		C2S_ACTION,
-		C2S_CHOOSECHARACTER,
-		C2S_LOGIN_REQUESTKEY,
-		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
-		C2S_LOGIN_SENDPROMISE,
-		C2S_LOGOUT,
-		C2S_OUTOFSYNC,
-		C2S_TRANSFER_ACK,
-		S2C_CHARACTERLIST,
-		S2C_CHOOSECHARACTER_ACK,
-		S2C_CHOOSECHARACTER_NACK,
-		S2C_INVALIDMESSAGE,
-		S2C_LOGIN_ACK,
-		S2C_LOGIN_NACK,
-		S2C_LOGIN_SENDKEY,
-		S2C_LOGIN_SENDNONCE,
-		S2C_LOGOUT_ACK,
-		S2C_LOGOUT_NACK,
-		S2C_PERCEPTION,
-		S2C_SERVERINFO,
-		S2C_TRANSFER,
-		S2C_TRANSFER_REQ,
-		C2S_CREATEACCOUNT,
-		S2C_CREATEACCOUNT_ACK,
-		S2C_CREATEACCOUNT_NACK, 
-		C2S_CREATECHARACTER, 
-		S2C_CREATECHARACTER_ACK,
-		S2C_CREATECHARACTER_NACK, 
-		S2C_CONNECT_NACK
+		C2S_ACTION, C2S_CHOOSECHARACTER, C2S_LOGIN_REQUESTKEY, C2S_LOGIN_SENDNONCENAMEANDPASSWORD, C2S_LOGIN_SENDPROMISE, C2S_LOGOUT, C2S_OUTOFSYNC, C2S_TRANSFER_ACK, S2C_CHARACTERLIST, S2C_CHOOSECHARACTER_ACK, S2C_CHOOSECHARACTER_NACK, S2C_INVALIDMESSAGE, S2C_LOGIN_ACK, S2C_LOGIN_NACK, S2C_LOGIN_SENDKEY, S2C_LOGIN_SENDNONCE, S2C_LOGOUT_ACK, S2C_LOGOUT_NACK, S2C_PERCEPTION, S2C_SERVERINFO, S2C_TRANSFER, S2C_TRANSFER_REQ, C2S_CREATEACCOUNT, S2C_CREATEACCOUNT_ACK, S2C_CREATEACCOUNT_NACK, C2S_CREATECHARACTER, S2C_CREATECHARACTER_ACK, S2C_CREATECHARACTER_NACK, S2C_CONNECT_NACK
 	}
 
 	/** Type of the message */
@@ -112,12 +85,12 @@ public class Message implements Serializable {
 	 * @return the address of the channel associated.
 	 */
 	public InetAddress getAddress() {
-		if(channel==null) {
+		if (channel == null) {
 			return null;
 		}
 
 		//return channel.socket().getInetAddress();
-		Socket socket=channel.socket();
+		Socket socket = channel.socket();
 		return socket.getInetAddress();
 	}
 

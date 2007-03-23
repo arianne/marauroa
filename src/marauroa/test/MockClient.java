@@ -15,17 +15,21 @@ import marauroa.common.net.message.TransferContent;
 public class MockClient extends ClientFramework {
 
 	private String[] characters;
+
 	private PerceptionHandler handler;
+
 	private MockPerceptionListener listener;
 
 	private boolean isSynced;
+
 	private int perceptions;
 
 	class MockPerceptionListener implements IPerceptionListener {
+
 		private Map<ID, RPObject> objects;
 
 		public MockPerceptionListener() {
-			objects=new HashMap<ID, RPObject>();
+			objects = new HashMap<ID, RPObject>();
 		}
 
 		public Map<ID, RPObject> getContainer() {
@@ -48,7 +52,7 @@ public class MockClient extends ClientFramework {
 		}
 
 		public void onException(Exception e, MessageS2CPerception perception) throws Exception {
-			System.out.println("Got "+e+" when applying "+perception);
+			System.out.println("Got " + e + " when applying " + perception);
 			e.printStackTrace();
 		}
 
@@ -75,21 +79,21 @@ public class MockClient extends ClientFramework {
 		}
 
 		public void onSynced() {
-			isSynced=true;
+			isSynced = true;
 		}
 
 		public void onUnsynced() {
-			isSynced=false;
+			isSynced = false;
 		}
 	}
 
 	public MockClient(String loggingProperties) {
 		super(loggingProperties);
 
-		listener=new MockPerceptionListener();
-		handler=new PerceptionHandler(listener);
-		isSynced=false;
-		perceptions=0;
+		listener = new MockPerceptionListener();
+		handler = new PerceptionHandler(listener);
+		isSynced = false;
+		perceptions = 0;
 	}
 
 	public String[] getCharacters() {
@@ -120,7 +124,7 @@ public class MockClient extends ClientFramework {
 
 	@Override
 	protected void onAvailableCharacters(String[] characters) {
-		this.characters=characters;
+		this.characters = characters;
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class MockClient extends ClientFramework {
 		try {
 			handler.apply(message, listener.getContainer());
 		} catch (Exception e) {
-			System.out.println("Exception with perception "+message);
+			System.out.println("Exception with perception " + message);
 			e.printStackTrace();
 			TestHelper.fail();
 		}

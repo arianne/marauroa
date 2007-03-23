@@ -12,7 +12,8 @@ import java.io.OutputStream;
  * @author hendrik
  */
 public class FileSystemPersistence extends Persistence {
-	private String homedir = System.getProperty("user.home") + "/"; 
+
+	private String homedir = System.getProperty("user.home") + "/";
 
 	/**
 	 * creates a "normal" FileSystemPersistence
@@ -43,12 +44,14 @@ public class FileSystemPersistence extends Persistence {
 	}
 
 	@Override
-	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		return new FileInputStream(concatFilename(relativeToHome, basedir, filename));
 	}
 
 	@Override
-	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		return new FileOutputStream(concatFilename(relativeToHome, basedir, filename));
 	}
 

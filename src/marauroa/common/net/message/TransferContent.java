@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.2 2007/03/05 16:51:57 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 public class TransferContent {
+
 	public String name;
 
 	public int timestamp;
@@ -26,11 +27,11 @@ public class TransferContent {
 	public boolean ack;
 
 	public TransferContent() {
-		ack=false;
-		cacheable=false;
-		data=null;
-		name=null;
-		timestamp=0;
+		ack = false;
+		cacheable = false;
+		data = null;
+		name = null;
+		timestamp = 0;
 	}
 
 	@Override
@@ -56,42 +57,39 @@ public class TransferContent {
 		ack = false;
 	}
 
-	public void writeREQ(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeREQ(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(timestamp);
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
-	public void readREQ(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+	public void readREQ(marauroa.common.net.InputSerializer in) throws IOException,
+	        ClassNotFoundException {
 		name = in.readString();
 		timestamp = in.readInt();
 		cacheable = (in.readByte() == 1);
 	}
 
-	public void writeACK(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeACK(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write((byte) (ack ? 1 : 0));
 	}
 
-	public void readACK(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+	public void readACK(marauroa.common.net.InputSerializer in) throws IOException,
+	        ClassNotFoundException {
 		name = in.readString();
 		ack = (in.readByte() == 1);
 	}
 
-	public void writeFULL(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeFULL(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(data);
 		out.write(timestamp);
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
-	public void readFULL(marauroa.common.net.InputSerializer in)
-			throws IOException, ClassNotFoundException {
+	public void readFULL(marauroa.common.net.InputSerializer in) throws IOException,
+	        ClassNotFoundException {
 		name = in.readString();
 		data = in.readByteArray();
 		timestamp = in.readInt();

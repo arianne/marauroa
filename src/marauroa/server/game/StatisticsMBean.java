@@ -1,4 +1,4 @@
-/* $Id: StatisticsMBean.java,v 1.3 2006/08/20 15:40:15 wikipedian Exp $ */
+/* $Id: StatisticsMBean.java,v 1.4 2007/03/23 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,5 +14,6 @@ package marauroa.server.game;
 
 /** statistics interface for the java management bean * */
 public interface StatisticsMBean {
+
 	public long get(String type);
 }

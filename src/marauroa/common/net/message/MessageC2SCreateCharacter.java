@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateCharacter.java,v 1.2 2007/03/05 18:31:29 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateCharacter.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,10 @@ import marauroa.common.game.RPObject;
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SCreateCharacter extends Message {
+
 	private String character;
 
 	private RPObject template;
-
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SCreateCharacter() {
@@ -43,7 +43,7 @@ public class MessageC2SCreateCharacter extends Message {
 	 */
 	public MessageC2SCreateCharacter(SocketChannel source, String character, RPObject template) {
 		super(MessageType.C2S_CREATECHARACTER, source);
-		this.character= character;
+		this.character = character;
 		this.template = template;
 	}
 
@@ -70,25 +70,23 @@ public class MessageC2SCreateCharacter extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateCharacter) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ character + ";" + template +")";
+		return "Message (C2S CreateCharacter) from (" + getAddress() + ") CONTENTS: (" + character
+		        + ";" + template + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(character);
 		out.write(template);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		character = in.readString();
-		template=(RPObject)in.readObject(new RPObject());
+		template = (RPObject) in.readObject(new RPObject());
 
 		if (type != MessageType.C2S_CREATECHARACTER) {
 			throw new java.lang.ClassNotFoundException();

@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.12 2007/03/21 19:23:15 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.13 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,8 @@ import marauroa.server.game.db.Transaction;
  * <li>Temportal bans<br>That are not stored but that has a interface for adding, removing and querying bans.
  * </ul>
  */
-public class ConnectionValidator implements Iterable<InetAddressMask>{
+public class ConnectionValidator implements Iterable<InetAddressMask> {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ConnectionValidator.class);
 
@@ -46,6 +47,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	/** Temporal bans are added using the API and are lost on each server reset.
 	 *  Consider using Database for a permanent ban  */
 	private List<InetAddressMask> temporalBans;
+
 	/** A timer to remove ban when it is done. */
 	private Timer timer;
 
@@ -53,20 +55,21 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	private long lastLoadTS;
 
 	/* How often do we reload ban information from database? Each 5 minutes*/
-	private final static long RELOAD_PERMANENT_BANS=5 * 60 * 1000;
+	private final static long RELOAD_PERMANENT_BANS = 5 * 60 * 1000;
 
 	/**
 	 * Constructor.
 	 * It loads permanent bans from database.
 	 */
 	public ConnectionValidator() {
-		permanentBans=new LinkedList<InetAddressMask>();
-		temporalBans=Collections.synchronizedList(new LinkedList<InetAddressMask>());
+		permanentBans = new LinkedList<InetAddressMask>();
+		temporalBans = Collections.synchronizedList(new LinkedList<InetAddressMask>());
 
 		/* read ban list from configuration */
 		loadBannedIPNetworkListFromDB();
-		timer=new Timer();
+		timer = new Timer();
 	}
+
 	/**
 	 * Request connection validator to stop all the activity, and stop
 	 * checking if any ban needs to be removed.
@@ -82,6 +85,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 *
 	 */
 	private class RemoveBan extends TimerTask {
+
 		private InetAddressMask mask;
 
 		/**
@@ -89,7 +93,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 		 * @param mask
 		 */
 		public RemoveBan(InetAddressMask mask) {
-			this.mask=mask;
+			this.mask = mask;
 		}
 
 		@Override
@@ -97,6 +101,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 			temporalBans.remove(mask);
 		}
 	}
+
 	/**
 	 * This adds a temporal ban.
 	 * @param address the address to ban
@@ -104,7 +109,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * @param time how many seconds should the ban apply.
 	 */
 	public void addBan(String address, String mask, long time) {
-		InetAddressMask inetmask=new InetAddressMask(address,mask);
+		InetAddressMask inetmask = new InetAddressMask(address, mask);
 
 		timer.schedule(new RemoveBan(inetmask), time);
 		temporalBans.add(inetmask);
@@ -117,7 +122,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * @return true if it has been removed.
 	 */
 	public boolean removeBan(String address, String mask) {
-		return temporalBans.remove(new InetAddressMask(address,mask));
+		return temporalBans.remove(new InetAddressMask(address, mask));
 	}
 
 	/**
@@ -138,14 +143,14 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	public synchronized boolean checkBanned(InetAddress address) {
 		checkReload();
 
-		for(InetAddressMask iam: temporalBans) {
+		for (InetAddressMask iam : temporalBans) {
 			if (iam.matches(address)) {
 				logger.debug("Address " + address + " is banned by " + iam);
 				return true;
 			}
 		}
 
-		for(InetAddressMask iam: permanentBans) {
+		for (InetAddressMask iam : permanentBans) {
 			if (iam.matches(address)) {
 				logger.debug("Address " + address + " is permanently banned by " + iam);
 				return true;
@@ -161,7 +166,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 	 * @return true if it is baneed.
 	 */
 	public synchronized boolean checkBanned(Socket socket) {
-		InetAddress address=socket.getInetAddress();
+		InetAddress address = socket.getInetAddress();
 		return checkBanned(address);
 	}
 
@@ -172,7 +177,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>{
 		try {
 			IDatabase db = JDBCDatabase.getDatabase();
 			permanentBans.clear();
-			Transaction transaction=db.getTransaction();
+			Transaction transaction = db.getTransaction();
 			permanentBans.addAll(db.getBannedAddresses(transaction));
 		} catch (SQLException sqle) {
 			logger.error("cannot read banned networks database table", sqle);

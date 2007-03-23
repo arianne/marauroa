@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.25 2007/03/15 11:06:46 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.26 2007/03/23 20:39:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,16 +31,18 @@ import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
-
 /**
  * This is the implementation of a worker that send messages, recieve it, ...
  * This class also handles validation of connections and disconnections events
  * @author miguel
  *
  */
-public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener, INetworkServerManager {
+public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener,
+        INetworkServerManager {
+
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(NIONetworkServerManager.class);
 
 	/** We store the server for sending stuff. */
 	private NioServer server;
@@ -65,6 +67,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 	/** encoder is in charge of getting a Message and creating a stream of bytes. */
 	private Encoder encoder;
+
 	/** decoder takes a stream of bytes and create a message */
 	private Decoder decoder;
 
@@ -78,8 +81,8 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		keepRunning = true;
 		isFinished = false;
 
-		encoder=Encoder.get();
-		decoder=Decoder.get();
+		encoder = Encoder.get();
+		decoder = Decoder.get();
 
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = new LinkedBlockingQueue<Message>();
@@ -88,9 +91,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 		logger.debug("NetworkServerManager started successfully");
 
-		server=new NioServer(null, NetConst.tcpPort, this);
+		server = new NioServer(null, NetConst.tcpPort, this);
 		server.start();
-		
+
 		/*
 		 * Register network listener.
 		 */
@@ -103,7 +106,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * @param server the master server.
 	 */
 	public void setServer(NioServer server) {
-		this.server=server;
+		this.server = server;
 	}
 
 	/**
@@ -157,18 +160,18 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	/** We check that this socket is not banned.
 	 *  We do it just on connect so we save lots of queries. */
 	public void onConnect(SocketChannel channel) {
-		Socket socket=channel.socket();
+		Socket socket = channel.socket();
 
-		if(connectionValidator.checkBanned(socket)) {
-			logger.debug("Reject connect from banned IP: "+socket.getInetAddress());
-			
+		if (connectionValidator.checkBanned(socket)) {
+			logger.debug("Reject connect from banned IP: " + socket.getInetAddress());
+
 			/*
 			 * Sends a connect NACK message if the address is banned. 
 			 */
-			MessageS2CConnectNACK msg=new MessageS2CConnectNACK();
+			MessageS2CConnectNACK msg = new MessageS2CConnectNACK();
 			msg.setSocketChannel(channel);
 			sendMessage(msg);
-			
+
 			/*
 			 * TODO: We should wait a bit to close the channel... to make sure message is send *before*
 			 * closing it, otherwise client won't know about it.
@@ -204,9 +207,9 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 */
 	public void sendMessage(Message msg) {
 		try {
-			if(logger.isDebugEnabled()) {
-				logger.debug("send message(type=" + msg.getType() + ") from "
-						+ msg.getClientID() + " full [" + msg + "]");
+			if (logger.isDebugEnabled()) {
+				logger.debug("send message(type=" + msg.getType() + ") from " + msg.getClientID()
+				        + " full [" + msg + "]");
 			}
 
 			byte[] data = encoder.encode(msg);
@@ -222,11 +225,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * @param channel the socket channel to close
 	 */
 	public void disconnectClient(SocketChannel channel) {
-			try {
+		try {
 			server.close(channel);
-			} catch (Exception e) {
-				logger.error("Unable to disconnect a client "+channel.socket(),e);
-			}
+		} catch (Exception e) {
+			logger.error("Unable to disconnect a client " + channel.socket(), e);
+		}
 
 	}
 
@@ -251,32 +254,33 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	@Override
 	public void run() {
 		try {
-			while(keepRunning) {
-				DataEvent event=queue.take();
+			while (keepRunning) {
+				DataEvent event = queue.take();
 
 				try {
 					Message msg = decoder.decode(event.channel, event.data);
-					if(msg!=null) {
-						if(logger.isDebugEnabled()) {
+					if (msg != null) {
+						if (logger.isDebugEnabled()) {
 							logger.debug("recv message(type=" + msg.getType() + ") from "
-									+ msg.getClientID() + " full [" + msg + "]");
+							        + msg.getClientID() + " full [" + msg + "]");
 						}
 
 						messages.add(msg);
 					}
 				} catch (InvalidVersionException e) {
 					stats.add("Message invalid version", 1);
-					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
+					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel,
+					        "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
-					logger.warn("IOException while building message.",e);
+					logger.warn("IOException while building message.", e);
 				}
 			}
 		} catch (InterruptedException e) {
-			keepRunning=false;
+			keepRunning = false;
 		}
 
-		isFinished=true;
+		isFinished = true;
 	}
 
 	/**
@@ -284,7 +288,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * @param channel the channel to clear
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		logger.info("NET Disconnecting "+channel);
+		logger.info("NET Disconnecting " + channel);
 		decoder.clear(channel);
 	}
 }

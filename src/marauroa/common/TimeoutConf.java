@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.11 2007/02/28 22:40:13 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.12 2007/03/23 20:39:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ package marauroa.common;
  *
  */
 public class TimeoutConf {
+
 	/** This indicate when we stop to wait on the socket. The lower the slower. */
 	final public static int SOCKET_TIMEOUT = 10;
 
@@ -27,7 +28,7 @@ public class TimeoutConf {
 	 * hacked client and if connection is not closed, that player is taking a "slot" of
 	 * the game and so disallowing other real players to play.
 	 */
-	final public static long UNCOMPLETED_LOGIN_TIMEOUT=60000;
+	final public static long UNCOMPLETED_LOGIN_TIMEOUT = 60000;
 
 	/**
 	 * This indicate how many time we wait for a message to arrive. The lower
@@ -44,7 +45,8 @@ public class TimeoutConf {
 	/**
 	 * The amount of failed login tries before considering the account blocked.
 	 */
-	final public static int FAILED_LOGIN_ATTEMPS=3;
+	final public static int FAILED_LOGIN_ATTEMPS = 3;
+
 	/**
 	 * The amount of seconds until being able to retry login after N failed attemps.
 	 */

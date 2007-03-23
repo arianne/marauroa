@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.4 2007/03/07 19:50:15 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.5 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateAccountACK extends Message {
+
 	private String username;
 
 	/** Constructor for allowing creation of an empty message */
@@ -37,7 +38,7 @@ public class MessageS2CCreateAccountACK extends Message {
 	 */
 	public MessageS2CCreateAccountACK(SocketChannel source, String username) {
 		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
-		this.username=username;
+		this.username = username;
 	}
 
 	/**
@@ -47,7 +48,7 @@ public class MessageS2CCreateAccountACK extends Message {
 	public String getUsername() {
 		return username;
 	}
-	
+
 	/**
 	 * This method returns a String that represent the object
 	 *
@@ -55,20 +56,18 @@ public class MessageS2CCreateAccountACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C CreateAccount ACK) from ("
-				+ getAddress() + ") CONTENTS: ()";
+		return "Message (S2C CreateAccount ACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
-		}
+	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 
 		username = in.readString();

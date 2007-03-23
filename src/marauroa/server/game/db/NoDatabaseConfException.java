@@ -1,4 +1,4 @@
-/* $Id: NoDatabaseConfException.java,v 1.4 2007/02/10 18:23:03 arianne_rpg Exp $ */
+/* $Id: NoDatabaseConfException.java,v 1.5 2007/03/23 20:39:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ package marauroa.server.game.db;
  *
  */
 public class NoDatabaseConfException extends IllegalStateException {
+
 	private static final long serialVersionUID = -4145441757361358659L;
 
 	/**

@@ -22,6 +22,7 @@ import org.junit.Test;
  *
  */
 public class TestRPZoneAccess {
+
 	/**
 	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
 	 * JDBC Database and create a proper public constructor.
@@ -29,13 +30,16 @@ public class TestRPZoneAccess {
 	 *
 	 */
 	static class TestJDBC extends JDBCDatabase {
+
 		public TestJDBC(Properties props) {
 			super(props);
 		}
 	}
 
 	private static TestJDBC database;
+
 	private RPObject object;
+
 	private MarauroaRPZone zone;
 
 	/**
@@ -53,8 +57,9 @@ public class TestRPZoneAccess {
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
 
-		database=new TestJDBC(props);
+		database = new TestJDBC(props);
 	}
+
 	/**
 	 * Populates the zone with some objects.
 	 *
@@ -62,32 +67,32 @@ public class TestRPZoneAccess {
 	@Before
 	public void populateZone() {
 		object = new RPObject();
-		object.put("a",1);
-		object.put("b","1");
-		object.put("c",2.0);
-		object.put("d","string of text");
+		object.put("a", 1);
+		object.put("b", "1");
+		object.put("c", 2.0);
+		object.put("d", "string of text");
 
 		object.addSlot("lhand");
 		object.addSlot("rhand");
 
-		RPEvent chat=new RPEvent("chat");
-		chat.put("text","Hi there");		
+		RPEvent chat = new RPEvent("chat");
+		chat.put("text", "Hi there");
 		object.addEvent(chat);
 
-		chat=new RPEvent("chat");
-		chat.put("text","Does this work?");		
+		chat = new RPEvent("chat");
+		chat.put("text", "Does this work?");
 		object.addEvent(chat);
 
-		RPSlot lhand=object.getSlot("lhand");
+		RPSlot lhand = object.getSlot("lhand");
 
-		RPObject pocket=new RPObject();
+		RPObject pocket = new RPObject();
 		pocket.put("size", 1);
 		pocket.addSlot("container");
 		lhand.add(pocket);
 
-		RPSlot container=pocket.getSlot("container");
+		RPSlot container = pocket.getSlot("container");
 
-		RPObject coin=new RPObject();
+		RPObject coin = new RPObject();
 		coin.put("euro", 100);
 		coin.put("value", 100);
 		container.add(coin);
@@ -108,18 +113,18 @@ public class TestRPZoneAccess {
 	 */
 	@Test
 	public void storeAndLoadObjects() throws Exception {
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 
 		try {
 			transaction.begin();
 
 			database.storeRPZone(transaction, zone);
 
-			MarauroaRPZone newzone=new MarauroaRPZone("test");
+			MarauroaRPZone newzone = new MarauroaRPZone("test");
 			database.loadRPZone(transaction, newzone);
 
-			RPObject.ID id=new RPObject.ID(1,"test");
-			assertEquals(zone.get(id),newzone.get(id));
+			RPObject.ID id = new RPObject.ID(1, "test");
+			assertEquals(zone.get(id), newzone.get(id));
 		} finally {
 			transaction.rollback();
 		}
@@ -133,26 +138,26 @@ public class TestRPZoneAccess {
 	 */
 	@Test
 	public void storeAndStoreAndLoadObjects() throws Exception {
-		Transaction transaction=database.getTransaction();
+		Transaction transaction = database.getTransaction();
 
 		try {
 			transaction.begin();
 
 			database.storeRPZone(transaction, zone);
 
-			MarauroaRPZone newzone=new MarauroaRPZone("test");
+			MarauroaRPZone newzone = new MarauroaRPZone("test");
 			database.loadRPZone(transaction, newzone);
 
-			RPObject.ID id=new RPObject.ID(1,"test");
-			assertEquals(zone.get(id),newzone.get(id));
+			RPObject.ID id = new RPObject.ID(1, "test");
+			assertEquals(zone.get(id), newzone.get(id));
 
 			database.storeRPZone(transaction, newzone);
 
-			MarauroaRPZone doublestoredzone=new MarauroaRPZone("test");
+			MarauroaRPZone doublestoredzone = new MarauroaRPZone("test");
 			database.loadRPZone(transaction, doublestoredzone);
 
-			id=new RPObject.ID(1,"test");
-			assertEquals(zone.get(id),doublestoredzone.get(id));
+			id = new RPObject.ID(1, "test");
+			assertEquals(zone.get(id), doublestoredzone.get(id));
 		} finally {
 			transaction.rollback();
 		}

@@ -42,7 +42,7 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testGetClass() {
-		RPClass b=new RPClass("B");
+		RPClass b = new RPClass("B");
 		assertEquals(b, RPClass.getRPClass("B"));
 	}
 
@@ -53,8 +53,8 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testisAClass() {
-		RPClass c=new RPClass("C");
-		RPClass d=new RPClass("D");
+		RPClass c = new RPClass("C");
+		RPClass d = new RPClass("D");
 
 		d.isA(c);
 
@@ -63,7 +63,7 @@ public class TestRPClass {
 		d.isA("C");
 
 		assertTrue(d.subclassOf(c.getName()));
-		}
+	}
 
 	/**
 	 * Create some definitions for data in a RPClass and check them.
@@ -71,15 +71,15 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testDefinitions() {
-		RPClass b=new RPClass("E");
+		RPClass b = new RPClass("E");
 		assertEquals(b, RPClass.getRPClass("E"));
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, Definition.STANDARD);
 
-		short code=b.getCode(DefinitionClass.ATTRIBUTE, "a");
-		assertEquals("a",b.getName(DefinitionClass.ATTRIBUTE, code));
+		short code = b.getCode(DefinitionClass.ATTRIBUTE, "a");
+		assertEquals("a", b.getName(DefinitionClass.ATTRIBUTE, code));
 	}
 
 	/**
@@ -89,29 +89,30 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testDefinitionsMethods() {
-		RPClass b=new RPClass("F");
+		RPClass b = new RPClass("F");
 		assertEquals(b, RPClass.getRPClass("F"));
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte)(Definition.PRIVATE|Definition.VOLATILE));
+		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
+		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
-		Definition def=b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
-		assertEquals(Type.INT,def.getType());
+		Definition def = b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		assertEquals(Type.INT, def.getType());
 		assertTrue(def.isVisible());
 		assertFalse(def.isHidden());
 		assertFalse(def.isPrivate());
 		assertTrue(def.isStorable());
 
-		def=b.getDefinition(DefinitionClass.ATTRIBUTE, "b");
-		assertEquals(Type.FLAG,def.getType());
+		def = b.getDefinition(DefinitionClass.ATTRIBUTE, "b");
+		assertEquals(Type.FLAG, def.getType());
 		assertFalse(def.isVisible());
 		assertTrue(def.isHidden());
 		assertFalse(def.isPrivate());
 		assertTrue(def.isStorable());
 
-		def=b.getDefinition(DefinitionClass.ATTRIBUTE, "c");
-		assertEquals(Type.STRING,def.getType());
+		def = b.getDefinition(DefinitionClass.ATTRIBUTE, "c");
+		assertEquals(Type.STRING, def.getType());
 		assertFalse(def.isVisible());
 		assertFalse(def.isHidden());
 		assertTrue(def.isPrivate());
@@ -132,20 +133,20 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testGlobalDefinitionBug() {
-		RPClass b=new RPClass("G");
+		RPClass b = new RPClass("G");
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
 
-		RPClass c=new RPClass("H");
+		RPClass c = new RPClass("H");
 
 		c.add(DefinitionClass.ATTRIBUTE, "a", Type.STRING, Definition.STANDARD);
 		c.add(DefinitionClass.ATTRIBUTE, "b", Type.FLOAT, Definition.HIDDEN);
 
-		Definition defb=b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
-		Definition defc=c.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		Definition defb = b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		Definition defc = c.getDefinition(DefinitionClass.ATTRIBUTE, "a");
 
-		assertFalse(defb.getType()==defc.getType());
+		assertFalse(defb.getType() == defc.getType());
 	}
 
 	/**
@@ -156,12 +157,13 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testSerialization() throws IOException, ClassNotFoundException {
-		RPClass expected=new RPClass("I");
+		RPClass expected = new RPClass("I");
 		assertEquals(expected, RPClass.getRPClass("I"));
 
 		expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte)(Definition.PRIVATE|Definition.VOLATILE));
+		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
+		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -171,7 +173,7 @@ public class TestRPClass {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPClass result=(RPClass) is.readObject(new RPClass());
+		RPClass result = (RPClass) is.readObject(new RPClass());
 
 		assertEquals(expected, result);
 	}
@@ -183,14 +185,14 @@ public class TestRPClass {
 	 */
 	@Test
 	public void testStaticAttributes() {
-		RPClass b=new RPClass("J");
+		RPClass b = new RPClass("J");
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
 		b.add(DefinitionClass.STATIC, "c", "test", Definition.STANDARD);
 
-		Attributes attr=new Attributes(b);
-		attr.put("a",10);
+		Attributes attr = new Attributes(b);
+		attr.put("a", 10);
 		assertTrue(attr.has("a"));
 		assertFalse(attr.has("b"));
 		assertTrue(attr.has("c"));

@@ -1,4 +1,4 @@
-/* $Id: Serializable.java,v 1.2 2006/08/20 15:40:12 wikipedian Exp $ */
+/* $Id: Serializable.java,v 1.3 2007/03/23 20:39:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,11 +17,11 @@ package marauroa.common.net;
  * stream of bytes.
  */
 public interface Serializable {
+
 	/** Method to convert the object into a stream */
-	void writeObject(marauroa.common.net.OutputSerializer out)
-			throws java.io.IOException;
+	void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException;
 
 	/** Method to build the object from a stream of bytes */
-	void readObject(marauroa.common.net.InputSerializer in)
-			throws java.io.IOException, java.lang.ClassNotFoundException;
+	void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
+	        java.lang.ClassNotFoundException;
 }

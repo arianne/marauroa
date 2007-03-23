@@ -19,13 +19,13 @@ import marauroa.common.net.OutputSerializer;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
  * Test unit for RPObject basic functionality
  * @author miguel
  *
  */
 public class TestRPObject {
+
 	private RPObject obj;
 
 	/**
@@ -34,34 +34,34 @@ public class TestRPObject {
 	 */
 	@Before
 	public void createObject() {
-		obj=new RPObject();
+		obj = new RPObject();
 
-		obj.put("a",1);
-		obj.put("b","1");
-		obj.put("c",2.0);
-		obj.put("d","string of text");
+		obj.put("a", 1);
+		obj.put("b", "1");
+		obj.put("c", 2.0);
+		obj.put("d", "string of text");
 
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
-		RPEvent chat=new RPEvent("chat");
-		chat.put("text","Hi there");		
+		RPEvent chat = new RPEvent("chat");
+		chat.put("text", "Hi there");
 		obj.addEvent(chat);
 
-		chat=new RPEvent("chat");
-		chat.put("text","Does this work?");		
+		chat = new RPEvent("chat");
+		chat.put("text", "Does this work?");
 		obj.addEvent(chat);
 
-		RPSlot lhand=obj.getSlot("lhand");
+		RPSlot lhand = obj.getSlot("lhand");
 
-		RPObject pocket=new RPObject();
+		RPObject pocket = new RPObject();
 		pocket.put("size", 1);
 		pocket.addSlot("container");
 		lhand.add(pocket);
 
-		RPSlot container=pocket.getSlot("container");
+		RPSlot container = pocket.getSlot("container");
 
-		RPObject coin=new RPObject();
+		RPObject coin = new RPObject();
 		coin.put("euro", 100);
 		coin.put("value", 100);
 		container.add(coin);
@@ -87,8 +87,8 @@ public class TestRPObject {
 		assertTrue(obj.hasSlot("lhand"));
 		assertTrue(obj.hasSlot("rhand"));
 
-		for(Iterator<RPEvent> it=obj.eventsIterator(); it.hasNext();) {
-			RPEvent event=it.next();
+		for (Iterator<RPEvent> it = obj.eventsIterator(); it.hasNext();) {
+			RPEvent event = it.next();
 			assertEquals("chat", event.getName());
 		}
 	}
@@ -100,8 +100,8 @@ public class TestRPObject {
 	 */
 	@Test
 	public void testRPSlots() {
-		RPObject expected=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		assertEquals(1,expected.getInt("id"));
+		RPObject expected = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		assertEquals(1, expected.getInt("id"));
 	}
 
 	/** Test serialization of the RPObject by serializing it and then deserializing it
@@ -119,7 +119,7 @@ public class TestRPObject {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		InputSerializer is = new InputSerializer(in);
 
-		RPObject result=(RPObject) is.readObject(new RPObject());
+		RPObject result = (RPObject) is.readObject(new RPObject());
 
 		assertEquals(obj, result);
 	}
@@ -132,10 +132,9 @@ public class TestRPObject {
 	 */
 	@Test
 	public void testBaseContainer() {
-		RPObject coin=obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		assertEquals(obj,coin.getBaseContainer());
+		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		assertEquals(obj, coin.getBaseContainer());
 	}
-
 
 	/**
 	 * Test clear visible by removing all the visible attributes, slots and events.
@@ -157,8 +156,8 @@ public class TestRPObject {
 	public void testClearVisibleDelta2() throws Exception {
 		obj.clearVisible();
 
-		RPObject oadded=new RPObject();
-		RPObject odeleted=new RPObject();
+		RPObject oadded = new RPObject();
+		RPObject odeleted = new RPObject();
 
 		obj.getDifferences(oadded, odeleted);
 

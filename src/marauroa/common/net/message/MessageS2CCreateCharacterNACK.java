@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.2 2007/03/21 19:23:14 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,18 +22,13 @@ import java.nio.channels.SocketChannel;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterNACK extends Message {
+
 	public enum Reasons {
-		UNKNOWN_REASON,
-		CHARACTER_EXISTS,
-		FIELD_TOO_SHORT,
-		TEMPLATE_INVALID
+		UNKNOWN_REASON, CHARACTER_EXISTS, FIELD_TOO_SHORT, TEMPLATE_INVALID
 	}
 
-	static private String[] text = {
-		"Unknown reason",
-		"Character already exists.",
-		"Field is too short",
-		"Template is invalid"};
+	static private String[] text = { "Unknown reason", "Character already exists.",
+	        "Field is too short", "Template is invalid" };
 
 	private Reasons reason;
 
@@ -50,8 +45,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateCharacterNACK(SocketChannel source,
-			Reasons resolution) {
+	public MessageS2CCreateCharacterNACK(SocketChannel source, Reasons resolution) {
 		super(MessageType.S2C_CREATECHARACTER_NACK, source);
 		reason = resolution;
 	}
@@ -82,21 +76,19 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Character NACK) from ("
-				+ getAddress() + ") CONTENTS: ("
-				+ getResolution() + ")";
+		return "Message (S2C Create Character NACK) from (" + getAddress() + ") CONTENTS: ("
+		        + getResolution() + ")";
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out)
-			throws IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write((byte) reason.ordinal());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in)
-			throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
+	        java.lang.ClassNotFoundException {
 		super.readObject(in);
 		reason = Reasons.values()[in.readByte()];
 		if (type != MessageType.S2C_CREATECHARACTER_NACK) {
