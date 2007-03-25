@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.12 2007/03/23 20:39:19 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.13 2007/03/25 10:02:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -204,7 +204,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private int generateClientID() {
 		int clientid = rand.nextInt();
 
-		while (has(clientid)) {
+		while (has(clientid) && clientid>0) {
 			clientid = rand.nextInt();
 		}
 
