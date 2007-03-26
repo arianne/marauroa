@@ -19,12 +19,20 @@ public class FloodMeasure {
 	public int sendBytes;
 
 	/**
-	 * Clears the  
+	 * Clears the flood measurement and reset the timestamp.
 	 *
 	 */
 	public void reset() {
 		lasttimestamp=System.currentTimeMillis();
 		sendMessages=0;
 		sendBytes=0;
+	}
+	
+	/**
+	 * Returns true if this socket channel is flooding. 
+	 * @return true if this socket channel is flooding.
+	 */
+	public boolean isFlooding() {
+		return false;
 	}
 }
