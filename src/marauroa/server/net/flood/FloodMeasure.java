@@ -4,7 +4,7 @@ import java.nio.channels.SocketChannel;
 
 /**
  * Stores for each player the amount of messages and bytes send since the last timestamp.
- * 
+ *
  * @author miguel
  *
  */
@@ -17,6 +17,22 @@ public class FloodMeasure {
 	public int sendMessages;
 	/** The amount of bytes recieved from client since the timestamp */
 	public int sendBytes;
+	/** When this entry was created. */
+	private long starttimestamp;
+	/** Store how many times it has caused a flood warning. */
+	public int floodWarnings;
+
+	/**
+	 * Constructor
+	 * @param channel the associated resource to this measure object.
+	 */
+	public FloodMeasure(SocketChannel channel) {
+		this.channel=channel;
+		floodWarnings=0;
+		starttimestamp=System.currentTimeMillis();
+
+		reset();
+	}
 
 	/**
 	 * Clears the flood measurement and reset the timestamp.
@@ -27,12 +43,21 @@ public class FloodMeasure {
 		sendMessages=0;
 		sendBytes=0;
 	}
-	
+
 	/**
-	 * Returns true if this socket channel is flooding. 
-	 * @return true if this socket channel is flooding.
+	 * Add a new message to the measure.
+	 * @param length
 	 */
-	public boolean isFlooding() {
-		return false;
+	public void addMessage(int length) {
+		sendMessages++;
+		sendBytes+=length;
+	}
+
+	/**
+	 * Adds a new flood warning to the measurement.
+	 *
+	 */
+	public void warning() {
+		floodWarnings++;
 	}
 }

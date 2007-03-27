@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.26 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.27 2007/03/27 16:51:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,7 @@ import marauroa.common.net.message.MessageS2CInvalidMessage;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
+import marauroa.server.net.flood.FloodValidator;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
@@ -59,8 +60,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	/** Statistics */
 	private Statistics stats;
 
-	/** checkes if the ip-address is banned */
+	/** checks if the ip-address is banned */
 	private ConnectionValidator connectionValidator;
+
+	/** Checks if a connection is flooding the server */
+	private FloodValidator floodValidator;
 
 	/** We queue here the data events. */
 	private BlockingQueue<DataEvent> queue;
@@ -78,6 +82,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	public NIONetworkServerManager() throws IOException {
 		/* init the packet validater (which can now only check if the address is banned)*/
 		connectionValidator = new ConnectionValidator();
+
+		/* create a flood check on connections */
+		floodValidator=new FloodValidator(null);
+
 		keepRunning = true;
 		isFinished = false;
 
@@ -95,9 +103,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		server.start();
 
 		/*
-		 * Register network listener.
+		 * Register network listener for get disconnection events.
 		 */
 		server.registerDisconnectedListener(this);
+		server.registerDisconnectedListener(floodValidator);
 	}
 
 	/**
@@ -166,7 +175,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 			logger.debug("Reject connect from banned IP: " + socket.getInetAddress());
 
 			/*
-			 * Sends a connect NACK message if the address is banned. 
+			 * Sends a connect NACK message if the address is banned.
 			 */
 			MessageS2CConnectNACK msg = new MessageS2CConnectNACK();
 			msg.setSocketChannel(channel);
@@ -179,7 +188,14 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 			/* If address is banned, just close connection */
 			server.close(channel);
+		} else {
+			/*
+			 * If the address is not banned, add it to flood validator for checking flooding.
+			 */
+			floodValidator.add(channel);
 		}
+
+
 	}
 
 	/**
@@ -190,12 +206,25 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 * @param count the amount of data recieved.
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
-		byte[] dataCopy = new byte[count];
-		System.arraycopy(data, 0, dataCopy, 0, count);
-		try {
-			queue.put(new DataEvent(channel, dataCopy));
-		} catch (InterruptedException e) {
-			/* This is never going to happen */
+		/*
+		 * We check the connection is case it is trying to flood server.
+		 */
+		if(floodValidator.isFlooding(channel, count)) {
+			/*
+			 * If it is flooding, let the validator decide what to do.
+			 */
+			floodValidator.onFlood(channel);
+		} else {
+			/*
+			 * If it is not flooding, just queue the message.
+			 */
+			byte[] dataCopy = new byte[count];
+			System.arraycopy(data, 0, dataCopy, 0, count);
+			try {
+				queue.put(new DataEvent(channel, dataCopy));
+			} catch (InterruptedException e) {
+				/* This is never going to happen */
+			}
 		}
 	}
 
