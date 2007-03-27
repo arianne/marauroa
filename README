@@ -70,11 +70,11 @@ Or for a complete package release write:
 
 Status
 ------
-Version > 2.0 doesn't support anything yet. YOU ARE WARNED!.
-Version > 0.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
-Version > 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
-Version > 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
-Version > 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
+Version >= 2.0 doesn't support anything yet. YOU ARE WARNED!.
+Version >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
+Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
+Version >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
+Version >= 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab game package in order to be able to play it.
 
@@ -92,6 +92,12 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+1.92 Mar 28, 2007
+- Added flood detection at server side.
+- RPEvents now extends Attributes, so it can have several values associated.
+- Send Connect NACK message for banned IP.
+- Fixed null pointer bugs at NIOServer
+
 1.91 Mar 13, 2007
 - Fixed bug at database methods for loading, storing and query for a character.
 - Fixed store and load zone database methods.
