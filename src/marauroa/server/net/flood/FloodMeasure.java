@@ -37,14 +37,14 @@ public class FloodMeasure {
 		floodWarnings = 0;
 		starttimestamp = System.currentTimeMillis();
 
-		reset();
+		resetPerSecondData();
 	}
 
 	/**
 	 * Clears the flood measurement and reset the timestamp.
 	 *
 	 */
-	public void reset() {
+	public void resetPerSecondData() {
 		lasttimestamp = System.currentTimeMillis();
 		sendMessages = 0;
 		sendBytes = 0;
@@ -66,4 +66,38 @@ public class FloodMeasure {
 	public void warning() {
 		floodWarnings++;
 	}
+
+	/**
+	 * Return the amount of bytes per second the client sent.
+	 * @return the amount of bytes per second the client sent.
+	 */
+	public int getBytesPerSecond() {
+		int seconds=(int)((System.currentTimeMillis()-lasttimestamp)/1000);
+		return sendBytes/seconds;
+    }
+
+	/**
+	 * Return the amount of messages per second the client sent.
+	 * @return the amount of messages per second the client sent.
+	 */
+	public int getMessagesPerSecond() {
+		int seconds=(int)((System.currentTimeMillis()-lasttimestamp)/1000);
+	    return sendMessages/seconds;
+    }
+
+	/**
+	 * Return the amount of warnings done because of flood.
+	 * @return the amount of warnings done because of flood.
+	 */
+	public int getWarnings() {
+	    return floodWarnings;
+    }
+
+	/**
+	 * Return the number of seconds since the last reset.
+	 * @return the number of seconds since the last reset.
+	 */
+	public int sinceLastReset() {
+		return (int)((System.currentTimeMillis()-lasttimestamp)/1000);
+    }
 }
