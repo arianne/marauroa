@@ -2,6 +2,7 @@ package marauroa.server.net.flood;
 
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import marauroa.common.Log4J;
@@ -13,7 +14,7 @@ import marauroa.server.net.IDisconnectedListener;
  * @author miguel
  *
  */
-public class FloodValidator implements IDisconnectedListener {
+public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeasure> {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(FloodValidator.class);
@@ -87,4 +88,12 @@ public class FloodValidator implements IDisconnectedListener {
 
 		floodCheck.onFlood(entry);
 	}
+
+	/**
+	 * Returns an iterator over the flood measure entries.
+	 * @return an iterator over the flood measure entries.
+	 */
+	public Iterator<FloodMeasure> iterator() {
+	    return connections.values().iterator();
+    }
 }
