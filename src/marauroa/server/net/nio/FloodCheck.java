@@ -28,7 +28,7 @@ public class FloodCheck implements IFloodCheck {
 	}
 
 	public void onFlood(FloodMeasure entry) {
-		if(entry.getBytesPerSecond()<1024) {
+		if(entry.getBytesPerSecond()<1024 || entry.getMessagesPerSecond()>12) {
 			/*
 			 * Ban for 10 minutes.
 			 */
