@@ -100,4 +100,13 @@ public class FloodMeasure {
 	public int sinceLastReset() {
 		return (int)((System.currentTimeMillis()-lasttimestamp)/1000);
     }
+
+	/**
+	 * Reset the number of warnings because of flood.
+	 *
+	 */
+	public void resetWarnings() {
+	    floodWarnings=0;
+	    
+    }
 }

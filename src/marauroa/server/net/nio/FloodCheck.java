@@ -1,7 +1,5 @@
 package marauroa.server.net.nio;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.server.net.flood.FloodMeasure;
 import marauroa.server.net.flood.IFloodCheck;
 
@@ -29,7 +27,18 @@ public class FloodCheck implements IFloodCheck {
 		return (entry.getWarnings()>=3);
 	}
 
-	public void onFlood(SocketChannel channel) {
+	public void onFlood(FloodMeasure entry) {
+		if(entry.getBytesPerSecond()<1024) {
+			/*
+			 * Ban for 10 minutes.
+			 */
+		} else if(entry.getBytesPerSecond()<512) {
+			/*
+			 * Just kick him
+			 */			
+		} else {
+			entry.resetWarnings();
+		}
 	}
 
 }

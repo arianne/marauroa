@@ -1,6 +1,5 @@
 package marauroa.server.net.flood;
 
-import java.nio.channels.SocketChannel;
 
 /**
  * Implement this interface to assert if an entry is flooding or not.
@@ -23,5 +22,5 @@ public interface IFloodCheck {
 	 *
 	 * @param channel the channel that is causing the flood.
 	 */
-	public void onFlood(SocketChannel channel);
+	public void onFlood(FloodMeasure entry);
 }

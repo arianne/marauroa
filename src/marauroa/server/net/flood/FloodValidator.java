@@ -80,6 +80,11 @@ public class FloodValidator implements IDisconnectedListener {
 	 * can be taken for a flooding channel
 	 */
 	public void onFlood(SocketChannel channel) {
-		floodCheck.onFlood(channel);
+		FloodMeasure entry = connections.get(channel);
+		if (entry == null) {
+			logger.warn("This connection is not registered. Impossible: " + channel);
+		}
+
+		floodCheck.onFlood(entry);
 	}
 }
