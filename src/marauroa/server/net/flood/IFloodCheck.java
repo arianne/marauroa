@@ -8,6 +8,7 @@ import java.nio.channels.SocketChannel;
  *
  */
 public interface IFloodCheck {
+
 	/**
 	 * Returns true if with the information stored an entry implementation determines
 	 * that there is a flood attack.

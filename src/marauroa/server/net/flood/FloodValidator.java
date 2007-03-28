@@ -13,7 +13,8 @@ import marauroa.server.net.IDisconnectedListener;
  * @author miguel
  *
  */
-public class FloodValidator implements IDisconnectedListener{
+public class FloodValidator implements IDisconnectedListener {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(FloodValidator.class);
 
@@ -28,8 +29,8 @@ public class FloodValidator implements IDisconnectedListener{
 	 * @param check the implementation of the flood check.
 	 */
 	public FloodValidator(IFloodCheck check) {
-		connections=new HashMap<SocketChannel, FloodMeasure>();
-		this.floodCheck=check;
+		connections = new HashMap<SocketChannel, FloodMeasure>();
+		this.floodCheck = check;
 	}
 
 	/**
@@ -56,17 +57,17 @@ public class FloodValidator implements IDisconnectedListener{
 	 * @return true if it is flooding.
 	 */
 	public boolean isFlooding(SocketChannel channel, int length) {
-		FloodMeasure entry=connections.get(channel);
-		if(entry==null) {
-			logger.warn("This connection is not registered. Impossible: "+channel);
+		FloodMeasure entry = connections.get(channel);
+		if (entry == null) {
+			logger.warn("This connection is not registered. Impossible: " + channel);
 			return true;
 		}
 
 		entry.addMessage(length);
 
-		boolean result=floodCheck.isFlooding(entry);
+		boolean result = floodCheck.isFlooding(entry);
 
-		if(result) {
+		if (result) {
 			logger.info("Connection determined to be flooding");
 			entry.warning();
 		}
@@ -74,10 +75,10 @@ public class FloodValidator implements IDisconnectedListener{
 		return result;
 	}
 
-	 /**
-	  * This method will call onFlood method of the flood check so appropiate actions
+	/**
+	 * This method will call onFlood method of the flood check so appropiate actions
 	 * can be taken for a flooding channel
-	  */
+	 */
 	public void onFlood(SocketChannel channel) {
 		floodCheck.onFlood(channel);
 	}
