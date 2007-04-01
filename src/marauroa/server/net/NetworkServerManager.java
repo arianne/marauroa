@@ -1,4 +1,4 @@
-/* $Id: NetworkServerManager.java,v 1.34 2006/12/18 21:11:06 arianne_rpg Exp $ */
+/* $Id: NetworkServerManager.java,v 1.29.6.1 2007/04/01 13:59:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.net;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -24,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.Message;
@@ -37,8 +39,7 @@ import org.apache.log4j.Logger;
 
 /** The NetworkServerManager is the active entity of the marauroa.net package,
  *  it is in charge of sending and recieving the packages from the network. */
-@Deprecated
-public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable, INetworkServerManager {
+public final class NetworkServerManager implements NetworkServerManagerCallback, Runnable {
 	/** the logger instance. */
 	private static final Logger logger = Log4J.getLogger(NetworkServerManager.class);
 
@@ -58,7 +59,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	private MessageFactory msgFactory;
 
 	private Map<InetSocketAddress, Socket> tcpSockets = null;
-
+	
 	private UDPReader udpReader;
 	private UDPWriter udpWriter;
 	
@@ -69,7 +70,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 	Statistics stats;
 
 	/** checkes if the ip-address is banned */
-	ConnectionValidator packetValidator;
+	PacketValidator packetValidator;
 
 	/** Used to close Sockets after the logout message has been transmitted */
 	private List<InetSocketAddress> toClose = null;
@@ -87,49 +88,52 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		this.toClose = Collections.synchronizedList(new LinkedList<InetSocketAddress>());
 
 		/* init the packet validater (which can now only check if the address is banned)*/
-		packetValidator = new ConnectionValidator();
+		packetValidator = new PacketValidator();
 		msgFactory = MessageFactory.getFactory();
 		keepRunning = true;
 		isfinished = false;
 
+		
 		/* Because we access the list from several places we create a synchronized list. */
 		messages = Collections.synchronizedList(new LinkedList<Message>());
 		stats = Statistics.getStatistics();
 
-		createUDPSocket();
-		createTCPSocket();
+		boolean useUDP = false;
+		try {
+			useUDP = !Configuration.getConfiguration().has("UDP")
+				|| Configuration.getConfiguration().get("UDP").equals("y");
+		} catch (FileNotFoundException e) {
+			logger.error(e, e);
+		}
 		
-		logger.debug("NetworkServerManager started successfully");
-	}
+		/* Create the socket and set a timeout of 1 second */
+		if (useUDP) {
+			udpSocket = new DatagramSocket(NetConst.marauroa_PORT);
+			udpSocket.setSoTimeout(1000);
+			try {
+				udpSocket.setTrafficClass(0x08 | 0x10);
+			} catch (Exception e) {
+				logger.warn("Cannot setTrafficClass " + e);
+			}
+			udpSocket.setSendBufferSize(1500 * 64);
 
-	private void createTCPSocket() {
+			udpReader = new UDPReader(this, udpSocket, stats);
+			udpReader.start();
+			udpWriter = new UDPWriter(this, udpSocket, stats);
+		}
+
 		Thread tcpListener = new Thread(this, "TCP-Listener");
 		tcpListener.setDaemon(true);
 		tcpListener.start();
-		
+
 		tcpReader = new TCPReader(this, tcpSockets, stats);
 		tcpReader.start();
 		tcpWriter = new TCPWriter(this, stats);
+		logger.debug("NetworkServerManager started successfully");
 	}
 
-	private void createUDPSocket() throws SocketException {
-		/* Create the socket and set a timeout of 1 second */
-		udpSocket = new DatagramSocket(NetConst.marauroa_PORT);
-		udpSocket.setSoTimeout(1000);
-		try {
-			udpSocket.setTrafficClass(0x08 | 0x10);
-		} catch (Exception e) {
-			logger.warn("Cannot setTrafficClass " + e);
-		}
-		udpSocket.setSendBufferSize(1500 * 64);
-
-		udpWriter = new UDPWriter(this, udpSocket, stats);
-		udpReader = new UDPReader(this, udpSocket, stats);
-		udpReader.start();
-	}
-
-	/* (non-Javadoc)
-	 * @see marauroa.server.net.INetworkServerManager#finish()
+	/** 
+	 * This method notify the thread to finish it execution
 	 */
 	public void finish() {
 		logger.debug("shutting down NetworkServerManager");
@@ -138,7 +142,9 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			Thread.yield();
 		}
 
-		udpSocket.close();
+		if (udpSocket != null) {
+			udpSocket.close();
+		}
 		logger.debug("NetworkServerManager is down");
 	}
 
@@ -149,8 +155,12 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		notifyAll();
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.net.INetworkServerManager#getMessage(int)
+	/** 
+	 * This method returns a Message from the list or block for timeout milliseconds
+	 * until a message is available or null if timeout happens.
+	 *
+	 * @param timeout timeout time in milliseconds
+	 * @return a Message or null if timeout happens
 	 */
 	public synchronized Message getMessage(int timeout) {
 		Log4J.startMethod(logger, "getMessage");
@@ -174,8 +184,10 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		return message;
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.net.INetworkServerManager#getMessage()
+	/** 
+	 * This method blocks until a message is available
+	 *
+	 * @return a Message
 	 */
 	public synchronized Message getMessage() {
 		Log4J.startMethod(logger, "getMessage[blocking]");
@@ -202,11 +214,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		if (!packetValidator.checkBanned(inetSocketAddress.getAddress())) {
 			try {
 				Message msg = msgFactory.getMessage(data, inetSocketAddress);
-				
-				if(logger.isDebugEnabled()) {
-				  logger.debug("Received message: " + msg.toString());
-				}
-				
+				logger.debug("Received message: " + msg.toString());
 				messages.add(msg);
 				newMessageArrived();
 			} catch (InvalidVersionException e) {
@@ -220,8 +228,11 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.net.INetworkServerManager#sendMessage(marauroa.common.net.Message)
+	/**
+	 * This method add a message to be delivered to the client the message
+	 * is pointed to.
+	 *
+	 * @param msg the message to be delivered.
 	 */
 	public void sendMessage(Message msg) {
 		Log4J.startMethod(logger, "addMessage");
@@ -231,15 +242,12 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 		}
 		if (socket != null) {
 			tcpWriter.write(msg, socket);
-		} else {
+		} else if (udpWriter != null) {
 			udpWriter.write(msg);
 		}
 		Log4J.finishMethod(logger, "addMessage");
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.net.INetworkServerManager#isStillRunning()
-	 */
 	public boolean isStillRunning() {
 		return keepRunning;
 	}
@@ -253,7 +261,7 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 			ServerSocket tcpSocket = new ServerSocket(NetConst.marauroa_PORT);
 			while (keepRunning) {
 				Socket socket = tcpSocket.accept();
-                socket.setSoTimeout(10);
+                socket.setSoTimeout(500);
 				InetSocketAddress inetSocketAddress = new InetSocketAddress(socket.getInetAddress(), socket.getPort());
 				synchronized (tcpSockets) {
 					tcpSockets.put(inetSocketAddress, socket);
@@ -298,15 +306,5 @@ public final class NetworkServerManager implements NetworkServerManagerCallback,
 				internalDisconnectClientNow(inetSocketAddress);
 			}
 		}
-	}
-
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public ConnectionValidator getValidator() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
