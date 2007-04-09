@@ -58,7 +58,7 @@ In order to get it working with MySQL you will also need:
 
 Build
 -----
-Make sure ant (TODO: Ant homepage link) is installed.
+Make sure ant ( http://ant.apache.org/ ) is installed.
 Now just write:
 
   ant jar
