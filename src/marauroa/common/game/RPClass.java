@@ -13,13 +13,15 @@ import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 
 /**
- * An RPClass is a entity that define the attributes, events and slots of an Object.
+ * An RPClass is a entity that define the attributes, events and slots of an
+ * Object.
  * <p>
  * The idea behind RPClass is not define members as a OOP language but to save
- * bandwidth usage by replacing these members text definitions with a short integer.
+ * bandwidth usage by replacing these members text definitions with a short
+ * integer.
  * <p>
- * Also RPClass define a set of propierties over attributes, events and slots, like being
- * private, hidden or volatile.
+ * Also RPClass define a set of propierties over attributes, events and slots,
+ * like being private, hidden or volatile.
  *
  * @see Definition
  *
@@ -43,9 +45,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 	private Map<String, Definition> staticattributes;
 
 	/**
-	 * Stores attributes definition.
-	 * The main difference between static and non-static attributes is that the first one
-	 * are not settable once they are defined at RPClass.
+	 * Stores attributes definition. The main difference between static and
+	 * non-static attributes is that the first one are not settable once they
+	 * are defined at RPClass.
 	 */
 	private Map<String, Definition> attributes;
 
@@ -55,9 +57,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/** Stores RPSlots definitions */
 	private Map<String, Definition> rpslots;
 
+	/** Stores RPLink definitions */
+	private Map<String, Definition> rplinks;
+
 	/**
-	 * Constructor
-	 * Only used in serialization.
+	 * Constructor Only used in serialization.
 	 */
 	public RPClass() {
 		name = null;
@@ -67,13 +71,14 @@ public class RPClass implements marauroa.common.net.Serializable {
 		attributes = new HashMap<String, Definition>();
 		rpevents = new HashMap<String, Definition>();
 		rpslots = new HashMap<String, Definition>();
+		rplinks= new HashMap<String, Definition>();
 	}
 
 	/**
-	 * Constructor.
-	 * It adds the RPClass to a global list of rp classes.
+	 * Constructor. It adds the RPClass to a global list of rp classes.
 	 *
-	 * @param name the class name
+	 * @param name
+	 *            the class name
 	 */
 	public RPClass(String name) {
 		this();
@@ -83,8 +88,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		/* Any class stores these attributes. */
 		add(DefinitionClass.ATTRIBUTE, "id", Type.INT, Definition.STANDARD);
 		add(DefinitionClass.ATTRIBUTE, "zoneid", Type.STRING, Definition.HIDDEN);
-		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT,
-		        (byte) (Definition.HIDDEN | Definition.VOLATILE));
+		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT, (byte) (Definition.HIDDEN | Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
 
 		rpClassList.put(name, this);
@@ -92,7 +96,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns true if the global list contains the name rpclass
-	 * @param name the class name to query
+	 *
+	 * @param name
+	 *            the class name to query
 	 * @return true if the global list contains the name rpclass
 	 */
 	public static boolean hasRPClass(String name) {
@@ -101,7 +107,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the name rpclass from the global list
-	 * @param name the name of the class
+	 *
+	 * @param name
+	 *            the name of the class
 	 * @return the class or null if it doesn't exist.
 	 */
 	public static RPClass getRPClass(String name) {
@@ -110,7 +118,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * This method sets the parent of this rpclass
-	 * @param parent the super class of this class.
+	 *
+	 * @param parent
+	 *            the super class of this class.
 	 */
 	public void isA(RPClass parent) {
 		this.parent = parent;
@@ -118,7 +128,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * This method sets the parent of this rpclass
-	 * @param parent the super class of this class.
+	 *
+	 * @param parent
+	 *            the super class of this class.
 	 */
 	public void isA(String parent) {
 		this.parent = getRPClass(parent);
@@ -127,8 +139,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * This method returns true if it is a subclass of parentClass or if it is
 	 * the class itself.
-	 * @param parentClass the super class of this class
-	 * @return true if it is a subclass of parentClass or if it is the class itself.
+	 *
+	 * @param parentClass
+	 *            the super class of this class
+	 * @return true if it is a subclass of parentClass or if it is the class
+	 *         itself.
 	 */
 	public boolean subclassOf(String parentClass) {
 		if (!hasRPClass(parentClass)) {
@@ -146,6 +161,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the name of the rpclass
+	 *
 	 * @return the name of the rpclass
 	 */
 	public String getName() {
@@ -167,35 +183,68 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Adds a definition of an attribute, event or slot with the given type and flags.
-	 * @param clazz type of definition ( attribute, event or slot )
-	 * @param name name of the definition
-	 * @param type type or capacity if it is an slot
-	 * @param flags like visibility, storability, etc...
+	 * Adds a definition of an attribute with the given type and
+	 * flags.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @param type
+	 *            type or capacity if it is an slot
+	 * @param flags
+	 *            like visibility, storability, etc...
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, Type type, byte flags) {
+		if (clazz != DefinitionClass.ATTRIBUTE) {
+			throw new SyntaxException(name);
+		}
+
+		Definition def = Definition.defineAttribute(name, type, flags);
+		attributes.put(name, def);
+
+		def.setCode(getValidCode(name));
+	}
+
+	/**
+	 * Adds a definition of an event or rplink with the given flags.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void add(Definition.DefinitionClass clazz, String name, byte flags) {
 		Definition def = null;
 		switch (clazz) {
-			case ATTRIBUTE:
-				def = Definition.defineAttribute(name, type, flags);
-				attributes.put(name, def);
-				break;
-			case RPEVENT:
-				def = Definition.defineEvent(name, type, flags);
-				rpevents.put(name, def);
-				break;
-			default:
-				throw new SyntaxException(name);
+		case RPLINK:
+			def = Definition.defineEvent(name, flags);
+			rplinks.put(name, def);
+			break;
+		case RPEVENT:
+			def = Definition.defineEvent(name, flags);
+			rpevents.put(name, def);
+			break;
+		default:
+			throw new SyntaxException(name);
 		}
 		def.setCode(getValidCode(name));
 	}
 
 	/**
-	 * Adds a definition of an attribute, event or slot with the given type and flags.
-	 * @param clazz type of definition ( attribute, event or slot )
-	 * @param name name of the definition
-	 * @param capacity capacity if it is an slot
-	 * @param flags like visibility, storability, etc...
+	 * Adds a definition of an slot with the given capacity and
+	 * flags.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @param capacity
+	 *            capacity if it is an slot
+	 * @param flags
+	 *            like visibility, storability, etc...
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, byte capacity, byte flags) {
 		if (clazz != DefinitionClass.RPSLOT) {
@@ -209,15 +258,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Adds a static definition of an attribute that will be set for any object of the
-	 * class.
-	 * Its value must be set as a string, but it can be accessed later using Attributes.get method.
-	 * NOTE: This type of attributes can't be set.
+	 * Adds a static definition of an attribute that will be set for any object
+	 * of the class. Its value must be set as a string, but it can be accessed
+	 * later using Attributes.get method. NOTE: This type of attributes can't be
+	 * set.
 	 *
-	 * @param clazz It must be DefinitionClass.STATIC
-	 * @param name name of the static attribute
-	 * @param value value of the attribute
-	 * @param flags like visibility, storability, etc...
+	 * @param clazz
+	 *            It must be DefinitionClass.STATIC
+	 * @param name
+	 *            name of the static attribute
+	 * @param value
+	 *            value of the attribute
+	 * @param flags
+	 *            like visibility, storability, etc...
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, String value, byte flags) {
 		if (clazz != DefinitionClass.STATIC) {
@@ -233,26 +286,33 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * Returns the definition object itself.
 	 *
-	 * @param clazz type of definition ( attribute, event or slot )
-	 * @param name name of the definition
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
 	 * @return this definition object or null if it is not found
 	 */
 	public Definition getDefinition(Definition.DefinitionClass clazz, String name) {
 		Definition def = null;
 
 		switch (clazz) {
-			case STATIC:
-				def = staticattributes.get(name);
-				break;
-			case ATTRIBUTE:
-				def = attributes.get(name);
-				break;
-			case RPEVENT:
-				def = rpevents.get(name);
-				break;
-			case RPSLOT:
-				def = rpslots.get(name);
-				break;
+		case STATIC:
+			def = staticattributes.get(name);
+			break;
+		case ATTRIBUTE:
+			def = attributes.get(name);
+			break;
+		case RPEVENT:
+			def = rpevents.get(name);
+			break;
+		case RPSLOT:
+			def = rpslots.get(name);
+			break;
+		case RPLINK:
+			def=rplinks.get(name);
+			break;
+		default:
+			throw new SyntaxException("Class not found: "+clazz);
 		}
 
 		if (def == null && parent != null) {
@@ -263,12 +323,16 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Returns the code of the attribute/event/slot whose name is name for this rpclass
-
-	 * @param clazz type of definition ( attribute, event or slot )
-	 * @param name name of the definition
+	 * Returns the code of the attribute/event/slot whose name is name for this
+	 * rpclass
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
 	 * @return definition code
-	 * @throws SyntaxException if the definition is not found.
+	 * @throws SyntaxException
+	 *             if the definition is not found.
 	 */
 	public short getCode(Definition.DefinitionClass clazz, String name) {
 		Definition def = getDefinition(clazz, name);
@@ -286,24 +350,33 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the name of the attribute whose code is code for this rpclass
-	 * @param clazz type of definition ( attribute, event or slot )
-	 * @param code definition code
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param code
+	 *            definition code
 	 * @return name of the definition
-	 * @throws SyntaxException if the definition is not found.
+	 * @throws SyntaxException
+	 *             if the definition is not found.
 	 */
 	public String getName(Definition.DefinitionClass clazz, short code) {
 		Map<String, Definition> list = null;
 
 		switch (clazz) {
-			case ATTRIBUTE:
-				list = attributes;
-				break;
-			case RPEVENT:
-				list = rpevents;
-				break;
-			case RPSLOT:
-				list = rpslots;
-				break;
+		case ATTRIBUTE:
+			list = attributes;
+			break;
+		case RPEVENT:
+			list = rpevents;
+			break;
+		case RPSLOT:
+			list = rpslots;
+			break;
+		case RPLINK:
+			list=rplinks;
+			break;
+		default:
+			throw new SyntaxException("Class not found: "+clazz);
 		}
 
 		if (list == null) {
@@ -326,8 +399,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Serialize the object into the output
-	 * @param out the output serializer
-	 * @throws IOException if there is any problem serializing.
+	 *
+	 * @param out
+	 *            the output serializer
+	 * @throws IOException
+	 *             if there is any problem serializing.
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		out.write(name);
@@ -343,6 +419,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		list.add(attributes);
 		list.add(rpslots);
 		list.add(rpevents);
+		list.add(rplinks);
 		list.add(staticattributes);
 
 		for (Map<String, Definition> definitions : list) {
@@ -356,11 +433,13 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Fill the object from data deserialized from the serializer
-	 * @param in input serializer
-	 * @throws IOException if there is any problem in the serialization.
+	 *
+	 * @param in
+	 *            input serializer
+	 * @throws IOException
+	 *             if there is any problem in the serialization.
 	 */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		name = in.readString();
 
 		byte parentPresent = in.readByte();
@@ -372,6 +451,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		list.add(attributes);
 		list.add(rpslots);
 		list.add(rpevents);
+		list.add(rplinks);
 		list.add(staticattributes);
 
 		for (Map<String, Definition> definitions : list) {
@@ -387,6 +467,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Iterates over the global list of rpclasses
+	 *
 	 * @return an iterator
 	 */
 	public static Iterator<RPClass> iterator() {
@@ -395,6 +476,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the size of the rpclass global list
+	 *
 	 * @return number of defined classes.
 	 */
 	public static int size() {
@@ -402,8 +484,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * We need a default class for some cases where attributes used are not known
-	 * at compile time.
+	 * We need a default class for some cases where attributes used are not
+	 * known at compile time.
 	 */
 	static RPClass defaultRPClass;
 
@@ -428,7 +510,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 					def.setName(name);
 					def.setType(Type.STRING);
 					/*
-					 * On Default RPClass we assume that strings that start with # are hidden.
+					 * On Default RPClass we assume that strings that start with #
+					 * are hidden.
 					 */
 					if (name.startsWith("#")) {
 						def.setFlags(Definition.HIDDEN);
@@ -477,7 +560,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns true if two objects are exactly equal
-	 * @param ot the object to compare with this one.
+	 *
+	 * @param ot
+	 *            the object to compare with this one.
 	 */
 	@Override
 	public boolean equals(Object ot) {
@@ -487,11 +572,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		RPClass otc = (RPClass) ot;
 
-		boolean result = name.equals(otc.name)
-		        && (parent == otc.parent || parent.equals(otc.parent))
-		        && staticattributes.equals(otc.staticattributes)
-		        && attributes.equals(otc.attributes) && rpevents.equals(otc.rpevents)
-		        && rpslots.equals(otc.rpslots);
+		boolean result = name.equals(otc.name) && (parent == otc.parent || parent.equals(otc.parent))
+				&& staticattributes.equals(otc.staticattributes) && attributes.equals(otc.attributes)
+				&& rpevents.equals(otc.rpevents) && rpslots.equals(otc.rpslots);
 
 		return result;
 	}

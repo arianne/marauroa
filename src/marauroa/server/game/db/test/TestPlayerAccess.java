@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.9 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.10 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -35,18 +35,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test database methods that are related with player like adding a player, removing
- * it, changing its status, etc...
+ * Test database methods that are related with player like adding a player,
+ * removing it, changing its status, etc...
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestPlayerAccess {
 
 	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
-	 * JDBC Database and create a proper public constructor.
+	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
+	 * instead JDBC Database and create a proper public constructor.
+	 * 
 	 * @author miguel
-	 *
+	 * 
 	 */
 	static class TestJDBC extends JDBCDatabase {
 
@@ -59,6 +61,7 @@ public class TestPlayerAccess {
 
 	/**
 	 * Setup one time the database.
+	 * 
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -76,8 +79,9 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * Test if create a player account works by adding it and making sure that the account is
-	 * there using has method.
+	 * Test if create a player account works by adding it and making sure that
+	 * the account is there using has method.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -95,12 +99,13 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * We test the change password method by changing the password of a existing account
-	 * There is right now no simple way of checking the value, as we would need the
-	 * RSA key of the server to encript the password. ( and this is stored at marauroa.ini )
-	 *
+	 * We test the change password method by changing the password of a existing
+	 * account There is right now no simple way of checking the value, as we
+	 * would need the RSA key of the server to encript the password. ( and this
+	 * is stored at marauroa.ini )
+	 * 
 	 * @throws SQLException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
 	public void changePassword() throws SQLException, IOException {
@@ -114,13 +119,15 @@ public class TestPlayerAccess {
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
-			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username,
-			        "testPassword");
+			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username, "testPassword");
 			assertTrue(database.verify(transaction, login));
 
 			database.changePassword(transaction, username, "anewtestPassword");
 
-			/* To test if password is correct we need to use the Secure login test unit */
+			/*
+			 * To test if password is correct we need to use the Secure login
+			 * test unit
+			 */
 			login = TestSecureLogin.simulateSecureLogin(username, "anewtestPassword");
 			assertTrue(database.verify(transaction, login));
 
@@ -131,6 +138,7 @@ public class TestPlayerAccess {
 
 	/**
 	 * Test if adding two times the same player throw a SQLException
+	 * 
 	 * @throws SQLException
 	 */
 	@Test(expected = SQLException.class)
@@ -158,7 +166,9 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * Remove a player and check that it is not anymore at database with has method.
+	 * Remove a player and check that it is not anymore at database with has
+	 * method.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -178,8 +188,8 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * Check get status method.
-	 * Every account is active by default.
+	 * Check get status method. Every account is active by default.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -199,6 +209,7 @@ public class TestPlayerAccess {
 
 	/**
 	 * Check the set status method, it uses getStatus to check the set value.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -219,8 +230,9 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * Test if create a player account works by adding it and making sure that the account is
-	 * there using has method.
+	 * Test if create a player account works by adding it and making sure that
+	 * the account is there using has method.
+	 * 
 	 * @throws SQLException
 	 * @throws UnknownHostException
 	 */

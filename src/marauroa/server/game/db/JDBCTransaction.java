@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.11 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.12 2007/04/09 14:39:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,6 +22,7 @@ import marauroa.common.Log4J;
 
 /**
  * Implementation of a JDBC transaction for MySQL
+ *
  * @author miguel
  *
  */
@@ -34,7 +35,9 @@ public class JDBCTransaction implements Transaction {
 
 	/**
 	 * Constructor
-	 * @param connection associated database connection.
+	 *
+	 * @param connection
+	 *            associated database connection.
 	 */
 	public JDBCTransaction(Connection connection) {
 		this.connection = connection;
@@ -43,7 +46,8 @@ public class JDBCTransaction implements Transaction {
 	/**
 	 * Sets Connection
 	 *
-	 * @param connection  a Connection
+	 * @param connection
+	 *            a Connection
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
@@ -60,6 +64,7 @@ public class JDBCTransaction implements Transaction {
 
 	/**
 	 * Starts a transaction
+	 *
 	 * @throws SQLException
 	 */
 	public void begin() throws SQLException {
@@ -70,7 +75,8 @@ public class JDBCTransaction implements Transaction {
 	/**
 	 * commits the changes made to backstore.
 	 *
-	 * @throws SQLException if the underlaying backstore throws an Exception
+	 * @throws SQLException
+	 *             if the underlaying backstore throws an Exception
 	 */
 	public void commit() throws SQLException {
 		logger.debug("Commiting");
@@ -86,8 +92,9 @@ public class JDBCTransaction implements Transaction {
 	}
 
 	/**
-	 * Returns true if the transaction is still valid.
-	 * A transaction could stop to be valid because the associated connnection has been dropped.
+	 * Returns true if the transaction is still valid. A transaction could stop
+	 * to be valid because the associated connnection has been dropped.
+	 *
 	 * @return true if the transaction is valid.
 	 */
 	boolean isValid() {

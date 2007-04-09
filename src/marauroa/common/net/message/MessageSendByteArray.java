@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,8 +59,7 @@ public class MessageSendByteArray extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		hash = in.readByteArray();
 	}

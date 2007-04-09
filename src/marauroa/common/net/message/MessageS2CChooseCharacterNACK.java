@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterNACK.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterNACK.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.nio.channels.SocketChannel;
 /**
  * This message indicate the client that the server has rejected its
  * ChooseCharacter Message
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CChooseCharacterNACK extends Message {
@@ -30,7 +30,7 @@ public class MessageS2CChooseCharacterNACK extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
@@ -40,7 +40,7 @@ public class MessageS2CChooseCharacterNACK extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -54,11 +54,11 @@ public class MessageS2CChooseCharacterNACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
 		if (type != MessageType.S2C_CHOOSECHARACTER_NACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

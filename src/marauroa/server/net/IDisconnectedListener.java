@@ -1,4 +1,4 @@
-/* $Id: IDisconnectedListener.java,v 1.5 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: IDisconnectedListener.java,v 1.6 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -14,17 +14,19 @@ package marauroa.server.net;
 
 import java.nio.channels.SocketChannel;
 
-/** 
+/**
  * This interface provides a callback notification for disconnected clients.
  * 
  * @author miguel
- *
+ * 
  */
 public interface IDisconnectedListener {
 
-	/** 
+	/**
 	 * This method is called when a connection is closed.
-	 * @param channel the channel that was closed. 
+	 * 
+	 * @param channel
+	 *            the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel);
 

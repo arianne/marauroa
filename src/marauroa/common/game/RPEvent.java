@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.19 2007/03/23 20:39:16 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.20 2007/04/09 14:39:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,14 +19,14 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 /**
- * This class implements an event.
- * It is something that happens along the turn duration and it is hard to represent as an attribute
- * because it just happen and disappear after that or because it happens several times per turn.
+ * This class implements an event. It is something that happens along the turn
+ * duration and it is hard to represent as an attribute because it just happen
+ * and disappear after that or because it happens several times per turn.
  * <p>
  * One interesting example of this would be private chat.<br>
- * When you write private messages, it is added inside the target player, but you can't represent that
- * as an attribute because it two private chat messages happen at the same time, one of them would
- * be lost.
+ * When you write private messages, it is added inside the target player, but
+ * you can't represent that as an attribute because it two private chat messages
+ * happen at the same time, one of them would be lost.
  * <p>
  * So solution to this problem is add each them as RPEvent.
  * <p>
@@ -73,6 +73,7 @@ public class RPEvent extends Attributes {
 
 	/**
 	 * Set the owner of this RPEvent.
+	 *
 	 * @param owner
 	 */
 	public void setOwner(RPObject owner) {
@@ -81,6 +82,7 @@ public class RPEvent extends Attributes {
 
 	/**
 	 * Return the name of the event
+	 *
 	 * @return name of the event
 	 */
 	public String getName() {
@@ -93,8 +95,11 @@ public class RPEvent extends Attributes {
 
 	/**
 	 * Serialize
-	 * @param out the output serializer.
-	 * @param level the detail level of the serialization
+	 *
+	 * @param out
+	 *            the output serializer.
+	 * @param level
+	 *            the detail level of the serialization
 	 */
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
@@ -118,9 +123,11 @@ public class RPEvent extends Attributes {
 
 	/**
 	 * Deserialize
-	 * @param in the input serializer
+	 *
+	 * @param in
+	 *            the input serializer
 	 */
-	public void readObject(InputSerializer in) throws IOException, ClassNotFoundException {
+	public void readObject(InputSerializer in) throws IOException {
 		short code = in.readShort();
 
 		if (code == -1) {
@@ -144,7 +151,9 @@ public class RPEvent extends Attributes {
 
 	/**
 	 * Returns true if two objects are exactly equal
-	 * @param obj the object to compare with this one.
+	 *
+	 * @param obj
+	 *            the object to compare with this one.
 	 */
 	@Override
 	public boolean equals(Object obj) {

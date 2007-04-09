@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.55 2007/03/23 20:39:19 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.56 2007/04/09 14:39:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,112 +27,122 @@ import marauroa.server.game.Statistics;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
 
-/** 
- *  The launcher of the whole Marauroa Server.<br>
- *  Marauroa is an arianne server application with an UDP transport.<br>
- *  Marauroa works by loading core class from your game server.
- *  <p>
- *  Marauroa server is and it is built using threads. marauroad has the following set
- *  of threads:<ul>
- *  <li> 1 thread to receive data from clients
- *  <li> 1 thread to send data to clients
- *  <li> 1 thread to handle the data into server actions
- *  <li> 1 thread to handle RPG itself.
- *  </ul>
- *  
- *  To denote the active behavior of the thread classes their names include the word Manager.<br> 
- *  So marauroad has:<ul>
- *  <li> NetworkManager
- *  <li> GameManager
- *  <li> RPManager
- *  </ul>
- *  
- *  NetworkManager is the active thread that handles messages that come from the clients and 
- *  converts them from a stream of bytes to a real Message object. See the Message Types 
- *  document to understand what each message is for.<br>
- *  The pseudo code behind NetworkManager is:
- *  <pre>
- forever
- {
- Read stream from network
- Convert to a Message
- store in our queue
- }
+/**
+ * The launcher of the whole Marauroa Server.<br>
+ * Marauroa is an arianne server application with an UDP transport.<br>
+ * Marauroa works by loading core class from your game server.
+ * <p>
+ * Marauroa server is and it is built using threads. marauroad has the following
+ * set of threads:
+ * <ul>
+ * <li> 1 thread to receive data from clients
+ * <li> 1 thread to send data to clients
+ * <li> 1 thread to handle the data into server actions
+ * <li> 1 thread to handle RPG itself.
+ * </ul>
+ *
+ * To denote the active behavior of the thread classes their names include the
+ * word Manager.<br>
+ * So marauroad has:
+ * <ul>
+ * <li> NetworkManager
+ * <li> GameManager
+ * <li> RPManager
+ * </ul>
+ *
+ * NetworkManager is the active thread that handles messages that come from the
+ * clients and converts them from a stream of bytes to a real Message object.
+ * See the Message Types document to understand what each message is for.<br>
+ * The pseudo code behind NetworkManager is:
+ *
+ * <pre>
+ *   forever
+ *   {
+ *   Read stream from network
+ *   Convert to a Message
+ *   store in our queue
+ *   }
  * </pre>
- * 
- * One level (conceptually) over NetworkManager is the GameManager, this is the part of the 
- * server that handles everything so that we can make the server work. Its main task is to 
- * process messages from clients and modify the state on the server to reflect the reply to 
- * that action, mainly related to:<ul>
+ *
+ * One level (conceptually) over NetworkManager is the GameManager, this is the
+ * part of the server that handles everything so that we can make the server
+ * work. Its main task is to process messages from clients and modify the state
+ * on the server to reflect the reply to that action, mainly related to:
+ * <ul>
  * <li> Login
  * <li> Logout
  * <li> ChooseCharacter
  * <li> Actions
  * <li> Transfer Content
  * </ul>
- * 
- * See GameManager for a deeper understanding about what it does exactly.<br> 
- * The hardest part of the Manager is to consider all the special cases and all the exceptions
- *  that can happen. The main pseudo code of the GameManager, if we skip exceptions, is:
- *  <pre>
- forever
- {
- Wait for Message to be available
- 
- if(Message is Login)
- {
- check player.
- ask for character
- }
- 
- if(Message is Choose Character)
- {
- check character
- add to game
- }
- 
- if(Message is Action)
- {
- add action to game
- }
- 
- if(Message is Transfer Request ACK)
- {
- send client the content requested
- }
- 
- if(Message is Logout)
- {
- remove from game
- }
- }
- *  </pre>
- *  
- *  And finally RPManager is the active thread that keeps executing actions.<br>
- *  Marauroa is, as you know, turn based, so actions when received are queued for the next
- *  turn, and when that turn is reached all the actions pending on that turn are executed.
- *  <p>
- *  
- *  The idea in RPManager is to split up complexity as much as possible: we have 2 entities
- *  to help it: Scheduler and RuleManager.  
- *  <pre>
- forever
- {
- for each action scheduled for this turn
- {
- run action in RuleManager
- }
- 
- Send Perceptions
- 
- wait until turn is completed
- next turn
- }
- *  </pre>
- *  
- *  Scheduler handles the actions as they are sent by the GameManager.<br> 
- *  RuleManager is a class that encapsulates all the implementation related to rules.
- *    
+ *
+ * See GameManager for a deeper understanding about what it does exactly.<br>
+ * The hardest part of the Manager is to consider all the special cases and all
+ * the exceptions that can happen. The main pseudo code of the GameManager, if
+ * we skip exceptions, is:
+ *
+ * <pre>
+ *   forever
+ *   {
+ *   Wait for Message to be available
+ *
+ *   if(Message is Login)
+ *   {
+ *   check player.
+ *   ask for character
+ *   }
+ *
+ *   if(Message is Choose Character)
+ *   {
+ *   check character
+ *   add to game
+ *   }
+ *
+ *   if(Message is Action)
+ *   {
+ *   add action to game
+ *   }
+ *
+ *   if(Message is Transfer Request ACK)
+ *   {
+ *   send client the content requested
+ *   }
+ *
+ *   if(Message is Logout)
+ *   {
+ *   remove from game
+ *   }
+ *   }
+ * </pre>
+ *
+ * And finally RPManager is the active thread that keeps executing actions.<br>
+ * Marauroa is, as you know, turn based, so actions when received are queued for
+ * the next turn, and when that turn is reached all the actions pending on that
+ * turn are executed.
+ * <p>
+ *
+ * The idea in RPManager is to split up complexity as much as possible: we have
+ * 2 entities to help it: Scheduler and RuleManager.
+ *
+ * <pre>
+ *   forever
+ *   {
+ *   for each action scheduled for this turn
+ *   {
+ *   run action in RuleManager
+ *   }
+ *
+ *   Send Perceptions
+ *
+ *   wait until turn is completed
+ *   next turn
+ *   }
+ * </pre>
+ *
+ * Scheduler handles the actions as they are sent by the GameManager.<br>
+ * RuleManager is a class that encapsulates all the implementation related to
+ * rules.
+ *
  */
 public class marauroad extends Thread {
 
@@ -168,14 +178,12 @@ public class marauroad extends Thread {
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {
-				System.out
-				        .println("Marauroa - an open source multiplayer online framework for game development -");
+				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
 				System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 				System.out.println();
 				System.out.println("usage: [-c gamefile] [-l]");
-				System.out
-				        .println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+				System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
 				System.out.println("\t-h: print this help message");
 				System.exit(0);
@@ -185,8 +193,7 @@ public class marauroad extends Thread {
 	}
 
 	public static void main(String[] args) {
-		System.out
-		        .println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
 		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 		System.out.println();
@@ -202,8 +209,7 @@ public class marauroad extends Thread {
 		System.out.println();
 		System.out.println("You should have received a copy of the GNU General Public License");
 		System.out.println("along with this program; if not, write to the Free Software");
-		System.out
-		        .println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
 		// Initialize Loggging
 		Log4J.init("marauroa/server/log4j.properties");
@@ -278,10 +284,9 @@ public class marauroad extends Thread {
 			netMan.start();
 		} catch (Exception e) {
 			logger.fatal("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
-			        + "- You are already running a copy of Marauroa on the same TCP port\n"
-			        + "- You haven't specified a valid configuration file\n"
-			        + "- You haven't create database\n"
-			        + "- You have invalid username and password to connect to database\n", e);
+					+ "- You are already running a copy of Marauroa on the same TCP port\n"
+					+ "- You haven't specified a valid configuration file\n" + "- You haven't create database\n"
+					+ "- You have invalid username and password to connect to database\n", e);
 			return false;
 		}
 
@@ -290,30 +295,30 @@ public class marauroad extends Thread {
 			rpMan.start();
 		} catch (Exception e) {
 			logger
-			        .fatal(
-			                "Marauroa can't create RPServerManager.\n"
-			                        + "Reasons:\n"
-			                        + "- You haven't specified a valid configuration file\n"
-			                        + "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
-			                        + "- There may be an error in the Game startup method.\n", e);
+					.fatal(
+							"Marauroa can't create RPServerManager.\n"
+									+ "Reasons:\n"
+									+ "- You haven't specified a valid configuration file\n"
+									+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
+									+ "- There may be an error in the Game startup method.\n", e);
 			return false;
 		}
 
 		try {
-			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
-			        new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
-			                Configuration.getConfiguration().get("e")));
+			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
+					Configuration.getConfiguration().get("d")), new BigInteger(Configuration.getConfiguration()
+					.get("e")));
 
 			gameMan = new GameServerManager(key, netMan, rpMan);
 			gameMan.start();
 		} catch (Exception e) {
 			logger
-			        .fatal(
-			                "Marauroa can't create GameServerManager.\n"
-			                        + "Reasons:\n"
-			                        + "- You haven't specified a valid configuration file\n"
-			                        + "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
-			                e);
+					.fatal(
+							"Marauroa can't create GameServerManager.\n"
+									+ "Reasons:\n"
+									+ "- You haven't specified a valid configuration file\n"
+									+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
+							e);
 			return false;
 		}
 

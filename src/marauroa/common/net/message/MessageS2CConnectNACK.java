@@ -1,4 +1,4 @@
-/* $Id: MessageS2CConnectNACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CConnectNACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,12 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has rejected its Logout
- * Message
- * 
+ * This message indicate the client that the server has rejected its connection
+ * It will indicate that this client IP has been banned from server because:
+ * a) Bad behaviour
+ * b) Flooding server.
+ * c) Any other reason at server's admin discrection
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CConnectNACK extends Message {
@@ -30,7 +33,7 @@ public class MessageS2CConnectNACK extends Message {
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
@@ -40,7 +43,7 @@ public class MessageS2CConnectNACK extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -54,11 +57,11 @@ public class MessageS2CConnectNACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
 		if (type != MessageType.S2C_CONNECT_NACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

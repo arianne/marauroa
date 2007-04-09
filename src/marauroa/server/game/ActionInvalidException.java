@@ -1,12 +1,12 @@
 package marauroa.server.game;
 
-/** 
+/**
  * This exception is thrown when an action lacks of an important attribute like:
  * <ul>
  * <li>sourceid
  * <li>zoneid
  * </ul>
- * 
+ *
  * @author miguel
  *
  */

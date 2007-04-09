@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,8 @@ public class MessageS2CLoginSendKey extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the public key server is using.
+	 * Constructor with a TCP/IP source/destination of the message and the
+	 * public key server is using.
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
@@ -62,8 +63,8 @@ public class MessageS2CLoginSendKey extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login Send key) from (" + getAddress() + ") CONTENTS: (n:"
-		        + key.getN() + "\te:" + key.getE() + ")";
+		return "Message (S2C Login Send key) from (" + getAddress() + ") CONTENTS: (n:" + key.getN() + "\te:"
+				+ key.getE() + ")";
 	}
 
 	@Override
@@ -74,14 +75,13 @@ public class MessageS2CLoginSendKey extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		BigInteger n = new BigInteger(in.readByteArray());
 		BigInteger e = new BigInteger(in.readByteArray());
 		key = new RSAPublicKey(n, e);
 		if (type != MessageType.S2C_LOGIN_SENDKEY) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

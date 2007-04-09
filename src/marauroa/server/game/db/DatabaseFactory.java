@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.3 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: DatabaseFactory.java,v 1.4 2007/04/09 14:39:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,7 +46,9 @@ public class DatabaseFactory {
 	 * param.
 	 *
 	 * @param database_type
-	 *            A String containing the type of database
+	 *            A String containing the type of database. It should be the
+	 *            complete class name. ie: marauroa.server.game.db.JDBCDatabase
+	 *
 	 * @return A shared instance of PlayerDatabase
 	 */
 	public static IDatabase getDatabase(String database_type) throws NoDatabaseConfException {

@@ -18,10 +18,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test the secure login procedure in the same way. 
+ * Test the secure login procedure in the same way.
  * 
  * @author miguel
- *
+ * 
  */
 public class TestSecureLogin {
 
@@ -29,8 +29,9 @@ public class TestSecureLogin {
 
 	/**
 	 * Initialize the container.
-	 * @throws IOException 
-	 *
+	 * 
+	 * @throws IOException
+	 * 
 	 */
 	@BeforeClass
 	public static void setUp() throws IOException {
@@ -42,14 +43,15 @@ public class TestSecureLogin {
 	}
 
 	public static void loadRSAKey() throws IOException {
-		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
-		        Configuration.getConfiguration().get("d")), new BigInteger(Configuration
-		        .getConfiguration().get("e")));
+		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(Configuration
+				.getConfiguration().get("d")), new BigInteger(Configuration.getConfiguration().get("e")));
 	}
 
 	/**
-	 * This method suppose that you have an account already created with username testUsername and password password.
-	 * It test if verify works correctly with a correct account.
+	 * This method suppose that you have an account already created with
+	 * username testUsername and password password. It test if verify works
+	 * correctly with a correct account.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -62,8 +64,10 @@ public class TestSecureLogin {
 	}
 
 	/**
-	 * This method suppose that you have an account already created with username testUsername and password password.
-	 * It test if verify works correctly with a bad password.
+	 * This method suppose that you have an account already created with
+	 * username testUsername and password password. It test if verify works
+	 * correctly with a bad password.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -75,14 +79,13 @@ public class TestSecureLogin {
 	}
 
 	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password)
-	        throws SQLException {
+			throws SQLException {
 		byte[] serverNonce = Hash.random(Hash.hashLength());
 		byte[] clientNonce = Hash.random(Hash.hashLength());
 
 		byte[] clientNonceHash = Hash.hash(clientNonce);
 
-		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
-		        serverNonce);
+		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
 
 		byte[] b1 = Hash.xor(clientNonce, serverNonce);
 		if (b1 == null) {

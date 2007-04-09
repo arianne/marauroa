@@ -27,8 +27,8 @@ import org.junit.Test;
 public class TestAttributes {
 
 	/**
-	 * Test if methods put, has and get of attributes work as expected.
-	 * It add and attribute, then assert it is present and finally compare the values.
+	 * Test if methods put, has and get of attributes work as expected. It add
+	 * and attribute, then assert it is present and finally compare the values.
 	 * It also assert that a non added attribute doesn't exists.
 	 */
 	@Test
@@ -50,8 +50,8 @@ public class TestAttributes {
 	}
 
 	/**
-	 * Test if an attribute is removed when it is removed.
-	 * assert that the attribute is not longer there.
+	 * Test if an attribute is removed when it is removed. assert that the
+	 * attribute is not longer there.
 	 *
 	 */
 	@Test
@@ -70,14 +70,15 @@ public class TestAttributes {
 	}
 
 	/**
-	 * Test the serialization process of an attribute.
-	 * It serialize the attribute and then deserialize it and check they are the same.
+	 * Test the serialization process of an attribute. It serialize the
+	 * attribute and then deserialize it and check they are the same.
 	 *
-	 * @throws IOException if there is a problem serializing the data.
+	 * @throws IOException
+	 *             if there is a problem serializing the data.
 	 * @throws ClassNotFoundException
 	 */
 	@Test
-	public void testSerialization() throws IOException, ClassNotFoundException {
+	public void testSerialization() throws IOException {
 		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
 		attr.put("a", 1);
@@ -99,14 +100,16 @@ public class TestAttributes {
 	}
 
 	/**
-	 * Test the serialization process of an attribute with a defined RPClass
-	 * It serialize the attribute and then deserialize it and check they are the same.
+	 * Test the serialization process of an attribute with a defined RPClass It
+	 * serialize the attribute and then deserialize it and check they are the
+	 * same.
 	 *
-	 * @throws IOException if there is a problem serializing the data.
+	 * @throws IOException
+	 *             if there is a problem serializing the data.
 	 * @throws ClassNotFoundException
 	 */
 	@Test
-	public void testSerializationWithRPClass() throws IOException, ClassNotFoundException {
+	public void testSerializationWithRPClass() throws IOException {
 		RPClass clazz = new RPClass("A");
 
 		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
@@ -126,9 +129,9 @@ public class TestAttributes {
 		attr.put("d", 120);
 		attr.put("e", 15000);
 		attr
-		        .put(
-		                "f",
-		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
+				.put(
+						"f",
+						"This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
 		attr.put("g", "Toooooooo big to even test the limit");
 		attr.put("h", "");
 
@@ -146,21 +149,24 @@ public class TestAttributes {
 	}
 
 	/**
-	 * Assert that an exception is thrown when a long string is added on a string that can host up to 128 characters.
-	 * @throws IOException the expected exception
+	 * Assert that an exception is thrown when a long string is added on a
+	 * string that can host up to 128 characters.
+	 *
+	 * @throws IOException
+	 *             the expected exception
 	 * @throws ClassNotFoundException
 	 */
 	@Test(expected = IOException.class)
-	public void testSerializationException() throws IOException, ClassNotFoundException {
+	public void testSerializationException() throws IOException {
 		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
 		attr.put("a", 1);
 		attr.put("b", "2");
 		attr.put("c", 3.0);
 		attr
-		        .put(
-		                "d",
-		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
+				.put(
+						"d",
+						"a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
 		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -168,4 +174,29 @@ public class TestAttributes {
 
 		os.write(attr);
 	}
+
+	/**
+	 * Test equals method.
+	 *
+	 */
+	@Test
+	public void testEquals() {
+		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
+
+		attr.put("pepe", "");
+		attr.put("john", "");
+		attr.put("anton", "");
+
+		Attributes other = new Attributes(RPClass.getBaseRPObjectDefault());
+
+		other.put("pepe", "");
+		other.put("anton", "");
+		other.put("john", "");
+
+		System.out.println(attr);
+		System.out.println(other);
+
+		assertEquals(attr, other);
+	}
+
 }

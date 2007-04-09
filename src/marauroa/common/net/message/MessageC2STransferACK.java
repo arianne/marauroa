@@ -1,4 +1,4 @@
-/* $Id: MessageC2STransferACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2STransferACK.java,v 1.4 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,8 +17,10 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
-/** This message is for confirming server the content we want to be transfered to us.
- *  This way client can implement a cache system to save bandwidth.
+/**
+ * This message is for confirming server the content we want to be transfered to
+ * us. This way client can implement a cache system to save bandwidth.
+ *
  * @author miguel
  *
  */
@@ -31,20 +33,32 @@ public class MessageC2STransferACK extends Message {
 		super(MessageType.C2S_TRANSFER_ACK, null);
 	}
 
+	/**
+	 * Constructor with a TCP/IP source/destination of the message and a list of the contents
+	 * to confirm to server.
+	 *
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 * @param content
+	 * 			  the list of contents to confirm to server.
+	 */
 	public MessageC2STransferACK(SocketChannel source, List<TransferContent> content) {
 		super(MessageType.C2S_TRANSFER_ACK, source);
 
 		this.contents = content;
 	}
 
+	/**
+	 * Returns the list of contents that have been confirmed.
+	 * @return the list of contents that have been confirmed.
+	 */
 	public List<TransferContent> getContents() {
 		return contents;
 	}
 
 	@Override
 	public String toString() {
-		return "Message (C2S Transfer ACK) from (" + getAddress() + ") CONTENTS: ("
-		        + contents.size() + ")";
+		return "Message (C2S Transfer ACK) from (" + getAddress() + ") CONTENTS: (" + contents.size() + ")";
 	}
 
 	@Override
@@ -60,8 +74,7 @@ public class MessageC2STransferACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		int size = in.readInt();
@@ -74,7 +87,7 @@ public class MessageC2STransferACK extends Message {
 		}
 
 		if (type != MessageType.C2S_TRANSFER_ACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

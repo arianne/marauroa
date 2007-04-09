@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.8 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.9 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,8 +27,9 @@ import marauroa.common.game.RPObject;
  * many actions as it wants.
  * <p>
  * We have two turns: actual and next one.<br>
- * When we execute actions on actual turn, next turn become actual turn and the process repeat.
- * 
+ * When we execute actions on actual turn, next turn become actual turn and the
+ * process repeat.
+ *
  */
 public class RPScheduler {
 
@@ -53,12 +54,15 @@ public class RPScheduler {
 
 	/**
 	 * Add an RPAction to the scheduler for the next turn
-	 * @param object the object that casted the action.
-	 * @param action the RPAction to add.
-	 * @param ruleProcessor where the actions are going to checked. 
+	 *
+	 * @param object
+	 *            the object that casted the action.
+	 * @param action
+	 *            the RPAction to add.
+	 * @param ruleProcessor
+	 *            where the actions are going to checked.
 	 */
-	public synchronized boolean addRPAction(RPObject object, RPAction action,
-	        IRPRuleProcessor ruleProcessor) {
+	public synchronized boolean addRPAction(RPObject object, RPAction action, IRPRuleProcessor ruleProcessor) {
 		try {
 			List<RPAction> list = nextTurn.get(object);
 
@@ -73,16 +77,19 @@ public class RPScheduler {
 
 			return true;
 		} catch (Exception e) {
-			logger.error("cannot add action to RPScheduler, Action(" + action
-			        + ") is missing a required attributes", e);
+			logger
+					.error("cannot add action to RPScheduler, Action(" + action + ") is missing a required attributes",
+							e);
 			return false;
 		}
 	}
 
 	/**
-	 * This method clears the actions that may exist in actual turn or the next one for the 
-	 * giver object id.
-	 * @param object object to remove actions from.
+	 * This method clears the actions that may exist in actual turn or the next
+	 * one for the giver object id.
+	 *
+	 * @param object
+	 *            object to remove actions from.
 	 */
 	public synchronized void clearRPActions(RPObject object) {
 		nextTurn.remove(object);
@@ -92,7 +99,9 @@ public class RPScheduler {
 	/**
 	 * For each action in the actual turn, make it to be run in the
 	 * ruleProcessor.
-	 * @param ruleProcessor the class that really run the action.
+	 *
+	 * @param ruleProcessor
+	 *            the class that really run the action.
 	 */
 	public synchronized void visit(IRPRuleProcessor ruleProcessor) {
 		for (Map.Entry<RPObject, List<RPAction>> entry : actualTurn.entrySet()) {
@@ -116,7 +125,10 @@ public class RPScheduler {
 	public synchronized void nextTurn() {
 		++turn;
 
-		/* we cross-exchange the two turns and erase the contents of the next turn */
+		/*
+		 * we cross-exchange the two turns and erase the contents of the next
+		 * turn
+		 */
 		Map<RPObject, List<RPAction>> tmp = actualTurn;
 		actualTurn = nextTurn;
 		nextTurn = tmp;

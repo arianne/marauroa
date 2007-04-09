@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,14 +19,16 @@ import marauroa.common.game.RPObject;
 
 /**
  * This message indicate the client that the server has accepted its create
- * account Message
+ * character Message
  *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterACK extends Message {
 
+	/** The approved character name */
 	private String character;
 
+	/** the approved avatar configuration */
 	private RPObject template;
 
 	/** Constructor for allowing creation of an empty message */
@@ -35,10 +37,15 @@ public class MessageS2CCreateCharacterACK extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and approved character name and
+	 * avatar configuration.
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param character
+	 * 			  the character name
+	 * @param template
+	 * 			  the avatar configuration.
 	 */
 	public MessageS2CCreateCharacterACK(SocketChannel source, String character, RPObject template) {
 		super(MessageType.S2C_CREATECHARACTER_ACK, source);
@@ -48,6 +55,7 @@ public class MessageS2CCreateCharacterACK extends Message {
 
 	/**
 	 * Returns the name of the character the server finally assigned us.
+	 *
 	 * @return the name of the character the server finally assigned us.
 	 */
 	public String getCharacter() {
@@ -56,6 +64,7 @@ public class MessageS2CCreateCharacterACK extends Message {
 
 	/**
 	 * The modifications of the template that the server did.
+	 *
 	 * @return The modifications of the template that the server did.
 	 */
 	public RPObject getTemplate() {
@@ -80,15 +89,14 @@ public class MessageS2CCreateCharacterACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		character = in.readString();
 		template = (RPObject) in.readObject(new RPObject());
 
 		if (type != MessageType.S2C_CREATECHARACTER_ACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,8 +16,9 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicates the client that it is running an incompatible version of stendhal.
- * 
+ * This message indicates the client that it is running an incompatible version
+ * of marauroa.
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CInvalidMessage extends Message {
@@ -31,8 +32,9 @@ public class MessageS2CInvalidMessage extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and reason of the failure.
-	 * 
+	 * Constructor with a TCP/IP source/destination of the message and reason of
+	 * the failure.
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param reason
@@ -45,7 +47,7 @@ public class MessageS2CInvalidMessage extends Message {
 
 	/**
 	 * This method returns the reason
-	 * 
+	 *
 	 * @return the reason
 	 */
 	public String getReason() {
@@ -54,13 +56,12 @@ public class MessageS2CInvalidMessage extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Message Invalid) from (" + getAddress() + ") CONTENTS: (reason:"
-		        + reason + ")";
+		return "Message (S2C Message Invalid) from (" + getAddress() + ") CONTENTS: (reason:" + reason + ")";
 	}
 
 	@Override
@@ -70,13 +71,12 @@ public class MessageS2CInvalidMessage extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		reason = in.readString();
 
 		if (type != MessageType.S2C_INVALIDMESSAGE) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

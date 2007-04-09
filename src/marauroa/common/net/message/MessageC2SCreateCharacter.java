@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateCharacter.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateCharacter.java,v 1.4 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,14 +18,17 @@ import java.nio.channels.SocketChannel;
 import marauroa.common.game.RPObject;
 
 /**
- * This message indicate the server to create an account.
- * 
+ * This message indicate the server to create a character.
+ * In order to create a character you need to correctly login into the server with an account.
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SCreateCharacter extends Message {
 
+	/** Desired character name */
 	private String character;
 
+	/** Desired character configuration. */
 	private RPObject template;
 
 	/** Constructor for allowing creation of an empty message */
@@ -34,12 +37,16 @@ public class MessageC2SCreateCharacter extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character to create.
-	 * 
-	 * @param source The TCP/IP address associated to this message
-	 * @param character the desired character name
-	 * @param template a RPObject that contains attributes that will be used on the created character.
+	 * Constructor with a TCP/IP source/destination of the message and character name and character
+	 * configuration.
+	 *
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 * @param character
+	 *            the desired character name
+	 * @param template
+	 *            a RPObject that contains attributes that will be used on the
+	 *            created character.
 	 */
 	public MessageC2SCreateCharacter(SocketChannel source, String character, RPObject template) {
 		super(MessageType.C2S_CREATECHARACTER, source);
@@ -49,6 +56,7 @@ public class MessageC2SCreateCharacter extends Message {
 
 	/**
 	 * Returns the character name
+	 *
 	 * @return the character name
 	 */
 	public String getCharacter() {
@@ -57,6 +65,7 @@ public class MessageC2SCreateCharacter extends Message {
 
 	/**
 	 * Returns the object template
+	 *
 	 * @return the object template
 	 */
 	public RPObject getTemplate() {
@@ -65,13 +74,13 @@ public class MessageC2SCreateCharacter extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateCharacter) from (" + getAddress() + ") CONTENTS: (" + character
-		        + ";" + template + ")";
+		return "Message (C2S CreateCharacter) from (" + getAddress() + ") CONTENTS: (" + character + ";" + template
+				+ ")";
 	}
 
 	@Override
@@ -82,14 +91,13 @@ public class MessageC2SCreateCharacter extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		character = in.readString();
 		template = (RPObject) in.readObject(new RPObject());
 
 		if (type != MessageType.C2S_CREATECHARACTER) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

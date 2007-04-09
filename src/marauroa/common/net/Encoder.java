@@ -8,15 +8,26 @@ import marauroa.common.net.message.Message;
 /**
  * This class encode a Message as a stream of bytes.
  * Encoder follows singleton pattern.
+ *
  * @author miguel
  */
 public class Encoder {
 
+	/**
+	 * Constructor
+	 *
+	 */
 	private Encoder() {
 	}
 
+	/** the singleton instance */
 	private static Encoder instance;
 
+	/**
+	 * Returns an unique instance of encoder
+	 *
+	 * @return an unique instance of encoder
+	 */
 	public static Encoder get() {
 		if (instance == null) {
 			instance = new Encoder();
@@ -25,11 +36,15 @@ public class Encoder {
 		return instance;
 	}
 
-	/** 
-	 * This method encodes using the Marauroa protocol a Message as a stream of bytes.
-	 * @param msg The message to encode
-	 * @return a byte array 
-	 * @throws IOException if there is any error encoding the message.
+	/**
+	 * This method encodes using the Marauroa protocol a Message as a stream of
+	 * bytes.
+	 *
+	 * @param msg
+	 *            The message to encode
+	 * @return a byte array
+	 * @throws IOException
+	 *             if there is any error encoding the message.
 	 */
 	public byte[] encode(Message msg) throws IOException {
 		int size = 0;

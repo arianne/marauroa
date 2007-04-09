@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.12 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.13 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,9 +14,9 @@ package marauroa.common;
 
 /**
  * This class stores some constants about server timeout values.
- *
+ * 
  * @author miguel
- *
+ * 
  */
 public class TimeoutConf {
 
@@ -24,9 +24,10 @@ public class TimeoutConf {
 	final public static int SOCKET_TIMEOUT = 10;
 
 	/**
-	 * It is possible for a player to start login procedure but not complete it with a
-	 * hacked client and if connection is not closed, that player is taking a "slot" of
-	 * the game and so disallowing other real players to play.
+	 * It is possible for a player to start login procedure but not complete it
+	 * with a hacked client and if connection is not closed, that player is
+	 * taking a "slot" of the game and so disallowing other real players to
+	 * play.
 	 */
 	final public static long UNCOMPLETED_LOGIN_TIMEOUT = 60000;
 
@@ -48,7 +49,8 @@ public class TimeoutConf {
 	final public static int FAILED_LOGIN_ATTEMPS = 3;
 
 	/**
-	 * The amount of seconds until being able to retry login after N failed attemps.
+	 * The amount of seconds until being able to retry login after N failed
+	 * attemps.
 	 */
 	final public static long FAILED_LOGIN_BLOCKTIME = 60;
 }

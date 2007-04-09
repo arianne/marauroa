@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.17 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.18 2007/04/09 14:39:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,16 +14,15 @@ package marauroa.common.game;
 
 import java.util.Iterator;
 
-/** Interface for managing the objects in a RPZone.
- * An RPZone is a storage for objects, that has an unique per World associated id.
- * It <b>must</b> provide at least methods for:
- * * adding
- * * removing
- * * querying
- * * modifying
+/**
+ * Interface for managing the objects in a RPZone. An RPZone is a storage for
+ * objects, that has an unique per World associated id. It <b>must</b> provide
+ * at least methods for: * adding * removing * querying * modifying
  *
  * It almost provide methods that are called on load and on unload of the zone.
- * And finally it must provide Perception when asked by @See marauroa.server.game.rp.RPServerManager
+ * And finally it must provide Perception when asked by
+ *
+ * @see marauroa.server.game.rp.RPServerManager
  *
  * @author miguel
  */
@@ -36,7 +35,9 @@ public interface IRPZone extends Iterable<RPObject> {
 
 		/**
 		 * Constructor
-		 * @param zid the object id
+		 *
+		 * @param zid
+		 *            the object id
 		 */
 		public ID(String zid) {
 			id = zid;
@@ -54,13 +55,13 @@ public interface IRPZone extends Iterable<RPObject> {
 		/**
 		 * This method returns true of both ids are equal.
 		 *
-		 * @param anotherid another id object
+		 * @param anotherid
+		 *            another id object
 		 * @return true if they are equal, or false otherwise.
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			return (anotherid != null) && (anotherid instanceof IRPZone.ID)
-			        && (id.equals(((IRPZone.ID) anotherid).id));
+			return (anotherid != null) && (anotherid instanceof IRPZone.ID) && (id.equals(((IRPZone.ID) anotherid).id));
 		}
 
 		/** We need it for HashMap */
@@ -80,45 +81,49 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** Serialize the object into a stream of bytes. */
-		public void writeObject(marauroa.common.net.OutputSerializer out)
-		        throws java.io.IOException {
+		public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 			out.write(id);
 		}
 
 		/** Deserialize the object and fills this object with the data */
-		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
-		        java.lang.ClassNotFoundException {
+		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 			id = in.readString();
 		}
 	}
 
 	/**
 	 * Returns the ID of the zone
+	 *
 	 * @return zone id
 	 */
 	public ID getID();
 
 	/**
 	 * This method is called when the zone is created to popullate it
-	 * @throws Exception if there has been any problem loading zone
+	 *
+	 * @throws Exception
+	 *             if there has been any problem loading zone
 	 */
 	public void onInit() throws Exception;
 
 	/**
 	 * This method is called when the server finish to save the content of the
 	 * zone
-	 * @throws Exception if there has been any problem loading zone
+	 *
+	 * @throws Exception
+	 *             if there has been any problem loading zone
 	 */
 	public void onFinish() throws Exception;
 
 	/**
-	 * This method is called when object is serialized back from database to zone, so
-	 * you can define which subclass of RPObject we are going to use.
+	 * This method is called when object is serialized back from database to
+	 * zone, so you can define which subclass of RPObject we are going to use.
 	 * This implements a factory pattern.
 	 *
 	 * If you are not interested in this feature, just return the object
 	 *
-	 * @param object the original object
+	 * @param object
+	 *            the original object
 	 * @return the new instance of the object
 	 */
 	public RPObject factory(RPObject object);
@@ -126,7 +131,9 @@ public interface IRPZone extends Iterable<RPObject> {
 	/**
 	 * This method adds an object to the Zone. Object can be modified after this
 	 * methods and changes are expected to happen too in zone stored object.
-	 * @param object the object
+	 *
+	 * @param object
+	 *            the object
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException;
 
@@ -134,30 +141,37 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method tag an object of the Zone as modified. Object can be modified
 	 * after this methods and changes are expected to happen too in zone stored
 	 * object.
-	 * @param object the object
+	 *
+	 * @param object
+	 *            the object
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException;
 
 	/**
 	 * This method removed an object of the Zone and return it. Object can be
 	 * modified but it is not longer inside zone.
-	 * @param id the object identification
+	 *
+	 * @param id
+	 *            the object identification
 	 * @return the remove object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id);
 
 	/**
-	 * Hide an object from the perceptions, but it doesn't remove
-	 * it from world.
+	 * Hide an object from the perceptions, but it doesn't remove it from world.
 	 * Any further calls to modify will be ignored.
-	 * @param object the object to hide.
+	 *
+	 * @param object
+	 *            the object to hide.
 	 */
 	public void hide(RPObject object);
 
 	/**
-	 * Makes a hidden object to be visible again.
-	 * It will appear on the perception as an added object.
-	 * @param object the object to unhide.
+	 * Makes a hidden object to be visible again. It will appear on the
+	 * perception as an added object.
+	 *
+	 * @param object
+	 *            the object to unhide.
 	 */
 	public void unhide(RPObject object);
 
@@ -165,40 +179,51 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method returns an object of the Zone. Object can be modified after
 	 * this methods and changes are expected to happen too in zone stored
 	 * object.
-	 * @param id the object identification
+	 *
+	 * @param id
+	 *            the object identification
 	 * @return the remove object or null if it is not found.
 	 */
 	public RPObject get(RPObject.ID id);
 
 	/**
 	 * This method returns true if the object exists in the Zone
-	 * @param id the object identification
+	 *
+	 * @param id
+	 *            the object identification
 	 * @return true if object exists
 	 */
 	public boolean has(RPObject.ID id);
 
 	/**
 	 * Assigns a valid RPObject.ID to the object given as parameter
-	 * @param object the object
+	 *
+	 * @param object
+	 *            the object
 	 */
 	public void assignRPObjectID(RPObject object);
 
 	/**
 	 * Iterates over the elements of the zone
+	 *
 	 * @return an iterator over zone
 	 */
 	public Iterator<RPObject> iterator();
 
 	/**
 	 * Returns the number of elements of the zone
+	 *
 	 * @return the amount of objects that exists in the zone.
 	 */
 	public long size();
 
 	/**
 	 * This method return the perception of a zone for a player
-	 * @param id id of the player
-	 * @param type type of perception
+	 *
+	 * @param id
+	 *            id of the player
+	 * @param type
+	 *            type of perception
 	 * @return the perception
 	 */
 	public Perception getPerception(RPObject.ID id, byte type);

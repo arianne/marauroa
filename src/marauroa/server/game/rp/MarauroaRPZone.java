@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.18 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.19 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,52 +30,59 @@ import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.Transaction;
 
 /**
- * Default implementation of <code>IRPZone</code>.
- * This class implements the Delta� algorithm to save bandwidth.
+ * Default implementation of <code>IRPZone</code>. This class implements the
+ * Delta� algorithm to save bandwidth.
  * <p>
- * The idea behind the DPA is to avoid sending ALL the objects to a client each time,
- * but only those that have been modified. Imagine that we have 1000 objects, and only
- * Object 1 and Object 505 are active objects that are modified each turn.
+ * The idea behind the DPA is to avoid sending ALL the objects to a client each
+ * time, but only those that have been modified. Imagine that we have 1000
+ * objects, and only Object 1 and Object 505 are active objects that are
+ * modified each turn.
+ *
  * <pre>
- The Traditional method:
-
- - Get objects that our player should see ( 1000 objects )
- - Send them to player ( 1000 objects )
- - Next turn
- - Get objects that our player should see ( 1000 objects )
- - Send them to player
- - Next turn
- ...
+ *   The Traditional method:
+ *
+ *   - Get objects that our player should see ( 1000 objects )
+ *   - Send them to player ( 1000 objects )
+ *   - Next turn
+ *   - Get objects that our player should see ( 1000 objects )
+ *   - Send them to player
+ *   - Next turn
+ *   ...
  * </pre>
- * I hope you see the problem... we are sending objects that haven't changed each turn.
+ *
+ * I hope you see the problem... we are sending objects that haven't changed
+ * each turn.
+ *
  * <pre>
- The delta perception algorithm:
-
- - Get objects that our player should see ( 1000 objects )
- - Reduce the list to the modified ones ( 1000 objects )
- - Store also the objects that are not longer visible ( 0 objects )
- - Send them to player ( 1000 objects )
- - Next turn
- - Get objects that our player should see ( 1000 objects )
- - Reduce the list to the modified ones ( 2 objects )
- - Store also the objects that are not longer visible ( 0 objects )
- - Send them to player ( 2 objects )
- - Next turn
- ...
+ *   The delta perception algorithm:
+ *
+ *   - Get objects that our player should see ( 1000 objects )
+ *   - Reduce the list to the modified ones ( 1000 objects )
+ *   - Store also the objects that are not longer visible ( 0 objects )
+ *   - Send them to player ( 1000 objects )
+ *   - Next turn
+ *   - Get objects that our player should see ( 1000 objects )
+ *   - Reduce the list to the modified ones ( 2 objects )
+ *   - Store also the objects that are not longer visible ( 0 objects )
+ *   - Send them to player ( 2 objects )
+ *   - Next turn
+ *   ...
  * </pre>
+ *
  * The next step of the delta perception algorithm is pretty clear: delta2<br>
- * The idea is to send only what changes of the objects that changed.
- * This way we save even more bandwidth, making perceptions around 20% of the
- * original delta perception size.
+ * The idea is to send only what changes of the objects that changed. This way
+ * we save even more bandwidth, making perceptions around 20% of the original
+ * delta perception size.
  * <p>
- * The delta2 algorithm is based on four containers:<ul>
+ * The delta2 algorithm is based on four containers:
+ * <ul>
  * <li>List of added objects
  * <li>List of modified added attributes of objects
  * <li>List of modified deleted attributes of objects
  * <li>List of deleted objects
  * </ul>
- * To make perceptions work, it is important to call the modify method in RPZone,
- * so this way objects modified are stored in the modified list.
+ * To make perceptions work, it is important to call the modify method in
+ * RPZone, so this way objects modified are stored in the modified list.
  *
  * @author miguel
  */
@@ -90,8 +97,10 @@ public class MarauroaRPZone implements IRPZone {
 	/** Objects contained by the zone indexed by its id. */
 	protected Map<RPObject.ID, RPObject> objects;
 
-	/** Objects that has been modified on zone since last turn.
-	 *  This information is useful for Delta² algorithm. */
+	/**
+	 * Objects that has been modified on zone since last turn. This information
+	 * is useful for Delta² algorithm.
+	 */
 	private Map<RPObject.ID, RPObject> modified;
 
 	/** This is the perception for the actual turn. */
@@ -149,13 +158,14 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This method is called when object is serialized back from database to zone, so
-	 * you can define which subclass of RPObject we are going to use.
+	 * This method is called when object is serialized back from database to
+	 * zone, so you can define which subclass of RPObject we are going to use.
 	 * This implements a factory pattern.
 	 *
 	 * If you are not interested in this feature, just return the object
 	 *
-	 * @param object the original object
+	 * @param object
+	 *            the original object
 	 * @return the new instance of the object
 	 */
 	public RPObject factory(RPObject object) {
@@ -164,8 +174,11 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * This method adds an object to this zone.
-	 * @param object object to add.
-	 * @throws RPObjectInvalidException if it lacks of mandatory attributes.
+	 *
+	 * @param object
+	 *            object to add.
+	 * @throws RPObjectInvalidException
+	 *             if it lacks of mandatory attributes.
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException {
 		try {
@@ -183,11 +196,14 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This method notify zone that the object has been modified.
-	 * You should call it only once per turn, even if inside the turn you modify
-	 * it several times.
-	 * @param object object to modify.
-	 * @throws RPObjectInvalidException if it lacks of mandatory attributes.
+	 * This method notify zone that the object has been modified. You should
+	 * call it only once per turn, even if inside the turn you modify it several
+	 * times.
+	 *
+	 * @param object
+	 *            object to modify.
+	 * @throws RPObjectInvalidException
+	 *             if it lacks of mandatory attributes.
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
@@ -208,7 +224,9 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Removes the object from zone.
-	 * @param id identified of the removed object
+	 *
+	 * @param id
+	 *            identified of the removed object
 	 * @return the removed object
 	 */
 	public RPObject remove(RPObject.ID id) {
@@ -229,10 +247,11 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * Hide an object from the perceptions, but it doesn't remove
-	 * it from world.
+	 * Hide an object from the perceptions, but it doesn't remove it from world.
 	 * Any further calls to modify will be ignored.
-	 * @param object the object to hide.
+	 *
+	 * @param object
+	 *            the object to hide.
 	 */
 	public void hide(RPObject object) {
 		object.hide();
@@ -248,9 +267,11 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * Makes a hidden object to be visible again.
-	 * It will appear on the perception as an added object.
-	 * @param object the object to unhide.
+	 * Makes a hidden object to be visible again. It will appear on the
+	 * perception as an added object.
+	 *
+	 * @param object
+	 *            the object to unhide.
 	 */
 	public void unhide(RPObject object) {
 		object.unhide();
@@ -261,7 +282,9 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Returns the object which id is id.
-	 * @param id identified of the removed object
+	 *
+	 * @param id
+	 *            identified of the removed object
 	 * @return the object
 	 */
 	public RPObject get(RPObject.ID id) {
@@ -270,7 +293,9 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Returns true if the zone has that object.
-	 * @param id identified of the removed object
+	 *
+	 * @param id
+	 *            identified of the removed object
 	 * @return true if object exists.
 	 */
 	public boolean has(RPObject.ID id) {
@@ -279,7 +304,9 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * This method assigns a valid id to the object.
-	 * @param object the object that is going to obtain a new id
+	 *
+	 * @param object
+	 *            the object that is going to obtain a new id
 	 */
 	public void assignRPObjectID(RPObject object) {
 		RPObject.ID id = new RPObject.ID(++lastNonPermanentIdAssigned, zoneid);
@@ -292,7 +319,8 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * Iterates  over all the objects in the zone.
+	 * Iterates over all the objects in the zone.
+	 *
 	 * @return an iterator
 	 */
 	public Iterator<RPObject> iterator() {
@@ -301,12 +329,15 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Returns the perception of given type for that object.
-	 * @param id object whose perception we are going to build
-	 * @param type the type of perception:
-	 * <ul>
-	 * <li>SYNC
-	 * <li>DELTA
-	 * </ul>
+	 *
+	 * @param id
+	 *            object whose perception we are going to build
+	 * @param type
+	 *            the type of perception:
+	 *            <ul>
+	 *            <li>SYNC
+	 *            <li>DELTA
+	 *            </ul>
 	 */
 	public Perception getPerception(RPObject.ID id, byte type) {
 		if (type == Perception.DELTA) {
@@ -317,8 +348,7 @@ public class MarauroaRPZone implements IRPZone {
 					try {
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
-						logger.error("cannot add object to modified list (object is: ["
-						        + modified_obj + "])", e);
+						logger.error("cannot add object to modified list (object is: [" + modified_obj + "])", e);
 					}
 				}
 			}
@@ -351,6 +381,7 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * This method returns the amount of objects in the zone.
+	 *
 	 * @return amount of objects.
 	 */
 	public long size() {
@@ -358,9 +389,10 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This method prints the whole zone.
-	 * Handle it with care.
-	 * @param out the PrintStream where zone is printed.
+	 * This method prints the whole zone. Handle it with care.
+	 *
+	 * @param out
+	 *            the PrintStream where zone is printed.
 	 */
 	public void print(PrintStream out) {
 		for (RPObject object : objects.values()) {
@@ -369,8 +401,8 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This method moves zone from this turn to the next turn.
-	 * It is called by RPWorld.
+	 * This method moves zone from this turn to the next turn. It is called by
+	 * RPWorld.
 	 */
 	public void nextTurn() {
 		reset();

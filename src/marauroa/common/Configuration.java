@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.19 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.20 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,8 @@ public class Configuration {
 	 * This method defines the default configuration file for all the instances
 	 * of Configuration
 	 *
-	 * @param conf the location of the file
+	 * @param conf
+	 *            the location of the file
 	 */
 	public static void setConfigurationFile(String conf) {
 		relativeToHome = false;
@@ -56,9 +57,12 @@ public class Configuration {
 	 * This method defines the default configuration file for all the instances
 	 * of Configuration
 	 *
-	 * @param relativeToHome should this file be placed below the users home directory?
-	 * @param basedir directory prefix which is ignore in webstart environment
-	 * @param conf the location of the file
+	 * @param relativeToHome
+	 *            should this file be placed below the users home directory?
+	 * @param basedir
+	 *            directory prefix which is ignore in webstart environment
+	 * @param conf
+	 *            the location of the file
 	 */
 	public static void setConfigurationFile(boolean relativeToHome, String basedir, String conf) {
 		Configuration.relativeToHome = relativeToHome;
@@ -69,7 +73,8 @@ public class Configuration {
 	/**
 	 * Should the configuration be read from and write to a file?
 	 *
-	 * @param persistence true to use files, false otherwise
+	 * @param persistence
+	 *            true to use files, false otherwise
 	 */
 	public static void setConfigurationPersitance(boolean persistence) {
 		Configuration.persistence = persistence;
@@ -77,6 +82,7 @@ public class Configuration {
 
 	/**
 	 * Returns the name of the configuration file
+	 *
 	 * @return the name of the configuration file
 	 */
 	public static String getConfigurationFile() {
@@ -88,8 +94,7 @@ public class Configuration {
 			properties = new Properties();
 
 			if (persistence) {
-				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir,
-				        configurationFile);
+				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir, configurationFile);
 				properties.load(is);
 				is.close();
 			}
@@ -128,6 +133,7 @@ public class Configuration {
 
 	/**
 	 * This method returns true if the property exists.
+	 *
 	 * @param property
 	 * @return true if the property exists
 	 */
@@ -148,14 +154,14 @@ public class Configuration {
 			properties.put(property, value);
 
 			if (persistence) {
-				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir,
-				        configurationFile);
+				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir, configurationFile);
 				properties.store(os, null);
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " "
-			        + configurationFile, e);
+			logger
+					.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile,
+							e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
 		}

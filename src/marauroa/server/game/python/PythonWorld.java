@@ -1,4 +1,4 @@
-/* $Id: PythonWorld.java,v 1.5 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: PythonWorld.java,v 1.6 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,17 +12,33 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
-@Deprecated
+/**
+ * This class is a abstract class for you to inherit in in Python. You can
+ * implement onInit and onFinish methods to define the behaviour to do when
+ * server init and server shutdown.
+ * 
+ * @author miguel
+ * 
+ */
 public class PythonWorld {
-
+	/**
+	 * Constructor
+	 * 
+	 */
 	public PythonWorld() {
 	}
 
-	public boolean onInit() {
-		return false;
+	/**
+	 * Called on server start up
+	 * 
+	 */
+	public void onInit() {
 	}
 
-	public boolean onFinish() {
-		return false;
+	/**
+	 * Called on server shutdown
+	 * 
+	 */
+	public void onFinish() {
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendNonce.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendNonce.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,9 +18,9 @@ import java.nio.channels.SocketChannel;
 import marauroa.common.crypto.Hash;
 
 /**
- * This message indicate the server that the client wants to login and send the
- * needed info: username and password to login to server.
- * 
+ * This message indicate the client the choosen server NONCE value by sending it a
+ * hash of it.
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CLoginSendNonce extends MessageSendByteArray {
@@ -33,7 +33,7 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the name
 	 * of the choosen character.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param hash
@@ -45,16 +45,15 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 
 	@Override
 	public String toString() {
-		return "Message (S2C Login Send Nonce) from (" + getAddress() + ") CONTENTS: (nonce:"
-		        + Hash.toHexString(hash) + ")";
+		return "Message (S2C Login Send Nonce) from (" + getAddress() + ") CONTENTS: (nonce:" + Hash.toHexString(hash)
+				+ ")";
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		if (type != MessageType.S2C_LOGIN_SENDNONCE) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 

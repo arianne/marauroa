@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginRequestKey.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginRequestKey.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,13 +19,15 @@ import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client want the server to send his public RSA key.
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SLoginRequestKey extends Message {
 
+	/** Name of the game that the client is running */
 	private String game;
 
+	/** Version of the game that the client is running */
 	private String version;
 
 	/** Constructor for allowing creation of an empty message */
@@ -34,10 +36,12 @@ public class MessageC2SLoginRequestKey extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 * Constructor with a TCP/IP source/destination of the message and game name and version.
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param game the game name
+	 * @param version the version of the game.
 	 */
 	public MessageC2SLoginRequestKey(SocketChannel source, String game, String version) {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
@@ -45,17 +49,25 @@ public class MessageC2SLoginRequestKey extends Message {
 		this.version = version;
 	}
 
+	/**
+	 * Returns The name of the game
+	 * @return the name of the game
+	 */
 	public String getGame() {
 		return game;
 	}
 
+	/**
+	 * Returns the version of the game
+	 * @return the version of the game
+	 */
 	public String getVersion() {
 		return version;
 	}
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -71,14 +83,13 @@ public class MessageC2SLoginRequestKey extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		game = in.read255LongString();
 		version = in.read255LongString();
 
 		if (type != MessageType.C2S_LOGIN_REQUESTKEY) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

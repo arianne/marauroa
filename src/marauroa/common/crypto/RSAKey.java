@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.7 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: RSAKey.java,v 1.8 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,12 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * Implementation of a private RSA Key
+ *
+ * @author quisar
+ *
+ */
 public class RSAKey extends RSAPublicKey {
 
 	private BigInteger d;

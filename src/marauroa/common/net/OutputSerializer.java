@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.6 2007/03/23 20:39:16 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.7 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * OutputSerializer is used to serialize classes that implement the Serializable
  * interface into a OutputStream.
+ *
  */
 public class OutputSerializer {
 
@@ -26,7 +27,7 @@ public class OutputSerializer {
 
 	/**
 	 * Constructor that defines a specified OutputStream for the serializer
-	 * 
+	 *
 	 * @param out
 	 *            the OutputStream to which objects are serialized
 	 */
@@ -37,7 +38,7 @@ public class OutputSerializer {
 	/**
 	 * Add the Object to the serializer, if it implements the
 	 * marauroa.common.net.Serializable interface
-	 * 
+	 *
 	 * @param obj
 	 *            the object to serialize
 	 */
@@ -47,7 +48,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the byte to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the byte to serialize
 	 */
@@ -57,7 +58,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the byte array to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the byte array to serialize
 	 */
@@ -68,7 +69,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add a byte array whose size is smaller than 255 to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the byte array to serialize
 	 */
@@ -92,7 +93,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the short to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the short to serialize
 	 */
@@ -107,7 +108,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the int to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the int to serialize
 	 */
@@ -126,7 +127,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the float to the serializer
-	 * 
+	 *
 	 * @param a
 	 *            the int to serialize
 	 */
@@ -146,7 +147,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the String to the serializer, using UTF-8 encoding
-	 * 
+	 *
 	 * @param a
 	 *            the String to serialize
 	 */
@@ -156,7 +157,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add a short string to the serializer, using UTF-8 encoding
-	 * 
+	 *
 	 * @param a
 	 *            the String to serialize
 	 */
@@ -170,7 +171,7 @@ public class OutputSerializer {
 
 	/**
 	 * Add the String array to the serializer, using UTF-8 encoding
-	 * 
+	 *
 	 * @param a
 	 *            the String array to serialize
 	 */

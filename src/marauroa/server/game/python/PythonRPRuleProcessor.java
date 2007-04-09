@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.24 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.25 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -24,43 +23,55 @@ import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
-import marauroa.server.game.rp.RPWorld;
 
 /**
- * FIXME: TODO: Update this class. It is now broken. Document how to use it.
+ * Python implementation of IRPRuleProcessor. You can't inherit directly
+ * IRPRuleProcessor, so you need to inherit in your Python code the
+ * PythonRPRuleProcessor class.
+ * 
+ * You should set ruleprocessor in server.ini to this class.
+ * 
+ * @see IRPRuleProcessor
+ * 
+ * @author miguel
  */
-@SuppressWarnings("unused")
-@Deprecated
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(PythonRPRuleProcessor.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(PythonRPRuleProcessor.class);
 
+	/** The link with the python engine */
 	private GameScript gameScript;
 
+	/** Python implementation of IRPRuleProcessor */
 	private PythonRP pythonRP;
 
-	private RPServerManager rpman;
-
-	public PythonRPRuleProcessor() throws FileNotFoundException {
+	/**
+	 * Constructor
+	 * 
+	 */
+	public PythonRPRuleProcessor() {
 	}
 
 	/**
 	 * Set the context where the actions are executed.
-	 *
-	 * @param rpman the RP Manager object
+	 * 
+	 * @param rpman
+	 *            the RP Manager object
 	 */
 	public void setContext(RPServerManager rpman) {
 		try {
-			this.rpman = rpman;
-
 			gameScript = GameScript.getGameScript();
-			gameScript.setRPWorld(RPWorld.get());
 			pythonRP = gameScript.getGameRules();
+
+			pythonRP.setRPManager(rpman);
 		} catch (Exception e) {
 			logger.error("error while setting context", e);
 		}
+	}
+
+	public void beginTurn() {
+		pythonRP.beginTurn();
 	}
 
 	public boolean checkGameVersion(String game, String version) {
@@ -71,82 +82,32 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.createAccount(username, password, email);
 	}
 
-	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
-		return pythonRP.onActionAdd(action, actionList);
+	public CharacterResult createCharacter(String username, String character, RPObject template) {
+		return pythonRP.createCharacter(username, character, template);
 	}
 
-	public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList) {
-		return pythonRP.onIncompleteActionAdd(action, actionList);
-	}
-
-	/**
-	 * Execute an action in the name of a player.
-	 *
-	 * @param id
-	 *            the id of the object owner of the actions.
-	 * @param action
-	 *            the action to execute
-	 */
-	public void execute(RPObject.ID id, RPAction action) {
-		try {
-			pythonRP.execute(id, action);
-		} catch (Exception e) {
-			logger.error("error in execute()", e);
-		}
-	}
-
-	/** Notify it when a new turn happens */
-	synchronized public void endTurn() {
+	public void endTurn() {
 		pythonRP.endTurn();
-	}
-
-	synchronized public void beginTurn() {
-		pythonRP.beginTurn();
-	}
-
-	synchronized public boolean onInit(RPObject object) throws RPObjectInvalidException {
-		return pythonRP.onInit(object);
-	}
-
-	synchronized public boolean onExit(RPObject.ID id) {
-		try {
-			return pythonRP.onExit(id);
-		} catch (Exception e) {
-			logger.error("onExit() returned with an exeption", e);
-			return true;
-		}
-	}
-
-	synchronized public void onTimeout(RPObject.ID id) {
-		try {
-			pythonRP.onTimeout(id);
-		} catch (Exception e) {
-			logger.error("onTimeout() returned with an exeption", e);
-		}
-	}
-
-	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void execute(RPObject object, RPAction action) {
-		// TODO Auto-generated method stub
-
+		pythonRP.execute(object, action);
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
-		// TODO Auto-generated method stub
-		return false;
+		return pythonRP.onActionAdd(object, action, actionList);
 	}
 
-	public CharacterResult createCharacter(String username, String character, RPObject template) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
+		return pythonRP.onExit(object);
+	}
+
+	public boolean onInit(RPObject object) throws RPObjectInvalidException {
+		return pythonRP.onInit(object);
+	}
+
+	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		pythonRP.onTimeout(object);
 	}
 }

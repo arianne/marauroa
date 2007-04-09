@@ -3,7 +3,8 @@ package marauroa.server.net.flood;
 import java.nio.channels.SocketChannel;
 
 /**
- * Stores for each player the amount of messages and bytes send since the last timestamp.
+ * Stores for each player the amount of messages and bytes send since the last
+ * timestamp.
  *
  * @author miguel
  *
@@ -23,14 +24,16 @@ public class FloodMeasure {
 	public int sendBytes;
 
 	/** When this entry was created. */
-	private long starttimestamp;
+	public long starttimestamp;
 
 	/** Store how many times it has caused a flood warning. */
 	public int floodWarnings;
 
 	/**
 	 * Constructor
-	 * @param channel the associated resource to this measure object.
+	 *
+	 * @param channel
+	 *            the associated resource to this measure object.
 	 */
 	public FloodMeasure(SocketChannel channel) {
 		this.channel = channel;
@@ -52,6 +55,7 @@ public class FloodMeasure {
 
 	/**
 	 * Add a new message to the measure.
+	 *
 	 * @param length
 	 */
 	public void addMessage(int length) {
@@ -69,44 +73,60 @@ public class FloodMeasure {
 
 	/**
 	 * Return the amount of bytes per second the client sent.
+	 *
 	 * @return the amount of bytes per second the client sent.
 	 */
 	public int getBytesPerSecond() {
-		int seconds=(int)((System.currentTimeMillis()-lasttimestamp)/1000);
-		return sendBytes/seconds;
-    }
+		int seconds = (int) ((System.currentTimeMillis() - lasttimestamp) / 1000) + 1;
+		return sendBytes / seconds;
+	}
 
 	/**
 	 * Return the amount of messages per second the client sent.
+	 *
 	 * @return the amount of messages per second the client sent.
 	 */
 	public int getMessagesPerSecond() {
-		int seconds=(int)((System.currentTimeMillis()-lasttimestamp)/1000);
-	    return sendMessages/seconds;
-    }
+		int seconds = (int) ((System.currentTimeMillis() - lasttimestamp) / 1000) + 1;
+		return sendMessages / seconds;
+	}
 
 	/**
 	 * Return the amount of warnings done because of flood.
+	 *
 	 * @return the amount of warnings done because of flood.
 	 */
 	public int getWarnings() {
-	    return floodWarnings;
-    }
+		return floodWarnings;
+	}
 
 	/**
 	 * Return the number of seconds since the last reset.
+	 *
 	 * @return the number of seconds since the last reset.
 	 */
 	public int sinceLastReset() {
-		return (int)((System.currentTimeMillis()-lasttimestamp)/1000);
-    }
+		return (int) ((System.currentTimeMillis() - lasttimestamp) / 1000);
+	}
 
 	/**
 	 * Reset the number of warnings because of flood.
 	 *
 	 */
 	public void resetWarnings() {
-	    floodWarnings=0;
-	    
-    }
+		floodWarnings = 0;
+
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer os = new StringBuffer();
+		os.append("[");
+		os.append(" time: " + sinceLastReset());
+		os.append(" send bytes: " + sendBytes);
+		os.append(" send messages: " + sendMessages);
+		os.append("]");
+
+		return os.toString();
+	}
 }

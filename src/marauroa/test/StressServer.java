@@ -29,7 +29,7 @@ public class StressServer {
 
 	private static final int NUM_CLIENTS = 10;
 
-	private static final boolean DETACHED_SERVER = false;
+	private static final boolean DETACHED_SERVER = true;
 
 	private static MockMarauroad server;
 
@@ -47,7 +47,7 @@ public class StressServer {
 			}
 
 			/*
-			 * Ugly hack, but junit does runs test cases in parallel 
+			 * Ugly hack, but junit does runs test cases in parallel
 			 */
 			NetConst.tcpPort = PORT;
 
@@ -79,8 +79,8 @@ public class StressServer {
 						MockClient client = new MockClient("client.properties");
 
 						client.connect("localhost", PORT);
-						AccountResult resAcc = client.createAccount("testUsername" + i, "password",
-						        "email");
+
+  						AccountResult resAcc = client.createAccount("testUsername" + i, "password", "email");
 						assertEquals("testUsername" + i, resAcc.getUsername());
 
 						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);

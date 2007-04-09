@@ -50,8 +50,8 @@ public class TransferContentTest {
 
 	@Ignore
 	@Test
-	public final void testReadWriteREQ() throws IOException, ClassNotFoundException {
-		//TODO: You can't read if there is nothing written.
+	public final void testReadWriteREQ() throws IOException {
+		// TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -69,8 +69,8 @@ public class TransferContentTest {
 
 	@Ignore
 	@Test
-	public final void testReadWriteACK() throws IOException, ClassNotFoundException {
-		//TODO: You can't read if there is nothing written.
+	public final void testReadWriteACK() throws IOException {
+		// TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -87,8 +87,8 @@ public class TransferContentTest {
 
 	@Ignore
 	@Test
-	public final void testReadWriteFULL() throws IOException, ClassNotFoundException {
-		//TODO: You can't read if there is nothing written.
+	public final void testReadWriteFULL() throws IOException {
+		// TODO: You can't read if there is nothing written.
 		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

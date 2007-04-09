@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.7 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.8 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,9 +16,11 @@ package marauroa.server.game.db;
 import java.sql.SQLException;
 
 /**
- * This class represents a transaction which can be used to retrieve/store/change in Database.
+ * This class represents a transaction which can be used to
+ * retrieve/store/change in Database.
  * <p>
- * Different Database implementaions may requiere different implementations of this class.
+ * Different Database implementaions may requiere different implementations of
+ * this class.
  */
 public interface Transaction {
 
@@ -31,6 +33,7 @@ public interface Transaction {
 
 	/**
 	 * Starts a transaction
+	 *
 	 * @throws SQLException
 	 */
 	public void begin() throws SQLException;
@@ -38,14 +41,16 @@ public interface Transaction {
 	/**
 	 * commits the changes made to backstore.
 	 *
-	 * @throws SQLException if the underlaying backstore throws an Exception
+	 * @throws SQLException
+	 *             if the underlaying backstore throws an Exception
 	 */
 	public void commit() throws SQLException;
 
 	/**
 	 * Makes previous changes to backstore invalid
 	 *
-	 * @throws SQLException if the underlaying backstore throws an Exception
+	 * @throws SQLException
+	 *             if the underlaying backstore throws an Exception
 	 */
 	public void rollback() throws SQLException;
 }

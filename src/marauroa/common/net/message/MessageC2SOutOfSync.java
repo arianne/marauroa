@@ -1,4 +1,4 @@
-/* $Id: MessageC2SOutOfSync.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2SOutOfSync.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * The Logout Message is sent from client to server to indicate that it wants to
- * finish the session.
+ * If client gets out of sync with server because of a problem in communications, it can
+ * request server to send a sync data frame to recover synchronization with server.
  */
 public class MessageC2SOutOfSync extends Message {
 
@@ -27,9 +27,8 @@ public class MessageC2SOutOfSync extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
-	 * 
+	 * Constructor with a TCP/IP source/destination of the message
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
@@ -39,7 +38,7 @@ public class MessageC2SOutOfSync extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -53,11 +52,11 @@ public class MessageC2SOutOfSync extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
 		if (type != MessageType.C2S_OUTOFSYNC) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

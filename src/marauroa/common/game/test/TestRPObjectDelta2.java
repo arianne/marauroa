@@ -15,10 +15,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Test delta² algorithm
- * This test unit needs MarauroaRPZone and RPObject.
+ * Test delta² algorithm This test unit needs MarauroaRPZone and RPObject.
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestRPObjectDelta2 {
 
@@ -27,9 +27,9 @@ public class TestRPObjectDelta2 {
 	private MarauroaRPZone zone;
 
 	/**
-	 * Set up an object and create a zone that will contain it.
-	 * It doesn't add the object to the zone.
-	 *
+	 * Set up an object and create a zone that will contain it. It doesn't add
+	 * the object to the zone.
+	 * 
 	 */
 	@Before
 	public void createObject() {
@@ -79,16 +79,15 @@ public class TestRPObjectDelta2 {
 	/**
 	 * Test if adding a object to a zone works, by assigning object a correct id
 	 * and retriving object from zone.
-	 *
-	 * Also test that modifications to object after just adding it works as expected, that
-	 * means that modifications are irrelevant to delta²
-	 *
+	 * 
+	 * Also test that modifications to object after just adding it works as
+	 * expected, that means that modifications are irrelevant to delta²
+	 * 
 	 */
 	@Test
 	public void testAddObjectToZone() {
 		/*
-		 * Add object to zone
-		 * Test it has correct attributes values.
+		 * Add object to zone Test it has correct attributes values.
 		 */
 		zone.assignRPObjectID(obj);
 		assertTrue(obj.has("id"));
@@ -110,15 +109,14 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test hidden object concept.
-	 * It hide an object and then add it to zone, the object must not appear at the perception.
-	 *
+	 * Test hidden object concept. It hide an object and then add it to zone,
+	 * the object must not appear at the perception.
+	 * 
 	 */
 	@Test
 	public void testAddHiddenObjectToZone() {
 		/*
-		 * Add object to zone
-		 * Test it has correct attributes values.
+		 * Add object to zone Test it has correct attributes values.
 		 */
 		zone.assignRPObjectID(obj);
 		assertTrue(obj.has("id"));
@@ -146,16 +144,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test remove object from zone, by adding it and on the next turn removing it.
-	 *
+	 * Test remove object from zone, by adding it and on the next turn removing
+	 * it.
+	 * 
 	 */
 	@Test
 	public void testRemoveObjectFromZone() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 
@@ -169,17 +167,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test if adding an attribute to an object works as expected in Delta².
-	 * The change must appear at modified added list
-	 *
+	 * Test if adding an attribute to an object works as expected in Delta². The
+	 * change must appear at modified added list
+	 * 
 	 */
 	@Test
 	public void testAttributeAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -197,17 +194,15 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test attribute removal.
-	 * It must appear at modified deleted list.
-	 *
+	 * Test attribute removal. It must appear at modified deleted list.
+	 * 
 	 */
 	@Test
 	public void testAttributeRemoval() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -225,17 +220,15 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test attribute modification.
-	 * The change must appear at modified added.
-	 *
+	 * Test attribute modification. The change must appear at modified added.
+	 * 
 	 */
 	@Test
 	public void testAttributeModification() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -253,17 +246,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an added event in a object inside a slot works.
-	 * It must appear at modified added.
-	 *
+	 * Test that an added event in a object inside a slot works. It must appear
+	 * at modified added.
+	 * 
 	 */
 	@Test
 	public void testAddSlotEventAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -285,17 +277,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an modified attribute in a object inside a slot works.
-	 * It must appear at modified added.
-	 *
+	 * Test that an modified attribute in a object inside a slot works. It must
+	 * appear at modified added.
+	 * 
 	 */
 	@Test
 	public void testSlotObjectAttributeModification() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -315,17 +306,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an added attribute in a object inside a slot works.
-	 * It must appear at modified added.
-	 *
+	 * Test that an added attribute in a object inside a slot works. It must
+	 * appear at modified added.
+	 * 
 	 */
 	@Test
 	public void testSlotObjectAttributeAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -345,17 +335,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an removed attribute in a object inside a slot works.
-	 * It must appear at modified deleted.
-	 *
+	 * Test that an removed attribute in a object inside a slot works. It must
+	 * appear at modified deleted.
+	 * 
 	 */
 	@Test
 	public void testSlotObjectAttributeRemoval() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -375,17 +364,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an added object in a object inside a slot works.
-	 * It must appear at modified added.
-	 *
+	 * Test that an added object in a object inside a slot works. It must appear
+	 * at modified added.
+	 * 
 	 */
 	@Test
 	public void testSlotObjectAddition() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -407,17 +395,16 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * Test that an removed object in a object inside a slot works.
-	 * It must appear at modified deleted.
-	 *
+	 * Test that an removed object in a object inside a slot works. It must
+	 * appear at modified deleted.
+	 * 
 	 */
 	@Test
 	public void testSlotObjectRemoval() {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 		/*
@@ -439,8 +426,8 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * This is a KNOWN bug that happens when a object from a visible slot is removed
-	 * in the object that has cleared the visible attributes.
+	 * This is a KNOWN bug that happens when a object from a visible slot is
+	 * removed in the object that has cleared the visible attributes.
 	 */
 	@Ignore
 	@Test
@@ -448,8 +435,7 @@ public class TestRPObjectDelta2 {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 
@@ -480,16 +466,15 @@ public class TestRPObjectDelta2 {
 	}
 
 	/**
-	 * This test try to show a problem that could happen if you delete and add an object
-	 * on the same turn. It should work correctly.
+	 * This test try to show a problem that could happen if you delete and add
+	 * an object on the same turn. It should work correctly.
 	 */
 	@Test
 	public void testApplyDifferences() throws Exception {
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
 		/*
-		 * Next turn.
-		 * We want to clear Delta^2 data.
+		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
 

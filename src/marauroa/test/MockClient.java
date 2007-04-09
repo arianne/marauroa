@@ -51,7 +51,7 @@ public class MockClient extends ClientFramework {
 			return false;
 		}
 
-		public void onException(Exception e, MessageS2CPerception perception) throws Exception {
+		public void onException(Exception e, MessageS2CPerception perception) {
 			System.out.println("Got " + e + " when applying " + perception);
 			e.printStackTrace();
 		}
@@ -155,6 +155,14 @@ public class MockClient extends ClientFramework {
 	protected List<TransferContent> onTransferREQ(List<TransferContent> items) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void onPreviousLogins(List<String> previousLogins) {
+		System.out.println("Listing previous logins");
+		for(String line: previousLogins) {
+			System.out.println(line);
+		}
 	}
 
 }

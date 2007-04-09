@@ -1,4 +1,4 @@
-/* $Id: ByteCounterOutputStream.java,v 1.7 2007/03/23 20:39:16 arianne_rpg Exp $ */
+/* $Id: ByteCounterOutputStream.java,v 1.8 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,16 +15,20 @@ package marauroa.common.net;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/** This class just counts the bytes written into underlaying outputstream */
+/**
+ * This class just counts the bytes written into underlaying outputstream
+ */
 public class ByteCounterOutputStream extends OutputStream {
 
 	private OutputStream os;
 
 	private long bytesWritten;
 
-	/** 
+	/**
 	 * Constructor
-	 * @param os the output stream to count.
+	 *
+	 * @param os
+	 *            the output stream to count.
 	 */
 	public ByteCounterOutputStream(OutputStream os) {
 		if (os == null) {
@@ -48,6 +52,7 @@ public class ByteCounterOutputStream extends OutputStream {
 
 	/**
 	 * Returns the amount of bytes written.
+	 *
 	 * @return the amount of bytes written.
 	 */
 	public long getBytesWritten() {

@@ -7,17 +7,18 @@ import marauroa.common.game.RPObject;
 import org.junit.Test;
 
 /**
- * This class test the getDifferences and applyDifferences methods
- * used at the Delta² algorithm.
+ * This class test the getDifferences and applyDifferences methods used at the
+ * Delta² algorithm.
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestGetAndApplyDifferences {
 
 	/**
 	 * Test if the getDiferences of an empty object works, by building it again
 	 * using applyDifferences.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -37,9 +38,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an attribute added works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an attribute added works,
+	 * by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -60,9 +61,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an attribute modified works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an attribute modified
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -94,9 +95,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an attribute removed works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an attribute removed
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -128,9 +129,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an empty slot added works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an empty slot added
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -151,9 +152,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an empty slot removed works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an empty slot removed
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -190,9 +191,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an empty slot added works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an empty slot added
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -217,10 +218,10 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an slot with
-	 * an object and has another new object added works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an slot with an object
+	 * and has another new object added works, by building it again using
+	 * applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -264,10 +265,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an slot with
-	 * an object and it is modified works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an slot with an object
+	 * and it is modified works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -310,9 +310,10 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an slot with
-	 * an object and we remove an attribute of latter, works, by building it again
-	 * using applyDifferences.
+	 * Test if the getDiferences of an object that has an slot with an object
+	 * and we remove an attribute of latter, works, by building it again using
+	 * applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -355,9 +356,9 @@ public class TestGetAndApplyDifferences {
 	}
 
 	/**
-	 * Test if the getDiferences of an object that has an empty slot removed works, by building it again
-	 * using applyDifferences.
-	 *
+	 * Test if the getDiferences of an object that has an empty slot removed
+	 * works, by building it again using applyDifferences.
+	 * 
 	 * @throws Exception
 	 */
 	@Test

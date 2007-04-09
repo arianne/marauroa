@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.46 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.47 2007/04/09 14:39:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,22 +23,18 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
 /**
- * This class hosts a list of Attributes stored as pairs String=String.
- * There are some important things to remark on Attributes.
+ * This class hosts a list of Attributes stored as pairs String=String. There
+ * are some important things to remark on Attributes.
  * 1) This class is more than a Map, as it stores information like its class.
  * 2) It has several special attributes that should be handle with care like:
- *   - id
- *     It contains the unique per zone ( @Link marauroa.common.game.IRPZone ) identification of the object.
- *   - zoneid
- *     It contains the zone identification. Both id and zoneid uniquely identify an object on server runtime.
- *   - type
- *     It contains the name of the RPClass ( @Link marauroa.common.game.RPClass ) that defines this attributes object.
+ * - id It contains the unique per zone @Link {marauroa.common.game.IRPZone} identification of the object.
+ * - zoneid It contains the zone identification. Both id and zoneid uniquely identify an object on server runtime.
+ * - type It contains the name of the RPClass (@Link {marauroa.common.game.RPClass} that defines this attributes object.
  *
- * Attributes also features a part of the implementation of Delta^2 that try
- * to reduce data send to clients by just sending differences on the objects from a previous
- * state.
- * This mainly consists on sending which attributes has been added or modified and what
- * attributes has been deleted.
+ * Attributes also features a part of the implementation of Delta^2 that try to
+ * reduce data send to clients by just sending differences on the objects from a
+ * previous state. This mainly consists on sending which attributes has been
+ * added or modified and what attributes has been deleted.
  *
  * @author miguel
  */
@@ -57,8 +53,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	private Map<String, String> deleted;
 
 	/**
-	 * This method fills this object with data from the attributes object passed as param
-	 * @param attr the attribute object to use to fill this one.
+	 * This method fills this object with data from the attributes object passed
+	 * as param
+	 *
+	 * @param attr
+	 *            the attribute object to use to fill this one.
 	 * @return the object itself.
 	 */
 	public Object fill(Attributes attr) {
@@ -84,7 +83,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Constructor
-	 * @param rpclass class that this attribute belongs too.
+	 *
+	 * @param rpclass
+	 *            class that this attribute belongs too.
 	 */
 	public Attributes(RPClass rpclass) {
 		rpClass = rpclass;
@@ -96,7 +97,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * This method sets the RPClass of this attributes
-	 * @param rpclass the rp class
+	 *
+	 * @param rpclass
+	 *            the rp class
 	 */
 	public void setRPClass(RPClass rpclass) {
 		rpClass = rpclass;
@@ -104,6 +107,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Returns the RPClass of the attributes
+	 *
 	 * @return the object RPClass
 	 */
 	public RPClass getRPClass() {
@@ -111,8 +115,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * This method returns true if this attributes is an instance of RPClass or any of its subclasses
-	 * @param baseclass the class we want to know if we are instance of.
+	 * This method returns true if this attributes is an instance of RPClass or
+	 * any of its subclasses
+	 *
+	 * @param baseclass
+	 *            the class we want to know if we are instance of.
 	 * @return true if it is an instance of class
 	 */
 	public boolean instanceOf(RPClass baseclass) {
@@ -121,6 +128,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Returns true if the attributes contains nothing.
+	 *
 	 * @return true if is empty
 	 */
 	public boolean isEmpty() {
@@ -129,6 +137,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Returns the number of attributes contained.
+	 *
 	 * @return amount of attributes
 	 */
 	public int size() {
@@ -157,8 +166,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This method set the value of an attribute
 	 *
-	 * @param attribute the attribute to be set.
-	 * @param value the value we want to set.
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
 	 */
 	public void put(String attribute, String value) {
 		/* This is for Delta-delta feature */
@@ -168,9 +179,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Adds value to a previously existing attribute or just put it if it doesn't exist.
-	 * @param attribute the attribute to be set.
-	 * @param value the value we want to set.
+	 * Adds value to a previously existing attribute or just put it if it
+	 * doesn't exist.
+	 *
+	 * @param attribute
+	 *            the attribute to be set.
+	 * @param value
+	 *            the value we want to set.
 	 */
 	public void add(String attribute, int value) {
 		if (!has(attribute)) {
@@ -219,15 +234,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This methods return the value of an attribute
 	 *
-	 * @param attribute the attribute we want to get
+	 * @param attribute
+	 *            the attribute we want to get
 	 * @return the value of the attribute
 	 */
 	public String get(String attribute) {
 		String value = content.get(attribute);
 
 		if (value == null) {
-			/* If instance doesn't have the attribute, check if RPClass
-			 * has it as a static attribute.
+			/*
+			 * If instance doesn't have the attribute, check if RPClass has it
+			 * as a static attribute.
 			 */
 			Definition def = rpClass.getDefinition(DefinitionClass.STATIC, attribute);
 			return def.getValue();
@@ -239,7 +256,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This methods return the value of an attribute
 	 *
-	 * @param attribute the attribute we want to get
+	 * @param attribute
+	 *            the attribute we want to get
 	 * @return the value of the attribute
 	 */
 	public int getInt(String attribute) {
@@ -254,7 +272,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This methods return the value of an attribute
 	 *
-	 * @param attribute the attribute we want to get
+	 * @param attribute
+	 *            the attribute we want to get
 	 * @return the value of the attribute
 	 */
 	public double getDouble(String attribute) {
@@ -269,7 +288,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This methods return the value of an attribute
 	 *
-	 * @param attribute the attribute we want to get
+	 * @param attribute
+	 *            the attribute we want to get
 	 * @return the value of the attribute
 	 */
 	public List<String> getList(String attribute) {
@@ -284,17 +304,23 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This methods remove the attribute from the container
 	 *
-	 * @param attribute the attribute we want to remove
+	 * @param attribute
+	 *            the attribute we want to remove
 	 * @return the value of the attribute
 	 */
 	public String remove(String attribute) {
 		String has = added.remove(attribute);
-		/*  We remove from added and if it has been added and remove we tell nothing about the attribute.
-		 *  But if it was not found, we add it to deleted
+		/*
+		 * We remove from added and if it has been added and remove we tell
+		 * nothing about the attribute. But if it was not found, we add it to
+		 * deleted
 		 */
 		if (has == null) {
-			/* This is for Delta^2 feature, as if it is empty it fails.
-			 * It must be 0 because if attribute is a number it would fail on the serialization */
+			/*
+			 * This is for Delta^2 feature, as if it is empty it fails. It must
+			 * be 0 because if attribute is a number it would fail on the
+			 * serialization
+			 */
 			deleted.put(attribute, "0");
 		}
 
@@ -304,13 +330,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * This method returns true of both object are equal.
 	 *
-	 * @param attr another Attributes object
+	 * @param attr
+	 *            another Attributes object
 	 * @return true if they are equal, or false otherwise.
 	 */
 	@Override
 	public boolean equals(Object attr) {
-		return (attr != null) && (attr instanceof Attributes)
-		        && content.equals(((Attributes) attr).content);
+		return (attr != null) && (attr instanceof Attributes) && content.equals(((Attributes) attr).content);
 	}
 
 	@Override
@@ -368,9 +394,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * This method serialize the object with the default level of detail, that removes
-	 *  private and hidden attributes
-	 *  @param out the output serializer
+	 * This method serialize the object with the default level of detail, that
+	 * removes private and hidden attributes
+	 *
+	 * @param out
+	 *            the output serializer
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
@@ -378,12 +406,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * This method serialize the object with the given level of detail.
-	 *  @param out the output serializer
-	 *  @param level the level of Detail
+	 *
+	 * @param out
+	 *            the output serializer
+	 * @param level
+	 *            the level of Detail
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
-	        throws java.io.IOException {
-		/* Obtains the number of attributes to serialize removing hidden and private attributes */
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
+		/*
+		 * Obtains the number of attributes to serialize removing hidden and
+		 * private attributes
+		 */
 		int size = 0;
 		for (String key : content.keySet()) {
 			if (shouldSerialize(DefinitionClass.ATTRIBUTE, key, level)) {
@@ -416,9 +449,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Returns true if the element should be serialized.
-	 * @param clazz Element definition type: ATTRIBUTE, RPSLOT or RPEVENT
-	 * @param key the name of the element to test.
-	 * @param level level of detail to serialize.
+	 *
+	 * @param clazz
+	 *            Element definition type: ATTRIBUTE, RPSLOT or RPEVENT
+	 * @param key
+	 *            the name of the element to test.
+	 * @param level
+	 *            level of detail to serialize.
 	 * @return true if it should be serialized.
 	 */
 	boolean shouldSerialize(DefinitionClass clazz, String key, DetailLevel level) {
@@ -428,21 +465,24 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Returns true if the attribute should be serialized.
-	 * @param def Attribute definition
-	 * @param level level of detail to serialize.
+	 *
+	 * @param def
+	 *            Attribute definition
+	 * @param level
+	 *            level of detail to serialize.
 	 * @return true if it should be serialized.
 	 */
 	boolean shouldSerialize(Definition def, DetailLevel level) {
-		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible())
-		        || (level == DetailLevel.FULL);
+		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL);
 	}
 
 	/**
 	 * Fills this object with the data that has been serialized.
-	 * @param in the input serializer
+	 *
+	 * @param in
+	 *            the input serializer
 	 */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		rpClass = RPClass.getRPClass(in.readString());
 		int size = in.readInt();
 
@@ -497,7 +537,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Fills this attribute with the added infomation of the Delta�.
-	 * @param attr the object whose added attributes we are going to copy.
+	 *
+	 * @param attr
+	 *            the object whose added attributes we are going to copy.
 	 */
 	public void setAddedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
@@ -521,7 +563,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Fills this attribute with the deleted infomation of the Delta�.
-	 * @param attr the object whose deleted attributes we are going to copy.
+	 *
+	 * @param attr
+	 *            the object whose deleted attributes we are going to copy.
 	 */
 	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;

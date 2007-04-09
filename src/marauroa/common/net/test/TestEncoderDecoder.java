@@ -20,15 +20,15 @@ import org.junit.Test;
 
 /**
  * Test the basic serialization schema.
- *
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestEncoderDecoder {
 
 	/**
-	 * Setup for class.
-	 * It initialize the logger instance
+	 * Setup for class. It initialize the logger instance
+	 * 
 	 * @throws Exception
 	 */
 	@BeforeClass
@@ -38,6 +38,7 @@ public class TestEncoderDecoder {
 
 	/**
 	 * Test encoding and decoding works when we use the data as a single chunk.
+	 * 
 	 * @throws IOException
 	 * @throws InvalidVersionException
 	 */
@@ -60,8 +61,10 @@ public class TestEncoderDecoder {
 
 		assertEquals(result.length, reencoded.length);
 
-		/** We verify the assertion by re encoding again the message.
-		 *  Message.equals(Object ) is NOT implemented. */
+		/**
+		 * We verify the assertion by re encoding again the message.
+		 * Message.equals(Object ) is NOT implemented.
+		 */
 		for (int i = 0; i < result.length; i++) {
 			assertEquals(result[i], reencoded[i]);
 		}
@@ -69,6 +72,7 @@ public class TestEncoderDecoder {
 
 	/**
 	 * Test that encoder and decoder works when we use several chunks of data.
+	 * 
 	 * @throws IOException
 	 * @throws InvalidVersionException
 	 */
@@ -105,8 +109,10 @@ public class TestEncoderDecoder {
 
 		assertEquals(result.length, reencoded.length);
 
-		/** We verify the assertion by re encoding again the message.
-		 *  Message.equals(Object ) is NOT implemented. */
+		/**
+		 * We verify the assertion by re encoding again the message.
+		 * Message.equals(Object ) is NOT implemented.
+		 */
 		for (int i = 0; i < result.length; i++) {
 			assertEquals(result[i], reencoded[i]);
 		}

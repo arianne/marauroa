@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.10 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.11 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,19 +28,17 @@ import marauroa.common.net.message.Message;
 
 /**
  * This is the basic implementation of a TCP network manager.
- *
+ * 
  * @author hendrik
  */
 public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(TCPNetworkClientManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(TCPNetworkClientManager.class);
 
 	/**
-	 * Server will assign us a clientid, so we store it so that we remind it for the messages
-	 * we send to server.
-	 * Client id is unique per session.
+	 * Server will assign us a clientid, so we store it so that we remind it for
+	 * the messages we send to server. Client id is unique per session.
 	 */
 	private int clientid;
 
@@ -62,7 +60,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	/** A instance of the thread that write messages to server. */
 	private NetworkClientManagerWrite writeManager;
 
-	/** List of already processed messages what the client will get using getMessage method. */
+	/**
+	 * List of already processed messages what the client will get using
+	 * getMessage method.
+	 */
 	private BlockingQueue<Message> processedMessages;
 
 	/**
@@ -72,7 +73,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	private Encoder encoder;
 
 	/**
-	 * An instance of the decoder class that will recreate a message from a stream of bytes.
+	 * An instance of the decoder class that will recreate a message from a
+	 * stream of bytes.
 	 */
 	private Decoder decoder;
 
@@ -84,8 +86,11 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
 	 * thread to recieve new messages from the network.
-	 * @param host the host where we connect to.
-	 * @param port the port of the server where we connect to.
+	 * 
+	 * @param host
+	 *            the host where we connect to.
+	 * @param port
+	 *            the port of the server where we connect to.
 	 * @throws IOException
 	 */
 	public TCPNetworkClientManager(String host, int port) throws IOException {
@@ -122,7 +127,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#finish()
 	 */
 	public void finish() {
@@ -147,7 +152,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getAddress()
 	 */
 	public InetSocketAddress getAddress() {
@@ -160,12 +165,14 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) throws InvalidVersionException {
-		/* As read of message is done in a different thread we lost the exception information,
-		 * so we store it in a variable and throw them now.
+		/*
+		 * As read of message is done in a different thread we lost the
+		 * exception information, so we store it in a variable and throw them
+		 * now.
 		 */
 		if (shouldThrowException) {
 			shouldThrowException = false;
@@ -182,7 +189,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
 	 */
 	public void addMessage(Message msg) {
@@ -190,7 +197,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	}
 
 	/**
-	 * Returns true if the connection is "connected" to server or false otherwise.
+	 * Returns true if the connection is "connected" to server or false
+	 * otherwise.
+	 * 
 	 * @return true if socket is connected.
 	 */
 	public boolean getConnectionState() {
@@ -202,15 +211,13 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 */
 	class NetworkClientManagerRead extends Thread {
 
-		private final marauroa.common.Logger logger = Log4J
-		        .getLogger(NetworkClientManagerRead.class);
+		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
 
 		/** We handle the data connection with the socket's input stream */
 		private InputStream is = null;
 
 		/**
-		 * Constructor.
-		 * This constructor doesn't start the thread.
+		 * Constructor. This constructor doesn't start the thread.
 		 */
 		public NetworkClientManagerRead() {
 			super("NetworkClientManagerRead");
@@ -223,22 +230,28 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 		/**
 		 * Decode a stream of bytes into a Message.
-		 * @param address address the message comes from.
-		 * @param data data that represent the serialized message
+		 * 
+		 * @param address
+		 *            address the message comes from.
+		 * @param data
+		 *            data that represent the serialized message
 		 * @throws IOException
 		 */
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data)
-		        throws IOException {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data) throws IOException {
 			try {
 				Message msg = decoder.decode(null, data);
 
-				/* If logger is enable, print the message so it shows useful debugging information. */
+				/*
+				 * If logger is enable, print the message so it shows useful
+				 * debugging information.
+				 */
 				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from "
-					        + msg.getClientID() + " full [" + msg + "]");
+					logger.debug("build message(type=" + msg.getType() + ") from " + msg.getClientID() + " full ["
+							+ msg + "]");
 				}
 
-				// Once server assign us a clientid, store it for future messages.
+				// Once server assign us a clientid, store it for future
+				// messages.
 				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
 					clientid = msg.getClientID();
 				}
@@ -254,8 +267,11 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 		/**
 		 * Keep reading from TCP stack until the whole Message has been read.
-		 * @return a byte stream representing the message or null if client has requested to exit.
-		 * @throws IOException if there is any problem reading.
+		 * 
+		 * @return a byte stream representing the message or null if client has
+		 *         requested to exit.
+		 * @throws IOException
+		 *             if there is any problem reading.
 		 */
 		private byte[] readByteStream() throws IOException {
 			byte[] sizebuffer = new byte[4];
@@ -265,8 +281,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				return null;
 			}
 
-			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8)
-			        + ((sizebuffer[2] & 0xFF) << 16) + ((sizebuffer[3] & 0xFF) << 24);
+			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8) + ((sizebuffer[2] & 0xFF) << 16)
+					+ ((sizebuffer[3] & 0xFF) << 24);
 
 			byte[] buffer = new byte[size];
 			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
@@ -318,7 +334,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 					storeMessage(address, buffer);
 				} catch (IOException e) {
-					//TODO: Notify upper layers about connection broken
+					// TODO: Notify upper layers about connection broken
 					/* Report the exception */
 					logger.debug("Connection broken.", e);
 					keepRunning = false;
@@ -334,8 +350,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	class NetworkClientManagerWrite {
 
 		/** the logger instance. */
-		private final marauroa.common.Logger logger = Log4J
-		        .getLogger(NetworkClientManagerWrite.class);
+		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
@@ -353,7 +368,9 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 		/**
 		 * Method that execute the writting
-		 * @param msg the message to send to server.
+		 * 
+		 * @param msg
+		 *            the message to send to server.
 		 */
 		public boolean write(Message msg) {
 			try {
@@ -362,15 +379,21 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					msg.setSocketChannel(null);
 					msg.setClientID(clientid);
 
-					/* If we are sending a out of sync message, clear the queue of messages. */
+					/*
+					 * If we are sending a out of sync message, clear the queue
+					 * of messages.
+					 */
 					if (msg.getType() == Message.MessageType.C2S_OUTOFSYNC) {
 						processedMessages.clear();
 					}
 
-					/* If logger is enable, print the message so it shows useful debugging information. */
+					/*
+					 * If logger is enable, print the message so it shows useful
+					 * debugging information.
+					 */
 					if (true || logger.isDebugEnabled()) {
-						logger.debug("build message(type=" + msg.getType() + ") from "
-						        + msg.getClientID() + " full [" + msg + "]");
+						logger.debug("build message(type=" + msg.getType() + ") from " + msg.getClientID() + " full ["
+								+ msg + "]");
 					}
 
 					os.write(encoder.encode(msg));

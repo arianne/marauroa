@@ -9,8 +9,16 @@ import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggerRepository;
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * A wrapper around Log4J logger so that it is easy for us to reemplace it on
+ * the future.
+ *
+ * @author durkham
+ *
+ */
 public class Logger {
 
+	/** The log4j instance */
 	org.apache.log4j.Logger _logger;
 
 	Logger(Class arg0) {

@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.10 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.11 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,17 +15,32 @@ package marauroa.server.game.python;
 import marauroa.common.Log4J;
 import marauroa.server.game.rp.RPWorld;
 
-@Deprecated
+/**
+ * Python implementation of RPWorld. You can't inherit directly RPWorld, so you
+ * need to inherit in your Python code the PythonWorld class.
+ * 
+ * You should set world in server.ini to this class.
+ * 
+ * @author miguel
+ * 
+ */
 public class PythonRPWorld extends RPWorld {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(PythonRPWorld.class);
 
+	/** Link with Jython engine. */
 	private GameScript gameScript;
 
+	/** The python instance of the world */
 	private PythonWorld pythonWorld;
 
-	public PythonRPWorld() throws Exception {
+	/**
+	 * Constructor
+	 * 
+	 * @throws Exception
+	 */
+	public PythonRPWorld() {
 		super();
 
 		try {
@@ -37,14 +52,19 @@ public class PythonRPWorld extends RPWorld {
 		}
 	}
 
+	/**
+	 * Called on server start up
+	 */
 	@Override
 	public void onInit() {
 		pythonWorld.onInit();
 	}
 
+	/**
+	 * Called on server shutdown.
+	 */
 	@Override
 	public void onFinish() {
 		pythonWorld.onFinish();
 	}
-
 }

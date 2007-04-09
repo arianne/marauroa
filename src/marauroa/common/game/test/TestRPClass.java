@@ -20,8 +20,9 @@ import org.junit.Test;
 
 /**
  * This test unit run test over RPClass and make some usage of Attributes too.
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestRPClass {
 
@@ -36,9 +37,9 @@ public class TestRPClass {
 	}
 
 	/**
-	 * In the same way that has test, we test get method so that is must return the
-	 * correct instance of RPClass.
-	 *
+	 * In the same way that has test, we test get method so that is must return
+	 * the correct instance of RPClass.
+	 * 
 	 */
 	@Test
 	public void testGetClass() {
@@ -47,9 +48,8 @@ public class TestRPClass {
 	}
 
 	/**
-	 * This test is method isA works, by defining two classes and create one as subclass
-	 * of the other.
-	 * It test both isA methods: String and RPClass.
+	 * This test is method isA works, by defining two classes and create one as
+	 * subclass of the other. It test both isA methods: String and RPClass.
 	 */
 	@Test
 	public void testisAClass() {
@@ -67,7 +67,7 @@ public class TestRPClass {
 
 	/**
 	 * Create some definitions for data in a RPClass and check them.
-	 *
+	 * 
 	 */
 	@Test
 	public void testDefinitions() {
@@ -83,9 +83,9 @@ public class TestRPClass {
 	}
 
 	/**
-	 * Check if definition methods: isVisible, isHidden, isPrivate and isStorable
-	 * works as expected by defining some of them.
-	 *
+	 * Check if definition methods: isVisible, isHidden, isPrivate and
+	 * isStorable works as expected by defining some of them.
+	 * 
 	 */
 	@Test
 	public void testDefinitionsMethods() {
@@ -94,8 +94,7 @@ public class TestRPClass {
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
-		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
 		Definition def = b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
 		assertEquals(Type.INT, def.getType());
@@ -120,16 +119,15 @@ public class TestRPClass {
 	}
 
 	/**
-	 * This test case shows a bug fix for a Marauroa 1.3x bug where two attributes
-	 * definition even in diferent classes where created as the same one ( ignoring the
-	 * second definition ).
-	 *
-	 * For example
-	 * A ( id string )
-	 * B ( id int )
-	 *
-	 * They are different attributes and of different type. Check that it is true.
-	 *
+	 * This test case shows a bug fix for a Marauroa 1.3x bug where two
+	 * attributes definition even in diferent classes where created as the same
+	 * one ( ignoring the second definition ).
+	 * 
+	 * For example A ( id string ) B ( id int )
+	 * 
+	 * They are different attributes and of different type. Check that it is
+	 * true.
+	 * 
 	 */
 	@Test
 	public void testGlobalDefinitionBug() {
@@ -150,20 +148,20 @@ public class TestRPClass {
 	}
 
 	/**
-	 * Test serialization code of RPClass by serializing it and then deserializing the stream again
-	 * and checking that it is the same RPClass.
+	 * Test serialization code of RPClass by serializing it and then
+	 * deserializing the stream again and checking that it is the same RPClass.
+	 * 
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
 	@Test
-	public void testSerialization() throws IOException, ClassNotFoundException {
+	public void testSerialization() throws IOException {
 		RPClass expected = new RPClass("I");
 		assertEquals(expected, RPClass.getRPClass("I"));
 
 		expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
-		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
@@ -179,9 +177,9 @@ public class TestRPClass {
 	}
 
 	/**
-	 * Test the creation of static attributes for Marauroa 2.0.
-	 * Check they work by creating an attribute object.
-	 *
+	 * Test the creation of static attributes for Marauroa 2.0. Check they work
+	 * by creating an attribute object.
+	 * 
 	 */
 	@Test
 	public void testStaticAttributes() {

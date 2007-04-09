@@ -27,11 +27,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test the whole system.
- * Mostly from the client perspective.
- *
+ * Test the whole system. Mostly from the client perspective.
+ * 
  * @author miguel
- *
+ * 
  */
 public class SystemTest {
 
@@ -57,7 +56,7 @@ public class SystemTest {
 			}
 
 			/*
-			 * Ugly hack, but junit does runs test cases in parallel 
+			 * Ugly hack, but junit does runs test cases in parallel
 			 */
 			NetConst.tcpPort = PORT;
 
@@ -76,7 +75,7 @@ public class SystemTest {
 
 	/**
 	 * Create a new client each time
-	 *
+	 * 
 	 */
 	@Before
 	public void createClient() {
@@ -85,7 +84,7 @@ public class SystemTest {
 
 	/**
 	 * And disconnect it when done.
-	 *
+	 * 
 	 */
 	@After
 	public void disconnectClient() {
@@ -93,18 +92,18 @@ public class SystemTest {
 	}
 
 	/**
-	 * Test create account process by creating an account and it should work
-	 * and create the account again and failing.
-	 *
+	 * Test create account process by creating an account and it should work and
+	 * create the account again and failing.
+	 * 
 	 * @throws IOException
 	 * @throws TimeoutException
 	 * @throws InvalidVersionException
 	 * @throws CreateAccountFailedException
-	 * @throws BannedAddressException 
+	 * @throws BannedAddressException
 	 */
 	@Test
 	public void createAccount() throws IOException, TimeoutException, InvalidVersionException,
-	        CreateAccountFailedException, BannedAddressException {
+			CreateAccountFailedException, BannedAddressException {
 		client.connect("localhost", PORT);
 		AccountResult res = client.createAccount("testUsername", "password", "email");
 
@@ -123,7 +122,7 @@ public class SystemTest {
 
 	/**
 	 * Test the login process.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -141,9 +140,9 @@ public class SystemTest {
 	}
 
 	/**
-	 * Test the login process bug when using invalid case in username.
-	 * It should not logint
-	 *
+	 * Test the login process bug when using invalid case in username. It should
+	 * not logint
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -158,9 +157,9 @@ public class SystemTest {
 	}
 
 	/**
-	 * Test the login process by login twice on the server.
-	 * It should logout the previous login
-	 *
+	 * Test the login process by login twice on the server. It should logout the
+	 * previous login
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -180,7 +179,7 @@ public class SystemTest {
 
 	/**
 	 * Test the create character process.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -212,7 +211,7 @@ public class SystemTest {
 
 	/**
 	 * Test the create character process.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -263,8 +262,7 @@ public class SystemTest {
 	}
 
 	@Test
-	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
-	        LoginFailedException {
+	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException, LoginFailedException {
 		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
 		ConnectionValidator conn = rp.getValidator();
 

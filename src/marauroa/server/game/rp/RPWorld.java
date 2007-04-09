@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.14 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.15 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,14 +25,17 @@ import marauroa.server.game.container.PlayerEntryContainer;
 /**
  * This class is a container of RPZones.
  * <p>
- * Worlds in Marauroa can be so big, so huge, that we need to split them in to several pieces.
- * Each of these pieces are what we call an IRPZone.
+ * Worlds in Marauroa can be so big, so huge, that we need to split them in to
+ * several pieces. Each of these pieces are what we call an IRPZone.
  * <p>
  * So our world is made of several IRPZones that are independent of each other.
  * <p>
- * RPWorld provides onInit and onFinish methods that are called on server initialisation and
- * server finalization to define what to do with the world on these events.<br>
- * <b>There is no default behaviour and you need to extend this class to implement the behaviour</b>.
+ * RPWorld provides onInit and onFinish methods that are called on server
+ * initialisation and server finalization to define what to do with the world on
+ * these events.<br>
+ * <b>There is no default behaviour and you need to extend this class to
+ * implement the behaviour</b>.
+ *
  * @author miguel
  */
 public class RPWorld implements Iterable<IRPZone> {
@@ -55,7 +58,19 @@ public class RPWorld implements Iterable<IRPZone> {
 	}
 
 	/**
+	 * Sets the instance of RPWorld we are going to use, so we are truly using a
+	 * singleton pattern.
+	 *
+	 * @param implementation
+	 *            the instance of RPWorld we are going to use.
+	 */
+	static void set(RPWorld implementation) {
+		instance = implementation;
+	}
+
+	/**
 	 * Returns an unique World method.
+	 *
 	 * @return an instance of RPWorld
 	 */
 	public static RPWorld get() {
@@ -65,7 +80,7 @@ public class RPWorld implements Iterable<IRPZone> {
 		return instance;
 	}
 
-	/** This method is called when RPWorld is created by RPServerManager*/
+	/** This method is called when RPWorld is created by RPServerManager */
 	public void onInit() {
 	}
 
@@ -85,7 +100,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Adds a new zone to World
-	 * @param zone a zone to add to world.
+	 *
+	 * @param zone
+	 *            a zone to add to world.
 	 */
 	public void addRPZone(IRPZone zone) {
 		zones.put(zone.getID(), zone);
@@ -93,7 +110,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Returns true if world has such zone
-	 * @param zoneid the zone to query
+	 *
+	 * @param zoneid
+	 *            the zone to query
 	 * @return true of the zone exists
 	 */
 	public boolean hasRPZone(IRPZone.ID zoneid) {
@@ -102,7 +121,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Returns the zone or null if it doesn't exists
-	 * @param zoneid the zone to query
+	 *
+	 * @param zoneid
+	 *            the zone to query
 	 * @return the zone or null if it is not found.
 	 */
 	public IRPZone getRPZone(IRPZone.ID zoneid) {
@@ -111,7 +132,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Returns the zone or null if it doesn't exists
-	 * @param objectid an id of an object that is in the zone to query
+	 *
+	 * @param objectid
+	 *            an id of an object that is in the zone to query
 	 * @return the zone or null if it is not found.
 	 */
 	public IRPZone getRPZone(RPObject.ID objectid) {
@@ -119,10 +142,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	}
 
 	/**
-	 * This method adds an object to the zone it points with its zoneid attribute.
-	 * And if it is a player, it request also a sync perception.
+	 * This method adds an object to the zone it points with its zoneid
+	 * attribute. And if it is a player, it request also a sync perception.
 	 *
-	 * @param object the object to add
+	 * @param object
+	 *            the object to add
 	 */
 	public void add(RPObject object) {
 		if (object.has("zoneid")) {
@@ -135,12 +159,17 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * When a player is added to a zone, it needs his status to be synced.
-	 * @param object the player object
+	 *
+	 * @param object
+	 *            the player object
 	 */
 	public void requestSync(RPObject object) {
 		/* A player object will have always the clientid attribute. */
 		if (object.has("#clientid")) {
-			/* So if object has the attribute, we request a sync perception as we have entered a new zone. */
+			/*
+			 * So if object has the attribute, we request a sync perception as
+			 * we have entered a new zone.
+			 */
 			PlayerEntry entry = playerContainer.get(object);
 			if (entry != null) {
 				entry.requestSync();
@@ -150,7 +179,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This method returns an object from a zone using it ID<object, zone>
-	 * @param id the object's id
+	 *
+	 * @param id
+	 *            the object's id
 	 * @return the object
 	 */
 	public RPObject get(RPObject.ID id) {
@@ -159,8 +190,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	}
 
 	/**
-	 * This method returns true if an object exists in a zone using it ID<object, zone>
-	 * @param id the object's id
+	 * This method returns true if an object exists in a zone using it ID<object,
+	 * zone>
+	 *
+	 * @param id
+	 *            the object's id
 	 * @return true if the object exists
 	 */
 	public boolean has(RPObject.ID id) {
@@ -169,8 +203,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	}
 
 	/**
-	 * This method returns an object from a zone using it ID<object, zone> and remove it
-	 * @param id the object's id
+	 * This method returns an object from a zone using it ID<object, zone> and
+	 * remove it
+	 *
+	 * @param id
+	 *            the object's id
 	 * @return the object or null if it not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
@@ -180,6 +217,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This method returns an iterator over all the zones contained.
+	 *
 	 * @return iterator over zones.
 	 */
 	public Iterator<IRPZone> iterator() {
@@ -188,7 +226,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This method notify zone that object has been modified. Used in Delta^2
-	 * @param object the object that has been modified.
+	 *
+	 * @param object
+	 *            the object that has been modified.
 	 */
 	public void modify(RPObject object) {
 		IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
@@ -197,8 +237,11 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods make a player/object to change zone.
-	 * @param newzoneid the new zone id
-	 * @param object the object we are going to change zone to.
+	 *
+	 * @param newzoneid
+	 *            the new zone id
+	 * @param object
+	 *            the object we are going to change zone to.
 	 * @throws RPObjectInvalidException
 	 */
 	public void changeZone(IRPZone.ID newzoneid, RPObject object) {
@@ -224,15 +267,19 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods make a player/object to change zone.
-	 * @param newzone the new zone id
-	 * @param object the object we are going to change zone to.
+	 *
+	 * @param newzone
+	 *            the new zone id
+	 * @param object
+	 *            the object we are going to change zone to.
 	 */
 	public void changeZone(String newzone, RPObject object) {
 		changeZone(new IRPZone.ID(newzone), object);
 	}
 
 	/**
-	 * This method make world to move to the next turn, calling each zone nextTurn method.	 *
+	 * This method make world to move to the next turn, calling each zone
+	 * nextTurn method. *
 	 */
 	public void nextTurn() {
 		for (IRPZone zone : zones.values()) {
@@ -242,6 +289,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * This methods return the amount of objects added to world.
+	 *
 	 * @return the amount of objects added to world.
 	 */
 	public int size() {

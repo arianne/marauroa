@@ -21,8 +21,11 @@ public class GenerateINI {
 	/**
 	 * reads a String from the input. When no String is choosen the defaultValue
 	 * is used.
-	 * @param input the buffered input, usually System.in
-	 * @param defaultValue if no value is written.
+	 * 
+	 * @param input
+	 *            the buffered input, usually System.in
+	 * @param defaultValue
+	 *            if no value is written.
 	 * @return the string readed or default if none was read.
 	 */
 	public static String getStringWithDefault(BufferedReader input, String defaultValue) {
@@ -43,7 +46,9 @@ public class GenerateINI {
 	/**
 	 * reads a String from the input. When no String is choosen the errorMessage
 	 * is is displayed and the application is terminated.
-	 * @param input the input stream, usually System.in
+	 * 
+	 * @param input
+	 *            the input stream, usually System.in
 	 */
 	public static String getStringWithoutDefault(BufferedReader input, String errorMessage) {
 		String ret = "";
@@ -64,12 +69,13 @@ public class GenerateINI {
 
 	/**
 	 * makes the first letter of the source uppercase
-	 * @param source the string
+	 * 
+	 * @param source
+	 *            the string
 	 * @return *T*he string, with first letter is upper case.
 	 */
 	public static String uppcaseFirstLetter(String source) {
-		return (source.length() > 0) ? Character.toUpperCase(source.charAt(0))
-		        + source.substring(1) : source;
+		return (source.length() > 0) ? Character.toUpperCase(source.charAt(0)) + source.substring(1) : source;
 	}
 
 	private static String gameName;
@@ -115,7 +121,7 @@ public class GenerateINI {
 		System.out.println("# mysql");
 		System.out.println("  create database " + databaseName + ";");
 		System.out.println("  grant all on " + databaseName + ".* to " + databaseUsername
-		        + "@localhost identified by '" + databasePassword + "';");
+				+ "@localhost identified by '" + databasePassword + "';");
 		System.out.println("  exit");
 
 		tcpPort = getTCPPort();
@@ -127,7 +133,7 @@ public class GenerateINI {
 
 		statisticsFilename = getStatisticsFilename();
 
-		/* The size of the RSA Key  in bits, usually 512 */
+		/* The size of the RSA Key in bits, usually 512 */
 		String keySize = getRSAKeyBits();
 		System.out.println("Using key of " + keySize + " bits.");
 		System.out.println("Please wait while the key is generated.");
@@ -139,7 +145,7 @@ public class GenerateINI {
 
 	private static String getRSAKeyBits() {
 		System.out
-		        .print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+				.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
 		String keySize = getStringWithDefault(in, "512");
 		return keySize;
 	}
@@ -187,8 +193,7 @@ public class GenerateINI {
 		out.println("server_typeGame=" + gameName);
 		out.println("server_name=" + gameName + " Marauroa server");
 		out.println("server_version=0.01");
-		out
-		        .println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
+		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);
 		out.println();

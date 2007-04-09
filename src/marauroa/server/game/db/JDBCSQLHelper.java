@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.7 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.8 2007/04/09 14:39:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -24,8 +24,9 @@ import marauroa.common.Log4J;
 
 /**
  * A helper class that runs SQL scripts.
+ * 
  * @author miguel
- *
+ * 
  */
 public class JDBCSQLHelper {
 
@@ -39,6 +40,7 @@ public class JDBCSQLHelper {
 
 	/**
 	 * Returns an unique instance of the helper.
+	 * 
 	 * @return an unique instance of the helper.
 	 */
 	public static JDBCSQLHelper get() {
@@ -50,11 +52,14 @@ public class JDBCSQLHelper {
 	}
 
 	/**
-	 * This method runs a SQL file using the given transaction.
-	 * You are resposible of begining the transaction and commiting the changes or rollback on error.
-	 *
-	 * @param transaction The JDBC Transaction that we are going to use.
-	 * @param file The file name that contains the SQL commands.
+	 * This method runs a SQL file using the given transaction. You are
+	 * resposible of begining the transaction and commiting the changes or
+	 * rollback on error.
+	 * 
+	 * @param transaction
+	 *            The JDBC Transaction that we are going to use.
+	 * @param file
+	 *            The file name that contains the SQL commands.
 	 * @return true if the whole file was executed or false in any other error.
 	 */
 	public boolean runDBScript(Transaction transaction, String file) {

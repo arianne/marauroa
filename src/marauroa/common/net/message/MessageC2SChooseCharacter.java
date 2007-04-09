@@ -1,4 +1,4 @@
-/* $Id: MessageC2SChooseCharacter.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2SChooseCharacter.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,11 +18,12 @@ import java.nio.channels.SocketChannel;
 /**
  * This message indicate the server what of the available characters is chosen
  * for the session to play.
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SChooseCharacter extends Message {
 
+	/** The choosen player */
 	private String character;
 
 	/** Constructor for allowing creation of an empty message */
@@ -33,7 +34,7 @@ public class MessageC2SChooseCharacter extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the name
 	 * of the choosen character.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param character
@@ -48,7 +49,7 @@ public class MessageC2SChooseCharacter extends Message {
 
 	/**
 	 * This methods returns the name of the chosen character
-	 * 
+	 *
 	 * @return the character name
 	 */
 	public String getCharacter() {
@@ -57,13 +58,12 @@ public class MessageC2SChooseCharacter extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S ChooseCharacter) from (" + getAddress() + ") CONTENTS: (" + character
-		        + ")";
+		return "Message (C2S ChooseCharacter) from (" + getAddress() + ") CONTENTS: (" + character + ")";
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class MessageC2SChooseCharacter extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		character = in.readString();
+
 		if (type != MessageType.C2S_CHOOSECHARACTER) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

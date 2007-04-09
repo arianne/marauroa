@@ -1,4 +1,4 @@
-/* $Id: RWLock.java,v 1.7 2007/03/23 20:39:19 arianne_rpg Exp $ */
+/* $Id: RWLock.java,v 1.8 2007/04/09 14:39:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,13 +17,14 @@ import marauroa.common.Log4J;
 /**
  * This class is a Reader/Writters lock A Reader Writer Lock is a
  * synchronization mechanism allowing access to data.<br>
- * It allows multiple threads to read the data simultaneously, 
- * but only one thread at a time to update it.
+ * It allows multiple threads to read the data simultaneously, but only one
+ * thread at a time to update it.
  * <p>
- * Controlling concurrent access to a shared, mutable resource is a classic problem. 
- * Clients request, and later release, either read-only or read-write access to the resource. 
- * To preserve consistency but minimize waiting, one usually wishes to allow either any 
- * number of readers or a single writer, but not both, to have access at any one time.
+ * Controlling concurrent access to a shared, mutable resource is a classic
+ * problem. Clients request, and later release, either read-only or read-write
+ * access to the resource. To preserve consistency but minimize waiting, one
+ * usually wishes to allow either any number of readers or a single writer, but
+ * not both, to have access at any one time.
  * <p>
  * While a thread is updating, no other thread can read the data. The name is
  * misleading. It may cause you to think there are two locks; in reality there
@@ -40,7 +41,7 @@ public class RWLock {
 
 	private Object mutex;
 
-	/** 
+	/**
 	 * Constructor
 	 */
 	public RWLock() {
@@ -67,8 +68,8 @@ public class RWLock {
 	}
 
 	/**
-	 * Request a Writers lock.
-	 * A writer can obtain the lock as long as there are no more writers nor readers using the lock.
+	 * Request a Writers lock. A writer can obtain the lock as long as there are
+	 * no more writers nor readers using the lock.
 	 */
 	public void requestWriteLock() {
 		synchronized (mutex) {

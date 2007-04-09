@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,9 +27,16 @@ import marauroa.common.net.OutputSerializer;
  * The ServerInfo message is sent from server to client to inform client about
  * any relevant info the server has to transmit. They are in the form of
  * <attribute>=<value>
+ *
+ * This message also sent to client the list of RPClass that are contained at
+ * server at the time the message was sent.
+ * It is because of that, that RPClass definition must be load previously to game start.
  */
 public class MessageS2CServerInfo extends Message {
 
+	/**
+	 * An array of the server string that want to be sent to client.
+	 */
 	private String[] contents;
 
 	/** Constructor for allowing creation of an empty message */
@@ -40,7 +47,7 @@ public class MessageS2CServerInfo extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the
 	 * content.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param contents
@@ -53,7 +60,7 @@ public class MessageS2CServerInfo extends Message {
 
 	/**
 	 * This method returns the list of string that describe the server
-	 * 
+	 *
 	 * @return the list of strings to describe the server
 	 */
 	public String[] getContents() {
@@ -62,7 +69,7 @@ public class MessageS2CServerInfo extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -73,7 +80,7 @@ public class MessageS2CServerInfo extends Message {
 			text.append("[" + contents[i] + "],");
 		}
 		return "Message (S2C Server Info) from (" + getAddress() + ") CONTENTS: ("
-		        + text.substring(0, text.length() - 1) + ")";
+				+ text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override
@@ -112,13 +119,12 @@ public class MessageS2CServerInfo extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
-		        new java.util.zip.Inflater());
+				new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		contents = serializer.readStringArray();
@@ -129,7 +135,7 @@ public class MessageS2CServerInfo extends Message {
 		}
 
 		if (type != MessageType.S2C_SERVERINFO) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.4 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.5 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,13 @@ import java.util.zip.DeflaterOutputStream;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
+/**
+ * This message is used to transfer the client a list of contents that has already being
+ * approved by it.
+ *
+ * @author miguel
+ *
+ */
 public class MessageS2CTransfer extends Message {
 
 	/** A list of the contents to transfer */
@@ -40,14 +47,18 @@ public class MessageS2CTransfer extends Message {
 		contents.add(content);
 	}
 
+
+	/**
+	 * The list if contents to transfer.
+	 * @return The list if contents to transfer.
+	 */
 	public List<TransferContent> getContents() {
 		return contents;
 	}
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress()
-		        + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress() + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -81,13 +92,12 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
-		        new java.util.zip.Inflater());
+				new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		int size = serializer.readInt();
@@ -100,7 +110,7 @@ public class MessageS2CTransfer extends Message {
 		}
 
 		if (type != MessageType.S2C_TRANSFER) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

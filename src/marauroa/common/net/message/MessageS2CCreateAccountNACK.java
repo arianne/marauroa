@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,18 +17,23 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has reject its login Message
- * 
+ * This message indicate the client that the server has reject its create account Message
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateAccountNACK extends Message {
 
 	public enum Reasons {
-		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT,
+		UNKNOWN_REASON,
+		USERNAME_EXISTS,
+		FIELD_TOO_SHORT
 	}
 
-	static private String[] text = { "Unknown reason", "Username already exists.",
-	        "Field is too short", };
+	static private String[] text = {
+		"Unknown reason",
+		"Username already exists.",
+		"Field is too short"
+		};
 
 	private Reasons reason;
 
@@ -38,12 +43,13 @@ public class MessageS2CCreateAccountNACK extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
-	 * 
+	 * Constructor with a TCP/IP source/destination of the message and the cause of the
+	 * rejection.
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param resolution
-	 *            the reason to deny the login
+	 *            the reason to deny the create account
 	 */
 	public MessageS2CCreateAccountNACK(SocketChannel source, Reasons resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
@@ -52,7 +58,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 
 	/**
 	 * This method returns the resolution of the login event
-	 * 
+	 *
 	 * @return a byte representing the resolution given.
 	 */
 	public Reasons getResolutionCode() {
@@ -62,7 +68,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	/**
 	 * This method returns a String that represent the resolution given to the
 	 * login event
-	 * 
+	 *
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
@@ -71,13 +77,12 @@ public class MessageS2CCreateAccountNACK extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Account NACK) from (" + getAddress() + ") CONTENTS: ("
-		        + getResolution() + ")";
+		return "Message (S2C Create Account NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution() + ")";
 	}
 
 	@Override
@@ -87,12 +92,12 @@ public class MessageS2CCreateAccountNACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		reason = Reasons.values()[in.readByte()];
+
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

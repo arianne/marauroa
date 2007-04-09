@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.13 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.14 2007/04/09 14:39:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,38 +17,26 @@ import java.io.IOException;
 import marauroa.common.Log4J;
 
 /**
- * This class stores the definition of an attributes, event or rpslot.
- * This definition contains:
+ * This class stores the definition of an attributes, event or rpslot. This
+ * definition contains:
  * - code used as index
  * - name
  * - type of the attribute or event.
  *   It must be one of the following:
- *   * STRING
- *     It is a 255 characters long string.
- *   * LONG_STRING
- *     It is a 65536 characters long string.
- *   * VERY_LONG_STRING
- *     It is 2^32 characters string.
- *     Handle this one with care. *
- *   * BYTE
- *     A 8 bits integer.
- *   * SHORT
- *     A 16 bits integer
- *   * INT
- *     A 32 bits integer
- *   * FLAG
- *     A value that is set or not set.
+ *   - STRING It is a 255 characters long string.
+ *   - LONG_STRING It is a 65536 characters long string.
+ *   - VERY_LONG_STRING It is 2^32 characters string. Handle this one with care.
+ *   - BYTE A 8 bits integer.
+ *   - SHORT A 16 bits integer
+ *   - INT A 32 bits integer
+ *   - FLAG A value that is set or not set.
  * - capacity of the slot
- * - flags to decide the visibility of the atttribute, event or slot.
- *   It must be one of the following:
- *   * STANDARD
- *     It is an attribute that it is storable and visible.
- *   * PRIVATE
- *     It is an attribute that only owner can know about.
- *   * HIDDEN
- *     It is an attribute that none knows about.
- *   * VOLATILE
- *     It is an attribute that it is not stored at persistence storage.
+ * - flags to decide the visibility of the atttribute, event or slot. It must be one of the
+ * following:
+ *   - STANDARD It is an attribute that it is storable and visible.
+ *   - PRIVATE It is an attribute that only owner can know about.
+ *   - HIDDEN It is an attribute that none knows about.
+ *   - VOLATILE It is an attribute that it is not stored at persistence storage.
  *
  *
  * @author miguel
@@ -59,7 +47,9 @@ public class Definition implements marauroa.common.net.Serializable {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Definition.class);
 
 	/**
-	 * This enum determine to which entity the definition belogs: either attributes, event or slot
+	 * This enum determine to which entity the definition belogs: either
+	 * attributes, event or slot
+	 *
 	 * @author miguel
 	 */
 	public enum DefinitionClass {
@@ -70,7 +60,9 @@ public class Definition implements marauroa.common.net.Serializable {
 		/** This definition is for a RPSlot */
 		RPSLOT,
 		/** This definition is for a RPEvent */
-		RPEVENT
+		RPEVENT,
+		/** This definition is for a RPLink */
+		RPLINK
 	}
 
 	/** Define the possible types of an attribute or event */
@@ -95,7 +87,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		FLAG
 	}
 
-	/* Visibility of a attribute/event/slot*/
+	/* Visibility of a attribute/event/slot */
 	/** The attribute is visible and stored in database */
 	final public static byte STANDARD = 0;
 
@@ -108,7 +100,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	/** The attribute should not be stored in the database */
 	final public static byte VOLATILE = 1 << 2;
 
-	/** the type of definition we have: ATTRIBUTE, RPSLOT or RPEVENT */
+	/** the type of definition we have: ATTRIBUTE, RPSLOT, RPLINK or RPEVENT */
 	private DefinitionClass clazz;
 
 	/** an unique code that is assigned at RPClass to identify this definition */
@@ -120,17 +112,22 @@ public class Definition implements marauroa.common.net.Serializable {
 	/** In case of a static attribute, it stores the value of the attribute. */
 	private String value;
 
-	/** if it is a RPSLOT, this defines the amount of objects that can be placed inside
-	 * otherwise it is 0.
+	/**
+	 * if it is a RPSLOT, this defines the amount of objects that can be placed
+	 * inside otherwise it is 0.
 	 */
 	private byte capacity;
 
-	/** if it is a RPEVENT or an ATTRIBUTE, this define the type of the data associated with
-	 * this definition.
+	/**
+	 * if it is an ATTRIBUTE, this define the type of the data
+	 * associated with this definition.
 	 */
 	private Type type;
 
-	/** the flags to show if it is visible, hidden, private, storable or volatile. */
+	/**
+	 * the flags to show if it is visible, hidden, private, storable or
+	 * volatile.
+	 */
 	private byte flags;
 
 	/**
@@ -145,19 +142,25 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Method to set the code of a definition.
-	 * It is called ONLY by RPClass internally.
-	 * @param code the code to assign to the definition.
+	 * Method to set the code of a definition. It is called ONLY by RPClass
+	 * internally.
+	 *
+	 * @param code
+	 *            the code to assign to the definition.
 	 */
 	void setCode(short code) {
 		this.code = code;
 	}
 
 	/**
-	 *  Creates an Attribute definition
-	 * @param name the name of the attribute
-	 * @param type the type of the attribute
-	 * @param flags flags options.
+	 * Creates an Attribute definition
+	 *
+	 * @param name
+	 *            the name of the attribute
+	 * @param type
+	 *            the type of the attribute
+	 * @param flags
+	 *            flags options.
 	 * @return an Attribute Definition
 	 */
 	public static Definition defineAttribute(String name, Type type, byte flags) {
@@ -170,10 +173,14 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 *  Creates an static attribute definition and give it a value
-	 * @param name the name of the attribute
-	 * @param value the type of the attribute
-	 * @param flags flags options.
+	 * Creates an static attribute definition and give it a value
+	 *
+	 * @param name
+	 *            the name of the attribute
+	 * @param value
+	 *            the type of the attribute
+	 * @param flags
+	 *            flags options.
 	 * @return an Attribute Definition
 	 */
 	public static Definition defineStaticAttribute(String name, String value, byte flags) {
@@ -187,26 +194,32 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 *  Creates an Event definition
-	 * @param name the name of the event
-	 * @param type the type of the event
-	 * @param flags flags options.
+	 * Creates an Event definition
+	 *
+	 * @param name
+	 *            the name of the event
+	 * @param flags
+	 *            flags options.
 	 * @return an Event Definition
 	 */
-	public static Definition defineEvent(String name, Type type, byte flags) {
+	public static Definition defineEvent(String name, byte flags) {
 		Definition def = new Definition(DefinitionClass.RPEVENT);
 		def.name = name;
-		def.type = type;
+		def.type = Type.NOTYPE;
 		def.flags = flags;
 		def.capacity = 0;
 		return def;
 	}
 
 	/**
-	 *  Creates a RPSLot definition
-	 * @param name the name of the slot
-	 * @param capacity the capacity of the slot
-	 * @param flags flags options.
+	 * Creates a RPSLot definition
+	 *
+	 * @param name
+	 *            the name of the slot
+	 * @param capacity
+	 *            the capacity of the slot
+	 * @param flags
+	 *            flags options.
 	 * @return an RPSlot Definition
 	 */
 	public static Definition defineSlot(String name, byte capacity, byte flags) {
@@ -219,7 +232,29 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
+	 * Creates a RPSLot definition
+	 *
+	 * @param name
+	 *            the name of the slot
+	 * @param capacity
+	 *            the capacity of the slot
+	 * @param flags
+	 *            flags options.
+	 * @return an RPSlot Definition
+	 */
+	public static Definition defineLink(String name, byte capacity, byte flags) {
+		Definition def = new Definition(DefinitionClass.RPLINK);
+		def.name = name;
+		def.capacity = 0;
+		def.flags = flags;
+		def.type = Type.NOTYPE;
+		return def;
+	}
+
+
+	/**
 	 * Returns the code of this definition
+	 *
 	 * @return definition's code
 	 */
 	public short getCode() {
@@ -228,6 +263,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the name of the definition
+	 *
 	 * @return definition's name
 	 */
 	public String getName() {
@@ -236,6 +272,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the value of a static attribute.
+	 *
 	 * @return the value of a static attribute.
 	 */
 	public String getValue() {
@@ -244,6 +281,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the type of the definition
+	 *
 	 * @return definition's type
 	 */
 	public Type getType() {
@@ -252,6 +290,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the capacity of the definition
+	 *
 	 * @return definition's capacity
 	 */
 	public byte getCapacity() {
@@ -260,6 +299,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns the flags of the definition
+	 *
 	 * @return definition's flags
 	 */
 	public byte getFlags() {
@@ -268,7 +308,9 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Sets the value name
-	 * @param name definition name
+	 *
+	 * @param name
+	 *            definition name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -277,17 +319,19 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Sets the type of the definition: BYTE, INT, SHORT, STRING, ...
-	 * @param type the type of the definition
+	 *
+	 * @param type
+	 *            the type of the definition
 	 */
 	public void setType(Type type) {
 		this.type = type;
 	}
 
 	/**
-	 * Sets the slot capacity.
-	 * Use 0 for non limited.
+	 * Sets the slot capacity. Use 0 for non limited.
 	 *
-	 * @param capacity its capacity.
+	 * @param capacity
+	 *            its capacity.
 	 */
 	public void setCapacity(byte capacity) {
 		this.capacity = capacity;
@@ -295,7 +339,9 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Set the definition flags: VOLATILE, HIDDEN, PRIVATE, ...
-	 * @param flags the flags to set.
+	 *
+	 * @param flags
+	 *            the flags to set.
 	 */
 	public void setFlags(byte flags) {
 		this.flags = flags;
@@ -303,6 +349,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns if this definition is visible ( it is not hidden nor private )
+	 *
 	 * @return true if it is visible
 	 */
 	public boolean isVisible() {
@@ -311,6 +358,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns true if the attribute is private.
+	 *
 	 * @return true if it is private
 	 */
 	public boolean isPrivate() {
@@ -319,6 +367,7 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Returns true if the attribute is Hidden.
+	 *
 	 * @return true if it is hidden
 	 */
 	public boolean isHidden() {
@@ -326,7 +375,9 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Return the storability of the attribute whose name is name for this rpclass
+	 * Return the storability of the attribute whose name is name for this
+	 * rpclass
+	 *
 	 * @return true if is it storable
 	 */
 	public boolean isStorable() {
@@ -335,75 +386,80 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/**
 	 * Deserializes an attribute or event from the input serializer
-	 * @param in the input serializer
+	 *
+	 * @param in
+	 *            the input serializer
 	 * @return the value
-	 * @throws java.io.IOException if there is any problem deserializing the object
+	 * @throws java.io.IOException
+	 *             if there is any problem deserializing the object
 	 * @throws ClassNotFoundException
 	 */
-	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException,
-	        ClassNotFoundException {
+	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		switch (type) {
-			case VERY_LONG_STRING:
-				return in.readString();
-			case LONG_STRING:
-				return in.read65536LongString();
-			case STRING:
-				return in.read255LongString();
-			case FLOAT:
-				return Float.toString(in.readFloat());
-			case INT:
-				return Integer.toString(in.readInt());
-			case SHORT:
-				return Integer.toString(in.readShort());
-			case BYTE:
-				return Integer.toString(in.readByte());
-			case FLAG:
-				return "";
+		case VERY_LONG_STRING:
+			return in.readString();
+		case LONG_STRING:
+			return in.read65536LongString();
+		case STRING:
+			return in.read255LongString();
+		case FLOAT:
+			return Float.toString(in.readFloat());
+		case INT:
+			return Integer.toString(in.readInt());
+		case SHORT:
+			return Integer.toString(in.readShort());
+		case BYTE:
+			return Integer.toString(in.readByte());
+		case FLAG:
+			return "";
 		}
 
 		return null;
 	}
 
 	/**
-	 * Serializes an attribute or even whose value is value into the output serializer
-	 * @param value the value of the event/attribute
-	 * @param out the output serializer
-	 * @throws IOException if there is any problem on the serialization
+	 * Serializes an attribute or even whose value is value into the output
+	 * serializer
+	 *
+	 * @param value
+	 *            the value of the event/attribute
+	 * @param out
+	 *            the output serializer
+	 * @throws IOException
+	 *             if there is any problem on the serialization
 	 */
-	public void serialize(String value, marauroa.common.net.OutputSerializer out)
-	        throws IOException {
+	public void serialize(String value, marauroa.common.net.OutputSerializer out) throws IOException {
 		switch (type) {
-			case VERY_LONG_STRING:
-				out.write(value);
-				break;
-			case LONG_STRING:
-				out.write65536LongString(value);
-				break;
-			case STRING:
-				out.write255LongString(value);
-				break;
-			case FLOAT:
-				out.write(Float.parseFloat(value));
-				break;
-			case INT:
-				out.write(Integer.parseInt(value));
-				break;
-			case SHORT:
-				out.write(Short.parseShort(value));
-				break;
-			case BYTE:
-				out.write(Byte.parseByte(value));
-				break;
-			case FLAG:
-				/*
-				 * It is empty because it is a flag and so, it is
-				 * already present.
-				 */
-				break;
-			default:
-				/* NOTE: Must never happen */
-				logger.fatal("got unknown attribute(" + name + ") type:" + code);
-				break;
+		case VERY_LONG_STRING:
+			out.write(value);
+			break;
+		case LONG_STRING:
+			out.write65536LongString(value);
+			break;
+		case STRING:
+			out.write255LongString(value);
+			break;
+		case FLOAT:
+			out.write(Float.parseFloat(value));
+			break;
+		case INT:
+			out.write(Integer.parseInt(value));
+			break;
+		case SHORT:
+			out.write(Short.parseShort(value));
+			break;
+		case BYTE:
+			out.write(Byte.parseByte(value));
+			break;
+		case FLAG:
+			/*
+			 * It is empty because it is a flag and so, it is already present.
+			 */
+			break;
+		default:
+			/* NOTE: Must never happen */
+			logger.fatal("got unknown attribute(" + name + ") type:" + code);
+			break;
 		}
 	}
 
@@ -426,8 +482,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/** Fill the object from data deserialized from the serializer */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		clazz = DefinitionClass.values()[in.readByte()];
 		code = in.readShort();
 		name = in.readString();
@@ -461,9 +516,8 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		Definition def = (Definition) ot;
 
-		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity
-		        && flags == def.flags && name.equals(def.name) && type == def.type
-		        && (value == def.value || value.equals(def.value));
+		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity && flags == def.flags
+				&& name.equals(def.name) && type == def.type && (value == def.value || value.equals(def.value));
 
 		return result;
 	}

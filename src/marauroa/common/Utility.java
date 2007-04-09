@@ -22,9 +22,13 @@ public class Utility {
 	}
 
 	/**
-	 * adds some leading '0' to the sting until the length <i>maxDigits</i> is reached
-	 * @param number the number to convert
-	 * @param maxDigits the amount of digits expected
+	 * adds some leading '0' to the sting until the length <i>maxDigits</i> is
+	 * reached
+	 * 
+	 * @param number
+	 *            the number to convert
+	 * @param maxDigits
+	 *            the amount of digits expected
 	 * @return the expected number
 	 */
 	public static String addLeadingZeros(String number, int maxDigits) {
@@ -37,19 +41,23 @@ public class Utility {
 		return result;
 	}
 
-	/** 
+	/**
 	 * creates a nice hex-dump of the byte array
-	 * @param byteArray the byte array to convert.
-	 * @return a hex-dump of the array. 
+	 * 
+	 * @param byteArray
+	 *            the byte array to convert.
+	 * @return a hex-dump of the array.
 	 */
 	public static String dumpByteArray(byte[] byteArray) {
 		return dumpInputStream(new ByteArrayInputStream(byteArray));
 	}
 
-	/** 
-	 * creates a nice hex-dump of the byte array 
-	 * @param byteStream the byte array to convert.
-	 * @return a hex-dump of the array. 
+	/**
+	 * creates a nice hex-dump of the byte array
+	 * 
+	 * @param byteStream
+	 *            the byte array to convert.
+	 * @return a hex-dump of the array.
 	 */
 	public static String dumpInputStream(InputStream byteStream) {
 		StringBuilder result = new StringBuilder();
@@ -72,8 +80,8 @@ public class Utility {
 				}
 
 				if (index > 0 && (index % 16 == 0)) {
-					result.append(chars).append('\n').append(
-					        addLeadingZeros(Integer.toHexString(index), 8)).append(' ');
+					result.append(chars).append('\n').append(addLeadingZeros(Integer.toHexString(index), 8))
+							.append(' ');
 
 					chars = new StringBuilder();
 				}

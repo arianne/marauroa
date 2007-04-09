@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,18 +14,45 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 
+/**
+ * A helper class to transfer content from server to client.
+ *
+ * @author miguel
+ *
+ */
 public class TransferContent {
 
+	/**
+	 * Name of the content to transfer.
+	 * Usually it is a file name.
+	 */
 	public String name;
 
+	/**
+	 * When this content was created or any other way of stamping the content for
+	 * version control.
+	 */
 	public int timestamp;
 
+	/**
+	 * The content itself.
+	 */
 	public byte[] data;
 
+	/**
+	 * If the client can cache this content,  this would be true.
+	 */
 	public boolean cacheable;
 
+	/**
+	 * If the client approved this content to be trasfered it will be true.
+	 */
 	public boolean ack;
 
+	/**
+	 * Constructor
+	 *
+	 */
 	public TransferContent() {
 		ack = false;
 		cacheable = false;
@@ -49,6 +76,12 @@ public class TransferContent {
 		return sstr.toString();
 	}
 
+	/**
+	 * Constructor
+	 * @param name name of the content
+	 * @param timestamp version control timestamp.
+	 * @param data data of the content.
+	 */
 	public TransferContent(String name, int timestamp, byte[] data) {
 		this.name = name;
 		this.timestamp = timestamp;
@@ -57,30 +90,53 @@ public class TransferContent {
 		ack = false;
 	}
 
+	/**
+	 * Write content as a request to client to approve it
+	 * @param out
+	 * @throws IOException
+	 */
 	public void writeREQ(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(timestamp);
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
-	public void readREQ(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	/**
+	 * Reads the content transfer request.
+	 * @param in
+	 * @throws IOException
+	 */
+	public void readREQ(marauroa.common.net.InputSerializer in) throws IOException {
 		name = in.readString();
 		timestamp = in.readInt();
 		cacheable = (in.readByte() == 1);
 	}
 
+	/**
+	 * Write a content acceptance to server.
+	 * @param out
+	 * @throws IOException
+	 */
 	public void writeACK(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write((byte) (ack ? 1 : 0));
 	}
 
-	public void readACK(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	/**
+	 * Reads the content acceptance from client
+	 * @param in
+	 * @throws IOException
+	 */
+	public void readACK(marauroa.common.net.InputSerializer in) throws IOException {
 		name = in.readString();
 		ack = (in.readByte() == 1);
 	}
 
+	/**
+	 * Write the content data to client
+	 * @param out
+	 * @throws IOException
+	 */
 	public void writeFULL(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(data);
@@ -88,8 +144,12 @@ public class TransferContent {
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
-	public void readFULL(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	/**
+	 * Read the content data from server.
+	 * @param in
+	 * @throws IOException
+	 */
+	public void readFULL(marauroa.common.net.InputSerializer in) throws IOException {
 		name = in.readString();
 		data = in.readByteArray();
 		timestamp = in.readInt();

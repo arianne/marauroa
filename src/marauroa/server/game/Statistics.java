@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.26 2007/03/23 20:39:19 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.27 2007/04/09 14:39:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,25 +37,27 @@ public class Statistics implements StatisticsMBean {
 
 	/**
 	 * This class is very similar to a Map<String, Long> with the extra that
-	 * adds some comodity methods like:<ul>
+	 * adds some comodity methods like:
+	 * <ul>
 	 * <li>add
 	 * <li>print
 	 * </ul>
+	 *
 	 * @author miguel
 	 */
 	public static class Variables implements Iterable<String> {
 
 		private Map<String, Long> content;
 
-		/** 
-		 * Constructor 
+		/**
+		 * Constructor
 		 */
 		public Variables() {
 			content = new HashMap<String, Long>();
 		}
 
-		/** 
-		 * Clear all the variables 
+		/**
+		 * Clear all the variables
 		 */
 		public void clear() {
 			content.clear();
@@ -63,8 +65,11 @@ public class Statistics implements StatisticsMBean {
 
 		/**
 		 * Put a new variable at the Map
-		 * @param type name of the variable
-		 * @param value its value
+		 *
+		 * @param type
+		 *            name of the variable
+		 * @param value
+		 *            its value
 		 */
 		public void put(String type, long value) {
 			content.put(type, value);
@@ -72,8 +77,11 @@ public class Statistics implements StatisticsMBean {
 
 		/**
 		 * Add value to previously existing variable.
-		 * @param type name of the variable
-		 * @param value value to add
+		 *
+		 * @param type
+		 *            name of the variable
+		 * @param value
+		 *            value to add
 		 */
 		public void add(String type, long value) {
 			if (!content.containsKey(type)) {
@@ -85,15 +93,19 @@ public class Statistics implements StatisticsMBean {
 
 		/**
 		 * Returns a variable value
-		 * @param type name of the variable
+		 *
+		 * @param type
+		 *            name of the variable
 		 * @return its value
 		 */
 		public long get(String type) {
 			return content.get(type);
 		}
 
-		/** Iterate over the variables
-		 *  @return an iterator over the variables
+		/**
+		 * Iterate over the variables
+		 *
+		 * @return an iterator over the variables
 		 */
 		public Iterator<String> iterator() {
 			return content.keySet().iterator();
@@ -101,7 +113,9 @@ public class Statistics implements StatisticsMBean {
 
 		/**
 		 * Adds to this instance the instance var
-		 * @param var a instance of Variables to add to this one.
+		 *
+		 * @param var
+		 *            a instance of Variables to add to this one.
 		 */
 		public void add(Variables var) {
 			for (String type : var) {
@@ -111,13 +125,13 @@ public class Statistics implements StatisticsMBean {
 
 		/**
 		 * Prints the variable
+		 *
 		 * @param out
 		 * @param diff
 		 */
 		public void print(PrintWriter out, double diff) {
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type)
-				        + "\" />");
+				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type) + "\" />");
 			}
 		}
 	}
@@ -159,8 +173,8 @@ public class Statistics implements StatisticsMBean {
 	private static Statistics stats;
 
 	/**
-	 * Returns an unique instance of Statistics.
-	 * This is a singleton.
+	 * Returns an unique instance of Statistics. This is a singleton.
+	 *
 	 * @return a statistics object
 	 */
 	public static Statistics getStatistics() {
@@ -173,8 +187,11 @@ public class Statistics implements StatisticsMBean {
 
 	/**
 	 * Sets an attribute
-	 * @param type attribute name
-	 * @param value its value
+	 *
+	 * @param type
+	 *            attribute name
+	 * @param value
+	 *            its value
 	 */
 	public void set(String type, int value) {
 		now.put(type, value);
@@ -183,6 +200,7 @@ public class Statistics implements StatisticsMBean {
 
 	/**
 	 * Adds an attribute to its existing
+	 *
 	 * @param type
 	 * @param value
 	 */
@@ -192,9 +210,11 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	/**
-	 * Return the value of an attribute since the server start.
-	 * This method is used by the Bean interface.
-	 * @param type the attribute name
+	 * Return the value of an attribute since the server start. This method is
+	 * used by the Bean interface.
+	 *
+	 * @param type
+	 *            the attribute name
 	 */
 	public long get(String type) {
 		return sinceStart == null ? -1 : sinceStart.get(type);
@@ -210,7 +230,7 @@ public class Statistics implements StatisticsMBean {
 
 			long actualTime = System.currentTimeMillis();
 			/*
-			 * Store statistics to database. 
+			 * Store statistics to database.
 			 */
 			addStatisticsEventRow(actualTime);
 
@@ -257,7 +277,6 @@ public class Statistics implements StatisticsMBean {
 	 * @return escaped strings
 	 */
 	private static String escapeXML(String param) {
-		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
-		        ">", "&gt;");
+		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 }

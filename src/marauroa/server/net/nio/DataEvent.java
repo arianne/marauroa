@@ -1,4 +1,4 @@
-/* $Id: DataEvent.java,v 1.5 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: DataEvent.java,v 1.6 2007/04/09 14:40:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,10 +14,12 @@ package marauroa.server.net.nio;
 
 import java.nio.channels.SocketChannel;
 
-/** This class represents a data event.
- * It stores the socket associated and the data that has been recieved.
+/**
+ * This class represents a data event. It stores the socket associated and the
+ * data that has been recieved.
+ * 
  * @author miguel
- *
+ * 
  */
 class DataEvent {
 

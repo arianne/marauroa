@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.13 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.14 2007/04/09 14:40:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.net.validator;
 
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,12 +29,16 @@ import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.Transaction;
 
 /**
- * The ConnectionValidator validates the ariving connections, currently it can only
- * check if the address is banned.
+ * The ConnectionValidator validates the ariving connections, currently it can
+ * only check if the address is banned.
  * <p>
- * There are two types of bans:<ul>
- * <li>Permanent bans<br>That are stored at database and that we offer no interface.
- * <li>Temportal bans<br>That are not stored but that has a interface for adding, removing and querying bans.
+ * There are two types of bans:
+ * <ul>
+ * <li>Permanent bans<br>
+ * That are stored at database and that we offer no interface.
+ * <li>Temportal bans<br>
+ * That are not stored but that has a interface for adding, removing and
+ * querying bans.
  * </ul>
  */
 public class ConnectionValidator implements Iterable<InetAddressMask> {
@@ -44,8 +49,10 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	/** Permanent bans are stored inside the database. */
 	private List<InetAddressMask> permanentBans;
 
-	/** Temporal bans are added using the API and are lost on each server reset.
-	 *  Consider using Database for a permanent ban  */
+	/**
+	 * Temporal bans are added using the API and are lost on each server reset.
+	 * Consider using Database for a permanent ban
+	 */
 	private List<InetAddressMask> temporalBans;
 
 	/** A timer to remove ban when it is done. */
@@ -54,12 +61,11 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	/* timestamp of last reload */
 	private long lastLoadTS;
 
-	/* How often do we reload ban information from database? Each 5 minutes*/
+	/* How often do we reload ban information from database? Each 5 minutes */
 	private final static long RELOAD_PERMANENT_BANS = 5 * 60 * 1000;
 
 	/**
-	 * Constructor.
-	 * It loads permanent bans from database.
+	 * Constructor. It loads permanent bans from database.
 	 */
 	public ConnectionValidator() {
 		permanentBans = new LinkedList<InetAddressMask>();
@@ -71,8 +77,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	}
 
 	/**
-	 * Request connection validator to stop all the activity, and stop
-	 * checking if any ban needs to be removed.
+	 * Request connection validator to stop all the activity, and stop checking
+	 * if any ban needs to be removed.
 	 *
 	 */
 	public void finish() {
@@ -81,6 +87,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 
 	/**
 	 * This class extend timer task to remove bans when the time is reached.
+	 *
 	 * @author miguel
 	 *
 	 */
@@ -90,6 +97,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 
 		/**
 		 * Constructor
+		 *
 		 * @param mask
 		 */
 		public RemoveBan(InetAddressMask mask) {
@@ -103,10 +111,27 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	}
 
 	/**
+	 * Adds a ban just for this ip address for i seconds.
+	 *
+	 * @param channel
+	 *            the channel whose IP we are going to ban.
+	 * @param time
+	 *            how many seconds to ban.
+	 */
+	public void addBan(SocketChannel channel, int time) {
+		addBan(channel.socket().getInetAddress().getHostAddress(), "255.255.255.255", time);
+
+	}
+
+	/**
 	 * This adds a temporal ban.
-	 * @param address the address to ban
-	 * @param mask mask to apply to the address
-	 * @param time how many seconds should the ban apply.
+	 *
+	 * @param address
+	 *            the address to ban
+	 * @param mask
+	 *            mask to apply to the address
+	 * @param time
+	 *            how many seconds should the ban apply.
 	 */
 	public void addBan(String address, String mask, long time) {
 		InetAddressMask inetmask = new InetAddressMask(address, mask);
@@ -117,8 +142,11 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 
 	/**
 	 * Removes one of the added temporal bans.
-	 * @param address the address to remove
-	 * @param mask the mask used.
+	 *
+	 * @param address
+	 *            the address to remove
+	 * @param mask
+	 *            the mask used.
 	 * @return true if it has been removed.
 	 */
 	public boolean removeBan(String address, String mask) {
@@ -126,8 +154,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	}
 
 	/**
-	 * Returns an iterator over the temporal bans.
-	 * To access permanent bans, use database facility.
+	 * Returns an iterator over the temporal bans. To access permanent bans, use
+	 * database facility.
 	 */
 	public Iterator<InetAddressMask> iterator() {
 		return temporalBans.iterator();
@@ -162,7 +190,9 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 
 	/**
 	 * Check if a socket that has a InetAddress associated is banned.
-	 * @param socket the socket we want to check if it is banned or not.
+	 *
+	 * @param socket
+	 *            the socket we want to check if it is banned or not.
 	 * @return true if it is baneed.
 	 */
 	public synchronized boolean checkBanned(Socket socket) {

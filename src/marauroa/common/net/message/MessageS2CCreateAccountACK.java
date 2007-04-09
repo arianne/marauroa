@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.5 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountACK.java,v 1.6 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,10 +31,12 @@ public class MessageS2CCreateAccountACK extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and the confirmed username
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param username
+	 * 			  The confirmed username from server.
 	 */
 	public MessageS2CCreateAccountACK(SocketChannel source, String username) {
 		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
@@ -43,6 +45,7 @@ public class MessageS2CCreateAccountACK extends Message {
 
 	/**
 	 * Returns the username created by the server.
+	 *
 	 * @return the username created by the server.
 	 */
 	public String getUsername() {
@@ -66,14 +69,13 @@ public class MessageS2CCreateAccountACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		username = in.readString();
 
 		if (type != MessageType.S2C_CREATEACCOUNT_ACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

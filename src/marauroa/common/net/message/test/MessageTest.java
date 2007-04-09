@@ -3,7 +3,6 @@ package marauroa.common.net.message.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,19 +46,15 @@ public class MessageTest {
 		mmOut.writeObject(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
-		try {
-			mmInn.readObject(in);
-			assertEquals(mmOut.getClientID(), mmInn.getClientID());
-			assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
-			assertEquals(mmOut.getType(), mmInn.getType());
 
-		} catch (ClassNotFoundException e) {
-			fail("Class was manually inited and not found");
-		}
+		mmInn.readObject(in);
+		assertEquals(mmOut.getClientID(), mmInn.getClientID());
+		assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
+		assertEquals(mmOut.getType(), mmInn.getType());
 	}
 
 	@Test
-	public final void testInvalidClientId() throws IOException, ClassNotFoundException {
+	public final void testInvalidClientId() throws IOException {
 		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		mmOut.setClientID(Message.CLIENTID_INVALID);

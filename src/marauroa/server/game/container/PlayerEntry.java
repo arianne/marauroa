@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.28 2007/03/23 20:39:19 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.29 2007/04/09 14:39:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -28,8 +28,8 @@ import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.Transaction;
 
 /**
- * This class represent a player on game.
- * It handles all the bussiness glue that it is needed by the server.
+ * This class represent a player on game. It handles all the bussiness glue that
+ * it is needed by the server.
  *
  * @author miguel
  */
@@ -44,8 +44,8 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * This class store the information needed to allow a secure login.
-	 * Once login is completed the information is cleared.
+	 * This class store the information needed to allow a secure login. Once
+	 * login is completed the information is cleared.
 	 */
 	static public class SecuredLoginInfo {
 
@@ -61,18 +61,24 @@ public class PlayerEntry {
 		/** Username of the player */
 		public String username;
 
-		/** An array that represent the hash of the password xor ClientNonce xor ServerNonce. */
+		/**
+		 * An array that represent the hash of the password xor ClientNonce xor
+		 * ServerNonce.
+		 */
 		public byte[] password;
 
 		/** The server RSA key. */
 		public RSAKey key;
 
 		/**
-		 *  Constructor
+		 * Constructor
 		 *
-		 * @param key the server private key
-		 * @param clientNonceHash the client hash
-		 * @param serverNonce the server random bigint
+		 * @param key
+		 *            the server private key
+		 * @param clientNonceHash
+		 *            the client hash
+		 * @param serverNonce
+		 *            the server random bigint
 		 */
 		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce) {
 			this.key = key;
@@ -84,18 +90,24 @@ public class PlayerEntry {
 		 * Verify that a player is whom he/she says it is.
 		 *
 		 * @return true if it is correct: username and password matches.
-		 * @throws SQLException if there is any database problem.
+		 * @throws SQLException
+		 *             if there is any database problem.
 		 */
 		public boolean verify() throws SQLException {
 			return playerDatabase.verify(playerDatabase.getTransaction(), this);
 		}
 
 		/**
-		 * Add a login event to database each time player login, even if it fails.
+		 * Add a login event to database each time player login, even if it
+		 * fails.
 		 *
-		 * @param address the IP address that originated the request.
-		 * @param loginResult the result of the login action, where true is login correct and false login failed.
-		 * @throws SQLException if there is any database problem.
+		 * @param address
+		 *            the IP address that originated the request.
+		 * @param loginResult
+		 *            the result of the login action, where true is login
+		 *            correct and false login failed.
+		 * @throws SQLException
+		 *             if there is any database problem.
 		 */
 		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
 			Transaction transaction = playerDatabase.getTransaction();
@@ -106,10 +118,13 @@ public class PlayerEntry {
 		}
 
 		/**
-		 * Returns true if an account is temporally blocked due to too many tries on the defined time frame.
+		 * Returns true if an account is temporally blocked due to too many
+		 * tries on the defined time frame.
 		 *
-		 * @return true if an account is temporally blocked due to too many tries on the defined time frame.
-		 * @throws SQLException if there is any database problem.
+		 * @return true if an account is temporally blocked due to too many
+		 *         tries on the defined time frame.
+		 * @throws SQLException
+		 *             if there is any database problem.
 		 */
 		public boolean isAccountBlocked() throws SQLException {
 			Transaction transaction = playerDatabase.getTransaction();
@@ -118,8 +133,8 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * We record when this player entry was created to remove players that don't complete
-	 * login stage but that keep connected.
+	 * We record when this player entry was created to remove players that don't
+	 * complete login stage but that keep connected.
 	 */
 	public long creationTime;
 
@@ -133,8 +148,8 @@ public class PlayerEntry {
 	public SocketChannel channel;
 
 	/**
-	 * The login Info. It is created after the first login message and
-	 * destroyed after the login is finished.
+	 * The login Info. It is created after the first login message and destroyed
+	 * after the login is finished.
 	 */
 	public SecuredLoginInfo loginInformations;
 
@@ -147,10 +162,11 @@ public class PlayerEntry {
 	/** The object of the player */
 	public RPObject object;
 
-	/** A counter to detect dropped packets or bad order at client side.
-	 * We enumerate each perception so client can know in which order it is
-	 * expected to apply them.
-	 * When using TCP there is no problem as delivery is guaranted.
+	/**
+	 * A counter to detect dropped packets or bad order at client side. We
+	 * enumerate each perception so client can know in which order it is
+	 * expected to apply them. When using TCP there is no problem as delivery is
+	 * guaranted.
 	 */
 	public int perceptionCounter;
 
@@ -162,7 +178,9 @@ public class PlayerEntry {
 
 	/**
 	 * Constructor
-	 * @param channel the socket channel
+	 *
+	 * @param channel
+	 *            the socket channel
 	 */
 	public PlayerEntry(SocketChannel channel) {
 		this.channel = channel;
@@ -175,8 +193,8 @@ public class PlayerEntry {
 		object = null;
 		perceptionCounter = 0;
 		/*
-		 * We set this to true so that RP Manager will send a sync perception to player
-		 * as soon as possible.
+		 * We set this to true so that RP Manager will send a sync perception to
+		 * player as soon as possible.
 		 */
 		requestedSync = true;
 		contentToTransfer = null;
@@ -212,7 +230,8 @@ public class PlayerEntry {
 	/**
 	 * Returns the named content or returns null if it is not found.
 	 *
-	 * @param name name of the content to find
+	 * @param name
+	 *            name of the content to find
 	 * @return the content or null if it is not found.
 	 */
 	public TransferContent getContent(String name) {
@@ -231,7 +250,9 @@ public class PlayerEntry {
 
 	/**
 	 * This method stores an object at database backend
-	 * @param player the object to store
+	 *
+	 * @param player
+	 *            the object to store
 	 * @throws SQLException
 	 */
 	public void storeRPObject(RPObject player) throws SQLException, IOException {
@@ -257,24 +278,29 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * This method query database to check if the player with username given by the entry
-	 * has a character with the name passed as argument.
+	 * This method query database to check if the player with username given by
+	 * the entry has a character with the name passed as argument.
 	 *
-	 * @param character The name we are querying for.
+	 * @param character
+	 *            The name we are querying for.
 	 * @return true if it is found or false otherwise.
-	 * @throws Exception If there is a Database exception.
+	 * @throws Exception
+	 *             If there is a Database exception.
 	 */
 	public boolean hasCharacter(String character) throws Exception {
 		return playerDatabase.hasCharacter(playerDatabase.getTransaction(), username, character);
 	}
 
 	/**
-	 * This method loads the object pointed by username and character from database
-	 * and assign already it to the entry.
+	 * This method loads the object pointed by username and character from
+	 * database and assign already it to the entry.
+	 *
 	 * @return the loaded object
 	 * @throws IOException
-	 * @throws IOException if the load fails.
-	 * @throws SQLException in case of an database error
+	 * @throws IOException
+	 *             if the load fails.
+	 * @throws SQLException
+	 *             in case of an database error
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
 		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(), username, character);
@@ -282,9 +308,12 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * This method returns a list of all the characters available for this player
+	 * This method returns a list of all the characters available for this
+	 * player
+	 *
 	 * @return a list containing all the usable characters
-	 * @throws SQLException if there is any database problem.
+	 * @throws SQLException
+	 *             if there is any database problem.
 	 */
 	public List<String> getCharacters() throws SQLException {
 		return playerDatabase.getCharacters(playerDatabase.getTransaction(), username);
@@ -299,6 +328,7 @@ public class PlayerEntry {
 
 	/**
 	 * Return a list of the previous login attemps.
+	 *
 	 * @return a list of the previous login attemps.
 	 * @throws SQLException
 	 */
@@ -307,19 +337,20 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * This method tag this entry as removable if there is more than UNCOMPLETED_LOGIN_TIMEOUT milliseconds
-	 * since the creation time of the entry and the actual time and the entry has not completed
-	 * the login stage.
+	 * This method tag this entry as removable if there is more than
+	 * UNCOMPLETED_LOGIN_TIMEOUT milliseconds since the creation time of the
+	 * entry and the actual time and the entry has not completed the login
+	 * stage.
 	 *
 	 * @return true, if it is removeable, false otherwise
 	 */
 	boolean isRemovable() {
 		/*
-		 * Add logged players that didn't choose a character or that have not even login yet.
+		 * Add logged players that didn't choose a character or that have not
+		 * even login yet.
 		 */
 		boolean isInOKState = (state == ClientState.GAME_BEGIN);
-		return !isInOKState
-		        && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
+		return !isInOKState && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
 	}
 
 	@Override

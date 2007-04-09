@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.13 2007/03/25 10:02:12 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.14 2007/04/09 14:39:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -25,15 +25,15 @@ import marauroa.server.RWLock;
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
  *
- * This class implements the singleton pattern.
- * PlayerContainer is the data structure that contains all of the information about
- * the players while the game is running.
+ * This class implements the singleton pattern. PlayerContainer is the data
+ * structure that contains all of the information about the players while the
+ * game is running.
  * <p>
  * It consists of a list of PlayerEntry objects and is heavily linked with the
- * database, so we can hide its complexity to GameManager. By making PlayerDatabase
- * hidden by PlayerContainer we achieve the illusion that managing the runtime behavior
- * we modify automatically the permanent one.
-
+ * database, so we can hide its complexity to GameManager. By making
+ * PlayerDatabase hidden by PlayerContainer we achieve the illusion that
+ * managing the runtime behavior we modify automatically the permanent one.
+ *
  * @author miguel
  *
  */
@@ -79,6 +79,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 	/**
 	 * This method returns an iterator over tha available player entry objects.
+	 *
 	 * @return the iterator
 	 */
 	public Iterator<PlayerEntry> iterator() {
@@ -97,6 +98,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 	/**
 	 * This method returns the size of the container.
+	 *
 	 * @return Container's size.
 	 */
 	public int size() {
@@ -104,8 +106,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns true if there is any PlayerEntry which has client id as clientid.
-	 * @param clientid the id of the PlayerEntry we are looking for
+	 * This method returns true if there is any PlayerEntry which has client id
+	 * as clientid.
+	 *
+	 * @param clientid
+	 *            the id of the PlayerEntry we are looking for
 	 * @return true if it is found or false otherwise.
 	 */
 	public boolean has(int clientid) {
@@ -113,8 +118,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the PlayerEntry whose client id is clientid or null otherwise.
-	 * @param clientid the id of the PlayerEntry we are looking for
+	 * This method returns the PlayerEntry whose client id is clientid or null
+	 * otherwise.
+	 *
+	 * @param clientid
+	 *            the id of the PlayerEntry we are looking for
 	 * @return the PlayerEntry if is it found or null otherwise
 	 */
 	public PlayerEntry get(int clientid) {
@@ -122,9 +130,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the entry that has been associated with this SocketChannel,
-	 * or null if it does not exists.
-	 * @param channel the socket channel to check
+	 * This method returns the entry that has been associated with this
+	 * SocketChannel, or null if it does not exists.
+	 *
+	 * @param channel
+	 *            the socket channel to check
 	 * @return the PlayerEntry or null if it is not found.
 	 */
 	public PlayerEntry get(SocketChannel channel) {
@@ -138,14 +148,19 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the entry that has been associated to this player or null
-	 * if it does not exists.
-	 * @param username the username to look for
+	 * This method returns the entry that has been associated to this player or
+	 * null if it does not exists.
+	 *
+	 * @param username
+	 *            the username to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(String username) {
 		for (PlayerEntry entry : clientidMap.values()) {
-			/* NOTE: Bug fix: We use ignore case to detect already logged players better. */
+			/*
+			 * NOTE: Bug fix: We use ignore case to detect already logged
+			 * players better.
+			 */
 			if (username.equalsIgnoreCase(entry.username)) {
 				return entry;
 			}
@@ -155,15 +170,17 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the entry that has been associated to this player or null
-	 * if it does not exists.
-	 * @param object the RPObject we have to look for
+	 * This method returns the entry that has been associated to this player or
+	 * null if it does not exists.
+	 *
+	 * @param object
+	 *            the RPObject we have to look for
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(RPObject object) {
 		for (PlayerEntry entry : clientidMap.values()) {
 			/*
-			 * We want really to do a fast comparasion 
+			 * We want really to do a fast comparasion
 			 */
 			if (entry.object == object) {
 				return entry;
@@ -174,9 +191,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method removed a player entry from the container and return it or null if the entry
-	 * does not exist.
-	 * @param clientid the clientid we want its Player entry to remove.
+	 * This method removed a player entry from the container and return it or
+	 * null if the entry does not exist.
+	 *
+	 * @param clientid
+	 *            the clientid we want its Player entry to remove.
 	 * @return the player entry or null if it has not been found.
 	 */
 	public PlayerEntry remove(int clientid) {
@@ -184,10 +203,12 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 	}
 
-	/** Add a new Player entry to the container.
-	 *  This method assigns automatically a random clientid to this player entry.
+	/**
+	 * Add a new Player entry to the container. This method assigns
+	 * automatically a random clientid to this player entry.
 	 *
-	 * @param channel the socket channel associated with the client
+	 * @param channel
+	 *            the socket channel associated with the client
 	 * @return client id resulting
 	 */
 	public PlayerEntry add(SocketChannel channel) {
@@ -204,7 +225,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private int generateClientID() {
 		int clientid = rand.nextInt();
 
-		while (has(clientid) && clientid>0) {
+		while (has(clientid) && clientid > 0) {
 			clientid = rand.nextInt();
 		}
 
@@ -212,10 +233,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * Obtains an idle player entry from the container.
-	 * We can define an idle player entry like a player that has connected to server
-	 * and requested to login, but never actually completed login stage.
-	 * This client is taking server resources but doing nothing useful at all.
+	 * Obtains an idle player entry from the container. We can define an idle
+	 * player entry like a player that has connected to server and requested to
+	 * login, but never actually completed login stage. This client is taking
+	 * server resources but doing nothing useful at all.
+	 *
 	 * @return an idle PlayerEntry or null if not found
 	 */
 	public PlayerEntry getIdleEntry() {

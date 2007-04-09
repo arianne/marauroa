@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,13 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Prior to transfer we send client a transfer request so it can decide whenever to ACK it and have it
+ * transfered or rejected it and use a local cache instead.
+ *
+ * @author miguel
+ *
+ */
 public class MessageS2CTransferREQ extends Message {
 
 	private List<TransferContent> contents;
@@ -38,8 +45,7 @@ public class MessageS2CTransferREQ extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress()
-		        + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress() + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -65,8 +71,7 @@ public class MessageS2CTransferREQ extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		int size = in.readInt();
@@ -79,7 +84,7 @@ public class MessageS2CTransferREQ extends Message {
 		}
 
 		if (type != MessageType.S2C_TRANSFER_REQ) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 }

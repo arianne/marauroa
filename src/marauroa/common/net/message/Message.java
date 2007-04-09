@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.7 2007/03/23 20:39:17 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.8 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,7 +33,35 @@ public class Message implements Serializable {
 
 	/** Type of message */
 	public enum MessageType {
-		C2S_ACTION, C2S_CHOOSECHARACTER, C2S_LOGIN_REQUESTKEY, C2S_LOGIN_SENDNONCENAMEANDPASSWORD, C2S_LOGIN_SENDPROMISE, C2S_LOGOUT, C2S_OUTOFSYNC, C2S_TRANSFER_ACK, S2C_CHARACTERLIST, S2C_CHOOSECHARACTER_ACK, S2C_CHOOSECHARACTER_NACK, S2C_INVALIDMESSAGE, S2C_LOGIN_ACK, S2C_LOGIN_NACK, S2C_LOGIN_SENDKEY, S2C_LOGIN_SENDNONCE, S2C_LOGOUT_ACK, S2C_LOGOUT_NACK, S2C_PERCEPTION, S2C_SERVERINFO, S2C_TRANSFER, S2C_TRANSFER_REQ, C2S_CREATEACCOUNT, S2C_CREATEACCOUNT_ACK, S2C_CREATEACCOUNT_NACK, C2S_CREATECHARACTER, S2C_CREATECHARACTER_ACK, S2C_CREATECHARACTER_NACK, S2C_CONNECT_NACK
+		C2S_ACTION,
+		C2S_CHOOSECHARACTER,
+		C2S_LOGIN_REQUESTKEY,
+		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		C2S_LOGIN_SENDPROMISE,
+		C2S_LOGOUT,
+		C2S_OUTOFSYNC,
+		C2S_TRANSFER_ACK,
+		S2C_CHARACTERLIST,
+		S2C_CHOOSECHARACTER_ACK,
+		S2C_CHOOSECHARACTER_NACK,
+		S2C_INVALIDMESSAGE,
+		S2C_LOGIN_ACK,
+		S2C_LOGIN_NACK,
+		S2C_LOGIN_SENDKEY,
+		S2C_LOGIN_SENDNONCE,
+		S2C_LOGOUT_ACK,
+		S2C_LOGOUT_NACK,
+		S2C_PERCEPTION,
+		S2C_SERVERINFO,
+		S2C_TRANSFER,
+		S2C_TRANSFER_REQ,
+		C2S_CREATEACCOUNT,
+		S2C_CREATEACCOUNT_ACK,
+		S2C_CREATEACCOUNT_NACK,
+		C2S_CREATECHARACTER,
+		S2C_CREATECHARACTER_ACK,
+		S2C_CREATECHARACTER_NACK,
+		S2C_CONNECT_NACK
 	}
 
 	/** Type of the message */
@@ -45,14 +73,19 @@ public class Message implements Serializable {
 	/** Timestamp about when the message was created */
 	protected int timestampMessage;
 
-	/** The socket channel that the message will use to be send or from where it was recieved */
+	/**
+	 * The socket channel that the message will use to be send or from where it
+	 * was recieved
+	 */
 	protected SocketChannel channel;
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
 	 *
-	 * @param type the type of the message
-	 * @param channel The TCP/IP address associated to this message
+	 * @param type
+	 *            the type of the message
+	 * @param channel
+	 *            The TCP/IP address associated to this message
 	 */
 	protected Message(MessageType type, SocketChannel channel) {
 		this.type = type;
@@ -82,6 +115,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Returns the address of the channel associated.
+	 *
 	 * @return the address of the channel associated.
 	 */
 	public InetAddress getAddress() {
@@ -89,7 +123,6 @@ public class Message implements Serializable {
 			return null;
 		}
 
-		//return channel.socket().getInetAddress();
 		Socket socket = channel.socket();
 		return socket.getInetAddress();
 	}
@@ -125,6 +158,7 @@ public class Message implements Serializable {
 
 	/**
 	 * Returns the timestamp of the message. Usually milliseconds
+	 *
 	 * @return the timestamp of the message. Usually milliseconds
 	 */
 	public int getMessageTimestamp() {
@@ -134,7 +168,8 @@ public class Message implements Serializable {
 	/**
 	 * Serialize the object into an ObjectOutput
 	 *
-	 * @param out the output serializer.
+	 * @param out
+	 *            the output serializer.
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
@@ -148,13 +183,12 @@ public class Message implements Serializable {
 	/**
 	 * Serialize the object from an ObjectInput
 	 *
-	 * @param in the input serializer
+	 * @param in
+	 *            the input serializer
 	 * @exception IOException
 	 *                if the serializations fails
-	 * @exception java.lang.ClassNotFoundException
-	 *                if the serialized class doesn't exist.
 	 */
-	public void readObject(InputSerializer in) throws IOException, java.lang.ClassNotFoundException {
+	public void readObject(InputSerializer in) throws IOException {
 		if (in.readByte() != NetConst.NETWORK_PROTOCOL_VERSION) {
 			throw new IOException();
 		}

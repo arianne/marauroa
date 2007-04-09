@@ -11,6 +11,7 @@ import marauroa.server.net.IDisconnectedListener;
 /**
  * This class implements a Flood checking for all the connections to server.
  * What is a flood is implemented at the IFloodCheck interface.
+ *
  * @author miguel
  *
  */
@@ -27,7 +28,9 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 
 	/**
 	 * Constructor
-	 * @param check the implementation of the flood check.
+	 *
+	 * @param check
+	 *            the implementation of the flood check.
 	 */
 	public FloodValidator(IFloodCheck check) {
 		connections = new HashMap<SocketChannel, FloodMeasure>();
@@ -36,15 +39,17 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 
 	/**
 	 * Adds a new channel to the flood validator.
-	 * @param channel the new added channel.
+	 *
+	 * @param channel
+	 *            the new added channel.
 	 */
 	public void add(SocketChannel channel) {
 		connections.put(channel, new FloodMeasure(channel));
 	}
 
 	/**
-	 * Callback method.
-	 * It will be called by NIOServer when the connection is closed.
+	 * Callback method. It will be called by NIOServer when the connection is
+	 * closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
 		connections.remove(channel);
@@ -53,8 +58,10 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	/**
 	 * Returns true if the channel passed as param is considered to be flooding
 	 *
-	 * @param channel the channel we got the new message from
-	 * @param length the length in bytes of the message.
+	 * @param channel
+	 *            the channel we got the new message from
+	 * @param length
+	 *            the length in bytes of the message.
 	 * @return true if it is flooding.
 	 */
 	public boolean isFlooding(SocketChannel channel, int length) {
@@ -77,8 +84,8 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	}
 
 	/**
-	 * This method will call onFlood method of the flood check so appropiate actions
-	 * can be taken for a flooding channel
+	 * This method will call onFlood method of the flood check so appropiate
+	 * actions can be taken for a flooding channel
 	 */
 	public void onFlood(SocketChannel channel) {
 		FloodMeasure entry = connections.get(channel);
@@ -91,9 +98,10 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 
 	/**
 	 * Returns an iterator over the flood measure entries.
+	 *
 	 * @return an iterator over the flood measure entries.
 	 */
 	public Iterator<FloodMeasure> iterator() {
-	    return connections.values().iterator();
-    }
+		return connections.values().iterator();
+	}
 }

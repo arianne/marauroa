@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.16 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.17 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,27 +16,52 @@ package marauroa.server.game.python;
 import java.util.List;
 
 import marauroa.common.game.AccountResult;
+import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
-import marauroa.common.game.RPObjectInvalidException;
-import marauroa.common.game.Result;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.rp.RPServerManager;
 
-@Deprecated
+/**
+ * Barebone implementation of RPRuleProcessor that you can extends at Python.
+ * You must extend this class.
+ * 
+ * @author miguel
+ * 
+ */
 public class PythonRP {
 
+	/**
+	 * Constructor
+	 * 
+	 */
 	public PythonRP() {
 	}
 
+	/** instance of rp manager */
 	private RPServerManager rpMan;
 
+	/**
+	 * This method is called by PythonRPRuleProcessor to make us know which is
+	 * the RP Manager instance.
+	 */
 	void setRPManager(RPServerManager rpMan) {
 		this.rpMan = rpMan;
 	}
 
-	public final void transferContent(RPObject target, List<TransferContent> content) {
+	/**
+	 * Transfer content to client.
+	 * 
+	 * @param target
+	 *            client to transfer content to.
+	 * @param content
+	 *            the contents to transfer.
+	 */
+	public void transferContent(RPObject target, List<TransferContent> content) {
 		rpMan.transferContent(target, content);
+	}
+
+	public void beginTurn() {
 	}
 
 	public boolean checkGameVersion(String game, String version) {
@@ -44,36 +69,32 @@ public class PythonRP {
 	}
 
 	public AccountResult createAccount(String username, String password, String email) {
-		return new AccountResult(Result.FAILED_EXCEPTION, username);
+		return null;
 	}
 
-	public boolean onActionAdd(RPAction action, List<RPAction> actionList) {
-		return true;
-	}
-
-	public boolean onIncompleteActionAdd(RPAction action, List<RPAction> actionList) {
-		return true;
-	}
-
-	public int execute(RPObject.ID id, RPAction action) {
-		return 0;
-	}
-
-	public void beginTurn() {
+	public CharacterResult createCharacter(String username, String character, RPObject template) {
+		return null;
 	}
 
 	public void endTurn() {
 	}
 
-	public boolean onInit(RPObject object) throws RPObjectInvalidException {
-		return false;
+	public void execute(RPObject object, RPAction action) {
 	}
 
-	public boolean onExit(RPObject.ID id) {
-		return false;
+	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
+		return true;
 	}
 
-	public boolean onTimeout(RPObject.ID id) {
-		return false;
+	public void onTimeout(RPObject object) {
 	}
+
+	public boolean onExit(RPObject object) {
+		return true;
+	}
+
+	public boolean onInit(RPObject object) {
+		return true;
+	}
+
 }

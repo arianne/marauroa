@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.2 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,12 +18,13 @@ import java.nio.channels.SocketChannel;
 import marauroa.common.game.RPAction;
 
 /**
- * This message indicate the server the action the client wants to perform.
- * 
+ * This message indicate the server the action the player's avatar wants to perform.
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SAction extends Message {
 
+	/** The action to do will be understood by IRPRuleProcessor */
 	private RPAction action;
 
 	/** Constructor for allowing creation of an empty message */
@@ -32,13 +33,12 @@ public class MessageC2SAction extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the name
-	 * of the choosen character.
-	 * 
+	 * Constructor with a TCP/IP source/destination of the message and action to send to serve.
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param action
-	 *            the username of the user that wants to login
+	 *            the action that we sent to server.
 	 */
 	public MessageC2SAction(SocketChannel source, RPAction action) {
 		super(MessageType.C2S_ACTION, source);
@@ -47,7 +47,7 @@ public class MessageC2SAction extends Message {
 
 	/**
 	 * This method returns the action
-	 * 
+	 *
 	 * @return the action
 	 */
 	public RPAction getRPAction() {
@@ -56,13 +56,12 @@ public class MessageC2SAction extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString()
-		        + ")";
+		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString() + ")";
 	}
 
 	@Override
@@ -72,12 +71,12 @@ public class MessageC2SAction extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		action = (RPAction) in.readObject(new RPAction());
+
 		if (type != MessageType.C2S_ACTION) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

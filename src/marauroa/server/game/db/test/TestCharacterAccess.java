@@ -1,4 +1,4 @@
-/* $Id: TestCharacterAccess.java,v 1.5 2007/03/23 20:39:20 arianne_rpg Exp $ */
+/* $Id: TestCharacterAccess.java,v 1.6 2007/04/09 14:40:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -33,16 +33,18 @@ import org.junit.Test;
 
 /**
  * Test the character related methods of database access.
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestCharacterAccess {
 
 	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
-	 * JDBC Database and create a proper public constructor.
+	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
+	 * instead JDBC Database and create a proper public constructor.
+	 * 
 	 * @author miguel
-	 *
+	 * 
 	 */
 	static class TestJDBC extends JDBCDatabase {
 
@@ -55,6 +57,7 @@ public class TestCharacterAccess {
 
 	/**
 	 * Setup one time the database.
+	 * 
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -72,7 +75,9 @@ public class TestCharacterAccess {
 	}
 
 	/**
-	 * Add a character to a player account and test it existence with hasCharacter method.
+	 * Add a character to a player account and test it existence with
+	 * hasCharacter method.
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -96,6 +101,7 @@ public class TestCharacterAccess {
 
 	/**
 	 * Test that adding two times the same character throws a SQLException
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -123,6 +129,7 @@ public class TestCharacterAccess {
 
 	/**
 	 * Test that remove character removed it and assert with hasCharacter.
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -147,7 +154,9 @@ public class TestCharacterAccess {
 	}
 
 	/**
-	 * Check that removing the player does in fact also removes the character that belonged to that player.
+	 * Check that removing the player does in fact also removes the character
+	 * that belonged to that player.
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -172,7 +181,9 @@ public class TestCharacterAccess {
 	}
 
 	/**
-	 * Check that getCharacters return a list with all the characters that belong to a player.
+	 * Check that getCharacters return a list with all the characters that
+	 * belong to a player.
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -198,9 +209,10 @@ public class TestCharacterAccess {
 	}
 
 	/**
-	 * Check that storing and loading an avatar associated to a character of a player works
-	 * as expected.
-	 * This code depends on RPObject and Serialization.
+	 * Check that storing and loading an avatar associated to a character of a
+	 * player works as expected. This code depends on RPObject and
+	 * Serialization.
+	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */

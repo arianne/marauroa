@@ -58,10 +58,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 	private static MockRPRuleProcessor rules;
 
 	/**
-	 * This method MUST be implemented in other for marauroa to be able to load this World implementation.
-	 * There is no way of enforcing static methods on a Interface, so just keep this in mind when
-	 * writting your own game.
-	 *
+	 * This method MUST be implemented in other for marauroa to be able to load
+	 * this World implementation. There is no way of enforcing static methods on
+	 * a Interface, so just keep this in mind when writting your own game.
+	 * 
 	 * @return an unique instance of world.
 	 */
 	public static IRPRuleProcessor get() {
@@ -85,8 +85,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	/**
-	 * Checks if game is correct.
-	 * We expect TestFramework at 0.00 version.
+	 * Checks if game is correct. We expect TestFramework at 0.00 version.
 	 */
 	public boolean checkGameVersion(String game, String version) {
 		TestHelper.assertEquals("TestFramework", game);

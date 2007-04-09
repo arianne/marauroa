@@ -1,4 +1,4 @@
-/* $Id: RSAPublicKey.java,v 1.7 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: RSAPublicKey.java,v 1.8 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,11 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 
+/**
+ * Implementation of a RSA key.
+ * @author quisar
+ *
+ */
 public class RSAPublicKey {
 
 	public static final BigInteger big0 = new BigInteger("0");

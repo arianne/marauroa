@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,12 +37,18 @@ public class MessageS2CLoginACK extends Message {
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param events
+	 * 			  The list of previous logins.
 	 */
 	public MessageS2CLoginACK(SocketChannel source, List<String> events) {
 		super(MessageType.S2C_LOGIN_ACK, source);
 		previousLogins = events;
 	}
 
+	/**
+	 * Return a list of previous login attemps.
+	 * @returna list of previous login attemps.
+	 */
 	public List<String> getPreviousLogins() {
 		return previousLogins;
 	}
@@ -68,17 +74,17 @@ public class MessageS2CLoginACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		if (type != MessageType.S2C_LOGIN_ACK) {
-			throw new java.lang.ClassNotFoundException();
-		}
 
 		int amount = in.readByte();
 		previousLogins = new LinkedList<String>();
 		for (int i = 0; i < amount; i++) {
 			previousLogins.add(in.read255LongString());
+		}
+
+		if (type != MessageType.S2C_LOGIN_ACK) {
+			throw new IOException();
 		}
 	}
 };

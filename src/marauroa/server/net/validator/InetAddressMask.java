@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.3 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: InetAddressMask.java,v 1.4 2007/04/09 14:40:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -86,8 +86,8 @@ public class InetAddressMask {
 	@Override
 	public String toString() {
 		try {
-			return (InetAddress.getByAddress(address).getHostAddress() + "/" + InetAddress
-			        .getByAddress(mask).getHostAddress());
+			return (InetAddress.getByAddress(address).getHostAddress() + "/" + InetAddress.getByAddress(mask)
+					.getHostAddress());
 		} catch (UnknownHostException e) {
 			return ("");
 		}

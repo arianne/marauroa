@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.3 2007/03/23 20:39:18 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,19 +17,27 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
- * This message indicate the client that the server has reject its login Message
+ * This message indicate the client that the server has reject its create character Message
  *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterNACK extends Message {
 
 	public enum Reasons {
-		UNKNOWN_REASON, CHARACTER_EXISTS, FIELD_TOO_SHORT, TEMPLATE_INVALID
+		UNKNOWN_REASON,
+		CHARACTER_EXISTS,
+		FIELD_TOO_SHORT,
+		TEMPLATE_INVALID
 	}
 
-	static private String[] text = { "Unknown reason", "Character already exists.",
-	        "Field is too short", "Template is invalid" };
+	static private String[] text = {
+		"Unknown reason",
+		"Character already exists.",
+		"Field is too short",
+		"Template is invalid"
+		};
 
+	/** The reason to reject character creation */
 	private Reasons reason;
 
 	/** Constructor for allowing creation of an empty message */
@@ -38,7 +46,8 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message
+	 * Constructor with a TCP/IP source/destination of the message and the reason to deny
+	 * character creation.
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
@@ -76,8 +85,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Character NACK) from (" + getAddress() + ") CONTENTS: ("
-		        + getResolution() + ")";
+		return "Message (S2C Create Character NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution() + ")";
 	}
 
 	@Override
@@ -87,12 +95,12 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException,
-	        java.lang.ClassNotFoundException {
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		reason = Reasons.values()[in.readByte()];
+
 		if (type != MessageType.S2C_CREATECHARACTER_NACK) {
-			throw new java.lang.ClassNotFoundException();
+			throw new IOException();
 		}
 	}
 };

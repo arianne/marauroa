@@ -92,11 +92,17 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
-1.92 Mar 28, 2007
+1.92 Apr 09, 2007
+- Ported Python server interface to Marauroa 2.0
 - Added flood detection at server side.
 - RPEvents now extends Attributes, so it can have several values associated.
 - Send Connect NACK message for banned IP.
-- Fixed null pointer bugs at NIOServer
+- Fixed null pointer bugs at NIOServer.
+- Fixed concurrent access bug at Hash class.
+- Fixed javadocs.
+- Added RPLink entity.
+- Removed ClassNotFoundException from Serializer
+- Fixed a problem at getPreviousLogins to return latest logins.
 
 1.91 Mar 13, 2007
 - Fixed bug at database methods for loading, storing and query for a character.

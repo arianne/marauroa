@@ -12,13 +12,22 @@ import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.Result;
 import marauroa.common.net.NetConst;
 import marauroa.server.marauroad;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+/**
+ * Test the server and client framework y running lots of clients several times
+ * against a server. The test is sucessfull if all client complete correctly.
+ *
+ * @author miguel
+ *
+ */
 public class CrushServer {
 
 	private static final int PORT = 3217;
@@ -29,9 +38,9 @@ public class CrushServer {
 
 	private int completed;
 
-	private static final int NUM_CLIENTS = 50;
+	private static final int NUM_CLIENTS = 150;
 
-	private static final boolean DETACHED_SERVER = false;
+	private static final boolean DETACHED_SERVER = true;
 
 	private static MockMarauroad server;
 
@@ -57,7 +66,7 @@ public class CrushServer {
 			}
 
 			/*
-			 * Ugly hack, but junit does runs test cases in parallel 
+			 * Ugly hack, but junit does runs test cases in parallel
 			 */
 			NetConst.tcpPort = PORT;
 
@@ -77,6 +86,7 @@ public class CrushServer {
 	/**
 	 * Test the perception management in game.
 	 */
+	@Ignore
 	@Test
 	public void crushServer() throws Exception {
 		for (int i = 0; i < NUM_CLIENTS; i++) {
@@ -93,9 +103,9 @@ public class CrushServer {
 						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);
 
 						client.connect("localhost", PORT);
-						AccountResult resAcc = client.createAccount("testUsername" + i, "password",
-						        "email");
+						AccountResult resAcc = client.createAccount("testUsername" + i, "password", "email");
 						assertEquals("testUsername" + i, resAcc.getUsername());
+						assertEquals(Result.OK_CREATED, resAcc.getResult());
 
 						Thread.sleep(Math.abs(new Random().nextInt() % 100) * 1000 + 5000);
 
@@ -123,7 +133,7 @@ public class CrushServer {
 							boolean choosen = client.chooseCharacter("testCharacter");
 							assertTrue(choosen);
 
-							int amount = Math.abs(new Random().nextInt() % 30) + 10;
+							int amount = Math.abs(new Random().nextInt() % 90) + 10;
 							while (client.getPerceptions() < amount) {
 								client.loop(0);
 
@@ -141,8 +151,7 @@ public class CrushServer {
 									/*
 									 * Randomly close the connection
 									 */
-									System.out
-									        .println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
+									System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
 									client.close();
 									return;
 								}

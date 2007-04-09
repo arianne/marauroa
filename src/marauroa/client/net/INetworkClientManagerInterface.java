@@ -6,22 +6,22 @@ import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 
 /**
- * All network-communication is done through this interface.
- * There are different implementations.
+ * All network-communication is done through this interface. There are different
+ * implementations.
  */
 public interface INetworkClientManagerInterface {
 
 	/**
 	 * This method notify the thread to finish it execution
 	 */
-	public abstract void finish();
+	void finish();
 
 	/**
 	 * Returns the ip address and port-number
 	 *
 	 * @return InetSocketAddress
 	 */
-	public abstract InetSocketAddress getAddress();
+	InetSocketAddress getAddress();
 
 	/**
 	 * This method returns a Message from the list or block for timeout
@@ -32,7 +32,7 @@ public interface INetworkClientManagerInterface {
 	 * @return a Message or null if timeout happens
 	 * @throws InvalidVersionException
 	 */
-	public abstract Message getMessage(int timeout) throws InvalidVersionException;
+	Message getMessage(int timeout) throws InvalidVersionException;
 
 	/**
 	 * This method add a message to be delivered to the client the message is
@@ -41,12 +41,12 @@ public interface INetworkClientManagerInterface {
 	 * @param msg
 	 *            the message to be delivered.
 	 */
-	public abstract void addMessage(Message msg);
+	void addMessage(Message msg);
 
 	/**
 	 * returns true unless it is sure that we are disconnected.
 	 *
 	 * @return true if we may be online
 	 */
-	public boolean getConnectionState();
+	boolean getConnectionState();
 }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.27 2007/03/23 20:39:21 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.28 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,8 @@ import marauroa.server.net.validator.ConnectionValidator;
  * This class is responsible for adding actions to scheduler, and to build and
  * sent perceptions.
  * <p>
- * The goal of the RP Manager is to handle the RP of the game. This means:<ul>
+ * The goal of the RP Manager is to handle the RP of the game. This means:
+ * <ul>
  * <li>run RPActions from clients
  * <li>manage RPWorld
  * <li>control triggers for events
@@ -52,9 +53,10 @@ import marauroa.server.net.validator.ConnectionValidator;
  * </ul>
  * <p>
  * This is a HUGE task that is very complex.<br>
- * Hence we split that behaviour in different class:<ul>
- * <li>IRuleProcessor will handle al the RP logic and run actions from client. This
- *  class will also implement AI, triggers, events, rules, etc...
+ * Hence we split that behaviour in different class:
+ * <ul>
+ * <li>IRuleProcessor will handle al the RP logic and run actions from client.
+ * This class will also implement AI, triggers, events, rules, etc...
  * <li>RPWorld will handle all the world storage and management logic.
  * </ul>
  *
@@ -125,7 +127,8 @@ public class RPServerManager extends Thread {
 
 			Configuration conf = Configuration.getConfiguration();
 			/*
-			 * This method loads the extensions that implement the game server code.
+			 * This method loads the extensions that implement the game server
+			 * code.
 			 */
 			initializeExtensions(conf);
 
@@ -133,18 +136,18 @@ public class RPServerManager extends Thread {
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {
-			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",
-			        e);
+			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances", e);
 			throw e;
 		}
 	}
 
 	/**
-	 * This method loads the extensions: IRPRuleProcessor and IRPWorld that are going to be used
-	 * to implement your game.
-	 * This method loads these class from the class names passed as arguments in Configuration
+	 * This method loads the extensions: IRPRuleProcessor and IRPWorld that are
+	 * going to be used to implement your game. This method loads these class
+	 * from the class names passed as arguments in Configuration
 	 *
-	 * @param conf the Configuration class
+	 * @param conf
+	 *            the Configuration class
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
@@ -152,19 +155,20 @@ public class RPServerManager extends Thread {
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
 	 */
-	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException,
-	        IllegalArgumentException, SecurityException, IllegalAccessException,
-	        InvocationTargetException, NoSuchMethodException {
+	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException,
+			SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("world"));
-		// call the get() method without parameters to retrieve the singleton instance
-		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null,
-		        (Object[]) null);
+		// call the get() method without parameters to retrieve the singleton
+		// instance
+		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		RPWorld.set(world);
 		world.onInit();
 
 		Class ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
-		// call the get() method without parameters to retrieve the singleton instance
-		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass
-		        .getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		// call the get() method without parameters to retrieve the singleton
+		// instance
+		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null,
+				(Object[]) null);
 		ruleProcessor.setContext(this);
 	}
 
@@ -174,6 +178,7 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * This method returns the actual turn number.
+	 *
 	 * @return actual turn number
 	 */
 	public int getTurn() {
@@ -181,8 +186,8 @@ public class RPServerManager extends Thread {
 	}
 
 	/**
-	 * This method finish the thread that run the RPServerManager.
-	 * It calls RPWorld.finish method.
+	 * This method finish the thread that run the RPServerManager. It calls
+	 * RPWorld.finish method.
 	 */
 	public void finish() {
 		keepRunning = false;
@@ -198,9 +203,13 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** Adds an action for the next turn
-	 * @param object the object that casted the action
-	 * @param action the action itself
+	/**
+	 * Adds an action for the next turn
+	 *
+	 * @param object
+	 *            the object that casted the action
+	 * @param action
+	 *            the action itself
 	 * @throws ActionInvalidException
 	 */
 	public void addRPAction(RPObject object, RPAction action) throws ActionInvalidException {
@@ -213,8 +222,11 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * This method decide if an client runs a compatible version of the game
-	 * @param game the game name
-	 * @param version the game version as a string
+	 *
+	 * @param game
+	 *            the game name
+	 * @param version
+	 *            the game version as a string
 	 * @return true if it is compatible.
 	 */
 	public boolean checkGameVersion(String game, String version) {
@@ -223,10 +235,15 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * Creates an account for a player in the game.
-	 * @param username player's username
-	 * @param password player's password
-	 * @param email player's email
-	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
+	 *
+	 * @param username
+	 *            player's username
+	 * @param password
+	 *            player's password
+	 * @param email
+	 *            player's email
+	 * @return a Result indicating if account creation was done successfully or
+	 *         if it is not the cause.
 	 */
 	public AccountResult createAccount(String username, String password, String email) {
 		return ruleProcessor.createAccount(username, password, email);
@@ -235,10 +252,13 @@ public class RPServerManager extends Thread {
 	/**
 	 * Creates a character for a account of a player
 	 *
-	 * @param username player's username
+	 * @param username
+	 *            player's username
 	 * @param character
-	 * @param template the template we are going to use to create the object.
-	 * @return a Result indicating if account creation was done successfully or if it is not the cause.
+	 * @param template
+	 *            the template we are going to use to create the object.
+	 * @return a Result indicating if account creation was done successfully or
+	 *         if it is not the cause.
 	 */
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		return ruleProcessor.createCharacter(username, character, template);
@@ -268,15 +288,16 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel,
-		        perception);
+		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel, perception);
 
 		stats.add("Perceptions " + (perception.type == 0 ? "DELTA" : "SYNC"), 1);
 
-		/* The perception is build of two parts: the general information and the private information
-		 *  about our object.
-		 *  This private information consists only of attributes that are not visible to every player
-		 *  but the owner, because visible attributes are already stored in the perception.
+		/*
+		 * The perception is build of two parts: the general information and the
+		 * private information about our object. This private information
+		 * consists only of attributes that are not visible to every player but
+		 * the owner, because visible attributes are already stored in the
+		 * perception.
 		 */
 		RPObject copy = (RPObject) object.clone();
 
@@ -330,7 +351,7 @@ public class RPServerManager extends Thread {
 				}
 			} catch (RuntimeException e) {
 				logger.error("Removing player(" + entry.clientid
-				        + ") because it caused a Exception while contacting it", e);
+						+ ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
 			}
 		}
@@ -414,11 +435,10 @@ public class RPServerManager extends Thread {
 							sb.append(" " + (timeEnd - timeStart));
 						}
 
-						logger.warn("Turn duration overflow by " + (-delay) + " ms: "
-						        + sb.toString());
+						logger.warn("Turn duration overflow by " + (-delay) + " ms: " + sb.toString());
 					} else if (delay > turnDuration) {
-						logger.error("Delay bigger than Turn duration. [delay: " + delay
-						        + "] [turnDuration:" + turnDuration + "]");
+						logger.error("Delay bigger than Turn duration. [delay: " + delay + "] [turnDuration:"
+								+ turnDuration + "]");
 						delay = 0;
 					}
 
@@ -463,7 +483,7 @@ public class RPServerManager extends Thread {
 
 					/** Remove timeout players */
 					/* NOTE: As we use TCP there are not anymore timeout players */
-					//notifyTimedoutPlayers(playersToRemove);
+					// notifyTimedoutPlayers(playersToRemove);
 					timeEnds[7] = System.currentTimeMillis();
 
 					turn++;
@@ -487,15 +507,19 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * This method disconnects a player from the server.
-	 * @param object the player object that we want to disconnect from world
+	 *
+	 * @param object
+	 *            the player object that we want to disconnect from world
 	 */
 	public void disconnectPlayer(RPObject object) {
 		PlayerEntry entry = playerContainer.get(object);
 		if (entry == null) {
-			/* There is no player entry for such channel
-			 * This is not necesaryly an error, as the connection could be
-			 * anything else but an arianne client or we are just disconnecting
-			 * a player that logout correctly. */
+			/*
+			 * There is no player entry for such channel This is not necesaryly
+			 * an error, as the connection could be anything else but an arianne
+			 * client or we are just disconnecting a player that logout
+			 * correctly.
+			 */
 			return;
 		}
 
@@ -503,7 +527,9 @@ public class RPServerManager extends Thread {
 	}
 
 	/**
-	 * This method exposes network layer connection validator so game logic can handle it.
+	 * This method exposes network layer connection validator so game logic can
+	 * handle it.
+	 *
 	 * @return the connection validator
 	 */
 	public ConnectionValidator getValidator() {

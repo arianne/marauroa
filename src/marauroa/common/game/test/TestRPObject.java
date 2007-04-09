@@ -21,6 +21,7 @@ import org.junit.Test;
 
 /**
  * Test unit for RPObject basic functionality
+ *
  * @author miguel
  *
  */
@@ -29,7 +30,8 @@ public class TestRPObject {
 	private RPObject obj;
 
 	/**
-	 * Set up method to create an object that contains some attributes, slots and events.
+	 * Set up method to create an object that contains some attributes, slots
+	 * and events.
 	 *
 	 */
 	@Before
@@ -43,6 +45,13 @@ public class TestRPObject {
 
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
+
+		RPObject buddy=new RPObject();
+		buddy.put("pepe","");
+		buddy.put("john","");
+		buddy.put("anton","");
+
+		obj.addLink("buddy",buddy);
 
 		RPEvent chat = new RPEvent("chat");
 		chat.put("text", "Hi there");
@@ -68,8 +77,9 @@ public class TestRPObject {
 	}
 
 	/**
-	 * Do some basic test on has and get methods over attributes, slots and events.
-	 * This test that adding attributes, slots and events works as expected.
+	 * Do some basic test on has and get methods over attributes, slots and
+	 * events. This test that adding attributes, slots and events works as
+	 * expected.
 	 *
 	 */
 	@Test
@@ -94,8 +104,8 @@ public class TestRPObject {
 	}
 
 	/**
-	 * Test that RPSlot works by retriving the object added to the container.
-	 * It test it by ensuring that the id numering is correct.
+	 * Test that RPSlot works by retriving the object added to the container. It
+	 * test it by ensuring that the id numering is correct.
 	 *
 	 */
 	@Test
@@ -104,13 +114,33 @@ public class TestRPObject {
 		assertEquals(1, expected.getInt("id"));
 	}
 
-	/** Test serialization of the RPObject by serializing it and then deserializing it
-	 * from the stream back again.
+	/**
+	 * Test the rp link feature by adding a link and testing some methods
+	 * over it.
+	 */
+	@Test
+	public void testRPLink() {
+		assertTrue(obj.hasLink("buddy"));
+		assertFalse(obj.hasLink("pals"));
+
+		RPObject buddy=obj.getLinkedObject("buddy");
+		assertNotNull(buddy);
+		assertEquals(buddy, obj.getLink("buddy").getObject());
+		assertEquals("buddy", obj.getLink("buddy").getName());
+
+		assertTrue(buddy.has("pepe"));
+		assertFalse(buddy.has("miguel"));
+	}
+
+	/**
+	 * Test serialization of the RPObject by serializing it and then
+	 * deserializing it from the stream back again.
+	 *
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
 	@Test
-	public void testSerialization() throws IOException, ClassNotFoundException {
+	public void testSerialization() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);
 
@@ -125,9 +155,9 @@ public class TestRPObject {
 	}
 
 	/**
-	 * Test the base container method that should return the base container of any contained
-	 * object.
-	 * The base container is the container of a object that is not contained by anyone.
+	 * Test the base container method that should return the base container of
+	 * any contained object. The base container is the container of a object
+	 * that is not contained by anyone.
 	 *
 	 */
 	@Test
@@ -137,8 +167,8 @@ public class TestRPObject {
 	}
 
 	/**
-	 * Test clear visible by removing all the visible attributes, slots and events.
-	 * The object should be empty afterwards.
+	 * Test clear visible by removing all the visible attributes, slots and
+	 * events. The object should be empty afterwards.
 	 *
 	 */
 	@Test

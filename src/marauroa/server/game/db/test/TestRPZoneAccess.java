@@ -18,16 +18,18 @@ import org.junit.Test;
 
 /**
  * This test unit test the load and store methods of database.
+ * 
  * @author miguel
- *
+ * 
  */
 public class TestRPZoneAccess {
 
 	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend instead
-	 * JDBC Database and create a proper public constructor.
+	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
+	 * instead JDBC Database and create a proper public constructor.
+	 * 
 	 * @author miguel
-	 *
+	 * 
 	 */
 	static class TestJDBC extends JDBCDatabase {
 
@@ -44,6 +46,7 @@ public class TestRPZoneAccess {
 
 	/**
 	 * Setup one time the database.
+	 * 
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -62,7 +65,7 @@ public class TestRPZoneAccess {
 
 	/**
 	 * Populates the zone with some objects.
-	 *
+	 * 
 	 */
 	@Before
 	public void populateZone() {
@@ -106,9 +109,10 @@ public class TestRPZoneAccess {
 	}
 
 	/**
-	 * Test the store and load methods of database by creating a zone and adding a object
-	 * and then storing it for at a later stage load the zone from database into a new zone
-	 * instance.
+	 * Test the store and load methods of database by creating a zone and adding
+	 * a object and then storing it for at a later stage load the zone from
+	 * database into a new zone instance.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -131,9 +135,11 @@ public class TestRPZoneAccess {
 	}
 
 	/**
-	 * Test the store and load methods of database by creating a zone and adding a object
-	 * and then storing it for at a later stage load the zone from database into a new zone
-	 * instance and repeating the operation a second time ( to test database update ).
+	 * Test the store and load methods of database by creating a zone and adding
+	 * a object and then storing it for at a later stage load the zone from
+	 * database into a new zone instance and repeating the operation a second
+	 * time ( to test database update ).
+	 * 
 	 * @throws Exception
 	 */
 	@Test

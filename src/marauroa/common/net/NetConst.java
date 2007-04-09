@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.21 2007/03/23 20:39:16 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.22 2007/04/09 14:39:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,8 @@ public class NetConst {
 	 *    - Added Timestamp to all Messages
 	 *    - Changed the ordering inside Perception message
 	 * 12 - Changed perception to send only what is hidden on myRPObject
-	 *    - Added Out of Sync Message - Improved speed of perception creation
+	 *    - Added Out of Sync Message
+     *    - Improved speed of perception creation
 	 * 13 - Redefined Map message
 	 * 14 - Compressed the Map message
 	 * 15 - Modified ServerInfo message to add RPClass stuff
@@ -68,6 +69,7 @@ public class NetConst {
 	 *    - Changed the RPClass serialization scheme
 	 * 22 - Changed signature method. Two bytes now.
 	 * 30 - Marauroa 2.0 refactoring
+	 *    - Dropped UDP support
 	 */
 	final static public byte NETWORK_PROTOCOL_VERSION = 30;
 }

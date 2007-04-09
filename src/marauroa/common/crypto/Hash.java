@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.5 2007/03/23 20:39:15 arianne_rpg Exp $ */
+/* $Id: Hash.java,v 1.6 2007/04/09 14:39:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * This class is used to create Hashes of byte arrays.
+ *
+ * @author quisar
+ */
 public class Hash {
 
 	private static String hex = "0123456789ABCDEF";
@@ -35,15 +40,15 @@ public class Hash {
 		}
 	}
 
-	public static final byte[] hash(final String value) {
+	synchronized public static final byte[] hash(final String value) {
 		return hash(value.getBytes());
 	}
 
-	public static final int hashLength() {
+	synchronized public static final int hashLength() {
 		return md.getDigestLength();
 	}
 
-	public static final byte[] hash(final byte[] value) {
+	synchronized public static final byte[] hash(final byte[] value) {
 		md.reset();
 		md.update(value);
 		return md.digest();
@@ -72,7 +77,7 @@ public class Hash {
 		return 0;
 	}
 
-	public static final byte[] random(int nbBytes) {
+	synchronized public static final byte[] random(int nbBytes) {
 		byte[] res = new byte[nbBytes];
 		random.nextBytes(res);
 		return res;
