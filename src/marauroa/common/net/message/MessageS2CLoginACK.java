@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.5 2007/04/09 15:32:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class MessageS2CLoginACK extends Message {
 
 	/**
 	 * Return a list of previous login attemps.
-	 * @returna list of previous login attemps.
+	 * @return a list of previous login attemps.
 	 */
 	public List<String> getPreviousLogins() {
 		return previousLogins;
