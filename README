@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 1.92
+Version 2.00
 
 
 Requeriments
@@ -92,6 +92,8 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+2.00 Apr XX, 2007
+
 1.92 Apr 09, 2007
 - Ported Python server interface to Marauroa 2.0
 - Added flood detection at server side.
