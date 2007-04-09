@@ -46,12 +46,12 @@ public class TestRPObject {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
-		RPObject buddy=new RPObject();
-		buddy.put("pepe","");
-		buddy.put("john","");
-		buddy.put("anton","");
+		RPObject buddy = new RPObject();
+		buddy.put("pepe", "");
+		buddy.put("john", "");
+		buddy.put("anton", "");
 
-		obj.addLink("buddy",buddy);
+		obj.addLink("buddy", buddy);
 
 		RPEvent chat = new RPEvent("chat");
 		chat.put("text", "Hi there");
@@ -123,7 +123,7 @@ public class TestRPObject {
 		assertTrue(obj.hasLink("buddy"));
 		assertFalse(obj.hasLink("pals"));
 
-		RPObject buddy=obj.getLinkedObject("buddy");
+		RPObject buddy = obj.getLinkedObject("buddy");
 		assertNotNull(buddy);
 		assertEquals(buddy, obj.getLink("buddy").getObject());
 		assertEquals("buddy", obj.getLink("buddy").getName());

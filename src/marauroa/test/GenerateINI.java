@@ -75,7 +75,8 @@ public class GenerateINI {
 	 * @return *T*he string, with first letter is upper case.
 	 */
 	public static String uppcaseFirstLetter(String source) {
-		return (source.length() > 0) ? Character.toUpperCase(source.charAt(0)) + source.substring(1) : source;
+		return (source.length() > 0) ? Character.toUpperCase(source.charAt(0))
+		        + source.substring(1) : source;
 	}
 
 	private static String gameName;
@@ -121,7 +122,7 @@ public class GenerateINI {
 		System.out.println("# mysql");
 		System.out.println("  create database " + databaseName + ";");
 		System.out.println("  grant all on " + databaseName + ".* to " + databaseUsername
-				+ "@localhost identified by '" + databasePassword + "';");
+		        + "@localhost identified by '" + databasePassword + "';");
 		System.out.println("  exit");
 
 		tcpPort = getTCPPort();
@@ -145,7 +146,7 @@ public class GenerateINI {
 
 	private static String getRSAKeyBits() {
 		System.out
-				.print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
+		        .print("Write size for the RSA key of the server. Be aware that a key bigger than 1024 could be very long to create [512]: ");
 		String keySize = getStringWithDefault(in, "512");
 		return keySize;
 	}
@@ -193,7 +194,8 @@ public class GenerateINI {
 		out.println("server_typeGame=" + gameName);
 		out.println("server_name=" + gameName + " Marauroa server");
 		out.println("server_version=0.01");
-		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
+		out
+		        .println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);
 		out.println();

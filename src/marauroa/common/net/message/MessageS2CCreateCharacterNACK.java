@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,18 +24,11 @@ import java.nio.channels.SocketChannel;
 public class MessageS2CCreateCharacterNACK extends Message {
 
 	public enum Reasons {
-		UNKNOWN_REASON,
-		CHARACTER_EXISTS,
-		FIELD_TOO_SHORT,
-		TEMPLATE_INVALID
+		UNKNOWN_REASON, CHARACTER_EXISTS, FIELD_TOO_SHORT, TEMPLATE_INVALID
 	}
 
-	static private String[] text = {
-		"Unknown reason",
-		"Character already exists.",
-		"Field is too short",
-		"Template is invalid"
-		};
+	static private String[] text = { "Unknown reason", "Character already exists.",
+	        "Field is too short", "Template is invalid" };
 
 	/** The reason to reject character creation */
 	private Reasons reason;
@@ -85,7 +78,8 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Create Character NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution() + ")";
+		return "Message (S2C Create Character NACK) from (" + getAddress() + ") CONTENTS: ("
+		        + getResolution() + ")";
 	}
 
 	@Override

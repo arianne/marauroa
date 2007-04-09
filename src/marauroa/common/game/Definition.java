@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.14 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.15 2007/04/09 14:47:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -251,7 +251,6 @@ public class Definition implements marauroa.common.net.Serializable {
 		return def;
 	}
 
-
 	/**
 	 * Returns the code of this definition
 	 *
@@ -396,22 +395,22 @@ public class Definition implements marauroa.common.net.Serializable {
 	 */
 	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		switch (type) {
-		case VERY_LONG_STRING:
-			return in.readString();
-		case LONG_STRING:
-			return in.read65536LongString();
-		case STRING:
-			return in.read255LongString();
-		case FLOAT:
-			return Float.toString(in.readFloat());
-		case INT:
-			return Integer.toString(in.readInt());
-		case SHORT:
-			return Integer.toString(in.readShort());
-		case BYTE:
-			return Integer.toString(in.readByte());
-		case FLAG:
-			return "";
+			case VERY_LONG_STRING:
+				return in.readString();
+			case LONG_STRING:
+				return in.read65536LongString();
+			case STRING:
+				return in.read255LongString();
+			case FLOAT:
+				return Float.toString(in.readFloat());
+			case INT:
+				return Integer.toString(in.readInt());
+			case SHORT:
+				return Integer.toString(in.readShort());
+			case BYTE:
+				return Integer.toString(in.readByte());
+			case FLAG:
+				return "";
 		}
 
 		return null;
@@ -428,38 +427,39 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @throws IOException
 	 *             if there is any problem on the serialization
 	 */
-	public void serialize(String value, marauroa.common.net.OutputSerializer out) throws IOException {
+	public void serialize(String value, marauroa.common.net.OutputSerializer out)
+	        throws IOException {
 		switch (type) {
-		case VERY_LONG_STRING:
-			out.write(value);
-			break;
-		case LONG_STRING:
-			out.write65536LongString(value);
-			break;
-		case STRING:
-			out.write255LongString(value);
-			break;
-		case FLOAT:
-			out.write(Float.parseFloat(value));
-			break;
-		case INT:
-			out.write(Integer.parseInt(value));
-			break;
-		case SHORT:
-			out.write(Short.parseShort(value));
-			break;
-		case BYTE:
-			out.write(Byte.parseByte(value));
-			break;
-		case FLAG:
-			/*
-			 * It is empty because it is a flag and so, it is already present.
-			 */
-			break;
-		default:
-			/* NOTE: Must never happen */
-			logger.fatal("got unknown attribute(" + name + ") type:" + code);
-			break;
+			case VERY_LONG_STRING:
+				out.write(value);
+				break;
+			case LONG_STRING:
+				out.write65536LongString(value);
+				break;
+			case STRING:
+				out.write255LongString(value);
+				break;
+			case FLOAT:
+				out.write(Float.parseFloat(value));
+				break;
+			case INT:
+				out.write(Integer.parseInt(value));
+				break;
+			case SHORT:
+				out.write(Short.parseShort(value));
+				break;
+			case BYTE:
+				out.write(Byte.parseByte(value));
+				break;
+			case FLAG:
+				/*
+				 * It is empty because it is a flag and so, it is already present.
+				 */
+				break;
+			default:
+				/* NOTE: Must never happen */
+				logger.fatal("got unknown attribute(" + name + ") type:" + code);
+				break;
 		}
 	}
 
@@ -516,8 +516,9 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		Definition def = (Definition) ot;
 
-		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity && flags == def.flags
-				&& name.equals(def.name) && type == def.type && (value == def.value || value.equals(def.value));
+		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity
+		        && flags == def.flags && name.equals(def.name) && type == def.type
+		        && (value == def.value || value.equals(def.value));
 
 		return result;
 	}

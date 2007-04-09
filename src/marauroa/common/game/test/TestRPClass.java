@@ -94,7 +94,8 @@ public class TestRPClass {
 
 		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		b.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
+		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
 		Definition def = b.getDefinition(DefinitionClass.ATTRIBUTE, "a");
 		assertEquals(Type.INT, def.getType());
@@ -161,7 +162,8 @@ public class TestRPClass {
 
 		expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
+		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);

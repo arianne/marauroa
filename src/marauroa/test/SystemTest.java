@@ -103,7 +103,7 @@ public class SystemTest {
 	 */
 	@Test
 	public void createAccount() throws IOException, TimeoutException, InvalidVersionException,
-			CreateAccountFailedException, BannedAddressException {
+	        CreateAccountFailedException, BannedAddressException {
 		client.connect("localhost", PORT);
 		AccountResult res = client.createAccount("testUsername", "password", "email");
 
@@ -262,7 +262,8 @@ public class SystemTest {
 	}
 
 	@Test
-	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException, LoginFailedException {
+	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
+	        LoginFailedException {
 		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
 		ConnectionValidator conn = rp.getValidator();
 

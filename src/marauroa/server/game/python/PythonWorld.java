@@ -1,4 +1,4 @@
-/* $Id: PythonWorld.java,v 1.6 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: PythonWorld.java,v 1.7 2007/04/09 14:47:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ package marauroa.server.game.python;
  * 
  */
 public class PythonWorld {
+
 	/**
 	 * Constructor
 	 * 

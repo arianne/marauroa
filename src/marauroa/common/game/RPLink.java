@@ -6,7 +6,6 @@ import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
-
 /**
  * An RPLink represent an object relation that is not as strong as RPSlot,
  * and although it could be modelled with a slot it would be better to manage
@@ -20,8 +19,10 @@ import marauroa.common.net.OutputSerializer;
  *
  */
 public class RPLink implements marauroa.common.net.Serializable {
+
 	/** Name of the rplink */
 	private String name;
+
 	/** Name of the object */
 	private RPObject object;
 
@@ -33,8 +34,8 @@ public class RPLink implements marauroa.common.net.Serializable {
 	 *
 	 */
 	public RPLink(String name, RPObject object) {
-		this.name=name;
-		this.object=object;
+		this.name = name;
+		this.object = object;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 	 * @param object the object that will represent this RPLink.
 	 */
 	public void setObject(RPObject object) {
-		this.object=object;
+		this.object = object;
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 	}
 
 	public String toString() {
-		return "name: "+name+" --> "+object;
+		return "name: " + name + " --> " + object;
 	}
 
 	public void writeObject(OutputSerializer out) throws IOException {
@@ -123,7 +124,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 			name = rpClass.getName(DefinitionClass.RPLINK, code);
 		}
 
-		object=(RPObject) in.readObject(new RPObject());
+		object = (RPObject) in.readObject(new RPObject());
 	}
 
 	/**
@@ -145,4 +146,5 @@ public class RPLink implements marauroa.common.net.Serializable {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
-	}}
+	}
+}

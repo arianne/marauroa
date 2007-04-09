@@ -54,7 +54,8 @@ public class WebstartPersistence extends Persistence {
 	 *             on io error
 	 */
 	@Override
-	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		FileContents fc = ps.get(muffinURL);
 		InputStream is = fc.getInputStream();
@@ -72,7 +73,8 @@ public class WebstartPersistence extends Persistence {
 	 *             on io error
 	 */
 	@Override
-	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename) throws IOException {
+	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename)
+	        throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		try {
 			ps.delete(muffinURL);

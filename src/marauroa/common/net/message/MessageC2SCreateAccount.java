@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateAccount.java,v 1.5 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateAccount.java,v 1.6 2007/04/09 14:47:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,8 @@ public class MessageC2SCreateAccount extends Message {
 	 * @param email
 	 *            email of the player
 	 */
-	public MessageC2SCreateAccount(SocketChannel source, String username, String password, String email) {
+	public MessageC2SCreateAccount(SocketChannel source, String username, String password,
+	        String email) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
 		this.password = password;
@@ -87,8 +88,8 @@ public class MessageC2SCreateAccount extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateAccount) from (" + getAddress() + ") CONTENTS: (" + username + ";" + password + ";"
-				+ email + ")";
+		return "Message (C2S CreateAccount) from (" + getAddress() + ") CONTENTS: (" + username
+		        + ";" + password + ";" + email + ")";
 	}
 
 	@Override

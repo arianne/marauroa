@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.29 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.30 2007/04/09 14:47:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -350,7 +350,8 @@ public class PlayerEntry {
 		 * even login yet.
 		 */
 		boolean isInOKState = (state == ClientState.GAME_BEGIN);
-		return !isInOKState && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
+		return !isInOKState
+		        && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
 	}
 
 	@Override

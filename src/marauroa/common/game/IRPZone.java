@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.18 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.19 2007/04/09 14:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,8 @@ public interface IRPZone extends Iterable<RPObject> {
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			return (anotherid != null) && (anotherid instanceof IRPZone.ID) && (id.equals(((IRPZone.ID) anotherid).id));
+			return (anotherid != null) && (anotherid instanceof IRPZone.ID)
+			        && (id.equals(((IRPZone.ID) anotherid).id));
 		}
 
 		/** We need it for HashMap */
@@ -81,7 +82,8 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** Serialize the object into a stream of bytes. */
-		public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+		public void writeObject(marauroa.common.net.OutputSerializer out)
+		        throws java.io.IOException {
 			out.write(id);
 		}
 

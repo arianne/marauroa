@@ -103,7 +103,8 @@ public class CrushServer {
 						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);
 
 						client.connect("localhost", PORT);
-						AccountResult resAcc = client.createAccount("testUsername" + i, "password", "email");
+						AccountResult resAcc = client.createAccount("testUsername" + i, "password",
+						        "email");
 						assertEquals("testUsername" + i, resAcc.getUsername());
 						assertEquals(Result.OK_CREATED, resAcc.getResult());
 
@@ -151,7 +152,8 @@ public class CrushServer {
 									/*
 									 * Randomly close the connection
 									 */
-									System.out.println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
+									System.out
+									        .println("FORCED CLOSE CONNECTION: Testint random disconnects on server");
 									client.close();
 									return;
 								}

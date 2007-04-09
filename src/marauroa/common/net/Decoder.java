@@ -117,7 +117,8 @@ public class Decoder {
 	 * @throws InvalidVersionException
 	 *             if the message version mismatch the expected version
 	 */
-	public Message decode(SocketChannel channel, byte[] data) throws IOException, InvalidVersionException {
+	public Message decode(SocketChannel channel, byte[] data) throws IOException,
+	        InvalidVersionException {
 		MessageParts buffers = content.get(channel);
 
 		if (buffers == null) {
@@ -126,7 +127,8 @@ public class Decoder {
 			 * NOTE: On real life we can be *sure* that 4 bytes are at least to
 			 * be recieved...
 			 */
-			int size = (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16) + ((data[3] & 0xFF) << 24);
+			int size = (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
+			        + ((data[3] & 0xFF) << 24);
 
 			if (data.length == size) {
 				/* If we have the full data build the message */

@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.25 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.26 2007/04/09 14:47:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -38,7 +38,8 @@ import marauroa.server.game.rp.RPServerManager;
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(PythonRPRuleProcessor.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(PythonRPRuleProcessor.class);
 
 	/** The link with the python engine */
 	private GameScript gameScript;

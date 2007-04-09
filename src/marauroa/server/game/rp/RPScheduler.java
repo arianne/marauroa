@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.9 2007/04/09 14:40:01 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.10 2007/04/09 14:47:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,8 @@ public class RPScheduler {
 	 * @param ruleProcessor
 	 *            where the actions are going to checked.
 	 */
-	public synchronized boolean addRPAction(RPObject object, RPAction action, IRPRuleProcessor ruleProcessor) {
+	public synchronized boolean addRPAction(RPObject object, RPAction action,
+	        IRPRuleProcessor ruleProcessor) {
 		try {
 			List<RPAction> list = nextTurn.get(object);
 
@@ -77,9 +78,8 @@ public class RPScheduler {
 
 			return true;
 		} catch (Exception e) {
-			logger
-					.error("cannot add action to RPScheduler, Action(" + action + ") is missing a required attributes",
-							e);
+			logger.error("cannot add action to RPScheduler, Action(" + action
+			        + ") is missing a required attributes", e);
 			return false;
 		}
 	}

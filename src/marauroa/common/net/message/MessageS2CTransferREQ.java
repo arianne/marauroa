@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,8 @@ public class MessageS2CTransferREQ extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress() + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress()
+		        + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);

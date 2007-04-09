@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendPromise.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendPromise.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -44,8 +44,8 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 
 	@Override
 	public String toString() {
-		return "Message (C2S Login Send Promise) from (" + getAddress() + ") CONTENTS: (hash:" + Hash.toHexString(hash)
-				+ ")";
+		return "Message (C2S Login Send Promise) from (" + getAddress() + ") CONTENTS: (hash:"
+		        + Hash.toHexString(hash) + ")";
 	}
 
 	@Override

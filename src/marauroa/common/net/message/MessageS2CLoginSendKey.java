@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendKey.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendKey.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -63,8 +63,8 @@ public class MessageS2CLoginSendKey extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login Send key) from (" + getAddress() + ") CONTENTS: (n:" + key.getN() + "\te:"
-				+ key.getE() + ")";
+		return "Message (S2C Login Send key) from (" + getAddress() + ") CONTENTS: (n:"
+		        + key.getN() + "\te:" + key.getE() + ")";
 	}
 
 	@Override

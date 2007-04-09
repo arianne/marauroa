@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.27 2007/04/09 14:39:58 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.28 2007/04/09 14:47:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,8 @@ public class Statistics implements StatisticsMBean {
 		 */
 		public void print(PrintWriter out, double diff) {
 			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type) + "\" />");
+				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type)
+				        + "\" />");
 			}
 		}
 	}
@@ -277,6 +278,7 @@ public class Statistics implements StatisticsMBean {
 	 * @return escaped strings
 	 */
 	private static String escapeXML(String param) {
-		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
+		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
+		        ">", "&gt;");
 	}
 }

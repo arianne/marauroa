@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.5 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.6 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,6 @@ public class MessageS2CTransfer extends Message {
 		contents.add(content);
 	}
 
-
 	/**
 	 * The list if contents to transfer.
 	 * @return The list if contents to transfer.
@@ -58,7 +57,8 @@ public class MessageS2CTransfer extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress() + ") CONTENTS: (");
+		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress()
+		        + ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -97,7 +97,7 @@ public class MessageS2CTransfer extends Message {
 
 		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
-				new java.util.zip.Inflater());
+		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		int size = serializer.readInt();

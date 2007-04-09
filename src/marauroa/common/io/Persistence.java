@@ -66,8 +66,8 @@ public abstract class Persistence {
 	 * @throws IOException
 	 *             on io error
 	 */
-	public abstract InputStream getInputStream(boolean relativeToHome, String basedir, String filename)
-			throws IOException;
+	public abstract InputStream getInputStream(boolean relativeToHome, String basedir,
+	        String filename) throws IOException;
 
 	/**
 	 * Gets an output stream to this "virtual" file
@@ -82,7 +82,7 @@ public abstract class Persistence {
 	 * @throws IOException
 	 *             on io error
 	 */
-	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename)
-			throws IOException;
+	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir,
+	        String filename) throws IOException;
 
 }

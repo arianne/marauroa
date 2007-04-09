@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateCharacter.java,v 1.4 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageC2SCreateCharacter.java,v 1.5 2007/04/09 14:47:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -79,8 +79,8 @@ public class MessageC2SCreateCharacter extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S CreateCharacter) from (" + getAddress() + ") CONTENTS: (" + character + ";" + template
-				+ ")";
+		return "Message (C2S CreateCharacter) from (" + getAddress() + ") CONTENTS: (" + character
+		        + ";" + template + ")";
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.42 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.43 2007/04/09 14:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -368,7 +368,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 
-		str.append(super.toString()).append(" named(" + name + ") with capacity(" + capacity + ") [");
+		str.append(super.toString()).append(
+		        " named(" + name + ") with capacity(" + capacity + ") [");
 
 		for (RPObject object : objects) {
 			str.append(object.toString());
@@ -396,7 +397,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @param level
 	 *            the level of Detail
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
+	        throws java.io.IOException {
 		RPClass rpClass = owner.getRPClass();
 
 		Definition def = rpClass.getDefinition(DefinitionClass.RPSLOT, name);

@@ -129,9 +129,9 @@ public class TestAttributes {
 		attr.put("d", 120);
 		attr.put("e", 15000);
 		attr
-				.put(
-						"f",
-						"This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
+		        .put(
+		                "f",
+		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
 		attr.put("g", "Toooooooo big to even test the limit");
 		attr.put("h", "");
 
@@ -164,9 +164,9 @@ public class TestAttributes {
 		attr.put("b", "2");
 		attr.put("c", 3.0);
 		attr
-				.put(
-						"d",
-						"a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
+		        .put(
+		                "d",
+		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
 		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.5 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.6 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,23 +28,18 @@ import marauroa.common.net.NetConst;
 public class MessageS2CLoginNACK extends Message {
 
 	public enum Reasons {
-		USERNAME_WRONG,
-		TOO_MANY_TRIES,
-		SERVER_IS_FULL,
-		GAME_MISMATCH,
-		PROTOCOL_MISMATCH,
-		INVALID_NONCE,
+		USERNAME_WRONG, TOO_MANY_TRIES, SERVER_IS_FULL, GAME_MISMATCH, PROTOCOL_MISMATCH, INVALID_NONCE,
 	}
 
 	static private String[] text = {
-			"Username/Password incorrect.",
-			"Username/Password has been failed too many times. Account blocked for "
-					+ (TimeoutConf.FAILED_LOGIN_BLOCKTIME / 60) + " minutes",
-			"Server is full.",
-			"Server is running an incompatible version of game. Update client",
-			"marauroa.common.network Protocol invalid version: Running "
-					+ Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
-			"The hash you sent does not correspond to the nonce you sent." };
+	        "Username/Password incorrect.",
+	        "Username/Password has been failed too many times. Account blocked for "
+	                + (TimeoutConf.FAILED_LOGIN_BLOCKTIME / 60) + " minutes",
+	        "Server is full.",
+	        "Server is running an incompatible version of game. Update client",
+	        "marauroa.common.network Protocol invalid version: Running "
+	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+	        "The hash you sent does not correspond to the nonce you sent." };
 
 	/** The reason of login rejection */
 	private Reasons reason;
@@ -93,7 +88,8 @@ public class MessageS2CLoginNACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution() + ")";
+		return "Message (S2C Login NACK) from (" + getAddress() + ") CONTENTS: (" + getResolution()
+		        + ")";
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.20 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.21 2007/04/09 14:47:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,8 @@ public class Configuration {
 			properties = new Properties();
 
 			if (persistence) {
-				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir, configurationFile);
+				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir,
+				        configurationFile);
 				properties.load(is);
 				is.close();
 			}
@@ -154,14 +155,14 @@ public class Configuration {
 			properties.put(property, value);
 
 			if (persistence) {
-				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir, configurationFile);
+				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir,
+				        configurationFile);
 				properties.store(os, null);
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger
-					.error("Configuration file not found: " + relativeToHome + " " + basedir + " " + configurationFile,
-							e);
+			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " "
+			        + configurationFile, e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
 		}

@@ -1,4 +1,4 @@
-/* $Id: Perception.java,v 1.15 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: Perception.java,v 1.16 2007/04/09 14:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -177,7 +177,8 @@ public class Perception {
 	 * @return the amount of objects
 	 */
 	public int size() {
-		return (addedList.size() + modifiedAddedList.size() + modifiedDeletedList.size() + deletedList.size());
+		return (addedList.size() + modifiedAddedList.size() + modifiedDeletedList.size() + deletedList
+		        .size());
 	}
 
 	/**

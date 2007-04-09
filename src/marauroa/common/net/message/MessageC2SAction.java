@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.4 2007/04/09 14:47:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,8 @@ public class MessageC2SAction extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString() + ")";
+		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString()
+		        + ")";
 	}
 
 	@Override

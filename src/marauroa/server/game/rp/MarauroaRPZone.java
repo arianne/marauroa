@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.19 2007/04/09 14:40:01 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.20 2007/04/09 14:47:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -348,7 +348,8 @@ public class MarauroaRPZone implements IRPZone {
 					try {
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
-						logger.error("cannot add object to modified list (object is: [" + modified_obj + "])", e);
+						logger.error("cannot add object to modified list (object is: ["
+						        + modified_obj + "])", e);
 					}
 				}
 			}

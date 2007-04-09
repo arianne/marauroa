@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.13 2007/04/09 14:40:02 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.14 2007/04/09 14:47:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,7 +127,8 @@ class NioServer extends Thread {
 	public void send(SocketChannel socket, byte[] data) {
 		synchronized (this.pendingChanges) {
 			// Indicate we want the interest ops set changed
-			this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+			this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS,
+			        SelectionKey.OP_WRITE));
 
 			// And queue the data we want written
 			synchronized (this.pendingData) {
@@ -174,11 +175,11 @@ class NioServer extends Thread {
 						ChangeRequest change = (ChangeRequest) changes.next();
 						if (change.socket.isConnected()) {
 							switch (change.type) {
-							case ChangeRequest.CHANGEOPS:
-								SelectionKey key = change.socket.keyFor(this.selector);
-								if (key.isValid()) {
-									key.interestOps(change.ops);
-								}
+								case ChangeRequest.CHANGEOPS:
+									SelectionKey key = change.socket.keyFor(this.selector);
+									if (key.isValid()) {
+										key.interestOps(change.ops);
+									}
 							}
 						}
 					}
@@ -191,27 +192,27 @@ class NioServer extends Thread {
 						ChangeRequest change = (ChangeRequest) it.next();
 						if (change.socket.isConnected()) {
 							switch (change.type) {
-							case ChangeRequest.CLOSE:
-								/*
-								 * Close the socket
-								 */
-								try {
+								case ChangeRequest.CLOSE:
 									/*
-									 * Force data to be sent if there is data
-									 * waiting.
+									 * Close the socket
 									 */
-									if (pendingData.containsKey(change.socket)) {
-										SelectionKey key = change.socket.keyFor(selector);
-										if (key.isValid()) {
-											write(key);
+									try {
+										/*
+										 * Force data to be sent if there is data
+										 * waiting.
+										 */
+										if (pendingData.containsKey(change.socket)) {
+											SelectionKey key = change.socket.keyFor(selector);
+											if (key.isValid()) {
+												write(key);
+											}
 										}
-									}
 
-									change.socket.close();
-								} catch (Exception e) {
-									logger.info("Exception happend when closing socket", e);
-								}
-								break;
+										change.socket.close();
+									} catch (Exception e) {
+										logger.info("Exception happend when closing socket", e);
+									}
+									break;
 							}
 						}
 					}

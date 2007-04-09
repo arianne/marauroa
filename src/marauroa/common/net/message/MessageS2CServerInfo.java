@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,7 +80,7 @@ public class MessageS2CServerInfo extends Message {
 			text.append("[" + contents[i] + "],");
 		}
 		return "Message (S2C Server Info) from (" + getAddress() + ") CONTENTS: ("
-				+ text.substring(0, text.length() - 1) + ")";
+		        + text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class MessageS2CServerInfo extends Message {
 
 		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
-				new java.util.zip.Inflater());
+		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
 
 		contents = serializer.readStringArray();

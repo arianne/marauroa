@@ -160,7 +160,7 @@ public class MockClient extends ClientFramework {
 	@Override
 	protected void onPreviousLogins(List<String> previousLogins) {
 		System.out.println("Listing previous logins");
-		for(String line: previousLogins) {
+		for (String line : previousLogins) {
 			System.out.println(line);
 		}
 	}

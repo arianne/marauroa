@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.26 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.27 2007/04/09 14:47:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,7 +118,8 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_TRANSFER_ACK, MessageC2STransferACK.class);
 		register(Message.MessageType.S2C_TRANSFER, MessageS2CTransfer.class);
 		register(Message.MessageType.C2S_LOGIN_REQUESTKEY, MessageC2SLoginRequestKey.class);
-		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, MessageC2SLoginSendNonceNameAndPassword.class);
+		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		        MessageC2SLoginSendNonceNameAndPassword.class);
 		register(Message.MessageType.S2C_LOGIN_SENDKEY, MessageS2CLoginSendKey.class);
 		register(Message.MessageType.S2C_LOGIN_SENDNONCE, MessageS2CLoginSendNonce.class);
 		register(Message.MessageType.C2S_LOGIN_SENDPROMISE, MessageC2SLoginSendPromise.class);
@@ -153,7 +154,8 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel) throws IOException, InvalidVersionException {
+	public Message getMessage(byte[] data, SocketChannel channel) throws IOException,
+	        InvalidVersionException {
 		return getMessage(data, channel, 0);
 	}
 
@@ -173,7 +175,7 @@ public class MessageFactory {
 	 *             if the message version doesn't match
 	 */
 	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException,
-			InvalidVersionException {
+	        InvalidVersionException {
 		/*
 		 * We do a fast check to see if protocol versions match.
 		 */
@@ -198,19 +200,22 @@ public class MessageFactory {
 					return tmp;
 				} catch (Exception e) {
 					NDC.push("message is [" + tmp + "]\n");
-					NDC.push("message dump is [\n" + Utility.dumpByteArray(data) + "\n] (offset: " + offset + ")\n");
+					NDC.push("message dump is [\n" + Utility.dumpByteArray(data) + "\n] (offset: "
+					        + offset + ")\n");
 					logger.error("error in getMessage", e);
 					NDC.pop();
 					NDC.pop();
 					throw new IOException(e.getMessage());
 				}
 			} else {
-				logger.warn("Message type [" + data[1] + "] is not registered in the MessageFactory");
-				throw new IOException("Message type [" + data[1] + "] is not registered in the MessageFactory");
+				logger.warn("Message type [" + data[1]
+				        + "] is not registered in the MessageFactory");
+				throw new IOException("Message type [" + data[1]
+				        + "] is not registered in the MessageFactory");
 			}
 		} else {
 			logger.warn("Message has incorrect protocol version(" + data[0] + ") expected ("
-					+ NetConst.NETWORK_PROTOCOL_VERSION + ")");
+			        + NetConst.NETWORK_PROTOCOL_VERSION + ")");
 			logger.debug("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[0]);
 		}

@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.19 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.20 2007/04/09 14:47:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,7 +78,8 @@ public class PerceptionHandler {
 	 *            a map representing objects stored in a zone.
 	 * @throws Exception
 	 */
-	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance) throws Exception {
+	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance)
+	        throws Exception {
 		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
 
 		/*
@@ -106,7 +107,7 @@ public class PerceptionHandler {
 			 * one that we are expecting.
 			 */
 		} else if (message.getPerceptionType() == Perception.DELTA
-				&& previousTimestamp + 1 == message.getPerceptionTimestamp()) {
+		        && previousTimestamp + 1 == message.getPerceptionTimestamp()) {
 			try {
 				/** OnSync: Keep processing */
 				previousTimestamp = message.getPerceptionTimestamp();
@@ -166,8 +167,8 @@ public class PerceptionHandler {
 	 * @param world
 	 *            the container of objects
 	 */
-	private void applyPerceptionAddedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world)
-			throws RPObjectNotFoundException {
+	private void applyPerceptionAddedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			/*
 			 * If the perception is Sync, we clear the contents of the
@@ -200,8 +201,8 @@ public class PerceptionHandler {
 	 * @param world
 	 *            the container of objects
 	 */
-	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world)
-			throws RPObjectNotFoundException {
+	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			for (RPObject object : message.getDeletedRPObjects()) {
 				if (!listener.onDeleted(object)) {
@@ -223,8 +224,8 @@ public class PerceptionHandler {
 	 * @param world
 	 *            the container of objects
 	 */
-	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message, Map<RPObject.ID, RPObject> world)
-			throws RPObjectNotFoundException {
+	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			/* First we remove the deleted attributes */
 			for (RPObject object : message.getModifiedDeletedRPObjects()) {
@@ -263,8 +264,8 @@ public class PerceptionHandler {
 	 * @param world
 	 *            the container of objects
 	 */
-	private void applyPerceptionMyRPObject(MessageS2CPerception message, Map<RPObject.ID, RPObject> world)
-			throws RPObjectNotFoundException {
+	private void applyPerceptionMyRPObject(MessageS2CPerception message,
+	        Map<RPObject.ID, RPObject> world) throws RPObjectNotFoundException {
 		try {
 			RPObject added = message.getMyRPObjectAdded();
 			RPObject deleted = message.getMyRPObjectDeleted();

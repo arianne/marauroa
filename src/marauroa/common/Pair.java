@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.5 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: Pair.java,v 1.6 2007/04/09 14:47:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,15 +43,18 @@ public class Pair<T1, T2> {
 	public boolean equals(Object o) {
 		if (o instanceof Pair) {
 			Pair object = (Pair) o;
-			if (first != null && first.equals(object.first) && second != null && second.equals(object.second)) {
+			if (first != null && first.equals(object.first) && second != null
+			        && second.equals(object.second)) {
 				return true;
 			}
 
-			if (first == null && first == object.first && second != null && second.equals(object.second)) {
+			if (first == null && first == object.first && second != null
+			        && second.equals(object.second)) {
 				return true;
 			}
 
-			if (second == null && second == object.second && first != null && first.equals(object.first)) {
+			if (second == null && second == object.second && first != null
+			        && first.equals(object.first)) {
 				return true;
 			}
 

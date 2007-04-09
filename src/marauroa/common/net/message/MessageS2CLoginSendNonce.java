@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginSendNonce.java,v 1.3 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginSendNonce.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,8 +45,8 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 
 	@Override
 	public String toString() {
-		return "Message (S2C Login Send Nonce) from (" + getAddress() + ") CONTENTS: (nonce:" + Hash.toHexString(hash)
-				+ ")";
+		return "Message (S2C Login Send Nonce) from (" + getAddress() + ") CONTENTS: (nonce:"
+		        + Hash.toHexString(hash) + ")";
 	}
 
 	@Override

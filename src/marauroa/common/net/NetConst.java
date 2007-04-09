@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.22 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.23 2007/04/09 14:47:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class NetConst {
 	 *    - Changed the ordering inside Perception message
 	 * 12 - Changed perception to send only what is hidden on myRPObject
 	 *    - Added Out of Sync Message
-     *    - Improved speed of perception creation
+	 *    - Improved speed of perception creation
 	 * 13 - Redefined Map message
 	 * 14 - Compressed the Map message
 	 * 15 - Modified ServerInfo message to add RPClass stuff

@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.4 2007/04/09 14:47:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,8 @@ public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArra
 	 * @param password
 	 *            the plain password of the user that wants to login
 	 */
-	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source, byte[] nonce, String username, byte[] password) {
+	public MessageC2SLoginSendNonceNameAndPassword(SocketChannel source, byte[] nonce,
+	        String username, byte[] password) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
 		this.username = username;
 		this.password = password;
@@ -76,8 +77,9 @@ public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArra
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:" + Hash.toHexString(hash)
-				+ "\tusername:" + username + "\tpassword:" + Hash.toHexString(password) + ")";
+		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
+		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
+		        + Hash.toHexString(password) + ")";
 	}
 
 	@Override

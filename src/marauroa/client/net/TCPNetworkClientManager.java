@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.11 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.12 2007/04/09 14:47:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,8 @@ import marauroa.common.net.message.Message;
 public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(TCPNetworkClientManager.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(TCPNetworkClientManager.class);
 
 	/**
 	 * Server will assign us a clientid, so we store it so that we remind it for
@@ -211,7 +212,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 */
 	class NetworkClientManagerRead extends Thread {
 
-		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerRead.class);
+		private final marauroa.common.Logger logger = Log4J
+		        .getLogger(NetworkClientManagerRead.class);
 
 		/** We handle the data connection with the socket's input stream */
 		private InputStream is = null;
@@ -237,7 +239,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 *            data that represent the serialized message
 		 * @throws IOException
 		 */
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data) throws IOException {
+		private synchronized void storeMessage(InetSocketAddress address, byte[] data)
+		        throws IOException {
 			try {
 				Message msg = decoder.decode(null, data);
 
@@ -246,8 +249,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				 * debugging information.
 				 */
 				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from " + msg.getClientID() + " full ["
-							+ msg + "]");
+					logger.debug("build message(type=" + msg.getType() + ") from "
+					        + msg.getClientID() + " full [" + msg + "]");
 				}
 
 				// Once server assign us a clientid, store it for future
@@ -281,8 +284,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				return null;
 			}
 
-			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8) + ((sizebuffer[2] & 0xFF) << 16)
-					+ ((sizebuffer[3] & 0xFF) << 24);
+			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8)
+			        + ((sizebuffer[2] & 0xFF) << 16) + ((sizebuffer[3] & 0xFF) << 24);
 
 			byte[] buffer = new byte[size];
 			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
@@ -350,7 +353,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	class NetworkClientManagerWrite {
 
 		/** the logger instance. */
-		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
+		private final marauroa.common.Logger logger = Log4J
+		        .getLogger(NetworkClientManagerWrite.class);
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
@@ -392,8 +396,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					 * debugging information.
 					 */
 					if (true || logger.isDebugEnabled()) {
-						logger.debug("build message(type=" + msg.getType() + ") from " + msg.getClientID() + " full ["
-								+ msg + "]");
+						logger.debug("build message(type=" + msg.getType() + ") from "
+						        + msg.getClientID() + " full [" + msg + "]");
 					}
 
 					os.write(encoder.encode(msg));

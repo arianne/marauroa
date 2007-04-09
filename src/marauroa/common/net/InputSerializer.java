@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.7 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.8 2007/04/09 14:47:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,12 +87,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
@@ -116,12 +116,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
@@ -138,12 +138,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(buffer, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 		return buffer;
 	}
@@ -162,12 +162,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -190,12 +190,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -220,12 +220,12 @@ public class InputSerializer {
 		int bytes_read = 0;
 
 		while ((bytes_read_total < size)
-				&& (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
+		        && (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
 		}
 		if (bytes_read_total != size) {
-			throw new IOException("Declared array size=" + size + " is not equal to actually read bytes count("
-					+ bytes_read_total + ")!");
+			throw new IOException("Declared array size=" + size
+			        + " is not equal to actually read bytes count(" + bytes_read_total + ")!");
 		}
 
 		int result = data[0] & 0xFF;
@@ -255,13 +255,11 @@ public class InputSerializer {
 	 * @throws java.io.IOException
 	 *             if there is an IO error
 	 */
-	public String read255LongString() throws IOException,
-			UnsupportedEncodingException {
+	public String read255LongString() throws IOException, UnsupportedEncodingException {
 		return new String(read255LongByteArray(), "UTF-8");
 	}
 
-	public String read65536LongString() throws IOException,
-			UnsupportedEncodingException {
+	public String read65536LongString() throws IOException, UnsupportedEncodingException {
 		return new String(read65536LongByteArray(), "UTF-8");
 	}
 

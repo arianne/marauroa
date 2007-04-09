@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.6 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.7 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,8 @@ import org.apache.log4j.NDC;
 public class MessageS2CPerception extends Message {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(MessageS2CPerception.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(MessageS2CPerception.class);
 
 	private byte typePerception;
 
@@ -167,7 +168,8 @@ public class MessageS2CPerception extends Message {
 	@Override
 	public String toString() {
 		StringBuilder perception_string = new StringBuilder();
-		perception_string.append("Type: " + typePerception + " Timestamp: " + timestampPerception + ") contents: ");
+		perception_string.append("Type: " + typePerception + " Timestamp: " + timestampPerception
+		        + ") contents: ");
 
 		perception_string.append("\n  zoneid: " + zoneid + "\n");
 		perception_string.append("\n  added: \n");
@@ -228,7 +230,7 @@ public class MessageS2CPerception extends Message {
 		byte[] byteArray = in.readByteArray();
 		ByteArrayInputStream array = new ByteArrayInputStream(byteArray);
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
-				new java.util.zip.Inflater());
+		        new java.util.zip.Inflater());
 		InputSerializer ser = new InputSerializer(szlib);
 
 		try {
@@ -242,7 +244,8 @@ public class MessageS2CPerception extends Message {
 			int added = ser.readInt();
 
 			if (added > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of " + String.valueOf(added) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(added)
+				        + " size");
 			}
 			logger.debug(added + "added objects.");
 			for (int i = 0; i < added; ++i) {
@@ -254,7 +257,8 @@ public class MessageS2CPerception extends Message {
 			int modAdded = ser.readInt();
 
 			if (modAdded > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of " + String.valueOf(modAdded) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(modAdded)
+				        + " size");
 			}
 			logger.debug(modAdded + " modified Added objects..");
 			for (int i = 0; i < modAdded; ++i) {
@@ -266,7 +270,8 @@ public class MessageS2CPerception extends Message {
 			int modDeleted = ser.readInt();
 
 			if (modDeleted > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of " + String.valueOf(modDeleted) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(modDeleted)
+				        + " size");
 			}
 			logger.debug(modDeleted + " modified Deleted objects..");
 			for (int i = 0; i < modDeleted; ++i) {
@@ -278,7 +283,8 @@ public class MessageS2CPerception extends Message {
 			int del = ser.readInt();
 
 			if (del > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-				throw new IOException("Illegal request of an list of " + String.valueOf(del) + " size");
+				throw new IOException("Illegal request of an list of " + String.valueOf(del)
+				        + " size");
 			}
 			logger.debug(del + " deleted objects..");
 			for (int i = 0; i < del; ++i) {
@@ -287,8 +293,8 @@ public class MessageS2CPerception extends Message {
 				deletedRPObjects.add(object);
 			}
 		} catch (IOException ioe) {
-			InputStream stream = new java.util.zip.InflaterInputStream(new ByteArrayInputStream(byteArray),
-					new java.util.zip.Inflater());
+			InputStream stream = new java.util.zip.InflaterInputStream(new ByteArrayInputStream(
+			        byteArray), new java.util.zip.Inflater());
 			NDC.push("message is [" + this + "]\n");
 			NDC.push("message dump is [\n" + Utility.dumpInputStream(stream) + "\n]\n");
 			logger.error("error in getMessage", ioe);

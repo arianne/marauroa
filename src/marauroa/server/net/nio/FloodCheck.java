@@ -15,6 +15,7 @@ import marauroa.server.net.flood.IFloodCheck;
  * 
  */
 public class FloodCheck implements IFloodCheck {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(FloodCheck.class);
 

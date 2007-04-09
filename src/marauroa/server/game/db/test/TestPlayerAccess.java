@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.10 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: TestPlayerAccess.java,v 1.11 2007/04/09 14:47:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -119,7 +119,8 @@ public class TestPlayerAccess {
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
 
-			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username, "testPassword");
+			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username,
+			        "testPassword");
 			assertTrue(database.verify(transaction, login));
 
 			database.changePassword(transaction, username, "anewtestPassword");

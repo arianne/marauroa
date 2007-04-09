@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.19 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.20 2007/04/09 14:47:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -44,7 +44,8 @@ public interface IDatabase {
 	 *            player's email
 	 * @throws SQLException
 	 */
-	public void addPlayer(Transaction transaction, String username, byte[] password, String email) throws SQLException;
+	public void addPlayer(Transaction transaction, String username, byte[] password, String email)
+	        throws SQLException;
 
 	/**
 	 * Generates an unique player id. A pattern is a string that where special
@@ -73,7 +74,8 @@ public interface IDatabase {
 	 *            the new password
 	 * @throws SQLException
 	 */
-	public void changePassword(Transaction transaction, String username, String password) throws SQLException;
+	public void changePassword(Transaction transaction, String username, String password)
+	        throws SQLException;
 
 	/**
 	 * Change the email address of the associated username
@@ -86,7 +88,8 @@ public interface IDatabase {
 	 *            the players new email address
 	 * @throws SQLException
 	 */
-	public void changeEmail(Transaction transaction, String username, String email) throws SQLException;
+	public void changeEmail(Transaction transaction, String username, String email)
+	        throws SQLException;
 
 	/**
 	 * Removes a player, its characters and the avatars that represent it from
@@ -127,7 +130,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is a database problem
 	 */
-	public void setAccountStatus(Transaction transaction, String username, String status) throws SQLException;
+	public void setAccountStatus(Transaction transaction, String username, String status)
+	        throws SQLException;
 
 	/**
 	 * Returns the account status of the given player.
@@ -158,8 +162,8 @@ public interface IDatabase {
 	 * @throws IOException
 	 *             if RPObject can NOT be serialized
 	 */
-	public void addCharacter(Transaction transaction, String username, String character, RPObject player)
-			throws SQLException, IOException;
+	public void addCharacter(Transaction transaction, String username, String character,
+	        RPObject player) throws SQLException, IOException;
 
 	/**
 	 * Removes a character of a player. This method also remove the associated
@@ -175,7 +179,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is any database problem
 	 */
-	public boolean removeCharacter(Transaction transaction, String username, String character) throws SQLException;
+	public boolean removeCharacter(Transaction transaction, String username, String character)
+	        throws SQLException;
 
 	/**
 	 * This method returns true if the player has that character or false if it
@@ -191,7 +196,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is any problem with database
 	 */
-	public boolean hasCharacter(Transaction transaction, String username, String character) throws SQLException;
+	public boolean hasCharacter(Transaction transaction, String username, String character)
+	        throws SQLException;
 
 	/**
 	 * Returns the list of characters this player owns.
@@ -222,8 +228,8 @@ public interface IDatabase {
 	 * @throws IOException
 	 *             if player can NOT be serialized
 	 */
-	public RPObject loadCharacter(Transaction transaction, String username, String character) throws SQLException,
-			IOException;
+	public RPObject loadCharacter(Transaction transaction, String username, String character)
+	        throws SQLException, IOException;
 
 	/**
 	 * This method stores a character's avatar at database and update the link
@@ -242,8 +248,8 @@ public interface IDatabase {
 	 * @throws IOException
 	 *             if player can NOT be serialized
 	 */
-	public void storeCharacter(Transaction transaction, String username, String character, RPObject player)
-			throws SQLException, IOException;
+	public void storeCharacter(Transaction transaction, String username, String character,
+	        RPObject player) throws SQLException, IOException;
 
 	/**
 	 * Stores all the objects tagged as storable into database and assign them
@@ -310,7 +316,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is any database problem.
 	 */
-	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations) throws SQLException;
+	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations)
+	        throws SQLException;
 
 	/**
 	 * Returns true if an account is temporally blocked due to too many tries on
@@ -340,8 +347,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is any problem such as a player that doesn't exist
 	 */
-	public void addLoginEvent(Transaction transaction, String username, InetAddress source, boolean correctLogin)
-			throws SQLException;
+	public void addLoginEvent(Transaction transaction, String username, InetAddress source,
+	        boolean correctLogin) throws SQLException;
 
 	/**
 	 * This method returns a list of the login events and its result.
@@ -356,7 +363,8 @@ public interface IDatabase {
 	 * @throws SQLException
 	 *             if there is any database problem.
 	 */
-	public List<String> getLoginEvents(Transaction transaction, String username, int events) throws SQLException;
+	public List<String> getLoginEvents(Transaction transaction, String username, int events)
+	        throws SQLException;
 
 	/**
 	 * Retrieve from database the list of banned addresses.

@@ -80,8 +80,8 @@ public class Utility {
 				}
 
 				if (index > 0 && (index % 16 == 0)) {
-					result.append(chars).append('\n').append(addLeadingZeros(Integer.toHexString(index), 8))
-							.append(' ');
+					result.append(chars).append('\n').append(
+					        addLeadingZeros(Integer.toHexString(index), 8)).append(' ');
 
 					chars = new StringBuilder();
 				}

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.28 2007/04/09 14:40:01 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.29 2007/04/09 14:47:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -136,7 +136,8 @@ public class RPServerManager extends Thread {
 			turnDuration = Long.parseLong(duration);
 			turn = 0;
 		} catch (Exception e) {
-			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances", e);
+			logger.warn("ABORT: Unable to create RPZone, RPRuleProcessor or RPAIManager instances",
+			        e);
 			throw e;
 		}
 	}
@@ -155,20 +156,22 @@ public class RPServerManager extends Thread {
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
 	 */
-	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException, IllegalArgumentException,
-			SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException,
+	        IllegalArgumentException, SecurityException, IllegalAccessException,
+	        InvocationTargetException, NoSuchMethodException {
 		Class worldClass = Class.forName(conf.get("world"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
-		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
+		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null,
+		        (Object[]) null);
 		RPWorld.set(world);
 		world.onInit();
 
 		Class ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
-		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null,
-				(Object[]) null);
+		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass
+		        .getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		ruleProcessor.setContext(this);
 	}
 
@@ -288,7 +291,8 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel, perception);
+		MessageS2CPerception messages2cPerception = new MessageS2CPerception(entry.channel,
+		        perception);
 
 		stats.add("Perceptions " + (perception.type == 0 ? "DELTA" : "SYNC"), 1);
 
@@ -351,7 +355,7 @@ public class RPServerManager extends Thread {
 				}
 			} catch (RuntimeException e) {
 				logger.error("Removing player(" + entry.clientid
-						+ ") because it caused a Exception while contacting it", e);
+				        + ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
 			}
 		}
@@ -435,10 +439,11 @@ public class RPServerManager extends Thread {
 							sb.append(" " + (timeEnd - timeStart));
 						}
 
-						logger.warn("Turn duration overflow by " + (-delay) + " ms: " + sb.toString());
+						logger.warn("Turn duration overflow by " + (-delay) + " ms: "
+						        + sb.toString());
 					} else if (delay > turnDuration) {
-						logger.error("Delay bigger than Turn duration. [delay: " + delay + "] [turnDuration:"
-								+ turnDuration + "]");
+						logger.error("Delay bigger than Turn duration. [delay: " + delay
+						        + "] [turnDuration:" + turnDuration + "]");
 						delay = 0;
 					}
 

@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.26 2007/04/09 14:39:48 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.27 2007/04/09 14:47:02 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -114,7 +114,8 @@ public abstract class ClientFramework {
 	 *             if there is no message available in TIMEOUT miliseconds.
 	 * @throws BannedAddressException
 	 */
-	private Message getMessage() throws InvalidVersionException, TimeoutException, BannedAddressException {
+	private Message getMessage() throws InvalidVersionException, TimeoutException,
+	        BannedAddressException {
 		Message msg = null;
 
 		if (messages.isEmpty()) {
@@ -160,8 +161,9 @@ public abstract class ClientFramework {
 	 *             if login is rejected
 	 * @throws BannedAddressException
 	 */
-	public synchronized void login(String username, String password) throws InvalidVersionException, TimeoutException,
-			LoginFailedException, BannedAddressException {
+	public synchronized void login(String username, String password)
+	        throws InvalidVersionException, TimeoutException, LoginFailedException,
+	        BannedAddressException {
 		int received = 0;
 		RSAPublicKey key = null;
 		byte[] clientNonce = null;
@@ -174,79 +176,79 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
-			/* Server sends its public RSA key */
-			case S2C_LOGIN_SENDKEY: {
-				logger.debug("Recieved Key");
-				key = ((MessageS2CLoginSendKey) msg).getKey();
+				/* Server sends its public RSA key */
+				case S2C_LOGIN_SENDKEY: {
+					logger.debug("Recieved Key");
+					key = ((MessageS2CLoginSendKey) msg).getKey();
 
-				clientNonce = Hash.random(Hash.hashLength());
-				netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
-				break;
-			}
-				/* Server sends a random big integer */
-			case S2C_LOGIN_SENDNONCE: {
-				logger.debug("Recieved Server Nonce");
-				if (serverNonce != null) {
-					throw new LoginFailedException("Already recieved a serverNonce");
+					clientNonce = Hash.random(Hash.hashLength());
+					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
+					break;
 				}
+					/* Server sends a random big integer */
+				case S2C_LOGIN_SENDNONCE: {
+					logger.debug("Recieved Server Nonce");
+					if (serverNonce != null) {
+						throw new LoginFailedException("Already recieved a serverNonce");
+					}
 
-				serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
-				byte[] b1 = Hash.xor(clientNonce, serverNonce);
-				if (b1 == null) {
-					throw new LoginFailedException("Incorrect hash b1");
+					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
+					byte[] b1 = Hash.xor(clientNonce, serverNonce);
+					if (b1 == null) {
+						throw new LoginFailedException("Incorrect hash b1");
+					}
+
+					byte[] b2 = Hash.xor(b1, Hash.hash(password));
+					if (b2 == null) {
+						throw new LoginFailedException("Incorrect hash b2");
+					}
+
+					byte[] cryptedPassword = key.encodeByteArray(b2);
+					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
+					        clientNonce, username, cryptedPassword));
+					break;
 				}
+					/* Server replied with ACK to login operation */
+				case S2C_LOGIN_ACK:
+					logger.debug("Login correct");
 
-				byte[] b2 = Hash.xor(b1, Hash.hash(password));
-				if (b2 == null) {
-					throw new LoginFailedException("Incorrect hash b2");
-				}
+					onPreviousLogins(((MessageS2CLoginACK) msg).getPreviousLogins());
 
-				byte[] cryptedPassword = key.encodeByteArray(b2);
-				netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null, clientNonce, username,
-						cryptedPassword));
-				break;
-			}
-				/* Server replied with ACK to login operation */
-			case S2C_LOGIN_ACK:
-				logger.debug("Login correct");
+					received++;
+					break;
+				/* Server send the character list */
+				case S2C_CHARACTERLIST:
+					logger.debug("Recieved Character list");
+					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
-				onPreviousLogins(((MessageS2CLoginACK)msg).getPreviousLogins());
-
-				received++;
-				break;
-			/* Server send the character list */
-			case S2C_CHARACTERLIST:
-				logger.debug("Recieved Character list");
-				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
-
+					/*
+					 * We notify client of characters by calling the callback
+					 * method.
+					 */
+					onAvailableCharacters(characters);
+					received++;
+					break;
 				/*
-				 * We notify client of characters by calling the callback
-				 * method.
+				 * Server sends the server info message with information about
+				 * versions, homepage, etc...
 				 */
-				onAvailableCharacters(characters);
-				received++;
-				break;
-			/*
-			 * Server sends the server info message with information about
-			 * versions, homepage, etc...
-			 */
-			case S2C_SERVERINFO:
-				logger.debug("Recieved Server info");
-				String[] info = ((MessageS2CServerInfo) msg).getContents();
+				case S2C_SERVERINFO:
+					logger.debug("Recieved Server info");
+					String[] info = ((MessageS2CServerInfo) msg).getContents();
 
-				/* We notify client of this info by calling the callback method. */
-				onServerInfo(info);
-				received++;
-				break;
-			/* Login failed, explain reason on event */
-			case S2C_LOGIN_NACK:
-				MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
-				logger.debug("Login failed. Reason: " + msgNACK.getResolution());
+					/* We notify client of this info by calling the callback method. */
+					onServerInfo(info);
+					received++;
+					break;
+				/* Login failed, explain reason on event */
+				case S2C_LOGIN_NACK:
+					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
+					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
 
-				throw new LoginFailedException(msgNACK.getResolution());
-				/* If message doesn't match, store it, someone will need it. */
-			default:
-				messages.add(msg);
+					throw new LoginFailedException(msgNACK.getResolution());
+					/* If message doesn't match, store it, someone will need it. */
+				default:
+					messages.add(msg);
 			}
 		}
 	}
@@ -263,8 +265,8 @@ public abstract class ClientFramework {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	public synchronized boolean chooseCharacter(String character) throws TimeoutException, InvalidVersionException,
-			BannedAddressException {
+	public synchronized boolean chooseCharacter(String character) throws TimeoutException,
+	        InvalidVersionException, BannedAddressException {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
 		netMan.addMessage(msgCC);
 
@@ -274,16 +276,16 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
-			/* Server accepted the character we choosed */
-			case S2C_CHOOSECHARACTER_ACK:
-				logger.debug("Choose Character ACK");
-				return true;
-				/* Server rejected the character we choosed. No reason */
-			case S2C_CHOOSECHARACTER_NACK:
-				logger.debug("Choose Character NACK");
-				return false;
-			default:
-				messages.add(msg);
+				/* Server accepted the character we choosed */
+				case S2C_CHOOSECHARACTER_ACK:
+					logger.debug("Choose Character ACK");
+					return true;
+					/* Server rejected the character we choosed. No reason */
+				case S2C_CHOOSECHARACTER_NACK:
+					logger.debug("Choose Character NACK");
+					return false;
+				default:
+					messages.add(msg);
 			}
 		}
 
@@ -309,7 +311,8 @@ public abstract class ClientFramework {
 	 * @throws BannedAddressException
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email)
-			throws TimeoutException, InvalidVersionException, CreateAccountFailedException, BannedAddressException {
+	        throws TimeoutException, InvalidVersionException, CreateAccountFailedException,
+	        BannedAddressException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 		netMan.addMessage(msgCA);
@@ -322,20 +325,21 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
-			/* Account was created */
-			case S2C_CREATEACCOUNT_ACK:
-				logger.debug("Create account ACK");
+				/* Account was created */
+				case S2C_CREATEACCOUNT_ACK:
+					logger.debug("Create account ACK");
 
-				MessageS2CCreateAccountACK msgack = (MessageS2CCreateAccountACK) msg;
-				result = new AccountResult(Result.OK_CREATED, msgack.getUsername());
+					MessageS2CCreateAccountACK msgack = (MessageS2CCreateAccountACK) msg;
+					result = new AccountResult(Result.OK_CREATED, msgack.getUsername());
 
-				recieved++;
-				break;
+					recieved++;
+					break;
 
-			/* Account was not created. Reason explained on event. */
-			case S2C_CREATEACCOUNT_NACK:
-				logger.debug("Create account NACK");
-				throw new CreateAccountFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
+				/* Account was not created. Reason explained on event. */
+				case S2C_CREATEACCOUNT_NACK:
+					logger.debug("Create account NACK");
+					throw new CreateAccountFailedException(((MessageS2CCreateAccountNACK) msg)
+					        .getResolution());
 			}
 		}
 
@@ -358,8 +362,9 @@ public abstract class ClientFramework {
 	 * @throws CreateCharacterFailedException
 	 * @throws BannedAddressException
 	 */
-	public synchronized CharacterResult createCharacter(String character, RPObject template) throws TimeoutException,
-			InvalidVersionException, CreateCharacterFailedException, BannedAddressException {
+	public synchronized CharacterResult createCharacter(String character, RPObject template)
+	        throws TimeoutException, InvalidVersionException, CreateCharacterFailedException,
+	        BannedAddressException {
 		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
 
 		netMan.addMessage(msgCA);
@@ -372,33 +377,35 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
-			/* Account was created */
-			case S2C_CREATECHARACTER_ACK:
-				logger.debug("Create character ACK");
+				/* Account was created */
+				case S2C_CREATECHARACTER_ACK:
+					logger.debug("Create character ACK");
 
-				MessageS2CCreateCharacterACK msgack = (MessageS2CCreateCharacterACK) msg;
+					MessageS2CCreateCharacterACK msgack = (MessageS2CCreateCharacterACK) msg;
 
-				result = new CharacterResult(Result.OK_CREATED, msgack.getCharacter(), msgack.getTemplate());
-				received++;
-				break;
+					result = new CharacterResult(Result.OK_CREATED, msgack.getCharacter(), msgack
+					        .getTemplate());
+					received++;
+					break;
 
-			/* Server send the character list */
-			case S2C_CHARACTERLIST:
-				logger.debug("Recieved Character list");
-				String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
+				/* Server send the character list */
+				case S2C_CHARACTERLIST:
+					logger.debug("Recieved Character list");
+					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
-				/*
-				 * We notify client of characters by calling the callback
-				 * method.
-				 */
-				onAvailableCharacters(characters);
-				received++;
-				break;
+					/*
+					 * We notify client of characters by calling the callback
+					 * method.
+					 */
+					onAvailableCharacters(characters);
+					received++;
+					break;
 
-			/* Account was not created. Reason explained on event. */
-			case S2C_CREATECHARACTER_NACK:
-				logger.debug("Create character NACK");
-				throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg).getResolution());
+				/* Account was not created. Reason explained on event. */
+				case S2C_CREATECHARACTER_NACK:
+					logger.debug("Create character NACK");
+					throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg)
+					        .getResolution());
 			}
 		}
 
@@ -427,7 +434,8 @@ public abstract class ClientFramework {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	public synchronized boolean logout() throws InvalidVersionException, TimeoutException, BannedAddressException {
+	public synchronized boolean logout() throws InvalidVersionException, TimeoutException,
+	        BannedAddressException {
 		Message msgL = new MessageC2SLogout(null);
 
 		netMan.addMessage(msgL);
@@ -436,12 +444,12 @@ public abstract class ClientFramework {
 		while (received != 1) {
 			Message msg = getMessage();
 			switch (msg.getType()) {
-			case S2C_LOGOUT_ACK:
-				logger.debug("Logout ACK");
-				return true;
-			case S2C_LOGOUT_NACK:
-				logger.debug("Logout NACK");
-				return false;
+				case S2C_LOGOUT_ACK:
+					logger.debug("Logout ACK");
+					return true;
+				case S2C_LOGOUT_NACK:
+					logger.debug("Logout NACK");
+					return false;
 			}
 		}
 
@@ -487,36 +495,36 @@ public abstract class ClientFramework {
 			receivedMessages = true;
 
 			switch (msg.getType()) {
-			/* It can be a perception message */
-			case S2C_PERCEPTION: {
-				logger.debug("Processing Message Perception");
-				MessageS2CPerception msgPer = (MessageS2CPerception) msg;
-				onPerception(msgPer);
+				/* It can be a perception message */
+				case S2C_PERCEPTION: {
+					logger.debug("Processing Message Perception");
+					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
+					onPerception(msgPer);
 
-				break;
-			}
+					break;
+				}
 
-				/* or it can be a transfer request message */
-			case S2C_TRANSFER_REQ: {
-				logger.debug("Processing Content Transfer Request");
-				List<TransferContent> items = ((MessageS2CTransferREQ) msg).getContents();
+					/* or it can be a transfer request message */
+				case S2C_TRANSFER_REQ: {
+					logger.debug("Processing Content Transfer Request");
+					List<TransferContent> items = ((MessageS2CTransferREQ) msg).getContents();
 
-				items = onTransferREQ(items);
+					items = onTransferREQ(items);
 
-				MessageC2STransferACK reply = new MessageC2STransferACK(null, items);
-				netMan.addMessage(reply);
+					MessageC2STransferACK reply = new MessageC2STransferACK(null, items);
+					netMan.addMessage(reply);
 
-				break;
-			}
+					break;
+				}
 
-				/* or it can be the data tranfer itself */
-			case S2C_TRANSFER: {
-				logger.debug("Processing Content Transfer");
-				List<TransferContent> items = ((MessageS2CTransfer) msg).getContents();
-				onTransfer(items);
+					/* or it can be the data tranfer itself */
+				case S2C_TRANSFER: {
+					logger.debug("Processing Content Transfer");
+					List<TransferContent> items = ((MessageS2CTransfer) msg).getContents();
+					onTransfer(items);
 
-				break;
-			}
+					break;
+				}
 			}
 		}
 

@@ -80,7 +80,8 @@ public class StressServer {
 
 						client.connect("localhost", PORT);
 
-  						AccountResult resAcc = client.createAccount("testUsername" + i, "password", "email");
+						AccountResult resAcc = client.createAccount("testUsername" + i, "password",
+						        "email");
 						assertEquals("testUsername" + i, resAcc.getUsername());
 
 						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);

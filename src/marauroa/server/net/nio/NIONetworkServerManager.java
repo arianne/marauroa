@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.28 2007/04/09 14:40:02 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.29 2007/04/09 14:47:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,10 +40,12 @@ import marauroa.server.net.validator.ConnectionValidator;
  * @author miguel
  * 
  */
-public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener, INetworkServerManager {
+public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener,
+        INetworkServerManager {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(NIONetworkServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J
+	        .getLogger(NIONetworkServerManager.class);
 
 	/** We store the server for sending stuff. */
 	private NioServer server;
@@ -258,8 +260,8 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	public void sendMessage(Message msg) {
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.debug("send message(type=" + msg.getType() + ") from " + msg.getClientID() + " full [" + msg
-						+ "]");
+				logger.debug("send message(type=" + msg.getType() + ") from " + msg.getClientID()
+				        + " full [" + msg + "]");
 			}
 
 			byte[] data = encoder.encode(msg);
@@ -319,8 +321,8 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 					Message msg = decoder.decode(event.channel, event.data);
 					if (msg != null) {
 						if (logger.isDebugEnabled()) {
-							logger.debug("recv message(type=" + msg.getType() + ") from " + msg.getClientID()
-									+ " full [" + msg + "]");
+							logger.debug("recv message(type=" + msg.getType() + ") from "
+							        + msg.getClientID() + " full [" + msg + "]");
 						}
 
 						messages.add(msg);
@@ -328,7 +330,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				} catch (InvalidVersionException e) {
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel,
-							"Invalid client version: Update client");
+					        "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
 					logger.warn("IOException while building message.", e);

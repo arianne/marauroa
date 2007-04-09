@@ -24,10 +24,10 @@ public class Log4J {
 
 	/** default properties */
 	private static final String DEFAULT_PROPERTIES = "log4j.rootLogger=INFO, Console\n"
-			+ "log4j.appender.Console=org.apache.log4j.ConsoleAppender\n"
-			+ "log4j.appender.Console.layout=org.apache.log4j.PatternLayout\n"
-			+ "log4j.appender.Console.threshold=INFO\n"
-			+ "log4j.appender.Console.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n\n";
+	        + "log4j.appender.Console=org.apache.log4j.ConsoleAppender\n"
+	        + "log4j.appender.Console.layout=org.apache.log4j.PatternLayout\n"
+	        + "log4j.appender.Console.threshold=INFO\n"
+	        + "log4j.appender.Console.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n\n";
 
 	/** flag indicating a successful configuration */
 	private static boolean configured = false;
@@ -47,7 +47,8 @@ public class Log4J {
 		try {
 			Properties props = new Properties();
 			if (propsFile == null) {
-				System.err.println("Cannot find " + filename + " in classpath. Using default properties.");
+				System.err.println("Cannot find " + filename
+				        + " in classpath. Using default properties.");
 				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes()));
 			} else {
 				System.out.println("Configuring Log4J using " + filename);
@@ -56,7 +57,8 @@ public class Log4J {
 			PropertyConfigurator.configure(props);
 			configured = true;
 		} catch (IOException ioe) {
-			System.err.println("cannot read property-file " + LOG4J_PROPERTIES + " because " + ioe.getMessage());
+			System.err.println("cannot read property-file " + LOG4J_PROPERTIES + " because "
+			        + ioe.getMessage());
 		}
 	}
 

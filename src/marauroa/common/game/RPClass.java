@@ -71,7 +71,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		attributes = new HashMap<String, Definition>();
 		rpevents = new HashMap<String, Definition>();
 		rpslots = new HashMap<String, Definition>();
-		rplinks= new HashMap<String, Definition>();
+		rplinks = new HashMap<String, Definition>();
 	}
 
 	/**
@@ -88,7 +88,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 		/* Any class stores these attributes. */
 		add(DefinitionClass.ATTRIBUTE, "id", Type.INT, Definition.STANDARD);
 		add(DefinitionClass.ATTRIBUTE, "zoneid", Type.STRING, Definition.HIDDEN);
-		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT, (byte) (Definition.HIDDEN | Definition.VOLATILE));
+		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT,
+		        (byte) (Definition.HIDDEN | Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
 
 		rpClassList.put(name, this);
@@ -219,16 +220,16 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void add(Definition.DefinitionClass clazz, String name, byte flags) {
 		Definition def = null;
 		switch (clazz) {
-		case RPLINK:
-			def = Definition.defineEvent(name, flags);
-			rplinks.put(name, def);
-			break;
-		case RPEVENT:
-			def = Definition.defineEvent(name, flags);
-			rpevents.put(name, def);
-			break;
-		default:
-			throw new SyntaxException(name);
+			case RPLINK:
+				def = Definition.defineEvent(name, flags);
+				rplinks.put(name, def);
+				break;
+			case RPEVENT:
+				def = Definition.defineEvent(name, flags);
+				rpevents.put(name, def);
+				break;
+			default:
+				throw new SyntaxException(name);
 		}
 		def.setCode(getValidCode(name));
 	}
@@ -296,23 +297,23 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Definition def = null;
 
 		switch (clazz) {
-		case STATIC:
-			def = staticattributes.get(name);
-			break;
-		case ATTRIBUTE:
-			def = attributes.get(name);
-			break;
-		case RPEVENT:
-			def = rpevents.get(name);
-			break;
-		case RPSLOT:
-			def = rpslots.get(name);
-			break;
-		case RPLINK:
-			def=rplinks.get(name);
-			break;
-		default:
-			throw new SyntaxException("Class not found: "+clazz);
+			case STATIC:
+				def = staticattributes.get(name);
+				break;
+			case ATTRIBUTE:
+				def = attributes.get(name);
+				break;
+			case RPEVENT:
+				def = rpevents.get(name);
+				break;
+			case RPSLOT:
+				def = rpslots.get(name);
+				break;
+			case RPLINK:
+				def = rplinks.get(name);
+				break;
+			default:
+				throw new SyntaxException("Class not found: " + clazz);
 		}
 
 		if (def == null && parent != null) {
@@ -363,20 +364,20 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Map<String, Definition> list = null;
 
 		switch (clazz) {
-		case ATTRIBUTE:
-			list = attributes;
-			break;
-		case RPEVENT:
-			list = rpevents;
-			break;
-		case RPSLOT:
-			list = rpslots;
-			break;
-		case RPLINK:
-			list=rplinks;
-			break;
-		default:
-			throw new SyntaxException("Class not found: "+clazz);
+			case ATTRIBUTE:
+				list = attributes;
+				break;
+			case RPEVENT:
+				list = rpevents;
+				break;
+			case RPSLOT:
+				list = rpslots;
+				break;
+			case RPLINK:
+				list = rplinks;
+				break;
+			default:
+				throw new SyntaxException("Class not found: " + clazz);
 		}
 
 		if (list == null) {
@@ -572,9 +573,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		RPClass otc = (RPClass) ot;
 
-		boolean result = name.equals(otc.name) && (parent == otc.parent || parent.equals(otc.parent))
-				&& staticattributes.equals(otc.staticattributes) && attributes.equals(otc.attributes)
-				&& rpevents.equals(otc.rpevents) && rpslots.equals(otc.rpslots);
+		boolean result = name.equals(otc.name)
+		        && (parent == otc.parent || parent.equals(otc.parent))
+		        && staticattributes.equals(otc.staticattributes)
+		        && attributes.equals(otc.attributes) && rpevents.equals(otc.rpevents)
+		        && rpslots.equals(otc.rpslots);
 
 		return result;
 	}

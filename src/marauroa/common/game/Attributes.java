@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.47 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.48 2007/04/09 14:47:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -336,7 +336,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	@Override
 	public boolean equals(Object attr) {
-		return (attr != null) && (attr instanceof Attributes) && content.equals(((Attributes) attr).content);
+		return (attr != null) && (attr instanceof Attributes)
+		        && content.equals(((Attributes) attr).content);
 	}
 
 	@Override
@@ -412,7 +413,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param level
 	 *            the level of Detail
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
+	        throws java.io.IOException {
 		/*
 		 * Obtains the number of attributes to serialize removing hidden and
 		 * private attributes
@@ -473,7 +475,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return true if it should be serialized.
 	 */
 	boolean shouldSerialize(Definition def, DetailLevel level) {
-		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible()) || (level == DetailLevel.FULL);
+		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible())
+		        || (level == DetailLevel.FULL);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.60 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.61 2007/04/09 14:47:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,7 +93,7 @@ public class RPObject extends Attributes {
 
 		events = new LinkedList<RPEvent>();
 
-		links= new LinkedList<RPLink>();
+		links = new LinkedList<RPLink>();
 		addedLinks = new LinkedList<String>();
 		deletedLinks = new LinkedList<String>();
 
@@ -117,25 +117,25 @@ public class RPObject extends Attributes {
 
 		hidden = object.hidden;
 		storable = object.storable;
-		lastassignedID= object.lastassignedID;
+		lastassignedID = object.lastassignedID;
 
 		container = object.container;
 		containerSlot = object.containerSlot;
 
 		for (RPSlot slot : object.slots) {
-			RPSlot added=(RPSlot) slot.clone();
+			RPSlot added = (RPSlot) slot.clone();
 			added.setOwner(this);
 			slots.add(added);
 		}
 
 		for (RPEvent event : object.events) {
-			RPEvent added=(RPEvent) event.clone();
+			RPEvent added = (RPEvent) event.clone();
 			added.setOwner(this);
 			events.add(added);
 		}
 
-		for( RPLink link: object.links) {
-			RPLink added=(RPLink) link.clone();
+		for (RPLink link : object.links) {
+			RPLink added = (RPLink) link.clone();
 			added.setOwner(this);
 			links.add(added);
 		}
@@ -450,7 +450,7 @@ public class RPObject extends Attributes {
 	 * @param object the object to link.
 	 */
 	public void addLink(String name, RPObject object) {
-		RPLink link=new RPLink(name, object);
+		RPLink link = new RPLink(name, object);
 		link.setOwner(this);
 		links.add(link);
 
@@ -478,8 +478,8 @@ public class RPObject extends Attributes {
 	 * @return the object linked by the given link.
 	 */
 	public RPObject getLinkedObject(String name) {
-		RPLink link=getLink(name);
-		if(link!=null) {
+		RPLink link = getLink(name);
+		if (link != null) {
 			return link.getObject();
 		}
 
@@ -492,7 +492,7 @@ public class RPObject extends Attributes {
 	 * @return true if the link exists.
 	 */
 	public boolean hasLink(String name) {
-		return getLink(name)!=null;
+		return getLink(name) != null;
 	}
 
 	/**
@@ -514,7 +514,6 @@ public class RPObject extends Attributes {
 
 		return null;
 	}
-
 
 	/**
 	 * This method returns a String that represent the object
@@ -565,7 +564,8 @@ public class RPObject extends Attributes {
 	 *            the level of Detail
 	 */
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level) throws java.io.IOException {
+	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
+	        throws java.io.IOException {
 		super.writeObject(out, level);
 
 		if (level == DetailLevel.FULL) {
@@ -695,7 +695,7 @@ public class RPObject extends Attributes {
 		links = new LinkedList<RPLink>();
 
 		for (int i = 0; i < size; ++i) {
-			RPLink link = new RPLink(null,null);
+			RPLink link = new RPLink(null, null);
 			link.setOwner(this);
 			link = (RPLink) in.readObject(link);
 			links.add(link);
@@ -730,7 +730,8 @@ public class RPObject extends Attributes {
 	public boolean equals(Object obj) {
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events) && links.equals(object.links);
+			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events)
+			        && links.equals(object.links);
 		} else {
 			return false;
 		}
@@ -841,14 +842,14 @@ public class RPObject extends Attributes {
 
 		object.hidden = hidden;
 		object.storable = storable;
-		object.lastassignedID=lastassignedID;
+		object.lastassignedID = lastassignedID;
 
 		for (RPEvent event : events) {
 			object.addEvent((RPEvent) event.clone());
 		}
 
-		for(RPLink link: links) {
-			RPLink copy=(RPLink) link.clone();
+		for (RPLink link : links) {
+			RPLink copy = (RPLink) link.clone();
 			copy.setOwner(object);
 			object.links.add(copy);
 		}
@@ -956,7 +957,8 @@ public class RPObject extends Attributes {
 		@Override
 		public boolean equals(Object anotherid) {
 			if (anotherid != null && anotherid instanceof RPObject.ID) {
-				return (id == ((RPObject.ID) anotherid).id && zoneid.equals(((RPObject.ID) anotherid).zoneid));
+				return (id == ((RPObject.ID) anotherid).id && zoneid
+				        .equals(((RPObject.ID) anotherid).zoneid));
 			} else {
 				return false;
 			}
@@ -1072,31 +1074,31 @@ public class RPObject extends Attributes {
 		/*
 		 * We add the added links.
 		 */
-		for(String addedLink: addedLinks) {
+		for (String addedLink : addedLinks) {
 			addedChanges.addLink(addedLink, getLinkedObject(addedLink));
 		}
 
 		/*
 		 * We add the deleted links.
 		 */
-		for(String deletedLink: deletedLinks) {
+		for (String deletedLink : deletedLinks) {
 			deletedChanges.addLink(deletedLink, new RPObject());
 		}
 
 		/*
 		 * We now get the diffs for the link
 		 */
-		for(RPLink link: links) {
-			RPObject linkadded=new RPObject();
-			RPObject linkdeleted=new RPObject();
+		for (RPLink link : links) {
+			RPObject linkadded = new RPObject();
+			RPObject linkdeleted = new RPObject();
 
 			link.getObject().getDifferences(linkadded, linkdeleted);
 
-			if(!linkadded.isEmpty()) {
+			if (!linkadded.isEmpty()) {
 				addedChanges.addLink(link.getName(), linkadded);
 			}
 
-			if(!linkdeleted.isEmpty()) {
+			if (!linkdeleted.isEmpty()) {
 				deletedChanges.addLink(link.getName(), linkdeleted);
 			}
 		}
@@ -1228,8 +1230,8 @@ public class RPObject extends Attributes {
 			/*
 			 * We apply the deleted changes to the object of the link.
 			 */
-			for(RPLink link: deletedChanges.links) {
-				if(link.getObject().isEmpty()) {
+			for (RPLink link : deletedChanges.links) {
+				if (link.getObject().isEmpty()) {
 					removeLink(link.getName());
 				} else {
 					getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
@@ -1290,8 +1292,8 @@ public class RPObject extends Attributes {
 			/*
 			 * We apply it for the links.
 			 */
-			for(RPLink link: addedChanges.links) {
-				if(!hasLink(link.getName())) {
+			for (RPLink link : addedChanges.links) {
+				if (!hasLink(link.getName())) {
 					links.add(link);
 				} else {
 					getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,7 @@ public class MessageS2CCharacterList extends Message {
 			text.append(characters[i] + ",");
 		}
 		return "Message (S2C Character List) from (" + getAddress() + ") CONTENTS: ("
-				+ text.substring(0, text.length() - 1) + ")";
+		        + text.substring(0, text.length() - 1) + ")";
 	}
 
 	@Override

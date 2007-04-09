@@ -43,8 +43,9 @@ public class TestSecureLogin {
 	}
 
 	public static void loadRSAKey() throws IOException {
-		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(Configuration
-				.getConfiguration().get("d")), new BigInteger(Configuration.getConfiguration().get("e")));
+		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
+		        Configuration.getConfiguration().get("d")), new BigInteger(Configuration
+		        .getConfiguration().get("e")));
 	}
 
 	/**
@@ -79,13 +80,14 @@ public class TestSecureLogin {
 	}
 
 	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password)
-			throws SQLException {
+	        throws SQLException {
 		byte[] serverNonce = Hash.random(Hash.hashLength());
 		byte[] clientNonce = Hash.random(Hash.hashLength());
 
 		byte[] clientNonceHash = Hash.hash(clientNonce);
 
-		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash, serverNonce);
+		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
+		        serverNonce);
 
 		byte[] b1 = Hash.xor(clientNonce, serverNonce);
 		if (b1 == null) {

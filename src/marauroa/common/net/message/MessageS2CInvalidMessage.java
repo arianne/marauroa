@@ -1,4 +1,4 @@
-/* $Id: MessageS2CInvalidMessage.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: MessageS2CInvalidMessage.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,8 @@ public class MessageS2CInvalidMessage extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Message Invalid) from (" + getAddress() + ") CONTENTS: (reason:" + reason + ")";
+		return "Message (S2C Message Invalid) from (" + getAddress() + ") CONTENTS: (reason:"
+		        + reason + ")";
 	}
 
 	@Override

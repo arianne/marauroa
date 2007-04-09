@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.56 2007/04/09 14:39:58 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.57 2007/04/09 14:47:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -178,12 +178,14 @@ public class marauroad extends Thread {
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {
-				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
+				System.out
+				        .println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
 				System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 				System.out.println();
 				System.out.println("usage: [-c gamefile] [-l]");
-				System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+				System.out
+				        .println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
 				System.out.println("\t-h: print this help message");
 				System.exit(0);
@@ -193,7 +195,8 @@ public class marauroad extends Thread {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out
+		        .println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
 		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 		System.out.println();
@@ -209,7 +212,8 @@ public class marauroad extends Thread {
 		System.out.println();
 		System.out.println("You should have received a copy of the GNU General Public License");
 		System.out.println("along with this program; if not, write to the Free Software");
-		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out
+		        .println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
 		// Initialize Loggging
 		Log4J.init("marauroa/server/log4j.properties");
@@ -284,9 +288,10 @@ public class marauroad extends Thread {
 			netMan.start();
 		} catch (Exception e) {
 			logger.fatal("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
-					+ "- You are already running a copy of Marauroa on the same TCP port\n"
-					+ "- You haven't specified a valid configuration file\n" + "- You haven't create database\n"
-					+ "- You have invalid username and password to connect to database\n", e);
+			        + "- You are already running a copy of Marauroa on the same TCP port\n"
+			        + "- You haven't specified a valid configuration file\n"
+			        + "- You haven't create database\n"
+			        + "- You have invalid username and password to connect to database\n", e);
 			return false;
 		}
 
@@ -295,30 +300,30 @@ public class marauroad extends Thread {
 			rpMan.start();
 		} catch (Exception e) {
 			logger
-					.fatal(
-							"Marauroa can't create RPServerManager.\n"
-									+ "Reasons:\n"
-									+ "- You haven't specified a valid configuration file\n"
-									+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
-									+ "- There may be an error in the Game startup method.\n", e);
+			        .fatal(
+			                "Marauroa can't create RPServerManager.\n"
+			                        + "Reasons:\n"
+			                        + "- You haven't specified a valid configuration file\n"
+			                        + "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
+			                        + "- There may be an error in the Game startup method.\n", e);
 			return false;
 		}
 
 		try {
-			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
-					Configuration.getConfiguration().get("d")), new BigInteger(Configuration.getConfiguration()
-					.get("e")));
+			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
+			        new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
+			                Configuration.getConfiguration().get("e")));
 
 			gameMan = new GameServerManager(key, netMan, rpMan);
 			gameMan.start();
 		} catch (Exception e) {
 			logger
-					.fatal(
-							"Marauroa can't create GameServerManager.\n"
-									+ "Reasons:\n"
-									+ "- You haven't specified a valid configuration file\n"
-									+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
-							e);
+			        .fatal(
+			                "Marauroa can't create GameServerManager.\n"
+			                        + "Reasons:\n"
+			                        + "- You haven't specified a valid configuration file\n"
+			                        + "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
+			                e);
 			return false;
 		}
 
