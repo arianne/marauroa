@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.16 2006/12/19 12:10:10 arianne_rpg Exp $ */
+/* $Id: createaccount.java,v 1.14.6.1 2007/04/21 14:51:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server;
 
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,20 +32,11 @@ import org.apache.log4j.Logger;
  * provide a few methods of which you inherit and implement.
  */
 public abstract class createaccount {
+
 	private static final Logger logger = Log4J.getLogger(createaccount.class);
 
-	/** This enum represent the possible values returned by the create account process.
-	 *  Caller should verify that the process ended in OK_ACCOUNT_CREATED.
-	 * @author miguel
-	 *
-	 */
 	public enum Result {
-		OK_ACCOUNT_CREATED, 
-		FAILED_EMPTY_STRING, 
-		FAILED_INVALID_CHARACTER_USED, 
-		FAILED_STRING_SIZE, 
-		FAILED_PLAYER_EXISTS, 
-		FAILED_EXCEPTION
+		OK_ACCOUNT_CREATED, FAILED_EMPTY_STRING, FAILED_INVALID_CHARACTER_USED, FAILED_STRING_SIZE, FAILED_PLAYER_EXISTS, FAILED_EXCEPTION
 	}
 
 	/**
@@ -54,10 +44,15 @@ public abstract class createaccount {
 	 * it default value and the allowed size ( > min and < max )
 	 */
 	public static class Information {
+
 		public String param;
+
 		public String name;
+
 		public String value;
+
 		public int min;
+
 		public int max;
 
 		public Information(String param, String name) {
@@ -138,12 +133,10 @@ public abstract class createaccount {
 		}
 
 		Transaction trans = null;
-		PrintWriter out = null;
 
 		try {
 			Configuration.setConfigurationFile(iniFile);
-			
-			logger.info("Trying to create username(" + get("username")+ "), character(" + get("character") + ")");
+			logger.info("Trying to create username(" + get("username") + "), character(" + get("character") + ")");
 
 			JDBCPlayerDatabase playerDatabase = (JDBCPlayerDatabase) PlayerDatabaseFactory.getDatabase();
 			trans = playerDatabase.getTransaction();
@@ -168,10 +161,21 @@ public abstract class createaccount {
 
 			logger.info("Checking string size");
 			for (Information item : information) {
-				if (item.value.length() > item.max || item.value.length() < item.min) {
+				if ((item.value.length() > item.max) || (item.value.length() < item.min)) {
 					logger.info("String size not valid: " + item.name);
 					return Result.FAILED_STRING_SIZE;
 				}
+			}
+
+			logger.info("Checking impersonation");
+
+			logger.info("Checking for valid string");
+			String name = get("username").trim().toLowerCase();
+			name = name.replaceAll("[ _.,;.-\\\\ \"§$%&/()='<>|*+~#]", " ");
+			if (name.startsWith(" ") || name.endsWith(" ") || (name.indexOf("gm ") > -1) || (name.indexOf(" gm") > -1)
+			        || name.startsWith("gm") || name.endsWith("gm") || (name.indexOf("  ") > -1)) {
+				logger.warn("Possible impersonation: " + get("username"));
+				return Result.FAILED_INVALID_CHARACTER_USED;
 			}
 
 			logger.info("Checking if player exists");
@@ -185,22 +189,18 @@ public abstract class createaccount {
 
 			RPObject object = populatePlayerRPObject(playerDatabase);
 
-			playerDatabase.addCharacter(trans, get("username"),	get("character"), object);
+			playerDatabase.addCharacter(trans, get("username"), get("character"), object);
 			logger.info("Correctly created");
 
 			trans.commit();
 		} catch (Exception e) {
-			if (out != null) {
-				logger.warn("Failed: " + e.getMessage());
-				e.printStackTrace(out);
+			logger.error("Failed: " + e.getMessage(), e);
 
-				try {
-					trans.rollback();
-				} catch (Exception ae) {
-					logger.fatal("Failed Rollback: " + ae.getMessage());
-				}
+			try {
+				trans.rollback();
+			} catch (Exception ae) {
+				logger.error("Failed Rollback: " + ae.getMessage());
 			}
-
 			return Result.FAILED_EXCEPTION;
 		}
 
