@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.27 2006/08/26 20:00:28 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.27.6.1 2007/05/01 17:12:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -269,6 +269,7 @@ public class RPSlot implements marauroa.common.net.Serializable,
 				deleted.add(new RPObject(new RPObject.ID(object)));
 				object.setContainer(null, null);
 			} catch (AttributeNotFoundException e) {
+				logger.error(e, e);
 			}
 		}
 
