@@ -1,4 +1,4 @@
-/* $Id: createaccount.java,v 1.14.6.2 2007/05/01 10:12:56 nhnb Exp $ */
+/* $Id: createaccount.java,v 1.14.6.3 2007/05/01 17:11:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,7 +169,7 @@ public abstract class createaccount {
 
 			logger.info("Checking impersonation");
 			String name = get("username").trim().toLowerCase();
-			name = name.replaceAll("[ _.,;.-\\\\ \"ï¿½$%&/()='<>|*+~#]", " ");
+			name.replaceAll("[ _.,;.\\-\\\\ \"§$%&/()='<>|*+~#]", " ");
 			if (name.startsWith(" ") || name.endsWith(" ") || (name.indexOf("gm ") > -1) || (name.indexOf(" gm") > -1)
 			        || name.startsWith("gm") || name.endsWith("gm") || (name.indexOf("  ") > -1)) {
 				logger.warn("Possible impersonation: " + get("username"));
