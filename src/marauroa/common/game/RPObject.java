@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.22.6.1 2007/03/12 19:48:30 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.22.6.2 2007/05/01 17:12:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -500,6 +500,7 @@ public class RPObject extends Attributes {
 			RPSlot copied = (RPSlot) slot.clone();
 			copied.setOwner(object);
 			object.deleted.add(copied);
+			slot.setOwner(null);
 		}
 
 		return object;
