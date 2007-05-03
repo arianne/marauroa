@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.77 2007/04/09 14:47:10 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.78 2007/05/03 18:19:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -505,33 +505,39 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				object.put("#clientid", clientid);
 
 				/* We ask RP Manager to initialize the object */
-				rpMan.onInit(object);
+				if(rpMan.onInit(object)) {
+					/* And finally sets this connection state to GAME_BEGIN */
+					entry.state = ClientState.GAME_BEGIN;
 
-				/* And finally sets this connection state to GAME_BEGIN */
-				entry.state = ClientState.GAME_BEGIN;
-
-				/* Correct: Character exist */
-				MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(
-				        msg.getSocketChannel());
-				msgChooseCharacterACK.setClientID(clientid);
-				netMan.sendMessage(msgChooseCharacterACK);
+					/* Correct: Character exist */
+					MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(
+							msg.getSocketChannel());
+					msgChooseCharacterACK.setClientID(clientid);
+					netMan.sendMessage(msgChooseCharacterACK);
+					return;
+				} else {
+					/* This account doesn't own that character */
+					logger.info("RuleProcessor rejected character(" + msg.getCharacter()+")");
+				}
 			} else {
 				/* This account doesn't own that character */
 				logger.info("Client(" + msg.getAddress().toString() + ") hasn't character("
-				        + msg.getCharacter() + ")");
-
-				/*
-				 * So we return it back to login complete stage.
-				 */
-				entry.state = ClientState.LOGIN_COMPLETE;
-
-				/* Error: There is no such character */
-				MessageS2CChooseCharacterNACK msgChooseCharacterNACK = new MessageS2CChooseCharacterNACK(
-				        msg.getSocketChannel());
-
-				msgChooseCharacterNACK.setClientID(clientid);
-				netMan.sendMessage(msgChooseCharacterNACK);
+						+ msg.getCharacter() + ")");
 			}
+
+			/*
+			 * If the account doesn't own the character OR if the rule processor rejected it.
+			 * So we return it back to login complete stage.
+			 */
+			entry.state = ClientState.LOGIN_COMPLETE;
+
+			/* Error: There is no such character */
+			MessageS2CChooseCharacterNACK msgChooseCharacterNACK = new MessageS2CChooseCharacterNACK(
+					msg.getSocketChannel());
+
+			msgChooseCharacterNACK.setClientID(clientid);
+			netMan.sendMessage(msgChooseCharacterNACK);
+
 		} catch (Exception e) {
 			logger.error("error when processing character event", e);
 		}
