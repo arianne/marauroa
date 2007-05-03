@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.32 2007/05/03 18:55:38 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.33 2007/05/03 18:58:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -316,23 +316,6 @@ public class PlayerEntry {
 	 */
 	public void ban() throws SQLException {
 		playerDatabase.setAccountStatus(playerDatabase.getTransaction(), username, "banned");
-	}
-
-	/**
-	 * Returns true if this player is banned.
-	 * @return true if this player is banned.
-	 * @throws SQLException
-	 */
-	public boolean isBanned() throws SQLException {
-		return playerDatabase.getAccountStatus(playerDatabase.getTransaction(), username).equalsIgnoreCase("banned");
-	}
-	
-	/**
-	 * Removes the ban on this player account
-	 * @throws SQLException
-	 */
-	public void unban() throws SQLException {
-		playerDatabase.setAccountStatus(playerDatabase.getTransaction(), username, "active");
 	}
 	
 	/**
