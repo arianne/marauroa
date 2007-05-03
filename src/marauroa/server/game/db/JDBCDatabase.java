@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.41 2007/05/03 18:32:32 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.42 2007/05/03 18:38:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -428,6 +428,43 @@ public class JDBCDatabase implements IDatabase {
 
 			if (result.next()) {
 				status = result.getString("status");
+			}
+
+			result.close();
+			stmt.close();
+
+			return status;
+		} catch (SQLException e) {
+			logger.error("Can't query player(" + username + ")", e);
+			throw e;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.Transaction,
+	 *      java.lang.String)
+	 */
+	public String getEmail(Transaction transaction, String username) throws SQLException {
+		try {
+			Connection connection = transaction.getConnection();
+			Statement stmt = connection.createStatement();
+
+			if (!StringChecker.validString(username)) {
+				throw new SQLException("Invalid string username=(" + username + ")");
+			}
+
+			String query = "select email from account where username like '" + username + "'";
+
+			logger.debug("getEmail is executing query " + query);
+
+			ResultSet result = stmt.executeQuery(query);
+
+			String status = null;
+
+			if (result.next()) {
+				status = result.getString("email");
 			}
 
 			result.close();
