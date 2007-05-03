@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.40 2007/04/09 14:47:12 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.41 2007/05/03 18:32:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -566,11 +566,14 @@ public class JDBCDatabase implements IDatabase {
 			}
 
 			Connection connection = transaction.getConnection();
-			// NOTE: It can be made simpler by splitting the query in two parts.
 			Statement stmt = connection.createStatement();
-			String query = "select count(*) as amount from  account,characters where "
-			        + "username like '" + username + "' and charname like '" + character
-			        + "' and account.id=characters.player_id";
+			/*
+			 * NOTE: 
+			 * Perse we have agreed that character name is unique per server, 
+			 * so we check just characters ignoring username.
+			 */
+			String query = "select count(*) as amount from  characters where "
+			        + "charname like '" + character + "'";
 
 			logger.debug("hasCharacter is executing query " + query);
 

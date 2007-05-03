@@ -19,7 +19,7 @@ create table if not exists characters
   charname varchar(32) not null,
   object_id integer not null,
   
-  PRIMARY KEY(charname,player_id)
+  PRIMARY KEY(charname)
   )
   TYPE=INNODB;
 
