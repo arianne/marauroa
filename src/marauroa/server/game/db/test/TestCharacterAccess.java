@@ -1,4 +1,4 @@
-/* $Id: TestCharacterAccess.java,v 1.6 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: TestCharacterAccess.java,v 1.7 2007/05/03 19:19:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -83,8 +83,8 @@ public class TestCharacterAccess {
 	 */
 	@Test
 	public void addCharacter() throws SQLException, IOException {
-		String username = "testUser";
-		String character = "testCharacter";
+		String username = "testUserCA";
+		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
@@ -107,8 +107,8 @@ public class TestCharacterAccess {
 	 */
 	@Test(expected = SQLException.class)
 	public void doubleAddedCharacter() throws SQLException, IOException {
-		String username = "testUser";
-		String character = "testCharacter";
+		String username = "testUserCA";
+		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
@@ -135,8 +135,8 @@ public class TestCharacterAccess {
 	 */
 	@Test
 	public void removeCharacter() throws SQLException, IOException {
-		String username = "testUser";
-		String character = "testCharacter";
+		String username = "testUserCA";
+		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
@@ -162,8 +162,8 @@ public class TestCharacterAccess {
 	 */
 	@Test
 	public void removePlayerCharacter() throws SQLException, IOException {
-		String username = "testUser";
-		String character = "testCharacter";
+		String username = "testUserCA";
+		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
@@ -189,8 +189,8 @@ public class TestCharacterAccess {
 	 */
 	@Test
 	public void getCharacters() throws SQLException, IOException {
-		String username = "testUser";
-		String[] characters = { "testCharacter1", "testCharacter2", "testCharacter3" };
+		String username = "testUserCA";
+		String[] characters = { "testCharacterCA1", "testCharacterCA2", "testCharacterCA3" };
 
 		Transaction transaction = database.getTransaction();
 		try {
@@ -218,8 +218,8 @@ public class TestCharacterAccess {
 	 */
 	@Test
 	public void storeAndLoadCharacter() throws SQLException, IOException {
-		String username = "testUser";
-		String character = "testCharacter";
+		String username = "testUserCA";
+		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 		player.put("one", "number one");
 		player.put("two", 2);
