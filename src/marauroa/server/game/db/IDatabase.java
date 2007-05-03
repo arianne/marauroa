@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.20 2007/04/09 14:47:12 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.21 2007/05/03 18:28:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -126,7 +126,7 @@ public interface IDatabase {
 	 * @param username
 	 *            player username
 	 * @param status
-	 *            status we are going to set
+	 *            status we are going to set, either inactive, active or banned.
 	 * @throws SQLException
 	 *             if there is a database problem
 	 */

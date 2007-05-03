@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.78 2007/05/03 18:19:32 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.79 2007/05/03 18:28:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1010,6 +1010,23 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				return;
 			}
 
+			/*
+			 * We check now the account is not banned or inactive.
+			 */
+			if (!"active".equalsIgnoreCase(info.getStatus())) {
+				logger.debug("Banned/Inactive account for player " + info.username);
+
+				/* Send player the Login NACK message */
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+				        MessageS2CLoginNACK.Reasons.USERNAME_BANNED);
+
+				netMan.sendMessage(msgLoginNACK);
+
+				// TODO: should use disconnect.
+				playerContainer.remove(clientid);
+				return;
+			}
+			
 			/*
 			 * We verify the username and the password to make sure player is
 			 * who he/she says he/she is.

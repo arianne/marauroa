@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.6 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.7 2007/05/03 18:28:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,13 +28,20 @@ import marauroa.common.net.NetConst;
 public class MessageS2CLoginNACK extends Message {
 
 	public enum Reasons {
-		USERNAME_WRONG, TOO_MANY_TRIES, SERVER_IS_FULL, GAME_MISMATCH, PROTOCOL_MISMATCH, INVALID_NONCE,
+		USERNAME_WRONG, 
+		TOO_MANY_TRIES, 
+		USERNAME_BANNED, 
+		SERVER_IS_FULL, 
+		GAME_MISMATCH, 
+		PROTOCOL_MISMATCH, 
+		INVALID_NONCE,
 	}
 
 	static private String[] text = {
 	        "Username/Password incorrect.",
 	        "Username/Password has been failed too many times. Account blocked for "
 	                + (TimeoutConf.FAILED_LOGIN_BLOCKTIME / 60) + " minutes",
+		    "Account is banned.",
 	        "Server is full.",
 	        "Server is running an incompatible version of game. Update client",
 	        "marauroa.common.network Protocol invalid version: Running "

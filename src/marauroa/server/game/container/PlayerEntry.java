@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.30 2007/04/09 14:47:11 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.31 2007/05/03 18:28:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -130,6 +130,25 @@ public class PlayerEntry {
 			Transaction transaction = playerDatabase.getTransaction();
 			return playerDatabase.isAccountBlocked(transaction, username);
 		}
+
+		/**
+		 * Returns a string indicating the status of the account.
+		 * It can be: <ul>
+		 * <li>active
+		 * <li>inactive
+		 * <li>banned
+		 * </ul>
+		 * @return a string indicating the status of the account.
+		 * @throws SQLException
+		 */
+		public String getStatus() throws SQLException {
+			Transaction transaction = playerDatabase.getTransaction();
+			if(playerDatabase.hasPlayer(transaction, username)) {
+				return playerDatabase.getAccountStatus(transaction, username);
+			} else {
+				return null;
+			}			
+        }
 	}
 
 	/**
