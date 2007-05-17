@@ -5,7 +5,7 @@ create table if not exists account
   password varchar(255) not null,
   
   email varchar(64) not null,
-  timedate timestamp,
+  timedate timestamp default CURRENT_TIMESTAMP,
   status ENUM('active','inactive','banned') not null default 'active',
 
   primary key(username),
