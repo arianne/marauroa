@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.42 2007/05/03 18:38:56 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.43 2007/05/24 15:07:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -891,7 +891,7 @@ public class JDBCDatabase implements IDatabase {
 		ps.close();
 	}
 
-	private boolean hasRPZone(Transaction transaction, IRPZone.ID zone) throws SQLException {
+	protected boolean hasRPZone(Transaction transaction, IRPZone.ID zone) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
 
@@ -1207,7 +1207,7 @@ public class JDBCDatabase implements IDatabase {
 		}
 	}
 
-	private RPObject loadRPObject(Transaction transaction, int objectid) throws SQLException,
+	protected RPObject loadRPObject(Transaction transaction, int objectid) throws SQLException,
 	        IOException {
 		Connection connection = transaction.getConnection();
 
@@ -1253,7 +1253,7 @@ public class JDBCDatabase implements IDatabase {
 		return null;
 	}
 
-	private int removeRPObject(Transaction transaction, int objectid) throws SQLException {
+	protected int removeRPObject(Transaction transaction, int objectid) throws SQLException {
 		Connection connection = transaction.getConnection();
 
 		String query = "delete from rpobject where object_id=" + objectid;
@@ -1267,7 +1267,7 @@ public class JDBCDatabase implements IDatabase {
 		return objectid;
 	}
 
-	private boolean hasRPObject(Transaction transaction, int objectid) throws SQLException {
+	protected boolean hasRPObject(Transaction transaction, int objectid) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
 		String query = "select count(*) as amount from rpobject where object_id=" + objectid;
@@ -1290,7 +1290,7 @@ public class JDBCDatabase implements IDatabase {
 		return rpObjectExists;
 	}
 
-	private int storeRPObject(Transaction transaction, RPObject object) throws IOException,
+	protected int storeRPObject(Transaction transaction, RPObject object) throws IOException,
 	        SQLException {
 		Connection connection = transaction.getConnection();
 

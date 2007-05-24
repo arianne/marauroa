@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.27 2007/04/09 14:47:02 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.28 2007/05/24 15:07:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -246,7 +246,7 @@ public abstract class ClientFramework {
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
 
 					throw new LoginFailedException(msgNACK.getResolution());
-					/* If message doesn't match, store it, someone will need it. */
+				/* If message doesn't match, store it, someone will need it. */
 				default:
 					messages.add(msg);
 			}
