@@ -313,6 +313,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void addAttribute(String name, Type type, byte flags) {
 		add(DefinitionClass.ATTRIBUTE, name, type, flags);
 	}
+
+	/**
+	 * Adds a definition of an attribute with the given type and
+	 * standard flags: VISIBLE and STORABLE.
+	 *
+	 * @param name
+	 *            name of the definition
+	 * @param type
+	 *            type or capacity if it is an slot
+	 */
+	public void addAttribute(String name, Type type) {
+		add(DefinitionClass.ATTRIBUTE, name, type, Definition.STANDARD);
+	}
 	
 	/**
 	 * Adds a static definition of an attribute that will be set for any object
@@ -346,6 +359,19 @@ public class RPClass implements marauroa.common.net.Serializable {
 		add(DefinitionClass.RPSLOT, name, capacity, flags);
 	}
 	
+	/**
+	 * Adds a definition of an slot with the given capacity and
+	 * standard flags: VISIBLE and STORABLE
+	 *
+	 * @param name
+	 *            name of the definition
+	 * @param capacity
+	 *            capacity if it is an slot
+	 */
+	public void addRPSlot(String name, byte capacity) {
+		add(DefinitionClass.RPSLOT, name, capacity, Definition.STANDARD);
+	}
+
 	/**
 	 * Adds a definition of a rplink with the given flags.
 	 *
