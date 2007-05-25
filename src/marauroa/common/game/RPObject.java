@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.61 2007/04/09 14:47:05 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.62 2007/05/25 15:43:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -347,6 +347,25 @@ public class RPObject extends Attributes {
 		/** Notify delta^2 about the addition of this slot */
 		addedSlots.add(name);
 	}
+	
+	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
+		if (hasSlot(slot.getName())) {
+			throw new SlotAlreadyAddedException(slot.getName());
+		}
+
+		/* First we set the slot owner, so that slot can get access to RPClass */
+		slot.setOwner(this);
+		slots.add(slot);
+		
+		/* Now we make sure everyRPObject inside the added slot gets a proper id */
+		for(RPObject object: slot) {
+			assignSlotID(object);
+			object.setContainer(this, slot);
+		}
+
+		/* Notify delta^2 about the addition of this slot */
+		addedSlots.add(slot.getName());
+	}
 
 	/**
 	 * This method is used to remove an slot of the object
@@ -450,6 +469,10 @@ public class RPObject extends Attributes {
 	 * @param object the object to link.
 	 */
 	public void addLink(String name, RPObject object) {
+		if(hasLink(name)) {
+			throw new SlotAlreadyAddedException(name);
+		}
+		
 		RPLink link = new RPLink(name, object);
 		link.setOwner(this);
 		links.add(link);

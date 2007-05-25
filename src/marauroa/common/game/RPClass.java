@@ -262,7 +262,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param flags
 	 *            like visibility, storability, etc...
 	 */
-	public void add(Definition.DefinitionClass clazz, String name, byte capacity, byte flags) {
+	public void add(Definition.DefinitionClass clazz, String name, int capacity, byte flags) {
 		if (clazz != DefinitionClass.RPSLOT) {
 			throw new SyntaxException(name);
 		}
@@ -355,7 +355,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param flags
 	 *            like visibility, storability, etc...
 	 */
-	public void addRPSlot(String name, byte capacity, byte flags) {
+	public void addRPSlot(String name, int capacity, byte flags) {
 		add(DefinitionClass.RPSLOT, name, capacity, flags);
 	}
 	
@@ -368,7 +368,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param capacity
 	 *            capacity if it is an slot
 	 */
-	public void addRPSlot(String name, byte capacity) {
+	public void addRPSlot(String name, int capacity) {
 		add(DefinitionClass.RPSLOT, name, capacity, Definition.STANDARD);
 	}
 

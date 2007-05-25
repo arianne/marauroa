@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.15 2007/04/09 14:47:04 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.16 2007/05/25 15:43:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -116,7 +116,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * if it is a RPSLOT, this defines the amount of objects that can be placed
 	 * inside otherwise it is 0.
 	 */
-	private byte capacity;
+	private int capacity;
 
 	/**
 	 * if it is an ATTRIBUTE, this define the type of the data
@@ -222,7 +222,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *            flags options.
 	 * @return an RPSlot Definition
 	 */
-	public static Definition defineSlot(String name, byte capacity, byte flags) {
+	public static Definition defineSlot(String name, int capacity, byte flags) {
 		Definition def = new Definition(DefinitionClass.RPSLOT);
 		def.name = name;
 		def.capacity = capacity;
@@ -292,7 +292,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *
 	 * @return definition's capacity
 	 */
-	public byte getCapacity() {
+	public int getCapacity() {
 		return capacity;
 	}
 
