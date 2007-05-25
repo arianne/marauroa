@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.44 2007/05/25 10:35:55 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.45 2007/05/25 11:11:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -61,6 +61,8 @@ public class JDBCDatabase implements IDatabase {
 	private Properties connInfo;
 
 	protected JDBCSQLHelper sql;
+	protected RPObjectFactory factory;
+
 
 	private JDBCTransaction transaction;
 
@@ -81,6 +83,7 @@ public class JDBCDatabase implements IDatabase {
 
 		sql = JDBCSQLHelper.get();
 		transaction = (JDBCTransaction) getTransaction();
+		factory=RPObjectFactory.get();
 
 		initialize();
 	}
@@ -824,7 +827,6 @@ public class JDBCDatabase implements IDatabase {
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObjectFactory factory=RPObjectFactory.get();
 					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
 
 					/* Give the object a valid id and add it */
@@ -1244,7 +1246,7 @@ public class JDBCDatabase implements IDatabase {
 
 			RPObject object = null;
 
-			object = (RPObject) inser.readObject(new RPObject());
+			object = factory.transform((RPObject) inser.readObject(new RPObject()));
 			object.put("#db_id", objectid);
 
 			return object;
