@@ -1,8 +1,5 @@
 package marauroa.server.game.rp;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
@@ -62,7 +59,7 @@ public class RPObjectFactory {
 	        java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getFactory");
 	        return (RPObjectFactory) singleton.invoke(null);
         } catch (Exception e) {
-        	logger.fatal("Can't create factory", e);
+        	logger.fatal("Can't create factory("+factoryName+")", e);
         	throw new NoFactoryConfException(e);
         }
 	}
@@ -88,7 +85,7 @@ public class RPObjectFactory {
 	 *            the original object
 	 * @return the new instance of the object
 	 */
-	public RPObject factory(RPObject object) {
+	public RPObject transform(RPObject object) {
 		return object;
 	}
 }
