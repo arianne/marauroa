@@ -298,6 +298,81 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		def.setCode(getValidCode(name));
 	}
+	
+	/**
+	 * Adds a definition of an attribute with the given type and
+	 * flags.
+	 *
+	 * @param name
+	 *            name of the definition
+	 * @param type
+	 *            type or capacity if it is an slot
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addAttribute(String name, Type type, byte flags) {
+		add(DefinitionClass.ATTRIBUTE, name, type, flags);
+	}
+	
+	/**
+	 * Adds a static definition of an attribute that will be set for any object
+	 * of the class. Its value must be set as a string, but it can be accessed
+	 * later using Attributes.get method. NOTE: This type of attributes can't be
+	 * set.
+	 *
+	 * @param name
+	 *            name of the static attribute
+	 * @param value
+	 *            value of the attribute
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addStaticAttribute(String name, String value, byte flags) {
+		add(DefinitionClass.STATIC, name, value, flags);
+	}
+
+	/**
+	 * Adds a definition of an slot with the given capacity and
+	 * flags.
+	 *
+	 * @param name
+	 *            name of the definition
+	 * @param capacity
+	 *            capacity if it is an slot
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addRPSlot(String name, byte capacity, byte flags) {
+		add(DefinitionClass.RPSLOT, name, capacity, flags);
+	}
+	
+	/**
+	 * Adds a definition of a rplink with the given flags.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addRPLink(String name, byte flags) {
+		add(DefinitionClass.RPLINK, name, flags);
+	}
+	
+	/**
+	 * Adds a definition of an event with the given flags.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addRPEvent(String name, byte flags) {		
+		add(DefinitionClass.RPEVENT, name, flags);
+	}
 
 	/**
 	 * Returns the definition object itself.
@@ -336,6 +411,20 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 
 		return def;
+	}
+	
+	/**
+	 * Returns true if name attributes, slot, event or rplink exists in this RPClass or
+	 * any of its ancestors.
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @param name
+	 *            name of the definition
+	 * @return returns true if name attributes, slot, event or rplink exists in this RPClass or
+	 * any of its ancestors.
+	 */
+	public boolean hasDefinition(Definition.DefinitionClass clazz, String name) {
+		return getDefinition(clazz, name)!=null;
 	}
 
 	/**
