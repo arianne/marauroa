@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.62 2007/05/25 15:43:57 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.63 2007/05/25 15:47:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -348,6 +348,14 @@ public class RPObject extends Attributes {
 		addedSlots.add(name);
 	}
 	
+	/**
+	 * This method add the slot to the object
+	 *
+	 * @param slot
+	 *            the RPSlot to be added
+	 * @throws SlotAlreadyAddedException
+	 *             if the slot already exists
+	 */
 	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
 		if (hasSlot(slot.getName())) {
 			throw new SlotAlreadyAddedException(slot.getName());
@@ -478,6 +486,21 @@ public class RPObject extends Attributes {
 		links.add(link);
 
 		addedLinks.add(name);
+	}
+	
+	/**
+	 * Adds a new link to the object.
+	 * @param link the link to add.
+	 */
+	public void addLink(RPLink link) {
+		if(hasLink(link.getName())) {
+			throw new SlotAlreadyAddedException(link.getName());
+		}
+		
+		link.setOwner(this);
+		links.add(link);
+
+		addedLinks.add(link.getName());
 	}
 
 	/**
