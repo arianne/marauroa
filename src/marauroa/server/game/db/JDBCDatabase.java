@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.43 2007/05/24 15:07:21 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.44 2007/05/25 10:35:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -43,6 +43,7 @@ import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.game.Statistics.Variables;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.rp.RPObjectFactory;
 import marauroa.server.net.validator.InetAddressMask;
 
 /**
@@ -823,7 +824,8 @@ public class JDBCDatabase implements IDatabase {
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObject object = zone.factory((RPObject) inser.readObject(new RPObject()));
+					RPObjectFactory factory=RPObjectFactory.get();
+					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
 
 					/* Give the object a valid id and add it */
 					zone.assignRPObjectID(object);
