@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.20 2007/04/09 14:47:13 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.21 2007/05/25 10:30:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -155,21 +155,6 @@ public class MarauroaRPZone implements IRPZone {
 		IDatabase db = DatabaseFactory.getDatabase();
 		Transaction transaction = db.getTransaction();
 		db.loadRPZone(transaction, this);
-	}
-
-	/**
-	 * This method is called when object is serialized back from database to
-	 * zone, so you can define which subclass of RPObject we are going to use.
-	 * This implements a factory pattern.
-	 *
-	 * If you are not interested in this feature, just return the object
-	 *
-	 * @param object
-	 *            the original object
-	 * @return the new instance of the object
-	 */
-	public RPObject factory(RPObject object) {
-		return object;
 	}
 
 	/**
