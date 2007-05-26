@@ -103,8 +103,9 @@ public class CrushServer {
 						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);
 
 						client.connect("localhost", PORT);
-						AccountResult resAcc = client.createAccount("testUsername" + i, "password",
-						        "email");
+						AccountResult resAcc = client.createAccount("testUsername" + i, "password","email");
+						assertTrue("Account creation must not fail", !resAcc.failed());
+
 						assertEquals("testUsername" + i, resAcc.getUsername());
 						assertEquals(Result.OK_CREATED, resAcc.getResult());
 

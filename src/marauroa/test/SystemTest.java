@@ -106,6 +106,7 @@ public class SystemTest {
 	        CreateAccountFailedException, BannedAddressException {
 		client.connect("localhost", PORT);
 		AccountResult res = client.createAccount("testUsername", "password", "email");
+		assertTrue("Account creation must not fail", !res.failed());
 
 		assertEquals("testUsername", res.getUsername());
 
@@ -113,12 +114,7 @@ public class SystemTest {
 		 * Doing a second time should fail
 		 */
 		AccountResult result=client.createAccount("testUsername", "password", "email");
-
-		if(result.failed()) {
-			assertTrue("Account should not be created as it already exists.", true);
-		} else {
-			fail("Created two accounts with the same name");
-		}
+		assertTrue("Second account creation must fail", result.failed());
 	}
 
 	/**
