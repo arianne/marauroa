@@ -44,6 +44,7 @@ public enum Result {
 	private boolean created;
 
 	Result(boolean created, String text) {
+		this.created=created;
 		this.text=text;
 	}
 

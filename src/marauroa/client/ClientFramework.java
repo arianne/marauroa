@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.29 2007/05/26 12:16:28 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.30 2007/05/26 12:34:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -339,6 +339,9 @@ public abstract class ClientFramework {
 					logger.debug("Create account NACK");
 					MessageS2CCreateAccountNACK nack=(MessageS2CCreateAccountNACK) msg;
 					result = new AccountResult(nack.getResolutionCode(),username);
+
+					recieved++;
+					break;
 			}
 		}
 
