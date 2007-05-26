@@ -196,7 +196,7 @@ public class Logger {
 		_logger.warn(arg0);
 	}
 
-	public static Logger getLogger(Class clazz) {
+	static Logger getLogger(Class clazz) {
 		return new Logger(clazz);
 	}
 
