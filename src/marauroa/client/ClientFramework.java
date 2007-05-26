@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.28 2007/05/24 15:07:20 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.29 2007/05/26 12:16:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -311,8 +311,7 @@ public abstract class ClientFramework {
 	 * @throws BannedAddressException
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email)
-	        throws TimeoutException, InvalidVersionException, CreateAccountFailedException,
-	        BannedAddressException {
+	        throws TimeoutException, InvalidVersionException, BannedAddressException {
 		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
 
 		netMan.addMessage(msgCA);
@@ -338,8 +337,8 @@ public abstract class ClientFramework {
 				/* Account was not created. Reason explained on event. */
 				case S2C_CREATEACCOUNT_NACK:
 					logger.debug("Create account NACK");
-					throw new CreateAccountFailedException(((MessageS2CCreateAccountNACK) msg)
-					        .getResolution());
+					MessageS2CCreateAccountNACK nack=(MessageS2CCreateAccountNACK) msg;
+					result = new AccountResult(nack.getResolutionCode(),username);
 			}
 		}
 

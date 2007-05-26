@@ -112,11 +112,12 @@ public class SystemTest {
 		/*
 		 * Doing a second time should fail
 		 */
-		try {
-			client.createAccount("testUsername", "password", "email");
-			fail("Created two accounts with the same name");
-		} catch (CreateAccountFailedException e) {
+		AccountResult result=client.createAccount("testUsername", "password", "email");
+
+		if(result.failed()) {
 			assertTrue("Account should not be created as it already exists.", true);
+		} else {
+			fail("Created two accounts with the same name");
 		}
 	}
 

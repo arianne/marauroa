@@ -49,4 +49,12 @@ public class AccountResult {
 	public String getUsername() {
 		return username;
 	}
+
+	/**
+	 * Returns true if the creation of the account failed.
+	 * @return true if the creation of the account failed.
+	 */
+	public boolean failed() {
+	    return result.failed();
+    }
 }

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.6 2007/05/26 12:16:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,21 +16,15 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.Result;
+
 /**
  * This message indicate the client that the server has reject its create account Message
  *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateAccountNACK extends Message {
-
-	public enum Reasons {
-		UNKNOWN_REASON, USERNAME_EXISTS, FIELD_TOO_SHORT
-	}
-
-	static private String[] text = { "Unknown reason", "Username already exists.",
-	        "Field is too short" };
-
-	private Reasons reason;
+	private Result reason;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CCreateAccountNACK() {
@@ -46,7 +40,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the create account
 	 */
-	public MessageS2CCreateAccountNACK(SocketChannel source, Reasons resolution) {
+	public MessageS2CCreateAccountNACK(SocketChannel source, Result resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
 		reason = resolution;
 	}
@@ -56,7 +50,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 *
 	 * @return a byte representing the resolution given.
 	 */
-	public Reasons getResolutionCode() {
+	public Result getResolutionCode() {
 		return reason;
 	}
 
@@ -67,7 +61,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
-		return text[reason.ordinal()];
+		return reason.getText();
 	}
 
 	/**
@@ -90,7 +84,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		reason = Reasons.values()[in.readByte()];
+		reason = Result.values()[in.readByte()];
 
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
 			throw new IOException();
