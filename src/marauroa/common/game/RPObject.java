@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.63 2007/05/25 15:47:38 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.64 2007/05/27 16:13:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -138,6 +138,25 @@ public class RPObject extends Attributes {
 			RPLink added = (RPLink) link.clone();
 			added.setOwner(this);
 			links.add(added);
+		}
+
+		/*
+		 * Copy also the delta^2 info.
+		 */
+		for (String link : object.addedLinks) {
+			addedLinks.add(link);
+		}
+
+		for (String link : object.deletedLinks) {
+			deletedLinks.add(link);
+		}
+
+		for (String slot : object.addedSlots) {
+			addedSlots.add(slot);
+		}
+
+		for (String slot : object.deletedSlots) {
+			deletedSlots.add(slot);
 		}
 	}
 
@@ -879,50 +898,7 @@ public class RPObject extends Attributes {
 	 */
 	@Override
 	public Object clone() {
-		RPObject object = new RPObject();
-
-		object.fill((Attributes) this);
-
-		object.container = container;
-		object.containerSlot = containerSlot;
-
-		object.hidden = hidden;
-		object.storable = storable;
-		object.lastassignedID = lastassignedID;
-
-		for (RPEvent event : events) {
-			object.addEvent((RPEvent) event.clone());
-		}
-
-		for (RPLink link : links) {
-			RPLink copy = (RPLink) link.clone();
-			copy.setOwner(object);
-			object.links.add(copy);
-		}
-
-		for (String link : addedLinks) {
-			object.addedLinks.add(link);
-		}
-
-		for (String link : deletedLinks) {
-			object.deletedLinks.add(link);
-		}
-
-		for (RPSlot slot : slots) {
-			RPSlot copied = (RPSlot) slot.clone();
-			copied.setOwner(object);
-			object.slots.add(copied);
-		}
-
-		for (String slot : addedSlots) {
-			object.addedSlots.add(slot);
-		}
-
-		for (String slot : deletedSlots) {
-			object.deletedSlots.add(slot);
-		}
-
-		return object;
+		return new RPObject(this);
 	}
 
 	/** This class stores the basic identification for a RPObject */

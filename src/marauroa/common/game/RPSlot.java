@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.44 2007/05/25 15:43:57 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.45 2007/05/27 16:13:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -472,7 +472,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		RPSlot slot = new RPSlot();
 
 		slot.name = name;
+
+		// TODO: Ensure correct cloning.
+		// This cloning is plainly bad.
 		slot.owner = owner;
+
 		slot.capacity = capacity;
 
 		for (RPObject object : objects) {
