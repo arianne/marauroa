@@ -87,13 +87,12 @@ create table if not exists gameEvents
   PRIMARY KEY(id)
   );
   
-create index i_gameEvents_timedate ON gameEvents(timedate);
-create index i_gameEvents_source ON gameEvents(source);
-create index i_gameEvents_event  ON gameEvents(event);
-create index i_gameEvents_param1 ON gameEvents(param1);
-create index i_gameEvents_param2 ON gameEvents(param2);
+/*create index i_gameEvents_timedate ON gameEvents(timedate);*/
+/*create index i_gameEvents_source ON gameEvents(source);*/
+/*create index i_gameEvents_event  ON gameEvents(event);*/
+/*create index i_gameEvents_param1 ON gameEvents(param1);*/
+/*create index i_gameEvents_param2 ON gameEvents(param2);*/
 
-  
 create table if not exists banlist
   (
   id integer auto_increment not null,
