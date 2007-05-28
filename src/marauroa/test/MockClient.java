@@ -147,7 +147,18 @@ public class MockClient extends ClientFramework {
 
 	@Override
 	protected void onTransfer(List<TransferContent> items) {
-		// TODO Auto-generated method stub
+		for(TransferContent item: items) {
+			if(!item.name.equals("test_content")) {
+				TestHelper.fail();
+			}
+			
+			int j=1;
+			for(byte i: item.data) {
+				if(i!=j++) {
+					TestHelper.fail();
+				}
+			}
+		}
 
 	}
 

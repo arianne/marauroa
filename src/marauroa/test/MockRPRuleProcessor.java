@@ -14,6 +14,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.game.Result;
+import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.JDBCSQLHelper;
@@ -186,6 +187,10 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 		world.add(object);
 
 		players.add(object);
+		
+		TransferContent content=new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,0});
+		
+		rpman.transferContent(object, content);
 
 		return true;
 	}
