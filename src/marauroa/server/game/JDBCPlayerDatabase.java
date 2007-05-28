@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.1 2007/03/12 19:48:31 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.2 2007/05/28 01:42:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1441,15 +1441,16 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 					param.append(" ");
 				}
 			}
+			String param2 = param.toString();
 
 			String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"
 					+ escapeSQLString(source)
 					+ "','"
 					+ escapeSQLString(event)
 					+ "','"
-					+ escapeSQLString(firstParam)
+					+ escapeSQLString(firstParam.substring(0, Math.min(128, firstParam.length())))
 					+ "','"
-					+ escapeSQLString(param.toString()) + "')";
+					+ escapeSQLString(param2.substring(0, Math.min(256, param2.length()))) + "')";
 			stmt.execute(query);
 			stmt.close();
 		} catch (SQLException sqle) {
