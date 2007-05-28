@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.45 2007/05/25 11:11:10 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.46 2007/05/28 01:42:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1166,15 +1166,17 @@ public class JDBCDatabase implements IDatabase {
 					param.append(" ");
 				}
 			}
+			String param2 = param.toString();
 
+			// write the row to the database, escaping and cutting the paramters to column size
 			String query = "insert into gameEvents(timedate, source, event, param1, param2) values(NULL,'"
-			        + StringChecker.escapeSQLString(source)
-			        + "','"
-			        + StringChecker.escapeSQLString(event)
-			        + "','"
-			        + StringChecker.escapeSQLString(firstParam)
-			        + "','"
-			        + StringChecker.escapeSQLString(param.toString()) + "')";
+					+ StringChecker.escapeSQLString(source)
+					+ "','"
+					+ StringChecker.escapeSQLString(event)
+					+ "','"
+					+ StringChecker.escapeSQLString(firstParam.substring(0, Math.min(128, firstParam.length())))
+					+ "','"
+					+ StringChecker.escapeSQLString(param2.substring(0, Math.min(256, param2.length()))) + "')";
 
 			stmt.execute(query);
 			stmt.close();
