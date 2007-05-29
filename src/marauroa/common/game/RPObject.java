@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.64 2007/05/27 16:13:20 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.65 2007/05/29 14:33:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -942,7 +942,12 @@ public class RPObject extends Attributes {
 		 */
 		public ID(RPObject attr) {
 			this.id = attr.getInt("id");
-			this.zoneid = attr.get("zoneid");
+			/*
+			 * Zone id is optional when the object is contained.
+			 */
+			if(attr.has("zoneid")) {
+				this.zoneid = attr.get("zoneid");
+			}
 		}
 
 		/**
@@ -953,7 +958,12 @@ public class RPObject extends Attributes {
 		 */
 		public ID(RPAction attr) {
 			this.id = attr.getInt("sourceid");
-			this.zoneid = attr.get("zoneid");
+			/*
+			 * Zone id is optional when the object is contained.
+			 */
+			if(attr.has("zoneid")) {
+				this.zoneid = attr.get("zoneid");
+			}
 		}
 
 		/**
