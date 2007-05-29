@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.30 2007/05/29 08:49:47 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.31 2007/05/29 09:35:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -418,8 +418,6 @@ public class RPServerManager extends Thread {
 	public void transferContent(RPObject target, TransferContent content) {
 		List<TransferContent> list = new LinkedList<TransferContent>();
 		list.add(content);
-		
-		System.out.println("Content:"+contentsToTransfer.size());
 
 		transferContent(target, list);
 	}

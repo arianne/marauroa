@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.81 2007/05/29 08:49:46 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.82 2007/05/29 09:35:50 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -497,9 +497,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				/* We restore back the character to the world */
 				RPObject object = entry.loadRPObject();
-				System.out.println("GSM: "+object);
-				System.out.println("GSM_EN: "+entry.object);
-				
 
 				/*
 				 * We set the clientid attribute to link easily the object with

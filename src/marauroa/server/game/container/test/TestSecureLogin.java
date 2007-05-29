@@ -58,8 +58,6 @@ public class TestSecureLogin {
 	@Test
 	public void testLogin() throws SQLException {
 		String password = "password";
-		System.out.println(Hash.toHexString(Hash.hash(password)));
-
 		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		assertTrue(login.verify());
 	}
