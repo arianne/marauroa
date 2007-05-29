@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.48 2007/04/09 14:47:04 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.49 2007/05/29 11:39:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,6 +103,20 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public void setRPClass(RPClass rpclass) {
 		rpClass = rpclass;
+	}
+
+	/**
+	 * This method sets the RPClass of this attributes
+	 *
+	 * @param rpclass
+	 *            the rp class
+	 */
+	public void setRPClass(String rpclass) {
+		rpClass = RPClass.getRPClass(rpclass);
+		
+		if(rpClass==null) {
+			throw new SyntaxException("Missing RPClass :"+rpclass);
+		}
 	}
 
 	/**
@@ -427,6 +441,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		}
 
 		out.write(rpClass.getName());
+		System.out.println("RPClass is: "+rpClass.getName());
 		out.write(size);
 
 		for (Map.Entry<String, String> entry : content.entrySet()) {

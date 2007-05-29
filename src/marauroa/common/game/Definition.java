@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.17 2007/05/29 11:11:23 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.18 2007/05/29 11:39:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -459,11 +459,11 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		break;
 	        	default:
 	        		/* NOTE: Must never happen */
-	        		logger.fatal("got unknown attribute(" + name + ") type:" + code);
+	        		logger.fatal("got unknown attribute(" + name + ") type:" + type);
 	        		break;
 	        }
         } catch (IOException e) {
-        	logger.warn("Exception caused by name="+name+" type="+type+" value="+value,e);
+        	logger.warn("Exception caused by name="+name+" type="+type+" code?"+code+" value="+value,e);
 	        throw e;
         }
 	}
