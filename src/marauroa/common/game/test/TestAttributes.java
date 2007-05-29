@@ -128,10 +128,8 @@ public class TestAttributes {
 		attr.put("c", 3.0);
 		attr.put("d", 120);
 		attr.put("e", 15000);
-		attr
-		        .put(
-		                "f",
-		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a bit of help from users all around the world");
+		attr.put("f",
+		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a biiiiiiiiiiiiiiiiiiiiiiiiiiiiiiit of heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelp frooooooooooooooooooooooooooom users all around the world");
 		attr.put("g", "Toooooooo big to even test the limit");
 		attr.put("h", "");
 
@@ -148,6 +146,53 @@ public class TestAttributes {
 		assertEquals(attr, result);
 	}
 
+	/**
+	 * Test the serialization process of an attribute with a defined RPClass It
+	 * serialize the attribute and then deserialize it and check they are the
+	 * same.
+	 *
+	 * @throws IOException
+	 *             if there is a problem serializing the data.
+	 * @throws ClassNotFoundException
+	 */
+	@Test(expected = IOException.class)
+	public void testSerializationWithRPClassFailure() throws IOException {
+		RPClass clazz = new RPClass("A");
+
+		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "b", Type.STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "c", Type.FLOAT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "d", Type.BYTE, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "e", Type.SHORT, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "f", Type.STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "g", Type.VERY_LONG_STRING, Definition.STANDARD);
+		clazz.add(DefinitionClass.ATTRIBUTE, "h", Type.FLAG, Definition.STANDARD);
+
+		Attributes attr = new Attributes(clazz);
+
+		attr.put("a", 1);
+		attr.put("b", "2");
+		attr.put("c", 3.0);
+		attr.put("d", 120);
+		attr.put("e", 15000);
+		attr.put("f",
+		                "This is a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong stream but it think we can make even longer with a biiiiiiiiiiiiiiiiiiiiiiiiiiiiiiit of heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelp frooooooooooooooooooooooooooom users all around the world");
+		attr.put("g", "Toooooooo big to even test the limit");
+		attr.put("h", "");
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+
+		os.write(attr);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+
+		Attributes result = (Attributes) is.readObject(new Attributes(null));
+
+		assertEquals(attr, result);
+	}
+	
 	/**
 	 * Assert that an exception is thrown when a long string is added on a
 	 * string that can host up to 128 characters.
@@ -166,7 +211,7 @@ public class TestAttributes {
 		attr
 		        .put(
 		                "d",
-		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooo long string without having problems with...");
+		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooooooooooooooooooooooooooooooooooooooooooooooooooooooo long string without having problems with...");
 		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

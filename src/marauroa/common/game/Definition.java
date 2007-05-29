@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.16 2007/05/25 15:43:56 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.17 2007/05/29 11:11:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		NOTYPE,
 		/** a string */
 		VERY_LONG_STRING,
-		/** a string of up to 255 chars long */
+		/** a string of up to 65536 chars long */
 		LONG_STRING,
 		/** a string of up to 255 chars long */
 		STRING,
@@ -428,39 +428,44 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *             if there is any problem on the serialization
 	 */
 	public void serialize(String value, marauroa.common.net.OutputSerializer out)
-	        throws IOException {
-		switch (type) {
-			case VERY_LONG_STRING:
-				out.write(value);
-				break;
-			case LONG_STRING:
-				out.write65536LongString(value);
-				break;
-			case STRING:
-				out.write255LongString(value);
-				break;
-			case FLOAT:
-				out.write(Float.parseFloat(value));
-				break;
-			case INT:
-				out.write(Integer.parseInt(value));
-				break;
-			case SHORT:
-				out.write(Short.parseShort(value));
-				break;
-			case BYTE:
-				out.write(Byte.parseByte(value));
-				break;
-			case FLAG:
-				/*
-				 * It is empty because it is a flag and so, it is already present.
-				 */
-				break;
-			default:
-				/* NOTE: Must never happen */
-				logger.fatal("got unknown attribute(" + name + ") type:" + code);
-				break;
-		}
+	        throws IOException {		
+		try {
+	        switch (type) {
+	        	case VERY_LONG_STRING:
+	        		out.write(value);
+	        		break;
+	        	case LONG_STRING:
+	        		out.write65536LongString(value);
+	        		break;
+	        	case STRING:
+	        		out.write255LongString(value);
+	        		break;
+	        	case FLOAT:
+	        		out.write(Float.parseFloat(value));
+	        		break;
+	        	case INT:
+	        		out.write(Integer.parseInt(value));
+	        		break;
+	        	case SHORT:
+	        		out.write(Short.parseShort(value));
+	        		break;
+	        	case BYTE:
+	        		out.write(Byte.parseByte(value));
+	        		break;
+	        	case FLAG:
+	        		/*
+	        		 * It is empty because it is a flag and so, it is already present.
+	        		 */
+	        		break;
+	        	default:
+	        		/* NOTE: Must never happen */
+	        		logger.fatal("got unknown attribute(" + name + ") type:" + code);
+	        		break;
+	        }
+        } catch (IOException e) {
+        	logger.warn("Exception caused by name="+name+" type="+type+" value="+value,e);
+	        throw e;
+        }
 	}
 
 	/** Serialize the object into the output */

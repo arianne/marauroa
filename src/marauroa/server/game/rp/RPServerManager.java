@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.31 2007/05/29 09:35:51 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.32 2007/05/29 11:11:27 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -393,7 +393,14 @@ public class RPServerManager extends Thread {
 				RPObject target = val.getKey();
 				List<TransferContent> content = val.getValue();
 
+				System.out.println(target);
+				System.out.println(playerContainer.size());
+				for(PlayerEntry e: playerContainer) {
+					System.out.println("E: "+e);
+				}
+				
 				PlayerEntry entry = playerContainer.get(target);
+				
 
 				entry.contentToTransfer = content;
 
