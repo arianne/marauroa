@@ -183,14 +183,23 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
+		System.out.println("PreW: "+object);
+		RPObject old=object;
+
 		object.put("zoneid", "test");
 		world.add(object);
+		
+		System.out.println("PostW("+(old==object?1:0)+"): "+object);
+
+		TestHelper.assertNotNull(object);
 
 		players.add(object);
 		
-		TransferContent content=new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,0});
+		TransferContent content=new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,10});
 		
+		System.out.println("PreT("+(old==object?1:0)+"): "+object);
 		rpman.transferContent(object, content);
+		System.out.println("PostT("+(old==object?1:0)+"): "+object);
 
 		return true;
 	}

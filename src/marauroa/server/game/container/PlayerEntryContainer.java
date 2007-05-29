@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.14 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.15 2007/05/29 08:49:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -182,6 +182,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 			/*
 			 * We want really to do a fast comparasion
 			 */
+			System.out.println(entry);
+			System.out.println(((Object)entry.object));
+			System.out.println(object);
+			
 			if (entry.object == object) {
 				return entry;
 			}

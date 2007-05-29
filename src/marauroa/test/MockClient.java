@@ -154,9 +154,12 @@ public class MockClient extends ClientFramework {
 			
 			int j=1;
 			for(byte i: item.data) {
-				if(i!=j++) {
+				if(i!=j) {
+					System.out.println("i="+i+" but was="+j);
 					TestHelper.fail();
 				}
+				
+				j++;
 			}
 		}
 
@@ -164,8 +167,11 @@ public class MockClient extends ClientFramework {
 
 	@Override
 	protected List<TransferContent> onTransferREQ(List<TransferContent> items) {
-		// TODO Auto-generated method stub
-		return null;
+		for(TransferContent i: items) {
+			i.ack=true;
+		}
+		
+		return items;
 	}
 
 	@Override
