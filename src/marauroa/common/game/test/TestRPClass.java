@@ -197,4 +197,37 @@ public class TestRPClass {
 		assertFalse(attr.has("b"));
 		assertTrue(attr.has("c"));
 	}
+
+	/**
+	 * Test the hierachy process.
+	 * This test verify bug, that caused codes to be badly resolve, is fixed.
+	 * 
+	 */
+	@Test
+	public void testHierachyBug() {
+		RPClass b = new RPClass("K");
+		b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+		b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
+		b.add(DefinitionClass.STATIC, "c", "test", Definition.STANDARD);
+
+		RPClass c = new RPClass("M");
+		c.isA(b);
+		c.add(DefinitionClass.ATTRIBUTE, "a", Type.STRING, Definition.STANDARD);
+		c.add(DefinitionClass.STATIC, "c", "subclass", Definition.STANDARD);
+		
+
+		Attributes attr = new Attributes(c);
+		attr.put("a", 10);
+		
+		assertTrue(attr.has("a"));
+		assertFalse(attr.has("b"));
+		assertTrue(attr.has("c"));
+		assertEquals("subclass",attr.get("c"));
+
+		Definition def=c.getDefinition(DefinitionClass.ATTRIBUTE, "a");
+		assertEquals(Type.STRING,def.getType());
+		short code=def.getCode();
+		
+		assertEquals("a",c.getName(DefinitionClass.ATTRIBUTE, code));
+	}
 }
