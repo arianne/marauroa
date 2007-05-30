@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.31 2007/05/30 08:59:16 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.32 2007/05/30 09:22:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -281,18 +281,6 @@ public abstract class ClientFramework {
 				/* Server accepted the character we choosed */
 				case S2C_CHOOSECHARACTER_ACK:
 					logger.debug("Choose Character ACK");
-					
-					/*
-					 * Print RPClasses
-					 */
-					Iterator<RPClass> it=RPClass.iterator();
-					StringBuffer os=new StringBuffer("Contenst:\n");
-					while(it.hasNext()) {
-						RPClass c=it.next();
-						os.append(c);
-					}
-					logger.info(os);
-					
 					return true;
 					/* Server rejected the character we choosed. No reason */
 				case S2C_CHOOSECHARACTER_NACK:
