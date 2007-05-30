@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.29 2007/04/09 14:47:13 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.30 2007/05/30 12:02:49 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,6 +84,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 *             if there any exception when starting the socket server.
 	 */
 	public NIONetworkServerManager() throws IOException {
+		super("NetworkServerManager");
 		/*
 		 * init the packet validater (which can now only check if the address is
 		 * banned)
