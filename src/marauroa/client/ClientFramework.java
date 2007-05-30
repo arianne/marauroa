@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.32 2007/05/30 09:22:16 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.33 2007/05/30 09:33:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.client;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
-import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
