@@ -537,8 +537,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public String getName(Definition.DefinitionClass clazz, short code) {
 		Map<String, Definition> list = null;
-		
-		logger.info("GETNAME: RP="+name+" CODE="+code);
 
 		switch (clazz) {
 			case ATTRIBUTE:

@@ -51,6 +51,9 @@ public class Encoder {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer s = new OutputSerializer(out);
 
+		/*
+		 * HACK: We make room for 4 bytes that we will set later to specify how big the packet is.
+		 */
 		s.write(size);
 		s.write(msg);
 

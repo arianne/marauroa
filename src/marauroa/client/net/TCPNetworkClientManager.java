@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.13 2007/05/30 08:59:17 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.14 2007/05/30 12:48:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -195,6 +195,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 */
 	public void addMessage(Message msg) {
 		connected = writeManager.write(msg);
+		logger.debug(connected?"connected":"disconnected");
 	}
 
 	/**
@@ -401,6 +402,8 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					}
 
 					os.write(encoder.encode(msg));
+				} else {
+					logger.warn("Write requested not to keeprunning");
 				}
 			} catch (IOException e) {
 				/* Report the exception */
