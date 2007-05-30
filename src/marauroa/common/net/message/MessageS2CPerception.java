@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.7 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.8 2007/05/30 08:59:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -247,7 +247,7 @@ public class MessageS2CPerception extends Message {
 				throw new IOException("Illegal request of an list of " + String.valueOf(added)
 				        + " size");
 			}
-			logger.debug(added + "added objects.");
+			logger.debug(added + " added objects.");
 			for (int i = 0; i < added; ++i) {
 				RPObject object = (RPObject) ser.readObject(new RPObject());
 				setZoneid(object, zoneid.getID());

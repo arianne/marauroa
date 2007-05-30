@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.27 2007/04/09 14:47:07 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.28 2007/05/30 08:59:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,12 +199,12 @@ public class MessageFactory {
 					tmp.setSocketChannel(channel);
 					return tmp;
 				} catch (Exception e) {
-					NDC.push("message is [" + tmp + "]\n");
-					NDC.push("message dump is [\n" + Utility.dumpByteArray(data) + "\n] (offset: "
-					        + offset + ")\n");
+//					NDC.push("message is [" + tmp + "]\n");
+//					NDC.push("message dump is [\n" + Utility.dumpByteArray(data) + "\n] (offset: "
+//					        + offset + ")\n");
 					logger.error("error in getMessage", e);
-					NDC.pop();
-					NDC.pop();
+//					NDC.pop();
+//					NDC.pop();
 					throw new IOException(e.getMessage());
 				}
 			} else {

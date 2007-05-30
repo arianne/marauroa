@@ -1,12 +1,14 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
@@ -94,6 +96,32 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		rpClassList.put(name, this);
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer os=new StringBuffer();		
+		os.append("RPCLASS name: "+name+"\n");
+		os.append("isa: "+(parent!=null?parent.getName():null)+"\n");
+		
+		for(Definition d: staticattributes.values()) {
+			os.append(d+"\n");
+		}
+		for(Definition d: attributes.values()) {
+			os.append(d+"\n");
+		}
+		for(Definition d: rpslots.values()) {
+			os.append(d+"\n");
+		}
+		for(Definition d: rplinks.values()) {
+			os.append(d+"\n");
+		}
+		for(Definition d: rpevents.values()) {
+			os.append(d+"\n");
+		}
+		os.append("\n");
+		
+		return os.toString();
+	}
 
 	/**
 	 * Returns true if the global list contains the name rpclass
@@ -125,6 +153,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public void isA(RPClass parent) {
 		this.parent = parent;
+		lastCode=parent.lastCode;
 	}
 
 	/**
@@ -135,6 +164,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public void isA(String parent) {
 		this.parent = getRPClass(parent);
+		lastCode=this.parent.lastCode;
 	}
 
 	/**
@@ -492,6 +522,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public String getName(Definition.DefinitionClass clazz, short code) {
 		Map<String, Definition> list = null;
+		
+		logger.info("GETNAME: RP="+name+" CODE="+code);
 
 		switch (clazz) {
 			case ATTRIBUTE:

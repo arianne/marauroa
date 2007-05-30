@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.30 2007/05/26 12:34:17 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.31 2007/05/30 08:59:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.client;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
+import marauroa.common.game.RPClass;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
@@ -279,6 +281,18 @@ public abstract class ClientFramework {
 				/* Server accepted the character we choosed */
 				case S2C_CHOOSECHARACTER_ACK:
 					logger.debug("Choose Character ACK");
+					
+					/*
+					 * Print RPClasses
+					 */
+					Iterator<RPClass> it=RPClass.iterator();
+					StringBuffer os=new StringBuffer("Contenst:\n");
+					while(it.hasNext()) {
+						RPClass c=it.next();
+						os.append(c);
+					}
+					logger.info(os);
+					
 					return true;
 					/* Server rejected the character we choosed. No reason */
 				case S2C_CHOOSECHARACTER_NACK:

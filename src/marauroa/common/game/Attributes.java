@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.50 2007/05/29 14:33:22 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.51 2007/05/30 08:59:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
@@ -39,6 +40,9 @@ import marauroa.common.game.Definition.DefinitionClass;
  * @author miguel
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
+
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(Attributes.class);
 
 	/** A Map<String,String> that contains the attributes */
 	private Map<String, String> content;
@@ -441,7 +445,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		}
 
 		out.write(rpClass.getName());
-		System.out.println("RPClass is: "+rpClass.getName());
 		out.write(size);
 
 		for (Map.Entry<String, String> entry : content.entrySet()) {
@@ -523,6 +526,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 			String value = def.deserialize(in);
+			
 			content.put(key, value);
 		}
 	}

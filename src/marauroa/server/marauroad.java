@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.57 2007/04/09 14:47:10 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.58 2007/05/30 08:59:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server;
 
 // marauroa stuff
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
 
@@ -173,17 +174,17 @@ public class marauroad extends Thread {
 				try {
 					Configuration.getConfiguration();
 				} catch (Exception e) {
-					logger.fatal("Can't find configuration file: " + args[i + 1], e);
-					logger.fatal("Run game configuration to get a valid \"server.ini\" file");
+					System.out.println("Can't find configuration file: " + args[i + 1]);
+					System.out.println("Run game configuration to get a valid \"server.ini\" file");
+					e.printStackTrace();
 					System.exit(1);
 				}
 			} else if (args[i].equals("-h")) {
-				System.out
-				        .println("Marauroa - an open source multiplayer online framework for game development -");
+				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
 				System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 				System.out.println();
-				System.out.println("usage: [-c gamefile] [-l]");
+				System.out.println("usage: [-c gamefile]");
 				System.out
 				        .println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
@@ -215,10 +216,24 @@ public class marauroad extends Thread {
 		System.out
 		        .println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
-		// Initialize Loggging
-		Log4J.init("marauroa/server/log4j.properties");
 		marauroad.setArguments(args);
+		
+		String log4jConfiguration=null;
 
+		try {
+	        Configuration conf=Configuration.getConfiguration();
+	        log4jConfiguration=conf.get("log4j_url");
+        } catch (IOException e) {
+        	e.printStackTrace();        	
+        }
+        
+        if(log4jConfiguration==null) {
+        	log4jConfiguration="marauroa/server/log4j.properties";
+        }
+        
+        // Initialize Loggging
+		Log4J.init(log4jConfiguration);
+		
 		marauroad.getMarauroa().start();
 	}
 

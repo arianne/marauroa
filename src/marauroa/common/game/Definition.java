@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.18 2007/05/29 11:39:08 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.19 2007/05/30 08:59:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,6 +139,11 @@ public class Definition implements marauroa.common.net.Serializable {
 	protected Definition(DefinitionClass clazz) {
 		this.clazz = clazz;
 		code = -1;
+	}
+	
+	@Override
+	public String toString() {
+		return clazz+": N="+name+" T="+type+" C="+code;
 	}
 
 	/**
@@ -406,9 +411,9 @@ public class Definition implements marauroa.common.net.Serializable {
 			case INT:
 				return Integer.toString(in.readInt());
 			case SHORT:
-				return Integer.toString(in.readShort());
+				return Short.toString(in.readShort());
 			case BYTE:
-				return Integer.toString(in.readByte());
+				return Byte.toString(in.readByte());
 			case FLAG:
 				return "";
 		}
