@@ -24,6 +24,23 @@ import marauroa.common.game.Definition.Type;
  * <p>
  * Also RPClass define a set of propierties over attributes, events and slots,
  * like being private, hidden or volatile.
+ * <p>
+ * It is very important that if you extend a class with isA, you completly 
+ * define the superclass before calling isA method.<br>
+ * For example:
+ * <pre>
+ *   RPClass foo=new RPClass("foo");
+ *   foo.add(....)
+ *   foo.add(....)
+ *   foo.add(....)
+ *   
+ *   RPClass bar=new RPClass("bar");
+ *   bar.isA(foo);
+ *   bar.add(....)
+ *   bar.add(....)
+ * </pre>
+ * </pre>
+ *
  *
  * @see Definition
  *
