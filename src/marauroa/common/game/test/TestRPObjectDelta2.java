@@ -489,6 +489,13 @@ public class TestRPObjectDelta2 {
 		assertEquals(obj.get("id"), result.get("id"));
 		assertEquals(obj.get("zoneid"), result.get("zoneid"));
 		assertEquals("test", result.get("zoneid"));
+
+		RPSlot resultSlot = result.getSlot("lhand").getFirst().getSlot("container");
+		/*
+		 * Only one modified slot.
+		 */
+		assertEquals(1,resultSlot.size());
+		assertEquals(2,slot.size());
 	}
 
 	/**
@@ -526,7 +533,6 @@ public class TestRPObjectDelta2 {
 	 * This is a KNOWN bug that happens when a object from a visible slot is
 	 * removed in the object that has cleared the visible attributes.
 	 */
-	@Ignore
 	@Test
 	public void testVisibleApplyDifferencesBug() {
 		zone.assignRPObjectID(obj);
@@ -601,6 +607,37 @@ public class TestRPObjectDelta2 {
 
 		result.applyDifferences(added, deleted);
 
+		assertEquals(result, obj);
+	}
+
+	@Test
+	public void testApplyDifferencesOnSlotObjectRemove() throws Exception {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		/*
+		 * Next turn. We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
+
+		RPObject result = (RPObject) obj.clone();
+
+		/*
+		 * Test Delta^2 on slot object modification.
+		 */
+		/* Remove coin from slot */
+		RPSlot slot = obj.getSlot("lhand").getFirst().getSlot("container");
+		RPObject coin = slot.remove(slot.getFirst().getID());
+
+		assertNotNull(coin);
+		assertEquals(coin, coin.getBaseContainer());
+
+		RPObject added = new RPObject();
+		RPObject deleted = new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+		
 		assertEquals(result, obj);
 	}
 }
