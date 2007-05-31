@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.14 2007/05/30 12:48:24 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.15 2007/05/31 14:47:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.client.net;
 
+import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -243,24 +244,28 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		private synchronized void storeMessage(InetSocketAddress address, byte[] data)
 		        throws IOException {
 			try {
-				Message msg = decoder.decode(null, data);
+				List<Message> messages = decoder.decode(null, data);
 
-				/*
-				 * If logger is enable, print the message so it shows useful
-				 * debugging information.
-				 */
-				if (logger.isDebugEnabled()) {
-					logger.debug("build message(type=" + msg.getType() + ") from "
-					        + msg.getClientID() + " full [" + msg + "]");
+				if (messages != null) {
+					for (Message msg : messages) {
+						/*
+						 * If logger is enable, print the message so it shows useful
+						 * debugging information.
+						 */
+						if (logger.isDebugEnabled()) {
+							logger.debug("build message(type=" + msg.getType() + ") from "
+							        + msg.getClientID() + " full [" + msg + "]");
+						}
+
+						// Once server assign us a clientid, store it for future
+						// messages.
+						if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
+							clientid = msg.getClientID();
+						}
+
+						processedMessages.add(msg);
+					}
 				}
-
-				// Once server assign us a clientid, store it for future
-				// messages.
-				if (msg.getType() == Message.MessageType.S2C_LOGIN_SENDNONCE) {
-					clientid = msg.getClientID();
-				}
-
-				processedMessages.add(msg);
 			} catch (InvalidVersionException e) {
 				shouldThrowException = true;
 				storedException = e;

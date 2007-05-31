@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.52 2007/05/30 09:33:17 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.53 2007/05/31 14:47:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -261,7 +261,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			 * as a static attribute.
 			 */
 			Definition def = rpClass.getDefinition(DefinitionClass.STATIC, attribute);
-			return def.getValue();
+			if(def!=null) {
+				/*
+				 * It is possible that the attribute itself doesn't exist as static attribute, 
+				 * so we should return null instead.
+				 */
+				return def.getValue();
+			}
 		}
 
 		return value;

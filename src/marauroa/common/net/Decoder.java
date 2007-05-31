@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
 
 /**
@@ -16,6 +17,9 @@ import marauroa.common.net.message.Message;
  * @author miguel
  */
 public class Decoder {
+
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(Decoder.class);
 
 	/**
 	 * This class handle not completed messages.
@@ -117,7 +121,7 @@ public class Decoder {
 	 * @throws InvalidVersionException
 	 *             if the message version mismatch the expected version
 	 */
-	public Message decode(SocketChannel channel, byte[] data) throws IOException,
+	public List<Message> decode(SocketChannel channel, byte[] data) throws IOException,
 	        InvalidVersionException {
 		MessageParts buffers = content.get(channel);
 
@@ -133,12 +137,18 @@ public class Decoder {
 			if (data.length == size) {
 				/* If we have the full data build the message */
 				Message msg = msgFactory.getMessage(data, channel, 4);
-				return msg;
+				List<Message> list=new LinkedList<Message>();
+				list.add(msg);
+				
+				return list;
 			} else {
+				logger.debug("Message full body missing ("+size+"), waiting for more data ("+data.length+").");
 				/* If there is still data to store it. */
 				buffers = new MessageParts(size);
 				content.put(channel, buffers);
 			}
+		} else {
+			logger.debug("Existing data, trying to complete Message full body");
 		}
 
 		buffers.add(data);
@@ -147,8 +157,13 @@ public class Decoder {
 
 		if (msg != null) {
 			content.remove(channel);
+			List<Message> list=new LinkedList<Message>();
+			list.add(msg);
+		
+			return list;
+		} else {
+			return null;
 		}
 
-		return msg;
 	}
 }

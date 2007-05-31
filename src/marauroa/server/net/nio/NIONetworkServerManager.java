@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.30 2007/05/30 12:02:49 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.31 2007/05/31 14:47:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.net.nio;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -229,6 +230,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 *            the amount of data recieved.
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
+		logger.debug("Recv from channel:"+channel+" "+count+" bytes");
 		/*
 		 * We check the connection is case it is trying to flood server.
 		 */
@@ -236,17 +238,21 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 			/*
 			 * If it is flooding, let the validator decide what to do.
 			 */
+			logger.warn("Channel: "+channel+" is flooding");
 			floodValidator.onFlood(channel);
 		} else {
 			/*
 			 * If it is not flooding, just queue the message.
 			 */
+			logger.debug("queueing message");
+			
 			byte[] dataCopy = new byte[count];
 			System.arraycopy(data, 0, dataCopy, 0, count);
 			try {
 				queue.put(new DataEvent(channel, dataCopy));
 			} catch (InterruptedException e) {
 				/* This is never going to happen */
+				logger.fatal("Not expected",e);
 			}
 		}
 	}
@@ -319,25 +325,28 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				DataEvent event = queue.take();
 
 				try {
-					Message msg = decoder.decode(event.channel, event.data);
-					if (msg != null) {
-						if (logger.isDebugEnabled()) {
-							logger.debug("recv message(type=" + msg.getType() + ") from "
-							        + msg.getClientID() + " full [" + msg + "]");
-						}
+					List<Message> recvMessages = decoder.decode(event.channel, event.data);
+					if (recvMessages != null) {
+						for (Message msg : recvMessages) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("recv message(type=" + msg.getType() + ") from "
+								        + msg.getClientID() + " full [" + msg + "]");
+							}
 
-						messages.add(msg);
+							messages.add(msg);
+						}
 					}
 				} catch (InvalidVersionException e) {
+					logger.warn("Invalid version message", e);
 					stats.add("Message invalid version", 1);
-					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel,
-					        "Invalid client version: Update client");
+					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
 					logger.warn("IOException while building message.", e);
 				}
 			}
 		} catch (InterruptedException e) {
+			logger.fatal("Error on NIONetworkServer",e);
 			keepRunning = false;
 		}
 

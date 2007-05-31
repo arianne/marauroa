@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import marauroa.common.Log4J;
@@ -56,17 +57,19 @@ public class TestEncoderDecoder {
 
 		Decoder dec = Decoder.get();
 
-		Message decoded = dec.decode(null, result);
-		byte[] reencoded = enc.encode(decoded);
+		List<Message> decodedMsgs = dec.decode(null, result);
+		for (Message decoded : decodedMsgs) {
+			byte[] reencoded = enc.encode(decoded);
 
-		assertEquals(result.length, reencoded.length);
-
-		/**
-		 * We verify the assertion by re encoding again the message.
-		 * Message.equals(Object ) is NOT implemented.
-		 */
-		for (int i = 0; i < result.length; i++) {
-			assertEquals(result[i], reencoded[i]);
+			assertEquals(result.length, reencoded.length);
+			
+			/**
+			 * We verify the assertion by re encoding again the message.
+			 * Message.equals(Object ) is NOT implemented.
+			 */
+			for (int i = 0; i < result.length; i++) {
+				assertEquals(result[i], reencoded[i]);
+			}
 		}
 	}
 
@@ -99,22 +102,24 @@ public class TestEncoderDecoder {
 
 		assertEquals(result.length, part1.length + part2.length);
 
-		Message decoded = null;
-		decoded = dec.decode(null, part1);
-		assertNull(decoded);
-		decoded = dec.decode(null, part2);
-		assertNotNull(decoded);
+		List<Message> decodedMsgs = null;
+		decodedMsgs = dec.decode(null, part1);
+		assertNull(decodedMsgs);
+		decodedMsgs = dec.decode(null, part2);
+		assertNotNull(decodedMsgs);
 
-		byte[] reencoded = enc.encode(decoded);
+		for (Message decoded : decodedMsgs) {
+			byte[] reencoded = enc.encode(decoded);
 
-		assertEquals(result.length, reencoded.length);
+			assertEquals(result.length, reencoded.length);
 
-		/**
-		 * We verify the assertion by re encoding again the message.
-		 * Message.equals(Object ) is NOT implemented.
-		 */
-		for (int i = 0; i < result.length; i++) {
-			assertEquals(result[i], reencoded[i]);
+			/**
+			 * We verify the assertion by re encoding again the message.
+			 * Message.equals(Object ) is NOT implemented.
+			 */
+			for (int i = 0; i < result.length; i++) {
+				assertEquals(result[i], reencoded[i]);
+			}
 		}
 	}
 }
