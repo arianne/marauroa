@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.65 2007/05/29 14:33:22 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.66 2007/05/31 17:04:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1100,7 +1100,7 @@ public class RPObject extends Attributes {
 		 * Because events are cleared on each turn so they have no delta²
 		 */
 		for (RPEvent event : events) {
-			addedChanges.events.add((RPEvent) event.clone());
+			addedChanges.events.add(event);
 		}
 
 		/*
@@ -1234,6 +1234,23 @@ public class RPObject extends Attributes {
 					recDeletedSlot.add(recDeletedChanges, false);
 				}
 
+			}
+		}
+
+		/*
+		 * If the diff objects are not empty, we make sure they has the id.
+		 */
+		if(!addedChanges.isEmpty()) {
+			addedChanges.put("id",get("id"));
+			if(has("zoneid")) {
+				addedChanges.put("zoneid",get("zoneid"));				
+			}
+		}
+
+		if(!deletedChanges.isEmpty()) {
+			deletedChanges.put("id",get("id"));
+			if(has("zoneid")) {
+				deletedChanges.put("zoneid",get("zoneid"));				
 			}
 		}
 	}

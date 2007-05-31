@@ -106,6 +106,15 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+		
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.addedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("b"), result.get("b"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
 	}
 
 	/**
@@ -164,6 +173,13 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertFalse(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.deletedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals("test", result.get("zoneid"));
 	}
 
 	/**
@@ -191,6 +207,16 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("bg"), result.get("bg"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+		
 	}
 
 	/**
@@ -217,6 +243,16 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedDeletedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertTrue(result.has("b"));
+		assertFalse(obj.has("b"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
 	}
 
 	/**
@@ -243,6 +279,15 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("b"), result.get("b"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
 	}
 
 	/**
@@ -274,6 +319,17 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+
+		RPEvent resultEvent=result.getSlot("lhand").getFirst().getSlot("container").getFirst().events().get(0);
+		assertEquals(tax,resultEvent);
 	}
 
 	/**
@@ -303,6 +359,17 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+
+		RPObject resultEvent=result.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		assertEquals(slotcoin.get("value"),resultEvent.get("value"));
 	}
 
 	/**
@@ -332,6 +399,17 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+
+		RPObject resultEvent=result.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		assertEquals("4000",resultEvent.get("pesetas"));
 	}
 
 	/**
@@ -361,6 +439,17 @@ public class TestRPObjectDelta2 {
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedDeletedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+
+		RPObject resultEvent=result.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		assertTrue(resultEvent.has("value"));
 	}
 
 	/**
@@ -392,6 +481,14 @@ public class TestRPObjectDelta2 {
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedAddedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
 	}
 
 	/**
