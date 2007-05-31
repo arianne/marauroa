@@ -3,9 +3,11 @@ package marauroa.common.net;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
@@ -28,16 +30,20 @@ public class Decoder {
 
 		public int size;
 
-		public List<byte[]> parts;
+		public Vector<byte[]> parts;
 
 		public MessageParts(int size) {
 			this.size = size;
-			parts = new LinkedList<byte[]>();
+			parts = new Vector<byte[]>();
 		}
 
 		/** Adds a new part to complete the message */
 		public void add(byte[] data) {
 			parts.add(data);
+		}
+		
+		public boolean isEmpty() {
+			return parts.isEmpty();
 		}
 
 		/**
@@ -50,16 +56,57 @@ public class Decoder {
 				length += p.length;
 			}
 
-			if (length != size) {
+			if (length < size) {
+				/* 
+				 * Still missing parts, let's wait
+				 */
 				return null;
+			}
+			
+			if( length > size ) {
+				/*
+				 * Two messages on a row... so we need to run until the end of the first one.
+				 */
 			}
 
 			byte[] data = new byte[size];
+			
+			int remaining=size;
 
 			int offset = 0;
-			for (byte[] p : parts) {
-				System.arraycopy(p, 0, data, offset, p.length);
-				offset += p.length;
+			Iterator<byte[]> it=parts.iterator();
+			while(it.hasNext()) {
+				byte[] p=it.next();
+				
+				if(remaining-p.length<0) {
+					/*
+					 * This part completes first message and has stuff from the second one.
+					 */
+					System.arraycopy(p, 0, data, offset, remaining);
+					offset += remaining;
+					
+					/*
+					 * Copy the rest of the array to a new array.					  
+					 */
+					byte[] rest=new byte[p.length-remaining];
+					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
+
+					if(rest.length<4) {
+						logger.warn("Reading size lacks of enough data.");
+					}
+					/*
+					 * Compute the new size of the other message
+					 */					
+					size=getSizeOfMessage(rest);
+					parts.set(0, rest);
+					break;					
+				} else {
+					System.arraycopy(p, 0, data, offset, p.length);
+					offset += p.length;
+					remaining -=p.length;
+					
+					it.remove();
+				}
 			}
 
 			Message msg = msgFactory.getMessage(data, channel, 4);
@@ -107,6 +154,11 @@ public class Decoder {
 	public void clear(SocketChannel channel) {
 		content.remove(channel);
 	}
+	
+	private static int getSizeOfMessage(byte[] data) {
+		return (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
+        + ((data[3] & 0xFF) << 24);
+	}
 
 	/**
 	 * Decodes a message from a stream of bytes recieved from channel
@@ -131,8 +183,7 @@ public class Decoder {
 			 * NOTE: On real life we can be *sure* that 4 bytes are at least to
 			 * be recieved...
 			 */
-			int size = (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
-			        + ((data[3] & 0xFF) << 24);
+			int size = getSizeOfMessage(data);
 
 			if (data.length == size) {
 				/* If we have the full data build the message */
@@ -152,18 +203,20 @@ public class Decoder {
 		}
 
 		buffers.add(data);
+		List<Message> list = new LinkedList<Message>();
 
-		Message msg = buffers.build(channel);
+		while (!buffers.isEmpty()) {
+			Message msg = buffers.build(channel);
 
-		if (msg != null) {
-			content.remove(channel);
-			List<Message> list=new LinkedList<Message>();
-			list.add(msg);
-		
-			return list;
-		} else {
-			return null;
+			if (msg != null) {
+				list.add(msg);
+			} else {
+				return null;
+			}
 		}
+		
+		content.remove(channel);
 
+		return list;
 	}
 }

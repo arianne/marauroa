@@ -122,4 +122,42 @@ public class TestEncoderDecoder {
 			}
 		}
 	}
+
+	/**
+	 * Test that encoder and decoder works when we use several chunks of data.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidVersionException
+	 */
+	@Test
+	public void testEncoderDecoderMultipleMessageInARead() throws IOException, InvalidVersionException {
+		Encoder enc = Encoder.get();
+
+		RPAction action = new RPAction();
+		action.put("one", 1);
+		action.put("two", "2");
+
+		MessageC2SAction message = new MessageC2SAction(null, action);
+
+		byte[] result1 = enc.encode(message);
+
+		action = new RPAction();
+		action.put("three", 31);
+		action.put("four", "4");
+
+		message = new MessageC2SAction(null, action);
+
+		byte[] result2 = enc.encode(message);
+		
+		byte[] result=new byte[result1.length+result2.length];
+		System.arraycopy(result1, 0, result, 0, result1.length);
+		System.arraycopy(result2, 0, result, result1.length, result2.length);
+		
+		Decoder dec = Decoder.get();
+
+		List<Message> decodedMsgs = dec.decode(null, result);		
+		assertNotNull(decodedMsgs);
+		
+		assertEquals(2, decodedMsgs.size());
+	}
 }
