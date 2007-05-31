@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.15 2007/05/31 14:47:38 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.16 2007/05/31 15:49:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -278,7 +278,7 @@ class NioServer extends Thread {
 		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
-			logger.warn("Remote closed connnection", e);
+			logger.debug("Remote closed connnection", e);
 			key.cancel();
 
 			close(socketChannel);
@@ -289,7 +289,7 @@ class NioServer extends Thread {
 		if (numRead == -1) {
 			// Remote entity shut the socket down cleanly. Do the
 			// same from our end and cancel the channel.
-			logger.warn("Remote closed connnection cleanly");
+			logger.debug("Remote closed connnection cleanly");
 			close((SocketChannel) key.channel());
 
 			key.cancel();
