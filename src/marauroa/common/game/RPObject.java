@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.66 2007/05/31 17:04:01 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.67 2007/06/01 15:07:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1021,6 +1021,7 @@ public class RPObject extends Attributes {
 		resetAddedAndDeletedAttributes();
 		resetAddedAndDeletedRPSlot();
 		resetAddedAndDeletedRPLink();
+		clearEvents();
 	}
 
 	/**

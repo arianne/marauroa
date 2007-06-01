@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.20 2007/04/09 14:47:02 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.21 2007/06/01 15:07:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,6 +81,14 @@ public class PerceptionHandler {
 	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance)
 	        throws Exception {
 		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
+		
+		/*
+		 * We want to clear previous delta^2 info in the objects.
+		 * Delta^2 is only useful in server for getting changes done to the object.
+		 */
+		for(RPObject obj: world_instance.values()) {
+			obj.resetAddedAndDeleted();
+		}
 
 		/*
 		 * When we get a sync perception, we set sync flag to true and clear the

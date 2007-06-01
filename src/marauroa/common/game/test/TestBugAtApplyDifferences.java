@@ -125,6 +125,7 @@ public class TestBugAtApplyDifferences {
 		 * Let's move Zone to the next turn.
 		 */
 		zone.nextTurn();
+		recreatedZone.nextTurn();
 
 		/*
 		 * Remove object from lhand.

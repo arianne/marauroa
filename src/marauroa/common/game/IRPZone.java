@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.20 2007/05/25 10:31:03 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.21 2007/06/01 15:07:06 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -209,13 +209,13 @@ public interface IRPZone extends Iterable<RPObject> {
 	/**
 	 * This method return the perception of a zone for a player
 	 *
-	 * @param id
-	 *            id of the player
+	 * @param player
+	 *            player object
 	 * @param type
 	 *            type of perception
 	 * @return the perception
 	 */
-	public Perception getPerception(RPObject.ID id, byte type);
+	public Perception getPerception(RPObject player, byte type);
 
 	/**
 	 * This method is called to take zone to the next turn

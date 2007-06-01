@@ -101,7 +101,7 @@ public class TestRPObjectDelta2 {
 		obj.put("b", 9);
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertFalse(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -145,7 +145,7 @@ public class TestRPObjectDelta2 {
 		obj.put("b", 9);
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -168,7 +168,7 @@ public class TestRPObjectDelta2 {
 
 		zone.remove(obj.getID());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -202,7 +202,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -238,7 +238,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
@@ -274,7 +274,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -314,7 +314,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -354,7 +354,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -394,7 +394,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -434,7 +434,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(slotcoin.getBaseContainer());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());
@@ -476,7 +476,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(anothercoin.getBaseContainer());
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertFalse(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
@@ -522,7 +522,7 @@ public class TestRPObjectDelta2 {
 
 		zone.modify(obj);
 
-		Perception expected = zone.getPerception(obj.getID(), Perception.DELTA);
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertFalse(expected.modifiedDeletedList.isEmpty());

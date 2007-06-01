@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.8 2007/05/30 08:59:17 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.9 2007/06/01 15:07:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -214,13 +214,13 @@ public class MessageS2CPerception extends Message {
 	private void setZoneid(RPObject object, String zoneid) {
 		object.put("zoneid", zoneid);
 
-		Iterator<RPSlot> it = object.slotsIterator();
-		while (it.hasNext()) {
-			RPSlot slot = it.next();
-			for (RPObject son : slot) {
-				setZoneid(son, zoneid);
-			}
-		}
+//		Iterator<RPSlot> it = object.slotsIterator();
+//		while (it.hasNext()) {
+//			RPSlot slot = it.next();
+//			for (RPObject son : slot) {
+//				setZoneid(son, zoneid);
+//			}
+//		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.33 2007/05/29 14:53:46 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.34 2007/06/01 15:07:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -275,11 +275,11 @@ public class RPServerManager extends Thread {
 
 		if (entry.requestedSync == false) {
 			logger.debug("Perception DELTA for player (" + id + ")");
-			perception = zone.getPerception(id, Perception.DELTA);
+			perception = zone.getPerception(entry.object, Perception.DELTA);
 		} else {
 			entry.requestedSync = false;
 			logger.debug("Perception SYNC for player (" + id + ")");
-			perception = zone.getPerception(id, Perception.SYNC);
+			perception = zone.getPerception(entry.object, Perception.SYNC);
 		}
 
 		return perception;

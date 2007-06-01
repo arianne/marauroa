@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.21 2007/05/25 10:30:04 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.22 2007/06/01 15:07:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -315,7 +315,7 @@ public class MarauroaRPZone implements IRPZone {
 	/**
 	 * Returns the perception of given type for that object.
 	 *
-	 * @param id
+	 * @param player
 	 *            object whose perception we are going to build
 	 * @param type
 	 *            the type of perception:
@@ -324,7 +324,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *            <li>DELTA
 	 *            </ul>
 	 */
-	public Perception getPerception(RPObject.ID id, byte type) {
+	public Perception getPerception(RPObject player, byte type) {
 		if (type == Perception.DELTA) {
 			if (prebuildDeltaPerception == null) {
 				prebuildDeltaPerception = perception;
@@ -361,7 +361,6 @@ public class MarauroaRPZone implements IRPZone {
 	protected void reset() {
 		for (RPObject object : objects.values()) {
 			object.resetAddedAndDeleted();
-			object.clearEvents();
 		}
 	}
 
