@@ -328,6 +328,8 @@ public class TestRPObjectDelta2 {
 		assertEquals(obj.get("zoneid"), result.get("zoneid"));
 		assertEquals("test", result.get("zoneid"));
 
+		System.out.println(obj);
+		System.out.println(result);
 		RPEvent resultEvent=result.getSlot("lhand").getFirst().getSlot("container").getFirst().events().get(0);
 		assertEquals(tax,resultEvent);
 	}

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.48 2007/06/04 16:35:32 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.49 2007/06/04 17:10:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,9 +145,12 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		/*
 		 * When object is added to slot we reset its added and delete
-		 * attributes, slots and events.
+		 * attributes, slots and events. 
+		 * But only in the case it is an external addition, we don't want to break Delta^2 process. 
 		 */
-		object.resetAddedAndDeleted();
+		if (assignId) {
+			object.resetAddedAndDeleted();
+		}
 
 		return object.getInt("id");
 	}

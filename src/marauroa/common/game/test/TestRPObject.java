@@ -181,7 +181,6 @@ public class TestRPObject {
 	@Test
 	public void testClearVisible() {
 		obj.clearVisible(false);
-		System.out.println(obj);
 		assertTrue(obj.isEmpty());
 	}
 
