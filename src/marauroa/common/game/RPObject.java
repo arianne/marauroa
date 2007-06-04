@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.69 2007/06/04 16:35:32 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.70 2007/06/04 16:38:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -873,7 +873,7 @@ public class RPObject extends Attributes {
 			 * Even if slot is empty client may be interested in knowing the slot.
 			 * So we don't remove the slot on sync type of clear visible.
 			 */
-			if (sync && slot.size() == 0) {
+			if (!sync && slot.size() == 0) {
 				slotit.remove();
 				addedSlots.remove(slot.getName());
 				deletedSlots.remove(slot.getName());
