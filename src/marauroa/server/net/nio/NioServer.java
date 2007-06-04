@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.16 2007/05/31 15:49:58 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.17 2007/06/04 19:50:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -306,23 +306,35 @@ class NioServer extends Thread {
 		synchronized (this.pendingData) {
 			List queue = (List) this.pendingData.get(socketChannel);
 
-			// Write until there's not more data ...
-			while (!queue.isEmpty()) {
-				ByteBuffer buf = (ByteBuffer) queue.get(0);
-				socketChannel.write(buf);
+			try {
+				// Write until there's not more data ...
+				while (!queue.isEmpty()) {
+					ByteBuffer buf = (ByteBuffer) queue.get(0);
+					socketChannel.write(buf);
 
-				if (buf.remaining() > 0) {
-					// ... or the socket's buffer fills up
-					break;
+					if (buf.remaining() > 0) {
+						// ... or the socket's buffer fills up
+						break;
+					}
+					queue.remove(0);
 				}
-				queue.remove(0);
-			}
 
-			if (queue.isEmpty()) {
-				// We wrote away all data, so we're no longer interested
-				// in writing on this socket. Switch back to waiting for
-				// data.
-				key.interestOps(SelectionKey.OP_READ);
+				if (queue.isEmpty()) {
+					// We wrote away all data, so we're no longer interested
+					// in writing on this socket. Switch back to waiting for
+					// data.
+					key.interestOps(SelectionKey.OP_READ);
+				}
+			} catch (IOException e) {
+				// The remote forcibly closed the connection, cancel
+				// the selection key and close the channel.
+				logger.debug("Remote closed connnection", e);
+				queue.clear();
+				key.cancel();
+
+				close(socketChannel);
+
+				return;
 			}
 		}
 	}
