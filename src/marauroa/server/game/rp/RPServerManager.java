@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.35 2007/06/04 16:35:32 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.36 2007/06/04 21:36:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -353,9 +353,8 @@ public class RPServerManager extends Thread {
 					Perception perception = getPlayerPerception(entry);
 					sendPlayerPerception(entry, perception, entry.object);
 				}
-			} catch (RuntimeException e) {
-				logger.error("Removing player(" + entry.clientid
-				        + ") because it caused a Exception while contacting it", e);
+			} catch (Exception e) {
+				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
 			}
 		}

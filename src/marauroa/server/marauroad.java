@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.58 2007/05/30 08:59:17 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.59 2007/06/04 21:36:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -329,7 +329,7 @@ public class marauroad extends Thread {
 			        new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
 			                Configuration.getConfiguration().get("e")));
 
-			gameMan = new GameServerManager(key, netMan, rpMan);
+			gameMan = new GameServerManager(key, netMan, rpMan);			
 			gameMan.start();
 		} catch (Exception e) {
 			logger

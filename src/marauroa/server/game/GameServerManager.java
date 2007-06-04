@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.82 2007/05/29 09:35:50 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.83 2007/06/04 21:36:51 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -224,6 +224,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		this.key = key;
 		this.netMan = netMan;
 		this.rpMan = rpMan;
+		
+		/*
+		 * This is used by RPServerManager to disconnect players.
+		 */
+		rpMan.setGameManager(this);
 
 		netMan.registerDisconnectedListener(this);
 
