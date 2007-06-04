@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.67 2007/06/01 15:07:06 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.68 2007/06/04 16:02:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -867,13 +867,11 @@ public class RPObject extends Attributes {
 			RPSlot slot = slotit.next();
 
 			slot.clearVisible();
-
-			/* If slot is empty remove it. */
-			if (slot.size() == 0) {
-				slotit.remove();
-				addedSlots.remove(slot.getName());
-				deletedSlots.remove(slot.getName());
-			}
+			
+			/*
+			 * Even if slot is empty client may be interested in knowing the slot.
+			 * So we don't remove the slot.
+			 */
 		}
 
 		Iterator<RPLink> linkit = links.iterator();
