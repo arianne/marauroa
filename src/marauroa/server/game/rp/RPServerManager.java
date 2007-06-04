@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.34 2007/06/01 15:07:08 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.35 2007/06/04 16:35:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -306,7 +306,7 @@ public class RPServerManager extends Thread {
 		RPObject copy = (RPObject) object.clone();
 
 		if (perception.type == Perception.SYNC) {
-			copy.clearVisible();
+			copy.clearVisible(true);
 			messages2cPerception.setMyRPObject(copy, null);
 		} else {
 			RPObject added = new RPObject();
@@ -314,8 +314,8 @@ public class RPServerManager extends Thread {
 
 			try {
 				copy.getDifferences(added, deleted);
-				added.clearVisible();
-				deleted.clearVisible();
+				added.clearVisible(false);
+				deleted.clearVisible(false);
 
 				if (added.size() == 0) {
 					added = null;

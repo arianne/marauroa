@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.47 2007/05/29 14:53:45 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.48 2007/06/04 16:35:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -281,20 +281,20 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
-	 * Traverses up the container tree to see if the slot is owned by id object
+	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
 	 *
-	 * @param id
+	 * @param object
 	 *            the object id. Note that only object_id field is relevant.
 	 * @return true if this slot is owned (at any depth) by id or false
 	 *         otherwise.
 	 */
-	public boolean hasAsParent(RPObject.ID id) {
+	public boolean hasAsParent(RPObject object) {
 		RPObject owner = getOwner();
 		// traverse the owner tree
 		while (owner != null) {
-			// compare only the id, as the zone is not used for slots
-			if (owner.getID().getObjectID() == id.getObjectID()) {
+			// NOTE: We compare pointers.
+			if (owner==object) {
 				return true;
 			}
 			owner = owner.getContainer();
@@ -550,14 +550,15 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Removes the visible objects from this slot. It iterates through the slots
 	 * to remove the attributes too of the contained objects if they are empty.
+	 * @param sync keep the structure intact, by not removing empty slots and links.
 	 */
-	public void clearVisible() {
+	public void clearVisible(boolean sync) {
 		Definition def = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name);
 
 		if (def.isVisible()) {
 			List<RPObject> idtoremove = new LinkedList<RPObject>();
 			for (RPObject object : objects) {
-				object.clearVisible();
+				object.clearVisible(sync);
 
 				/* If object is empty remove it. */
 				if (object.size() == 1) {

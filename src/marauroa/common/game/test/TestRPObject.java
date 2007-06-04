@@ -113,6 +113,13 @@ public class TestRPObject {
 		RPObject expected = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(1, expected.getInt("id"));
 	}
+	
+	public void testHasAsParent() {
+		RPObject p=obj.getSlot("lhand").getFirst();
+		
+		assertTrue(obj.getSlot("lhand").hasAsParent(obj));
+		assertTrue(p.getSlot("container").hasAsParent(obj));		
+	}
 
 	/**
 	 * Test the rp link feature by adding a link and testing some methods
@@ -173,7 +180,7 @@ public class TestRPObject {
 	 */
 	@Test
 	public void testClearVisible() {
-		obj.clearVisible();
+		obj.clearVisible(false);
 		assertTrue(obj.isEmpty());
 	}
 
@@ -184,7 +191,7 @@ public class TestRPObject {
 	 */
 	@Test
 	public void testClearVisibleDelta2() throws Exception {
-		obj.clearVisible();
+		obj.clearVisible(false);
 
 		RPObject oadded = new RPObject();
 		RPObject odeleted = new RPObject();

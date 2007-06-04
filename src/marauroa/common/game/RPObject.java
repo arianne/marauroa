@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.68 2007/06/04 16:02:24 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.69 2007/06/04 16:35:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -847,10 +847,11 @@ public class RPObject extends Attributes {
 	 * Removes the visible attributes and events from this object. It iterates
 	 * through the slots to remove the attributes too of the contained objects
 	 * if they are empty.
+	 * @param sync keep the structure intact, by not removing empty slots and links.
 	 */
 	@Override
-	public void clearVisible() {
-		super.clearVisible();
+	public void clearVisible(boolean sync) {
+		super.clearVisible(sync);
 
 		Iterator<RPEvent> eventsit = events.iterator();
 		while (eventsit.hasNext()) {
@@ -866,19 +867,24 @@ public class RPObject extends Attributes {
 		while (slotit.hasNext()) {
 			RPSlot slot = slotit.next();
 
-			slot.clearVisible();
-			
+			slot.clearVisible(sync);
+
 			/*
 			 * Even if slot is empty client may be interested in knowing the slot.
-			 * So we don't remove the slot.
+			 * So we don't remove the slot on sync type of clear visible.
 			 */
+			if (sync && slot.size() == 0) {
+				slotit.remove();
+				addedSlots.remove(slot.getName());
+				deletedSlots.remove(slot.getName());
+			}
 		}
 
 		Iterator<RPLink> linkit = links.iterator();
 		while (linkit.hasNext()) {
 			RPLink link = linkit.next();
 
-			link.getObject().clearVisible();
+			link.getObject().clearVisible(sync);
 
 			/* If link is empty remove it. */
 			if (link.getObject().isEmpty()) {

@@ -554,7 +554,7 @@ public class TestRPObjectDelta2 {
 		assertNotNull(coin);
 		assertEquals(coin, coin.getBaseContainer());
 
-		obj.clearVisible();
+		obj.clearVisible(false);
 
 		RPObject added = new RPObject();
 		RPObject deleted = new RPObject();
@@ -563,7 +563,7 @@ public class TestRPObjectDelta2 {
 
 		result.applyDifferences(added, deleted);
 
-		result.clearVisible();
+		result.clearVisible(false);
 
 		assertEquals(result, obj);
 	}

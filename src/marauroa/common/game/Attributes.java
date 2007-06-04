@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.53 2007/05/31 14:47:37 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.54 2007/06/04 16:35:32 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
@@ -39,6 +41,7 @@ import marauroa.common.game.Definition.DefinitionClass;
  * @author miguel
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
+	private static Logger logger = Log4J.getLogger(Attributes.class);
 
 	/** A Map<String,String> that contains the attributes */
 	private Map<String, String> content;
@@ -535,17 +538,20 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Removes all the visible attributes
+	 * @param sync keep the structure intact, by not removing empty slots and links.
 	 */
-	public void clearVisible() {
+	public void clearVisible(boolean sync) {
 		Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, String> entry = it.next();
 
 			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
+
 			// TODO:
 			if(def==null) {
-				System.out.println("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
+				logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
 			}
+			
 			if (def.isVisible() && !entry.getKey().equals("id")) {
 				it.remove();
 
