@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.54 2007/06/04 16:35:32 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.55 2007/06/04 21:59:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -444,8 +444,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		 */
 		int size = 0;
 		for (String key : content.keySet()) {
+			try {
 			if (shouldSerialize(DefinitionClass.ATTRIBUTE, key, level)) {
 				size++;
+			}
+			} catch(NullPointerException e) {
+				logger.warn("Not found key: "+key,e);
+				logger.warn(this);
+				throw e;
 			}
 		}
 

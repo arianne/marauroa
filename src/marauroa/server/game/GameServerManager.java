@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.83 2007/06/04 21:36:51 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.84 2007/06/04 21:59:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1163,15 +1163,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					 * We get the content from those of that this client are
 					 * waiting for being sent to it.
 					 */
-					content = entry.getContent(content.name);
-					if (content != null) {
+					TransferContent contentToTransfer = entry.getContent(content.name);
+					if (contentToTransfer != null) {
 						stats.add("Transfer content", 1);
-						stats.add("Tranfer content size", content.data.length);
+						stats.add("Tranfer content size", contentToTransfer.data.length);
 
-						logger.debug("Transfering content " + content);
+						logger.debug("Transfering content " + contentToTransfer);
 
 						MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.channel,
-						        content);
+								contentToTransfer);
 						msgTransfer.setClientID(clientid);
 						netMan.sendMessage(msgTransfer);
 					} else {
