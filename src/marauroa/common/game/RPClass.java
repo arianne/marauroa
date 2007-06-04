@@ -420,8 +420,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * Adds a definition of a rplink with the given flags.
 	 *
-	 * @param clazz
-	 *            type of definition ( attribute, event or slot )
 	 * @param name
 	 *            name of the definition
 	 * @param flags
@@ -434,8 +432,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * Adds a definition of an event with the given flags.
 	 *
-	 * @param clazz
-	 *            type of definition ( attribute, event or slot )
 	 * @param name
 	 *            name of the definition
 	 * @param flags
