@@ -4,15 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import marauroa.common.game.RPClass;
 import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
+import marauroa.common.game.SlotIsFullException;
+import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -37,6 +41,7 @@ public class TestRPObject {
 	@Before
 	public void createObject() {
 		obj = new RPObject();
+		obj.setRPClass(RPClass.getBaseRPObjectDefault());
 
 		obj.put("a", 1);
 		obj.put("b", "1");
@@ -114,11 +119,29 @@ public class TestRPObject {
 		assertEquals(1, expected.getInt("id"));
 	}
 	
+	@Test
 	public void testHasAsParent() {
 		RPObject p=obj.getSlot("lhand").getFirst();
 		
 		assertTrue(obj.getSlot("lhand").hasAsParent(obj));
 		assertTrue(p.getSlot("container").hasAsParent(obj));		
+	}
+
+	@Test(expected=SlotIsFullException.class)
+	public void testSlotCapacity() {
+		RPClass clazz=new RPClass("object");
+		clazz.addAttribute("a", Type.BYTE);
+		clazz.addRPSlot("cont", 1);
+		
+		obj=new RPObject();
+		obj.setRPClass("object");
+		obj.addSlot("cont");
+		
+		RPSlot s=obj.getSlot("cont");
+		s.add(new RPObject());
+		
+		s.add(new RPObject());
+		fail("Object added");
 	}
 
 	/**

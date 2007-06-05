@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.49 2007/06/04 17:10:32 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.50 2007/06/05 16:42:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,6 +78,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	void setOwner(RPObject object) {
 		owner = object;
+		
+		/*
+		 * Compute now the capacity of the slot 
+		 */
+		capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 	}
 
 	/**
@@ -321,10 +326,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the maximum amount of objects that can be stored at the slot.
 	 */
 	public int getCapacity() {
-		if (capacity == -1) {
-			capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
-		}
-
 		return capacity;
 	}
 

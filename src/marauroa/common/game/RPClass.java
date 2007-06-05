@@ -693,7 +693,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 					def.setCapacity((byte) -1);
 
-					if (name.charAt(0) == '!') {
+					if (name.startsWith("!")) {
 						def.setFlags(Definition.PRIVATE);
 					}
 
