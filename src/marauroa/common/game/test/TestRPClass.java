@@ -162,8 +162,8 @@ public class TestRPClass {
 
 		expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
-		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING,
-		        (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		expected.add(DefinitionClass.ATTRIBUTE, "c", Type.STRING, (byte) (Definition.PRIVATE | Definition.VOLATILE));
+		expected.add(DefinitionClass.RPSLOT, "d", 1, Definition.HIDDEN);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer os = new OutputSerializer(out);

@@ -218,7 +218,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	private List<String> definitions = new LinkedList<String>();
 
-	private short getValidCode(String name) {
+	private short getValidCode(DefinitionClass clazz, String name) {
 		if (definitions.contains(name)) {
 			throw new SyntaxException(name);
 		}
@@ -264,7 +264,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Definition def = Definition.defineAttribute(name, type, flags);
 		attributes.put(name, def);
 
-		def.setCode(getValidCode(name));
+		def.setCode(getValidCode(clazz, name));
 	}
 
 	/**
@@ -291,7 +291,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 			default:
 				throw new SyntaxException(name);
 		}
-		def.setCode(getValidCode(name));
+		def.setCode(getValidCode(clazz, name));
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Definition def = Definition.defineSlot(name, capacity, flags);
 		rpslots.put(name, def);
 
-		def.setCode(getValidCode(name));
+		def.setCode(getValidCode(clazz, name));
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 		Definition def = Definition.defineStaticAttribute(name, value, flags);
 		staticattributes.put(name, def);
 
-		def.setCode(getValidCode(name));
+		def.setCode(getValidCode(clazz, name));
 	}
 	
 	/**
