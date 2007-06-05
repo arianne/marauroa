@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.84 2007/06/04 21:59:47 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.85 2007/06/05 16:18:45 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -621,25 +621,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		/* We need to adquire the lock because this is handle by another thread */
-		playerContainer.getLock().requestWriteLock();
+		logger.info("GAME Disconnecting " + channel);
 
-		try {
-			logger.info("GAME Disconnecting " + channel);
-
-			PlayerEntry entry = playerContainer.get(channel);
-			if (entry == null) {
-				/*
-				 * If connection has not even started login it won't have a
-				 * entry and it will be null
-				 */
-				return;
-			}
-
-			disconnect(entry);
-		} finally {
-			playerContainer.getLock().releaseLock();
+		PlayerEntry entry = playerContainer.get(channel);
+		if (entry == null) {
+			/*
+			 * If connection has not even started login it won't have a
+			 * entry and it will be null
+			 */
+			return;
 		}
+
+		disconnect(entry);
 	}
 
 	/**

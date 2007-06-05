@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.36 2007/06/04 21:36:51 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.37 2007/06/05 16:18:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -361,7 +361,7 @@ public class RPServerManager extends Thread {
 
 		for (PlayerEntry entry : playersToRemove) {
 			logger.warn("RP Disconnecting entry: " + entry);
-			gameMan.disconnect(entry);
+			netMan.disconnectClient(entry.channel);
 		}
 	}
 
@@ -536,7 +536,7 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		gameMan.disconnect(entry);
+		netMan.disconnectClient(entry.channel);
 	}
 
 	/**

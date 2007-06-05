@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.17 2007/06/04 19:50:16 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.18 2007/06/05 16:18:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,8 +112,13 @@ class NioServer extends Thread {
 
 		/*
 		 * We ask the server to close the channel
-		 */
+		 */		
 		pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
+		
+		/*
+		 * Wake up to make effective the closing.
+		 */
+		selector.wakeup();
 	}
 
 	/**
@@ -193,9 +198,6 @@ class NioServer extends Thread {
 						if (change.socket.isConnected()) {
 							switch (change.type) {
 								case ChangeRequest.CLOSE:
-									/*
-									 * Close the socket
-									 */
 									try {
 										/*
 										 * Force data to be sent if there is data
@@ -208,12 +210,17 @@ class NioServer extends Thread {
 											}
 										}
 
+										/*
+										 * Close the socket
+										 */
 										change.socket.close();
 									} catch (Exception e) {
 										logger.info("Exception happend when closing socket", e);
 									}
 									break;
 							}
+						} else {
+							logger.info("Closing a not connected socket");
 						}
 					}
 					pendingClosed.clear();
