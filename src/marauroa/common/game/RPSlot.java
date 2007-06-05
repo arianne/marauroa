@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.50 2007/06/05 16:42:03 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.51 2007/06/05 16:51:26 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 *
 	 */
 	public RPSlot() {
-		name = "";
+		name = null;
 		owner = null;
 		capacity = -1;
 
@@ -82,7 +82,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		/*
 		 * Compute now the capacity of the slot 
 		 */
-		capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		if (name != null) {
+			capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		}
 	}
 
 	/**
@@ -454,6 +456,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			name = rpClass.getName(DefinitionClass.RPSLOT, code);
 		}
 
+		capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
