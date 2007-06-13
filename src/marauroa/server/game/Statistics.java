@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.29 2007/06/13 15:35:14 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.30 2007/06/13 15:59:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -256,7 +256,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	private void addStatisticsEventRow(long actualTime) throws SQLException {
-		if ((actualTime - lastStatisticsEventAdded) > DATABASE_STATISTICS_LAPSUS) {
+//		if ((actualTime - lastStatisticsEventAdded) > DATABASE_STATISTICS_LAPSUS) {
 			lastStatisticsEventAdded = actualTime;
 
 			JDBCDatabase database = JDBCDatabase.getDatabase();
@@ -267,7 +267,7 @@ public class Statistics implements StatisticsMBean {
 
 			now.clear();
 			init();
-		}
+//		}
 	}
 
 	/**

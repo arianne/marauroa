@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.52 2007/06/13 15:35:13 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.53 2007/06/13 15:59:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -127,6 +127,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	public int add(RPObject object) {
 		return add(object, true);
+	}
+	
+	public int addPreservingId(RPObject object) {
+		object.resetAddedAndDeleted();
+		return add(object, false);
 	}
 
 	int add(RPObject object, boolean assignId) {
