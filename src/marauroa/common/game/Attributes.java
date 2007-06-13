@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.55 2007/06/04 21:59:47 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.56 2007/06/13 15:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -191,6 +191,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public void put(String attribute, String value) {
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
+		
+		if(value==null) {
+			throw new IllegalArgumentException(attribute);
+		}
 
 		content.put(attribute, value);
 	}

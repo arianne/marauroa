@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.20 2007/06/05 17:30:33 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.21 2007/06/13 15:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -470,7 +470,11 @@ public class Definition implements marauroa.common.net.Serializable {
         } catch (IOException e) {
         	logger.warn("Exception caused by name="+name+" type="+type+" code?"+code+" value="+value,e);
 	        throw e;
-        }
+        } catch (NullPointerException e) {
+			logger.warn("Exception caused by name=" + name + " type=" + type + " code?" + code
+			        + " value=" + value, e);
+			throw e;
+		}
 	}
 
 	/** Serialize the object into the output */

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.59 2007/06/04 21:36:51 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.60 2007/06/13 15:35:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -270,7 +270,7 @@ public class marauroad extends Thread {
 		while (!finish) {
 			try {
 				Statistics.getStatistics().print();
-				wait(30000);
+				wait(Statistics.DATABASE_STATISTICS_LAPSUS);
 			} catch (InterruptedException e) {
 				finish = true;
 			}

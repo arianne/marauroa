@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.51 2007/06/05 16:51:26 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.52 2007/06/13 15:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -263,7 +263,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	public void clear() {
 		for (RPObject object : objects) {
-			deleted.add(new RPObject(new RPObject.ID(object)));
+			RPObject.ID deletedid=new RPObject.ID(object);
+			deleted.add(new RPObject(deletedid));
+			
 			object.setContainer(null, null);
 		}
 

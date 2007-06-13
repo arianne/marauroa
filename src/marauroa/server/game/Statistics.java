@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.28 2007/04/09 14:47:10 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.29 2007/06/13 15:35:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,7 @@ import marauroa.server.game.db.Transaction;
  */
 public class Statistics implements StatisticsMBean {
 
-	private static final int DATABASE_STATISTICS_LAPSUS = 60000;
+	public static final int DATABASE_STATISTICS_LAPSUS = 60000;
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Statistics.class);

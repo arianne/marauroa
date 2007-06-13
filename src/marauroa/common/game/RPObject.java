@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.70 2007/06/04 16:38:32 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.71 2007/06/13 15:35:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
@@ -41,6 +42,9 @@ import marauroa.common.game.Definition.DefinitionClass;
  */
 
 public class RPObject extends Attributes {
+
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObject.class);
 
 	/** a list of slots that this object contains */
 	private List<RPSlot> slots;
@@ -188,7 +192,13 @@ public class RPObject extends Attributes {
 	 */
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
-		put("zoneid", id.getZoneID());
+		
+		/*
+		 * We don't use zoneid inside slots.
+		 */
+		if(id.getZoneID()!=null) {
+		  put("zoneid", id.getZoneID());
+		}
 	}
 
 	/**
@@ -617,7 +627,12 @@ public class RPObject extends Attributes {
 	 */
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+		try {
 		writeObject(out, DetailLevel.NORMAL);
+		} catch(NullPointerException e) {
+			logger.warn(this,e);
+			throw e;
+		}
 	}
 
 	/**
