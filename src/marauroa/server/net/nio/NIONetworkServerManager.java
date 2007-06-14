@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.32 2007/05/31 15:49:58 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.33 2007/06/14 13:53:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -231,6 +231,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		logger.debug("Recv from channel:"+channel+" "+count+" bytes");
+		
+		stats.add("Bytes recv", count);
+		stats.add("Message recv", 1);
+		
 		/*
 		 * We check the connection is case it is trying to flood server.
 		 */
@@ -272,6 +276,10 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 			}
 
 			byte[] data = encoder.encode(msg);
+			
+			stats.add("Bytes send", data.length);
+			stats.add("Message send", 1);
+			
 			server.send(msg.getSocketChannel(), data);
 		} catch (IOException e) {
 			e.printStackTrace();

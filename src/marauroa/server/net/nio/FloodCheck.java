@@ -26,7 +26,7 @@ public class FloodCheck implements IFloodCheck {
 	}
 
 	public boolean isFlooding(FloodMeasure entry) {
-		if (entry.getBytesPerSecond() > 256 || entry.getMessagesPerSecond() > 6) {
+		if (entry.getBytesPerSecond() > 512 || entry.getMessagesPerSecond() > 10) {
 			entry.warning();
 		}
 
@@ -54,6 +54,7 @@ public class FloodCheck implements IFloodCheck {
 			logger.info("Disconnecting " + entry.channel + " for flooding server: " + entry);
 			netMan.disconnectClient(entry.channel);
 		} else {
+			logger.info("Giving another change to" + entry.channel + " for flooding server: " + entry);
 			/*
 			 * Give another chance.
 			 */
