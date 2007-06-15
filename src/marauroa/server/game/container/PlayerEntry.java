@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.33 2007/05/03 18:58:13 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.34 2007/06/15 23:50:53 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -237,6 +237,10 @@ public class PlayerEntry {
 	 */
 	public int getPerceptionTimestamp() {
 		return perceptionCounter++;
+	}
+
+	public int getThisPerceptionTimestamp() {
+		return perceptionCounter;
 	}
 
 	/**

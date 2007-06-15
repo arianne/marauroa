@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.37 2007/06/05 16:18:47 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.38 2007/06/15 23:50:54 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -356,6 +356,14 @@ public class RPServerManager extends Thread {
 			} catch (Exception e) {
 				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
+			}
+			
+			try{
+				if(entry.getThisPerceptionTimestamp()%2000==2000) {
+					entry.storeRPObject(entry.object);
+				}			
+			}catch(Exception e) {
+				logger.error("Error while storing player",e);
 			}
 		}
 
