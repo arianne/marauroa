@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.18 2007/06/05 16:18:47 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.19 2007/06/17 19:49:02 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -170,6 +170,7 @@ class NioServer extends Thread {
 		}
 	}
 
+	@Override
 	public void run() {
 		while (keepRunning) {
 			try {

@@ -72,6 +72,7 @@ public class StressServer {
 		for (int i = 0; i < NUM_CLIENTS; i++) {
 			new Thread() {
 
+				@Override
 				public void run() {
 					try {
 						System.out.println("Initing client");

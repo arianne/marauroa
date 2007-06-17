@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.20 2007/04/09 14:39:51 arianne_rpg Exp $ */
+/* $Id: RPEvent.java,v 1.21 2007/06/17 19:49:03 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -89,6 +89,7 @@ public class RPEvent extends Attributes {
 		return name;
 	}
 
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
@@ -101,6 +102,7 @@ public class RPEvent extends Attributes {
 	 * @param level
 	 *            the detail level of the serialization
 	 */
+	@Override
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
 
@@ -127,6 +129,7 @@ public class RPEvent extends Attributes {
 	 * @param in
 	 *            the input serializer
 	 */
+	@Override
 	public void readObject(InputSerializer in) throws IOException {
 		short code = in.readShort();
 

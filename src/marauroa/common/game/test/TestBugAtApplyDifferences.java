@@ -1,7 +1,8 @@
 package marauroa.common.game.test;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -63,17 +64,21 @@ public class TestBugAtApplyDifferences {
 		lhand.add(pocket);
 
 		zone = new MarauroaRPZone("test") {
+			@Override
 			public void onInit() throws Exception {
 			}
 
+			@Override
 			public void onFinish() throws Exception {
 			}
 		};
 
 		recreatedZone = new MarauroaRPZone("test") {
+			@Override
 			public void onInit() throws Exception {
 			}
 
+			@Override
 			public void onFinish() throws Exception {
 			}
 		};
@@ -148,10 +153,7 @@ public class TestBugAtApplyDifferences {
 		
 		msgs=dec.decode(null, data);
 		
-		/*
-		 * There should only be one message.
-		 */
-		assertEquals(1, msgs.size());
+		assertEquals("there should only be one message",1, msgs.size());
 		
 		recv=(MessageS2CPerception)msgs.get(0);
 		assertTrue(recv.getAddedRPObjects().isEmpty());

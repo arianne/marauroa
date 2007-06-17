@@ -11,7 +11,6 @@ import marauroa.common.game.RPSlot;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -67,9 +66,11 @@ public class TestRPObjectDelta2 {
 
 		zone = new MarauroaRPZone("test") {
 
+			@Override
 			public void onInit() throws Exception {
 			}
 
+			@Override
 			public void onFinish() throws Exception {
 			}
 		};

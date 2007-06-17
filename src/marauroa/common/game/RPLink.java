@@ -82,6 +82,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 		return object;
 	}
 
+	@Override
 	public Object clone() {
 		RPLink link=new RPLink(name, (RPObject)object.clone());
 		// TODO: Ensure correct cloning.
@@ -90,6 +91,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 		return link;
 	}
 
+	@Override
 	public String toString() {
 		return "name: " + name + " --> " + object;
 	}

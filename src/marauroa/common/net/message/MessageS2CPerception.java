@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.9 2007/06/01 15:07:07 arianne_rpg Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.10 2007/06/17 19:49:03 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
-import marauroa.common.game.RPSlot;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
