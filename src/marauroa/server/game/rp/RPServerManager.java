@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.38 2007/06/15 23:50:54 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.39 2007/06/17 20:04:10 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,7 +32,6 @@ import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.game.ActionInvalidException;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -99,11 +98,6 @@ public class RPServerManager extends Thread {
 	private List<PlayerEntry> playersToRemove;
 
 	private Map<RPObject, List<TransferContent>> contentsToTransfer;
-
-	/**
-	 * The game manager pointer to disconnect players the good way.
-	 */
-	private GameServerManager gameMan;
 
 	/**
 	 * Constructor
@@ -175,10 +169,7 @@ public class RPServerManager extends Thread {
 		ruleProcessor.setContext(this);
 	}
 
-	public void setGameManager(GameServerManager gameMan) {
-		this.gameMan = gameMan;
-	}
-
+	
 	/**
 	 * This method returns the actual turn number.
 	 *
