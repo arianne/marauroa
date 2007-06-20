@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.21 2007/06/13 15:35:13 arianne_rpg Exp $ */
+/* $Id: Definition.java,v 1.22 2007/06/20 21:25:11 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -526,14 +526,18 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	@Override
 	public boolean equals(Object ot) {
-		if (ot == null || !(ot instanceof Definition)) {
+		if (!(ot instanceof Definition)) {
 			return false;
 		}
 
 		Definition def = (Definition) ot;
 
-		boolean result = clazz.equals(def.clazz) && code == def.code && capacity == def.capacity
-		        && flags == def.flags && name.equals(def.name) && type == def.type
+		boolean result = clazz.equals(def.clazz) 
+				&& code == def.code 
+				&& capacity == def.capacity
+		        && flags == def.flags 
+		        && name.equals(def.name) 
+		        && type == def.type
 		        && (value == def.value || value.equals(def.value));
 
 		return result;
