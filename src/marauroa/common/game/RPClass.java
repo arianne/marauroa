@@ -738,19 +738,30 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	@Override
 	public boolean equals(Object ot) {
-		if (ot == null || !(ot instanceof RPClass)) {
+		if (!(ot instanceof RPClass)) {
 			return false;
 		}
 
-		RPClass otc = (RPClass) ot;
+		RPClass other = (RPClass) ot;
+		boolean isEqual;
+		if (name==null){
+			isEqual = other.name==null;
+		} else {
+			isEqual = name.equals(other.name);
+		}
+		if (parent==null){
+			isEqual = isEqual && other.parent==null;
+		} else {
+			isEqual = isEqual && parent.equals(other.parent);
+		}
+			
+		isEqual = isEqual 
+		        && staticattributes.equals(other.staticattributes)
+		        && attributes.equals(other.attributes) 
+		        && rpevents.equals(other.rpevents)
+		        && rpslots.equals(other.rpslots);
 
-		boolean result = name.equals(otc.name)
-		        && (parent == otc.parent || parent.equals(otc.parent))
-		        && staticattributes.equals(otc.staticattributes)
-		        && attributes.equals(otc.attributes) && rpevents.equals(otc.rpevents)
-		        && rpslots.equals(otc.rpslots);
-
-		return result;
+		return isEqual;
 	}
 
 }
