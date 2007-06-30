@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.47 2007/06/04 17:44:06 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.48 2007/06/30 22:13:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1159,6 +1159,9 @@ public class JDBCDatabase implements IDatabase {
 			Statement stmt = connection.createStatement();
 
 			String firstParam = (params.length > 0 ? params[0] : "");
+			if (firstParam == null) {
+				firstParam = "";
+			}
 			StringBuffer param = new StringBuffer();
 			if (params.length > 1) {
 				for (int i = 1; i < params.length; i++) {
