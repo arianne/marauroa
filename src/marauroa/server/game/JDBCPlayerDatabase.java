@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.2 2007/05/28 01:42:08 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.3 2007/06/30 22:13:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1434,6 +1434,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			Statement stmt = connection.createStatement();
 
 			String firstParam = (params.length > 0 ? params[0] : "");
+			if (firstParam == null) {
+				firstParam = "";
+			}
 			StringBuffer param = new StringBuffer();
 			if (params.length > 1) {
 				for (int i = 1; i < params.length; i++) {
