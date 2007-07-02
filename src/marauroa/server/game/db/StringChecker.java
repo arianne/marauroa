@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.4 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: StringChecker.java,v 1.5 2007/07/02 01:44:55 seather Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,7 @@
 package marauroa.server.game.db;
 
 /**
- * Helper class to validate strings and escapa SQL strings.
+ * Helper class to validate strings and escape SQL strings.
  *
  * @author miguel
  *
@@ -21,7 +21,7 @@ package marauroa.server.game.db;
 public class StringChecker {
 
 	/**
-	 * This method returns if a string is valid because it lacks of any kind of
+	 * This method returns true if a string is valid because it lacks of any kind of
 	 * control or escape character.
 	 *
 	 * @param string
