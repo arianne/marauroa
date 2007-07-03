@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.71 2007/06/13 15:35:13 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.72 2007/07/03 23:17:21 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -819,7 +819,13 @@ public class RPObject extends Attributes {
 
 	@Override
 	public int hashCode() {
-		return getInt("id");
+		int hash=0;
+		if (has("id")) {
+			hash=getInt("id");
+		}
+		
+		return hash;
+		
 	}
 
 	/**
