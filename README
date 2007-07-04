@@ -92,6 +92,11 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+2.0.1 Jul XX, 2007
+- Fixed MySQL 4.0 incompatibility.
+- Fixed bug at IRPZone.ID
+- Fixed problem with RPObject.hashCode.
+
 2.00 Jul 03, 2007
 - Moved factory to a RPObjectFactory.
 - Added factory_implementation to server.ini
