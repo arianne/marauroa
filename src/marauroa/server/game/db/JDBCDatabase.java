@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.49 2007/06/30 22:13:56 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.50 2007/07/04 09:21:22 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -933,7 +933,7 @@ public class JDBCDatabase implements IDatabase {
 
 		int id = getDatabasePlayerId(transaction, username);
 		String query = "SELECT count(*) as amount FROM loginEvent where player_id=" + id
-		        + " and result=0 and timestampdiff(SECOND,timedate,now())<"
+		        + " and result=0 and (now()-timedate)<"
 		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 
 		ResultSet eventSet = stmt.executeQuery(query);
