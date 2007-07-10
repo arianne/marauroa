@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.24 2007/07/10 18:38:49 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.25 2007/07/10 18:47:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,7 +199,7 @@ public class MarauroaRPZone implements IRPZone {
 				return;
 			}
 
-			if (has(object)) {
+			if (has(object.getID())) {
 				modified.add(object);
 			} else {
 				logger.warn("Modifying a non existing object: "+object);
@@ -287,10 +287,6 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	public boolean has(RPObject.ID id) {
 		return objects.containsKey(id);
-	}
-
-	boolean has(RPObject object) {
-		return objects.containsValue(object);
 	}
 
 	/**
