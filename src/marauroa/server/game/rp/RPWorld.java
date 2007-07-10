@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.15 2007/04/09 14:40:01 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.16 2007/07/10 19:30:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,14 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	protected RPWorld() {
 		zones = new HashMap<IRPZone.ID, IRPZone>();
+		initialize();
+	}
+
+	/**
+	 * Initialize the player entry container so RPWorld knows about players.
+	 *
+	 */
+	protected void initialize() {
 		playerContainer = PlayerEntryContainer.getContainer();
 	}
 
