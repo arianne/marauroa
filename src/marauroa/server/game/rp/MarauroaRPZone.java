@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.25 2007/07/10 18:47:47 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.26 2007/07/10 19:06:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,11 +199,7 @@ public class MarauroaRPZone implements IRPZone {
 				return;
 			}
 
-			if (has(object.getID())) {
-				modified.add(object);
-			} else {
-				logger.warn("Modifying a non existing object: "+object);
-			}
+			modified.add(object);
 		} catch (Exception e) {
 			throw new RPObjectInvalidException(e.getMessage());
 		}
@@ -333,6 +329,10 @@ public class MarauroaRPZone implements IRPZone {
 
 				for (RPObject modified_obj : modified) {
 					try {
+						if(!has(modified_obj.getID())) {
+							logger.warn("Modifying a non existing object: "+modified_obj);
+						}
+						
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
 						logger.error("cannot add object to modified list (object is: ["
