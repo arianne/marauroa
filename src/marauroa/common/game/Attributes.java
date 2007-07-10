@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.56 2007/06/13 15:35:13 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.57 2007/07/10 18:15:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,9 @@ import marauroa.common.game.Definition.DefinitionClass;
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
 	private static Logger logger = Log4J.getLogger(Attributes.class);
+	
+	/** We are interested in clearing added and deleted only if they have changed. */
+	private boolean modified;
 
 	/** A Map<String,String> that contains the attributes */
 	private Map<String, String> content;
@@ -65,6 +68,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public Object fill(Attributes attr) {
 		setRPClass(attr.rpClass);
+		modified=attr.modified;
 
 		content.clear();
 		for (Map.Entry<String, String> entry : attr.content.entrySet()) {
@@ -96,6 +100,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		content = new HashMap<String, String>();
 		added = new HashMap<String, String>();
 		deleted = new HashMap<String, String>();
+		modified=false;
 	}
 
 	/**
@@ -191,6 +196,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public void put(String attribute, String value) {
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
+		
+		modified=true;
 		
 		if(value==null) {
 			throw new IllegalArgumentException(attribute);
@@ -350,6 +357,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			 */
 			deleted.put(attribute, "0");
 		}
+		
+		modified=true;
 
 		return content.remove(attribute);
 	}
@@ -519,6 +528,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *            the input serializer
 	 */
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+		modified=true;
 		rpClass = RPClass.getRPClass(in.readString());
 		int size = in.readInt();
 
@@ -565,6 +575,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			if (def.isVisible() && !entry.getKey().equals("id")) {
 				it.remove();
 
+				modified=true;
 				deleted.remove(entry.getKey());
 				added.remove(entry.getKey());
 			}
@@ -575,8 +586,14 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * Reset the Delta² information of the attribute.
 	 */
 	public void resetAddedAndDeletedAttributes() {
-		added.clear();
-		deleted.clear();
+		/*
+		 * We should clear added and deleted if they have been deleted. 
+		 */
+		if (modified) {
+			added.clear();
+			deleted.clear();
+			modified = false;
+		}
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.72 2007/07/03 23:17:21 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.73 2007/07/10 18:15:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,9 @@ public class RPObject extends Attributes {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObject.class);
+	
+	/** We are interested in clearing added and deleted only if they have changed. */
+	private boolean modified;
 
 	/** a list of slots that this object contains */
 	private List<RPSlot> slots;
@@ -100,6 +103,8 @@ public class RPObject extends Attributes {
 		links = new LinkedList<RPLink>();
 		addedLinks = new LinkedList<String>();
 		deletedLinks = new LinkedList<String>();
+		
+		modified=false;
 
 		container = null;
 		containerSlot = null;
@@ -122,6 +127,7 @@ public class RPObject extends Attributes {
 		hidden = object.hidden;
 		storable = object.storable;
 		lastassignedID = object.lastassignedID;
+		modified=object.modified;
 
 		container = object.container;
 		containerSlot = object.containerSlot;
@@ -375,6 +381,7 @@ public class RPObject extends Attributes {
 
 		/** Notify delta^2 about the addition of this slot */
 		addedSlots.add(name);
+		modified=true;
 	}
 	
 	/**
@@ -402,6 +409,7 @@ public class RPObject extends Attributes {
 
 		/* Notify delta^2 about the addition of this slot */
 		addedSlots.add(slot.getName());
+		modified=true;
 	}
 
 	/**
@@ -419,6 +427,8 @@ public class RPObject extends Attributes {
 				// shouldn't be mention on deleted.
 				/** Notify delta^2 about the removal of this slot. */
 				deletedSlots.add(name);
+
+				modified=true;
 
 				/* Remove and return it */
 				it.remove();
@@ -515,6 +525,7 @@ public class RPObject extends Attributes {
 		links.add(link);
 
 		addedLinks.add(name);
+		modified=true;
 	}
 	
 	/**
@@ -530,6 +541,7 @@ public class RPObject extends Attributes {
 		links.add(link);
 
 		addedLinks.add(link.getName());
+		modified=true;
 	}
 
 	/**
@@ -580,6 +592,8 @@ public class RPObject extends Attributes {
 			RPLink link = it.next();
 			if (name.equals(link.getName())) {
 				deletedLinks.add(name);
+
+				modified=true;
 
 				/* Remove and return it */
 				it.remove();
@@ -739,6 +753,7 @@ public class RPObject extends Attributes {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		super.readObject(in);
+		modified=true;
 
 		if (in.readByte() == 1) {
 			hidden = in.readByte() == 1;
@@ -898,6 +913,7 @@ public class RPObject extends Attributes {
 				slotit.remove();
 				addedSlots.remove(slot.getName());
 				deletedSlots.remove(slot.getName());
+				modified=true;
 			}
 		}
 
@@ -912,6 +928,7 @@ public class RPObject extends Attributes {
 				linkit.remove();
 				addedLinks.remove(link.getName());
 				deletedLinks.remove(link.getName());
+				modified=true;
 			}
 		}
 	}
@@ -1047,6 +1064,10 @@ public class RPObject extends Attributes {
 		resetAddedAndDeletedRPSlot();
 		resetAddedAndDeletedRPLink();
 		clearEvents();
+		
+		if(modified) {
+			modified=false;
+		}
 	}
 
 	/**
@@ -1060,8 +1081,10 @@ public class RPObject extends Attributes {
 			}
 		}
 
-		addedSlots.clear();
-		deletedSlots.clear();
+		if (modified) {
+			addedSlots.clear();
+			deletedSlots.clear();
+		}
 	}
 
 	/**
@@ -1072,8 +1095,10 @@ public class RPObject extends Attributes {
 			link.getObject().resetAddedAndDeleted();
 		}
 
-		addedLinks.clear();
-		deletedLinks.clear();
+		if (modified) {
+			addedLinks.clear();
+			deletedLinks.clear();
+		}
 	}
 
 	/**
