@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.86 2007/06/17 20:04:10 astridemma Exp $ */
+/* $Id: GameServerManager.java,v 1.87 2007/07/10 10:00:00 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -239,6 +239,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	public void finish() {
 		rpMan.finish();
 		keepRunning = false;
+		interrupt();
+		
 		while (isfinished == false) {
 			Thread.yield();
 		}
@@ -277,7 +279,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	public void run() {
 		try {
 			while (keepRunning) {
-				Message msg = netMan.getMessage(TimeoutConf.GAMESERVER_MESSAGE_GET_TIMEOUT);
+				Message msg = netMan.getMessage();
 
 				if (msg != null) {
 					// TODO: Bootleneck because of synchronization.

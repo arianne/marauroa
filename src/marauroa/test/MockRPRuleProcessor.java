@@ -156,8 +156,6 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public void endTurn() {
-		logger.info("There are " + players.size() + " players in server");
-
 	}
 
 	public void execute(RPObject object, RPAction action) {

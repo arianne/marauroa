@@ -96,6 +96,7 @@ Changelog
 - Fixed MySQL 4.0 incompatibility.
 - Fixed bug at IRPZone.ID
 - Fixed problem with RPObject.hashCode.
+- Fixed memory leak because of Sun bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6460501
 
 2.00 Jul 03, 2007
 - Moved factory to a RPObjectFactory.

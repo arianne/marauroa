@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.33 2007/06/14 13:53:54 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.34 2007/07/10 10:00:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -149,23 +149,6 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		}
 
 		logger.debug("NetworkServerManager is down");
-	}
-
-	/**
-	 * This method returns a Message from the list or block for timeout
-	 * milliseconds until a message is available or null if timeout happens.
-	 * 
-	 * @param timeout
-	 *            timeout time in milliseconds
-	 * @return a Message or null if timeout happens
-	 */
-	public synchronized Message getMessage(int timeout) {
-		try {
-			return messages.poll(timeout, java.util.concurrent.TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			/* If interrupted while waiting we just return null */
-			return null;
-		}
 	}
 
 	/**

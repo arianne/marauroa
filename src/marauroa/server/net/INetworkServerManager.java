@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.10 2007/04/09 14:40:01 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.11 2007/07/10 10:00:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,16 +60,6 @@ public interface INetworkServerManager {
 	 * @return validator.
 	 */
 	public abstract ConnectionValidator getValidator();
-
-	/**
-	 * This method returns a Message from the list or block for timeout
-	 * milliseconds until a message is available or null if timeout happens.
-	 * 
-	 * @param timeout
-	 *            timeout time in milliseconds
-	 * @return a Message or null if timeout happens
-	 */
-	public abstract Message getMessage(int timeout);
 
 	/**
 	 * This method blocks until a message is available
