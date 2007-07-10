@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.22 2007/06/01 15:07:08 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.23 2007/07/10 18:33:07 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,10 +15,12 @@ package marauroa.server.game.rp;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.IRPZone;
@@ -101,7 +103,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * Objects that has been modified on zone since last turn. This information
 	 * is useful for Delta² algorithm.
 	 */
-	private Map<RPObject.ID, RPObject> modified;
+	private Set<RPObject> modified;
 
 	/** This is the perception for the actual turn. */
 	private Perception perception;
@@ -122,7 +124,7 @@ public class MarauroaRPZone implements IRPZone {
 		rand.setSeed(new Date().getTime());
 
 		objects = new LinkedHashMap<RPObject.ID, RPObject>();
-		modified = new LinkedHashMap<RPObject.ID, RPObject>();
+		modified = new HashSet<RPObject>();
 
 		perception = new Perception(Perception.DELTA, this.zoneid);
 	}
@@ -197,10 +199,10 @@ public class MarauroaRPZone implements IRPZone {
 				return;
 			}
 
-			RPObject.ID id = object.getID();
-
-			if (!modified.containsKey(id) && has(id)) {
-				modified.put(id, object);
+			if (has(object)) {
+				modified.add(object);
+			} else {
+				logger.warn("Modifying a non existing object: "+object);
 			}
 		} catch (Exception e) {
 			throw new RPObjectInvalidException(e.getMessage());
@@ -219,7 +221,7 @@ public class MarauroaRPZone implements IRPZone {
 
 		if (object != null) {
 			// If objects has been removed, remove from modified
-			modified.remove(object.getID());
+			modified.remove(object);
 			/* We create an empty copy of the object */
 			RPObject deleted = new RPObject();
 			deleted.setID(object.getID());
@@ -242,7 +244,7 @@ public class MarauroaRPZone implements IRPZone {
 		object.hide();
 
 		// If objects has been removed, remove from modified
-		modified.remove(object.getID());
+		modified.remove(object);
 		/* We create an empty copy of the object */
 		RPObject deleted = new RPObject();
 		deleted.setID(object.getID());
@@ -287,6 +289,10 @@ public class MarauroaRPZone implements IRPZone {
 		return objects.containsKey(id);
 	}
 
+	boolean has(RPObject object) {
+		return objects.containsValue(object);
+	}
+
 	/**
 	 * This method assigns a valid id to the object.
 	 *
@@ -329,7 +335,7 @@ public class MarauroaRPZone implements IRPZone {
 			if (prebuildDeltaPerception == null) {
 				prebuildDeltaPerception = perception;
 
-				for (RPObject modified_obj : modified.values()) {
+				for (RPObject modified_obj : modified) {
 					try {
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
@@ -359,7 +365,10 @@ public class MarauroaRPZone implements IRPZone {
 	 * This methods resets the delta� information of objects.
 	 */
 	protected void reset() {
-		for (RPObject object : objects.values()) {
+//		for (RPObject object : objects.values()) {
+//			object.resetAddedAndDeleted();
+//		}
+		for (RPObject object : modified) {
 			object.resetAddedAndDeleted();
 		}
 	}
