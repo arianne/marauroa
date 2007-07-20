@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.87 2007/07/10 10:00:00 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.88 2007/07/20 16:14:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -978,6 +978,28 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			info.password = msgLogin.getPassword();
 
 			/*
+			 * We verify the username and the password to make sure player is
+			 * who he/she says he/she is.
+			 */
+			if (!info.verify()) {
+				/*
+				 * If the verification fails we send player a NACK and record
+				 * the event
+				 */
+				logger.debug("Incorrect username/password for player " + info.username);
+				stats.add("Players invalid login", 1);
+				info.addLoginEvent(msg.getAddress(), false);
+
+				/* Send player the Login NACK message */
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+				        MessageS2CLoginNACK.Reasons.USERNAME_WRONG);
+
+				netMan.sendMessage(msgLoginNACK);
+				playerContainer.remove(clientid);
+				return;
+			}
+
+			/*
 			 * We check that player didn't failed too many time the login, if it
 			 * did, we reject the login request until the block pass.
 			 */
@@ -1012,28 +1034,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				return;
 			}
 			
-			/*
-			 * We verify the username and the password to make sure player is
-			 * who he/she says he/she is.
-			 */
-			if (!info.verify()) {
-				/*
-				 * If the verification fails we send player a NACK and record
-				 * the event
-				 */
-				logger.debug("Incorrect username/password for player " + info.username);
-				stats.add("Players invalid login", 1);
-				info.addLoginEvent(msg.getAddress(), false);
-
-				/* Send player the Login NACK message */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
-				        MessageS2CLoginNACK.Reasons.USERNAME_WRONG);
-
-				netMan.sendMessage(msgLoginNACK);
-				playerContainer.remove(clientid);
-				return;
-			}
-
 			/* Now we check if this player is previously logged in */
 			PlayerEntry existing = playerContainer.get(msgLogin.getUsername());
 
