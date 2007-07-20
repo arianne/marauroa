@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.50 2007/07/04 09:21:22 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.51 2007/07/20 16:21:11 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1040,10 +1040,10 @@ public class JDBCDatabase implements IDatabase {
 
 			if (id == -1) {
 				/**
-				 * This should never happen as we should check previously that
-				 * player exists...
+				 * This will happen when the player doesn't exist at database.
+				 * For example, a mispelled username.
 				 */
-				throw new SQLException("Unable to find player(" + username + ")");
+				return;
 			}
 
 			Connection connection = transaction.getConnection();
