@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.14 2007/04/09 14:40:02 arianne_rpg Exp $ */
+/* $Id: ConnectionValidator.java,v 1.15 2007/08/02 19:30:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,8 +24,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import marauroa.common.Log4J;
+import marauroa.server.game.db.DatabaseFactory;
 import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.Transaction;
 
 /**
@@ -205,7 +205,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 */
 	public synchronized void loadBannedIPNetworkListFromDB() {
 		try {
-			IDatabase db = JDBCDatabase.getDatabase();
+			IDatabase db = DatabaseFactory.getDatabase();
 			permanentBans.clear();
 			Transaction transaction = db.getTransaction();
 			permanentBans.addAll(db.getBannedAddresses(transaction));

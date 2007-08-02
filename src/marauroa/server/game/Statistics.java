@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.31 2007/06/17 19:55:07 astridemma Exp $ */
+/* $Id: Statistics.java,v 1.32 2007/08/02 19:30:49 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.server.game.db.JDBCDatabase;
+import marauroa.server.game.db.DatabaseFactory;
+import marauroa.server.game.db.IDatabase;
 import marauroa.server.game.db.Transaction;
 
 /**
@@ -251,15 +252,14 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	private void addStatisticsEventRow(long actualTime) throws SQLException {
-JDBCDatabase database = JDBCDatabase.getDatabase();
-			Transaction transaction = database.getTransaction();
+        IDatabase database = DatabaseFactory.getDatabase();
+		Transaction transaction = database.getTransaction();
 
-			database.addStatisticsEvent(transaction, now);
-			transaction.commit();
+		database.addStatisticsEvent(transaction, now);
+		transaction.commit();
 
-			now.clear();
-			init();
-//		}
+		now.clear();
+		init();
 	}
 
 	/**
