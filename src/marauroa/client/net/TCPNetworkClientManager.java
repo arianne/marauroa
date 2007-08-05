@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.15 2007/05/31 14:47:36 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.16 2007/08/05 19:45:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -96,15 +97,32 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 * @throws IOException
 	 */
 	public TCPNetworkClientManager(String host, int port) throws IOException {
+		this(null, new InetSocketAddress(host, port));
+	}
+	/**
+	 * Constructor that opens the socket on the marauroa_PORT and start the
+	 * thread to recieve new messages from the network.
+	 *
+	 * @param proxy proxy server and protocol to use
+	 * @param serverAddress the host and port where we connect to.
+	 * @throws IOException
+	 */
+	public TCPNetworkClientManager(Proxy proxy, InetSocketAddress serverAddress) throws IOException {
 		clientid = Message.CLIENTID_INVALID;
+		this.address = serverAddress;
 
-		/* Create the socket */
-		address = new InetSocketAddress(host, port);
+		// check name (dns lookup)
 		if (address.getAddress() == null) {
 			throw new IOException("Unknown Host");
 		}
 
-		socket = new Socket(address.getAddress(), port);
+		/* Create the socket */
+		if (proxy != null) {
+			socket = new Socket(proxy);
+		} else {
+			socket = new Socket();
+		}
+		socket.connect(address);
 		socket.setTcpNoDelay(true); // disable Nagle's algorithm
 		socket.setReceiveBufferSize(128 * 1024);
 

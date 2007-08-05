@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.33 2007/05/30 09:33:17 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.34 2007/08/05 19:45:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,8 @@
 package marauroa.client;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,6 +107,18 @@ public abstract class ClientFramework {
 		netMan = new TCPNetworkClientManager(host, port);
 	}
 
+	/**
+	 * Call this method to connect to server using a proxy-server inbetween.
+	 * This method just configure the connection, it doesn't send anything.
+	 *
+	 * @param proxy proxy server to use for the connection
+	 * @param serverAddress marauroa server (final destination)
+	 * @throws IOException if connection is not possible
+	 */
+	public void connect(Proxy proxy, InetSocketAddress serverAddress) throws IOException {
+		netMan = new TCPNetworkClientManager(proxy, serverAddress);
+	}
+	
 	/**
 	 * Retrieves a message from network manager.
 	 *
