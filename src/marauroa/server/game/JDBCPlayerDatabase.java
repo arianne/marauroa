@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.3 2007/06/30 22:13:18 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.4 2007/08/11 13:32:24 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1451,9 +1451,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 					+ "','"
 					+ escapeSQLString(event)
 					+ "','"
-					+ escapeSQLString(firstParam.substring(0, Math.min(128, firstParam.length())))
+					+ escapeSQLString(firstParam.substring(0, Math.min(127, firstParam.length())))
 					+ "','"
-					+ escapeSQLString(param2.substring(0, Math.min(256, param2.length()))) + "')";
+					+ escapeSQLString(param2.substring(0, Math.min(255, param2.length()))) + "')";
 			stmt.execute(query);
 			stmt.close();
 		} catch (SQLException sqle) {
