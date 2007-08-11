@@ -680,7 +680,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 					def.setCode((short) -1);
 					def.setName(name);
-					def.setType(Type.STRING);
+					def.setType(Type.VERY_LONG_STRING);
 					/*
 					 * On Default RPClass we assume that strings that start with #
 					 * are hidden.
