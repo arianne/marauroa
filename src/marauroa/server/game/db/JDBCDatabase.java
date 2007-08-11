@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.51 2007/07/20 16:21:11 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.52 2007/08/11 13:32:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1178,9 +1178,9 @@ public class JDBCDatabase implements IDatabase {
 					+ "','"
 					+ StringChecker.escapeSQLString(event)
 					+ "','"
-					+ (firstParam==null?null:StringChecker.escapeSQLString(firstParam.substring(0, Math.min(128, firstParam.length()))))
+					+ (firstParam==null?null:StringChecker.escapeSQLString(firstParam.substring(0, Math.min(127, firstParam.length()))))
 					+ "','"
-					+ (param2==null?null:StringChecker.escapeSQLString(param2.substring(0, Math.min(256, param2.length())))) + "')";
+					+ (param2==null?null:StringChecker.escapeSQLString(param2.substring(0, Math.min(255, param2.length())))) + "')";
 
 			stmt.execute(query);
 			stmt.close();
