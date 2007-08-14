@@ -22,3 +22,5 @@ marauroa-*.zip
 .checkstyle
 .pmd
 server.log*
+server.ini
+server_stats.xml
