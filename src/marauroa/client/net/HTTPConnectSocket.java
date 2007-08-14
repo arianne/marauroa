@@ -64,6 +64,8 @@ public class HTTPConnectSocket extends Socket {
 		connect.append(":");
 		connect.append(server.getPort());
 		connect.append(" HTTP/1.1\r\n");
+		
+		connect.append("Accept: text/plain,text/html;q=0.9,*/*;q=0.5\r\n");
 
 		// TODO: add proxy authentication here
 
@@ -87,7 +89,7 @@ public class HTTPConnectSocket extends Socket {
 
 		// verify the server response (was it a http-connect proxy and did the connection succeed?)
 		String answer = new String(data).toUpperCase();
-		if (!answer.startsWith("HTTP/") || answer.endsWith(" 200")) {
+		if (!answer.startsWith("HTTP/") || !answer.endsWith(" 200")) {
 			data = new byte[4096];
 			int size = is.read(data);
 			String error = answer + new String(data, 0, size);
