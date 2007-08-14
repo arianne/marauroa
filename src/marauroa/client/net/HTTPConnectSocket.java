@@ -1,7 +1,9 @@
 package marauroa.client.net;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -33,13 +35,6 @@ public class HTTPConnectSocket extends Socket {
 		super.connect(proxy, timeout);
 		setupHttpConnect(endpoint);
 	}
-
-	@Override
-	public void connect(SocketAddress endpoint) throws IOException {
-		super.connect(proxy);
-		setupHttpConnect(endpoint);
-	}
-
 
 	private void setupHttpConnect(SocketAddress endpoint) throws IOException {
 		sendConnect(endpoint);
@@ -87,13 +82,21 @@ public class HTTPConnectSocket extends Socket {
 			throw new IOException("Unexpected end of stream while reading proxy answer.");
 		}
 
-		// verify the server response (was it a http-connect proxy and did the connection succeed?)
+		// verify the server response part 1: Was it a http-connect proxy?
 		String answer = new String(data).toUpperCase();
-		if (!answer.startsWith("HTTP/") || !answer.endsWith(" 200")) {
+		if (!answer.startsWith("HTTP/")) {
 			data = new byte[4096];
 			int size = is.read(data);
 			String error = answer + new String(data, 0, size);
-			throw new IOException("Proxy connection failed. Proxy response: " + error);
+			throw new IOException("Proxy connection failed. It does not seem to be a valid http-proxy because I did not understand this response: " + error);
+		}
+
+		// verify the server response part 2: Did the connection succeed?
+		if (!answer.endsWith(" 200")) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String error = answer.substring(answer.length() - 3) + br.readLine();
+			br.close();
+			throw new IOException("Proxy connection failed: " + error);
 		}
 
 		// OK, the status code of the proxy was 200 Connection established
