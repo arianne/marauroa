@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.16 2007/08/05 19:45:43 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.17 2007/08/14 22:37:27 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -97,7 +97,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 * @throws IOException
 	 */
 	public TCPNetworkClientManager(String host, int port) throws IOException {
-		this(null, new InetSocketAddress(host, port));
+		this(Proxy.NO_PROXY, new InetSocketAddress(host, port));
 	}
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -117,10 +117,10 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		}
 
 		/* Create the socket */
-		if (proxy != null) {
-			socket = new Socket(proxy);
+		if (proxy.type() == Proxy.Type.HTTP) {
+			socket = new HTTPConnectSocket(proxy.address());
 		} else {
-			socket = new Socket();
+			socket = new Socket(proxy);
 		}
 		socket.connect(address);
 		socket.setTcpNoDelay(true); // disable Nagle's algorithm
