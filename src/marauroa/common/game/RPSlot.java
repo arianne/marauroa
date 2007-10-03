@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.53 2007/06/13 15:59:21 arianne_rpg Exp $ */
+/* $Id: RPSlot.java,v 1.54 2007/10/03 17:51:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -33,16 +33,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	private RPObject owner;
 
 	/** A List<RPObject> of objects */
-	private List<RPObject> objects;
+	private LinkedRPObjectList objects;
 
 	/** The maximum amount of objects that we can store at this slot */
 	private int capacity;
 
 	/** Stores added objects for delta^2 algorithm */
-	private List<RPObject> added;
+	private LinkedRPObjectList added;
 
 	/** Stores deleted objects for delta^2 algorithm */
-	private List<RPObject> deleted;
+	private LinkedRPObjectList deleted;
 
 	/**
 	 * Constructor.
@@ -53,9 +53,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		owner = null;
 		capacity = -1;
 
-		objects = new LinkedList<RPObject>();
-		added = new LinkedList<RPObject>();
-		deleted = new LinkedList<RPObject>();
+		objects = new LinkedRPObjectList();
+		added = new LinkedRPObjectList();
+		deleted = new LinkedRPObjectList();
 	}
 
 	/**
@@ -175,19 +175,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the object or null if it is not found.
 	 */
 	public RPObject get(RPObject.ID id) {
-		int oid = id.getObjectID();
-
-		for (RPObject object : objects) {
-			/*
-			 * We compare only the id, as the zone is really irrelevant in a
-			 * contained object
-			 */
-			if (object.getID().getObjectID() == oid) {
-				return object;
-			}
-		}
-
-		return null;
+		return objects.getByIDIgnoringZone(id);
 	}
 
 	/**
@@ -225,21 +213,13 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 				 * the same turn an object is added and deleted, causing the
 				 * client to confuse.
 				 */
-				boolean found_in_added_list = false;
-				Iterator<RPObject> added_it = added.iterator();
-				while (!found_in_added_list && added_it.hasNext()) {
-					RPObject added_object = added_it.next();
-					if (added_object.getID().getObjectID() == oid) {
-						added_it.remove();
-						found_in_added_list = true;
-					}
-				}
+				RPObject fromAddedList = added.removeByIDIgnoringZone(id);
 
 				/*
 				 * If it was added and it is now deleted on the same turn.
 				 * Simply ignore the delta^2 information.
 				 */
-				if (!found_in_added_list) {
+				if (fromAddedList == null) {
 					/*
 					 * Instead of adding the full object we are interested in
 					 * adding only the id.
@@ -286,15 +266,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return true if it is found or false otherwise.
 	 */
 	public boolean has(RPObject.ID id) {
-		int oid = id.getObjectID();
-
-		for (RPObject object : objects) {
-			// compare only the id, as the zone is not used for slots
-			if (oid == object.getID().getObjectID()) {
-				return true;
-			}
-		}
-		return false;
+		return objects.hasByIDIgnoringZone(id);
 	}
 
 	/**
@@ -594,19 +566,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 				 */
 				objects.remove(obj);
 				added.remove(obj);
-
-				int oid = obj.getID().getObjectID();
-
-				Iterator<RPObject> it = deleted.iterator();
-				while (it.hasNext()) {
-					RPObject object = it.next();
-
-					/** We compare only the id, as the zone is really irrelevant */
-					if (object.getID().getObjectID() == oid) {
-						it.remove();
-						break;
-					}
-				}
+				deleted.removeByIDIgnoringZone(obj.getID());
 			}
 		}
 
