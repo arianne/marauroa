@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.55 2007/10/03 17:52:54 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.56 2007/10/03 18:05:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -206,35 +206,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		while (it.hasNext()) {
 			RPObject object = it.next();
 
-			/** We compare only the id, as the zone is really irrelevant */
+			// We compare only the id, as the zone is really irrelevant
 			if (object.getID().getObjectID() == oid) {
-				/*
-				 * HACK: This is a hack to avoid a problem that happens when on
-				 * the same turn an object is added and deleted, causing the
-				 * client to confuse.
-				 */
-				RPObject fromAddedList = added.removeByIDIgnoringZone(id);
-
-				/*
-				 * If it was added and it is now deleted on the same turn.
-				 * Simply ignore the delta^2 information.
-				 */
-				if (fromAddedList == null) {
-					/*
-					 * Instead of adding the full object we are interested in
-					 * adding only the id.
-					 */
-					RPObject del = new RPObject();
-					del.setRPClass(object.getRPClass());
-					del.put("id", object.get("id"));
-
-					deleted.add(del);
-				}
-
+				prepareRemove(object);
 				it.remove();
-
-				object.setContainer(null, null);
-
 				return object;
 			}
 		}
@@ -244,18 +219,54 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
+	 * Preparse the removal of an RPObject without actually removing it from
+	 * the objects list. This is within the responsibilities of the caller
+	 * to enabling calling this method within an interation loop.
+	 *
+	 * @param object to remove.
+	 */
+	private void prepareRemove(RPObject object) {
+		/*
+		 * HACK: This is a hack to avoid a problem that happens when on
+		 * the same turn an object is added and deleted, causing the
+		 * client to confuse.
+		 */
+		RPObject fromAddedList = added.removeByIDIgnoringZone(object.getID());
+
+		/*
+		 * If it was added and it is now deleted on the same turn.
+		 * Simply ignore the delta^2 information.
+		 */
+		if (fromAddedList == null) {
+			/*
+			 * Instead of adding the full object we are interested in
+			 * adding only the id.
+			 */
+			RPObject del = new RPObject();
+			del.setRPClass(object.getRPClass());
+			del.put("id", object.get("id"));
+
+			deleted.add(del);
+		}
+		object.setContainer(null, null);
+	}
+
+	/**
 	 * This method empty the slot by removing all the objects inside.
 	 */
 	public void clear() {
-		for (RPObject object : objects) {
-			RPObject.ID deletedid=new RPObject.ID(object);
-			deleted.add(new RPObject(deletedid));
-			
-			object.setContainer(null, null);
+		Iterator<RPObject> it = objects.iterator();
+		while (it.hasNext()) {
+			RPObject object = it.next();
+
+			prepareRemove(object);
+			it.remove();
 		}
 
-		added.clear();
-		objects.clear();
+		// this should never happen
+		if (!added.isEmpty()) {
+			throw new IllegalStateException("added list not empty after cleaing rpslot: " + toString());
+		}
 	}
 
 	/**
