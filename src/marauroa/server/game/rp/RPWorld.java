@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.16 2007/07/10 19:30:23 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.17 2007/10/03 19:47:27 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,6 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	protected RPWorld() {
 		zones = new HashMap<IRPZone.ID, IRPZone>();
-		initialize();
 	}
 
 	/**
@@ -84,6 +83,8 @@ public class RPWorld implements Iterable<IRPZone> {
 	public static RPWorld get() {
 		if (instance == null) {
 			instance = new RPWorld();
+			instance.initialize();
+
 		}
 		return instance;
 	}
