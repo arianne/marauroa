@@ -10,7 +10,8 @@ import java.util.LinkedList;
  */
 // This class is not part of the Marauroa API but used internally.
 class LinkedRPObjectList extends LinkedList<RPObject> {
-	
+	private static final long serialVersionUID = -7221795029536087812L;
+
 	/**
 	 * Gets the object from this list by its ID ignoring the zone.
 	 * The zone is really irrelevant in a contained object.
