@@ -123,8 +123,8 @@ public class TestRPObject {
 	public void testHasAsParent() {
 		RPObject p=obj.getSlot("lhand").getFirst();
 		
-		assertTrue(obj.getSlot("lhand").hasAsParent(obj));
-		assertTrue(p.getSlot("container").hasAsParent(obj));		
+		assertTrue(obj.getSlot("lhand").hasAsAncestor(obj));
+		assertTrue(p.getSlot("container").hasAsAncestor(obj));		
 	}
 
 	@Test(expected=SlotIsFullException.class)
