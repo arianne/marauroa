@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.4 2007/08/11 13:32:24 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.5 2007/10/07 19:44:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,8 +22,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import marauroa.common.Configuration;
@@ -1343,8 +1345,18 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		Iterator it = object.iterator();
 		RPClass rpClass = object.getRPClass();
 
+		// MySQL strings and indices are case insensitive.
+		// So we store only the first occurence in case an
+		// object has the same attribute twice with different
+		// uppercase/lowercase spelling.
+		Set<String> known = new HashSet<String>();
 		while (it.hasNext()) {
 			String attrib = (String) it.next();
+			String lowerCaseAttrib = attrib.toLowerCase();
+			if (known.contains(lowerCaseAttrib)) {
+				continue;
+			}
+			known.add(lowerCaseAttrib);
 			if (rpClass.isStorable(attrib)) {
 				String value = object.get(attrib);
 
