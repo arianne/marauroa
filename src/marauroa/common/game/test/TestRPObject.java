@@ -3,6 +3,7 @@ package marauroa.common.game.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -194,6 +195,21 @@ public class TestRPObject {
 	public void testBaseContainer() {
 		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(obj, coin.getBaseContainer());
+	}
+	
+	/**
+	 * Test that the getFromSlots method returns the proper object and returns null
+	 * when it is not found.
+	 *
+	 */
+	@Test
+	public void testGetObjectFromSlots() {
+		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+		
+		RPObject coinfromslot=obj.getFromSlots(coin.getInt("id"));
+		assertEquals(coin,coinfromslot);
+		
+		assertNull(obj.getFromSlots(-1));
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.73 2007/07/10 18:15:31 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.74 2007/10/08 17:13:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -342,6 +342,35 @@ public class RPObject extends Attributes {
 				object.remove("zoneid");
 			}
 		}
+	}
+	
+	/**
+	 * Gets and object from the tree of RPSlots using its id ( that it is unique ).
+	 * Return null if it is not found.
+	 *  
+	 * @param id the id of the object to look for.
+	 * @return
+	 */	
+	public RPObject getFromSlots(int id) {
+		if(isContained()) {
+			if(getInt("id")==id) {
+				return this;
+			}
+		}
+		
+		RPObject found=null;
+		
+		for (RPSlot slot : slots) {
+			for(RPObject object: slot) {
+				found=object.getFromSlots(id);
+				
+				if(found!=null) {
+					return found;
+				}
+			}
+		}
+		
+		return found;
 	}
 
 	/**
