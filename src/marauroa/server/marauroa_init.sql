@@ -87,6 +87,6 @@ create table if not exists banlist
   id integer auto_increment not null,
   address varchar(15),
   mask    varchar(15),
-
+  reason  varchar(255),
   PRIMARY KEY(id)
   );
