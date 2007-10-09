@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.7 2007/10/09 21:02:05 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.8 2007/10/09 21:06:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1335,7 +1335,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			ResultSet result = stmt.executeQuery(query);
 
 			result.next();
-			object_id = result.getInt("inserted_id");
+			object_id = result.getInt(1);
 
 			/**
 			 * We update the object to contain the database reference, so we can
