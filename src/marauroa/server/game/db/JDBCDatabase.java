@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.52 2007/08/11 13:32:16 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.53 2007/10/09 21:12:04 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1342,7 +1342,7 @@ public class JDBCDatabase implements IDatabase {
 		// If object is new, get the objectid we gave it.
 		if (object_id == -1) {
 			Statement stmt = connection.createStatement();
-			query = "select LAST_INSERT_ID() as inserted_id from rpobject";
+			query = "select LAST_INSERT_ID() as inserted_id";
 			logger.debug("storeRPObject is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
