@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.5 2007/10/07 19:44:13 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.6 2007/10/09 18:41:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,10 +22,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Vector;
 
 import marauroa.common.Configuration;
@@ -47,6 +45,9 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 	/** the logger instance. */
 	private static final Logger logger = Log4J
 			.getLogger(JDBCPlayerDatabase.class);
+
+	/** hack to disabled unwanted code during porting of database */
+	public boolean porting = false;
 
 	/** Class to store the login events */
 	private static class LoginEvent {
@@ -1286,7 +1287,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		Log4J.startMethod(logger, "storeRPObject");
 
 		try {
-			if (object.has("#db_id")) {
+			if (!porting && object.has("#db_id")) {
 				int object_id = object.getInt("#db_id");
 
 				if (hasRPObject(trans, object_id)) {
@@ -1314,7 +1315,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		String query;
 		int object_id;
 
-		if (object.has("#db_id")) {
+		// ignore invalid #db_id during porting of the database
+		if (!porting && object.has("#db_id")) {
 			object_id = object.getInt("#db_id");
 
 			query = "insert into rpobject(object_id,slot_id) values("
@@ -1345,18 +1347,8 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		Iterator it = object.iterator();
 		RPClass rpClass = object.getRPClass();
 
-		// MySQL strings and indices are case insensitive.
-		// So we store only the first occurence in case an
-		// object has the same attribute twice with different
-		// uppercase/lowercase spelling.
-		Set<String> known = new HashSet<String>();
 		while (it.hasNext()) {
 			String attrib = (String) it.next();
-			String lowerCaseAttrib = attrib.toLowerCase();
-			if (known.contains(lowerCaseAttrib)) {
-				continue;
-			}
-			known.add(lowerCaseAttrib);
 			if (rpClass.isStorable(attrib)) {
 				String value = object.get(attrib);
 
@@ -1476,3 +1468,6 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		}
 	}
 }
+
+// TODO: add if around commented coded
+// TODO: document binary column type in table rpattribute
