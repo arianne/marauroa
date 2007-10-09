@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.6 2007/10/09 18:41:20 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.7 2007/10/09 21:02:05 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1330,7 +1330,7 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 			stmt.execute(query);
 
 			/* We get the stored id */
-			query = "select LAST_INSERT_ID() as inserted_id from rpobject";
+			query = "select LAST_INSERT_ID()";
 			logger.debug("storeRPObject is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
