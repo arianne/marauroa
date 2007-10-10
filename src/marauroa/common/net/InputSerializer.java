@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.8 2007/04/09 14:47:07 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.9 2007/10/10 18:23:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -98,6 +98,16 @@ public class InputSerializer {
 	}
 
 	/**
+	 * converts a byte into an int of range 0-255
+	 *
+	 * @param b byte to convert
+	 * @return int in range 0-255
+	 */
+	private static int byteToPositiveInt(byte b) { 
+		return b & 0xff; 
+	}
+
+	/**
 	 * This method read a byte array from the Serializer
 	 *
 	 * @return the byte array serialized
@@ -105,11 +115,7 @@ public class InputSerializer {
 	 *             if there is an IO error
 	 */
 	public byte[] read255LongByteArray() throws IOException {
-		int size = readByte();
-
-		if (size > Byte.MAX_VALUE) {
-			throw new IOException("Ilegal request of an array of " + size + " size");
-		}
+		int size = byteToPositiveInt(readByte());
 
 		byte[] buffer = new byte[size];
 		int bytes_read_total = 0;
@@ -129,7 +135,7 @@ public class InputSerializer {
 	public byte[] read65536LongByteArray() throws IOException {
 		int size = readShort();
 
-		if (size > Short.MAX_VALUE) {
+		if (size < 0) {
 			throw new IOException("Ilegal request of an array of " + size + " size");
 		}
 

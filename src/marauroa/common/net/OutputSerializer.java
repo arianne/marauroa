@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.7 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.8 2007/10/10 18:23:29 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -74,8 +74,8 @@ public class OutputSerializer {
 	 *            the byte array to serialize
 	 */
 	public void write255LongArray(byte[] a) throws IOException {
-		if (a.length > Byte.MAX_VALUE) {
-			throw new IOException();
+		if (a.length > 255) {
+			throw new IOException("Array too large for write255LongArray.");
 		}
 
 		write((byte) a.length);
