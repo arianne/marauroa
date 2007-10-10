@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.53 2007/10/09 21:12:04 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.54 2007/10/10 22:05:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -960,35 +960,50 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public boolean verify(Transaction transaction, PlayerEntry.SecuredLoginInfo informations)
 	        throws SQLException {
+		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+			logger.debug("Different hashs for client Nonce");
+			return false;
+		}
+
+		byte[] b1 = informations.key.decodeByteArray(informations.password);
+		byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
+		if (b2 == null) {
+			logger.debug("B2 is null");
+			return false;
+		}
+
+		byte[] password = Hash.xor(b1, b2);
+		if (password == null) {
+			logger.debug("Password is null");
+			return false;
+		}
+
+		if (!StringChecker.validString(informations.username)) {
+			throw new SQLException("Invalid string username=(" + informations.username + ")");
+		}
+
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+
+		// check new Marauroa 2.0 password type
+		String hexPassword = Hash.toHexString(password);
+		boolean res = verifyUsingDB(stmt, informations.username, hexPassword);
+
+		if (!res) {
+			// compatiblity: check new Marauroa 1.0 password type
+			hexPassword = Hash.toHexString(Hash.hash(password));
+			res = verifyUsingDB(stmt, informations.username, hexPassword);
+		}
+
+		stmt.close();
+
+		return res;
+	}
+	
+	private boolean verifyUsingDB(Statement stmt, String username, String hexPassword) throws SQLException {
 		try {
-			if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
-				logger.debug("Different hashs for client Nonce");
-				return false;
-			}
-
-			byte[] b1 = informations.key.decodeByteArray(informations.password);
-			byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
-			if (b2 == null) {
-				logger.debug("B2 is null");
-				return false;
-			}
-
-			byte[] password = Hash.xor(b1, b2);
-			if (password == null) {
-				logger.debug("Password is null");
-				return false;
-			}
-
-			if (!StringChecker.validString(informations.username)) {
-				throw new SQLException("Invalid string username=(" + informations.username + ")");
-			}
-
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-			String hexPassword = Hash.toHexString(password);
-
 			String query = "select status, username from account where username like '"
-			        + informations.username + "' and password like '" + hexPassword + "'";
+			        + username + "' and password like '" + hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet result = stmt.executeQuery(query);
 
@@ -1005,8 +1020,8 @@ public class JDBCDatabase implements IDatabase {
 					        + account_status + "}");
 				}
 
-				if (!userNameFromDB.equals(informations.username)) {
-					logger.warn("Username(" + informations.username
+				if (!userNameFromDB.equals(username)) {
+					logger.warn("Username(" + username
 					        + ") is not the same that stored username(" + userNameFromDB + ")");
 					isplayer = false;
 				}
@@ -1014,11 +1029,11 @@ public class JDBCDatabase implements IDatabase {
 			}
 
 			result.close();
-			stmt.close();
+
 
 			return isplayer;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + informations.username + ")", e);
+			logger.error("Can't query for player(" + username + ")", e);
 			throw e;
 		}
 	}
