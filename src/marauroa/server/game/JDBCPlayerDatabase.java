@@ -1,4 +1,4 @@
-/* $Id: JDBCPlayerDatabase.java,v 1.32.2.8 2007/10/09 21:06:06 nhnb Exp $ */
+/* $Id: JDBCPlayerDatabase.java,v 1.32.2.9 2007/10/12 23:31:07 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1316,26 +1316,29 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		int object_id;
 
 		// ignore invalid #db_id during porting of the database
-		if (!porting && object.has("#db_id")) {
+		if (object.has("#db_id") && slot_id == 0) {
 			object_id = object.getInt("#db_id");
 
-			query = "insert into rpobject(object_id,slot_id) values("
+			if (porting) {
+				query = "insert into rpobject(old_object_id, slot_id) values("
 					+ object_id + "," + slot_id + ")";
+			} else {
+				query = "insert into rpobject(object_id,slot_id) values("
+						+ object_id + "," + slot_id + ")";
+			}
 			logger.debug("storeRPObject is executing query " + query);
 			stmt.execute(query);
+			if (porting) {
+				object_id = getLastInsertId(stmt);
+				object.put("#db_id", object_id);
+			}
 		} else {
 			query = "insert into rpobject(object_id,slot_id) values(NULL,"
 					+ slot_id + ")";
 			logger.debug("storeRPObject is executing query " + query);
 			stmt.execute(query);
 
-			/* We get the stored id */
-			query = "select LAST_INSERT_ID()";
-			logger.debug("storeRPObject is executing query " + query);
-			ResultSet result = stmt.executeQuery(query);
-
-			result.next();
-			object_id = result.getInt(1);
+			object_id = getLastInsertId(stmt);
 
 			/**
 			 * We update the object to contain the database reference, so we can
@@ -1399,6 +1402,16 @@ public class JDBCPlayerDatabase implements IPlayerDatabase {
 		stmt.close();
 
 		return object_id;
+	}
+	
+	private int getLastInsertId(Statement stmt) throws SQLException {
+		/* We get the stored id */
+		String query = "select LAST_INSERT_ID()";
+		logger.debug("storeRPObject is executing query " + query);
+		ResultSet result = stmt.executeQuery(query);
+
+		result.next();
+		return result.getInt(1);
 	}
 
 	public void addStatisticsEvent(Transaction trans, Statistics.Variables var)
