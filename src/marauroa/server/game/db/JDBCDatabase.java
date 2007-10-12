@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.54 2007/10/10 22:05:21 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.55 2007/10/12 23:28:55 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -99,29 +99,38 @@ public class JDBCDatabase implements IDatabase {
 	private static JDBCDatabase database;
 
 	/**
+	 * Reads the database connection information
+	 *
+	 * @return database connection information
+	 */
+	protected static Properties getInitProps() {
+		Configuration conf = null;
+
+		try {
+			conf = Configuration.getConfiguration();
+		} catch (Exception e) {
+			logger.fatal("Unable to locate Configuration file: "
+			        + Configuration.getConfigurationFile(), e);
+			throw new NoDatabaseConfException();
+		}
+
+		Properties props = new Properties();
+
+		props.put("jdbc_url", conf.get("jdbc_url"));
+		props.put("jdbc_class", conf.get("jdbc_class"));
+		props.put("jdbc_user", conf.get("jdbc_user"));
+		props.put("jdbc_pwd", conf.get("jdbc_pwd"));
+		return props;
+	}
+
+	/**
 	 * Returns an unique instance of the Database.
 	 *
 	 * @return an unique instance of the Database.
 	 */
 	public static JDBCDatabase getDatabase() {
 		if (database == null) {
-			Configuration conf = null;
-
-			try {
-				conf = Configuration.getConfiguration();
-			} catch (Exception e) {
-				logger.fatal("Unable to locate Configuration file: "
-				        + Configuration.getConfigurationFile(), e);
-				throw new NoDatabaseConfException();
-			}
-
-			Properties props = new Properties();
-
-			props.put("jdbc_url", conf.get("jdbc_url"));
-			props.put("jdbc_class", conf.get("jdbc_class"));
-			props.put("jdbc_user", conf.get("jdbc_user"));
-			props.put("jdbc_pwd", conf.get("jdbc_pwd"));
-
+			Properties props = JDBCDatabase.getInitProps();
 			database = new JDBCDatabase(props);
 		}
 
