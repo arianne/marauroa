@@ -121,14 +121,17 @@ public class RPSlotTest {
 		RPSlot rps = new RPSlot();
 		assertEquals(-1,rps.getCapacity());
 
-		RPObject rpo = new RPObject();
-
+		// create a class definition
 		RPClass entity = new RPClass("corpse");
 		entity.addRPSlot("content", 4);
-		rpo.setRPClass(entity);
 
-	     assertEquals(4,rpo.getRPClass().getDefinition(DefinitionClass.RPSLOT, "content").getCapacity());
-	     assertNotNull("we should be able to access it ?",rpo.getSlot("content"));
+		// instantiate an object
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(entity);
+		rpo.addSlot(new RPSlot("content"));
+
+		assertEquals(4,rpo.getRPClass().getDefinition(DefinitionClass.RPSLOT, "content").getCapacity());
+		assertNotNull("we should be able to access it ?", rpo.getSlot("content"));
 	}
 
 //	@Test
