@@ -131,22 +131,37 @@ public class RPSlotTest {
 		rpo.addSlot(new RPSlot("content"));
 
 		assertEquals(4,rpo.getRPClass().getDefinition(DefinitionClass.RPSLOT, "content").getCapacity());
-		assertNotNull("we should be able to access it ?", rpo.getSlot("content"));
+		rps = rpo.getSlot("content");
+		assertEquals(4, rps.getCapacity());
+
 	}
 
-//	@Test
-//	public final void testIsFull() {
-//		RPObject rpo = new RPObject();
-//
-//		RPClass entity = new RPClass("corpse");
-//		entity.addRPSlot("content", 4);
-//
-//
-//		rpo.setRPClass(entity);
-//		RPSlot rps = entity.getSlot("content");
-//		assertEquals(4, rps.getCapacity());
-//
-//	}
+	@Test  (expected=SlotIsFullException.class)
+	public final void testIsFull() {
+		RPClass entity = new RPClass("corpse");
+		entity.addRPSlot("content", 4);
+
+		// instantiate an object
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(entity);
+		rpo.addSlot(new RPSlot("content"));
+		RPSlot rps = rpo.getSlot("content");
+		assertEquals(4, rps.getCapacity());
+
+		assertEquals(0,rps.add(new RPObject()));
+		assertEquals(1, rps.size());
+
+		assertEquals(1,rps.add(new RPObject()));
+		assertEquals(2, rps.size());
+
+		assertEquals(2,rps.add(new RPObject()));
+		assertEquals(3, rps.size());
+
+		assertEquals(3,rps.add(new RPObject()));
+		assertEquals(4, rps.size());
+
+		rps.add(new RPObject());
+	}
 
 	@Test
 	@Ignore
