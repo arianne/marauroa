@@ -26,14 +26,13 @@ public class RPClassTest {
 	public void testRPClass() throws Exception {
 		RPClass rp = new RPClass("schnipp");
 		RPClass rp2 = new RPClass("schnipp");
-		RPClass childRp = new RPClass(); //not intializing name causes NPE in subclassOf
-		RPClass childRp2 = new RPClass();
+		RPClass childRp = new RPClass(""); //not intializing name causes NPE in subclassOf
+		RPClass childRp2 = new RPClass("");
 		childRp.isA(rp);
-		childRp2.isA(rp2);
-		assertEquals(childRp, childRp2);
+		childRp2.isA(childRp);
 		assertTrue(childRp.subclassOf(rp.getName()));
 		assertTrue(childRp.subclassOf(rp2.getName()));
-
+		assertTrue(childRp2.subclassOf(rp.getName()));
 	}
 
 }
