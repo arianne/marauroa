@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.57 2007/10/03 19:41:51 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.58 2007/10/13 22:38:26 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -78,9 +78,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	void setOwner(RPObject object) {
 		owner = object;
-		
+
 		/*
-		 * Compute now the capacity of the slot 
+		 * Compute now the capacity of the slot
 		 */
 		if (name != null) {
 			capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
@@ -124,11 +124,13 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the id assigned to the object
 	 * @throws SlotIsFullException
 	 *             if there is no more room at the slot.
+	 * @throws NullPointerException
+	 *             if Owner is null
 	 */
 	public int add(RPObject object) {
 		return add(object, true);
 	}
-	
+
 	public int addPreservingId(RPObject object) {
 		object.resetAddedAndDeleted();
 		return add(object, false);
@@ -157,8 +159,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		/*
 		 * When object is added to slot we reset its added and delete
-		 * attributes, slots and events. 
-		 * But only in the case it is an external addition, we don't want to break Delta^2 process. 
+		 * attributes, slots and events.
+		 * But only in the case it is an external addition, we don't want to break Delta^2 process.
 		 */
 		if (assignId) {
 			object.resetAddedAndDeleted();
@@ -200,6 +202,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
+		if (id == null) return null;
 		int oid = id.getObjectID();
 
 		Iterator<RPObject> it = objects.iterator();
@@ -442,7 +445,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		}
 
 		capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
-		
+
 		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
