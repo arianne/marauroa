@@ -68,4 +68,26 @@ class LinkedRPObjectList extends LinkedList<RPObject> {
 
 		return null;
 	}
+	
+	@Override
+	public boolean add(RPObject object) {
+		assertObjectNotAllreadyInList(object);
+		return super.add(object);
+	}
+
+	// TODO: Read RPSlot.java and decide whether assigning unique ids
+	// is within the responsibilities of Marauroa or the Application.
+	// In the first case fix the bug; in the second case throw a
+	// specialized exception.
+	private void assertObjectNotAllreadyInList(RPObject object) {
+		RPObject.ID id = object.getID();
+		RPObject oldObject = getByIDIgnoringZone(id);
+		if (oldObject != null) {
+			if (oldObject == object) {
+				throw new IllegalStateException("Object cannot be added to list because it is already part of it: " + object);
+			} else {
+				throw new IllegalStateException("Object cannot be added to list because another object with the same ID is part of it. objectToAdd: " + object + " objectAlreadyInList: " + oldObject);
+			}
+		}
+	}
 }
