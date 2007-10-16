@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.58 2007/10/13 22:38:26 astridemma Exp $ */
+/* $Id: RPSlot.java,v 1.59 2007/10/16 02:29:14 chad3f Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -143,6 +143,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		if (assignId) {
 			owner.assignSlotID(object);
+		} else {
+			// Ensure this ID doesn't get re-used
+			if (object.has("id")) {
+				owner.usedSlotID(object.getInt("id"));
+			}
 		}
 
 		// Notify about the addition of the object

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.74 2007/10/08 17:13:13 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.75 2007/10/16 02:29:14 chad3f Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -343,7 +343,26 @@ public class RPObject extends Attributes {
 			}
 		}
 	}
-	
+
+	/**
+	 * Mark an ID as used for slot assignments so that it won't be used again.
+	 * @param id
+	 *	An ID.
+	 */
+	void usedSlotID(int id) {
+		if (container != null) {
+			container.usedSlotID(id);
+		} else {
+			if(id >= lastassignedID) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Reseting slot ID: " + lastassignedID + " -> " + (id + 1));
+				}
+
+				lastassignedID = id + 1;
+			}
+		}
+	}
+
 	/**
 	 * Gets and object from the tree of RPSlots using its id ( that it is unique ).
 	 * Return null if it is not found.
