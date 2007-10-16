@@ -3,6 +3,9 @@ package marauroa.common.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+
 /**
  * A linked list which some helper functions for managing RPObjects
  *
@@ -11,6 +14,7 @@ import java.util.LinkedList;
 // This class is not part of the Marauroa API but used internally.
 class LinkedRPObjectList extends LinkedList<RPObject> {
 	private static final long serialVersionUID = -7221795029536087812L;
+	private static final Logger logger = Log4J.getLogger(LinkedRPObjectList.class);
 
 	/**
 	 * Gets the object from this list by its ID ignoring the zone.
@@ -71,7 +75,7 @@ class LinkedRPObjectList extends LinkedList<RPObject> {
 	
 	@Override
 	public boolean add(RPObject object) {
-		assertObjectNotAllreadyInList(object);
+	    checkObjectNotAllreadyInList(object);
 		return super.add(object);
 	}
 
@@ -79,14 +83,14 @@ class LinkedRPObjectList extends LinkedList<RPObject> {
 	// is within the responsibilities of Marauroa or the Application.
 	// In the first case fix the bug; in the second case throw a
 	// specialized exception.
-	private void assertObjectNotAllreadyInList(RPObject object) {
+	private void checkObjectNotAllreadyInList(RPObject object) {
 		RPObject.ID id = object.getID();
 		RPObject oldObject = getByIDIgnoringZone(id);
 		if (oldObject != null) {
 			if (oldObject == object) {
-				throw new IllegalStateException("Object cannot be added to list because it is already part of it: " + object);
+				logger.error("Object cannot be added to list because it is already part of it: " + object, new Throwable());
 			} else {
-				throw new IllegalStateException("Object cannot be added to list because another object with the same ID is part of it. objectToAdd: " + object + " objectAlreadyInList: " + oldObject);
+			    logger.error("Object cannot be added to list because another object with the same ID is part of it. objectToAdd: " + object + " objectAlreadyInList: " + oldObject, new Throwable());
 			}
 		}
 	}
