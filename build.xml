@@ -103,8 +103,8 @@
                    byline="true"/>
 
 		<replaceregexp file="${extras}/marauroad"
-                   match="java -cp"
-                   replace="java -cp $LOCALCLASSPATH -jar /opt/marauroa/libs/marauroa-${version}.jar -c server.ini -l"
+	    	       match="export LOCALCLASSPATH=.*"
+    	    	   replace="set LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>
