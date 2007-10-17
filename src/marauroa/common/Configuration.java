@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.21 2007/04/09 14:47:03 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.22 2007/10/17 08:20:14 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -139,7 +139,7 @@ public class Configuration {
 	 * @return true if the property exists
 	 */
 	public boolean has(String property) {
-		return properties.contains(property);
+		return properties.containsKey(property);
 	}
 
 	/**
@@ -174,5 +174,12 @@ public class Configuration {
 	 */
 	public Enumeration propertyNames() {
 		return properties.propertyNames();
+	}
+
+	/**
+	 * cleares the configuration
+	 */
+	public void clear() {
+	    properties.clear();
 	}
 }
