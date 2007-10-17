@@ -12,7 +12,6 @@ build-m.xml
 tomcat.properties
 web.xml
 .settings
-.classpath
 .project
 bin
 marauroa-*-src.tar.gz
