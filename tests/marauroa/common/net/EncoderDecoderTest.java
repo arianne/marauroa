@@ -1,4 +1,4 @@
-package marauroa.common.net.test;
+package marauroa.common.net;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestEncoderDecoder {
+public class EncoderDecoderTest {
 
 	/**
 	 * Setup for class. It initialize the logger instance

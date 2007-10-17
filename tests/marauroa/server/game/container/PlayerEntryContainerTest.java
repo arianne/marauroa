@@ -1,4 +1,4 @@
-package marauroa.server.game.container.test;
+package marauroa.server.game.container;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,7 +18,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestPlayerEntryContainer {
+public class PlayerEntryContainerTest {
 
 	private static PlayerEntryContainer cont;
 

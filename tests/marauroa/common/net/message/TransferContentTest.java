@@ -1,4 +1,4 @@
-package marauroa.common.net.message.test;
+package marauroa.common.net.message;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,4 +1,4 @@
-/* $Id: TestPlayerAccess.java,v 1.11 2007/04/09 14:47:12 arianne_rpg Exp $ */
+/* $Id: CharacterAccessTest.java,v 1.1 2007/10/17 20:16:39 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package marauroa.server.game.db.test;
+package marauroa.server.game.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,16 +18,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
-import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
-import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.container.test.TestSecureLogin;
+import marauroa.common.game.RPObject;
 import marauroa.server.game.db.JDBCDatabase;
 import marauroa.server.game.db.Transaction;
 
@@ -35,13 +32,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test database methods that are related with player like adding a player,
- * removing it, changing its status, etc...
+ * Test the character related methods of database access.
  * 
  * @author miguel
  * 
  */
-public class TestPlayerAccess {
+public class CharacterAccessTest {
 
 	/**
 	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
@@ -79,185 +75,170 @@ public class TestPlayerAccess {
 	}
 
 	/**
-	 * Test if create a player account works by adding it and making sure that
-	 * the account is there using has method.
-	 * 
-	 * @throws SQLException
-	 */
-	@Test
-	public void addPlayer() throws SQLException {
-		String username = "testUser";
-
-		Transaction transaction = database.getTransaction();
-		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-		} finally {
-			transaction.rollback();
-		}
-	}
-
-	/**
-	 * We test the change password method by changing the password of a existing
-	 * account There is right now no simple way of checking the value, as we
-	 * would need the RSA key of the server to encript the password. ( and this
-	 * is stored at marauroa.ini )
+	 * Add a character to a player account and test it existence with
+	 * hasCharacter method.
 	 * 
 	 * @throws SQLException
 	 * @throws IOException
 	 */
 	@Test
-	public void changePassword() throws SQLException, IOException {
-		String username = "testUser";
-
-		TestSecureLogin.loadRSAKey();
+	public void addCharacter() throws SQLException, IOException {
+		String username = "testUserCA";
+		String character = "testCharacterCA";
+		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
-
-			PlayerEntry.SecuredLoginInfo login = TestSecureLogin.simulateSecureLogin(username,
-			        "testPassword");
-			assertTrue(database.verify(transaction, login));
-
-			database.changePassword(transaction, username, "anewtestPassword");
-
-			/*
-			 * To test if password is correct we need to use the Secure login
-			 * test unit
-			 */
-			login = TestSecureLogin.simulateSecureLogin(username, "anewtestPassword");
-			assertTrue(database.verify(transaction, login));
-
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
 		} finally {
 			transaction.rollback();
 		}
 	}
 
 	/**
-	 * Test if adding two times the same player throw a SQLException
+	 * Test that adding two times the same character throws a SQLException
 	 * 
 	 * @throws SQLException
+	 * @throws IOException
 	 */
 	@Test(expected = SQLException.class)
-	public void doubleAddedPlayer() throws SQLException {
-		String username = "testUser";
+	public void doubleAddedCharacter() throws SQLException, IOException {
+		String username = "testUserCA";
+		String character = "testCharacterCA";
+		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 
-			if (database.hasPlayer(transaction, username)) {
-				fail("Player was not expected");
-			}
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
+			database.addCharacter(transaction, username, character, player);
 
-			if (!database.hasPlayer(transaction, username)) {
-				fail("Player was expected");
-			}
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-
-			fail("Player was added");
+			fail("Character was added");
 		} finally {
 			transaction.rollback();
 		}
 	}
 
 	/**
-	 * Remove a player and check that it is not anymore at database with has
-	 * method.
+	 * Test that remove character removed it and assert with hasCharacter.
 	 * 
 	 * @throws SQLException
+	 * @throws IOException
 	 */
 	@Test
-	public void removePlayer() throws SQLException {
-		String username = "testUser";
+	public void removeCharacter() throws SQLException, IOException {
+		String username = "testUserCA";
+		String character = "testCharacterCA";
+		RPObject player = new RPObject();
 
 		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
+			database.removeCharacter(transaction, username, character);
+			assertFalse(database.hasCharacter(transaction, username, character));
+		} finally {
+			transaction.rollback();
+		}
+	}
+
+	/**
+	 * Check that removing the player does in fact also removes the character
+	 * that belonged to that player.
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	@Test
+	public void removePlayerCharacter() throws SQLException, IOException {
+		String username = "testUserCA";
+		String character = "testCharacterCA";
+		RPObject player = new RPObject();
+
+		Transaction transaction = database.getTransaction();
+		try {
+			transaction.begin();
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(database.hasPlayer(transaction, username));
+			database.addCharacter(transaction, username, character, player);
+			assertTrue(database.hasCharacter(transaction, username, character));
 			database.removePlayer(transaction, username);
-			assertFalse(database.hasPlayer(transaction, username));
+			assertFalse(database.hasCharacter(transaction, username, character));
 		} finally {
 			transaction.rollback();
 		}
 	}
 
 	/**
-	 * Check get status method. Every account is active by default.
+	 * Check that getCharacters return a list with all the characters that
+	 * belong to a player.
 	 * 
 	 * @throws SQLException
+	 * @throws IOException
 	 */
 	@Test
-	public void getStatus() throws SQLException {
-		String username = "testUser";
-
-		Transaction transaction = database.getTransaction();
-
-		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active", database.getAccountStatus(transaction, username));
-		} finally {
-			transaction.rollback();
-		}
-	}
-
-	/**
-	 * Check the set status method, it uses getStatus to check the set value.
-	 * 
-	 * @throws SQLException
-	 */
-	@Test
-	public void setStatus() throws SQLException {
-		String username = "testUser";
-
-		Transaction transaction = database.getTransaction();
-
-		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active", database.getAccountStatus(transaction, username));
-			database.setAccountStatus(transaction, username, "banned");
-			assertEquals("banned", database.getAccountStatus(transaction, username));
-		} finally {
-			transaction.rollback();
-		}
-	}
-
-	/**
-	 * Test if create a player account works by adding it and making sure that
-	 * the account is there using has method.
-	 * 
-	 * @throws SQLException
-	 * @throws UnknownHostException
-	 */
-	@Test
-	public void blockAccountPlayer() throws SQLException, UnknownHostException {
-		String username = "testUser";
+	public void getCharacters() throws SQLException, IOException {
+		String username = "testUserCA";
+		String[] characters = { "testCharacterCA1", "testCharacterCA2", "testCharacterCA3" };
 
 		Transaction transaction = database.getTransaction();
 		try {
 			transaction.begin();
 			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-
-			InetAddress address = InetAddress.getLocalHost();
-
-			assertFalse(database.isAccountBlocked(transaction, username));
-
-			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS + 1; i++) {
-				database.addLoginEvent(transaction, username, address, false);
+			for (String character : characters) {
+				database.addCharacter(transaction, username, character, new RPObject());
 			}
 
-			assertTrue(database.isAccountBlocked(transaction, username));
+			List<String> result = database.getCharacters(transaction, username);
+			assertEquals(characters, result.toArray());
+
 		} finally {
 			transaction.rollback();
 		}
 	}
+
+	/**
+	 * Check that storing and loading an avatar associated to a character of a
+	 * player works as expected. This code depends on RPObject and
+	 * Serialization.
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	@Test
+	public void storeAndLoadCharacter() throws SQLException, IOException {
+		String username = "testUserCA";
+		String character = "testCharacterCA";
+		RPObject player = new RPObject();
+		player.put("one", "number one");
+		player.put("two", 2);
+		player.put("three", 3.0);
+
+		Transaction transaction = database.getTransaction();
+		try {
+			transaction.begin();
+			assertFalse(database.hasPlayer(transaction, username));
+			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+
+			assertFalse(database.hasCharacter(transaction, username, character));
+			database.addCharacter(transaction, username, character, player);
+
+			RPObject loaded = database.loadCharacter(transaction, username, character);
+			assertEquals(player, loaded);
+		} finally {
+			transaction.rollback();
+		}
+	}
+
 }

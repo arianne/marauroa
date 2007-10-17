@@ -1,4 +1,4 @@
-package marauroa.server.game.container.test;
+package marauroa.server.game.container;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -9,12 +9,12 @@ import org.junit.Test;
  *
  * @author hendrik
  */
-public class TestCharacternameValidation {
-	private static Logger logger = Logger.getLogger(TestCharacternameValidation.class);
+public class CharacternameValidationTest {
+	private static Logger logger = Logger.getLogger(CharacternameValidationTest.class);
 
 	public boolean checkImpersonation(String username) {
 		String name = username;
-		name = name.replaceAll("[ _.,;.\\-\\\\ \"§$%&/()='<>|*+~#]", " ");
+		name = name.replaceAll("[ _.,;.\\-\\\\ \"ï¿½$%&/()='<>|*+~#]", " ");
 		if (name.startsWith(" ") || name.endsWith(" ") || (name.indexOf("gm ") > -1) || (name.indexOf(" gm") > -1)
 		        || name.startsWith("gm") || name.endsWith("gm") || (name.indexOf("  ") > -1)) {
 			logger.warn("Possible impersonation: " + username);

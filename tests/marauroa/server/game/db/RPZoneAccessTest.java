@@ -1,4 +1,4 @@
-package marauroa.server.game.db.test;
+package marauroa.server.game.db;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestRPZoneAccess {
+public class RPZoneAccessTest {
 
 	/**
 	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend

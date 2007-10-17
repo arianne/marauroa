@@ -1,4 +1,4 @@
-package marauroa.server.game.container.test;
+package marauroa.server.game.container;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestSecureLogin {
+public class SecureLoginTest {
 
 	private static RSAKey key;
 
