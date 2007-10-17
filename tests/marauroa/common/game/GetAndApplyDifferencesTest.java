@@ -1,4 +1,4 @@
-package marauroa.common.game.test;
+package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,7 +13,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestGetAndApplyDifferences {
+public class GetAndApplyDifferencesTest {
 
 	/**
 	 * Test if the getDiferences of an empty object works, by building it again

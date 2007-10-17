@@ -1,4 +1,4 @@
-package marauroa.common.game.test;
+package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class TestBugAtApplyDifferences {
+public class BugAtApplyDifferencesTest {
 
 
 	private RPObject obj;

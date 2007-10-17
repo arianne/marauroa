@@ -1,4 +1,4 @@
-package marauroa.common.game.test;
+package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,7 +24,7 @@ import org.junit.Test;
  * @author miguel
  *
  */
-public class TestAttributes {
+public class AttributesTest {
 
 	/**
 	 * Test if methods put, has and get of attributes work as expected. It add

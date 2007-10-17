@@ -1,4 +1,4 @@
-package marauroa.common.game.test;
+package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author miguel
  *
  */
-public class TestRPEvent {
+public class RPEventTest {
 
 	/**
 	 * Test the methods provided by RPEvent

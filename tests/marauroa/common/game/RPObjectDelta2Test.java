@@ -1,4 +1,4 @@
-package marauroa.common.game.test;
+package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +19,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class TestRPObjectDelta2 {
+public class RPObjectDelta2Test {
 
 	private RPObject obj;
 
