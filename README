@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.00
+Version 2.0.2
 
 
 Requeriments
@@ -70,6 +70,7 @@ Or for a complete package release write:
 
 Status
 ------
+Version >= 2.0.2 does support Stendhal >= 0.63
 Version >= 2.0 doesn't support anything yet. YOU ARE WARNED!.
 Version >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
@@ -92,6 +93,15 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+2.0.2 Oct 18, 2007
+- 256 arrays / strings may be up to 256 bytes large now (it used to be only 128 bytes)
+- fixed a bug which caused rpobjects with same ID to be part of a slot in case addPreservingID() and add() have been mixed
+- enabled subclasses of JDPCPlayerDatabase to get access to low level methods
+- moved *.test-subpackages into source path "tests"
+
+
+
+
 2.0.1 Jul 10, 2007
 - Fixed MySQL 4.0 incompatibility.
 - Fixed bug at IRPZone.ID
