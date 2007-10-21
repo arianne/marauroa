@@ -194,24 +194,23 @@ public class AttributesTest {
 	}
 	
 	/**
-	 * Assert that an exception is thrown when a long string is added on a
-	 * string that can host up to 128 characters.
+	 * Assert that no exception is thrown when a long string is added to
+	 * to rpclassless attributes.
 	 *
-	 * @throws IOException
-	 *             the expected exception
-	 * @throws ClassNotFoundException
+	 * @throws IOException in case of an unexspected error
 	 */
-	@Test(expected = IOException.class)
-	public void testSerializationException() throws IOException {
+	public void testSerializationOfClasslessAttributesWithALongString() throws IOException {
 		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
 		attr.put("a", 1);
 		attr.put("b", "2");
 		attr.put("c", 3.0);
-		attr
-		        .put(
-		                "d",
-		                "a long string that I would hardly imagine how to add it because no language procesor would be able to handle a soooooooooooooooooooooooooooooooooooooooooooooooooooooooo long string without having problems with...");
+		attr.put("d", "a long string that I would hardly imagine how to add it " +
+				"because no language procesor would be able to handle a " +
+				"soooooooooooooooooooooooooooooooooooooooooooooooooooooooo long " +
+				"string without having problems with... But as we do have a limit " +
+				"of 256 bytes for short strings, we need a way to test it.");
+		System.out.println(attr.get("d").length());
 		attr.put("e", "a short string");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
