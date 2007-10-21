@@ -91,6 +91,8 @@ public class GenerateINI {
 
 	private static String databaseImplementation;
 
+	private static String factoryImplementation;
+
 	private static String tcpPort;
 
 	private static String worldImplementation;
@@ -107,6 +109,7 @@ public class GenerateINI {
 		gameName = "test";
 
 		/** Write configuration for database */
+		factoryImplementation = getFactoryImplementation();
 		databaseImplementation = getDatabaseImplementation();
 		databaseName = getDatabaseName();
 		databaseHost = getDatabaseHost();
@@ -167,6 +170,10 @@ public class GenerateINI {
 		return "marauroa.test.MockRPWorld";
 	}
 
+	private static String getFactoryImplementation() {
+		return "marauroa.server.game.rp.RPObjectFactory";
+	}
+
 	private static String getTCPPort() {
 		return "3217";
 	}
@@ -178,6 +185,7 @@ public class GenerateINI {
 	private static void write(PrintWriter out) {
 		out.println("# Generated .ini file for Test Game at " + new Date());
 		out.println("database_implementation=" + databaseImplementation);
+		out.println("factory_implementation=" + factoryImplementation);
 		out.println();
 		out.println("jdbc_url=jdbc:mysql://" + databaseHost + "/" + databaseName);
 		out.println("jdbc_class=com.mysql.jdbc.Driver");
@@ -194,8 +202,7 @@ public class GenerateINI {
 		out.println("server_typeGame=" + gameName);
 		out.println("server_name=" + gameName + " Marauroa server");
 		out.println("server_version=0.01");
-		out
-		        .println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
+		out.println("server_contact=https://sourceforge.net/tracker/?atid=514826&group_id=66537&func=browse");
 		out.println();
 		out.println("statistics_filename=" + statisticsFilename);
 		out.println();
