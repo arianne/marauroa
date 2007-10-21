@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.59 2007/10/16 02:29:14 chad3f Exp $ */
+/* $Id: RPSlot.java,v 1.60 2007/10/21 21:07:07 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,8 +45,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	private LinkedRPObjectList deleted;
 
 	/**
-	 * Constructor.
-	 *
+	 * Constructor for deserialization. Please use {@link RPSlot#RPSlot(String)}. 
 	 */
 	public RPSlot() {
 		name = null;
