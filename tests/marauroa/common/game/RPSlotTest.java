@@ -22,12 +22,10 @@ public class RPSlotTest {
 
 	@Test
 	public final void testHashCode() {
-		RPSlot rpslot1 = new RPSlot();
-		RPSlot rpslot2 = new RPSlot();
-		assertTrue(rpslot1.hashCode()==rpslot2.hashCode());
-
+		RPSlot rpslot1 = new RPSlot("testslot");
+		RPSlot rpslot2 = new RPSlot("testslot");
+		assertEquals("hashcode match", rpslot1.hashCode(), rpslot2.hashCode());
 	}
-
 
 	@Test
 	public final void testGetSetOwner() {
