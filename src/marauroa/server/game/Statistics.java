@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.32 2007/08/02 19:30:49 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.33 2007/10/21 21:37:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -223,18 +223,21 @@ public class Statistics implements StatisticsMBean {
 	public void print() {
 		try {
 			Configuration conf = Configuration.getConfiguration();
-			String webfolder = conf.get("statistics_filename");
+			String filename = conf.get("statistics_filename");
+			if (filename == null) {
+				return;
+			}
 
-			long actualTime = System.currentTimeMillis();
+			long currentTime = System.currentTimeMillis();
 			/*
 			 * Store statistics to database.
 			 */
-			addStatisticsEventRow(actualTime);
+			addStatisticsEventRow(currentTime);
 
-			PrintWriter out = new PrintWriter(new FileOutputStream(webfolder));
+			PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 
-			double diff = (actualTime - startTime) / 1000.0;
-			out.println("<statistics time=\"" + (actualTime / 1000) + "\">");
+			double diff = (currentTime - startTime) / 1000.0;
+			out.println("<statistics time=\"" + (currentTime / 1000) + "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
 			long totalMemory = Runtime.getRuntime().totalMemory() / 1024;
@@ -247,7 +250,7 @@ public class Statistics implements StatisticsMBean {
 			out.println("</statistics>");
 			out.close();
 		} catch (Exception e) {
-			logger.warn("error while printing statistics", e);
+			logger.warn("error while printing statistics to file configured in parameter \"statistics_filename\". ", e);
 		}
 	}
 
