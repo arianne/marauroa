@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.33 2007/10/21 21:37:00 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.34 2007/10/22 15:46:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -237,6 +237,7 @@ public class Statistics implements StatisticsMBean {
 			PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 
 			double diff = (currentTime - startTime) / 1000.0;
+			out.println("<?xml version=\"1.0\" encoding=\"" + System.getProperty("file.encoding") + "\"?>");
 			out.println("<statistics time=\"" + (currentTime / 1000) + "\">");
 			out.println("  <uptime value=\"" + diff + "\"/>");
 
