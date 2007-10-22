@@ -40,8 +40,43 @@ public enum Result {
 	 * The template passed to the create character method is not valid because
 	 * it fails to pass the RP rules.
 	 */
-	FAILED_INVALID_TEMPLATE(false, "The template passed to the create character method is not valid because it fails to pass the RP rules.");
-	
+	FAILED_INVALID_TEMPLATE(false, "The template passed to the create character method is not valid because it fails to pass the RP rules."),
+
+	/**
+	 * String is too short
+	 *
+	 * @since 2.1
+	 */
+	FAILED_STRING_TOO_SHORT(false, "Account was not created because at least one of the parameters was too short."),
+
+	/**
+	 * String is too long
+	 *
+	 * @since 2.1
+	 */
+	FAILED_STRING_TOO_LONG(false, "Account was not created because at least one of the parameters was too long."),
+
+	/**
+	 * Name is reserved
+	 *
+	 * @since 2.1
+	 */
+	FAILED_RESERVED_NAME(false, "Account was not created because the name is reservered (or contains a reserved name)."),
+
+	/**
+	 * Password is too close to the username
+	 *
+	 * @since 2.1
+	 */
+	FAILED_PASSWORD_TOO_CLOSE_TO_USERNAME(false, "Account was not created because the password is too close to the username."),
+
+	/**
+	 * Password is too weak.
+	 *
+	 * @since 2.1
+	 */
+	FAILED_PASSWORD_TO_WEAK(false, "Account was not created because the password is too weak.");
+
 	/**
 	 * Textual description of the result 
 	 */
