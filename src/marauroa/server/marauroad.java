@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.60 2007/06/13 15:35:14 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.61 2007/10/24 22:46:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,7 @@ import marauroa.server.net.INetworkServerManager;
 
 /**
  * The launcher of the whole Marauroa Server.<br>
- * Marauroa is an arianne server application with an UDP transport.<br>
+ * Marauroa is an arianne server application with an TCP transport.<br>
  * Marauroa works by loading core class from your game server.
  * <p>
  * Marauroa server is and it is built using threads. marauroad has the following
@@ -298,6 +298,8 @@ public class marauroad extends Thread {
 	 */
 	public boolean init() {
 		logger.debug("staring initialize");
+		MarauroaUncaughtExceptionHandler.setup();
+
 		try {
 			netMan = new marauroa.server.net.nio.NIONetworkServerManager();
 			netMan.start();
