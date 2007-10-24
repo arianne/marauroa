@@ -108,6 +108,13 @@ public class Decoder {
 					it.remove();
 				}
 			}
+			
+			/* We need to be *sure* that 4 bytes are at least to
+			 * be recieved...
+			 */
+			if(data.length<4) {
+				throw new IOException("Message is too short. Missing mandatory fields.");
+			}
 
 			Message msg = msgFactory.getMessage(data, channel, 4);
 			return msg;
@@ -180,9 +187,13 @@ public class Decoder {
 		if (buffers == null) {
 			/* First part of the message */
 			/*
-			 * NOTE: On real life we can be *sure* that 4 bytes are at least to
+			 * We need to be *sure* that 4 bytes are at least to
 			 * be recieved...
 			 */
+			if(data.length<4) {
+				throw new IOException("Message is too short. Missing mandatory fields.");
+			}
+			
 			int size = getSizeOfMessage(data);
 
 			if (data.length == size) {

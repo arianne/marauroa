@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.89 2007/09/11 20:58:04 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.90 2007/10/24 22:07:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -737,7 +737,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			/*
 			 * We request RP Manager to create an account for our player. This
-			 * will return a <b>result<7b> of the operation.
+			 * will return a <b>result</b> of the operation.
 			 */
 			AccountResult val = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg
 			        .getEmail());
