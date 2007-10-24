@@ -92,6 +92,12 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
+2.0.3
+- Fixed problem with bogus network message.
+
+2.0.2 Oct 19, 2007
+-
+
 2.0.1 Jul 10, 2007
 - Fixed MySQL 4.0 incompatibility.
 - Fixed bug at IRPZone.ID
