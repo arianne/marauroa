@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.2 2007/10/28 19:06:10 arianne_rpg Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.3 2007/10/28 19:38:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
@@ -38,6 +40,7 @@ import marauroa.server.net.nio.NIONetworkServerManager;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -49,7 +52,7 @@ import org.junit.Test;
 public class NetworkManagerTest {
 	private static NIONetworkServerManager netMan;
 
-	private static final int PORT = 3218;
+	private static final int PORT = 3215;
 
 	@BeforeClass	
 	public static void createNetworkManager() throws Exception {
@@ -86,7 +89,7 @@ public class NetworkManagerTest {
 	}
 
 	/**
-	 * Test that message sent from client to server are recieved correctly.
+	 * Test that message sent from client to server and server to client are recieved correctly.
 	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
 	 * @throws InvalidVersionException 
 	 */
@@ -116,5 +119,55 @@ public class NetworkManagerTest {
 		
 		assertNotNull(msgReply);
 		assertEquals(reply, msgReply.getRPAction());
+	}
+
+	/**
+	 * Testing what happens when client send nothing to server, but in fact send a TCP packet.
+	 */
+	@Test
+	public void sendMessageNull() throws IOException, InvalidVersionException {
+		Socket socket=new Socket("localhost", PORT);
+		OutputStream out=socket.getOutputStream();
+		
+		out.write(new byte[0]);
+		out.flush();
+		socket.close();		
+		
+		sendMessageC2S();
+	}
+
+	/**
+	 * Testing what happens when client send just one byte to server, but in fact send a TCP packet.
+	 */
+	@Test
+	public void sendMessageOneByte() throws IOException, InvalidVersionException {
+		Socket socket=new Socket("localhost", PORT);
+		OutputStream out=socket.getOutputStream();
+		
+		out.write(new byte[1]);
+		out.flush();
+		socket.close();		
+		
+		sendMessageC2S();
+	}
+
+	/**
+	 * Testing what happens when client send rubish to server.
+	 */
+	@Test
+	public void sendMessageRubish() throws IOException, InvalidVersionException {
+		Socket socket=new Socket("localhost", PORT);
+		OutputStream out=socket.getOutputStream();
+		
+		byte[] tmp=new byte[1024];
+		for(int i=0; i<1024; i++) {
+			tmp[i]=(byte)(255*Math.random());
+		}
+		
+		out.write(tmp);
+		out.flush();
+		socket.close();		
+		
+		sendMessageC2S();
 	}
 }
