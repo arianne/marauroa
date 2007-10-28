@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.1 2007/10/28 17:59:47 arianne_rpg Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.2 2007/10/28 19:06:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.net;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +28,7 @@ import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
@@ -83,4 +85,36 @@ public class NetworkManagerTest {
 		assertEquals(msg.getRPAction(), recv.getRPAction());
 	}
 
+	/**
+	 * Test that message sent from client to server are recieved correctly.
+	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
+	 * @throws InvalidVersionException 
+	 */
+	@Test
+	public void sendMessageS2C() throws IOException, InvalidVersionException {
+		TCPNetworkClientManager clientNet=new TCPNetworkClientManager("localhost", PORT);
+
+		RPAction action=new RPAction();
+		action.put("test","hello world");
+		MessageC2SAction msg=new MessageC2SAction(null, action);
+		
+		clientNet.addMessage(msg);
+		
+		MessageC2SAction recv=(MessageC2SAction)netMan.getMessage();
+		
+		assertEquals(msg.getRPAction(), recv.getRPAction());
+		
+		RPAction reply=new RPAction();
+		reply.put("test","world ok");
+		
+		netMan.sendMessage(new MessageC2SAction(recv.getSocketChannel(), reply));
+		
+		MessageC2SAction msgReply=null;
+		while(msgReply==null) {
+			msgReply=(MessageC2SAction) clientNet.getMessage(100);
+		}
+		
+		assertNotNull(msgReply);
+		assertEquals(reply, msgReply.getRPAction());
+	}
 }
