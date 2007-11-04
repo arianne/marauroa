@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.8 2007/10/10 18:23:29 nhnb Exp $ */
+/* $Id: OutputSerializer.java,v 1.9 2007/11/04 20:47:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class OutputSerializer {
 
-	OutputStream out;
+	private OutputStream out;
 
 	/**
 	 * Constructor that defines a specified OutputStream for the serializer
@@ -41,6 +41,8 @@ public class OutputSerializer {
 	 *
 	 * @param obj
 	 *            the object to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(marauroa.common.net.Serializable obj) throws IOException {
 		obj.writeObject(this);
@@ -51,6 +53,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the byte to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(byte a) throws IOException {
 		out.write(a);
@@ -61,6 +65,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the byte array to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(byte[] a) throws IOException {
 		write(a.length);
@@ -72,6 +78,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the byte array to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write255LongArray(byte[] a) throws IOException {
 		if (a.length > 255) {
@@ -82,6 +90,14 @@ public class OutputSerializer {
 		out.write(a);
 	}
 
+	/**
+	 * Add a long byte array whose size is smaller than 2^31 to the serializer
+	 *
+	 * @param a
+	 *            the byte array to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
+	 */
 	public void write65536LongArray(byte[] a) throws IOException {
 		if (a.length > Short.MAX_VALUE) {
 			throw new IOException();
@@ -96,6 +112,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the short to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(short a) throws IOException {
 		int tmp;
@@ -111,6 +129,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the int to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(int a) throws IOException {
 		int tmp;
@@ -130,6 +150,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the int to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(float a) throws IOException {
 		int tmp;
@@ -150,6 +172,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the String to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(String a) throws IOException, UnsupportedEncodingException {
 		write(a.getBytes("UTF-8"));
@@ -160,11 +184,22 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the String to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write255LongString(String a) throws IOException, UnsupportedEncodingException {
 		write255LongArray(a.getBytes("UTF-8"));
 	}
 
+	/**
+	/**
+	 * Add a long string to the serializer, using UTF-8 encoding
+	 *
+	 * @param a
+	 *            the String to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
+	 */
 	public void write65536LongString(String a) throws IOException, UnsupportedEncodingException {
 		write65536LongArray(a.getBytes("UTF-8"));
 	}
@@ -174,6 +209,8 @@ public class OutputSerializer {
 	 *
 	 * @param a
 	 *            the String array to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
 	 */
 	public void write(String[] a) throws IOException {
 		write(a.length);
