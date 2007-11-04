@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.9 2007/11/04 20:47:28 nhnb Exp $ */
+/* $Id: OutputSerializer.java,v 1.10 2007/11/04 20:49:02 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class OutputSerializer {
 	 * @throws IOException
 	 *            in case of an IO-error
 	 */
-	public void write(String a) throws IOException, UnsupportedEncodingException {
+	public void write(String a) throws IOException {
 		write(a.getBytes("UTF-8"));
 	}
 
@@ -187,7 +187,7 @@ public class OutputSerializer {
 	 * @throws IOException
 	 *            in case of an IO-error
 	 */
-	public void write255LongString(String a) throws IOException, UnsupportedEncodingException {
+	public void write255LongString(String a) throws IOException {
 		write255LongArray(a.getBytes("UTF-8"));
 	}
 
@@ -200,7 +200,7 @@ public class OutputSerializer {
 	 * @throws IOException
 	 *            in case of an IO-error
 	 */
-	public void write65536LongString(String a) throws IOException, UnsupportedEncodingException {
+	public void write65536LongString(String a) throws IOException {
 		write65536LongArray(a.getBytes("UTF-8"));
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.9 2007/10/10 18:23:32 nhnb Exp $ */
+/* $Id: InputSerializer.java,v 1.10 2007/11/04 20:49:02 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -249,7 +249,7 @@ public class InputSerializer {
 	 * @throws java.io.IOException
 	 *             if there is an IO error
 	 */
-	public String readString() throws IOException, UnsupportedEncodingException {
+	public String readString() throws IOException {
 		return new String(readByteArray(), "UTF-8");
 	}
 
@@ -261,11 +261,11 @@ public class InputSerializer {
 	 * @throws java.io.IOException
 	 *             if there is an IO error
 	 */
-	public String read255LongString() throws IOException, UnsupportedEncodingException {
+	public String read255LongString() throws IOException {
 		return new String(read255LongByteArray(), "UTF-8");
 	}
 
-	public String read65536LongString() throws IOException, UnsupportedEncodingException {
+	public String read65536LongString() throws IOException {
 		return new String(read65536LongByteArray(), "UTF-8");
 	}
 
