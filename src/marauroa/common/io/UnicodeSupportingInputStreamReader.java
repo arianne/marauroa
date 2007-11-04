@@ -1,6 +1,5 @@
 package marauroa.common.io;
 
-
 /*
 http://koti.mbnet.fi/akini/java/unicodereader/
 
@@ -30,11 +29,9 @@ import java.io.*;
 * then use a given default or system encoding.
 */
 public class UnicodeSupportingInputStreamReader extends Reader {
-    PushbackInputStream internalIn;
-
-    InputStreamReader internalIn2 = null;
-
-    String defaultEnc;
+    private PushbackInputStream internalIn;
+    private InputStreamReader internalIn2 = null;
+    private String defaultEnc;
 
     private static final int BOM_SIZE = 4;
 
@@ -61,6 +58,11 @@ public class UnicodeSupportingInputStreamReader extends Reader {
         this.defaultEnc = defaultEnc;
     }
 
+    /**
+     * returns the default encoding
+     *
+     * @return default encoding
+     */
     public String getDefaultEncoding() {
         return defaultEnc;
     }
@@ -68,6 +70,8 @@ public class UnicodeSupportingInputStreamReader extends Reader {
     /**
      * Get stream encoding or NULL if stream is uninitialized.
      * Call init() or read() method to initialize it.
+     *
+     * @return actual encoding used to read this file
      */
     public String getEncoding() {
         if (internalIn2 == null) return null;
@@ -77,6 +81,8 @@ public class UnicodeSupportingInputStreamReader extends Reader {
     /**
      * Read-ahead four bytes and check for BOM marks. Extra bytes are
      * unread back to the stream, only BOM bytes are skipped.
+     *
+     * @throws IOException in cases of an I/O error
      */
     protected void init() throws IOException {
         if (internalIn2 != null) return;
