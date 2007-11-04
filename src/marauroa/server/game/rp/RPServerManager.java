@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.39 2007/06/17 20:04:10 astridemma Exp $ */
+/* $Id: RPServerManager.java,v 1.40 2007/11/04 19:35:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -179,6 +179,15 @@ public class RPServerManager extends Thread {
 		return turn;
 	}
 
+	/**
+	 * gets the duration of a turn
+	 *
+	 * @return duration
+	 */
+	public long getTurnDuration() {
+		return turnDuration;
+	}
+	
 	/**
 	 * This method finish the thread that run the RPServerManager. It calls
 	 * RPWorld.finish method.
