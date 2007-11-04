@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.23 2007/07/03 23:01:31 arianne_rpg Exp $ */
+/* $Id: IRPZone.java,v 1.24 2007/11/04 09:22:05 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,9 +61,9 @@ public interface IRPZone extends Iterable<RPObject> {
 		 */
 		@Override
 		public boolean equals(Object anotherid) {
-			if (anotherid instanceof IRPZone.ID) { 
-			    return id.equals(((IRPZone.ID) anotherid).id);
-			} else { 
+			if (anotherid instanceof IRPZone.ID) {
+			    return (((IRPZone.ID) anotherid).id).equals(this.id);
+			} else {
 				return false;
 			}
 		}
@@ -71,7 +71,10 @@ public interface IRPZone extends Iterable<RPObject> {
 		/** We need it for HashMap */
 		@Override
 		public int hashCode() {
-			return id.hashCode();
+			if (id!= null){
+				return id.hashCode();
+			}
+			else return 0;
 		}
 
 		/**
