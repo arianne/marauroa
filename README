@@ -95,6 +95,7 @@ Changelog
 2.0.3
 - Fixed problem with bogus network message.
 - Added additional results to enum Result (for account/character creation)
+- Added UnicodeSupportingInputStream and -Reader which automatically detect unicode type (and even support UTF-8Y)
 
 2.0.2 Oct 19, 2007
 - fixed a bug causing RPSlot.addPreservingID() to cause rpobjects with same ids
