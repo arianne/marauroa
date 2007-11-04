@@ -23,7 +23,7 @@ public class RPLink implements marauroa.common.net.Serializable {
 	/** Name of the rplink */
 	private String name;
 
-	/** Name of the object */
+	/** Target object */
 	private RPObject object;
 
 	/** This slot is linked to an object: its owner. */
@@ -32,6 +32,8 @@ public class RPLink implements marauroa.common.net.Serializable {
 	/**
 	 * Constructor
 	 *
+	 * @param name name of link
+	 * @param object target object
 	 */
 	public RPLink(String name, RPObject object) {
 		this.name = name;
@@ -100,6 +102,13 @@ public class RPLink implements marauroa.common.net.Serializable {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
+	/**
+	 * Method to convert the object into a stream
+	 *
+	 * @param out OutputSerializer to write the object to
+	 * @param level DetailLevel
+	 * @throws IOException in case of an IO-error
+	 */
 	public void writeObject(OutputSerializer out, DetailLevel level) throws IOException {
 		RPClass rpClass = owner.getRPClass();
 

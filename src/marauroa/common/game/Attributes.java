@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.57 2007/07/10 18:15:31 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.58 2007/11/04 11:32:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -448,9 +448,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *            the output serializer
 	 * @param level
 	 *            the level of Detail
+	 * @throws IOException
+	 *            in case of an IO error		
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
-	        throws java.io.IOException {
+	        throws IOException {
 		/*
 		 * Obtains the number of attributes to serialize removing hidden and
 		 * private attributes

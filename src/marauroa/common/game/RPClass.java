@@ -664,6 +664,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * Returns a default rpclass for lazy developers. You won't get any
 	 * advantages on the engine by using it.
+	 *
+	 * @return RPClass
 	 */
 	public static RPClass getBaseRPObjectDefault() {
 		if (defaultRPClass == null) {
@@ -708,6 +710,8 @@ public class RPClass implements marauroa.common.net.Serializable {
 	/**
 	 * Returns a default rpclass for lazy developers. You won't get any
 	 * advantages on the engine by using it.
+	 *
+	 * @return RPClass
 	 */
 	public static RPClass getBaseRPActionDefault() {
 		if (defaultRPClass == null) {

@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.21 2007/06/17 19:49:03 astridemma Exp $ */
+/* $Id: RPEvent.java,v 1.22 2007/11/04 11:32:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,7 @@ public class RPEvent extends Attributes {
 	/**
 	 * Constructor
 	 *
+	 * @param name name of this RPEvent
 	 */
 	public RPEvent(String name) {
 		super(RPClass.getBaseRPObjectDefault());

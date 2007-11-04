@@ -1,4 +1,4 @@
-/* $Id: IRPZone.java,v 1.24 2007/11/04 09:22:05 astridemma Exp $ */
+/* $Id: IRPZone.java,v 1.25 2007/11/04 11:32:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,6 +129,8 @@ public interface IRPZone extends Iterable<RPObject> {
 	 *
 	 * @param object
 	 *            the object
+	 * @throws RPObjectInvalidException
+	 *            in case the rpobject is invalid for some reason
 	 */
 	public void add(RPObject object) throws RPObjectInvalidException;
 
@@ -139,6 +141,8 @@ public interface IRPZone extends Iterable<RPObject> {
 	 *
 	 * @param object
 	 *            the object
+	 * @throws RPObjectInvalidException
+	 *            in case the rpobject is invalid for some reason
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException;
 

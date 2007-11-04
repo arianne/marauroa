@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.22 2007/06/20 21:25:11 astridemma Exp $ */
+/* $Id: Definition.java,v 1.23 2007/11/04 11:32:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,11 +131,17 @@ public class Definition implements marauroa.common.net.Serializable {
 	private byte flags;
 
 	/**
-	 * Constructor
+	 * Constructor used for serialisation
 	 */
 	public Definition() {
+		// declaration needed because there is another constructor
 	}
 
+	/**
+	 * creates a new definition object bases on the provided definition class
+	 *
+	 * @param clazz definition class
+	 */
 	protected Definition(DefinitionClass clazz) {
 		this.clazz = clazz;
 		code = -1;

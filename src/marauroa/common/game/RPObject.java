@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.75 2007/10/16 02:29:14 chad3f Exp $ */
+/* $Id: RPObject.java,v 1.76 2007/11/04 11:32:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -368,7 +368,7 @@ public class RPObject extends Attributes {
 	 * Return null if it is not found.
 	 *  
 	 * @param id the id of the object to look for.
-	 * @return
+	 * @return RPObject
 	 */	
 	public RPObject getFromSlots(int id) {
 		if(isContained()) {
@@ -1065,6 +1065,11 @@ public class RPObject extends Attributes {
 			return id;
 		}
 
+		/**
+		 * returns the zone id as string
+		 *
+		 * @return zone id
+		 */
 		public String getZoneID() {
 			return zoneid;
 		}
