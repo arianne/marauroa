@@ -27,6 +27,8 @@ import java.io.*;
 * Generic unicode textreader, which will use BOM mark
 * to identify the encoding to be used. If BOM is not found
 * then use a given default or system encoding.
+*
+* @since 2.1
 */
 public class UnicodeSupportingInputStreamReader extends Reader {
     private PushbackInputStream internalIn;

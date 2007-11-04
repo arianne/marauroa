@@ -24,19 +24,21 @@ Win2k Notepad:
 import java.io.*;
 
 /**
-* This inputstream will recognize unicode BOM marks
-* and will skip bytes if getEncoding() method is called
-* before any of the read(...) methods.
-*
-* Usage pattern:
-    String enc = "ISO-8859-1"; // or NULL to use systemdefault
-    FileInputStream fis = new FileInputStream(file);
-    UnicodeInputStream uin = new UnicodeInputStream(fis, enc);
-    enc = uin.getEncoding(); // check and skip possible BOM bytes
-    InputStreamReader in;
-    if (enc == null) in = new InputStreamReader(uin);
-    else in = new InputStreamReader(uin, enc);
-*/
+ * This inputstream will recognize unicode BOM marks
+ * and will skip bytes if getEncoding() method is called
+ * before any of the read(...) methods.
+ *
+ * Usage pattern:<pre>
+     String enc = "ISO-8859-1"; // or NULL to use systemdefault
+     FileInputStream fis = new FileInputStream(file);
+     UnicodeInputStream uin = new UnicodeInputStream(fis, enc);
+     enc = uin.getEncoding(); // check and skip possible BOM bytes
+     InputStreamReader in;
+     if (enc == null) in = new InputStreamReader(uin);
+     else in = new InputStreamReader(uin, enc);
+    </pre>
+ * @since 2.1
+ */
 public class UnicodeSupportingInputStream extends InputStream {
     private PushbackInputStream internalIn;
     private boolean isInited = false;
