@@ -65,10 +65,22 @@ public class UnicodeSupportingInputStream extends InputStream {
         this.defaultEnc = defaultEnc;
     }
 
+
+    /**
+     * returns the default encoding
+     *
+     * @return default encoding
+     */
     public String getDefaultEncoding() {
         return defaultEnc;
     }
 
+    /**
+     * Get stream encoding or NULL if stream is uninitialized.
+     * Call init() or read() method to initialize it.
+     *
+     * @return actual encoding used to read this file
+     */
     public String getEncoding() {
         if (!isInited) {
             try {
@@ -85,6 +97,8 @@ public class UnicodeSupportingInputStream extends InputStream {
     /**
      * Read-ahead four bytes and check for BOM marks. Extra bytes are
      * unread back to the stream, only BOM bytes are skipped.
+     *
+     * @throws IOException in cases of an I/O error
      */
     protected void init() throws IOException {
         if (isInited) return;
