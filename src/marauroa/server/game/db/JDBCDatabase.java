@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.56 2007/10/18 20:37:47 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.57 2007/11/05 21:51:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -20,10 +20,8 @@ import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -207,9 +205,6 @@ public class JDBCDatabase implements IDatabase {
 				        + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			String query = "insert into account(id,username,password,email,timedate,status) values("
 			        + "NULL,'"
 			        + username
@@ -221,8 +216,8 @@ public class JDBCDatabase implements IDatabase {
 
 			logger.debug("addPlayer is using query: " + query);
 
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't add player(" + username + ") to Database", e);
 			throw e;
@@ -267,21 +262,18 @@ public class JDBCDatabase implements IDatabase {
 	public void changeEmail(Transaction transaction, String username, String email)
 	        throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
+			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=(" + username + ") email=(" + email
 				        + ")");
 			}
-
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 
 			int id = getDatabasePlayerId(transaction, username);
 
 			String query = "update account set email='" + email + "' where id=" + id;
 			logger.debug("changePassword is using query: " + query);
 
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't remove player(" + username + ") to Database", e);
 			throw e;
@@ -301,9 +293,6 @@ public class JDBCDatabase implements IDatabase {
 				throw new SQLException("Invalid string username=(" + username + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			int id = getDatabasePlayerId(transaction, username);
 
 			byte[] hashedPassword = Hash.hash(password);
@@ -312,8 +301,8 @@ public class JDBCDatabase implements IDatabase {
 			        + "' where id=" + id;
 			logger.debug("changePassword is using query: " + query);
 
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't remove player(" + username + ") to Database", e);
 			throw e;
@@ -337,14 +326,11 @@ public class JDBCDatabase implements IDatabase {
 				removeCharacter(transaction, username, character);
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			String query = "delete from account where username='" + username + "'";
 
 			logger.debug("removePlayer is using query: " + query);
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 
 			return true;
 		} catch (SQLException e) {
@@ -365,14 +351,13 @@ public class JDBCDatabase implements IDatabase {
 				throw new SQLException("Invalid string username=(" + username + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 			String query = "select count(*) as amount from  account where username like '"
 			        + username + "'";
 
 			logger.debug("hasPlayer is using query: " + query);
 
-			ResultSet result = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			boolean playerExists = false;
 
@@ -380,7 +365,7 @@ public class JDBCDatabase implements IDatabase {
 				playerExists = true;
 			}
 
-			stmt.close();
+			jdbc.close();
 			return playerExists;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
@@ -401,15 +386,12 @@ public class JDBCDatabase implements IDatabase {
 				throw new SQLException("Invalid string username=(" + username + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			String query = "update account set status='" + status + "' where username like '"
 			        + username + "'";
 			logger.debug("setAccountStatus is executing query " + query);
 
-			stmt.executeUpdate(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't udpate account status of player(" + username + ")", e);
 			throw e;
@@ -424,9 +406,6 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public String getAccountStatus(Transaction transaction, String username) throws SQLException {
 		try {
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=(" + username + ")");
 			}
@@ -435,7 +414,8 @@ public class JDBCDatabase implements IDatabase {
 
 			logger.debug("getAccountStatus is executing query " + query);
 
-			ResultSet result = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			String status = null;
 
@@ -443,8 +423,7 @@ public class JDBCDatabase implements IDatabase {
 				status = result.getString("status");
 			}
 
-			result.close();
-			stmt.close();
+			jdbc.close();
 
 			return status;
 		} catch (SQLException e) {
@@ -461,9 +440,6 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public String getEmail(Transaction transaction, String username) throws SQLException {
 		try {
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			if (!StringChecker.validString(username)) {
 				throw new SQLException("Invalid string username=(" + username + ")");
 			}
@@ -472,7 +448,8 @@ public class JDBCDatabase implements IDatabase {
 
 			logger.debug("getEmail is executing query " + query);
 
-			ResultSet result = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			String status = null;
 
@@ -480,9 +457,7 @@ public class JDBCDatabase implements IDatabase {
 				status = result.getString("email");
 			}
 
-			result.close();
-			stmt.close();
-
+			jdbc.close();
 			return status;
 		} catch (SQLException e) {
 			logger.error("Can't query player(" + username + ")", e);
@@ -491,9 +466,6 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	private int getDatabasePlayerId(Transaction trans, String username) throws SQLException {
-		Connection connection = trans.getConnection();
-		Statement stmt = connection.createStatement();
-
 		if (!StringChecker.validString(username)) {
 			throw new SQLException("Invalid string username=(" + username + ")");
 		}
@@ -502,17 +474,15 @@ public class JDBCDatabase implements IDatabase {
 
 		logger.debug("getDatabasePlayerId is executing query " + query);
 
-		ResultSet result = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet result = jdbc.query(query);
 
 		int id = -1;
-
 		if (result.next()) {
 			id = result.getInt("id");
 		}
 
-		result.close();
-		stmt.close();
-
+		jdbc.close();
 		return id;
 	}
 
@@ -530,9 +500,6 @@ public class JDBCDatabase implements IDatabase {
 				        + character + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			int id = getDatabasePlayerId(transaction, username);
 			int object_id = storeRPObject(transaction, player);
 
@@ -540,9 +507,9 @@ public class JDBCDatabase implements IDatabase {
 			        + ",'" + character + "'," + object_id + ")";
 			logger.debug("addCharacter is executing query " + query);
 			logger.debug("Character: " + player);
-			stmt.execute(query);
-			stmt.close();
 
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't add player(" + username + ") character(" + character + ")", e);
 			throw e;
@@ -566,33 +533,28 @@ public class JDBCDatabase implements IDatabase {
 				        + character + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			int player_id = getDatabasePlayerId(transaction, username);
 
 			String query = "select object_id from characters where player_id=" + player_id
 			        + " and charname='" + character + "'";
-			ResultSet result = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			if (result.next()) {
 				int id = result.getInt("object_id");
 				removeRPObject(transaction, id);
 			} else {
-				result.close();
-				stmt.close();
-
+				jdbc.close();
 				throw new SQLException("Character (" + character
 				        + ") without object: Database integrity error.");
 			}
-			result.close();
 
 			query = "delete from characters where player_id=" + player_id + " and charname='"
 			        + character + "'";
 
 			logger.debug("removeCharacter is using query: " + query);
-			stmt.execute(query);
-			stmt.close();
+			jdbc.execute(query);
+			jdbc.close();
 
 			return true;
 		} catch (SQLException e) {
@@ -615,8 +577,6 @@ public class JDBCDatabase implements IDatabase {
 				        + character + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 			/*
 			 * NOTE: 
 			 * Perse we have agreed that character name is unique per server, 
@@ -627,21 +587,19 @@ public class JDBCDatabase implements IDatabase {
 
 			logger.debug("hasCharacter is executing query " + query);
 
-			ResultSet result = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			boolean characterExists = false;
-
 			if (result.next() && result.getInt("amount") != 0) {
 				characterExists = true;
 			}
 
-			result.close();
-			stmt.close();
+			jdbc.close();
 
 			return characterExists;
 		} catch (SQLException e) {
-			logger
-			        .error("Can't query for player(" + username + ") character(" + character + ")",
+			logger.error("Can't query for player(" + username + ") character(" + character + ")",
 			                e);
 			throw e;
 		}
@@ -668,22 +626,19 @@ public class JDBCDatabase implements IDatabase {
 				throw new SQLException("Unable to find player(" + username + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 			String query = "select charname from characters where player_id=" + id;
 
 			logger.debug("getCharacterList is executing query " + query);
 
-			ResultSet charactersSet = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet charactersSet = jdbc.query(query);
 			List<String> list = new LinkedList<String>();
 
 			while (charactersSet.next()) {
 				list.add(charactersSet.getString("charname"));
 			}
 
-			charactersSet.close();
-
-			stmt.close();
+			jdbc.close();
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
@@ -715,9 +670,6 @@ public class JDBCDatabase implements IDatabase {
 				        + character + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			int objectid = storeRPObject(transaction, player);
 			int id = getDatabasePlayerId(transaction, username);
 
@@ -726,10 +678,8 @@ public class JDBCDatabase implements IDatabase {
 			logger.debug("storeCharacter is executing query " + query);
 			logger.debug("Character: " + player);
 
-			stmt.execute(query);
-
-			stmt.close();
-
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException sqle) {
 			logger.warn("Error storing character: " + player, sqle);
 			throw sqle;
@@ -762,14 +712,13 @@ public class JDBCDatabase implements IDatabase {
 				        + character + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
-
 			int id = getDatabasePlayerId(transaction, username);
 			String query = "select object_id from characters where charname='" + character
 			        + "' and player_id=" + id;
 			logger.debug("loadCharacter is executing query " + query);
-			ResultSet result = stmt.executeQuery(query);
+
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet result = jdbc.query(query);
 
 			RPObject player = null;
 			if (result.next()) {
@@ -778,9 +727,7 @@ public class JDBCDatabase implements IDatabase {
 				logger.debug("Character: " + player);
 			}
 
-			result.close();
-			stmt.close();
-
+			jdbc.close();
 			return player;
 		} catch (SQLException sqle) {
 			logger.warn("Error loading character: " + character, sqle);
@@ -801,16 +748,14 @@ public class JDBCDatabase implements IDatabase {
 			throw new SQLException("Invalid string zoneid=(" + zoneid + ")");
 		}
 
-		Connection connection = transaction.getConnection();
-
 		String query = "select data from rpzone where zone_id='" + zoneid + "'";
 		logger.debug("loadRPZone is executing query " + query);
 
-		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 
-		if (rs.next()) {
-			Blob data = rs.getBlob("data");
+		if (resultSet.next()) {
+			Blob data = resultSet.getBlob("data");
 			InputStream input = data.getBinaryStream();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -829,8 +774,7 @@ public class JDBCDatabase implements IDatabase {
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
 			InputSerializer inser = new InputSerializer(szlib);
 
-			rs.close();
-			stmt.close();
+			jdbc.close();
 
 			int amount = inser.readInt();
 
@@ -847,8 +791,7 @@ public class JDBCDatabase implements IDatabase {
 			}
 		}
 
-		rs.close();
-		stmt.close();
+		jdbc.close();
 	}
 
 	/*
@@ -897,32 +840,25 @@ public class JDBCDatabase implements IDatabase {
 		}
 		logger.debug("storeRPZone is executing query " + query);
 
-		Connection connection = transaction.getConnection();
-		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setBinaryStream(1, inStream, inStream.available());
-		ps.executeUpdate();
-		ps.close();
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		jdbc.execute(query, inStream);
 	}
 
 	protected boolean hasRPZone(Transaction transaction, IRPZone.ID zone) throws SQLException {
-		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
-
 		String query = "SELECT count(*) as amount FROM rpzone where zone_id='" + zone.getID() + "'";
 
-		ResultSet eventSet = stmt.executeQuery(query);
-		boolean exists = false;
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 
-		while (eventSet.next()) {
-			int has = eventSet.getInt("amount");
+		boolean exists = false;
+		while (resultSet.next()) {
+			int has = resultSet.getInt("amount");
 			if (has > 0) {
 				exists = true;
 			}
 		}
 
-		eventSet.close();
-		stmt.close();
-
+		jdbc.close();
 		return exists;
 	}
 
@@ -937,27 +873,23 @@ public class JDBCDatabase implements IDatabase {
 			throw new SQLException("Invalid string username=(" + username + ")");
 		}
 
-		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
-
 		int id = getDatabasePlayerId(transaction, username);
 		String query = "SELECT count(*) as amount FROM loginEvent where player_id=" + id
 		        + " and result=0 and (now()-timedate)<"
 		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 
-		ResultSet eventSet = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 		boolean blocked = false;
 
-		while (eventSet.next()) {
-			int attemps = eventSet.getInt("amount");
+		while (resultSet.next()) {
+			int attemps = resultSet.getInt("amount");
 			if (attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS) {
 				blocked = true;
 			}
 		}
 
-		eventSet.close();
-		stmt.close();
-
+		jdbc.close();
 		return blocked;
 	}
 
@@ -991,36 +923,33 @@ public class JDBCDatabase implements IDatabase {
 			throw new SQLException("Invalid string username=(" + informations.username + ")");
 		}
 
-		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
+		JDBCAccess jdbc = new JDBCAccess(transaction);
 
 		// check new Marauroa 2.0 password type
 		String hexPassword = Hash.toHexString(password);
-		boolean res = verifyUsingDB(stmt, informations.username, hexPassword);
+		boolean res = verifyUsingDB(jdbc, informations.username, hexPassword);
 
 		if (!res) {
 			// compatiblity: check new Marauroa 1.0 password type
 			hexPassword = Hash.toHexString(Hash.hash(password));
-			res = verifyUsingDB(stmt, informations.username, hexPassword);
+			res = verifyUsingDB(jdbc, informations.username, hexPassword);
 		}
 
-		stmt.close();
-
+		jdbc.close();
 		return res;
 	}
 	
-	private boolean verifyUsingDB(Statement stmt, String username, String hexPassword) throws SQLException {
+	private boolean verifyUsingDB(JDBCAccess jdbc, String username, String hexPassword) throws SQLException {
 		try {
 			String query = "select status, username from account where username like '"
 			        + username + "' and password like '" + hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
-			ResultSet result = stmt.executeQuery(query);
-
+			ResultSet resultSet = jdbc.query(query);
 			boolean isplayer = false;
 
-			if (result.next()) {
-				String userNameFromDB = result.getString("username");
-				String account_status = result.getString("status");
+			if (resultSet.next()) {
+				String userNameFromDB = resultSet.getString("username");
+				String account_status = resultSet.getString("status");
 
 				if ("active".equals(account_status)) {
 					isplayer = true;
@@ -1036,10 +965,6 @@ public class JDBCDatabase implements IDatabase {
 				}
 
 			}
-
-			result.close();
-
-
 			return isplayer;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
@@ -1070,13 +995,10 @@ public class JDBCDatabase implements IDatabase {
 				return;
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 			String query = "insert into loginEvent(player_id,address,timedate,result) values(" + id
 			        + ",'" + source.getHostAddress() + "',NULL," + (correctLogin ? 1 : 0) + ")";
-			stmt.execute(query);
-
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
 			throw e;
@@ -1145,25 +1067,23 @@ public class JDBCDatabase implements IDatabase {
 				throw new SQLException("Unable to find player(" + username + ")");
 			}
 
-			Connection connection = transaction.getConnection();
-			Statement stmt = connection.createStatement();
 			String query = "select address, timedate, result from loginEvent where player_id=" + id
 			        + " order by timedate desc limit " + events;
 
 			logger.debug("getLoginEvents is executing query " + query);
 
-			ResultSet eventSet = stmt.executeQuery(query);
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			ResultSet resultSet = jdbc.query(query);
+
 			List<String> list = new LinkedList<String>();
 
-			while (eventSet.next()) {
-				LoginEvent event = new LoginEvent(eventSet.getString("address"), eventSet
-				        .getString("timedate"), eventSet.getBoolean("result"));
+			while (resultSet.next()) {
+				LoginEvent event = new LoginEvent(resultSet.getString("address"), resultSet
+				        .getString("timedate"), resultSet.getBoolean("result"));
 				list.add(event.toString());
 			}
 
-			eventSet.close();
-
-			stmt.close();
+			jdbc.close();
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
@@ -1179,9 +1099,6 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public void addGameEvent(Transaction trans, String source, String event, String... params) {
 		try {
-			Connection connection = trans.getConnection();
-			Statement stmt = connection.createStatement();
-
 			String firstParam = (params.length > 0 ? params[0] : "");
 			StringBuffer param = new StringBuffer();
 			if (params.length > 1) {
@@ -1206,8 +1123,8 @@ public class JDBCDatabase implements IDatabase {
 					+ "','"
 					+ (param2==null?null:StringChecker.escapeSQLString(param2.substring(0, Math.min(255, param2.length())))) + "')";
 
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException sqle) {
 			logger.warn("Error adding game event: " + event, sqle);
 		}
@@ -1221,9 +1138,6 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public void addStatisticsEvent(Transaction trans, Variables var) {
 		try {
-			Connection connection = trans.getConnection();
-			Statement stmt = connection.createStatement();
-
 			String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) values(NULL,"
 			        + var.get("Bytes send")
 			        + ","
@@ -1234,8 +1148,8 @@ public class JDBCDatabase implements IDatabase {
 			        + var.get("Players logout")
 			        + ","
 			        + var.get("Players timeout") + "," + var.get("Players online") + ")";
-			stmt.execute(query);
-			stmt.close();
+			JDBCAccess jdbc = new JDBCAccess(transaction);
+			jdbc.execute(query);
 		} catch (SQLException sqle) {
 			logger.warn("Error adding statistics event", sqle);
 		}
@@ -1243,16 +1157,15 @@ public class JDBCDatabase implements IDatabase {
 
 	protected RPObject loadRPObject(Transaction transaction, int objectid) throws SQLException,
 	        IOException {
-		Connection connection = transaction.getConnection();
 
 		String query = "select data from rpobject where object_id=" + objectid;
 		logger.debug("loadRPObject is executing query " + query);
 
-		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 
-		if (rs.next()) {
-			Blob data = rs.getBlob("data");
+		if (resultSet.next()) {
+			Blob data = resultSet.getBlob("data");
 			InputStream input = data.getBinaryStream();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -1271,8 +1184,7 @@ public class JDBCDatabase implements IDatabase {
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
 			InputSerializer inser = new InputSerializer(szlib);
 
-			rs.close();
-			stmt.close();
+			jdbc.close();
 
 			RPObject object = null;
 
@@ -1282,52 +1194,41 @@ public class JDBCDatabase implements IDatabase {
 			return object;
 		}
 
-		rs.close();
-		stmt.close();
+		jdbc.close();
 		return null;
 	}
 
 	protected int removeRPObject(Transaction transaction, int objectid) throws SQLException {
-		Connection connection = transaction.getConnection();
-
 		String query = "delete from rpobject where object_id=" + objectid;
 		logger.debug("removeRPObject is executing query " + query);
 
-		Statement stmt = connection.createStatement();
-		stmt.execute(query);
-
-		stmt.close();
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		jdbc.execute(query);
 
 		return objectid;
 	}
 
 	protected boolean hasRPObject(Transaction transaction, int objectid) throws SQLException {
-		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
 		String query = "select count(*) as amount from rpobject where object_id=" + objectid;
 
 		logger.debug("hasRPObject is executing query " + query);
 
-		ResultSet result = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 
 		boolean rpObjectExists = false;
-
-		if (result.next()) {
-			if (result.getInt("amount") != 0) {
+		if (resultSet.next()) {
+			if (resultSet.getInt("amount") != 0) {
 				rpObjectExists = true;
 			}
 		}
 
-		result.close();
-		stmt.close();
-
+		jdbc.close();
 		return rpObjectExists;
 	}
 
 	protected int storeRPObject(Transaction transaction, RPObject object) throws IOException,
 	        SQLException {
-		Connection connection = transaction.getConnection();
-
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
@@ -1358,30 +1259,25 @@ public class JDBCDatabase implements IDatabase {
 		}
 		logger.debug("storeRPObject is executing query " + query);
 
-		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setBinaryStream(1, inStream, inStream.available());
-		ps.executeUpdate();
-		ps.close();
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		jdbc.execute(query, inStream);
+
 
 		// If object is new, get the objectid we gave it.
 		if (object_id == -1) {
-			Statement stmt = connection.createStatement();
 			query = "select LAST_INSERT_ID() as inserted_id";
 			logger.debug("storeRPObject is executing query " + query);
-			ResultSet result = stmt.executeQuery(query);
-
-			result.next();
-			object_id = result.getInt("inserted_id");
+			ResultSet resultSet = jdbc.query(query);
+			resultSet.next();
+			object_id = resultSet.getInt("inserted_id");
 
 			// We alter the original object to add the proper db_id
 			object.put("#db_id", object_id);
-
-			result.close();
-			stmt.close();
 		} else {
 			object_id = object.getInt("#db_id");
 		}
 
+		jdbc.close();
 		return object_id;
 	}
 
@@ -1394,25 +1290,21 @@ public class JDBCDatabase implements IDatabase {
 		List<InetAddressMask> permanentBans = new LinkedList<InetAddressMask>();
 
 		/* read ban list from DB */
-		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
 		String query = "select address,mask from banlist";
 		logger.debug("getBannedAddresses is executing query " + query);
 
-		ResultSet rs = stmt.executeQuery(query);
+		JDBCAccess jdbc = new JDBCAccess(transaction);
+		ResultSet resultSet = jdbc.query(query);
 
 		permanentBans.clear();
-		while (rs.next()) {
-			String address = rs.getString("address");
-			String mask = rs.getString("mask");
+		while (resultSet.next()) {
+			String address = resultSet.getString("address");
+			String mask = resultSet.getString("mask");
 			InetAddressMask iam = new InetAddressMask(address, mask);
 			permanentBans.add(iam);
 		}
 
-		// free database resources
-		rs.close();
-		stmt.close();
-
+		jdbc.close();
 		return permanentBans;
 	}
 }
