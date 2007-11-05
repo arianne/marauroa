@@ -79,6 +79,25 @@ public class JDBCAccess {
 	}
 
 	/**
+	 * Returns the value of the first row first column which is
+	 * exspected to be an int. Use this for count(*) and last_insert_id 
+	 *
+	 * @param sql query
+	 * @return integer of first column in first row
+	 * @throws SQLException in case of an SQL error
+	 */
+	public int querySingleCellInt(String sql) throws SQLException {
+		Connection connection = transaction.getConnection();
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(sql);
+		resultSet.next();
+		int res = resultSet.getInt(1);
+		resultSet.close();
+		stmt.close();
+		return res;
+	}
+	
+	/**
 	 * initializes the collections where opened Statements and ResultSets
 	 * are stored in order to have only one close methods.
 	 */
