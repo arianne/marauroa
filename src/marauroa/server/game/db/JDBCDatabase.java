@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.57 2007/11/05 21:51:15 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.58 2007/11/05 22:06:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -357,16 +357,8 @@ public class JDBCDatabase implements IDatabase {
 			logger.debug("hasPlayer is using query: " + query);
 
 			JDBCAccess jdbc = new JDBCAccess(transaction);
-			ResultSet result = jdbc.query(query);
-
-			boolean playerExists = false;
-
-			if (result.next() && result.getInt("amount") != 0) {
-				playerExists = true;
-			}
-
-			jdbc.close();
-			return playerExists;
+			int count = jdbc.querySingleCellInt(query);
+			return count > 0;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
 			throw e;
@@ -432,12 +424,6 @@ public class JDBCDatabase implements IDatabase {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see marauroa.server.game.db.nio.IPlayerAccess#getAccountStatus(marauroa.server.game.db.Transaction,
-	 *      java.lang.String)
-	 */
 	public String getEmail(Transaction transaction, String username) throws SQLException {
 		try {
 			if (!StringChecker.validString(username)) {
@@ -451,14 +437,13 @@ public class JDBCDatabase implements IDatabase {
 			JDBCAccess jdbc = new JDBCAccess(transaction);
 			ResultSet result = jdbc.query(query);
 
-			String status = null;
-
+			String email = null;
 			if (result.next()) {
-				status = result.getString("email");
+				email = result.getString("email");
 			}
 
 			jdbc.close();
-			return status;
+			return email;
 		} catch (SQLException e) {
 			logger.error("Can't query player(" + username + ")", e);
 			throw e;
@@ -588,16 +573,8 @@ public class JDBCDatabase implements IDatabase {
 			logger.debug("hasCharacter is executing query " + query);
 
 			JDBCAccess jdbc = new JDBCAccess(transaction);
-			ResultSet result = jdbc.query(query);
-
-			boolean characterExists = false;
-			if (result.next() && result.getInt("amount") != 0) {
-				characterExists = true;
-			}
-
-			jdbc.close();
-
-			return characterExists;
+			int count = jdbc.querySingleCellInt(query);
+			return count > 0;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ") character(" + character + ")",
 			                e);
@@ -846,20 +823,9 @@ public class JDBCDatabase implements IDatabase {
 
 	protected boolean hasRPZone(Transaction transaction, IRPZone.ID zone) throws SQLException {
 		String query = "SELECT count(*) as amount FROM rpzone where zone_id='" + zone.getID() + "'";
-
 		JDBCAccess jdbc = new JDBCAccess(transaction);
-		ResultSet resultSet = jdbc.query(query);
-
-		boolean exists = false;
-		while (resultSet.next()) {
-			int has = resultSet.getInt("amount");
-			if (has > 0) {
-				exists = true;
-			}
-		}
-
-		jdbc.close();
-		return exists;
+		int count = jdbc.querySingleCellInt(query);
+		return count > 0;
 	}
 
 	/*
@@ -879,18 +845,8 @@ public class JDBCDatabase implements IDatabase {
 		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 
 		JDBCAccess jdbc = new JDBCAccess(transaction);
-		ResultSet resultSet = jdbc.query(query);
-		boolean blocked = false;
-
-		while (resultSet.next()) {
-			int attemps = resultSet.getInt("amount");
-			if (attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS) {
-				blocked = true;
-			}
-		}
-
-		jdbc.close();
-		return blocked;
+		int attemps = jdbc.querySingleCellInt(query);
+		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS;
 	}
 
 	/*
@@ -1214,17 +1170,8 @@ public class JDBCDatabase implements IDatabase {
 		logger.debug("hasRPObject is executing query " + query);
 
 		JDBCAccess jdbc = new JDBCAccess(transaction);
-		ResultSet resultSet = jdbc.query(query);
-
-		boolean rpObjectExists = false;
-		if (resultSet.next()) {
-			if (resultSet.getInt("amount") != 0) {
-				rpObjectExists = true;
-			}
-		}
-
-		jdbc.close();
-		return rpObjectExists;
+		int count = jdbc.querySingleCellInt(query);
+		return count > 0;
 	}
 
 	protected int storeRPObject(Transaction transaction, RPObject object) throws IOException,
@@ -1267,9 +1214,7 @@ public class JDBCDatabase implements IDatabase {
 		if (object_id == -1) {
 			query = "select LAST_INSERT_ID() as inserted_id";
 			logger.debug("storeRPObject is executing query " + query);
-			ResultSet resultSet = jdbc.query(query);
-			resultSet.next();
-			object_id = resultSet.getInt("inserted_id");
+			object_id = jdbc.querySingleCellInt(query);
 
 			// We alter the original object to add the proper db_id
 			object.put("#db_id", object_id);
