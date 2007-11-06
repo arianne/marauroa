@@ -31,11 +31,5 @@ public class MarauroaUncaughtExceptionHandler implements Thread.UncaughtExceptio
 		handler.next = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(handler);
 	}
-	
-	public static void main(String[] args) {
-		setup();
-		Object o = null;
-		o.equals(o);
-		System.out.println("x");
-	}
+
 }
