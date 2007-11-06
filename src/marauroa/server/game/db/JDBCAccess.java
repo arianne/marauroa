@@ -38,9 +38,9 @@ public class JDBCAccess {
 	 */
 	public void execute(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
-		Statement stmt = connection.createStatement();
-		stmt.execute(sql);
-		stmt.close();
+		Statement statement = connection.createStatement();
+		statement.execute(sql);
+		statement.close();
 	}
 
 	/**
@@ -53,14 +53,33 @@ public class JDBCAccess {
 	 */
 	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
-		PreparedStatement stmt = connection.prepareStatement(sql);
+		PreparedStatement statement = connection.prepareStatement(sql);
 		int i = 1; // yes, jdbc starts counting at 1.
 		for (InputStream inputStream : inputStreams) {
-			stmt.setBinaryStream(i, inputStream, inputStream.available());
+			statement.setBinaryStream(i, inputStream, inputStream.available());
 			i++;
 		}
-		stmt.executeUpdate();
-		stmt.close();
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	/**
+	 * Executes an prepared SQL statement multiple times with different data
+	 *
+	 * @param sql sql
+	 * @param inputStreams data
+	 * @throws SQLException in case of an SQL error
+	 * @throws IOException in case of an IO error
+	 */
+	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
+		Connection connection = transaction.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		int i = 1; // yes, jdbc starts counting at 1.
+		for (InputStream inputStream : inputStreams) {
+			statement.setBinaryStream(i, inputStream, inputStream.available());
+			statement.executeUpdate();
+		}
+		statement.close();
 	}
 
 	/**
