@@ -1,4 +1,4 @@
-/* $Id: DataEvent.java,v 1.6 2007/04/09 14:40:02 arianne_rpg Exp $ */
+/* $Id: DataEvent.java,v 1.7 2007/11/06 22:56:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,11 @@ class DataEvent {
 	/** Data associated to the event */
 	public byte[] data;
 
-	/** Constructor */
+	/** Constructor
+	 *
+	 * @param socket SocketChannel
+	 * @param data   the data of this event
+	 */
 	public DataEvent(SocketChannel socket, byte[] data) {
 		this.channel = socket;
 		this.data = data;

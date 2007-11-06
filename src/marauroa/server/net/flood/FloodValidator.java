@@ -86,6 +86,8 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	/**
 	 * This method will call onFlood method of the flood check so appropiate
 	 * actions can be taken for a flooding channel
+	 *
+	 * @param channel SocketChannel
 	 */
 	public void onFlood(SocketChannel channel) {
 		FloodMeasure entry = connections.get(channel);

@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.19 2007/06/17 19:49:02 astridemma Exp $ */
+/* $Id: NioServer.java,v 1.20 2007/11/06 22:56:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,6 @@ class NioServer extends Thread {
 	 * @param channel
 	 *            the channel to close.
 	 * @throws IOException
-	 * @see SocketChannel.close()
 	 */
 	public void close(SocketChannel channel) {
 		for (IDisconnectedListener listener : listeners) {
@@ -312,12 +311,12 @@ class NioServer extends Thread {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		synchronized (this.pendingData) {
-			List queue = (List) this.pendingData.get(socketChannel);
+			List<ByteBuffer> queue = this.pendingData.get(socketChannel);
 
 			try {
 				// Write until there's not more data ...
 				while (!queue.isEmpty()) {
-					ByteBuffer buf = (ByteBuffer) queue.get(0);
+					ByteBuffer buf = queue.get(0);
 					socketChannel.write(buf);
 
 					if (buf.remaining() > 0) {
@@ -367,7 +366,11 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
-	/** Register a listener to notify about disconnected events */
+	/** 
+	 * Register a listener to notify about disconnected events
+	 *
+	 * @param listener listener to add
+	 */
 	public void registerDisconnectedListener(IDisconnectedListener listener) {
 		this.listeners.add(listener);
 	}

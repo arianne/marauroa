@@ -12,7 +12,6 @@ import marauroa.server.net.flood.IFloodCheck;
  * happens we consider this a flooding.
  * 
  * @author miguel
- * 
  */
 public class FloodCheck implements IFloodCheck {
 
@@ -21,6 +20,11 @@ public class FloodCheck implements IFloodCheck {
 
 	private INetworkServerManager netMan;
 
+	/**
+	 * creates a new FloodChecker
+	 *
+	 * @param netMan INetworkServerManager
+	 */
 	public FloodCheck(INetworkServerManager netMan) {
 		this.netMan = netMan;
 	}
