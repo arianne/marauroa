@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.61 2007/10/24 22:46:32 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.62 2007/11/06 18:41:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -195,9 +195,13 @@ public class marauroad extends Thread {
 		}
 	}
 
+	/**
+	 * Entry point
+	 *
+	 * @param args command line arguments
+	 */
 	public static void main(String[] args) {
-		System.out
-		        .println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
 		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
 		System.out.println();
@@ -213,8 +217,7 @@ public class marauroad extends Thread {
 		System.out.println();
 		System.out.println("You should have received a copy of the GNU General Public License");
 		System.out.println("along with this program; if not, write to the Free Software");
-		System.out
-		        .println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
 
 		marauroad.setArguments(args);
 		
@@ -280,10 +283,18 @@ public class marauroad extends Thread {
 		logger.debug("exiting marauroad thread");
 	}
 
+	/**
+	 * Constructor
+	 */
 	protected marauroad() {
 		super("marauroad");
 	}
 
+	/**
+	 * returns the marauroad object
+	 *
+	 * @return marauroad
+	 */
 	public static marauroad getMarauroa() {
 		if (marauroa == null) {
 			marauroa = new marauroad();
@@ -295,6 +306,8 @@ public class marauroad extends Thread {
 	/**
 	 * initializes the game. returns true when all is ok, else false (this may
 	 * terminate the server).
+	 *
+	 * @return true, in case the startup was successful, false otherwise
 	 */
 	public boolean init() {
 		logger.debug("staring initialize");
@@ -316,8 +329,7 @@ public class marauroad extends Thread {
 			rpMan = new RPServerManager(netMan);
 			rpMan.start();
 		} catch (Exception e) {
-			logger
-			        .fatal(
+			logger.fatal(
 			                "Marauroa can't create RPServerManager.\n"
 			                        + "Reasons:\n"
 			                        + "- You haven't specified a valid configuration file\n"
@@ -334,8 +346,7 @@ public class marauroad extends Thread {
 			gameMan = new GameServerManager(key, netMan, rpMan);			
 			gameMan.start();
 		} catch (Exception e) {
-			logger
-			        .fatal(
+			logger.fatal(
 			                "Marauroa can't create GameServerManager.\n"
 			                        + "Reasons:\n"
 			                        + "- You haven't specified a valid configuration file\n"
@@ -359,6 +370,9 @@ public class marauroad extends Thread {
 		return true;
 	}
 
+	/**
+	 * shuts down Marauroa
+	 */
 	public void finish() {
 		netMan.finish();
 		gameMan.finish();
