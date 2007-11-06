@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.21 2007/05/03 18:28:50 arianne_rpg Exp $ */
+/* $Id: IDatabase.java,v 1.22 2007/11/06 18:35:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -60,6 +60,7 @@ public interface IDatabase {
 	 * @param pattern
 	 *            the pattern to follow to genereate the player id
 	 * @return the generated player id
+	 * @throws SQLException in case of an SQL error
 	 */
 	public String generatePlayer(Transaction transaction, String pattern) throws SQLException;
 
@@ -377,6 +378,10 @@ public interface IDatabase {
 	 */
 	public List<InetAddressMask> getBannedAddresses(Transaction transaction) throws SQLException;
 
-	/** This method returns a transaction to the database. */
+	/**
+	 * This method returns a transaction to the database.
+	 *
+	 * @return Transaction
+	 */
 	public Transaction getTransaction();
 }

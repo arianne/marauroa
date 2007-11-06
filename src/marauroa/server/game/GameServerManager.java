@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.90 2007/10/24 22:07:37 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.91 2007/11/06 18:35:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,6 +61,8 @@ import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
+
+import org.apache.log4j.Logger;
 
 /**
  * The GameServerManager is a active entity of the marauroa.game package, it is
@@ -668,8 +670,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		entry.state = ClientState.LOGOUT_ACCEPTED;
 	}
 
-	static int lastActionIdGenerated = 0;
-
 	/**
 	 * This method process actions send from client. In fact, the action is
 	 * passed to RPManager that will, when the turn arrives, execute it.
@@ -1191,8 +1191,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * </ul>
 	 */
 	private static class ServerInfo {
+		private static Logger logger = Logger.getLogger(ServerInfo.class);
 
-		static Configuration config;
+		private static Configuration config;
 		static {
 			try {
 				config = Configuration.getConfiguration();
@@ -1206,7 +1207,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		}
 
-		/** This method builds a String[] from the properties used in Server Info */
+		/** 
+		 * This method builds a String[] from the properties used in Server Info
+		 *
+		 * @return Server Info
+		 */
 		public static String[] get() {
 			List<String> l_result = new ArrayList<String>();
 

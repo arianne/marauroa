@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.4 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: DatabaseFactory.java,v 1.5 2007/11/06 18:35:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ public class DatabaseFactory {
 	 * Configuration file.
 	 *
 	 * @return A shared instance of PlayerDatabase
+	 * @throws NoDatabaseConfException in case the database configurtion is broken
 	 */
 	public static IDatabase getDatabase() throws NoDatabaseConfException {
 		try {
@@ -50,6 +51,7 @@ public class DatabaseFactory {
 	 *            complete class name. ie: marauroa.server.game.db.JDBCDatabase
 	 *
 	 * @return A shared instance of PlayerDatabase
+	 * @throws NoDatabaseConfException in case the database configurtion is broken
 	 */
 	public static IDatabase getDatabase(String database_type) throws NoDatabaseConfException {
 		try {

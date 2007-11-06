@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.8 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.9 2007/11/06 18:35:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ public class JDBCSQLHelper {
 	private static JDBCSQLHelper sqlHelper;
 
 	private JDBCSQLHelper() {
+		// hide constructor; Singleton pattern
 	}
 
 	/**
@@ -110,6 +111,7 @@ public class JDBCSQLHelper {
 					in.close();
 				}
 			} catch (IOException e) {
+				logger.debug(e, e);
 			}
 		}
 	}

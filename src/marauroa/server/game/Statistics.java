@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.34 2007/10/22 15:46:06 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.35 2007/11/06 18:35:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,6 +31,9 @@ import marauroa.server.game.db.Transaction;
  */
 public class Statistics implements StatisticsMBean {
 
+	/**
+	 *  time between statistics dumps
+	 */
 	public static final int DATABASE_STATISTICS_LAPSUS = 60000;
 
 	/** the logger instance. */
