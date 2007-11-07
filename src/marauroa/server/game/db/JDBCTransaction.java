@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.12 2007/04/09 14:39:59 arianne_rpg Exp $ */
+/* $Id: JDBCTransaction.java,v 1.13 2007/11/07 22:10:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -10,7 +10,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 package marauroa.server.game.db;
 
 import java.sql.Connection;
@@ -24,7 +23,6 @@ import marauroa.common.Log4J;
  * Implementation of a JDBC transaction for MySQL
  *
  * @author miguel
- *
  */
 public class JDBCTransaction implements Transaction {
 
@@ -32,6 +30,7 @@ public class JDBCTransaction implements Transaction {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCTransaction.class);
 
 	private Connection connection;
+	private JDBCAccess accessor;
 
 	/**
 	 * Constructor
@@ -81,6 +80,7 @@ public class JDBCTransaction implements Transaction {
 	public void commit() throws SQLException {
 		logger.debug("Commiting");
 		connection.commit();
+		closeAccessor();
 	}
 
 	/**
@@ -89,6 +89,7 @@ public class JDBCTransaction implements Transaction {
 	public void rollback() throws SQLException {
 		logger.debug("Rollback");
 		connection.rollback();
+		closeAccessor();
 	}
 
 	/**
@@ -120,5 +121,28 @@ public class JDBCTransaction implements Transaction {
 			}
 		}
 		return valid;
+	}
+
+	/**
+	 * Returns a helper object to access the database
+	 *
+	 * @return Accessor
+	 */
+	public Accessor getAccessor() {
+		if (accessor == null) {
+			accessor = new JDBCAccess(this);
+		}
+		return accessor;
+	}
+
+	/**
+	 * closes the JDBCAccessor
+	 *
+	 * @throws SQLException in case of an SQL error
+	 */
+	private void closeAccessor() throws SQLException {
+		if (accessor != null) {
+			accessor.close();
+		}
 	}
 }

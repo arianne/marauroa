@@ -15,7 +15,7 @@ import java.util.LinkedList;
  *
  * @author hendrik
  */
-public class JDBCAccess {
+public class JDBCAccess implements Accessor {
 
 	private Transaction transaction;
 	private LinkedList<Statement> statements = null;
@@ -30,11 +30,8 @@ public class JDBCAccess {
 		this.transaction = transaction;
 	}
 
-	/**
-	 * Executes an SQL statement
-	 *
-	 * @param sql sql
-	 * @throws SQLException in case of an SQL error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#execute(java.lang.String)
 	 */
 	public void execute(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
@@ -43,13 +40,8 @@ public class JDBCAccess {
 		statement.close();
 	}
 
-	/**
-	 * Executes an SQL statement
-	 *
-	 * @param sql sql
-	 * @param inputStreams data
-	 * @throws SQLException in case of an SQL error
-	 * @throws IOException in case of an IO error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#execute(java.lang.String, java.io.InputStream)
 	 */
 	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
@@ -63,13 +55,8 @@ public class JDBCAccess {
 		statement.close();
 	}
 
-	/**
-	 * Executes an prepared SQL statement multiple times with different data
-	 *
-	 * @param sql sql
-	 * @param inputStreams data
-	 * @throws SQLException in case of an SQL error
-	 * @throws IOException in case of an IO error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#executeBatch(java.lang.String, java.io.InputStream)
 	 */
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
@@ -82,12 +69,8 @@ public class JDBCAccess {
 		statement.close();
 	}
 
-	/**
-	 * Executes a query. Note: You need to call the close() method
-	 *
-	 * @param sql query
-	 * @return ResultSet
-	 * @throws SQLException in case of an SQL error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#query(java.lang.String)
 	 */
 	public ResultSet query(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
@@ -97,13 +80,8 @@ public class JDBCAccess {
 		return resultSet;
 	}
 
-	/**
-	 * Returns the value of the first row first column which is
-	 * exspected to be an int. Use this for count(*) and last_insert_id 
-	 *
-	 * @param sql query
-	 * @return integer of first column in first row
-	 * @throws SQLException in case of an SQL error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#querySingleCellInt(java.lang.String)
 	 */
 	public int querySingleCellInt(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
@@ -140,10 +118,8 @@ public class JDBCAccess {
 		resultSets.add(resultSet);
 	}
 
-	/**
-	 * Clean up
-	 *
-	 * @throws SQLException in case of an unexspected JDBC error
+	/* (non-Javadoc)
+	 * @see marauroa.server.game.db.Accessor#close()
 	 */
 	public void close() throws SQLException {
 		if (statements != null) {

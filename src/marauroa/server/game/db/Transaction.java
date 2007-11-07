@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.8 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: Transaction.java,v 1.9 2007/11/07 22:10:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 
 package marauroa.server.game.db;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -29,7 +30,7 @@ public interface Transaction {
 	 *
 	 * @return a Connection
 	 */
-	public java.sql.Connection getConnection();
+	public Connection getConnection();
 
 	/**
 	 * Starts a transaction
@@ -53,4 +54,11 @@ public interface Transaction {
 	 *             if the underlaying backstore throws an Exception
 	 */
 	public void rollback() throws SQLException;
+
+	/**
+	 * Returns a helper object to access the database
+	 *
+	 * @return Accessor
+	 */
+	public Accessor getAccessor();
 }
