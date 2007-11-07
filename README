@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.00
+Version 2.1
 
 
 Requeriments
@@ -70,7 +70,7 @@ Or for a complete package release write:
 
 Status
 ------
-Version >= 2.0 doesn't support anything yet. YOU ARE WARNED!.
+Version >= 2.0 does support Stendhal 0.63
 Version >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
 Version >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
@@ -92,7 +92,7 @@ http://arianne.sourceforge.net instead.
 
 Changelog
 ---------
-2.0.3
+2.1
 - Fixed problem with bogus network message.
 - Added additional results to enum Result (for account/character creation)
 - Added UnicodeSupportingInputStream and -Reader which automatically detect unicode type (and even support UTF-8Y)
