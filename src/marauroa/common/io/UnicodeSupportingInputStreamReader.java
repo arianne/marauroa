@@ -21,7 +21,11 @@ Win2k Notepad:
   Unicode format = UTF-16LE
 ***/
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PushbackInputStream;
+import java.io.Reader;
 
 /**
 * Generic unicode textreader, which will use BOM mark

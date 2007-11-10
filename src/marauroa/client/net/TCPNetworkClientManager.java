@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.17 2007/08/14 22:37:27 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.18 2007/11/10 18:46:36 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,13 +12,13 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 

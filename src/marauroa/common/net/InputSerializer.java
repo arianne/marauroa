@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.10 2007/11/04 20:49:02 nhnb Exp $ */
+/* $Id: InputSerializer.java,v 1.11 2007/11/10 18:46:37 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 import marauroa.common.TimeoutConf;
 
