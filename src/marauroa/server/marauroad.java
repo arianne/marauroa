@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.62 2007/11/06 18:41:18 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.63 2007/11/11 19:51:42 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -171,14 +171,6 @@ public class marauroad extends Thread {
 		while (i != args.length) {
 			if (args[i].equals("-c")) {
 				Configuration.setConfigurationFile(args[i + 1]);
-				try {
-					Configuration.getConfiguration();
-				} catch (Exception e) {
-					System.out.println("Can't find configuration file: " + args[i + 1]);
-					System.out.println("Run game configuration to get a valid \"server.ini\" file");
-					e.printStackTrace();
-					System.exit(1);
-				}
 			} else if (args[i].equals("-h")) {
 				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
@@ -218,17 +210,20 @@ public class marauroad extends Thread {
 		System.out.println("You should have received a copy of the GNU General Public License");
 		System.out.println("along with this program; if not, write to the Free Software");
 		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println();
 
 		marauroad.setArguments(args);
 		
-		String log4jConfiguration=null;
+		String log4jConfiguration = null;
 
 		try {
-	        Configuration conf=Configuration.getConfiguration();
-	        log4jConfiguration=conf.get("log4j_url");
-        } catch (IOException e) {
-        	e.printStackTrace();        	
-        }
+			Configuration conf = Configuration.getConfiguration();
+			log4jConfiguration = conf.get("log4j_url");
+		} catch (IOException e) {
+			System.out.println("ERROR: Marauroa can't find configuration file.");
+			System.out.println("Run game configuration to get a valid \"server.ini\" file");
+			System.exit(1);
+		}
         
         if(log4jConfiguration==null) {
         	log4jConfiguration="marauroa/server/log4j.properties";
