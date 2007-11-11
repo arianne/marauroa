@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import marauroa.common.game.Perception;
-import marauroa.common.game.RPEvent;
-import marauroa.common.game.RPObject;
-import marauroa.common.game.RPSlot;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;

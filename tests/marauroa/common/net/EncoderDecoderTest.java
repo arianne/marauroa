@@ -10,9 +10,6 @@ import java.util.Random;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
-import marauroa.common.net.Decoder;
-import marauroa.common.net.Encoder;
-import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 

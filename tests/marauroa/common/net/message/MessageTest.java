@@ -11,7 +11,6 @@ import java.nio.channels.SocketChannel;
 
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-import marauroa.common.net.message.Message;
 import marauroa.common.net.message.Message.MessageType;
 
 import org.junit.Test;

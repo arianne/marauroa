@@ -2,7 +2,6 @@ package marauroa.common.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import marauroa.common.game.RPObject;
 
 import org.junit.Test;
 

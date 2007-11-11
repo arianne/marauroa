@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.3 2007/10/28 19:38:35 arianne_rpg Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.4 2007/11/11 19:59:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -12,35 +12,22 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
 
 import marauroa.client.net.TCPNetworkClientManager;
-import marauroa.common.Log4J;
-import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPAction;
-import marauroa.common.game.RPObject;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
-import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
-import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.Transaction;
 import marauroa.server.net.nio.NIONetworkServerManager;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

@@ -7,10 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import marauroa.common.game.Definition;
-import marauroa.common.game.RPClass;
-import marauroa.common.game.RPEvent;
-import marauroa.common.game.RPObject;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;

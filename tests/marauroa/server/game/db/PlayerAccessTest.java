@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.1 2007/10/17 20:16:38 nhnb Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.2 2007/11/11 19:59:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -28,8 +28,6 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.SecureLoginTest;
-import marauroa.server.game.db.JDBCDatabase;
-import marauroa.server.game.db.Transaction;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

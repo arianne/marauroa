@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-import marauroa.common.net.message.TransferContent;
 
 import org.junit.After;
 import org.junit.Before;

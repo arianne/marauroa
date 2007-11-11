@@ -12,11 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-import marauroa.common.game.RPClass;
-import marauroa.common.game.RPEvent;
-import marauroa.common.game.RPObject;
-import marauroa.common.game.RPSlot;
-import marauroa.common.game.SlotIsFullException;
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;

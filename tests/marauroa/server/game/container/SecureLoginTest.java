@@ -11,8 +11,6 @@ import java.sql.SQLException;
 import marauroa.common.Configuration;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
-import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.container.PlayerEntryContainer;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

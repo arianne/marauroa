@@ -8,10 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
-import marauroa.common.game.Perception;
-import marauroa.common.game.RPEvent;
-import marauroa.common.game.RPObject;
-import marauroa.common.game.RPSlot;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;

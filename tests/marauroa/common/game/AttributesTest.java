@@ -8,9 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import marauroa.common.game.Attributes;
-import marauroa.common.game.Definition;
-import marauroa.common.game.RPClass;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
