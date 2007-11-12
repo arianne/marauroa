@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import marauroa.common.Configuration;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,6 +19,15 @@ import org.junit.Test;
  * 
  */
 public class PlayerEntryContainerTest {
+	static class MockPlayerEntryContainer extends PlayerEntryContainer {
+		MockPlayerEntryContainer() {
+			super();
+		}
+
+		protected void initializeDatabase() {
+			/* Do nothing, we don't need database on this test. */
+		}
+	}
 
 	private static PlayerEntryContainer cont;
 
@@ -26,7 +37,7 @@ public class PlayerEntryContainerTest {
 	 */
 	@BeforeClass
 	public static void setUp() {
-		cont = PlayerEntryContainer.getContainer();
+		cont = new MockPlayerEntryContainer();
 	}
 
 	/**
