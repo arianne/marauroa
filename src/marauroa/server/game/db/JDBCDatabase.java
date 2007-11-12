@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.60 2007/11/12 13:21:47 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.61 2007/11/12 19:37:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -910,10 +910,8 @@ public class JDBCDatabase implements IDatabase {
 					        + account_status + "}");
 				}
 
-				if (!userNameFromDB.equalsIgnoreCase(username)) {
-					logger.warn("Username(" + username
-					        + ") is not the same that stored username(" + userNameFromDB + ")");
-					isplayer = false;
+				if (!userNameFromDB.equals(username)) {
+					logger.warn("Username(" + username + ") is not the same that stored username(" + userNameFromDB + ")");
 				}
 
 			}

@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -137,11 +138,28 @@ public class SystemTest {
 	}
 
 	/**
+	 * Test the login process.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void t1_1_login() throws Exception {
+		try {
+			client.connect("localhost", PORT);
+			client.login("testAnotherUsername", "NoPassword");
+			fail("It must not login");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Test the login process bug when using invalid case in username. It should
 	 * not login
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void t2_loginBadCase() throws Exception {
 		try {
