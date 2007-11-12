@@ -196,6 +196,10 @@ public class Decoder {
 			
 			int size = getSizeOfMessage(data);
 
+			if(size<0) {
+				throw new IOException("Message size is negative. Message ignored.");
+			}
+
 			if (data.length == size) {
 				/* If we have the full data build the message */
 				Message msg = msgFactory.getMessage(data, channel, 4);

@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.4 2007/11/11 19:59:28 arianne_rpg Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.5 2007/11/12 19:17:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -143,18 +143,21 @@ public class NetworkManagerTest {
 	 */
 	@Test
 	public void sendMessageRubish() throws IOException, InvalidVersionException {
-		Socket socket=new Socket("localhost", PORT);
-		OutputStream out=socket.getOutputStream();
-		
-		byte[] tmp=new byte[1024];
-		for(int i=0; i<1024; i++) {
-			tmp[i]=(byte)(255*Math.random());
+		/* Send 256 rubish messages, just to make sure. */
+		for (int j = 0; j < 256; j++) {
+			Socket socket = new Socket("localhost", PORT);
+			OutputStream out = socket.getOutputStream();
+
+			byte[] tmp = new byte[1024];
+			for (int i = 0; i < 1024; i++) {
+				tmp[i] = (byte) (255 * Math.random());
+			}
+
+			out.write(tmp);
+			out.flush();
+			socket.close();
+
+			sendMessageC2S();
 		}
-		
-		out.write(tmp);
-		out.flush();
-		socket.close();		
-		
-		sendMessageC2S();
 	}
 }

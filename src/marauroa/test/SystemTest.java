@@ -90,7 +90,7 @@ public class SystemTest {
 	public void disconnectClient() {
 		client.close();
 	}
-
+	
 	/**
 	 * Test create account process by creating an account and it should work and
 	 * create the account again and failing.
@@ -102,7 +102,7 @@ public class SystemTest {
 	 * @throws BannedAddressException
 	 */
 	@Test
-	public void createAccount() throws IOException, TimeoutException, InvalidVersionException,
+	public void t0_createAccount() throws IOException, TimeoutException, InvalidVersionException,
 	        CreateAccountFailedException, BannedAddressException {
 		client.connect("localhost", PORT);
 		AccountResult res = client.createAccount("testUsername", "password", "email");
@@ -123,7 +123,7 @@ public class SystemTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void login() throws Exception {
+	public void t1_login() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
@@ -138,12 +138,12 @@ public class SystemTest {
 
 	/**
 	 * Test the login process bug when using invalid case in username. It should
-	 * not logint
+	 * not login
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void loginBadCase() throws Exception {
+	public void t2_loginBadCase() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testusername", "password");
@@ -160,7 +160,7 @@ public class SystemTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void loginDouble() throws Exception {
+	public void t3_loginDouble() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
@@ -180,7 +180,7 @@ public class SystemTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void createCharacter() throws Exception {
+	public void t4_createCharacter() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
@@ -212,7 +212,7 @@ public class SystemTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void chooseCharacter() throws Exception {
+	public void t5_chooseCharacter() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
@@ -235,7 +235,7 @@ public class SystemTest {
 	 * Test the perception management in game.
 	 */
 	@Test
-	public void receivePerceptions() throws Exception {
+	public void t6_receivePerceptions() throws Exception {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
@@ -259,7 +259,7 @@ public class SystemTest {
 	}
 
 	@Test
-	public void testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
+	public void t7_testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
 	        LoginFailedException {
 		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
 		ConnectionValidator conn = rp.getValidator();
