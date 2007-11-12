@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.16 2007/05/29 09:35:51 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.17 2007/11/12 13:08:52 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -51,7 +51,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static PlayerEntryContainer playerEntryContainer;
 
 	/** Constructor */
-	private PlayerEntryContainer() {
+	protected PlayerEntryContainer() {
 		/* Initialize the random number generator */
 		rand = new Random();
 		rand.setSeed(new Date().getTime());
@@ -61,6 +61,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		/* We initialize the list that will help us sort the player entries. */
 		clientidMap = new HashMap<Integer, PlayerEntry>();
 
+		initializeDatabase();
+	}
+
+	protected void initializeDatabase() {
 		/* Choose the database type using configuration file */
 		PlayerEntry.initDatabase();
 	}
