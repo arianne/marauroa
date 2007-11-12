@@ -41,9 +41,9 @@ public class SecureLoginTest {
 	}
 
 	public static void loadRSAKey() throws IOException {
-		key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")), new BigInteger(
-		        Configuration.getConfiguration().get("d")), new BigInteger(Configuration
-		        .getConfiguration().get("e")));
+		key = new RSAKey(new BigInteger("2408376769632966826891253753617412746862686794740723175774423430043927850498085639220684795629747326949838501777926669337171495421818563824539329224927899179237"), 
+				new BigInteger("2247818318324102371765170170042918563738507675091341630722795201374332660464879838332237004076252849654527963214772652641735279016325354691167883850414929419335"), 
+		        new BigInteger("15"));
 	}
 
 	/**

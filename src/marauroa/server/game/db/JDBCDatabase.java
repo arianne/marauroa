@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.59 2007/11/07 22:10:45 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.60 2007/11/12 13:21:47 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -81,9 +81,18 @@ public class JDBCDatabase implements IDatabase {
 
 		sql = JDBCSQLHelper.get();
 		transaction = (JDBCTransaction) getTransaction();
-		factory=RPObjectFactory.get();
+		
+		initializeRPObjectFactory();
 
 		initialize();
+	}
+
+	/**
+	 * Creates the RPObject factory so objects loaded from database
+	 * has already the correct type.
+	 */
+	protected void initializeRPObjectFactory() {
+		factory=RPObjectFactory.get();
 	}
 
 	/**

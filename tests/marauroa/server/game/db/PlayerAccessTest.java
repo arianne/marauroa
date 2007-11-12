@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.2 2007/11/11 19:59:28 arianne_rpg Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.3 2007/11/12 13:21:48 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.SecureLoginTest;
+import marauroa.server.game.rp.RPObjectFactory;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,6 +53,10 @@ public class PlayerAccessTest {
 
 		public TestJDBC(Properties props) {
 			super(props);
+		}
+		
+		protected void initializeRPObjectFactory() {
+			factory=new marauroa.server.game.rp.RPObjectFactory();
 		}
 	}
 
