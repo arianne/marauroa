@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.76 2007/11/04 11:32:30 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.77 2007/11/13 23:20:13 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -942,6 +942,11 @@ public class RPObject extends Attributes {
 			/* Iterate over events and remove all of them that are visible */
 			RPEvent event = eventsit.next();
 			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+
+			if(def==null) {
+				logger.warn("Null Definition for event: "+event.getName()+" of RPClass: "+getRPClass().getName());
+			}
+
 			if (def.isVisible()) {
 				eventsit.remove();
 			}
