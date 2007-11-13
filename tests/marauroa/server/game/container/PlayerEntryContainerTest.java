@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import marauroa.common.Configuration;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 

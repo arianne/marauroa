@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.SQLException;
 
-import marauroa.common.Configuration;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 
