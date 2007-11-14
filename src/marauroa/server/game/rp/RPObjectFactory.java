@@ -55,7 +55,7 @@ public class RPObjectFactory {
 	 */
 	public static RPObjectFactory get(String factoryName) throws NoFactoryConfException {
 		try {
-	        Class databaseClass = Class.forName(factoryName);
+	        Class<?> databaseClass = Class.forName(factoryName);
 	        java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getFactory");
 	        return (RPObjectFactory) singleton.invoke(null);
         } catch (Exception e) {

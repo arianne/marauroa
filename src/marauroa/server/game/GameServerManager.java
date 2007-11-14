@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.91 2007/11/06 18:35:18 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.92 2007/11/14 19:49:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1215,7 +1215,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		public static String[] get() {
 			List<String> l_result = new ArrayList<String>();
 
-			Enumeration props = config.propertyNames();
+			Enumeration<?> props = config.propertyNames();
 			while (props.hasMoreElements()) {
 				String prop_name = String.valueOf(props.nextElement());
 				if (prop_name.startsWith("server_")) {

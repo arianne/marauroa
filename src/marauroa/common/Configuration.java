@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.22 2007/10/17 08:20:14 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.23 2007/11/14 19:49:55 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -169,10 +169,10 @@ public class Configuration {
 	}
 
 	/**
-	 * This method returns an enumeration of the propierties that the file
+	 * This method returns an enumeration of the properties that the file
 	 * contains
 	 */
-	public Enumeration propertyNames() {
+	public Enumeration<?> propertyNames() {
 		return properties.propertyNames();
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.20 2007/11/06 22:56:46 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.21 2007/11/14 19:49:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ class NioServer extends Thread {
 			try {
 				// Process any pending changes
 				synchronized (this.pendingChanges) {
-					Iterator changes = this.pendingChanges.iterator();
+					Iterator<?> changes = this.pendingChanges.iterator();
 					while (changes.hasNext()) {
 						ChangeRequest change = (ChangeRequest) changes.next();
 						if (change.socket.isConnected()) {
@@ -192,7 +192,7 @@ class NioServer extends Thread {
 				}
 
 				synchronized (this.pendingClosed) {
-					Iterator it = pendingClosed.iterator();
+					Iterator<?> it = pendingClosed.iterator();
 					while (it.hasNext()) {
 						ChangeRequest change = (ChangeRequest) it.next();
 						if (change.socket.isConnected()) {
@@ -230,7 +230,7 @@ class NioServer extends Thread {
 				this.selector.select();
 
 				// Iterate over the set of keys for which events are available
-				Iterator selectedKeys = this.selector.selectedKeys().iterator();
+				Iterator<?> selectedKeys = this.selector.selectedKeys().iterator();
 				while (selectedKeys.hasNext()) {
 					SelectionKey key = (SelectionKey) selectedKeys.next();
 					selectedKeys.remove();

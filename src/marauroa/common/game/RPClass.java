@@ -707,20 +707,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return defaultRPClass;
 	}
 
-	/**
-	 * Returns a default rpclass for lazy developers. You won't get any
-	 * advantages on the engine by using it.
-	 *
-	 * @return RPClass
-	 */
-	public static RPClass getBaseRPActionDefault() {
-		if (defaultRPClass == null) {
-			defaultRPClass = getBaseRPObjectDefault();
-		}
-
-		return defaultRPClass;
-	}
-
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;

@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.5 2007/11/06 18:35:15 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.6 2007/11/14 19:49:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class DatabaseFactory {
 	 */
 	public static IDatabase getDatabase(String database_type) throws NoDatabaseConfException {
 		try {
-			Class databaseClass = Class.forName(database_type);
+			Class<?> databaseClass = Class.forName(database_type);
 			java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getDatabase");
 			return (IDatabase) singleton.invoke(null);
 		} catch (Exception e) {

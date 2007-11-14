@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.58 2007/11/04 11:32:31 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.59 2007/11/14 19:49:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -401,7 +401,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	private static String listToString(List<String> list) {
 		StringBuffer buffer = new StringBuffer("[");
 
-		for (Iterator it = list.iterator(); it.hasNext();) {
+		for (Iterator<?> it = list.iterator(); it.hasNext();) {
 			String value = (String) it.next();
 
 			buffer.append(value);

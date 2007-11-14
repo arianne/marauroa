@@ -157,6 +157,9 @@ public class SystemTest {
 	 * Test the login process bug when using invalid case in username. It should
 	 * not login
 	 * 
+	 * TODO: Stendhal 0.6x allowed different cases so we are not going to 
+	 *   consider this bug for now.
+	 * 
 	 * @throws Exception
 	 */
 	@Ignore

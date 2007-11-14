@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.29 2007/05/30 09:33:18 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.30 2007/11/14 19:49:57 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,7 @@ public class MessageFactory {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Attributes.class);
 
 	/** A factory to create messages instance from an integer code. */
-	private static Map<Integer, Class> factoryArray;
+	private static Map<Integer, Class<?>> factoryArray;
 
 	/**
 	 * Singleton instance
@@ -87,7 +87,7 @@ public class MessageFactory {
 	 */
 	public static MessageFactory getFactory() {
 		if (messageFactory == null) {
-			factoryArray = new HashMap<Integer, Class>();
+			factoryArray = new HashMap<Integer, Class<?>>();
 			messageFactory = new MessageFactory();
 		}
 		return messageFactory;
@@ -135,7 +135,7 @@ public class MessageFactory {
 	 * @param index the code to use.
 	 * @param messageClass the class of the message to add.
 	 */
-	private void register(Message.MessageType index, Class messageClass) {
+	private void register(Message.MessageType index, Class<?> messageClass) {
 		factoryArray.put(index.ordinal(), messageClass);
 	}
 
@@ -185,7 +185,7 @@ public class MessageFactory {
 			if (factoryArray.containsKey(messageTypeIndex)) {
 				Message tmp = null;
 				try {
-					Class messageType = factoryArray.get(messageTypeIndex);
+					Class<?> messageType = factoryArray.get(messageTypeIndex);
 					tmp = (Message) messageType.newInstance();
 					ByteArrayInputStream in = new ByteArrayInputStream(data);
 					if (offset > 0) {

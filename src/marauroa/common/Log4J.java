@@ -71,7 +71,7 @@ public class Log4J {
 	 *            the Class requesting a logger
 	 * @return the logger instance
 	 */
-	public static marauroa.common.Logger getLogger(Class clazz) {
+	public static marauroa.common.Logger getLogger(Class<?> clazz) {
 		return new marauroa.common.Logger(clazz);
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.41 2007/11/10 18:46:37 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.42 2007/11/14 19:49:58 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -153,14 +153,14 @@ public class RPServerManager extends Thread {
 	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException,
 	        IllegalArgumentException, SecurityException, IllegalAccessException,
 	        InvocationTargetException, NoSuchMethodException {
-		Class worldClass = Class.forName(conf.get("world"));
+		Class<?> worldClass = Class.forName(conf.get("world"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
 		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		RPWorld.set(world);
 		world.onInit();
 
-		Class ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
+		Class<?> ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
 		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);

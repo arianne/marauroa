@@ -21,7 +21,7 @@ public class Logger {
 	/** The log4j instance */
 	org.apache.log4j.Logger _logger;
 
-	Logger(Class arg0) {
+	Logger(Class<?> arg0) {
 
 		_logger = org.apache.log4j.Logger.getLogger(arg0);
 	}
@@ -76,7 +76,7 @@ public class Logger {
 		return _logger.getAdditivity();
 	}
 
-	public synchronized Enumeration getAllAppenders() {
+	public synchronized Enumeration<?> getAllAppenders() {
 
 		return _logger.getAllAppenders();
 	}
@@ -196,7 +196,7 @@ public class Logger {
 		_logger.warn(arg0);
 	}
 
-	static Logger getLogger(Class clazz) {
+	static Logger getLogger(Class<?> clazz) {
 		return new Logger(clazz);
 	}
 
