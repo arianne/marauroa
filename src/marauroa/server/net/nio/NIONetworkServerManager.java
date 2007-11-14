@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.34 2007/07/10 10:00:01 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.35 2007/11/14 20:20:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -219,7 +219,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		stats.add("Message recv", 1);
 		
 		/*
-		 * We check the connection is case it is trying to flood server.
+		 * We check the connection in case it is trying to flood server.
 		 */
 		if (floodValidator.isFlooding(channel, count)) {
 			/*

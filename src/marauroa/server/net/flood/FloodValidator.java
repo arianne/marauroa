@@ -93,6 +93,7 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 		FloodMeasure entry = connections.get(channel);
 		if (entry == null) {
 			logger.warn("This connection is not registered. Impossible: " + channel);
+			return;
 		}
 
 		floodCheck.onFlood(entry);
