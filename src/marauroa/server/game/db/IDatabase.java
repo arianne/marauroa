@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.22 2007/11/06 18:35:15 nhnb Exp $ */
+/* $Id: IDatabase.java,v 1.23 2007/11/16 22:16:47 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -384,4 +384,9 @@ public interface IDatabase {
 	 * @return Transaction
 	 */
 	public Transaction getTransaction();
+
+	/**
+	 * Close the database connection
+	 */
+	public void close();
 }

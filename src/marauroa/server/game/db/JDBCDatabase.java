@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.62 2007/11/14 19:49:58 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.63 2007/11/16 22:16:47 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -85,6 +85,23 @@ public class JDBCDatabase implements IDatabase {
 		initializeRPObjectFactory();
 
 		initialize();
+	}
+
+	/**
+	 * Close the database connection and remove the transaction object
+	 */
+	public void close()
+	{
+		Connection conn = transaction.getConnection();
+
+		transaction = null;
+
+		try {
+	        conn.close();
+        } catch(SQLException e) {
+			logger.fatal("Exception while closing the database connection", e);
+			throw new NoDatabaseConfException(e);
+        }
 	}
 
 	/**

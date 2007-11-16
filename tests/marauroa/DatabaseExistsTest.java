@@ -38,6 +38,8 @@ public class DatabaseExistsTest {
 			props.put("jdbc_pwd", "passwd");
 
 			IDatabase database = new TestJDBC(props);
+
+			database.close();
 		} catch (Exception e) {
 			fail("Database is not accessible. Please check \"marauroatest\" is created and that user \"junittest\" with password \"passwd\" can access it.");			
 			System.exit(1);
