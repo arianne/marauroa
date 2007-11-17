@@ -24,3 +24,4 @@ server.log*
 server.ini
 server_stats.xml
 dist
+build-archive
