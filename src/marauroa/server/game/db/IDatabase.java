@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.23 2007/11/16 22:16:47 martinfuchs Exp $ */
+/* $Id: IDatabase.java,v 1.24 2007/11/17 13:01:50 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -58,7 +58,7 @@ public interface IDatabase {
 	 * @param transaction
 	 *            the database transaction.
 	 * @param pattern
-	 *            the pattern to follow to genereate the player id
+	 *            the pattern to follow to generate the player id
 	 * @return the generated player id
 	 * @throws SQLException in case of an SQL error
 	 */
@@ -70,7 +70,7 @@ public interface IDatabase {
 	 * @param transaction
 	 *            the database transaction.
 	 * @param username
-	 *            the player's usernam
+	 *            the player's username
 	 * @param password
 	 *            the new password
 	 * @throws SQLException
@@ -335,7 +335,7 @@ public interface IDatabase {
 
 	/**
 	 * This methods adds an entry to the login events table so player can know
-	 * who has tried to access his account and if he has been sucessful or not.
+	 * who has tried to access his account and if he has been sucessfull or not.
 	 *
 	 * @param transaction
 	 *            the database transaction

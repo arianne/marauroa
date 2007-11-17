@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.13 2007/11/07 22:10:45 nhnb Exp $ */
+/* $Id: JDBCTransaction.java,v 1.14 2007/11/17 13:01:50 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public class JDBCTransaction implements Transaction {
 
 	/**
 	 * Returns true if the transaction is still valid. A transaction could stop
-	 * to be valid because the associated connnection has been dropped.
+	 * to be valid because the associated connection has been dropped.
 	 *
 	 * @return true if the transaction is valid.
 	 */

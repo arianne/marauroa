@@ -1,4 +1,4 @@
-/* $Id: Transaction.java,v 1.9 2007/11/07 22:10:45 nhnb Exp $ */
+/* $Id: Transaction.java,v 1.10 2007/11/17 13:01:50 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * This class represents a transaction which can be used to
  * retrieve/store/change in Database.
  * <p>
- * Different Database implementaions may requiere different implementations of
+ * Different Database implementations may require different implementations of
  * this class.
  */
 public interface Transaction {

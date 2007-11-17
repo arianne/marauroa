@@ -59,7 +59,7 @@ public interface Accessor {
 	/**
 	 * Clean up
 	 *
-	 * @throws SQLException in case of an unexspected JDBC error
+	 * @throws SQLException in case of an unexpected JDBC error
 	 */
 	public abstract void close() throws SQLException;
 

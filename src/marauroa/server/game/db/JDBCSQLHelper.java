@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.9 2007/11/06 18:35:16 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.10 2007/11/17 13:01:50 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class JDBCSQLHelper {
 
 	/**
 	 * This method runs a SQL file using the given transaction. You are
-	 * resposible of begining the transaction and commiting the changes or
+	 * responsible of beginning the transaction and commiting the changes or
 	 * rollback on error.
 	 * 
 	 * @param transaction

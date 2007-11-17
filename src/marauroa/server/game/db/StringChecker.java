@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.5 2007/07/02 01:44:55 seather Exp $ */
+/* $Id: StringChecker.java,v 1.6 2007/11/17 13:01:50 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -65,7 +65,7 @@ public class StringChecker {
 	 * engines accept single quotes around numbers as well.
 	 * <p>
 	 * Please note that special characters for LIKE and other matching commands
-	 * are not quotes. The result of this method is suiteable for INSERT, UPDATE
+	 * are not quotes. The result of this method is suitable for INSERT, UPDATE
 	 * and an "=" operator in the WHERE part.
 	 *
 	 * @param param
