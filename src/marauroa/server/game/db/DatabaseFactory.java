@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.7 2007/11/17 13:01:50 martinfuchs Exp $ */
+/* $Id: DatabaseFactory.java,v 1.8 2007/11/18 19:45:02 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -43,7 +43,7 @@ public class DatabaseFactory {
 	}
 
 	/**
-	 * This method returns an instance of PlayerDatabase choosen using the
+	 * This method returns an instance of PlayerDatabase chosen using the
 	 * param.
 	 *
 	 * @param database_type
