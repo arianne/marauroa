@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.30 2007/11/14 19:49:57 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.31 2007/11/18 15:06:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -209,7 +209,10 @@ public class MessageFactory {
 		} else {
 			logger.warn("Message has incorrect protocol version(" + data[0] + ") expected ("
 			        + NetConst.NETWORK_PROTOCOL_VERSION + ")");
-			logger.debug("Message is: " + Utility.dumpByteArray(data));
+			// Deactivaed on 2007-11-18 because during a server crash
+			// three threads dumps over a periord of about 30 seconds
+			// showed NetworkServerManager in it.
+			// logger.debug("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[0]);
 		}
 	}
