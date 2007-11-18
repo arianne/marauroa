@@ -194,7 +194,7 @@ public class AttributesTest {
 	 * Assert that no exception is thrown when a long string is added to
 	 * to rpclassless attributes.
 	 *
-	 * @throws IOException in case of an unexspected error
+	 * @throws IOException in case of an unexpected error
 	 */
 	public void testSerializationOfClasslessAttributesWithALongString() throws IOException {
 		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
