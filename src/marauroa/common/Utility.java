@@ -19,6 +19,7 @@ public class Utility {
 
 	/** no instance allowed */
 	private Utility() {
+		// static class
 	}
 
 	/**
@@ -32,13 +33,13 @@ public class Utility {
 	 * @return the expected number
 	 */
 	public static String addLeadingZeros(String number, int maxDigits) {
-		String result = number;
+		StringBuilder result = new StringBuilder(number);
 
 		while (number.length() < maxDigits) {
-			result = "0" + result;
+			result.append("0");
 		}
 
-		return result;
+		return result.toString();
 	}
 
 	/**
