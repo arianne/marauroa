@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.31 2007/11/18 15:06:00 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.32 2007/11/19 19:35:43 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import marauroa.common.Log4J;
-import marauroa.common.Utility;
 import marauroa.common.game.Attributes;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
