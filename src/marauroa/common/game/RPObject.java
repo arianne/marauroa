@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.77 2007/11/13 23:20:13 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.78 2007/11/19 19:33:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1114,13 +1114,16 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Clean delta^2 information about added and deleted. It is called by
-	 * Marauroa, don't use :)
+	 * Clean delta^2 information about added and deleted.
+	 * It also empty the event list.
+	 *  
+	 * It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeleted() {
 		resetAddedAndDeletedAttributes();
 		resetAddedAndDeletedRPSlot();
 		resetAddedAndDeletedRPLink();
+		
 		clearEvents();
 		
 		if(modified) {

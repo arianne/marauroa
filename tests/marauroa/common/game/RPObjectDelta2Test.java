@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
@@ -638,5 +641,42 @@ public class RPObjectDelta2Test {
 		result.applyDifferences(added, deleted);
 		
 		assertEquals(result, obj);
+	}
+
+	@Test
+	public void testRPEvent() throws Exception {
+		List<RPEvent> events=obj.events();
+		assertEquals("There is two events", 2, events.size());
+
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		
+		events=obj.events();	
+		assertEquals("There is no event", 0, events.size());
+
+		RPObject result = (RPObject) obj.clone();
+
+		/*
+		 * Test adding one rp event
+		 */
+		RPEvent chat = new RPEvent("chat");
+		chat.put("text", "Hi there");
+		obj.addEvent(chat);
+
+		RPObject added = new RPObject();
+		RPObject deleted = new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		events=result.events();	
+		assertEquals("There is one event", 1, events.size());
+
+		
+		/*
+		 * Next turn. We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
 	}
 }
