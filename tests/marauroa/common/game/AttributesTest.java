@@ -239,5 +239,33 @@ public class AttributesTest {
 
 		assertEquals(attr, other);
 	}
+	
+	/**
+	 * 
+	 * Summary: Marauroa NullPointerException in Attribute.has()
+	 * 
+     * ERROR games.stendhal.server.StendhalRPRuleProcessor  - Player has logout before dead
+     * java.lang.NullPointerException
+     * marauroa.common.game.RPClass$1.getDefinition(RPClass.java:690)
+     * marauroa.common.game.Attributes.has(Attributes.java:181)
+     * games.stendhal.server.entity.player.Player.getKeyedSlot(Player.java:736)
+     * games.stendhal.server.entity.player.Player.hasKilledSolo(Player.java:1376)
+     * games.stendhal.server.entity.RPEntity.rewardKillers(RPEntity.java:877)
+     * games.stendhal.server.entity.RPEntity.onDead(RPEntity.java:944)
+     * games.stendhal.server.entity.RPEntity.onDead(RPEntity.java:924)
+     * games.stendhal.server.entity.RPEntity.onDead(RPEntity.java:892)
+     * games.stendhal.server.entity.creature.Creature.onDead(Creature.java:339)
+     * games.stendhal.server.entity.creature.Pet.onDead(Pet.java:146)
+     * games.stendhal.server.StendhalRPRuleProcessor.beginTurn(StendhalRPRuleProcessor.java:432)
+     * marauroa.server.game.rp.RPServerManager.run(RPServerManager.java:510)
+ 
+	 */
+	@Test
+	public void testBug1833952() {
+		Attributes test=new Attributes(RPClass.getBaseRPObjectDefault());
+		
+		assertFalse("Attribute is empty",test.has("a"));
+		assertFalse("Attribute is empty",test.has(null));		
+	}
 
 }

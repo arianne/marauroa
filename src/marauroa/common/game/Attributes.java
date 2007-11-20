@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.59 2007/11/14 19:49:56 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.60 2007/11/20 22:08:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public boolean has(String attribute) {
 		if (!content.containsKey(attribute)) {
-			if (rpClass == null)
+			if (rpClass == null || attribute==null)
 				return false;
 
 			Definition def = rpClass.getDefinition(DefinitionClass.STATIC, attribute);
