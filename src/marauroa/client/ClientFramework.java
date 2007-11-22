@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.34 2007/08/05 19:45:43 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.35 2007/11/22 22:58:13 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,7 @@ public abstract class ClientFramework {
 	public final static int TIMEOUT = 10000;
 
 	/**
-	 * We keep an instance of network manager to be able to comunicate with
+	 * We keep an instance of network manager to be able to communicate with
 	 * server.
 	 */
 	protected INetworkClientManagerInterface netMan;
@@ -125,7 +125,7 @@ public abstract class ClientFramework {
 	 * @return a message
 	 * @throws InvalidVersionException
 	 * @throws TimeoutException
-	 *             if there is no message available in TIMEOUT miliseconds.
+	 *             if there is no message available in TIMEOUT milliseconds.
 	 * @throws BannedAddressException
 	 */
 	private Message getMessage() throws InvalidVersionException, TimeoutException,
@@ -290,11 +290,11 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
-				/* Server accepted the character we choosed */
+				/* Server accepted the character we chose */
 				case S2C_CHOOSECHARACTER_ACK:
 					logger.debug("Choose Character ACK");
 					return true;
-					/* Server rejected the character we choosed. No reason */
+					/* Server rejected the character we chose. No reason */
 				case S2C_CHOOSECHARACTER_NACK:
 					logger.debug("Choose Character NACK");
 					return false;
@@ -572,7 +572,7 @@ public abstract class ClientFramework {
 	 * approve or reject
 	 *
 	 * @param items
-	 *            the items to approve or reject the transmision.
+	 *            the items to approve or reject the transmission.
 	 * @return the list of approved and rejected items.
 	 */
 	abstract protected List<TransferContent> onTransferREQ(List<TransferContent> items);
