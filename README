@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.1
+Version 2.2
 
 
 Requeriments
@@ -109,6 +109,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.2
+- Added close method to IDatabase.
+- Fixed problem when querying for null at Attributes.has
+
 2.1
 - Fixed problem with bogus network message.
 - Added additional results to enum Result (for account/character creation)
