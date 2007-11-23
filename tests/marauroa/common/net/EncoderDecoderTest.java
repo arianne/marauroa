@@ -187,10 +187,10 @@ public class EncoderDecoderTest {
 		parts.add(crafted_1);
 		parts.add(crafted_2);
 		
-		Message msg=parts.build(null);	
+		MessageC2SAction rebuild=(MessageC2SAction) parts.build(null);	
 		
-		assertEquals(message,msg);
+		assertEquals(message.getRPAction(),rebuild.getRPAction());
 		
-		assertFalse("There is still part of message",parts.isEmpty());
+		assertTrue("The incomplete message is dumped",parts.isEmpty());
 		}
 }

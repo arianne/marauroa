@@ -90,18 +90,19 @@ public class Decoder {
 					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
 
 					if (rest.length < 4) {
-						logger.warn("Reading size lacks of enough data.");
-						size=-1;
-						
-						return null;
+						logger.warn("Reading size lacks of enough data. Deleting.");
+						it.remove();
 					} else {
 						/*
 						 * Compute the new size of the other message
 						 */
 						size = getSizeOfMessage(rest);
+						parts.set(0, rest);
 					}
-					
-					parts.set(0, rest);
+
+					/*
+					 * Stop iterating and process the actual complete message.
+					 */
 					break;					
 				} else {
 					System.arraycopy(p, 0, data, offset, p.length);
