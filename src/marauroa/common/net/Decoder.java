@@ -55,18 +55,16 @@ public class Decoder {
 			for (byte[] p : parts) {
 				length += p.length;
 			}
-
+			
+			/*
+			 * If length is bigger than size that means that two messages on
+			 * a row... so we need to run until the end of the first one.
+			 */
 			if (length < size) {
-				/* 
+				/*
 				 * Still missing parts, let's wait
 				 */
 				return null;
-			}
-			
-			if( length > size ) {
-				/*
-				 * Two messages on a row... so we need to run until the end of the first one.
-				 */
 			}
 
 			byte[] data = new byte[size];
@@ -91,18 +89,18 @@ public class Decoder {
 					byte[] rest=new byte[p.length-remaining];
 					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
 
-					if(rest.length<4) {
+					if (rest.length < 4) {
 						logger.warn("Reading size lacks of enough data.");
-						/*
-						 * TODO: Check we are not missing memory here.
-						 */
+						size=-1;
 						
 						return null;
+					} else {
+						/*
+						 * Compute the new size of the other message
+						 */
+						size = getSizeOfMessage(rest);
 					}
-					/*
-					 * Compute the new size of the other message
-					 */					
-					size=getSizeOfMessage(rest);
+					
 					parts.set(0, rest);
 					break;					
 				} else {
