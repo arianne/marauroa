@@ -93,6 +93,11 @@ public class Decoder {
 
 					if(rest.length<4) {
 						logger.warn("Reading size lacks of enough data.");
+						/*
+						 * TODO: Check we are not missing memory here.
+						 */
+						
+						return null;
 					}
 					/*
 					 * Compute the new size of the other message
