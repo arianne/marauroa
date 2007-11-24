@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.92 2007/11/14 19:49:57 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.93 2007/11/24 20:39:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -385,7 +385,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 * avoid ConcurrentModificationException
 				 */
 				for (PlayerEntry entry : entriesToRemove) {
-					playerContainer.remove(entry.clientid);
+					disconnect(entry);
 				}
 				entriesToRemove.clear();
 
@@ -630,7 +630,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			return;
 		}
 
-		disconnect(entry);
+		/*
+		 * We request the entry removal. We can't remove ourselves because we
+		 * may cause a comodification.
+		 */
+		entriesToRemove.add(entry);
 	}
 
 	/**
@@ -640,13 +644,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param entry
 	 *            the player entry to remove.
 	 */
-	public void disconnect(PlayerEntry entry) {
-		/*
-		 * We request the entry removal. We can't remove ourselves because we
-		 * may cause a comodification.
-		 */
-		entriesToRemove.add(entry);
-
+	private void disconnect(PlayerEntry entry) {
 		/*
 		 * If client is still login, don't notify RP as it knows nothing about
 		 * this client. That means state != of GAME_BEGIN

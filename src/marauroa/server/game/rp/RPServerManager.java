@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.42 2007/11/14 19:49:58 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.43 2007/11/24 20:39:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -539,6 +539,7 @@ public class RPServerManager extends Thread {
 			 * client or we are just disconnecting a player that logout
 			 * correctly.
 			 */
+			logger.warn("There is no PlayerEntry associated to this RPObject.");
 			return;
 		}
 
