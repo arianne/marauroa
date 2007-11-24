@@ -104,7 +104,7 @@
 
 		<replaceregexp file="${extras}/marauroad"
 	    	       match="export LOCALCLASSPATH=.*"
-    	    	   replace="set LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar"
+    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>
