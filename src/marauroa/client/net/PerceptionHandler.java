@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.21 2007/06/01 15:07:05 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.22 2007/11/25 19:03:16 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,6 +53,7 @@ public class PerceptionHandler {
 	 */
 	public PerceptionHandler() {
 		synced = false;
+		previousTimestamp = -1;
 		previousPerceptions = new LinkedList<MessageS2CPerception>();
 	}
 
@@ -63,10 +64,8 @@ public class PerceptionHandler {
 	 *            the listener that will give meaning to perception handler.
 	 */
 	public PerceptionHandler(IPerceptionListener listener) {
+		this();
 		this.listener = listener;
-		previousPerceptions = new LinkedList<MessageS2CPerception>();
-		previousTimestamp = -1;
-		synced = false;
 	}
 
 	/**

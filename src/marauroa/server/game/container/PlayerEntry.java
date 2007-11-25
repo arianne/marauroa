@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.34 2007/06/15 23:50:53 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.35 2007/11/25 19:03:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -389,6 +389,7 @@ public class PlayerEntry {
 	public String toString() {
 		StringBuffer os = new StringBuffer("PlayerEntry");
 		os.append("[clientid=" + clientid + "]");
+		os.append("[channel=" + channel + "]");
 		os.append("[state=" + state + "]");
 		os.append("[username=" + username + "]");
 		os.append("[character=" + character + "]");

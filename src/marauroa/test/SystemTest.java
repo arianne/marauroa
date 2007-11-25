@@ -14,6 +14,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
+import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
@@ -330,8 +331,13 @@ public class SystemTest {
 
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
+			
+			RPAction action=new RPAction();
+			action.put("test", 1);
+			client.send(action);
 
 			while (client.getPerceptions() < 5) {
+				assertTrue(client.getConnectionState());
 				client.loop(0);
 			}
 
