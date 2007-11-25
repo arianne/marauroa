@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.95 2007/11/25 17:51:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.96 2007/11/25 19:22:18 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -592,6 +592,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			if (shouldLogout) {
 				stats.add("Players logout", 1);
+				logger.info("Logging out correctly channel: "+entry.channel);
 				playerContainer.remove(clientid);
 
 				/* Send Logout ACK message */
@@ -623,15 +624,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		PlayerEntry entry = playerContainer.get(channel);
 		if (entry == null) {
+			logger.info("No player entry for channel: "+entry.channel);
 			/*
-			 * If connection has not even started login it won't have a
-			 * entry and it will be null
+			 * Player may have logout correctly or may have even not started.
 			 */
-			logger.info("No player entry for connection: "+channel);
 			return;
 		}
 
 		/*
+		 * Player didn't logout normally. So we need to force logout on this connection.
+		 * 
 		 * We request the entry removal. We can't remove ourselves because we
 		 * may cause a comodification.
 		 */
