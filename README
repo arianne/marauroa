@@ -112,6 +112,7 @@ Changelog
 2.2
 - Added close method to IDatabase.
 - Fixed problem when querying for null at Attributes.has
+- Fixed problem when messages were less than 4 bytes.
 
 2.1
 - Fixed problem with bogus network message.
