@@ -47,59 +47,72 @@ public class TransferContentTest {
 		assertEquals(timestamp, tc.timestamp);
 	}
 
-	@Ignore
 	@Test
 	public final void testReadWriteREQ() throws IOException {
-		// TODO: You can't read if there is nothing written.
-		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
+		tcInn.name="Test";
+		tcInn.timestamp=123123;
+		tcInn.cacheable=true;
+		tcInn.data=new byte[64];
+		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeREQ(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
+		TransferContent tcOut = new TransferContent();
 		tcOut.readREQ(in);
 		assertTrue(tcInn.ack == tcOut.ack);
 		assertTrue(tcInn.cacheable == tcOut.cacheable);
-		assertTrue(tcInn.data == tcOut.data);
+		assertTrue(tcInn.timestamp == tcOut.timestamp);
 		assertTrue(tcInn.name.equals(tcOut.name));
 
 	}
 
-	@Ignore
 	@Test
 	public final void testReadWriteACK() throws IOException {
-		// TODO: You can't read if there is nothing written.
-		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
+		tcInn.name="Test";
+		tcInn.timestamp=123123;
+		tcInn.cacheable=true;
+		tcInn.data=new byte[64];
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeACK(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
+		TransferContent tcOut = new TransferContent();
 		tcOut.readACK(in);
-		assertTrue(tcInn.ack = tcOut.ack);
-		assertTrue(tcInn.cacheable = tcOut.cacheable);
-		assertTrue(tcInn.data == tcOut.data);
+		assertTrue(tcInn.ack == tcOut.ack);
 		assertTrue(tcInn.name.equals(tcOut.name));
 	}
 
-	@Ignore
 	@Test
 	public final void testReadWriteFULL() throws IOException {
-		// TODO: You can't read if there is nothing written.
-		TransferContent tcOut = new TransferContent();
 		TransferContent tcInn = new TransferContent();
+		tcInn.name="Test";
+		tcInn.timestamp=123123;
+		tcInn.cacheable=true;
+		tcInn.data=new byte[64];
+		
+		for(int i=0;i<64;i++) {
+			tcInn.data[i]=(byte)i;
+		}
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeFULL(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
 
+		TransferContent tcOut = new TransferContent();
 		tcOut.readFULL(in);
-		assertTrue(tcInn.ack == tcOut.ack);
-		assertTrue(tcInn.cacheable == tcOut.cacheable);
-		assertTrue(tcInn.data == tcOut.data);
-		assertTrue(tcInn.name.equals(tcOut.name));
+		assertEquals(tcInn.ack,tcOut.ack);
+		assertEquals(tcInn.cacheable,tcOut.cacheable);
+		for(int i=0;i<64;i++) {
+		  assertEquals(tcInn.data[i],tcOut.data[i]);
+		}
+		assertEquals(tcInn.name,tcOut.name);
 
 	}
 
