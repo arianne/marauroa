@@ -1,5 +1,6 @@
 package marauroa.test;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -290,6 +291,30 @@ public class SystemTest {
 		}
 	}
 
+	/**
+	 * Test the choose character process for an incorrect character name.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void t5_1_chooseWrongCharacter() throws Exception {
+		try {
+			client.connect("localhost", PORT);
+			client.login("testUsername", "password");
+
+			String[] characters = client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
+
+			boolean choosen = client.chooseCharacter("testAnotherCharacter");
+			assertFalse(choosen);
+
+			client.logout();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}	
 	/**
 	 * Test the perception management in game.
 	 */
