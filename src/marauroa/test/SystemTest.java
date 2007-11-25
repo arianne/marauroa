@@ -137,6 +137,22 @@ public class SystemTest {
 	}
 
 	/**
+	 * Test the timeout event.
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected=TimeoutException.class)
+	public void t1_1_loginTimeout() throws Exception {
+		try {
+			client.connect("localhost", PORT);
+			client.logout();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}	
+	/**
 	 * Test the login process.
 	 * 
 	 * @throws Exception

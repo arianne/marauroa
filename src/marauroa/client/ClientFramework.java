@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.36 2007/11/25 17:51:14 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.37 2007/11/25 18:16:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -380,8 +380,7 @@ public abstract class ClientFramework {
 	 * @throws BannedAddressException
 	 */
 	public synchronized CharacterResult createCharacter(String character, RPObject template)
-	        throws TimeoutException, InvalidVersionException, CreateCharacterFailedException,
-	        BannedAddressException {
+	        throws TimeoutException, InvalidVersionException, BannedAddressException {
 		Message msgCA = new MessageC2SCreateCharacter(null, character, template);
 
 		netMan.addMessage(msgCA);
