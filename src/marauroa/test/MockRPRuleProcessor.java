@@ -131,6 +131,13 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		Transaction trans = db.getTransaction();
 		try {
+			/*
+			 * We filter too short character names.
+			 */
+			if(character.length()<4) {
+				return new CharacterResult(Result.FAILED_STRING_SIZE, character, template);
+			}
+			
 			RPObject player = new RPObject(template);
 
 			player.put("name", character);

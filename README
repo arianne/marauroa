@@ -113,6 +113,7 @@ Changelog
 - Added close method to IDatabase.
 - Fixed problem when querying for null at Attributes.has
 - Fixed problem when messages were less than 4 bytes.
+- CreateCharacter works now in a similar way to CreateAccount
 
 2.1
 - Fixed problem with bogus network message.

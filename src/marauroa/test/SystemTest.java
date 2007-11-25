@@ -14,6 +14,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
 import marauroa.server.net.validator.ConnectionValidator;
@@ -208,6 +209,7 @@ public class SystemTest {
 			template.put("client", "junit");
 
 			CharacterResult res = client.createCharacter("testCharacter", template);
+			assertEquals(res.getResult(),Result.OK_CREATED);
 			assertEquals("testCharacter", res.getCharacter());
 
 			RPObject result = res.getTemplate();
@@ -225,6 +227,28 @@ public class SystemTest {
 		}
 	}
 
+	/**
+	 * Test the create character process.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void t4_1_createCharacterFailure() throws Exception {
+		try {
+			client.connect("localhost", PORT);
+			client.login("testUsername", "password");
+
+			RPObject template = new RPObject();
+			template.put("client", "junit");
+
+			CharacterResult res = client.createCharacter("ter", template);
+			assertTrue(res.getResult().failed());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 	/**
 	 * Test the create character process.
 	 * 

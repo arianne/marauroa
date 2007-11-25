@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.6 2007/11/25 17:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,22 +16,16 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.Result;
+
 /**
  * This message indicate the client that the server has reject its create character Message
  *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterNACK extends Message {
-
-	public enum Reasons {
-		UNKNOWN_REASON, CHARACTER_EXISTS, FIELD_TOO_SHORT, TEMPLATE_INVALID
-	}
-
-	static private String[] text = { "Unknown reason", "Character already exists.",
-	        "Field is too short", "Template is invalid" };
-
 	/** The reason to reject character creation */
-	private Reasons reason;
+	private Result reason;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CCreateCharacterNACK() {
@@ -47,7 +41,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateCharacterNACK(SocketChannel source, Reasons resolution) {
+	public MessageS2CCreateCharacterNACK(SocketChannel source, Result resolution) {
 		super(MessageType.S2C_CREATECHARACTER_NACK, source);
 		reason = resolution;
 	}
@@ -57,7 +51,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 *
 	 * @return a byte representing the resolution given.
 	 */
-	public Reasons getResolutionCode() {
+	public Result getResolutionCode() {
 		return reason;
 	}
 
@@ -68,7 +62,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
-		return text[reason.ordinal()];
+		return reason.getText();
 	}
 
 	/**
@@ -91,7 +85,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		reason = Reasons.values()[in.readByte()];
+		reason = Result.values()[in.readByte()];
 
 		if (type != MessageType.S2C_CREATECHARACTER_NACK) {
 			throw new IOException();

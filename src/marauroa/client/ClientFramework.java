@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.35 2007/11/22 22:58:13 martinfuchs Exp $ */
+/* $Id: ClientFramework.java,v 1.36 2007/11/25 17:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,7 @@ import marauroa.common.net.message.MessageS2CConnectNACK;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
+import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
@@ -417,11 +418,13 @@ public abstract class ClientFramework {
 					received++;
 					break;
 
-				/* Account was not created. Reason explained on event. */
+				/* Account was not created. Reason explained on event and return. */
 				case S2C_CREATECHARACTER_NACK:
 					logger.debug("Create character NACK");
-					throw new CreateCharacterFailedException(((MessageS2CCreateAccountNACK) msg)
-					        .getResolution());
+					MessageS2CCreateCharacterNACK reply= (MessageS2CCreateCharacterNACK) msg;
+					
+					result=new CharacterResult(reply.getResolutionCode(), character, template);
+					return result;					
 			}
 		}
 

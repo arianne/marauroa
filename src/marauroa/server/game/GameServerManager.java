@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.94 2007/11/25 15:44:44 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.95 2007/11/25 17:51:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -816,26 +816,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 * It also may fail to create the character. Explain the reasons
 				 * to player.
 				 */
-				MessageS2CCreateCharacterNACK.Reasons reason;
-
-				// TODO: AccountResult should match CreateAccount message
-				// Reasons
-				switch (result) {
-					case FAILED_PLAYER_EXISTS:
-						reason = MessageS2CCreateCharacterNACK.Reasons.CHARACTER_EXISTS;
-						break;
-					case FAILED_INVALID_TEMPLATE:
-						reason = MessageS2CCreateCharacterNACK.Reasons.TEMPLATE_INVALID;
-						break;
-					default:
-						reason = MessageS2CCreateCharacterNACK.Reasons.FIELD_TOO_SHORT;
-				}
-
-				/*
-				 * Notify player about the event.
-				 */
 				MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
-				        msg.getSocketChannel(), reason);
+				        msg.getSocketChannel(), result);
 				netMan.sendMessage(msgCreateCharacterNACK);
 			}
 		} catch (Exception e) {
