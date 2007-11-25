@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.96 2007/11/25 19:22:18 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.97 2007/11/25 19:25:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -624,7 +624,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		PlayerEntry entry = playerContainer.get(channel);
 		if (entry == null) {
-			logger.info("No player entry for channel: "+entry.channel);
+			logger.info("No player entry for channel: "+channel);
 			/*
 			 * Player may have logout correctly or may have even not started.
 			 */
