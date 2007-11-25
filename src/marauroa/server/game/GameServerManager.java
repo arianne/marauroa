@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.93 2007/11/24 20:39:19 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.94 2007/11/25 15:44:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -627,6 +627,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * If connection has not even started login it won't have a
 			 * entry and it will be null
 			 */
+			logger.info("No player entry for connection: "+channel);
 			return;
 		}
 
