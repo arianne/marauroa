@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 
 import marauroa.client.BannedAddressException;
-import marauroa.client.CreateAccountFailedException;
 import marauroa.client.LoginFailedException;
 import marauroa.client.TimeoutException;
 import marauroa.common.Configuration;
@@ -103,8 +102,7 @@ public class SystemTest {
 	 * @throws BannedAddressException
 	 */
 	@Test
-	public void t0_createAccount() throws IOException, TimeoutException, InvalidVersionException,
-	        CreateAccountFailedException, BannedAddressException {
+	public void t0_createAccount() throws IOException, TimeoutException, InvalidVersionException, BannedAddressException {
 		client.connect("localhost", PORT);
 		AccountResult res = client.createAccount("testUsername", "password", "email");
 		assertTrue("Account creation must not fail", !res.failed());
