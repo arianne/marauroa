@@ -97,11 +97,12 @@ public class CrushServer {
 				@Override
 				public void run() {
 					try {
+						Random rand=new Random();
 						System.out.println("Initing client");
 						i = index++;
 						MockClient client = new MockClient("client.properties");
 
-						Thread.sleep(Math.abs(new Random().nextInt() % 20) * 1000);
+						Thread.sleep(Math.abs(rand.nextInt() % 20) * 1000);
 
 						client.connect("localhost", PORT);
 						AccountResult resAcc = client.createAccount("testUsername" + i, "password","email");
@@ -110,7 +111,7 @@ public class CrushServer {
 						assertEquals("testUsername" + i, resAcc.getUsername());
 						assertEquals(Result.OK_CREATED, resAcc.getResult());
 
-						Thread.sleep(Math.abs(new Random().nextInt() % 100) * 1000 + 5000);
+						Thread.sleep(Math.abs(rand.nextInt() % 100) * 1000 + 5000);
 
 						client.login("testUsername" + i, "password");
 
@@ -126,7 +127,7 @@ public class CrushServer {
 						client.logout();
 
 						for (int logins = 0; logins < TIMES_TO_LOGIN; logins++) {
-							Thread.sleep(Math.abs(new Random().nextInt() % 30) * 1000 + 5000);
+							Thread.sleep(Math.abs(rand.nextInt() % 30) * 1000 + 5000);
 							client.login("testUsername" + i, "password");
 
 							String[] characters = client.getCharacters();
@@ -136,11 +137,11 @@ public class CrushServer {
 							boolean choosen = client.chooseCharacter("testCharacter");
 							assertTrue(choosen);
 
-							int amount = Math.abs(new Random().nextInt() % 90) + 10;
+							int amount = Math.abs(rand.nextInt() % 90) + 10;
 							while (client.getPerceptions() < amount) {
 								client.loop(0);
 
-								if (new Random().nextInt() % 10 == 0) {
+								if (rand.nextInt() % 10 == 0) {
 									/*
 									 * Send an action to server.
 									 */
@@ -150,7 +151,7 @@ public class CrushServer {
 									client.send(action);
 								}
 
-								if (new Random().nextInt() % 1000 == 0) {
+								if (rand.nextInt() % 1000 == 0) {
 									/*
 									 * Randomly close the connection
 									 */
@@ -167,7 +168,7 @@ public class CrushServer {
 						}
 
 						client.close();
-						Thread.sleep(Math.abs(new Random().nextInt() % 60) * 1000);
+						Thread.sleep(Math.abs(rand.nextInt() % 60) * 1000);
 
 					} catch (Exception e) {
 						System.out.println("Problem for player: testUsername" + i);
