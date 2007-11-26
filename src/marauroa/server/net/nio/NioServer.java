@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.21 2007/11/14 19:49:59 arianne_rpg Exp $ */
+/* $Id: NioServer.java,v 1.22 2007/11/26 20:42:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,6 +39,7 @@ import marauroa.server.net.IDisconnectedListener;
  * 
  */
 class NioServer extends Thread {
+	private static final int BACKLOG_WARNING_SIZE = 10;
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NioServer.class);
@@ -142,6 +143,9 @@ class NioServer extends Thread {
 					this.pendingData.put(socket, queue);
 				}
 				queue.add(ByteBuffer.wrap(data));
+				if (queue.size() > BACKLOG_WARNING_SIZE) {
+					logger.warn(socket + ": " + queue.size());
+				}
 			}
 		}
 
