@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.97 2007/11/25 19:25:04 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.98 2007/11/28 22:14:14 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -384,10 +384,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 * Clean the entry to be removed. We need to do in this way to
 				 * avoid ConcurrentModificationException
 				 */
-				for (PlayerEntry entry : entriesToRemove) {
-					disconnect(entry);
+				synchronized (entriesToRemove) {
+					for (PlayerEntry entry : entriesToRemove) {
+						disconnect(entry);
+					}
+					entriesToRemove.clear();
 				}
-				entriesToRemove.clear();
 
 				playerContainer.getLock().releaseLock();
 
@@ -632,12 +634,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 
 		/*
-		 * Player didn't logout normally. So we need to force logout on this connection.
+		 * Player didn't logout normally. So we need to force logout on this
+		 * connection.
 		 * 
 		 * We request the entry removal. We can't remove ourselves because we
 		 * may cause a comodification.
 		 */
-		entriesToRemove.add(entry);
+		synchronized (entriesToRemove) {
+			entriesToRemove.add(entry);
+		}
 	}
 
 	/**
