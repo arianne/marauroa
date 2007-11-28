@@ -114,6 +114,7 @@ Changelog
 - Fixed problem when querying for null at Attributes.has
 - Fixed problem when messages were less than 4 bytes.
 - CreateCharacter works now in a similar way to CreateAccount
+- Removed comodification problem.
 
 2.1
 - Fixed problem with bogus network message.
