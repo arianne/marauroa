@@ -1,7 +1,7 @@
 package marauroa.common.net;
 
 /**
- * This exception is thrown when a invalid version message is recieved.
+ * This exception is thrown when a invalid version message is received.
  */
 public class InvalidVersionException extends Exception {
 

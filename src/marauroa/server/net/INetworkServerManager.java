@@ -1,4 +1,4 @@
-/* $Id: INetworkServerManager.java,v 1.11 2007/07/10 10:00:01 arianne_rpg Exp $ */
+/* $Id: INetworkServerManager.java,v 1.12 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.server.net.validator.ConnectionValidator;
 
 /**
  * A Network Server Manager is an active object ( a thread ) that send and
- * recieve messages from clients. There is not transport or technology imposed.
+ * receive messages from clients. There is not transport or technology imposed.
  * <p>
  * The Network Manager is our router that sends and receives messages to and
  * from the network. The manager exposes the interfaces that allow:

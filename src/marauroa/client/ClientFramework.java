@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.37 2007/11/25 18:16:17 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.38 2007/12/04 20:00:12 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,7 +193,7 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 				/* Server sends its public RSA key */
 				case S2C_LOGIN_SENDKEY: {
-					logger.debug("Recieved Key");
+					logger.debug("Received Key");
 					key = ((MessageS2CLoginSendKey) msg).getKey();
 
 					clientNonce = Hash.random(Hash.hashLength());
@@ -202,9 +202,9 @@ public abstract class ClientFramework {
 				}
 					/* Server sends a random big integer */
 				case S2C_LOGIN_SENDNONCE: {
-					logger.debug("Recieved Server Nonce");
+					logger.debug("Received Server Nonce");
 					if (serverNonce != null) {
-						throw new LoginFailedException("Already recieved a serverNonce");
+						throw new LoginFailedException("Already received a serverNonce");
 					}
 
 					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();

@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.9 2007/04/09 14:47:07 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.10 2007/12/04 20:00:09 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,7 +47,7 @@ public class Message implements Serializable {
 
 	/**
 	 * The socket channel that the message will use to be send or from where it
-	 * was recieved
+	 * was received
 	 */
 	protected SocketChannel channel;
 

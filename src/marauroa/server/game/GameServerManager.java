@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.98 2007/11/28 22:14:14 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.99 2007/12/04 20:00:11 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -273,7 +273,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	/**
-	 * Runs the game glue logic. This class is responsible of recieving messages
+	 * Runs the game glue logic. This class is responsible of receiving messages
 	 * from clients and intruct RP about actions clients did.
 	 */
 	@Override
@@ -295,7 +295,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							break;
 						case C2S_LOGIN_SENDPROMISE:
 							/*
-							 * Recieve the client hash promise of the password. Now
+							 * Receive the client hash promise of the password. Now
 							 * client has a PlayerEntry container.
 							 */
 							logger.debug("Processing C2S Login Send Promise Message");
@@ -329,7 +329,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							break;
 						case C2S_ACTION:
 							/*
-							 * Process an action recieved from client and pass it
+							 * Process an action received from client and pass it
 							 * directly to RP manager.
 							 */
 							logger.debug("Processing C2S Action Message");
@@ -348,7 +348,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							break;
 						case C2S_TRANSFER_ACK:
 							/*
-							 * This message is recieved when client get data at
+							 * This message is received when client get data at
 							 * server request and it confirms the data to be sent.
 							 */
 							logger.debug("Processing C2S Transfer ACK Message");
@@ -474,7 +474,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	/**
 	 * This methods handles the logic when a Choose Character message is
-	 * recieved from client, checking the message and choosing the character.
+	 * received from client, checking the message and choosing the character.
 	 *
 	 * This method will send also the reply ACK or NACK to the message.
 	 *
@@ -549,7 +549,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	}
 
 	/**
-	 * This method is called when server recieves a logout message from a
+	 * This method is called when server receives a logout message from a
 	 * player. It handles all the logic to effectively logout the player and
 	 * free the associated resources.
 	 *

@@ -1,4 +1,4 @@
-/* $Id: DataEvent.java,v 1.7 2007/11/06 22:56:46 nhnb Exp $ */
+/* $Id: DataEvent.java,v 1.8 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,7 @@ import java.nio.channels.SocketChannel;
 
 /**
  * This class represents a data event. It stores the socket associated and the
- * data that has been recieved.
+ * data that has been received.
  * 
  * @author miguel
  * 

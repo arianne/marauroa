@@ -17,7 +17,7 @@ public class FloodMeasure {
 	/** The last timestamp when the flood was measured. */
 	public long lasttimestamp;
 
-	/** The amount of messages recieved from client since the timestamp. */
+	/** The amount of messages received from client since the timestamp. */
 	public int sendMessages;
 
 	/** The amount of bytes recieved from client since the timestamp */

@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.35 2007/11/14 20:20:19 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.36 2007/12/04 20:00:09 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,7 @@ import marauroa.server.net.flood.IFloodCheck;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
- * This is the implementation of a worker that send messages, recieve it, ...
+ * This is the implementation of a worker that send messages, receive it, ...
  * This class also handles validation of connections and disconnections events
  * 
  * @author miguel
@@ -201,16 +201,16 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	}
 
 	/**
-	 * This method is called when new data is recieved on server from channel.
+	 * This method is called when new data is received on server from channel.
 	 * 
 	 * @param server
 	 *            the master server
 	 * @param channel
 	 *            socket channel associated to the event
 	 * @param data
-	 *            the data recieved
+	 *            the data received
 	 * @param count
-	 *            the amount of data recieved.
+	 *            the amount of data received.
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		logger.debug("Recv from channel:"+channel+" "+count+" bytes");

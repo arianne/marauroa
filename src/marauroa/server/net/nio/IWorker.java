@@ -1,4 +1,4 @@
-/* $Id: IWorker.java,v 1.7 2007/04/09 14:40:02 arianne_rpg Exp $ */
+/* $Id: IWorker.java,v 1.8 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,6 +29,6 @@ public interface IWorker {
 	/** This is a callback method that is called onConnect */
 	public abstract void onConnect(SocketChannel socket);
 
-	/** This method is called when data is recieved from a socket channel */
+	/** This method is called when data is received from a socket channel */
 	public abstract void onData(NioServer server, SocketChannel socket, byte[] data, int count);
 }

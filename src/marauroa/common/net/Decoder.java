@@ -114,7 +114,7 @@ public class Decoder {
 			}
 			
 			/* We need to be *sure* that 4 bytes are at least to
-			 * be recieved...
+			 * be received...
 			 */
 			if(data.length<4) {
 				throw new IOException("Message is too short. Missing mandatory fields.");

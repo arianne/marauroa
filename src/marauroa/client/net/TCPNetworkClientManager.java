@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.18 2007/11/10 18:46:36 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.19 2007/12/04 20:00:12 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 */
 	private int clientid;
 
-	/** The server socket from where we recieve the packets. */
+	/** The server socket from where we receive the packets. */
 	private Socket socket;
 
 	/** The TCP/IP address where the server is running. */
@@ -88,7 +88,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
-	 * thread to recieve new messages from the network.
+	 * thread to receive new messages from the network.
 	 * 
 	 * @param host
 	 *            the host where we connect to.
@@ -101,7 +101,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	}
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
-	 * thread to recieve new messages from the network.
+	 * thread to receive new messages from the network.
 	 *
 	 * @param proxy proxy server and protocol to use
 	 * @param serverAddress the host and port where we connect to.

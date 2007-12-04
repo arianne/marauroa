@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.13 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.14 2007/12/04 20:00:12 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ import marauroa.common.game.RPObjectNotFoundException;
  * <p>
  * onActionAdd, execute, beginTurn and endTurn allow you to code behaviour for
  * each of these events. You can control whenever to allow player to add an
- * action to system, what system should do when it recieve an action and what to
+ * action to system, what system should do when it receive an action and what to
  * do at the begin and end of each turn.<br>
  * Perceptions are delivered just after endTurn is called.
  * <p>

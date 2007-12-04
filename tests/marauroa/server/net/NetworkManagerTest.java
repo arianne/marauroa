@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.5 2007/11/12 19:17:23 arianne_rpg Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.6 2007/12/04 20:01:06 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -57,7 +57,7 @@ public class NetworkManagerTest {
 	}
 	
 	/**
-	 * Test that message sent from client to server are recieved correctly.
+	 * Test that message sent from client to server are received correctly.
 	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
 	 */
 	@Test
@@ -76,7 +76,7 @@ public class NetworkManagerTest {
 	}
 
 	/**
-	 * Test that message sent from client to server and server to client are recieved correctly.
+	 * Test that message sent from client to server and server to client are received correctly.
 	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
 	 * @throws InvalidVersionException 
 	 */
