@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.60 2007/11/20 22:08:31 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.61 2007/12/05 14:44:32 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,10 +52,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/** Every attributes has a class */
 	private RPClass rpClass;
 
-	/** This is for Delta� algorithm: added attributes */
+	/** This is for Delta algorithm: added attributes */
 	private Map<String, String> added;
 
-	/** This is for Delta� algorithm: deleted attributes */
+	/** This is for Delta algorithm: deleted attributes */
 	private Map<String, String> deleted;
 
 	/**
@@ -71,19 +71,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		modified=attr.modified;
 
 		content.clear();
-		for (Map.Entry<String, String> entry : attr.content.entrySet()) {
-			content.put(entry.getKey(), entry.getValue());
-		}
-
+		content.putAll(attr.content);
+		
 		added.clear();
-		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
-			added.put(entry.getKey(), entry.getValue());
-		}
-
+		added.putAll(attr.added);
+		
 		deleted.clear();
-		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
-			deleted.put(entry.getKey(), entry.getValue());
-		}
+		deleted.putAll(attr.deleted);
 
 		return this;
 	}
