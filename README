@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.2
+Version 2.3
 
 
 Requeriments
@@ -109,7 +109,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-2.2
+2.3
+- Fixed ConcurrentModificationException in database access code
+
+2.2 Dec 03, 2007
 - Added close method to IDatabase.
 - Fixed problem when querying for null at Attributes.has
 - Fixed problem when messages were less than 4 bytes.

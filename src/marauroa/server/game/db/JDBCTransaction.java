@@ -1,4 +1,4 @@
-/* $Id: JDBCTransaction.java,v 1.14 2007/11/17 13:01:50 martinfuchs Exp $ */
+/* $Id: JDBCTransaction.java,v 1.15 2007/12/06 21:52:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,7 +30,7 @@ public class JDBCTransaction implements Transaction {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCTransaction.class);
 
 	private Connection connection;
-	private JDBCAccess accessor;
+	private ThreadLocal<JDBCAccess> accessor = new ThreadLocal<JDBCAccess>();
 
 	/**
 	 * Constructor
@@ -129,10 +129,10 @@ public class JDBCTransaction implements Transaction {
 	 * @return Accessor
 	 */
 	public Accessor getAccessor() {
-		if (accessor == null) {
-			accessor = new JDBCAccess(this);
+		if (accessor.get() == null) {
+			accessor.set(new JDBCAccess(this));
 		}
-		return accessor;
+		return accessor.get();
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class JDBCTransaction implements Transaction {
 	 * @throws SQLException in case of an SQL error
 	 */
 	private void closeAccessor() throws SQLException {
-		if (accessor != null) {
-			accessor.close();
+		if (accessor.get() != null) {
+			accessor.get().close();
 		}
 	}
 }
