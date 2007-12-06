@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.11 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: PythonRPWorld.java,v 1.12 2007/12/06 22:01:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,17 @@ public class PythonRPWorld extends RPWorld {
 
 	/** The python instance of the world */
 	private PythonWorld pythonWorld;
+	
+	private static PythonRPWorld instance;
 
+	public static PythonRPWorld get() {
+		if (instance == null) {
+			instance = new PythonRPWorld();
+			instance.initialize();
+		}
+		return instance;
+	}	
+	
 	/**
 	 * Constructor
 	 * 

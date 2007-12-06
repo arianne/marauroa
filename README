@@ -111,6 +111,7 @@ Changelog
 ---------
 2.3
 - Fixed ConcurrentModificationException in database access code
+- Fixed PyhtonRPWorld
 
 2.2 Dec 03, 2007
 - Added close method to IDatabase.
