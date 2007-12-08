@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.22 2007/11/26 20:42:10 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.23 2007/12/08 22:03:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,7 +144,7 @@ class NioServer extends Thread {
 				}
 				queue.add(ByteBuffer.wrap(data));
 				if (queue.size() > BACKLOG_WARNING_SIZE) {
-					logger.warn(socket + ": " + queue.size());
+					logger.debug(socket + ": " + queue.size());
 				}
 			}
 		}
