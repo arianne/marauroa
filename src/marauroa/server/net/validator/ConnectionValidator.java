@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.15 2007/08/02 19:30:50 nhnb Exp $ */
+/* $Id: ConnectionValidator.java,v 1.16 2007/12/08 14:28:40 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -193,7 +193,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 *
 	 * @param socket
 	 *            the socket we want to check if it is banned or not.
-	 * @return true if it is baneed.
+	 * @return true if it is banned.
 	 */
 	public synchronized boolean checkBanned(Socket socket) {
 		InetAddress address = socket.getInetAddress();

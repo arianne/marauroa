@@ -46,7 +46,7 @@ public class SecureLoginTest {
 	}
 
 	/**
-	 * This method suppose that you have an account already created with
+	 * This method supposes that you have an account already created with
 	 * username testUsername and password password. It test if verify works
 	 * correctly with a correct account.
 	 * 

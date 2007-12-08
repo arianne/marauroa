@@ -21,7 +21,6 @@ import org.junit.Test;
 
 public class BugAtApplyDifferencesTest {
 
-
 	private RPObject obj;
 	private MarauroaRPZone zone;
 
@@ -168,7 +167,5 @@ public class BugAtApplyDifferencesTest {
 		
 		assertEquals(obj, recreated);
 	}
-	
-	
 
 }
