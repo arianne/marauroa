@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.6 2007/12/04 20:01:06 martinfuchs Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.7 2007/12/08 14:27:15 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -43,9 +43,9 @@ public class NetworkManagerTest {
 
 	@BeforeClass	
 	public static void createNetworkManager() throws Exception {
-		NetConst.tcpPort=PORT;
+		NetConst.tcpPort = PORT;
 		
-		netMan=new NIONetworkServerManager();
+		netMan = new NIONetworkServerManager();
 		netMan.start();
 
 		Thread.sleep(2000);
@@ -53,7 +53,8 @@ public class NetworkManagerTest {
 	
 	@AfterClass 
 	public static void destroyNetworkManager() {
-		netMan.finish();
+		if (netMan != null)
+			netMan.finish();
 	}
 	
 	/**
