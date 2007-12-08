@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.7 2007/12/08 14:27:15 martinfuchs Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.8 2007/12/08 15:47:48 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -32,54 +32,54 @@ import org.junit.Test;
 
 /**
  * Test the character related methods of database access.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class NetworkManagerTest {
 	private static NIONetworkServerManager netMan;
 
 	private static final int PORT = 3215;
 
-	@BeforeClass	
+	@BeforeClass
 	public static void createNetworkManager() throws Exception {
 		NetConst.tcpPort = PORT;
-		
+
 		netMan = new NIONetworkServerManager();
 		netMan.start();
 
 		Thread.sleep(2000);
 	}
-	
-	@AfterClass 
+
+	@AfterClass
 	public static void destroyNetworkManager() {
 		if (netMan != null)
 			netMan.finish();
 	}
-	
+
 	/**
 	 * Test that message sent from client to server are received correctly.
-	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
+	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server
 	 */
 	@Test
 	public void sendMessageC2S() throws IOException {
-		TCPNetworkClientManager clientNet=new TCPNetworkClientManager("localhost", PORT);
+		TCPNetworkClientManager clientNet = new TCPNetworkClientManager("localhost", PORT);
 
-		RPAction action=new RPAction();
-		action.put("test","hello world");
-		MessageC2SAction msg=new MessageC2SAction(null, action);
-		
+		RPAction action = new RPAction();
+		action.put("test", "hello world");
+		MessageC2SAction msg = new MessageC2SAction(null, action);
+
 		clientNet.addMessage(msg);
-		
-		MessageC2SAction recv=(MessageC2SAction)netMan.getMessage();
-		
+
+		MessageC2SAction recv = (MessageC2SAction)netMan.getMessage();
+
 		assertEquals(msg.getRPAction(), recv.getRPAction());
 	}
 
 	/**
 	 * Test that message sent from client to server and server to client are received correctly.
-	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server 
-	 * @throws InvalidVersionException 
+	 * This test the structure from end to end. Client -> serialize -> net -> deserialize -> Server
+	 * @throws InvalidVersionException
 	 */
 	@Test
 	public void sendMessageS2C() throws IOException, InvalidVersionException {
@@ -88,23 +88,23 @@ public class NetworkManagerTest {
 		RPAction action=new RPAction();
 		action.put("test","hello world");
 		MessageC2SAction msg=new MessageC2SAction(null, action);
-		
+
 		clientNet.addMessage(msg);
-		
+
 		MessageC2SAction recv=(MessageC2SAction)netMan.getMessage();
-		
+
 		assertEquals(msg.getRPAction(), recv.getRPAction());
-		
+
 		RPAction reply=new RPAction();
 		reply.put("test","world ok");
-		
+
 		netMan.sendMessage(new MessageC2SAction(recv.getSocketChannel(), reply));
-		
+
 		MessageC2SAction msgReply=null;
 		while(msgReply==null) {
 			msgReply=(MessageC2SAction) clientNet.getMessage(100);
 		}
-		
+
 		assertNotNull(msgReply);
 		assertEquals(reply, msgReply.getRPAction());
 	}
@@ -116,11 +116,11 @@ public class NetworkManagerTest {
 	public void sendMessageNull() throws IOException, InvalidVersionException {
 		Socket socket=new Socket("localhost", PORT);
 		OutputStream out=socket.getOutputStream();
-		
+
 		out.write(new byte[0]);
 		out.flush();
-		socket.close();		
-		
+		socket.close();
+
 		sendMessageC2S();
 	}
 
@@ -131,20 +131,20 @@ public class NetworkManagerTest {
 	public void sendMessageOneByte() throws IOException, InvalidVersionException {
 		Socket socket=new Socket("localhost", PORT);
 		OutputStream out=socket.getOutputStream();
-		
+
 		out.write(new byte[1]);
 		out.flush();
-		socket.close();		
-		
+		socket.close();
+
 		sendMessageC2S();
 	}
 
 	/**
-	 * Testing what happens when client send rubish to server.
+	 * Testing what happens when client send rubbish to server.
 	 */
 	@Test
 	public void sendMessageRubish() throws IOException, InvalidVersionException {
-		/* Send 256 rubish messages, just to make sure. */
+		/* Send 256 rubbish messages, just to make sure. */
 		for (int j = 0; j < 256; j++) {
 			Socket socket = new Socket("localhost", PORT);
 			OutputStream out = socket.getOutputStream();
