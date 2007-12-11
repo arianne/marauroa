@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.44 2007/12/11 19:29:41 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.45 2007/12/11 21:57:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -357,7 +357,9 @@ public class RPServerManager extends Thread {
 			}
 			
 			try{
-				if(entry.getThisPerceptionTimestamp()%2000==0) {
+				// do not use = 0 because we need a little time until the
+				// player object is fully initialized (e. g. has a charname)
+				if(entry.getThisPerceptionTimestamp()%2000==1999) {
 					entry.storeRPObject(entry.object);
 				}			
 			}catch(Exception e) {
