@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.27 2007/11/19 19:33:47 arianne_rpg Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.28 2007/12/11 23:30:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -134,10 +134,14 @@ public class MarauroaRPZone implements IRPZone {
 		return zoneid;
 	}
 
+	public void onFinish() throws Exception {
+		storeToDatabase();
+	}
+
 	/**
 	 * Store objects that has been tagged as storable to database.
 	 */
-	public void onFinish() throws Exception {
+	public void storeToDatabase() throws Exception {
 		IDatabase db = DatabaseFactory.getDatabase();
 		Transaction transaction = db.getTransaction();
 		try {
