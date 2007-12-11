@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.43 2007/11/24 20:39:14 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.44 2007/12/11 19:29:41 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -357,7 +357,7 @@ public class RPServerManager extends Thread {
 			}
 			
 			try{
-				if(entry.getThisPerceptionTimestamp()%2000==2000) {
+				if(entry.getThisPerceptionTimestamp()%2000==0) {
 					entry.storeRPObject(entry.object);
 				}			
 			}catch(Exception e) {
