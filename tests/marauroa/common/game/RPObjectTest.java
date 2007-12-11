@@ -92,7 +92,7 @@ public class RPObjectTest {
 		assertTrue(obj.has("b"));
 		assertEquals("1", obj.get("b"));
 		assertTrue(obj.has("c"));
-		assertEquals(2.0, obj.getDouble("c"));
+		assertEquals(2.0, obj.getDouble("c"), 0.1f);
 		assertFalse(obj.has("e"));
 
 		assertTrue(obj.hasSlot("lhand"));

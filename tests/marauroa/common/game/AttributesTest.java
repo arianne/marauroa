@@ -43,7 +43,7 @@ public class AttributesTest {
 
 		assertEquals(1, attr.getInt("a"));
 		assertEquals("2", attr.get("b"));
-		assertEquals(3.0, attr.getDouble("c"));
+		assertEquals(3.0, attr.getDouble("c"), 0.1f);
 	}
 
 	/**

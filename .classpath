@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="libs/jnlp.jar"/>
 	<classpathentry kind="lib" path="libs/log4j.jar"/>
 	<classpathentry kind="lib" path="libs/mysql-connector.jar"/>
-	<classpathentry kind="lib" path="libs/junit-4.1.jar"/>
 	<classpathentry kind="lib" path="libs/jython.jar"/>
+	<classpathentry kind="lib" path="libs/junit-4.4.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
