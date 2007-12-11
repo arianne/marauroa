@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.17 2007/10/03 19:47:27 astridemma Exp $ */
+/* $Id: RPWorld.java,v 1.18 2007/12/11 20:09:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -221,7 +221,12 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public RPObject remove(RPObject.ID id) {
 		IRPZone zone = zones.get(new IRPZone.ID(id.getZoneID()));
-		return zone.remove(id);
+		if (zone != null) {
+			return zone.remove(id);
+		}
+
+		logger.error("Cannot remove rpobject with id " + id + " from zone because there is no zone with that name in thw RPWorld");
+		return null;
 	}
 
 	/**
