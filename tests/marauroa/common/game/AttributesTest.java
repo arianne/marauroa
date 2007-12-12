@@ -3,6 +3,7 @@ package marauroa.common.game;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,6 +47,14 @@ public class AttributesTest {
 		assertEquals(3.0, attr.getDouble("c"), 0.1f);
 	}
 
+	
+	@Test ( expected = NullPointerException.class)
+	public void testGetOnEmptyattribute(){
+		Attributes test = new Attributes(RPClass.getBaseRPObjectDefault());
+		assertNull("Attribute is empty", test.get("a"));
+		assertNull("throws NPE", test.get(null));
+	}
+	
 	/**
 	 * Test if an attribute is removed when it is removed. assert that the
 	 * attribute is not longer there.
@@ -266,6 +275,7 @@ public class AttributesTest {
 		
 		assertFalse("Attribute is empty",test.has("a"));
 		assertFalse("Attribute is empty",test.has(null));		
+		
 	}
-
+	
 }
