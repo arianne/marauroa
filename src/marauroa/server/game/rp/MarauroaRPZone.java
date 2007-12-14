@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.28 2007/12/11 23:30:38 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.29 2007/12/14 15:17:21 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game.rp;
 
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -141,7 +142,7 @@ public class MarauroaRPZone implements IRPZone {
 	/**
 	 * Store objects that has been tagged as storable to database.
 	 */
-	public void storeToDatabase() throws Exception {
+	public void storeToDatabase() {
 		IDatabase db = DatabaseFactory.getDatabase();
 		Transaction transaction = db.getTransaction();
 		try {
@@ -149,8 +150,12 @@ public class MarauroaRPZone implements IRPZone {
 			db.storeRPZone(transaction, this);
 			transaction.commit();
 		} catch (Exception e) {
-			transaction.rollback();
-			throw e;
+			try {
+				transaction.rollback();
+			} catch (SQLException e1) {
+				logger.error(e1, e1);
+			}
+			logger.error(e, e);
 		}
 	}
 
