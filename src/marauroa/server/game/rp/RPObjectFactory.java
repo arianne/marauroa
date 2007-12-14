@@ -66,7 +66,7 @@ public class RPObjectFactory {
 	
 	private static RPObjectFactory singleton;
 	
-	static RPObjectFactory getFactory() {
+	public static RPObjectFactory getFactory() {
 		if(singleton==null) {
 			singleton=new RPObjectFactory();
 		}
