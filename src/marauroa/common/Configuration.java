@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.23 2007/11/14 19:49:55 arianne_rpg Exp $ */
+/* $Id: Configuration.java,v 1.24 2007/12/15 16:28:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -129,7 +129,11 @@ public class Configuration {
 	 * @return a string containing the value of the propierty
 	 */
 	public String get(String property) {
-		return properties.getProperty(property);
+		String value = properties.getProperty(property);
+		if (value != null) {
+			value = value.trim();
+		}
+		return value;
 	}
 
 	/**
