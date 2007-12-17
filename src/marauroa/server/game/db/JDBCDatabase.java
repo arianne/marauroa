@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.63 2007/11/16 22:16:47 martinfuchs Exp $ */
+/* $Id: JDBCDatabase.java,v 1.64 2007/12/17 17:04:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -910,29 +910,18 @@ public class JDBCDatabase implements IDatabase {
 	
 	private boolean verifyUsingDB(Accessor jdbc, String username, String hexPassword) throws SQLException {
 		try {
-			String query = "select status, username from account where username like '"
+			String query = "select username from account where username like '"
 			        + username + "' and password like '" + hexPassword + "'";
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet resultSet = jdbc.query(query);
-			boolean isplayer = false;
-
 			if (resultSet.next()) {
 				String userNameFromDB = resultSet.getString("username");
-				String account_status = resultSet.getString("status");
-
-				if ("active".equals(account_status)) {
-					isplayer = true;
-				} else {
-					logger.debug("Username/password is ok, but account is in status {"
-					        + account_status + "}");
-				}
-
 				if (!userNameFromDB.equals(username)) {
 					logger.warn("Username(" + username + ") is not the same that stored username(" + userNameFromDB + ")");
 				}
-
+				return true;
 			}
-			return isplayer;
+			return false;
 		} catch (SQLException e) {
 			logger.error("Can't query for player(" + username + ")", e);
 			throw e;
