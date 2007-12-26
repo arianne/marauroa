@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.6 2007/11/17 13:01:50 martinfuchs Exp $ */
+/* $Id: StringChecker.java,v 1.7 2007/12/26 14:47:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -79,4 +79,27 @@ public class StringChecker {
 		return param.replace("'", "''").replace("\\", "\\\\");
 	}
 
+	/**
+	 * Trims the string to the specified size without error in case it is already shorter. 
+	 * Escapes ' and \ in a string so that the result can be passed into an SQL
+	 * command. The parameter has be quoted using ' in the sql. Most database
+	 * engines accept single quotes around numbers as well.
+	 * <p>
+	 * Please note that special characters for LIKE and other matching commands
+	 * are not quotes. The result of this method is suitable for INSERT, UPDATE
+	 * and an "=" operator in the WHERE part.
+	 *
+	 * @param param
+	 *            string to quote
+	 * @return quoted string
+	 */
+	public static String trimAndEscapeSQLString(String param, int size) {
+		if (param == null) {
+			return param;
+		}
+		if (param.length() > size) {
+			param = param.substring(0, size);
+		}
+		return escapeSQLString(param);
+	}
 }
