@@ -100,7 +100,7 @@ In order to test Marauroa with JUnit 4.0 you need to setup a MySQL database:
 You can do that by doing:
 
   create database marauroatest;
-  grant all on marauroatest.* to junittest@localhost identified by 'passwd';Query OK, 0 rows affected (0.00 sec)
+  grant all on marauroatest.* to junittest@localhost identified by 'passwd';
 
 Also please copy src/marauroa/test/server.ini to main project folder.
 
@@ -114,6 +114,7 @@ Changelog
 - Fixed PyhtonRPWorld
 - Fixed 10 minute player autosave
 - Added method MarauroaRPZone.storeToDatabase()
+- JDBCAccess execute now returns the update count if available
 
 2.2 Dec 03, 2007
 - Added close method to IDatabase.

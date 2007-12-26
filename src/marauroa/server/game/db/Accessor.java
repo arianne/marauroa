@@ -13,9 +13,10 @@ public interface Accessor {
 	 * Executes an SQL statement
 	 *
 	 * @param sql sql
+	 * @return -2 in case no updated count was returned by that statement, the update count otherwise.
 	 * @throws SQLException in case of an SQL error
 	 */
-	public abstract void execute(String sql) throws SQLException;
+	public abstract int execute(String sql) throws SQLException;
 
 	/**
 	 * Executes an SQL statement

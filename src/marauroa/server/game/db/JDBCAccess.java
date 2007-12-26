@@ -30,11 +30,16 @@ public class JDBCAccess implements Accessor {
 		this.transaction = transaction;
 	}
 
-	public void execute(String sql) throws SQLException {
+	public int execute(String sql) throws SQLException {
+		int res = -2;
 		Connection connection = transaction.getConnection();
 		Statement statement = connection.createStatement();
-		statement.execute(sql);
+		boolean resultType = statement.execute(sql);
+		if (!resultType) {
+			res = statement.getUpdateCount();
+		}
 		statement.close();
+		return res;
 	}
 
 	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
