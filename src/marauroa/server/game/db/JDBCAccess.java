@@ -30,9 +30,6 @@ public class JDBCAccess implements Accessor {
 		this.transaction = transaction;
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#execute(java.lang.String)
-	 */
 	public void execute(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement statement = connection.createStatement();
@@ -40,9 +37,6 @@ public class JDBCAccess implements Accessor {
 		statement.close();
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#execute(java.lang.String, java.io.InputStream)
-	 */
 	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -55,9 +49,6 @@ public class JDBCAccess implements Accessor {
 		statement.close();
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#executeBatch(java.lang.String, java.io.InputStream)
-	 */
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		Connection connection = transaction.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -69,9 +60,6 @@ public class JDBCAccess implements Accessor {
 		statement.close();
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#query(java.lang.String)
-	 */
 	public ResultSet query(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
@@ -80,9 +68,6 @@ public class JDBCAccess implements Accessor {
 		return resultSet;
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#querySingleCellInt(java.lang.String)
-	 */
 	public int querySingleCellInt(String sql) throws SQLException {
 		Connection connection = transaction.getConnection();
 		Statement stmt = connection.createStatement();
@@ -118,9 +103,6 @@ public class JDBCAccess implements Accessor {
 		resultSets.add(resultSet);
 	}
 
-	/* (non-Javadoc)
-	 * @see marauroa.server.game.db.Accessor#close()
-	 */
 	public void close() throws SQLException {
 		if (statements != null) {
 			// Note: Some JDBC drivers like Informix require resultSet.close() 
