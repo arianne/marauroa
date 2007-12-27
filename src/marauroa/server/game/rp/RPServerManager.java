@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.45 2007/12/11 21:57:26 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.46 2007/12/27 18:02:15 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -355,7 +355,7 @@ public class RPServerManager extends Thread {
 				logger.error("Removing player(" + entry.clientid + ") because it caused a Exception while contacting it", e);
 				playersToRemove.add(entry);
 			}
-			
+
 			try{
 				// do not use = 0 because we need a little time until the
 				// player object is fully initialized (e. g. has a charname)

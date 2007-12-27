@@ -20,7 +20,7 @@ import marauroa.common.game.Definition.Type;
  * bandwidth usage by replacing these members text definitions with a short
  * integer.
  * <p>
- * Also RPClass define a set of propierties over attributes, events and slots,
+ * Also RPClass define a set of properties over attributes, events and slots,
  * like being private, hidden or volatile.
  * <p>
  * It is very important that if you extend a class with isA, you completly 
