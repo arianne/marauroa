@@ -1,4 +1,4 @@
-/* $Id: CharacterAccessTest.java,v 1.2 2007/11/11 19:59:27 arianne_rpg Exp $ */
+/* $Id: CharacterAccessTest.java,v 1.3 2007/12/28 17:17:55 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -199,8 +200,7 @@ public class CharacterAccessTest {
 			}
 
 			List<String> result = database.getCharacters(transaction, username);
-			assertEquals(characters, result.toArray());
-
+			assertArrayEquals(characters, result.toArray());
 		} finally {
 			transaction.rollback();
 		}
