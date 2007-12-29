@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.79 2007/12/29 14:00:53 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.80 2007/12/29 21:59:19 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -550,9 +550,9 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Returns an unmodifyable list of the events
+	 * Returns an unmodifiable list of the events
 	 *
-	 * @return a list of the evetns
+	 * @return a list of the events
 	 */
 	public List<RPEvent> events() {
 		return Collections.unmodifiableList(events);

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.62 2007/12/08 14:14:00 martinfuchs Exp $ */
+/* $Id: Attributes.java,v 1.63 2007/12/29 21:59:35 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -68,7 +68,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public Object fill(Attributes attr) {
 		setRPClass(attr.rpClass);
-		modified=attr.modified;
+		modified = attr.modified;
 
 		content.clear();
 		content.putAll(attr.content);
@@ -117,7 +117,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		rpClass = RPClass.getRPClass(rpclass);
 		
 		if(rpClass==null) {
-			throw new SyntaxException("Missing RPClass :"+rpclass);
+			throw new SyntaxException("Missing RPClass: "+rpclass);
 		}
 	}
 
@@ -537,7 +537,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		for (int i = 0; i < size; ++i) {
 			short code = in.readShort();
 
-			/* We obtaing now the key name */
+			/* We obtain now the key name */
 			String key;
 			if (code == -1) {
 				key = in.readString();
