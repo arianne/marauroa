@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.3
+Version 2.4
 
 
 Requeriments
@@ -109,7 +109,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-2.3
+2.4
+-
+
+2.3 Dec 29, 2007
 - Fixed ConcurrentModificationException in database access code
 - Fixed PyhtonRPWorld
 - Fixed 10 minute player autosave
