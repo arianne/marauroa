@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.24 2007/12/15 16:28:32 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.25 2007/12/29 22:01:06 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,18 +27,13 @@ public class Configuration {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Configuration.class);
 
-	private static boolean relativeToHome = false;
-
-	private static String basedir = "";
-
-	/** Default name of configuration file */
-	private static String configurationFile = "server.ini";
-
-	private Properties properties;
-
+	/*TODO get rid of this static configuration parameters by removing the static setConfigurationFile()
+	 * functions and the 'configuration' singleton variable */
+	private static ConfigurationParams staticParams = new ConfigurationParams();
 	private static Configuration configuration = null;
 
-	private static boolean persistence = true;
+	private final ConfigurationParams params;
+	private final Properties properties;
 
 	/**
 	 * This method defines the default configuration file for all the instances
@@ -48,9 +43,9 @@ public class Configuration {
 	 *            the location of the file
 	 */
 	public static void setConfigurationFile(String conf) {
-		relativeToHome = false;
-		basedir = "";
-		configurationFile = conf;
+		staticParams.setRelativeToHome(false);
+		staticParams.setBasedir("");
+		staticParams.setConfigurationFile(conf);
 	}
 
 	/**
@@ -65,9 +60,9 @@ public class Configuration {
 	 *            the location of the file
 	 */
 	public static void setConfigurationFile(boolean relativeToHome, String basedir, String conf) {
-		Configuration.relativeToHome = relativeToHome;
-		Configuration.basedir = basedir;
-		configurationFile = conf;
+		staticParams.setRelativeToHome(relativeToHome);
+		staticParams.setBasedir(basedir);
+		staticParams.setConfigurationFile(conf);
 	}
 
 	/**
@@ -77,7 +72,7 @@ public class Configuration {
 	 *            true to use files, false otherwise
 	 */
 	public static void setConfigurationPersitance(boolean persistence) {
-		Configuration.persistence = persistence;
+		staticParams.setPersistence(persistence);
 	}
 
 	/**
@@ -86,21 +81,30 @@ public class Configuration {
 	 * @return the name of the configuration file
 	 */
 	public static String getConfigurationFile() {
-		return configurationFile;
+		return staticParams.getConfigurationFile();
 	}
 
-	private Configuration() throws IOException {
+	/**
+	 * Create a new COnfiguration instance using filename etc from the
+	 * given params parameter.
+	 *
+	 * @param params
+	 * @throws IOException
+	 */
+	public Configuration(ConfigurationParams params) throws IOException {
+		this.params = params;
+
 		try {
 			properties = new Properties();
 
-			if (persistence) {
-				InputStream is = Persistence.get().getInputStream(relativeToHome, basedir,
-				        configurationFile);
+			if (params.isPersistence()) {
+				InputStream is = Persistence.get().getInputStream(
+						params.isRelativeToHome(), params.getBasedir(), params.getConfigurationFile());
 				properties.load(is);
 				is.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.warn("Configuration file not found: " + configurationFile, e);
+			logger.warn("Configuration file not found: " + params.getConfigurationFile(), e);
 			throw e;
 		} catch (IOException e) {
 			logger.warn("Error loading Configuration file", e);
@@ -116,7 +120,7 @@ public class Configuration {
 	 */
 	public static Configuration getConfiguration() throws IOException {
 		if (configuration == null) {
-			configuration = new Configuration();
+			configuration = new Configuration(staticParams);
 		}
 		return configuration;
 	}
@@ -126,7 +130,7 @@ public class Configuration {
 	 *
 	 * @param property
 	 *            the property we want the value
-	 * @return a string containing the value of the propierty
+	 * @return a string containing the value of the property
 	 */
 	public String get(String property) {
 		String value = properties.getProperty(property);
@@ -158,15 +162,15 @@ public class Configuration {
 		try {
 			properties.put(property, value);
 
-			if (persistence) {
-				OutputStream os = Persistence.get().getOutputStream(relativeToHome, basedir,
-				        configurationFile);
+			if (params.isPersistence()) {
+				OutputStream os = Persistence.get().getOutputStream(
+						params.isRelativeToHome(), params.getBasedir(), params.getConfigurationFile());
 				properties.store(os, null);
 				os.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("Configuration file not found: " + relativeToHome + " " + basedir + " "
-			        + configurationFile, e);
+			logger.error("Configuration file not found: " + params.isRelativeToHome() + " " + params.getBasedir() + " "
+			        + params.getConfigurationFile(), e);
 		} catch (IOException e) {
 			logger.error("Error storing Configuration file", e);
 		}
@@ -181,9 +185,10 @@ public class Configuration {
 	}
 
 	/**
-	 * cleares the configuration
+	 * Clears the configuration.
 	 */
 	public void clear() {
 	    properties.clear();
 	}
+
 }
