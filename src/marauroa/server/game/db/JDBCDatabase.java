@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.64 2007/12/17 17:04:06 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.65 2007/12/29 16:07:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -811,9 +811,11 @@ public class JDBCDatabase implements IDatabase {
 
 		os.write(amount);
 
+		boolean empty = true;
 		for (RPObject object : zone) {
 			if (object.isStorable()) {
 				object.writeObject(os, DetailLevel.FULL);
+				empty = false;
 			}
 		}
 
@@ -827,6 +829,10 @@ public class JDBCDatabase implements IDatabase {
 		if (hasRPZone(transaction, zone.getID())) {
 			query = "update rpzone set data=? where zone_id='" + zoneid + "'";
 		} else {
+			// do not add empty zones
+			if (empty) {
+				return;
+			}
 			query = "insert into rpzone(zone_id,data) values('" + zoneid + "',?)";
 		}
 		logger.debug("storeRPZone is executing query " + query);
