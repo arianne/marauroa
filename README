@@ -115,6 +115,7 @@ Changelog
 - Fixed 10 minute player autosave
 - Added method MarauroaRPZone.storeToDatabase()
 - JDBCAccess execute now returns the update count if available
+- Fixed a problem which occured in case an object was modified and added to a slot at the same time
 
 2.2 Dec 03, 2007
 - Added close method to IDatabase.
