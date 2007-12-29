@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.78 2007/11/19 19:33:38 arianne_rpg Exp $ */
+/* $Id: RPObject.java,v 1.79 2007/12/29 14:00:53 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1296,56 +1296,59 @@ public class RPObject extends Attributes {
 			 * Finally we process the changes on the objects of the slot.
 			 */
 			for (RPObject rec : slot) {
-				RPObject recAddedChanges = new RPObject();
-				RPObject recDeletedChanges = new RPObject();
-
-				rec.getDifferences(recAddedChanges, recDeletedChanges);
-
-				/*
-				 * If this object is not empty that means that there has been a
-				 * change at it. So we add this object to the slot.
-				 */
-				if (!recAddedChanges.isEmpty()) {
+				
+				// ignore modified objects that has been added in the same turn
+				if (!addedObjectsInSlot.has(rec.getID())) {
+					RPObject recAddedChanges = new RPObject();
+					RPObject recDeletedChanges = new RPObject();
+	
+					rec.getDifferences(recAddedChanges, recDeletedChanges);
+	
 					/*
-					 * If slot was not created, create it now. For example if an
-					 * object is modified ( that means not added nor deleted ),
-					 * it won't have a slot already created on added.
+					 * If this object is not empty that means that there has been a
+					 * change at it. So we add this object to the slot.
 					 */
-					if (!addedChanges.hasSlot(slot.getName())) {
-						addedChanges.addSlot(slot.getName());
+					if (!recAddedChanges.isEmpty()) {
+						/*
+						 * If slot was not created, create it now. For example if an
+						 * object is modified ( that means not added nor deleted ),
+						 * it won't have a slot already created on added.
+						 */
+						if (!addedChanges.hasSlot(slot.getName())) {
+							addedChanges.addSlot(slot.getName());
+						}
+	
+						RPSlot recAddedSlot = addedChanges.getSlot(slot.getName());
+						/*
+						 * We need to set the id of the object to be equals to the
+						 * object from which the diff was generated.
+						 */
+						recAddedChanges.put("id", rec.get("id"));
+						recAddedSlot.add(recAddedChanges, false);
 					}
 
-					RPSlot recAddedSlot = addedChanges.getSlot(slot.getName());
 					/*
-					 * We need to set the id of the object to be equals to the
-					 * object from which the diff was generated.
+					 * Same operation with delete changes
 					 */
-					recAddedChanges.put("id", rec.get("id"));
-					recAddedSlot.add(recAddedChanges, false);
-				}
-
-				/*
-				 * Same operation with delete changes
-				 */
-				if (!recDeletedChanges.isEmpty()) {
-					/*
-					 * If slot was not created, create it now. For example if an
-					 * object is modified ( that means not added nor deleted ),
-					 * it won't have a slot already created on added.
-					 */
-					if (!deletedChanges.hasSlot(slot.getName())) {
-						deletedChanges.addSlot(slot.getName());
+					if (!recDeletedChanges.isEmpty()) {
+						/*
+						 * If slot was not created, create it now. For example if an
+						 * object is modified ( that means not added nor deleted ),
+						 * it won't have a slot already created on added.
+						 */
+						if (!deletedChanges.hasSlot(slot.getName())) {
+							deletedChanges.addSlot(slot.getName());
+						}
+	
+						RPSlot recDeletedSlot = deletedChanges.getSlot(slot.getName());
+						/*
+						 * We need to set the id of the object to be equals to the
+						 * object from which the diff was generated.
+						 */
+						recDeletedChanges.put("id", rec.get("id"));
+						recDeletedSlot.add(recDeletedChanges, false);
 					}
-
-					RPSlot recDeletedSlot = deletedChanges.getSlot(slot.getName());
-					/*
-					 * We need to set the id of the object to be equals to the
-					 * object from which the diff was generated.
-					 */
-					recDeletedChanges.put("id", rec.get("id"));
-					recDeletedSlot.add(recDeletedChanges, false);
 				}
-
 			}
 		}
 
