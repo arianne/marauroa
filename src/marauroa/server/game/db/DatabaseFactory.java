@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.8 2007/11/18 19:45:02 martinfuchs Exp $ */
+/* $Id: DatabaseFactory.java,v 1.9 2007/12/29 20:26:36 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class DatabaseFactory {
 
 			return getDatabase(database_type);
 		} catch (Exception e) {
-			logger.debug("cannot get player databese", e);
+			logger.debug("cannot get player database", e);
 			throw new NoDatabaseConfException(e);
 		}
 	}
