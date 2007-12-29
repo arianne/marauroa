@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.99 2007/12/04 20:00:11 martinfuchs Exp $ */
+/* $Id: GameServerManager.java,v 1.100 2007/12/29 14:43:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -503,11 +503,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				/* We restore back the character to the world */
 				RPObject object = entry.loadRPObject();
 
-				/*
-				 * We set the clientid attribute to link easily the object with
-				 * is player runtime information
-				 */
-				object.put("#clientid", clientid);
+				if (object != null) {
+    				/*
+    				 * We set the clientid attribute to link easily the object with
+    				 * is player runtime information
+    				 */
+    				object.put("#clientid", clientid);
+				} else {
+					logger.info("could not load object for character("+entry.character+") from database");
+				}
 
 				/* We ask RP Manager to initialize the object */
 				if(rpMan.onInit(object)) {
