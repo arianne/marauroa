@@ -39,7 +39,7 @@ Current Version
 Version 2.4
 
 
-Requeriments
+Requirements
 ------------
 To actually compile Marauroa you will need:
 - Java SDK 1.5 http://java.sun.com
@@ -52,7 +52,7 @@ In order to get it working with MySQL you will also need:
   slightly incompatible with other DBMS. Join us and help to port SQL code
   to a real standard complaint DBMS.
 
-- JUnit 4.0 in order to run test cases.
+- JUnit 4.4 in order to run test cases.
 - Jython for Python support.
 
 
@@ -70,6 +70,8 @@ Or for a complete package release write:
 
 Status
 ------
+Version >= 2.3 does support Stendhal 0.65.1
+Version >= 2.2 does support Stendhal 0.65
 Version >= 2.0 does support Stendhal 0.63
 Version >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
 Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
@@ -91,12 +93,12 @@ http://arianne.sourceforge.net instead.
 
 Testing
 -------
-In order to test Marauroa with JUnit 4.0 you need to setup a MySQL database:
-  
+In order to test Marauroa with JUnit you need to setup a MySQL database:
+ 
   Database: marauroatest
   username: junittest 
   password: passwd
-  
+ 
 You can do that by doing:
 
   create database marauroatest;
@@ -110,7 +112,8 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 2.4
--
+- Added class ConfigurationParams and added public Configuration constructor to manage
+  more than one configuration file per process.
 
 2.3 Dec 29, 2007
 - Fixed ConcurrentModificationException in database access code
