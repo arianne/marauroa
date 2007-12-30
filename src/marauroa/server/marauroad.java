@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.64 2007/11/11 20:14:26 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.65 2007/12/30 22:03:48 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -264,6 +264,7 @@ public class marauroad extends Thread {
 
 	@Override
 	public synchronized void run() {
+		long startTime = System.currentTimeMillis();
 		logger.debug("marauroad thread started");
 
 		createBeanForStatistics();
@@ -275,7 +276,9 @@ public class marauroad extends Thread {
 			System.exit(-1);
 		}
 
-		logger.info("marauroa is up and running...");
+		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
+
+		logger.info("marauroa is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
 		while (!finish) {
 			try {
 				Statistics.getStatistics().print();
