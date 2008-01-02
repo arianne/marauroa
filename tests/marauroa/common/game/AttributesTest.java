@@ -205,6 +205,7 @@ public class AttributesTest {
 	 *
 	 * @throws IOException in case of an unexpected error
 	 */
+	@Test
 	public void testSerializationOfClasslessAttributesWithALongString() throws IOException {
 		Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
 
