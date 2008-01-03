@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.65 2007/12/29 16:07:20 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.66 2008/01/03 13:33:39 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -152,7 +152,7 @@ public class JDBCDatabase implements IDatabase {
 	 *
 	 * @return an unique instance of the Database.
 	 */
-	public static JDBCDatabase getDatabase() {
+	public static IDatabase getDatabase() {
 		if (database == null) {
 			Properties props = JDBCDatabase.getInitProps();
 			database = new JDBCDatabase(props);
