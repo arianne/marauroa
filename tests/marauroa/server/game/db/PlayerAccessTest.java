@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.4 2007/11/13 21:50:12 nhnb Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.5 2008/01/03 13:33:08 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -54,6 +54,7 @@ public class PlayerAccessTest {
 			super(props);
 		}
 		
+		@Override
 		protected void initializeRPObjectFactory() {
 			factory=new marauroa.server.game.rp.RPObjectFactory();
 		}

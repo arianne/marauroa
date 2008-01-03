@@ -22,6 +22,7 @@ public class PlayerEntryContainerTest {
 			super();
 		}
 
+		@Override
 		protected void initializeDatabase() {
 			/* Do nothing, we don't need database on this test. */
 		}
