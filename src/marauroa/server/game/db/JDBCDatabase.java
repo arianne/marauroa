@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.66 2008/01/03 13:33:39 astridemma Exp $ */
+/* $Id: JDBCDatabase.java,v 1.67 2008/01/03 17:26:57 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -55,7 +55,10 @@ public class JDBCDatabase implements IDatabase {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCDatabase.class);
 
-	/** connection info * */
+	/** the singleton instance. */
+	protected static IDatabase database;
+	
+	/** connection info. */
 	private Properties connInfo;
 
 	protected JDBCSQLHelper sql;
@@ -75,10 +78,10 @@ public class JDBCDatabase implements IDatabase {
 	 *            class of the JDBC storage com.mysql.jdbc.Driver jdbc_user
 	 *            Username we are going to use to connect to database jdbc_pwd
 	 *            Password.
+	 * @throws NoDatabaseConfException TODO: describe conditions
 	 */
-	protected JDBCDatabase(Properties connInfo) throws NoDatabaseConfException {
+	protected JDBCDatabase(Properties connInfo) {
 		this.connInfo = connInfo;
-
 		sql = JDBCSQLHelper.get();
 		transaction = (JDBCTransaction) getTransaction();
 		
@@ -88,17 +91,16 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/**
-	 * Close the database connection and remove the transaction object
+	 * Closes the database connection and removes the transaction object.
 	 */
-	public void close()
-	{
+	public void close()	{
 		Connection conn = transaction.getConnection();
 
 		transaction = null;
 
 		try {
 	        conn.close();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
 			logger.fatal("Exception while closing the database connection", e);
 			throw new NoDatabaseConfException(e);
         }
@@ -109,7 +111,7 @@ public class JDBCDatabase implements IDatabase {
 	 * has already the correct type.
 	 */
 	protected void initializeRPObjectFactory() {
-		factory=RPObjectFactory.get();
+		factory = RPObjectFactory.get();
 	}
 
 	/**
@@ -120,10 +122,8 @@ public class JDBCDatabase implements IDatabase {
 		sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 	}
 
-	private static JDBCDatabase database;
-
 	/**
-	 * Reads the database connection information
+	 * Reads the database connection information.
 	 *
 	 * @return database connection information
 	 */
@@ -164,29 +164,27 @@ public class JDBCDatabase implements IDatabase {
 	/**
 	 * This method creates the real connection to database.
 	 *
-	 * @param props
-	 *            the database configuration.
 	 * @return a Connection to Database
 	 * @throws NoDatabaseConfException
 	 *             If there is any kind of problem creating the connection.
 	 */
-	private Connection createConnection(Properties props) throws NoDatabaseConfException {
+	private Connection createConnection() throws NoDatabaseConfException {
 		try {
 			/* We instantiate now the Driver class */
 			try {
-				Class.forName((String) props.get("jdbc_class")).newInstance();
+				Class.forName((String) connInfo.get("jdbc_class")).newInstance();
 			} catch (Exception e) {
-				logger.fatal("Unable to create Driver class: " + props.get("jdbc_class"), e);
+				logger.fatal("Unable to create Driver class: " + connInfo.get("jdbc_class"), e);
 				throw new NoDatabaseConfException(e);
 			}
 
-			Properties connInfo = new Properties();
+			Properties connectionInfo = new Properties();
 
-			connInfo.put("user", props.get("jdbc_user"));
-			connInfo.put("password", props.get("jdbc_pwd"));
-			connInfo.put("charSet", "UTF-8");
+			connectionInfo.put("user", connInfo.get("jdbc_user"));
+			connectionInfo.put("password", connInfo.get("jdbc_pwd"));
+			connectionInfo.put("charSet", "UTF-8");
 
-			Connection conn = DriverManager.getConnection((String) props.get("jdbc_url"), connInfo);
+			Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"), connectionInfo);
 
 			/*
 			 * This is for MySQL:
@@ -198,7 +196,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return conn;
 		} catch (SQLException e) {
-			logger.fatal("Unable to create a connection to: " + props.get("jdbc_url"), e);
+			logger.fatal("Unable to create a connection to: " + connInfo.get("jdbc_url"), e);
 			throw new NoDatabaseConfException(e);
 		}
 	}
@@ -211,7 +209,7 @@ public class JDBCDatabase implements IDatabase {
 	 */
 	public Transaction getTransaction() {
 		if (transaction == null || !transaction.isValid()) {
-			transaction = new JDBCTransaction(createConnection(connInfo));
+			transaction = new JDBCTransaction(createConnection());
 		}
 
 		return transaction;
@@ -996,7 +994,7 @@ public class JDBCDatabase implements IDatabase {
 		}
 
 		/**
-		 * This method returns a String that represent the object
+		 * This method returns a String that represent the object.
 		 *
 		 * @return a string representing the object.
 		 */
@@ -1080,9 +1078,9 @@ public class JDBCDatabase implements IDatabase {
 					+ "','"
 					+ StringChecker.escapeSQLString(event)
 					+ "','"
-					+ (firstParam==null?null:StringChecker.escapeSQLString(firstParam.substring(0, Math.min(127, firstParam.length()))))
+					+ (firstParam == null ? null : StringChecker.escapeSQLString(firstParam.substring(0, Math.min(127, firstParam.length()))))
 					+ "','"
-					+ (param2==null?null:StringChecker.escapeSQLString(param2.substring(0, Math.min(255, param2.length())))) + "')";
+					+ (param2 == null ? null : StringChecker.escapeSQLString(param2.substring(0, Math.min(255, param2.length())))) + "')";
 
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
