@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.29 2007/12/14 15:17:21 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.30 2008/01/06 19:44:03 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -106,7 +106,7 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	private Set<RPObject> modified;
 
-	/** This is the perception for the actual turn. */
+	/** This is the perception for the current turn. */
 	private Perception perception;
 
 	/** This is a cache for the perception for this turn. */
