@@ -112,6 +112,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 2.4
+- speed up perception difference calculation by ignoring server only slots
 - Added class ConfigurationParams and added public Configuration constructor to manage
   more than one configuration file per process.
 

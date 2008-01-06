@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.80 2007/12/29 21:59:19 martinfuchs Exp $ */
+/* $Id: RPObject.java,v 1.81 2008/01/06 20:24:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1254,6 +1254,13 @@ public class RPObject extends Attributes {
 		deletedChanges.setDeletedRPSlot(this);
 
 		for (RPSlot slot : slots) {
+
+			// ignore all slots that are server only
+			Definition def = this.getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+			if (def.isHidden()) {
+				continue;
+			}
+
 			/*
 			 * First we process the added things to slot.
 			 */
