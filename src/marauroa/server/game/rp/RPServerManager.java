@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.46 2007/12/27 18:02:15 martinfuchs Exp $ */
+/* $Id: RPServerManager.java,v 1.47 2008/01/06 21:03:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -446,28 +446,29 @@ public class RPServerManager extends Thread {
 			while (keepRunning) {
 				stop = System.nanoTime();
 
-				try {
-					logger.debug("Turn time elapsed: " + ((stop - start) / 1000) + " microsecs");
-					delay = turnDuration - ((stop - start) / 1000000);
-					if (delay < 0) {
-						StringBuilder sb = new StringBuilder();
-						for (long timeEnd : timeEnds) {
-							sb.append(" " + (timeEnd - timeStart));
-						}
-
-						logger.warn("Turn duration overflow by " + (-delay) + " ms: "
-						        + sb.toString());
-					} else if (delay > turnDuration) {
-						logger.error("Delay bigger than Turn duration. [delay: " + delay
-						        + "] [turnDuration:" + turnDuration + "]");
-						delay = 0;
+				logger.debug("Turn time elapsed: " + ((stop - start) / 1000) + " microsecs");
+				delay = turnDuration - ((stop - start) / 1000000);
+				if (delay < 0) {
+					StringBuilder sb = new StringBuilder();
+					for (long timeEnd : timeEnds) {
+						sb.append(" " + (timeEnd - timeStart));
 					}
 
-					// only sleep when the turn delay is > 0
-					if (delay > 0) {
+					logger.warn("Turn duration overflow by " + (-delay) + " ms: "
+					        + sb.toString());
+				} else if (delay > turnDuration) {
+					logger.error("Delay bigger than Turn duration. [delay: " + delay
+					        + "] [turnDuration:" + turnDuration + "]");
+					delay = 0;
+				}
+
+				// only sleep when the turn delay is > 0
+				if (delay > 0) {
+					try {
 						Thread.sleep(delay);
+					} catch (InterruptedException e) {
+						// ignore
 					}
-				} catch (InterruptedException e) {
 				}
 
 				start = System.nanoTime();
