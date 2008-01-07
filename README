@@ -78,7 +78,7 @@ Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java
 Version >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
 Version >= 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
-You need to grab game package in order to be able to play it.
+You need to grab a game package in order to be able to play it.
 
 
 Running
@@ -112,6 +112,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 2.4
+- RPObjectFactory.transform may return null to not load an object from the database into a zone
 - speed up perception difference calculation by ignoring server only slots
 - Added class ConfigurationParams and added public Configuration constructor to manage
   more than one configuration file per process.
