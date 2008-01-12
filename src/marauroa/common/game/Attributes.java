@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.63 2007/12/29 21:59:35 martinfuchs Exp $ */
+/* $Id: Attributes.java,v 1.64 2008/01/12 13:06:39 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -291,7 +291,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public int getInt(String attribute) {
 		String val = get(attribute);
 		if (val == null) {
-			throw new IllegalArgumentException("'" + attribute + "' not found");
+			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
 		}
 
 		return Integer.parseInt(val);
@@ -567,7 +567,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
 
-			// TODO:
+			// TODO handle Null Definition for attribute
 			if(def==null) {
 				logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
 			}
