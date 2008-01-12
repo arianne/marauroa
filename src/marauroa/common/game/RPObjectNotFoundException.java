@@ -1,7 +1,7 @@
 package marauroa.common.game;
 
 /**
- * thrown in case an exspected rpobject is not found
+ * thrown in case an expected rpobject is not found
  */
 public class RPObjectNotFoundException extends RuntimeException {
 
@@ -10,7 +10,7 @@ public class RPObjectNotFoundException extends RuntimeException {
 	/**
 	 * creates a new RPObjectNotFoundException
 	 *
-	 * @param id id of exspected rpobject
+	 * @param id id of expected rpobject
 	 */
 	public RPObjectNotFoundException(RPObject.ID id) {
 		super("RP Object [" + id + "] not found");

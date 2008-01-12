@@ -102,22 +102,22 @@ public class HTTPConnectSocket extends Socket {
 		// OK, the status code of the proxy was 200 Connection established
 		// so now we have to skip until the end of the proxy header (CR LF CR LF)
 		long startTime = System.currentTimeMillis();
-		int exspected = 0;
+		int expected = 0;
 		while (startTime + TIMEOUT * 1000 > System.currentTimeMillis()) {
 			int b = is.read();
 			if (b < 0) {
 				throw new IOException("Unexpected end of stream while reading proxy preload.");
 			}
 
-			// Check whether this byte is exspected in the byte sequence
-			if (b == HTTP_SUFFIX[exspected]) {
-				exspected++;
+			// Check whether this byte is expected in the byte sequence
+			if (b == HTTP_SUFFIX[expected]) {
+				expected++;
 			} else {
-				exspected = 0;
+				expected = 0;
 			}
 
 			// Did we find the complete byte sequence?
-			if (exspected == HTTP_SUFFIX.length) {
+			if (expected == HTTP_SUFFIX.length) {
 				return;
 			}
 		}

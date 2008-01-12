@@ -49,7 +49,7 @@ public interface Accessor {
 
 	/**
 	 * Returns the value of the first row first column which is
-	 * exspected to be an int. Use this for count(*) and last_insert_id 
+	 * expected to be an int. Use this for count(*) and last_insert_id 
 	 *
 	 * @param sql query
 	 * @return integer of first column in first row
