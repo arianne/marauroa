@@ -29,7 +29,6 @@ public class BugAtApplyDifferencesTest {
 	/**
 	 * Set up an object and create a zone that will contain it. It doesn't add
 	 * the object to the zone.
-	 * 
 	 */
 	@Before
 	public void createObject() {

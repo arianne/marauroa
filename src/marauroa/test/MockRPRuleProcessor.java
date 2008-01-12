@@ -200,7 +200,7 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 
 		players.add(object);
 		
-		TransferContent content=new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,10});
+		TransferContent content = new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,10});
 		
 		System.out.println("PreT("+(old==object?1:0)+"): "+object);
 		rpman.transferContent(object, content);
