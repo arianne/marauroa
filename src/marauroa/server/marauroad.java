@@ -1,14 +1,14 @@
-/* $Id: marauroad.java,v 1.65 2007/12/30 22:03:48 martinfuchs Exp $ */
+/* $Id: marauroad.java,v 1.66 2008/01/13 11:18:03 martinfuchs Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
  ***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
+ *																		   *
+ *	 This program is free software; you can redistribute it and/or modify  *
+ *	 it under the terms of the GNU General Public License as published by  *
+ *	 the Free Software Foundation; either version 2 of the License, or	   *
+ *	 (at your option) any later version.								   *
+ *																		   *
  ***************************************************************************/
 package marauroa.server;
 
@@ -59,12 +59,12 @@ import marauroa.server.net.INetworkServerManager;
  * The pseudo code behind NetworkManager is:
  *
  * <pre>
- *   forever
- *   {
- *   Read stream from network
- *   Convert to a Message
- *   store in our queue
- *   }
+ *	 forever
+ *	 {
+ *	 Read stream from network
+ *	 Convert to a Message
+ *	 store in our queue
+ *	 }
  * </pre>
  *
  * One level (conceptually) over NetworkManager is the GameManager, this is the
@@ -85,37 +85,37 @@ import marauroa.server.net.INetworkServerManager;
  * we skip exceptions, is:
  *
  * <pre>
- *   forever
- *   {
- *   Wait for Message to be available
+ *	 forever
+ *	 {
+ *	 Wait for Message to be available
  *
- *   if(Message is Login)
- *   {
- *   check player.
- *   ask for character
- *   }
+ *	 if(Message is Login)
+ *	 {
+ *	 check player.
+ *	 ask for character
+ *	 }
  *
- *   if(Message is Choose Character)
- *   {
- *   check character
- *   add to game
- *   }
+ *	 if(Message is Choose Character)
+ *	 {
+ *	 check character
+ *	 add to game
+ *	 }
  *
- *   if(Message is Action)
- *   {
- *   add action to game
- *   }
+ *	 if(Message is Action)
+ *	 {
+ *	 add action to game
+ *	 }
  *
- *   if(Message is Transfer Request ACK)
- *   {
- *   send client the content requested
- *   }
+ *	 if(Message is Transfer Request ACK)
+ *	 {
+ *	 send client the content requested
+ *	 }
  *
- *   if(Message is Logout)
- *   {
- *   remove from game
- *   }
- *   }
+ *	 if(Message is Logout)
+ *	 {
+ *	 remove from game
+ *	 }
+ *	 }
  * </pre>
  *
  * And finally RPManager is the active thread that keeps executing actions.<br>
@@ -128,18 +128,18 @@ import marauroa.server.net.INetworkServerManager;
  * 2 entities to help it: Scheduler and RuleManager.
  *
  * <pre>
- *   forever
- *   {
- *   for each action scheduled for this turn
- *   {
- *   run action in RuleManager
- *   }
+ *	 forever
+ *	 {
+ *	 for each action scheduled for this turn
+ *	 {
+ *	 run action in RuleManager
+ *	 }
  *
- *   Send Perceptions
+ *	 Send Perceptions
  *
- *   wait until turn is completed
- *   next turn
- *   }
+ *	 wait until turn is completed
+ *	 next turn
+ *	 }
  * </pre>
  *
  * Scheduler handles the actions as they are sent by the GameManager.<br>
@@ -180,7 +180,7 @@ public class marauroad extends Thread {
 				System.out.println();
 				System.out.println("usage: [-c gamefile]");
 				System.out
-				        .println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+						.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
 				System.out.println("\t-h: print this help message");
 				System.exit(0);
@@ -226,12 +226,12 @@ public class marauroad extends Thread {
 			System.out.println("Run game configuration to get a valid \"server.ini\" file");
 			System.exit(1);
 		}
-        
-        if(log4jConfiguration==null) {
-        	log4jConfiguration="marauroa/server/log4j.properties";
-        }
-        
-        // Initialize Loggging
+		
+		if(log4jConfiguration==null) {
+			log4jConfiguration="marauroa/server/log4j.properties";
+		}
+		
+		// Initialize Loggging
 		Log4J.init(log4jConfiguration);
 		
 		// Check access to database is possible.
@@ -327,10 +327,10 @@ public class marauroad extends Thread {
 			netMan.start();
 		} catch (Exception e) {
 			logger.fatal("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
-			        + "- You are already running a copy of Marauroa on the same TCP port\n"
-			        + "- You haven't specified a valid configuration file\n"
-			        + "- You haven't create database\n"
-			        + "- You have invalid username and password to connect to database\n", e);
+					+ "- You are already running a copy of Marauroa on the same TCP port\n"
+					+ "- You haven't specified a valid configuration file\n"
+					+ "- You haven't create database\n"
+					+ "- You have invalid username and password to connect to database\n", e);
 			return false;
 		}
 
@@ -339,33 +339,32 @@ public class marauroad extends Thread {
 			rpMan.start();
 		} catch (Exception e) {
 			logger.fatal(
-			                "Marauroa can't create RPServerManager.\n"
-			                        + "Reasons:\n"
-			                        + "- You haven't specified a valid configuration file\n"
-			                        + "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
-			                        + "- There may be an error in the Game startup method.\n", e);
+							"Marauroa can't create RPServerManager.\n"
+									+ "Reasons:\n"
+									+ "- You haven't specified a valid configuration file\n"
+									+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
+									+ "- There may be an error in the Game startup method.\n", e);
 			return false;
 		}
 
 		try {
 			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
-			        new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
-			                Configuration.getConfiguration().get("e")));
+					new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
+							Configuration.getConfiguration().get("e")));
 
 			gameMan = new GameServerManager(key, netMan, rpMan);			
 			gameMan.start();
 		} catch (Exception e) {
 			logger.fatal(
-			                "Marauroa can't create GameServerManager.\n"
-			                        + "Reasons:\n"
-			                        + "- You haven't specified a valid configuration file\n"
-			                        + "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
-			                e);
+							"Marauroa can't create GameServerManager.\n"
+									+ "Reasons:\n"
+									+ "- You haven't specified a valid configuration file\n"
+									+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
+							e);
 			return false;
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-
 			@Override
 			public void run() {
 				// Note: Log4J ist shutdown already at this point
