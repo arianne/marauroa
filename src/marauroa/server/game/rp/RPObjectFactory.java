@@ -43,7 +43,7 @@ public class RPObjectFactory {
 	}
 
 	/**
-	 * This method returns an instance of RPObjectFactory choosen using the
+	 * This method returns an instance of RPObjectFactory chosen using the
 	 * param.
 	 *
 	 * @param factoryName

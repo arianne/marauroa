@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.100 2007/12/29 14:43:18 martinfuchs Exp $ */
+/* $Id: GameServerManager.java,v 1.101 2008/01/13 11:12:49 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -274,7 +274,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	/**
 	 * Runs the game glue logic. This class is responsible of receiving messages
-	 * from clients and intruct RP about actions clients did.
+	 * from clients and instruct RP about actions clients did.
 	 */
 	@Override
 	public void run() {
