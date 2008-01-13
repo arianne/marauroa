@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.68 2008/01/07 07:02:39 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.69 2008/01/13 21:39:17 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -772,8 +772,8 @@ public class JDBCDatabase implements IDatabase {
 			for (int i = 0; i < amount; i++) {
 				try {
 					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
+
 					if (object != null) {
-	
 						/* Give the object a valid id and add it */
 						zone.assignRPObjectID(object);
 						zone.add(object);

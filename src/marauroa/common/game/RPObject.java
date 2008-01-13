@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.81 2008/01/06 20:24:26 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.82 2008/01/13 21:39:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -104,7 +104,7 @@ public class RPObject extends Attributes {
 		addedLinks = new LinkedList<String>();
 		deletedLinks = new LinkedList<String>();
 		
-		modified=false;
+		modified = false;
 
 		container = null;
 		containerSlot = null;
@@ -429,7 +429,7 @@ public class RPObject extends Attributes {
 
 		/** Notify delta^2 about the addition of this slot */
 		addedSlots.add(name);
-		modified=true;
+		modified = true;
 	}
 	
 	/**
@@ -457,7 +457,7 @@ public class RPObject extends Attributes {
 
 		/* Notify delta^2 about the addition of this slot */
 		addedSlots.add(slot.getName());
-		modified=true;
+		modified = true;
 	}
 
 	/**
@@ -476,7 +476,7 @@ public class RPObject extends Attributes {
 				/** Notify delta^2 about the removal of this slot. */
 				deletedSlots.add(name);
 
-				modified=true;
+				modified = true;
 
 				/* Remove and return it */
 				it.remove();
@@ -573,7 +573,7 @@ public class RPObject extends Attributes {
 		links.add(link);
 
 		addedLinks.add(name);
-		modified=true;
+		modified = true;
 	}
 	
 	/**
@@ -589,7 +589,7 @@ public class RPObject extends Attributes {
 		links.add(link);
 
 		addedLinks.add(link.getName());
-		modified=true;
+		modified = true;
 	}
 
 	/**
@@ -641,7 +641,7 @@ public class RPObject extends Attributes {
 			if (name.equals(link.getName())) {
 				deletedLinks.add(name);
 
-				modified=true;
+				modified = true;
 
 				/* Remove and return it */
 				it.remove();
@@ -801,7 +801,7 @@ public class RPObject extends Attributes {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		super.readObject(in);
-		modified=true;
+		modified = true;
 
 		if (in.readByte() == 1) {
 			hidden = in.readByte() == 1;
@@ -966,7 +966,7 @@ public class RPObject extends Attributes {
 				slotit.remove();
 				addedSlots.remove(slot.getName());
 				deletedSlots.remove(slot.getName());
-				modified=true;
+				modified = true;
 			}
 		}
 
@@ -981,7 +981,7 @@ public class RPObject extends Attributes {
 				linkit.remove();
 				addedLinks.remove(link.getName());
 				deletedLinks.remove(link.getName());
-				modified=true;
+				modified = true;
 			}
 		}
 	}
@@ -1127,7 +1127,7 @@ public class RPObject extends Attributes {
 		clearEvents();
 		
 		if(modified) {
-			modified=false;
+			modified = false;
 		}
 	}
 
