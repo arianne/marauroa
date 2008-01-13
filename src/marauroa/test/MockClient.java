@@ -148,17 +148,17 @@ public class MockClient extends ClientFramework {
 	@Override
 	protected void onTransfer(List<TransferContent> items) {
 		for(TransferContent item: items) {
-			if(!item.name.equals("test_content")) {
+			if (!item.name.equals("test content")) {
 				TestHelper.fail();
 			}
-			
+
 			int j=1;
 			for(byte i: item.data) {
 				if(i!=j) {
 					System.out.println("i="+i+" but was="+j);
 					TestHelper.fail();
 				}
-				
+
 				j++;
 			}
 		}
