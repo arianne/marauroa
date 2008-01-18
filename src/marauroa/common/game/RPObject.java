@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.83 2008/01/18 09:10:57 martinfuchs Exp $ */
+/* $Id: RPObject.java,v 1.84 2008/01/18 19:26:38 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -182,16 +182,16 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Returns an ID object representing the id of this object
+	 * Returns an ID object representing the id of this object.
 	 *
-	 * @return the identificator of the object
+	 * @return the identifier of the object
 	 */
 	public RPObject.ID getID() {
 		return new ID(this);
 	}
 
 	/**
-	 * Set the attributes that define the ID of the object
+	 * Sets the attributes that define the ID of the object.
 	 *
 	 * @param id
 	 *            the object id to set for this object
@@ -401,7 +401,7 @@ public class RPObject extends Attributes {
 	 */
 	public boolean hasSlot(String name) {
 		for (RPSlot slot : slots) {
-			if (name.equals(slot.getName())) {
+			if (slot.getName().equals(name)) {
 				return true;
 			}
 		}

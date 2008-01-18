@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test unit for RPObject basic functionality
+ * Test unit for RPObject basic functionality.
  *
  * @author miguel
  *
@@ -117,25 +117,25 @@ public class RPObjectTest {
 	
 	@Test
 	public void testHasAsParent() {
-		RPObject p=obj.getSlot("lhand").getFirst();
+		RPObject p = obj.getSlot("lhand").getFirst();
 		
 		assertTrue(obj.getSlot("lhand").hasAsAncestor(obj));
 		assertTrue(p.getSlot("container").hasAsAncestor(obj));		
 	}
 
-	@Test(expected=SlotIsFullException.class)
+	@Test(expected = SlotIsFullException.class)
 	public void testSlotCapacity() {
-		RPClass clazz=new RPClass("object");
+		RPClass clazz = new RPClass("object");
 		clazz.addAttribute("a", Type.BYTE);
 		clazz.addRPSlot("cont", 1);
-		
-		obj=new RPObject();
+
+		obj = new RPObject();
 		obj.setRPClass("object");
 		obj.addSlot("cont");
-		
-		RPSlot s=obj.getSlot("cont");
+
+		RPSlot s = obj.getSlot("cont");
 		s.add(new RPObject());
-		
+
 		s.add(new RPObject());
 		fail("Object added");
 	}
@@ -159,11 +159,10 @@ public class RPObjectTest {
 	}
 
 	/**
-	 * Test serialization of the RPObject by serializing it and then
+	 * Tests serialization of the RPObject by serializing it and then
 	 * deserializing it from the stream back again.
 	 *
 	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 */
 	@Test
 	public void testSerialization() throws IOException {
@@ -200,10 +199,10 @@ public class RPObjectTest {
 	@Test
 	public void testGetObjectFromSlots() {
 		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		
-		RPObject coinfromslot=obj.getFromSlots(coin.getInt("id"));
-		assertEquals(coin,coinfromslot);
-		
+
+		RPObject coinfromslot = obj.getFromSlots(coin.getInt("id"));
+		assertEquals(coin, coinfromslot);
+
 		assertNull(obj.getFromSlots(-1));
 	}
 
@@ -237,6 +236,24 @@ public class RPObjectTest {
 
 		assertTrue(oadded.isEmpty());
 		assertTrue(odeleted.isEmpty());
+	}
+	
+	/**
+	 * Checks that passing <code>null</code> does not throw a NPE.
+	 */
+	@Test
+	public void testhasSlot() {
+		RPObject localobj = new RPObject();
+		String slotname = "slotname";
+		assertFalse(localobj.hasSlot(slotname));
+		assertFalse(localobj.hasSlot(slotname + "blabla"));
+		assertFalse(localobj.hasSlot(null));
+		
+		localobj.addSlot(slotname);
+		assertTrue(localobj.hasSlot(slotname));
+		assertFalse(localobj.hasSlot(slotname + "blabla"));
+		assertFalse(localobj.hasSlot(null));
+		
 	}
 
 }
