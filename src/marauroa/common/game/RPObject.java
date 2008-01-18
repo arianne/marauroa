@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.82 2008/01/13 21:39:18 martinfuchs Exp $ */
+/* $Id: RPObject.java,v 1.83 2008/01/18 09:10:57 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -514,7 +514,7 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * Returns an unmodifyable list of the slots
+	 * Returns an unmodifiable list of the slots
 	 *
 	 * @return a list of the slots
 	 */
