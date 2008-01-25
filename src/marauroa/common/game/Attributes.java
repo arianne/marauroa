@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.65 2008/01/13 11:18:04 martinfuchs Exp $ */
+/* $Id: Attributes.java,v 1.66 2008/01/25 19:37:07 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -551,7 +551,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 				String value = def.deserialize(in);
 				content.put(key, value);
 			} else {
-				throw new IOException("rpClass definition not found: " + key);
+				throw new IOException("RPClass("+rpClass+") definition for attribute not found: " + key);
 			}
 		}
 	}

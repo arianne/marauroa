@@ -15,6 +15,9 @@ import marauroa.common.game.Definition.Type;
 /**
  * An RPClass is a entity that define the attributes, events and slots of an
  * Object.
+ * <b>TODO:</b> Creating a new RPClass does in fact add it to a global list of RPClasses.
+ *   Search for a way of making this in a different way so test added for equality works.
+ *    
  * <p>
  * The idea behind RPClass is not define members as a OOP language but to save
  * bandwidth usage by replacing these members text definitions with a short
@@ -108,6 +111,13 @@ public class RPClass implements marauroa.common.net.Serializable {
 		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT,
 		        (byte) (Definition.HIDDEN | Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
+		
+		/*
+		 * We want to avoid shadow redefinitions of classes that are very hard to trace.
+		 */
+		if(rpClassList.containsKey(name)) {
+			throw new IllegalArgumentException("Duplicated class name: "+name);
+		}
 
 		rpClassList.put(name, this);
 	}
