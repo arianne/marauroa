@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.101 2008/01/13 11:12:49 martinfuchs Exp $ */
+/* $Id: GameServerManager.java,v 1.102 2008/01/25 20:59:38 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -699,6 +699,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
+			
+			/*
+			 * Update timeout timestamp on player.
+			 */
+			entry.update();
 
 			/* Send the action to RP Manager */
 			RPAction action = msg.getRPAction();
