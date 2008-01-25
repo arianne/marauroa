@@ -116,7 +116,7 @@ public class AttributesTest {
 	 */
 	@Test
 	public void testSerializationWithRPClass() throws IOException {
-		RPClass clazz = new RPClass("A");
+		RPClass clazz = new RPClass("AttributeTest::A");
 
 		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		clazz.add(DefinitionClass.ATTRIBUTE, "b", Type.STRING, Definition.STANDARD);
@@ -163,7 +163,7 @@ public class AttributesTest {
 	 */
 	@Test(expected = IOException.class)
 	public void testSerializationWithRPClassFailure() throws IOException {
-		RPClass clazz = new RPClass("A");
+		RPClass clazz = new RPClass("AttributeTest::B");
 
 		clazz.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
 		clazz.add(DefinitionClass.ATTRIBUTE, "b", Type.STRING, Definition.STANDARD);

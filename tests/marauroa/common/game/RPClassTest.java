@@ -29,8 +29,8 @@ public class RPClassTest {
      */
     @Test
     public void testHasClass() {
-        new RPClass("A");
-        assertTrue(RPClass.hasRPClass("A"));
+        new RPClass("RPClassTest::A");
+        assertTrue(RPClass.hasRPClass("RPClassTest::A"));
     }
 
     /**
@@ -40,8 +40,8 @@ public class RPClassTest {
      */
     @Test
     public void testGetClass() {
-        RPClass b = new RPClass("B");
-        assertEquals(b, RPClass.getRPClass("B"));
+        RPClass b = new RPClass("RPClassTest::B");
+        assertEquals(b, RPClass.getRPClass("RPClassTest::B"));
     }
 
     /**
@@ -50,14 +50,14 @@ public class RPClassTest {
      */
     @Test
     public void testisAClass() {
-        RPClass c = new RPClass("C");
-        RPClass d = new RPClass("D");
+        RPClass c = new RPClass("RPClassTest::C");
+        RPClass d = new RPClass("RPClassTest::D");
 
         d.isA(c);
 
         assertTrue(d.subclassOf(c.getName()));
 
-        d.isA("C");
+        d.isA("RPClassTest::C");
 
         assertTrue(d.subclassOf(c.getName()));
     }
@@ -68,8 +68,8 @@ public class RPClassTest {
      */
     @Test
     public void testDefinitions() {
-        RPClass b = new RPClass("E");
-        assertEquals(b, RPClass.getRPClass("E"));
+        RPClass b = new RPClass("RPClassTest::E");
+        assertEquals(b, RPClass.getRPClass("RPClassTest::E"));
 
         b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
@@ -86,8 +86,8 @@ public class RPClassTest {
      */
     @Test
     public void testDefinitionsMethods() {
-        RPClass b = new RPClass("F");
-        assertEquals(b, RPClass.getRPClass("F"));
+        RPClass b = new RPClass("RPClassTest::F");
+        assertEquals(b, RPClass.getRPClass("RPClassTest::F"));
 
         b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
@@ -129,7 +129,7 @@ public class RPClassTest {
      */
     @Test
     public void testGlobalDefinitionBug() {
-        RPClass b = new RPClass("G");
+        RPClass b = new RPClass("RPClassTest::G");
 
         b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
@@ -154,8 +154,8 @@ public class RPClassTest {
      */
     @Test
     public void testSerialization() throws IOException {
-        RPClass expected = new RPClass("I");
-        assertEquals(expected, RPClass.getRPClass("I"));
+        RPClass expected = new RPClass("RPClassTest::I");
+        assertEquals(expected, RPClass.getRPClass("RPClassTest::I"));
 
         expected.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         expected.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.HIDDEN);
@@ -182,7 +182,7 @@ public class RPClassTest {
      */
     @Test
     public void testStaticAttributes() {
-        RPClass b = new RPClass("J");
+        RPClass b = new RPClass("RPClassTest::J");
 
         b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
@@ -202,12 +202,12 @@ public class RPClassTest {
      */
     @Test
     public void testHierachyBug() {
-        RPClass b = new RPClass("K");
+        RPClass b = new RPClass("RPClassTest::K");
         b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
         b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
         b.add(DefinitionClass.STATIC, "c", "test", Definition.STANDARD);
 
-        RPClass c = new RPClass("M");
+        RPClass c = new RPClass("RPClassTest::M");
         c.isA(b);
         c.add(DefinitionClass.ATTRIBUTE, "a", Type.STRING, Definition.STANDARD);
         c.add(DefinitionClass.STATIC, "c", "subclass", Definition.STANDARD);
@@ -229,33 +229,15 @@ public class RPClassTest {
     }
 
 	@Test
-	public void testEqualsNewObjects() throws Exception {
-		assertEquals("two new Objects should be equal", new RPClass(),
-				new RPClass());
-
-	}
-
-	@Test
 	public void testEqualsNewObjectsName() throws Exception {
-		assertEquals("two new Objects should be equal if Name is Equal",
-				new RPClass(new String("name")),
-				new RPClass(new String("name")));
-		assertFalse("two new Objects should not be equal if Name is not Equal",
-				new RPClass("name").equals(new RPClass("name2")));
-	}
+        RPClass b = new RPClass("RPClassTest::L");
+        b.add(DefinitionClass.ATTRIBUTE, "a", Type.INT, Definition.STANDARD);
+        b.add(DefinitionClass.ATTRIBUTE, "b", Type.FLAG, Definition.STANDARD);
+        b.add(DefinitionClass.STATIC, "c", "test", Definition.STANDARD);
 
-	@Test
-	public void testRPClass() throws Exception {
-		RPClass rp = new RPClass("schnipp");
-		RPClass rp2 = new RPClass("schnipp");
-		RPClass childRp = new RPClass(""); //not intializing name causes NPE in subclassOf
-		RPClass childRp2 = new RPClass("");
-		childRp.isA(rp);
-		childRp2.isA(childRp);
-		assertTrue(childRp.subclassOf(rp.getName()));
-		assertTrue(childRp.subclassOf(rp2.getName()));
-		assertTrue(childRp2.subclassOf(rp.getName()));
+        assertEquals("Check equals method",
+				b,
+				b);
 	}
-
 	
 }

@@ -123,7 +123,7 @@ public class RPSlotTest {
 		assertEquals(-1,rps.getCapacity());
 
 		// create a class definition
-		RPClass entity = new RPClass("corpse");
+		RPClass entity = new RPClass("corpseCapacity");
 		entity.addRPSlot("content", 4);
 
 		// instantiate an object
@@ -139,7 +139,7 @@ public class RPSlotTest {
 
 	@Test  (expected=SlotIsFullException.class)
 	public final void testIsFull() {
-		RPClass entity = new RPClass("corpse");
+		RPClass entity = new RPClass("corpseException");
 		entity.addRPSlot("content", 4);
 
 		// instantiate an object
