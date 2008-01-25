@@ -33,7 +33,7 @@ public class SecureLoginTest {
 	@BeforeClass
 	public static void setUp() throws IOException {
 		/*
-		 * Make sure database is initialized-
+		 * Make sure database is initialized.
 		 */
 		PlayerEntryContainer.getContainer();
 		loadRSAKey();
@@ -47,8 +47,9 @@ public class SecureLoginTest {
 
 	/**
 	 * This method supposes that you have an account already created with
-	 * username testUsername and password password. It test if verify works
-	 * correctly with a correct account.
+	 * username testUsername and password password. 
+	 * 
+	 * It test if verify works correctly with a correct account.
 	 * 
 	 * @throws SQLException
 	 */
@@ -56,7 +57,7 @@ public class SecureLoginTest {
 	public void testLogin() throws SQLException {
 		String password = "password";
 		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
-		assertTrue(login.verify());
+		assertTrue("Unable to verify login",login.verify());
 	}
 
 	/**
