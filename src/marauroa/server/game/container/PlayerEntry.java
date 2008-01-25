@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.35 2007/11/25 19:03:18 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.36 2008/01/25 20:35:15 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -180,6 +180,18 @@ public class PlayerEntry {
 
 	/** The object of the player */
 	public RPObject object;
+	
+	/**
+	 * We need to control if player is active because sometimes server changes its IP
+	 * and we are not able to realize about this at server side, so all the clients are left there
+	 * until the TCP stack determine a timeout that can be a long time.
+	 */
+	public long activityTimestamp;
+	
+	/**
+	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
+	 */	
+	public static final long TIMEOUT_MILLISECONDS= 20 * 1000;
 
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
@@ -228,6 +240,25 @@ public class PlayerEntry {
 	 */
 	public InetAddress getAddress() {
 		return channel.socket().getInetAddress();
+	}
+	
+	/**
+	 * Returns true when nothing has been recieved from client in TIMEOUT_SECONDS.
+	 * Note that client sends confirmations to perceptions, so this mean that client is
+	 * for whatever reason not working.
+	 * 
+	 * @return  true when nothing has been recieved from client in TIMEOUT_SECONDS.
+	 */
+	public boolean isTimeout() {
+		return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_MILLISECONDS;		
+	}
+	
+	/**
+	 * Refresh player timeout timestamp.
+	 * This method is invoked when a new message arrives from client.
+	 */
+	public void update() {
+		activityTimestamp=System.currentTimeMillis();
 	}
 
 	/**
