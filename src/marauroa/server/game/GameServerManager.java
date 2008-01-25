@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.102 2008/01/25 20:59:38 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.103 2008/01/25 21:03:12 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -345,6 +345,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							 */
 							logger.debug("Processing C2S Out Of Sync Message");
 							processOutOfSyncEvent((MessageC2SOutOfSync) msg);
+							break;
+						case C2S_KEEPALIVE:
+							/*
+							 * Recieve keep alive messages from client.
+							 */
+							logger.debug("Processing C2S Keep alive Message");
+							processKeepAliveEvent((MessageC2SOutOfSync) msg);
 							break;
 						case C2S_TRANSFER_ACK:
 							/*
@@ -1119,6 +1126,28 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		}
 	}
 
+	/**
+	 * This message is send from client to confirm that he is still alive and has not timeout. 
+	 *
+	 * @param msg
+	 *            the keep alive message
+	 */
+	private void processKeepAliveEvent(MessageC2SOutOfSync msg) {
+		try {
+			int clientid = msg.getClientID();
+			PlayerEntry entry = playerContainer.get(clientid);
+
+			// verify event
+			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
+				return;
+			}
+
+			entry.update();
+		} catch (Exception e) {
+			logger.error("error while processing Keep Alive event", e);
+		}
+	}
+	
 	/**
 	 * This message is send from client to server to notify server which of the
 	 * proposed transfer has to be done.
