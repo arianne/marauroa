@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.23 2007/04/09 14:47:07 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.24 2008/01/25 20:44:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -70,6 +70,7 @@ public class NetConst {
 	 * 22 - Changed signature method. Two bytes now.
 	 * 30 - Marauroa 2.0 refactoring
 	 *    - Dropped UDP support
+	 * 31 - Added KeepAlive message.
 	 */
-	final static public byte NETWORK_PROTOCOL_VERSION = 30;
+	final static public byte NETWORK_PROTOCOL_VERSION = 31;
 }

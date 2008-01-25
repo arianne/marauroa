@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.33 2007/12/08 14:28:40 martinfuchs Exp $ */
+/* $Id: MessageFactory.java,v 1.34 2008/01/25 20:44:40 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
+import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -109,6 +110,7 @@ public class MessageFactory {
 		register(Message.MessageType.S2C_LOGOUT_NACK, MessageS2CLogoutNACK.class);
 		register(Message.MessageType.S2C_PERCEPTION, MessageS2CPerception.class);
 		register(Message.MessageType.C2S_OUTOFSYNC, MessageC2SOutOfSync.class);
+		register(Message.MessageType.C2S_KEEPALIVE, MessageC2SKeepAlive.class);
 		register(Message.MessageType.S2C_SERVERINFO, MessageS2CServerInfo.class);
 		register(Message.MessageType.S2C_INVALIDMESSAGE, MessageS2CInvalidMessage.class);
 		register(Message.MessageType.S2C_TRANSFER_REQ, MessageS2CTransferREQ.class);
