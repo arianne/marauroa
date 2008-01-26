@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.103 2008/01/25 21:03:12 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.104 2008/01/26 16:42:39 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -351,7 +351,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							 * Recieve keep alive messages from client.
 							 */
 							logger.debug("Processing C2S Keep alive Message");
-							processKeepAliveEvent((MessageC2SOutOfSync) msg);
+							processKeepAliveEvent((MessageC2SKeepAlive) msg);
 							break;
 						case C2S_TRANSFER_ACK:
 							/*
