@@ -19,7 +19,6 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
-import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
 import marauroa.test.CrushServer.MockMarauroad;
 
@@ -385,8 +384,6 @@ public class SystemTest {
 				 * Instead we just sleep a bit.
 				 */
 				Thread.sleep(3000);
-				
-				System.out.println("Aqui estamos...: "+client.getConnectionState());
 				
 				client.resync();
 			}
