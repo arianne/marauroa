@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.36 2008/01/25 20:35:15 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.37 2008/01/26 17:17:08 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -191,7 +191,7 @@ public class PlayerEntry {
 	/**
 	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
 	 */	
-	public static final long TIMEOUT_MILLISECONDS= 20 * 1000;
+	public static final long TIMEOUT_MILLISECONDS= 30 * 1000;
 
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
@@ -229,8 +229,9 @@ public class PlayerEntry {
 		 */
 		requestedSync = true;
 		contentToTransfer = null;
-
+		
 		creationTime = System.currentTimeMillis();
+		activityTimestamp=creationTime;
 	}
 
 	/**
