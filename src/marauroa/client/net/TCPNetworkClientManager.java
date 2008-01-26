@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.22 2008/01/26 23:37:50 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.23 2008/01/26 23:41:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -426,15 +426,17 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 					}
 
 					os.write(encoder.encode(msg));
+					return true;
 				} else {
 					logger.warn("Write requested not to keeprunning");
+					connected=false;
+					return false;
 				}
 			} catch (IOException e) {
 				/* Report the exception */
 				logger.error("error while sending a packet (msg=(" + msg + "))", e);
 				return false;
 			}
-			return true;
 		}
 	}
 }
