@@ -333,7 +333,7 @@ public class SystemTest {
 			assertTrue(choosen);
 			
 			RPAction action=new RPAction();
-			action.put("test", 1);
+			action.put("text", 1);
 			client.send(action);
 
 			while (client.getPerceptions() < 5) {

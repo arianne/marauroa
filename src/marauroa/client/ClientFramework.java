@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.38 2007/12/04 20:00:12 martinfuchs Exp $ */
+/* $Id: ClientFramework.java,v 1.39 2008/01/26 16:48:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,6 +34,7 @@ import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
+import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -70,6 +71,8 @@ public abstract class ClientFramework {
 
 	/** How long we should wait for connect. */
 	public final static int TIMEOUT = 10000;
+	
+	private int perceptionsCount;
 
 	/**
 	 * We keep an instance of network manager to be able to communicate with
@@ -91,6 +94,7 @@ public abstract class ClientFramework {
 		Log4J.init(loggingProperties);
 
 		messages = new LinkedList<Message>();
+		perceptionsCount=0;
 	}
 
 	/**
@@ -437,6 +441,12 @@ public abstract class ClientFramework {
 	 *            the action to send to server.
 	 */
 	public void send(RPAction action) {
+		/*
+		 * Each time we send an action we are confirming server our presence, so we 
+		 * reset the counter to avoid sending keep alive messages.
+		 */
+		perceptionsCount=0;
+		
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
 		netMan.addMessage(msgAction);
 	}
@@ -515,6 +525,16 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 				/* It can be a perception message */
 				case S2C_PERCEPTION: {
+					perceptionsCount++;
+					
+					/*
+					 * Only once each 5 perceptions we tell that we are alive.
+					 */
+					if(perceptionsCount%5+1==5) {
+						MessageC2SKeepAlive msgAlive=new MessageC2SKeepAlive();
+						netMan.addMessage(msgAlive);						
+					}
+					
 					logger.debug("Processing Message Perception");
 					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
 					onPerception(msgPer);

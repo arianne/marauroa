@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.48 2008/01/13 11:14:46 martinfuchs Exp $ */
+/* $Id: RPServerManager.java,v 1.49 2008/01/26 16:48:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -348,6 +348,14 @@ public class RPServerManager extends Thread {
 		for (PlayerEntry entry : playerContainer) {
 			try {
 				if (entry.state == ClientState.GAME_BEGIN) {
+					/*
+					 * Before creating the perception we check the player is still there.
+					 */
+					if(entry.isTimeout()) {
+						playersToRemove.add(entry);
+						continue;
+					}
+					
 					Perception perception = getPlayerPerception(entry);
 					sendPlayerPerception(entry, perception, entry.object);
 				}
