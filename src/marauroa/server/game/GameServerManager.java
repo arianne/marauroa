@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.104 2008/01/26 16:42:39 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.105 2008/01/26 16:44:20 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
+import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
@@ -1129,16 +1130,16 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/**
 	 * This message is send from client to confirm that he is still alive and has not timeout. 
 	 *
-	 * @param msg
+	 * @param alive
 	 *            the keep alive message
 	 */
-	private void processKeepAliveEvent(MessageC2SOutOfSync msg) {
+	private void processKeepAliveEvent(MessageC2SKeepAlive alive) {
 		try {
-			int clientid = msg.getClientID();
+			int clientid = alive.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
 
 			// verify event
-			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(alive, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
