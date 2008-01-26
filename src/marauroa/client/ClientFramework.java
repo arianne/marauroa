@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.39 2008/01/26 16:48:04 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.40 2008/01/26 23:53:31 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -528,9 +528,10 @@ public abstract class ClientFramework {
 					perceptionsCount++;
 					
 					/*
-					 * Only once each 5 perceptions we tell that we are alive.
+					 * Only once each 30 perceptions we tell that we are alive.
 					 */
-					if(perceptionsCount%5+1==5) {
+					if(perceptionsCount%30+1==30) {
+						System.out.println("Alaqueteva!");
 						MessageC2SKeepAlive msgAlive=new MessageC2SKeepAlive();
 						netMan.addMessage(msgAlive);						
 					}

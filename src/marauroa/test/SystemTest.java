@@ -396,6 +396,40 @@ public class SystemTest {
 	}
 
 	@Test
+	public void t7_1_testKeepAliveWorks() throws Exception {
+		try {
+			client.connect("localhost", PORT);
+			client.login("testUsername", "password");
+
+			String[] characters = client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
+
+			boolean choosen = client.chooseCharacter("testCharacter");
+			assertTrue(choosen);
+			
+			RPAction action=new RPAction();
+			action.put("text", 1);
+			client.send(action);
+
+			long init=System.currentTimeMillis();
+			/*
+			 * Timeout for players is 30 seconds.
+			 */
+			while (System.currentTimeMillis()-init<40000) {
+				client.loop(0);
+			}
+			
+			assertTrue("Connection still be there", client.getConnectionState());
+
+			client.logout();			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Test
 	public void t8_testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
 	        LoginFailedException {
 		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
