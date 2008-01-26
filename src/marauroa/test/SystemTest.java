@@ -19,6 +19,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
 import marauroa.test.CrushServer.MockMarauroad;
 
@@ -349,7 +350,56 @@ public class SystemTest {
 	}
 
 	@Test
-	public void t7_testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
+	public void t7_testKeepAlive() throws Exception {
+		try {
+			client=new MockClient("log4j.properties") {
+				@Override			
+				public synchronized boolean loop(int delta) {
+					try {
+						netMan.getMessage(30);
+					} catch (InvalidVersionException e) {
+					}
+					
+					return false;
+				}	
+			};
+			
+			client.connect("localhost", PORT);
+			client.login("testUsername", "password");
+
+			String[] characters = client.getCharacters();
+			assertEquals(1, characters.length);
+			assertEquals("testCharacter", characters[0]);
+
+			boolean choosen = client.chooseCharacter("testCharacter");
+			assertTrue(choosen);
+			
+			RPAction action=new RPAction();
+			action.put("text", 1);
+			client.send(action);
+
+			while (client.getConnectionState()) {
+				client.loop(30);
+				/*
+				 * We don't run loop method that would send keep alive message.
+				 * Instead we just sleep a bit.
+				 */
+				Thread.sleep(3000);
+				
+				System.out.println("Aqui estamos...: "+client.getConnectionState());
+				
+				client.resync();
+			}
+			
+			assertFalse("Connection must be broken as connection was closed by server", client.getConnectionState());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Test
+	public void t8_testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
 	        LoginFailedException {
 		MockRPRuleProcessor rp = (MockRPRuleProcessor) MockRPRuleProcessor.get();
 		ConnectionValidator conn = rp.getValidator();
@@ -367,4 +417,5 @@ public class SystemTest {
 			 */
 		}
 	}
+
 }

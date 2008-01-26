@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.105 2008/01/26 16:44:20 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.106 2008/01/26 23:25:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -201,6 +201,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
+	
+	private DisconnectPlayers disconnectThread;
 
 	/** A list of player entries to remove. */
 	private List<PlayerEntry> entriesToRemove;
@@ -232,6 +234,88 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 		entriesToRemove = new LinkedList<PlayerEntry>();
+		
+		disconnectThread= new DisconnectPlayers();
+	}
+	
+	@Override
+	public void start() {
+		super.start();
+		disconnectThread.start();
+	}
+	
+	class DisconnectPlayers extends Thread {
+		public DisconnectPlayers() {
+			super("GameServerManagerDisconnectPlayers");
+		}
+		
+		public synchronized void awake() {
+			notify();
+		}
+
+		/**
+		 * This method is used mainly by onDisconnect and RPServerManager to force
+		 * the disconnection of a player entry.
+		 *
+		 * @param entry
+		 *            the player entry to remove.
+		 */
+		private void disconnect(PlayerEntry entry) {
+			/*
+			 * First we remove the entry from the player container.
+			 */
+			if(playerContainer.remove(entry.clientid)==null) {
+				logger.warn("Entry to remove not found: "+entry.channel +"("+playerContainer.size()+")");
+			}
+
+			/*
+			 * If client is still login, don't notify RP as it knows nothing about
+			 * this client. That means state != of GAME_BEGIN
+			 */
+			if (entry.state == ClientState.GAME_BEGIN) {
+				/*
+				 * If client was playing the game request the RP to disconnected it.
+				 */
+				try {
+					rpMan.onTimeout(entry.object);
+					entry.storeRPObject(entry.object);
+				} catch (Exception e) {
+					logger.error("Error disconnecting player" + entry, e);
+				}
+			}
+
+			/*
+			 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
+			 * GameServerManager to make room for new players.
+			 */
+			entry.state = ClientState.LOGOUT_ACCEPTED;
+		}
+
+		public synchronized void run() {
+			while (keepRunning) {
+				try {
+	                wait();
+                } catch (InterruptedException e) {
+                	/*
+                	 * We are not interested really.
+                	 */
+                }
+				
+				playerContainer.getLock().requestWriteLock();
+				/*
+				 * Clean the entry to be removed. We need to do in this way to
+				 * avoid ConcurrentModificationException
+				 */
+				synchronized (entriesToRemove) {
+					for (PlayerEntry entry : entriesToRemove) {
+						disconnect(entry);
+					}
+					entriesToRemove.clear();
+				}
+
+				playerContainer.getLock().releaseLock();
+			}
+		}
 	}
 
 	/**
@@ -241,7 +325,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	public void finish() {
 		rpMan.finish();
 		keepRunning = false;
+		
 		interrupt();
+		disconnectThread.interrupt();
 		
 		while (isfinished == false) {
 			Thread.yield();
@@ -386,20 +472,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					}
 					playerContainer.getLock().releaseLock();
 				}
-
-				playerContainer.getLock().requestWriteLock();
-				/*
-				 * Clean the entry to be removed. We need to do in this way to
-				 * avoid ConcurrentModificationException
-				 */
-				synchronized (entriesToRemove) {
-					for (PlayerEntry entry : entriesToRemove) {
-						disconnect(entry);
-					}
-					entriesToRemove.clear();
-				}
-
-				playerContainer.getLock().releaseLock();
 
 				/*
 				 * Finally store stats about logged players.
@@ -655,37 +727,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		synchronized (entriesToRemove) {
 			entriesToRemove.add(entry);
 		}
-	}
-
-	/**
-	 * This method is used mainly by onDisconnect and RPServerManager to force
-	 * the disconnection of a player entry.
-	 *
-	 * @param entry
-	 *            the player entry to remove.
-	 */
-	private void disconnect(PlayerEntry entry) {
-		/*
-		 * If client is still login, don't notify RP as it knows nothing about
-		 * this client. That means state != of GAME_BEGIN
-		 */
-		if (entry.state == ClientState.GAME_BEGIN) {
-			/*
-			 * If client was playing the game request the RP to disconnected it.
-			 */
-			try {
-				rpMan.onTimeout(entry.object);
-				entry.storeRPObject(entry.object);
-			} catch (Exception e) {
-				logger.error("Error disconnecting player" + entry, e);
-			}
-		}
-
-		/*
-		 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
-		 * GameServerManager to make room for new players.
-		 */
-		entry.state = ClientState.LOGOUT_ACCEPTED;
+		
+		disconnectThread.awake();
 	}
 
 	/**

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.49 2008/01/26 16:48:04 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.50 2008/01/26 23:25:19 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -352,6 +352,7 @@ public class RPServerManager extends Thread {
 					 * Before creating the perception we check the player is still there.
 					 */
 					if(entry.isTimeout()) {
+						logger.info("Request disconnection of Player "+entry.channel);
 						playersToRemove.add(entry);
 						continue;
 					}
