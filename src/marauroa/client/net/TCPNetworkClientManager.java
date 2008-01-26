@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.20 2008/01/26 23:25:18 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.21 2008/01/26 23:27:04 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -224,7 +224,6 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	 * @return true if socket is connected.
 	 */
 	public boolean getConnectionState() {
-		System.out.println("SOCKET: "+socket);
 		return connected && !socket.isClosed();
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.106 2008/01/26 23:25:19 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.107 2008/01/26 23:27:05 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -265,7 +265,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * First we remove the entry from the player container.
 			 */
 			if(playerContainer.remove(entry.clientid)==null) {
-				logger.warn("Entry to remove not found: "+entry.channel +"("+playerContainer.size()+")");
+				logger.info("Entry to remove not found: "+entry.channel +"("+playerContainer.size()+")");
 			}
 
 			/*
