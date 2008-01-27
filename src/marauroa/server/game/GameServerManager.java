@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.107 2008/01/26 23:27:05 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.108 2008/01/27 12:09:01 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -238,17 +238,38 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		disconnectThread= new DisconnectPlayers();
 	}
 	
+	/**
+	 * Starting this thread makes it to start the thread that disconnect players.
+	 */
 	@Override
 	public void start() {
 		super.start();
 		disconnectThread.start();
 	}
-	
+
+	/**
+	 * Thread that disconnect players.
+	 * It has to be done this way because we can't run it on the main loop of GameServerManager,
+	 * because it locks waiting for new messages to arrive, so the player keeps unremoved until a 
+	 * message is recieved.
+	 * 
+	 * This way players are removed as they are requested to be.
+	 * 
+	 * @author miguel
+	 *
+	 */
 	class DisconnectPlayers extends Thread {
+		/**
+		 * Constructor.
+		 * It just gives a nice name to the thread.
+		 */
 		public DisconnectPlayers() {
 			super("GameServerManagerDisconnectPlayers");
 		}
 		
+		/**
+		 * GameServerManager thread needs to awake this thread to notify about removed players.
+		 */
 		public synchronized void awake() {
 			notify();
 		}
@@ -293,6 +314,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		public synchronized void run() {
 			while (keepRunning) {
+				/*
+				 * We keep waiting until we are signaled to remove a player.
+				 * This way we avoid wasting CPU cycles.
+				 */
 				try {
 	                wait();
                 } catch (InterruptedException e) {
