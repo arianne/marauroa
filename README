@@ -111,6 +111,11 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.4.1
+- Added timeout value so players get disconnected after 30 seconds if their connection is lost.
+- Updated protocol version.
+- Fixed problem with player left in game.
+
 2.4
 - RPObjectFactory.transform may return null to not load an object from the database into a zone
 - speed up perception difference calculation by ignoring server only slots
