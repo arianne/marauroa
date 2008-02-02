@@ -347,6 +347,11 @@ public class SystemTest {
 			throw e;
 		}
 	}
+	
+	/*
+	 * TODO: Write test case for Logout NACK.
+	 * TODO: Remove, modify and add objects on perceptions.
+	 */
 
 	@Test
 	public void t7_testKeepAlive() throws Exception {

@@ -44,5 +44,4 @@ public class DatabaseExistsTest {
 			System.exit(1);
 		}
 	}
-
 }
