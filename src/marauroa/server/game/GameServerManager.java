@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.108 2008/01/27 12:09:01 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.109 2008/02/11 12:53:28 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,8 +15,9 @@ package marauroa.server.game;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -204,9 +205,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	
 	private DisconnectPlayers disconnectThread;
 
-	/** A list of player entries to remove. */
-	private List<PlayerEntry> entriesToRemove;
-
 	/**
 	 * Constructor that initialize also the RPManager
 	 *
@@ -233,7 +231,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
-		entriesToRemove = new LinkedList<PlayerEntry>();
 		
 		disconnectThread= new DisconnectPlayers();
 	}
@@ -259,83 +256,85 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *
 	 */
 	class DisconnectPlayers extends Thread {
+		BlockingQueue<SocketChannel> players;
+		
 		/**
 		 * Constructor.
 		 * It just gives a nice name to the thread.
 		 */
 		public DisconnectPlayers() {
 			super("GameServerManagerDisconnectPlayers");
+			players=new LinkedBlockingQueue<SocketChannel>();
 		}
 		
-		/**
-		 * GameServerManager thread needs to awake this thread to notify about removed players.
-		 */
-		public synchronized void awake() {
-			notify();
-		}
-
 		/**
 		 * This method is used mainly by onDisconnect and RPServerManager to force
 		 * the disconnection of a player entry.
 		 *
-		 * @param entry
-		 *            the player entry to remove.
+		 * @param channel
+		 *            the socket channel of the player entry to remove.
 		 */
-		private void disconnect(PlayerEntry entry) {
-			/*
-			 * First we remove the entry from the player container.
-			 */
-			if(playerContainer.remove(entry.clientid)==null) {
-				logger.info("Entry to remove not found: "+entry.channel +"("+playerContainer.size()+")");
-			}
-
-			/*
-			 * If client is still login, don't notify RP as it knows nothing about
-			 * this client. That means state != of GAME_BEGIN
-			 */
-			if (entry.state == ClientState.GAME_BEGIN) {
+		public void disconnect(SocketChannel channel) {
+			try {
+				players.put(channel);
+			} catch (InterruptedException e) {
 				/*
-				 * If client was playing the game request the RP to disconnected it.
+				 * Not really instereted in.
 				 */
-				try {
-					rpMan.onTimeout(entry.object);
-					entry.storeRPObject(entry.object);
-				} catch (Exception e) {
-					logger.error("Error disconnecting player" + entry, e);
-				}
 			}
-
-			/*
-			 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
-			 * GameServerManager to make room for new players.
-			 */
-			entry.state = ClientState.LOGOUT_ACCEPTED;
 		}
 
-		public synchronized void run() {
+		public void run() {
 			while (keepRunning) {
+				SocketChannel channel = null;
+
 				/*
 				 * We keep waiting until we are signaled to remove a player.
 				 * This way we avoid wasting CPU cycles.
 				 */
 				try {
-	                wait();
-                } catch (InterruptedException e) {
-                	/*
-                	 * We are not interested really.
-                	 */
-                }
-				
+					channel = players.take();
+				} catch (InterruptedException e1) {
+					/*
+					 * Not interested.
+					 */
+				}
+
 				playerContainer.getLock().requestWriteLock();
-				/*
-				 * Clean the entry to be removed. We need to do in this way to
-				 * avoid ConcurrentModificationException
-				 */
-				synchronized (entriesToRemove) {
-					for (PlayerEntry entry : entriesToRemove) {
-						disconnect(entry);
+
+				PlayerEntry entry = playerContainer.get(channel);
+				if (entry != null) {
+					/*
+					 * First we remove the entry from the player container.
+					 */
+					playerContainer.remove(entry.clientid);
+
+					/*
+					 * If client is still login, don't notify RP as it knows nothing about
+					 * this client. That means state != of GAME_BEGIN
+					 */
+					if (entry.state == ClientState.GAME_BEGIN) {
+						/*
+						 * If client was playing the game request the RP to disconnected it.
+						 */
+						try {
+							rpMan.onTimeout(entry.object);
+							entry.storeRPObject(entry.object);
+						} catch (Exception e) {
+							logger.error("Error disconnecting player" + entry, e);
+						}
 					}
-					entriesToRemove.clear();
+
+					/*
+					 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
+					 * GameServerManager to make room for new players.
+					 */
+					entry.state = ClientState.LOGOUT_ACCEPTED;
+				} else {
+					/*
+					 * Player may have logout correctly or may have even not started.
+					 */
+					logger.info("No player entry for channel: " + channel);
 				}
 
 				playerContainer.getLock().releaseLock();
@@ -373,14 +372,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * going down so there is no hurry.
 			 */
 			onDisconnect(entry.channel);
-		}
-
-		/*
-		 * Clean the entry to be removed. We need to do in this way to avoid
-		 * ConcurrentModificationException
-		 */
-		for (PlayerEntry entry : entriesToRemove) {
-			playerContainer.remove(entry.clientid);
 		}
 	}
 
@@ -731,29 +722,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		logger.info("GAME Disconnecting " + channel);
-
-		PlayerEntry entry = playerContainer.get(channel);
-		if (entry == null) {
-			logger.info("No player entry for channel: "+channel);
-			/*
-			 * Player may have logout correctly or may have even not started.
-			 */
-			return;
-		}
-
-		/*
-		 * Player didn't logout normally. So we need to force logout on this
-		 * connection.
-		 * 
-		 * We request the entry removal. We can't remove ourselves because we
-		 * may cause a comodification.
-		 */
-		synchronized (entriesToRemove) {
-			entriesToRemove.add(entry);
-		}
-		
-		disconnectThread.awake();
+		logger.info("GAME Disconnecting " + channel);		
+		disconnectThread.disconnect(channel);
 	}
 
 	/**
