@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.35 2007/11/06 18:35:17 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.36 2008/02/11 13:28:23 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.game;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class Statistics implements StatisticsMBean {
 		 * Constructor
 		 */
 		public Variables() {
-			content = new HashMap<String, Long>();
+			content = Collections.synchronizedMap(new HashMap<String, Long>());
 		}
 
 		/**
@@ -134,9 +135,11 @@ public class Statistics implements StatisticsMBean {
 		 * @param diff
 		 */
 		public void print(PrintWriter out, double diff) {
-			for (String type : content.keySet()) {
-				out.println("<attrib name=\"" + escapeXML(type) + "\" value=\"" + content.get(type)
-				        + "\" />");
+			synchronized (content) {
+				for (String type : content.keySet()) {
+					out.println("<attrib name=\"" + escapeXML(type) + "\" value=\""
+					        + content.get(type) + "\" />");
+				}
 			}
 		}
 	}
