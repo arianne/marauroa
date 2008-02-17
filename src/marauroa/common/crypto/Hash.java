@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.6 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: Hash.java,v 1.7 2008/02/17 12:58:10 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,10 @@ import java.security.SecureRandom;
 
 /**
  * This class is used to create Hashes of byte arrays.
+ * It is thread safe.
+ * 
+ * This class require from JVM that it provides MD5 digest 
+ * and SHA1PRNG random number generator.
  *
  * @author quisar
  */
@@ -40,20 +44,45 @@ public class Hash {
 		}
 	}
 
+	/**
+	 * Return a hash of the given argument.
+	 * It is thread safe.
+	 * 
+	 * @param value a string
+	 * @return the hash of the string.
+	 */
 	synchronized public static final byte[] hash(final String value) {
 		return hash(value.getBytes());
 	}
 
+	/**
+	 * Return the length of the hash digest in bytes.
+	 * @return  the length of the hash digest in bytes.
+	 */
 	synchronized public static final int hashLength() {
 		return md.getDigestLength();
 	}
 
+	/**
+	 * Return the hash of an array of bytes.
+	 * This method is thread safe.
+	 * 
+	 * @param value an array of bytes.
+	 * @return the hash of an array of bytes.
+	 */
 	synchronized public static final byte[] hash(final byte[] value) {
 		md.reset();
 		md.update(value);
 		return md.digest();
 	}
 
+	/**
+	 * Returns the XOR of two arrays of bytes of the same size otherwise it returns null.
+	 * 
+	 * @param b1 an array of bytes.
+	 * @param b2 an array of bytes.
+	 * @return an array of bytes containing the xor of b1 and b2
+	 */
 	public static final byte[] xor(final byte[] b1, final byte[] b2) {
 		if (b1.length != b2.length) {
 			return null;
@@ -65,6 +94,18 @@ public class Hash {
 		return res;
 	}
 
+	/**
+	 * Compare two arrays of bytes so that it returns a negative integer, zero, 
+	 * or a positive integer as the first argument is less than, equal to, or 
+	 * greater than the second.
+	 * 
+	 * @param b1 an array of bytes. 
+	 * @param b2 an array of bytes.
+	 * 
+	 * @return a negative integer, zero, 
+	 * or a positive integer as the first argument is less than, equal to, or 
+	 * greater than the second.
+	 */
 	public static final int compare(final byte[] b1, final byte[] b2) {
 		if (b1.length != b2.length) {
 			return (b1.length - b2.length);
@@ -77,12 +118,23 @@ public class Hash {
 		return 0;
 	}
 
+	/**
+	 * Generate an array of bytes of nbBytes size.
+	 * 
+	 * @param nbBytes size of the array.
+	 * @return an array of bytes of nbBytes size.
+	 */
 	synchronized public static final byte[] random(int nbBytes) {
 		byte[] res = new byte[nbBytes];
 		random.nextBytes(res);
 		return res;
 	}
 
+	/**
+	 * Convert and array of bytes to a Hex string.
+	 * @param bs array of bytes
+	 * @return a string representing a hexadecimal number.
+	 */
 	public static final String toHexString(final byte[] bs) {
 		String res = "";
 		for (byte b : bs) {
