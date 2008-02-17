@@ -202,13 +202,22 @@ public class SystemTest {
 		try {
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
-			client.login("testUsername", "password");
+			
+			MockClient altClient = new MockClient("log4j.properties");
+			altClient.connect("localhost", PORT);
+			altClient.login("testUsername", "password");
 
-			String[] characters = client.getCharacters();
+			String[] characters = altClient.getCharacters();
 			assertEquals(0, characters.length);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+		
+		try {
+			client.logout();
+			fail("Connection should have been closed");
+		} catch(TimeoutException e) {		
 		}
 	}
 

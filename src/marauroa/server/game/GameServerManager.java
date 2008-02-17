@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.109 2008/02/11 12:53:28 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.110 2008/02/17 17:25:29 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -334,7 +334,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					/*
 					 * Player may have logout correctly or may have even not started.
 					 */
-					logger.info("No player entry for channel: " + channel);
+					logger.debug("No player entry for channel: " + channel);
 				}
 
 				playerContainer.getLock().releaseLock();
@@ -952,11 +952,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					 * Cool!, we got a candidate, so we remove and disconnect
 					 * it.
 					 */
+					netMan.disconnectClient(candidate.channel);
+
+					/*
+					 * HACK: Remove the entry now so we can continue.
+					 */				
 					playerContainer.remove(candidate.clientid);
-					// TODO: notify forced disconnection without locking server.
-					// netMan.disconnectClient(candidate.channel);
-					// BUG: It will cause server to enter in a dead lock
-					// But we need to close the connection.
 				}
 			}
 
@@ -1053,9 +1054,12 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				        MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
 
 				netMan.sendMessage(msgLoginNACK);
+				
+				/*
+				 * Disconnect player of server.
+				 */
+				netMan.disconnectClient(msg.getSocketChannel());
 
-				// TODO: should use disconnect.
-				playerContainer.remove(clientid);
 				return;
 			}
 
@@ -1071,8 +1075,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				netMan.sendMessage(msgLoginNACK);
 
-				// TODO: should use disconnect.
-				playerContainer.remove(clientid);
+				/*
+				 * Disconnect player of server.
+				 */
+				netMan.disconnectClient(msg.getSocketChannel());
+
 				return;
 			}
 			
@@ -1094,7 +1101,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				}
 				logger.debug("Disconnecting PREVIOUS " + existing.channel + " with " + existing);
 
-				// TODO: May it need to call instead to disconnect.
+				/*
+				 * Disconnect player of server.
+				 */
+				netMan.disconnectClient(existing.channel);
+
+				/*
+				 * HACK: Remove the entry now so we can continue.
+				 */				
 				playerContainer.remove(existing.clientid);
 			}
 
