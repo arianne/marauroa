@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.67 2008/02/17 13:17:06 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.68 2008/02/17 13:18:26 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server;
 
 // marauroa stuff
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
