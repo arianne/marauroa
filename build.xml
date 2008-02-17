@@ -45,8 +45,8 @@
 
 		<!-- Update version number. -->
 		<replaceregexp file="${src}/marauroa/server/marauroad.java"
-                   match="final private static String VERSION=&quot;.*&quot;;"
-                   replace="final private static String VERSION=&quot;${version}&quot;;"
+                   match="private static final String VERSION = &quot;.*&quot;;"
+                   replace="private static final String VERSION = &quot;${version}&quot;;"
                    byline="true"/>
 
 		<!-- Compile it -->
