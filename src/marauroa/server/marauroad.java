@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.66 2008/01/13 11:18:03 martinfuchs Exp $ */
+/* $Id: marauroad.java,v 1.67 2008/02/17 13:17:06 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server;
 
 // marauroa stuff
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
@@ -232,7 +233,13 @@ public class marauroad extends Thread {
 		}
 		
 		// Initialize Loggging
-		Log4J.init(log4jConfiguration);
+		try {
+		  Log4J.init(log4jConfiguration);
+		} catch(Exception e) {
+			System.out.println("ERROR: Marauroa can't initialize logging.");
+			System.out.println("Verify you have created log/ directory.");
+			System.exit(1);
+		}
 		
 		// Check access to database is possible.
 		try {
