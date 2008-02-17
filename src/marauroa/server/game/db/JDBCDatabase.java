@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.69 2008/01/13 21:39:17 martinfuchs Exp $ */
+/* $Id: JDBCDatabase.java,v 1.70 2008/02/17 12:08:44 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -72,12 +72,13 @@ public class JDBCDatabase implements IDatabase {
 	 *
 	 * @param connInfo
 	 *            a Properties set with the options to create the database.
-	 *            Properties should have: jdbc_url Contains the URL of the
-	 *            Database we are going to connect to
-	 *            jdbc:mysql://127.0.0.1/marauroa jdbc_class Contains the driver
-	 *            class of the JDBC storage com.mysql.jdbc.Driver jdbc_user
-	 *            Username we are going to use to connect to database jdbc_pwd
-	 *            Password.
+ 	 *            Properties should have:
+ 	 *            <ul>
+ 	 *             <li> jdbc_url contains the URL of the database we are going to connect to (jdbc:mysql://127.0.0.1/marauroa) </li>
+ 	 *             <li> jdbc_class contains the driver class of the JDBC storage (com.mysql.jdbc.Driver) </li>
+ 	 *             <li> jdbc_user contains the username we are going to use to connect to the database </li>
+ 	 *             <li> jdbc_pwd contains the password </li>
+ 	 *            </ul>
 	 * @throws NoDatabaseConfException TODO: describe conditions
 	 */
 	protected JDBCDatabase(Properties connInfo) {
@@ -108,14 +109,14 @@ public class JDBCDatabase implements IDatabase {
 
 	/**
 	 * Creates the RPObject factory so objects loaded from database
-	 * has already the correct type.
+	 * can have the correct type.
 	 */
 	protected void initializeRPObjectFactory() {
 		factory = RPObjectFactory.get();
 	}
 
 	/**
-	 * Creates the database Tables. Extend it to change the database
+	 * Creates the database tables. Extend it to change the database
 	 * initialization.
 	 */
 	protected void initialize() {
@@ -243,7 +244,7 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't add player(" + username + ") to Database", e);
+			logger.error("Can't add player \"" + username + "\" to database", e);
 			throw e;
 		}
 	}
@@ -299,7 +300,7 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't remove player(" + username + ") to Database", e);
+			logger.error("Can't change email for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -328,7 +329,7 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't remove player(" + username + ") to Database", e);
+			logger.error("Can't update password for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -358,7 +359,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			logger.error("Can't remove player(" + username + ") to Database", e);
+			logger.error("Can't remove player\"" + username + "\" from database", e);
 			throw e;
 		}
 	}
@@ -384,7 +385,7 @@ public class JDBCDatabase implements IDatabase {
 			int count = jdbc.querySingleCellInt(query);
 			return count > 0;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ")", e);
+			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -409,7 +410,7 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't udpate account status of player(" + username + ")", e);
+			logger.error("Can't update account status of player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -441,7 +442,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return status;
 		} catch (SQLException e) {
-			logger.error("Can't query player(" + username + ")", e);
+			logger.error("Can't query player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -466,7 +467,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return email;
 		} catch (SQLException e) {
-			logger.error("Can't query player(" + username + ")", e);
+			logger.error("Can't query player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -516,10 +517,10 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't add player(" + username + ") character(" + character + ")", e);
+			logger.error("Can't add player \"" + username + "\" character \"" + character + "\" to database", e);
 			throw e;
 		} catch (IOException e) {
-			logger.error("Can't add player(" + username + ") character(" + character + ")", e);
+			logger.error("Can't add player \"" + username + "\" character \"" + character + "\" to database", e);
 			throw e;
 		}
 	}
@@ -561,7 +562,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			logger.error("Can't remove player(" + username + ") from Database", e);
+			logger.error("Can't remove player \"" + username + "\" character \"" + character + "\" from database", e);
 			throw e;
 		}
 	}
@@ -594,8 +595,7 @@ public class JDBCDatabase implements IDatabase {
 			int count = jdbc.querySingleCellInt(query);
 			return count > 0;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ") character(" + character + ")",
-			                e);
+			logger.error("Can't query for player \"" + username + "\" character \"" + character + "\"", e);
 			throw e;
 		}
 	}
@@ -635,14 +635,14 @@ public class JDBCDatabase implements IDatabase {
 
 			return list;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ")", e);
+			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
 
 	/**
-	 * This method stores a character's avatar at database and update the link
-	 * with Character table.
+ 	 * This method stores a character's avatar in the database and updates the link
+ 	 * with the Character table.
 	 *
 	 * @param transaction
 	 *            the database transaction
@@ -684,8 +684,8 @@ public class JDBCDatabase implements IDatabase {
 	}
 
 	/**
-	 * This method load from database the character's avatar asociated to this
-	 * character.
+ 	 * This method loads the character's avatar associated with this
+ 	 * character from the database.
 	 *
 	 * @param transaction
 	 *            the database transaction
@@ -923,13 +923,13 @@ public class JDBCDatabase implements IDatabase {
 			if (resultSet.next()) {
 				String userNameFromDB = resultSet.getString("username");
 				if (!userNameFromDB.equals(username)) {
-					logger.warn("Username(" + username + ") is not the same that stored username(" + userNameFromDB + ")");
+					logger.warn("Username \"" + username + "\" is not the same that stored username\"" + userNameFromDB + "\"");
 				}
 				return true;
 			}
 			return false;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ")", e);
+			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -962,7 +962,7 @@ public class JDBCDatabase implements IDatabase {
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ")", e);
+			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
@@ -1002,8 +1002,7 @@ public class JDBCDatabase implements IDatabase {
 		 */
 		@Override
 		public String toString() {
-			return "Login " + (correct ? "SUCESSFULL" : "FAILED") + " at " + date + " from "
-			        + address;
+			return "Login " + (correct ? "SUCCESSFUL" : "FAILED") + " at " + date + " from " + address;
 		}
 	}
 
@@ -1047,7 +1046,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return list;
 		} catch (SQLException e) {
-			logger.error("Can't query for player(" + username + ")", e);
+			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
 	}
