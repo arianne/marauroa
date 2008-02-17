@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.70 2008/02/17 12:08:44 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.71 2008/02/17 13:54:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -1107,7 +1107,9 @@ public class JDBCDatabase implements IDatabase {
 			        + ","
 			        + var.get("Players logout")
 			        + ","
-			        + var.get("Players timeout") + "," + var.get("Players online") + ")";
+			        + var.get("Players timeout") 
+			        + "," 
+			        + var.get("Players online") + ")";
 			Accessor jdbc = transaction.getAccessor();
 			jdbc.execute(query);
 		} catch (SQLException sqle) {

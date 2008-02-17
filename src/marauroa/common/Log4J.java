@@ -47,8 +47,7 @@ public class Log4J {
 		try {
 			Properties props = new Properties();
 			if (propsFile == null) {
-				System.err.println("Cannot find " + filename
-				        + " in classpath. Using default properties.");
+				System.err.println("Cannot find " + filename + " in classpath. Using default properties.");
 				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes()));
 			} else {
 				System.out.println("Configuring Log4J using " + filename);
