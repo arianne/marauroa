@@ -172,6 +172,13 @@ public class MockRPRuleProcessor implements IRPRuleProcessor {
 		chat.put("text", action.get("text"));
 		object.addEvent(chat);
 
+		int eventCounter = 0;
+		if (object.has("eventcounter")) {
+			eventCounter = object.getInt("eventcounter");
+		}
+
+		object.put("eventcounter", eventCounter + 1);
+
 		world.modify(object);
 	}
 

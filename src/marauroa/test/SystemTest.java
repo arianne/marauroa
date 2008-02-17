@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 
 import marauroa.client.BannedAddressException;
@@ -51,6 +52,9 @@ public class SystemTest {
 			Log4J.init("log4j.properties");
 			server = new MockMarauroad();
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
+
+			File ini = new File("server.ini");
+			assertTrue("There must be a file named server.ini in src/marauroa/test.",ini.exists());
 
 			try {
 				Configuration.getConfiguration();
@@ -421,17 +425,14 @@ public class SystemTest {
 
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
-			
-			RPAction action=new RPAction();
-			action.put("text", 1);
-			client.send(action);
 
 			long init=System.currentTimeMillis();
 			/*
 			 * Timeout for players is 30 seconds.
-			 */
+			 */			
 			while (System.currentTimeMillis()-init<40000) {
 				client.loop(0);
+				Thread.sleep(50);
 			}
 			
 			assertTrue("Connection still be there", client.getConnectionState());
