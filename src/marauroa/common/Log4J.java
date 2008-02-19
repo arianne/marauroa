@@ -15,7 +15,15 @@ import org.apache.log4j.PropertyConfigurator;
 
 /**
  * This is a convenience class for initializing log4j
- *
+ * 
+ * Please when using Log4j follow the next rules:<ul>
+ * <li><b>debug</b> just debug info that may be need to find a bug.
+ * <li><b>info</b> is just important information that we should be aware to spot behaviors on application.
+ * <li><b>warn</b> is a problem that application will handle itself
+ * <li><b>error</b> is a big problem on the application that it can't handle.
+ * <li><b>fatal</b> is such a problem that the application will stop.
+ * </ul>
+ * 
  * @author Matthias Totz
  */
 public class Log4J {
