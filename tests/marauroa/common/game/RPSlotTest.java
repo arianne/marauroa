@@ -1,4 +1,4 @@
-/* $Id: RPSlotTest.java,v 1.7 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: RPSlotTest.java,v 1.8 2008/02/28 14:46:24 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -63,9 +63,14 @@ public class RPSlotTest {
 	}
 
 	@Test
-	@Ignore
 	public final void testAddRPObject() {
-		fail("Not yet implemented");
+		RPSlot slot = new RPSlot("slotname");
+		RPObject owner = new RPObject();
+		slot.setOwner(owner);
+		RPObject object = new RPObject();
+		slot.add(object);
+		assertEquals(slot, object.getContainerSlot());
+		assertEquals(owner, object.getContainer());
 	}
 
 	@Test
