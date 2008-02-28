@@ -1,3 +1,4 @@
+package marauroa.test.ping;
 /**
   * This is an small example of a MVC client approach for Marauroa.
   * 
