@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.61 2007/11/04 11:32:31 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.62 2008/03/03 20:10:21 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -131,7 +131,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
-	 * adds an object to a slot perserving its it.
+	 * adds an object to a slot preserving its it.
 	 * Note: In most cases you want to assign a new id.
 	 *
 	 * @param object RPObject to add
@@ -143,11 +143,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
-	 * adds an object to a slot perserving its it.
+	 * adds an object to a slot preserving its it.
 	 * Note: In most cases you want to assign a new id.
 	 *
 	 * @param object RPObject to add
-	 * @param assignId true to assign a new, conflictfree ID.
+	 * @param assignId true to assign a new, conflict free ID.
 	 * @return the id of the object
 	 */
 	int add(RPObject object, boolean assignId) {
