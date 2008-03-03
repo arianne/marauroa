@@ -1,4 +1,4 @@
-/* $Id: PingClient.java,v 1.2 2008/02/22 10:28:34 arianne_rpg Exp $ */
+/* $Id: PingClient.java,v 1.3 2008/03/03 20:17:37 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.test.ping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Observer;
 
 import marauroa.client.ClientFramework;
 import marauroa.client.net.IPerceptionListener;
@@ -92,19 +91,18 @@ public class PingClient extends ClientFramework {
 	        // TODO Auto-generated method stub
 	        
         }
-		
 	}
 
 	/**
 	 * List of characters this player owns.
 	 */
 	private String[] characters;
-	
+
 	/**
 	 * Perception handler to process messages received from server. 
 	 */
 	private PerceptionHandler handler;
-	
+
 	/**
 	 * Stores all the zone objects.
 	 */
@@ -112,10 +110,10 @@ public class PingClient extends ClientFramework {
 
 	public PingClient(String loggingProperties) {
 	    super(loggingProperties);
-	    
+
 		PingPerceptionListener listener = new PingPerceptionListener();
 		handler = new PerceptionHandler(listener);
-		
+
 		objects=new HashMap<ID,RPObject>();
     }
 
@@ -131,7 +129,7 @@ public class PingClient extends ClientFramework {
 
 	@Override
     protected void onAvailableCharacters(String[] characters) {
-		this.characters=characters;
+		this.characters = characters;
     }
 
 	@Override
@@ -172,7 +170,7 @@ public class PingClient extends ClientFramework {
 		for(TransferContent item: items) {
 			item.ack=true;
 		}
-		
+
 		return items;
     }
 
