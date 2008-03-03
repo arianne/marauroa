@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.44 2008/02/22 10:28:34 arianne_rpg Exp $ */
+/* $Id: SystemTest.java,v 1.45 2008/03/03 20:18:39 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -75,7 +75,7 @@ public class SystemTest {
 			}
 
 			/*
-			 * Ugly hack, but junit does runs test cases in parallel
+			 * Ugly hack, but JUnit does runs test cases in parallel
 			 */
 			NetConst.tcpPort = PORT;
 
@@ -392,7 +392,7 @@ public class SystemTest {
 					return false;
 				}	
 			};
-			
+
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -402,7 +402,7 @@ public class SystemTest {
 
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
-			
+
 			RPAction action=new RPAction();
 			action.put("text", 1);
 			client.send(action);
@@ -414,10 +414,10 @@ public class SystemTest {
 				 * Instead we just sleep a bit.
 				 */
 				Thread.sleep(3000);
-				
+
 				client.resync();
 			}
-			
+
 			assertFalse("Connection must be broken as connection was closed by server", client.getConnectionState());
 		} catch (Exception e) {
 			e.printStackTrace();

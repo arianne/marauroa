@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.41 2008/01/26 23:54:21 arianne_rpg Exp $ */
+/* $Id: ClientFramework.java,v 1.42 2008/03/03 20:16:11 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -94,7 +94,7 @@ public abstract class ClientFramework {
 		Log4J.init(loggingProperties);
 
 		messages = new LinkedList<Message>();
-		perceptionsCount=0;
+		perceptionsCount = 0;
 	}
 
 	/**
@@ -445,7 +445,7 @@ public abstract class ClientFramework {
 		 * Each time we send an action we are confirming server our presence, so we 
 		 * reset the counter to avoid sending keep alive messages.
 		 */
-		perceptionsCount=0;
+		perceptionsCount = 0;
 		
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
 		netMan.addMessage(msgAction);
@@ -526,15 +526,15 @@ public abstract class ClientFramework {
 				/* It can be a perception message */
 				case S2C_PERCEPTION: {
 					perceptionsCount++;
-					
+
 					/*
 					 * Only once each 30 perceptions we tell that we are alive.
 					 */
-					if(perceptionsCount%30+1==30) {
-						MessageC2SKeepAlive msgAlive=new MessageC2SKeepAlive();
+					if (perceptionsCount%30+1 == 30) {
+						MessageC2SKeepAlive msgAlive = new MessageC2SKeepAlive();
 						netMan.addMessage(msgAlive);						
 					}
-					
+
 					logger.debug("Processing Message Perception");
 					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
 					onPerception(msgPer);
@@ -555,7 +555,7 @@ public abstract class ClientFramework {
 					break;
 				}
 
-					/* or it can be the data tranfer itself */
+					/* or it can be the data transfer itself */
 				case S2C_TRANSFER: {
 					logger.debug("Processing Content Transfer");
 					List<TransferContent> items = ((MessageS2CTransfer) msg).getContents();

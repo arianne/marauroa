@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.51 2008/01/26 23:27:05 arianne_rpg Exp $ */
+/* $Id: RPServerManager.java,v 1.52 2008/03/03 20:16:10 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -107,6 +107,7 @@ public class RPServerManager extends Thread {
 	 */
 	public RPServerManager(INetworkServerManager netMan) throws Exception {
 		super("RPServerManager");
+
 		try {
 			stats = Statistics.getStatistics();
 			keepRunning = true;
