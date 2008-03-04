@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.69 2008/02/22 10:28:33 arianne_rpg Exp $ */
+/* $Id: marauroad.java,v 1.70 2008/03/04 20:01:54 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -319,7 +319,7 @@ public class marauroad extends Thread {
 	}
 
 	/**
-	 * initializes the game. returns true when all is ok, else false (this may
+	 * Initializes the game. Returns true when all is OK, else false (this may
 	 * terminate the server).
 	 *
 	 * @return true, in case the startup was successful, false otherwise
