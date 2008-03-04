@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.62 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: RPClass.java,v 1.63 2008/03/04 20:36:41 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -29,7 +29,7 @@ import marauroa.common.game.Definition.Type;
  * Object.
  * <b>TODO:</b> Creating a new RPClass does in fact add it to a global list of RPClasses.
  *   Search for a way of making this in a different way so test added for equality works.
- *    
+ *
  * <p>
  * The idea behind RPClass is not define members as a OOP language but to save
  * bandwidth usage by replacing these members text definitions with a short
@@ -38,7 +38,7 @@ import marauroa.common.game.Definition.Type;
  * Also RPClass define a set of properties over attributes, events and slots,
  * like being private, hidden or volatile.
  * <p>
- * It is very important that if you extend a class with isA, you completly 
+ * It is very important that if you extend a class with isA, you completely
  * define the superclass before calling isA method.<br>
  * For example:
  * <pre>
@@ -46,7 +46,7 @@ import marauroa.common.game.Definition.Type;
  *   foo.add(....)
  *   foo.add(....)
  *   foo.add(....)
- *   
+ *
  *   RPClass bar=new RPClass("bar");
  *   bar.isA(foo);
  *   bar.add(....)
@@ -123,23 +123,23 @@ public class RPClass implements marauroa.common.net.Serializable {
 		add(DefinitionClass.ATTRIBUTE, "#clientid", Type.INT,
 		        (byte) (Definition.HIDDEN | Definition.VOLATILE));
 		add(DefinitionClass.ATTRIBUTE, "#db_id", Type.INT, Definition.HIDDEN);
-		
+
 		/*
 		 * We want to avoid shadow redefinitions of classes that are very hard to trace.
 		 */
-		if(rpClassList.containsKey(name)) {
+		if (rpClassList.containsKey(name)) {
 			throw new IllegalArgumentException("Duplicated class name: "+name);
 		}
 
 		rpClassList.put(name, this);
 	}
-	
+
 	@Override
 	public String toString() {
-		StringBuffer os=new StringBuffer();		
+		StringBuffer os=new StringBuffer();
 		os.append("RPCLASS name: "+name+"\n");
 		os.append("isa: "+(parent!=null?parent.getName():null)+"\n");
-		
+
 		for(Definition d: staticattributes.values()) {
 			os.append(d+"\n");
 		}
@@ -156,7 +156,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 			os.append(d+"\n");
 		}
 		os.append("\n");
-		
+
 		return os.toString();
 	}
 
@@ -190,7 +190,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public void isA(RPClass parent) {
 		this.parent = parent;
-		lastCode=parent.lastCode;
+		lastCode = parent.lastCode;
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public void isA(String parent) {
 		this.parent = getRPClass(parent);
-		lastCode=this.parent.lastCode;
+		lastCode = this.parent.lastCode;
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void add(Definition.DefinitionClass clazz, String name, Type type) {
 		add(clazz,name,type, Definition.STANDARD);
 	}
-	
+
 	/**
 	 * Adds a definition of an attribute with the given type and
 	 * flags.
@@ -301,18 +301,22 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public void add(Definition.DefinitionClass clazz, String name, byte flags) {
 		Definition def = null;
+
 		switch (clazz) {
 			case RPLINK:
 				def = Definition.defineEvent(name, flags);
 				rplinks.put(name, def);
 				break;
+
 			case RPEVENT:
 				def = Definition.defineEvent(name, flags);
 				rpevents.put(name, def);
 				break;
+
 			default:
 				throw new SyntaxException(name);
 		}
+
 		def.setCode(getValidCode(clazz, name));
 	}
 
@@ -365,7 +369,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		def.setCode(getValidCode(clazz, name));
 	}
-	
+
 	/**
 	 * Adds a definition of an attribute with the given type and
 	 * flags.
@@ -393,7 +397,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void addAttribute(String name, Type type) {
 		add(DefinitionClass.ATTRIBUTE, name, type, Definition.STANDARD);
 	}
-	
+
 	/**
 	 * Adds a static definition of an attribute that will be set for any object
 	 * of the class. Its value must be set as a string, but it can be accessed
@@ -425,7 +429,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void addRPSlot(String name, int capacity, byte flags) {
 		add(DefinitionClass.RPSLOT, name, capacity, flags);
 	}
-	
+
 	/**
 	 * Adds a definition of an slot with the given capacity and
 	 * standard flags: VISIBLE and STORABLE
@@ -450,7 +454,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void addRPLink(String name, byte flags) {
 		add(DefinitionClass.RPLINK, name, flags);
 	}
-	
+
 	/**
 	 * Adds a definition of an event with the given flags.
 	 *
@@ -459,7 +463,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @param flags
 	 *            like visibility, storability, etc...
 	 */
-	public void addRPEvent(String name, byte flags) {		
+	public void addRPEvent(String name, byte flags) {
 		add(DefinitionClass.RPEVENT, name, flags);
 	}
 
@@ -501,7 +505,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		return def;
 	}
-	
+
 	/**
 	 * Returns true if name attributes, slot, event or rplink exists in this RPClass or
 	 * any of its ancestors.
@@ -622,7 +626,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 				out.write(desc);
 			}
 		}
-
 	}
 
 	/**
@@ -766,10 +769,10 @@ public class RPClass implements marauroa.common.net.Serializable {
 		} else {
 			isEqual = isEqual && parent.equals(other.parent);
 		}
-			
-		isEqual = isEqual 
+
+		isEqual = isEqual
 		        && staticattributes.equals(other.staticattributes)
-		        && attributes.equals(other.attributes) 
+		        && attributes.equals(other.attributes)
 		        && rpevents.equals(other.rpevents)
 		        && rpslots.equals(other.rpslots);
 
