@@ -1,4 +1,4 @@
-/* $Id: PingClient.java,v 1.3 2008/03/03 20:17:37 martinfuchs Exp $ */
+/* $Id: PingClient.java,v 1.4 2008/03/05 11:47:29 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -24,11 +24,21 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObject.ID;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.TransferContent;
+import marauroa.test.ping.client.Speaker;
+import marauroa.test.ping.client.SpeakerView;
 
 
 public class PingClient extends ClientFramework {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ClientFramework.class);
+	
+	/**
+	 * Stores all the zone objects.
+	 */
+	private Map<ID, RPObject> objects;
+
+	private Map<ID, Speaker> speakers;
+	private Map<Speaker,SpeakerView> speakersView;
 	
 	/**
 	 * Perception listener that handle how perceptions are applied.
@@ -37,59 +47,74 @@ public class PingClient extends ClientFramework {
 	 */
 	class PingPerceptionListener implements IPerceptionListener {
 
+		/**
+		 * We define how we handle when a new object is added to the zone.
+		 * So when a new object appears we create a model for it and based
+		 * on the model we create a view.
+		 */
 		public boolean onAdded(RPObject object) {
-	        // TODO Auto-generated method stub
+	        Speaker speaker=new Speaker();
+	        speaker.initialize(object);
+	        speakers.put(object.getID(), speaker);
+	        
+	        SpeakerView view=new SpeakerView(speaker);	        
+	        speakersView.put(speaker,view);
+	        
 	        return false;
         }
 
+		/**
+		 * When we are asked to remove all the objects.
+		 */
 		public boolean onClear() {
-	        // TODO Auto-generated method stub
-	        return false;
+			speakers.clear();
+			speakersView.clear();
+			
+			return false;
         }
 
+		/**
+		 * When a object is removed from world.
+		 */
 		public boolean onDeleted(RPObject object) {
-	        // TODO Auto-generated method stub
-	        return false;
-        }
+			Speaker removed=speakers.remove(object.getID());
+			speakersView.remove(removed);
+			
+			return false;
+		}
 
 		public void onException(Exception exception, MessageS2CPerception perception) {
-	        // TODO Auto-generated method stub
-	        
+			exception.printStackTrace();
         }
 
 		public boolean onModifiedAdded(RPObject object, RPObject changes) {
-	        // TODO Auto-generated method stub
+	        Speaker speaker=speakers.get(object.getID());
+	        speaker.onAddedChanges(changes);
+	        
 	        return false;
         }
 
 		public boolean onModifiedDeleted(RPObject object, RPObject changes) {
-	        // TODO Auto-generated method stub
+	        Speaker speaker=speakers.get(object.getID());
+	        speaker.onDeletedChanges(changes);
+	        
 	        return false;
         }
 
 		public boolean onMyRPObject(RPObject added, RPObject deleted) {
-	        // TODO Auto-generated method stub
 	        return false;
         }
 
 		public void onPerceptionBegin(byte type, int timestamp) {
-	        // TODO Auto-generated method stub
-	        
         }
 
 		public void onPerceptionEnd(byte type, int timestamp) {
-	        // TODO Auto-generated method stub
-	        
         }
 
 		public void onSynced() {
-	        // TODO Auto-generated method stub
-	        
         }
 
 		public void onUnsynced() {
-	        // TODO Auto-generated method stub
-	        
         }
 	}
 
@@ -97,23 +122,18 @@ public class PingClient extends ClientFramework {
 	 * List of characters this player owns.
 	 */
 	private String[] characters;
-
+	
 	/**
 	 * Perception handler to process messages received from server. 
 	 */
 	private PerceptionHandler handler;
-
-	/**
-	 * Stores all the zone objects.
-	 */
-	private Map<ID, RPObject> objects;
-
+	
 	public PingClient(String loggingProperties) {
 	    super(loggingProperties);
-
+	    
 		PingPerceptionListener listener = new PingPerceptionListener();
 		handler = new PerceptionHandler(listener);
-
+		
 		objects=new HashMap<ID,RPObject>();
     }
 
@@ -129,8 +149,12 @@ public class PingClient extends ClientFramework {
 
 	@Override
     protected void onAvailableCharacters(String[] characters) {
-		this.characters = characters;
+		this.characters=characters;
     }
+	
+	public String[] getAvailableCharacters() {
+		return characters;
+	}
 
 	@Override
     protected void onPerception(MessageS2CPerception message) {
@@ -170,7 +194,7 @@ public class PingClient extends ClientFramework {
 		for(TransferContent item: items) {
 			item.ack=true;
 		}
-
+		
 		return items;
     }
 
