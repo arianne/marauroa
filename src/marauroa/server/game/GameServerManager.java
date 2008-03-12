@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.110 2008/02/17 17:25:29 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.111 2008/03/12 15:56:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -367,6 +367,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private void storeConnectedPlayers() {
 		for (PlayerEntry entry : playerContainer) {
+			logger.info("STORING ("+entry.username+") :"+entry.object);
 			/*
 			 * It may be a bit slower than disconnecting here, but server is
 			 * going down so there is no hurry.
