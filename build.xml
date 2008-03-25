@@ -37,7 +37,7 @@
 		</condition>
 
 		<!-- Exclude junit support if junit is not present -->
-		<condition property="exclude.junit" value="**/test/*.*">
+		<condition property="exclude.junit" value="**/*tests/*.*">
 			<not>
 				<available file="${junit_jar}"/>
 			</not>
@@ -143,6 +143,12 @@
 		<copy todir="marauroa-${version}/src">
 			<fileset dir="src"/>
 		</copy>
+		<copy todir="marauroa-${version}/tests">
+			<fileset dir="tests"/>
+		</copy>
+			<copy todir="marauroa-${version}/functional_tests">
+				<fileset dir="functional_tests"/>
+			</copy>
 		<copy todir="marauroa-${version}/extras">
 			<fileset dir="extras"/>
 		</copy>
