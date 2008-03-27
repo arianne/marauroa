@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.1 2008/03/25 17:55:25 arianne_rpg Exp $ */
+/* $Id: SystemTest.java,v 1.2 2008/03/27 11:32:50 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -32,16 +32,10 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.NetConst;
-import marauroa.functional.SimpleClient;
+import marauroa.functional.IFunctionalTest;
 import marauroa.functional.MarauroadLauncher;
+import marauroa.functional.SimpleClient;
 import marauroa.server.net.validator.ConnectionValidator;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Test the whole system. Mostly from the client perspective.
@@ -49,7 +43,7 @@ import org.junit.Test;
  * @author miguel
  * 
  */
-public class SystemTest {
+public class SystemTest implements IFunctionalTest {
 
 	private static final int PORT = 3218;
 
@@ -59,15 +53,16 @@ public class SystemTest {
 
 	private static MarauroadLauncher server;
 
-	@BeforeClass
-	public static void createServer() throws InterruptedException {
+	public void setUp() throws Exception {
 		if (!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
-			server = new MarauroadLauncher();
+			server = new MarauroadLauncher(PORT);
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
 			File ini = new File("server.ini");
-			assertTrue("There must be a file named server.ini in src/marauroa/test.",ini.exists());
+			assertTrue(
+					"There must be a file named server.ini in src/marauroa/test.",
+					ini.exists());
 
 			try {
 				Configuration.getConfiguration();
@@ -75,42 +70,35 @@ public class SystemTest {
 				fail("Unable to find configuration file");
 			}
 
-			/*
-			 * Ugly hack, but JUnit does runs test cases in parallel
-			 */
-			NetConst.tcpPort = PORT;
-
 			server.start();
 			Thread.sleep(2000);
 		}
 	}
 
-	@AfterClass
-	public static void takeDownServer() throws InterruptedException {
+	public void tearDown() throws Exception {
 		if (!DETACHED_SERVER) {
 			server.finish();
 			Thread.sleep(2000);
 		}
 	}
 
-	/**
-	 * Create a new client each time
-	 * 
-	 */
-	@Before
-	public void createClient() {
-		client = new SimpleClient("log4j.properties");
+	public void launch() throws Exception {
+		t0_createAccount();
+		t1_login();
+		t1_1_loginTimeout();
+		t1_1_login();
+		t2_loginBadCase();
+		t3_loginDouble();
+		t4_createCharacter();
+		t4_1_createCharacterFailure();
+		t5_chooseCharacter();
+		t5_1_chooseWrongCharacter();
+		t6_receivePerceptions();
+		t7_testKeepAlive();
+		t7_1_testKeepAliveWorks();
+		t8_testBannedIP();
 	}
 
-	/**
-	 * And disconnect it when done.
-	 * 
-	 */
-	@After
-	public void disconnectClient() {
-		client.close();
-	}
-	
 	/**
 	 * Test create account process by creating an account and it should work and
 	 * create the account again and failing.
@@ -121,10 +109,13 @@ public class SystemTest {
 	 * @throws CreateAccountFailedException
 	 * @throws BannedAddressException
 	 */
-	@Test
-	public void t0_createAccount() throws IOException, TimeoutException, InvalidVersionException, BannedAddressException {
+
+	public void t0_createAccount() throws IOException, TimeoutException,
+			InvalidVersionException, BannedAddressException {
+		client = new SimpleClient("log4j.properties");
 		client.connect("localhost", PORT);
-		AccountResult res = client.createAccount("testUsername", "password", "email");
+		AccountResult res = client.createAccount("testUsername", "password",
+				"email");
 		assertTrue("Account creation must not fail", !res.failed());
 
 		assertEquals("testUsername", res.getUsername());
@@ -132,8 +123,10 @@ public class SystemTest {
 		/*
 		 * Doing a second time should fail
 		 */
-		AccountResult result=client.createAccount("testUsername", "password", "email");
+		AccountResult result = client.createAccount("testUsername", "password",
+				"email");
 		assertTrue("Second account creation must fail", result.failed());
+		client.close();
 	}
 
 	/**
@@ -141,14 +134,16 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t1_login() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
 			String[] characters = client.getCharacters();
 			assertEquals(0, characters.length);
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -160,52 +155,62 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected=TimeoutException.class)
 	public void t1_1_loginTimeout() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.logout();
 
+			client.close();
+		} catch (TimeoutException e) {
+			/*
+			 * Good. Expected.
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-	}	
+	}
+
 	/**
 	 * Test the login process.
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t1_1_login() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testAnotherUsername", "NoPassword");
 			fail("It must not login");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		client.close();
 	}
-	
+
 	/**
 	 * Test the login process bug when using invalid case in username. It should
 	 * not login
 	 * 
-	 * TODO: Stendhal 0.6x allowed different cases so we are not going to 
-	 *   consider this bug for now.
+	 * TODO: Stendhal 0.6x allowed different cases so we are not going to
+	 * consider this bug for now.
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
-	@Test
+
 	public void t2_loginBadCase() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testusername", "password");
 			fail("It must not login");
 		} catch (LoginFailedException e) {
 			e.printStackTrace();
 		}
+		client.close();
 	}
 
 	/**
@@ -214,12 +219,13 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t3_loginDouble() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
-			
+
 			SimpleClient altClient = new SimpleClient("log4j.properties");
 			altClient.connect("localhost", PORT);
 			altClient.login("testUsername", "password");
@@ -230,12 +236,13 @@ public class SystemTest {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		try {
 			client.logout();
 			fail("Connection should have been closed");
-		} catch(TimeoutException e) {		
+		} catch (TimeoutException e) {
 		}
+		client.close();
 	}
 
 	/**
@@ -243,17 +250,19 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t4_createCharacter() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
 			RPObject template = new RPObject();
 			template.put("client", "junit");
 
-			CharacterResult res = client.createCharacter("testCharacter", template);
-			assertEquals(res.getResult(),Result.OK_CREATED);
+			CharacterResult res = client.createCharacter("testCharacter",
+					template);
+			assertEquals(res.getResult(), Result.OK_CREATED);
 			assertEquals("testCharacter", res.getCharacter());
 
 			RPObject result = res.getTemplate();
@@ -265,6 +274,7 @@ public class SystemTest {
 			String[] characters = client.getCharacters();
 			assertEquals(1, characters.length);
 			assertEquals("testCharacter", characters[0]);
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -276,9 +286,10 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t4_1_createCharacterFailure() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -287,20 +298,22 @@ public class SystemTest {
 
 			CharacterResult res = client.createCharacter("ter", template);
 			assertTrue(res.getResult().failed());
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Test the create character process.
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t5_chooseCharacter() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -312,6 +325,7 @@ public class SystemTest {
 			assertTrue(choosen);
 
 			client.logout();
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -323,9 +337,10 @@ public class SystemTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+
 	public void t5_1_chooseWrongCharacter() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -337,17 +352,20 @@ public class SystemTest {
 			assertFalse(choosen);
 
 			client.logout();
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-	}	
+	}
+
 	/**
 	 * Test the perception management in game.
 	 */
-	@Test
+
 	public void t6_receivePerceptions() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -357,8 +375,8 @@ public class SystemTest {
 
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
-			
-			RPAction action=new RPAction();
+
+			RPAction action = new RPAction();
 			action.put("text", 1);
 			client.send(action);
 
@@ -368,30 +386,31 @@ public class SystemTest {
 			}
 
 			client.logout();
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
+
 	/*
-	 * TODO: Write test case for Logout NACK.
-	 * TODO: Remove, modify and add objects on perceptions.
+	 * TODO: Write test case for Logout NACK. TODO: Remove, modify and add
+	 * objects on perceptions.
 	 */
 
-	@Test
 	public void t7_testKeepAlive() throws Exception {
 		try {
-			client=new SimpleClient("log4j.properties") {
-				@Override			
+			client = new SimpleClient("log4j.properties");
+			client = new SimpleClient("log4j.properties") {
+				@Override
 				public synchronized boolean loop(int delta) {
 					try {
 						netMan.getMessage(30);
 					} catch (InvalidVersionException e) {
 					}
-					
+
 					return false;
-				}	
+				}
 			};
 
 			client.connect("localhost", PORT);
@@ -404,7 +423,7 @@ public class SystemTest {
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
 
-			RPAction action=new RPAction();
+			RPAction action = new RPAction();
 			action.put("text", 1);
 			client.send(action);
 
@@ -419,16 +438,19 @@ public class SystemTest {
 				client.resync();
 			}
 
-			assertFalse("Connection must be broken as connection was closed by server", client.getConnectionState());
+			assertFalse(
+					"Connection must be broken as connection was closed by server",
+					client.getConnectionState());
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
 
-	@Test
 	public void t7_1_testKeepAliveWorks() throws Exception {
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -439,33 +461,35 @@ public class SystemTest {
 			boolean choosen = client.chooseCharacter("testCharacter");
 			assertTrue(choosen);
 
-			long init=System.currentTimeMillis();
+			long init = System.currentTimeMillis();
 			/*
 			 * Timeout for players is 30 seconds.
-			 */			
-			while (System.currentTimeMillis()-init<40000) {
+			 */
+			while (System.currentTimeMillis() - init < 40000) {
 				client.loop(0);
 				Thread.sleep(50);
 			}
-			
+
 			assertTrue("Connection still be there", client.getConnectionState());
 
-			client.logout();			
+			client.logout();
+			client.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
 
-	@Test
-	public void t8_testBannedIP() throws IOException, InvalidVersionException, TimeoutException,
-	        LoginFailedException {
-		BareRPRuleProcessor rp = (BareRPRuleProcessor) BareRPRuleProcessor.get();
+	public void t8_testBannedIP() throws IOException, InvalidVersionException,
+			TimeoutException, LoginFailedException {
+		BareRPRuleProcessor rp = (BareRPRuleProcessor) BareRPRuleProcessor
+				.get();
 		ConnectionValidator conn = rp.getValidator();
 
 		conn.addBan("127.0.0.1", "0.0.0.0", 20);
 
 		try {
+			client = new SimpleClient("log4j.properties");
 			client.connect("localhost", PORT);
 			client.login("testUsername", "password");
 
@@ -475,6 +499,7 @@ public class SystemTest {
 			 * Good.
 			 */
 		}
+		client.close();
 	}
 
 }

@@ -1,4 +1,4 @@
-/* $Id: CrushServer.java,v 1.1 2008/03/25 17:55:26 arianne_rpg Exp $ */
+/* $Id: CrushServer.java,v 1.2 2008/03/27 11:32:51 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -25,14 +25,9 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
-import marauroa.common.net.NetConst;
-import marauroa.functional.SimpleClient;
+import marauroa.functional.IFunctionalTest;
 import marauroa.functional.MarauroadLauncher;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import marauroa.functional.SimpleClient;
 
 /**
  * Test the server and client framework y running lots of clients several times
@@ -41,7 +36,7 @@ import org.junit.Test;
  * @author miguel
  *
  */
-public class CrushServer {
+public class CrushServer implements IFunctionalTest {
 
 	private static final int PORT = 3217;
 
@@ -57,11 +52,10 @@ public class CrushServer {
 
 	private static MarauroadLauncher server;
 	
-	@BeforeClass
-	public static void createServer() throws InterruptedException {
+	public void setUp() throws Exception {
 		if (!DETACHED_SERVER) {
 			Log4J.init("log4j.properties");
-			server = new MarauroadLauncher();
+			server = new MarauroadLauncher(PORT);
 			Configuration.setConfigurationFile("src/marauroa/test/server.ini");
 
 			try {
@@ -70,18 +64,12 @@ public class CrushServer {
 				fail("Unable to find configuration file");
 			}
 
-			/*
-			 * Ugly hack, but junit does runs test cases in parallel
-			 */
-			NetConst.tcpPort = PORT;
-
 			server.start();
 			Thread.sleep(2000);
 		}
 	}
 
-	@AfterClass
-	public static void takeDownServer() throws InterruptedException {
+	public void tearDown() throws Exception {
 		if (!DETACHED_SERVER) {
 			server.finish();
 			Thread.sleep(2000);
@@ -91,9 +79,7 @@ public class CrushServer {
 	/**
 	 * Test the perception management in game.
 	 */
-	@Ignore
-	@Test
-	public void crushServer() throws Exception {
+	public void launch() throws Exception {
 		for (int i = 0; i < NUM_CLIENTS; i++) {
 			new Thread() {
 

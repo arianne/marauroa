@@ -1,4 +1,4 @@
-/* $Id: Ping.java,v 1.1 2008/03/25 17:51:15 arianne_rpg Exp $ */
+/* $Id: Ping.java,v 1.2 2008/03/27 11:32:51 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -20,34 +20,28 @@ import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import marauroa.functional.IFunctionalTest;
 
 /**
  * System test of a ping client/server deployment using Marauroa.
  * @author miguel
  *
  */
-public class Ping {
+public class Ping implements IFunctionalTest {
 	private static final int PORT = 5122;
 	
 	private PingClient client;
 	
-	@Before
-	public void create() {
+	public void setUp() {
 		client=new PingClient("log4j.properties");
 	}
 	
-	@After
-	public void destroy() {
+	public void tearDown() {
 		assertFalse("Client can't be null",client==null);
 		client.close();
 	}
 	
-	@Test
-	public void run() {
+	public void launch() {
 		try {
 			/*
 			 * Connect to server
