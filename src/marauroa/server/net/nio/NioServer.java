@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.23 2007/12/08 22:03:31 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.24 2008/04/10 15:09:56 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -112,8 +112,10 @@ class NioServer extends Thread {
 
 		/*
 		 * We ask the server to close the channel
-		 */		
-		pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
+		 */	
+		synchronized (this.pendingClosed) {
+		  pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
+		}
 		
 		/*
 		 * Wake up to make effective the closing.
