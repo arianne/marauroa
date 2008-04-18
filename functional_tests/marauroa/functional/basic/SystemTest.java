@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.2 2008/03/27 11:32:50 arianne_rpg Exp $ */
+/* $Id: SystemTest.java,v 1.3 2008/04/18 18:53:27 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -31,7 +31,6 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.NetConst;
 import marauroa.functional.IFunctionalTest;
 import marauroa.functional.MarauroadLauncher;
 import marauroa.functional.SimpleClient;

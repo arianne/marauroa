@@ -1,4 +1,4 @@
-/* $Id: StressServer.java,v 1.2 2008/03/27 11:32:51 arianne_rpg Exp $ */
+/* $Id: StressServer.java,v 1.3 2008/04/18 18:53:25 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -27,8 +27,6 @@ import marauroa.common.game.RPObject;
 import marauroa.functional.IFunctionalTest;
 import marauroa.functional.MarauroadLauncher;
 import marauroa.functional.SimpleClient;
-
-import org.junit.Test;
 
 public class StressServer implements IFunctionalTest {
 
