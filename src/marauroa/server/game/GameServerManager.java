@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.111 2008/03/12 15:56:17 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.112 2008/05/12 16:56:17 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -347,6 +347,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * all the players back to database.
 	 */
 	public void finish() {
+		/* We store all the players when we are requested to exit */
+		storeConnectedPlayers();
+		
 		rpMan.finish();
 		keepRunning = false;
 		
@@ -356,9 +359,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		while (isfinished == false) {
 			Thread.yield();
 		}
-
-		/* We store all the players when we are requested to exit */
-		storeConnectedPlayers();
 	}
 
 	/*
