@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.36 2007/12/04 20:00:09 martinfuchs Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.37 2008/05/15 12:56:33 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -337,7 +337,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.debug("interrupted exception on NIONetworkServer",e);
+			logger.warn("interrupted exception on NIONetworkServer",e);
 			keepRunning = false;
 		}
 
