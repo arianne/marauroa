@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.66 2008/01/25 19:37:07 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.67 2008/05/26 09:46:41 arianne_rpg Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -297,6 +297,22 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return Integer.parseInt(val);
 	}
 
+	/**
+	 * This methods return the value of an attribute
+	 *
+	 * @param attribute
+	 *			  the attribute we want to get
+	 * @return the value of the attribute
+	 */
+	public boolean getBool(String attribute) {
+		String val = get(attribute);
+		if (val == null) {
+			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
+		}
+
+		return Boolean.parseBoolean(val);
+	}
+	
 	/**
 	 * This methods return the value of an attribute
 	 *
