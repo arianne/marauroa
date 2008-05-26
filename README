@@ -111,6 +111,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.5.1
+- Fixed problem on server shutdown
+- Add Attributes.getBool
+
 2.5
 - Added timeout value so players get disconnected after 30 seconds if their connection is lost.
 - Updated protocol version.
