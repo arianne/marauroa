@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.112 2008/05/12 16:56:17 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.113 2008/06/01 19:06:24 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.game;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -366,7 +367,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * was playing game it is stored back to database.
 	 */
 	private void storeConnectedPlayers() {
-		for (PlayerEntry entry : playerContainer) {
+		/*
+		 * We want to avoid concurrentComodification of playerContainer.
+		 */
+		List<PlayerEntry> list=new LinkedList<PlayerEntry>();
+		for (PlayerEntry entry : playerContainer) {			
+			list.add(entry);
+		}
+		
+		/*
+		 * Now we iterate the list and remove characters.
+		 */		
+		for (PlayerEntry entry : list) {
 			logger.info("STORING ("+entry.username+") :"+entry.object);
 			/*
 			 * It may be a bit slower than disconnecting here, but server is
