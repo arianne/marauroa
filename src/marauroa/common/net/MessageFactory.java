@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.36 2008/06/01 17:11:39 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.37 2008/06/01 17:27:59 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -178,7 +178,9 @@ public class MessageFactory {
 		/*
 		 * We do a fast check to see if protocol versions match.
 		 */
-		if (data[offset] == NetConst.NETWORK_PROTOCOL_VERSION) {
+		int networkProtocolVersion = data[offset];
+		
+		if (networkProtocolVersion == NetConst.NETWORK_PROTOCOL_VERSION) {
 			int messageTypeIndex = data[offset + 1];
 			/*
 			 * Now we check if we have this message class implemented.
@@ -206,7 +208,7 @@ public class MessageFactory {
 				throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
 			}
 		} else {
-			logger.warn("Message has incorrect protocol version(" + data[offset] + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
+			logger.warn("Message has incorrect protocol version(" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
 			// Deactivated on 2007-11-18 because during a server crash
 			// three threads dumps over a period of about 30 seconds
 			// showed NetworkServerManager in it.
