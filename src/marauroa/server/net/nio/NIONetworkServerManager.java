@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.38 2008/06/01 19:06:25 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.39 2008/06/03 17:54:03 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -337,7 +337,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.warn(getName()+" interrupted. Finishing network layer.",e);
+			logger.warn(getName()+" interrupted. Finishing network layer.");
 			keepRunning = false;
 		}
 
