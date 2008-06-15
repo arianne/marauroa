@@ -43,12 +43,28 @@ create table if not exists rpzone
 
 create table if not exists loginEvent
   (
+  id integer auto_increment not null,
   player_id integer not null,
   address varchar(64),
+  service char(10),
 
   timedate timestamp,
 
-  result tinyint
+  result tinyint,
+  primary key(id)
+  );
+
+create table if not exists passwordChange
+  (
+  id integer auto_increment not null,
+  player_id integer not null,
+  address varchar(64),
+  service char(10),
+
+  timedate timestamp,
+
+  oldpassword varchar(255),
+  primary key(id)
   );
 
 create table if not exists statistics
