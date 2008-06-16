@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.67 2008/05/26 09:46:41 arianne_rpg Exp $ */
+/* $Id: Attributes.java,v 1.68 2008/06/16 20:34:36 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -40,7 +40,7 @@ import marauroa.common.game.Definition.DefinitionClass;
  *
  * @author miguel
  */
-public class Attributes implements marauroa.common.net.Serializable, Iterable<String> {
+public class Attributes implements marauroa.common.net.Serializable, Iterable<String>, Cloneable {
 	private static Logger logger = Log4J.getLogger(Attributes.class);
 	
 	/** We are interested in clearing added and deleted only if they have changed. */
@@ -95,6 +95,15 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		added = new HashMap<String, String>();
 		deleted = new HashMap<String, String>();
 		modified = false;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Attributes clone = (Attributes) super.clone();
+		clone.content = new HashMap<String, String>(content);
+		clone.added = new HashMap<String, String>(added);
+		clone.deleted = new HashMap<String, String>(deleted);
+		return clone;
 	}
 
 	/**

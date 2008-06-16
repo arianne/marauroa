@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.62 2008/03/03 20:10:21 martinfuchs Exp $ */
+/* $Id: RPSlot.java,v 1.63 2008/06/16 20:34:36 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,13 +18,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
 /**
  * This class represent a slot in an object
  */
-public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject> {
+public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObject>, Cloneable {
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObject.class);
 
 	/** Name of the slot */
 	private String name;
@@ -486,28 +488,33 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	@Override
 	public Object clone() {
-		RPSlot slot = new RPSlot();
+		RPSlot slot = null;
+		try {
+			slot = (RPSlot) super.clone();
+		} catch (CloneNotSupportedException e) {
+			logger.error(e, e);
+			return null;
+		}
 
 		slot.name = name;
-
-		// TODO: Ensure correct cloning.
-		// This cloning is plainly bad.
 		slot.owner = owner;
-
 		slot.capacity = capacity;
 
+		slot.objects = new LinkedRPObjectList();
 		for (RPObject object : objects) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
 			slot.objects.add(copied);
 		}
 
+		slot.added = new LinkedRPObjectList();
 		for (RPObject object : added) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
 			slot.added.add(copied);
 		}
 
+		slot.deleted = new LinkedRPObjectList();
 		for (RPObject object : deleted) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);

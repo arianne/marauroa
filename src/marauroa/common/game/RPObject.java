@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.84 2008/01/18 19:26:38 astridemma Exp $ */
+/* $Id: RPObject.java,v 1.85 2008/06/16 20:34:36 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -93,7 +93,10 @@ public class RPObject extends Attributes {
 	 */
 	public RPObject() {
 		super(RPClass.getBaseRPObjectDefault());
-
+		clear();
+	}
+	
+	private void clear() {
 		slots = new LinkedList<RPSlot>();
 		addedSlots = new LinkedList<String>();
 		deletedSlots = new LinkedList<String>();
@@ -112,7 +115,7 @@ public class RPObject extends Attributes {
 		hidden = false;
 		storable = false;
 	}
-
+	
 	/**
 	 * Copy constructor
 	 *
@@ -122,6 +125,17 @@ public class RPObject extends Attributes {
 	public RPObject(RPObject object) {
 		this();
 
+		fill(object);
+	}
+
+
+	/**
+	 * Copy constructor
+	 *
+	 * @param object
+	 *            the object that is going to be copied.
+	 */
+	public void fill(RPObject object) {
 		super.fill(object);
 
 		hidden = object.hidden;
@@ -990,10 +1004,19 @@ public class RPObject extends Attributes {
 	 * Create a depth copy of the object
 	 *
 	 * @return a copy of this object.
+	 * @throws CloneNotSupportedException 
 	 */
 	@Override
 	public Object clone() {
-		return new RPObject(this);
+		try {
+			RPObject rpobject = (RPObject) super.clone();
+			rpobject.clear();
+			rpobject.fill(this);
+			return rpobject;
+		} catch (CloneNotSupportedException e) {
+			logger.error(e, e);
+			return null;
+		}
 	}
 
 	/** This class stores the basic identification for a RPObject */
