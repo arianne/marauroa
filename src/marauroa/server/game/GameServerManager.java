@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.113 2008/06/01 19:06:24 arianne_rpg Exp $ */
+/* $Id: GameServerManager.java,v 1.114 2008/07/20 15:18:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -619,7 +619,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
     				 */
     				object.put("#clientid", clientid);
 				} else {
-					logger.info("could not load object for character("+entry.character+") from database");
+					logger.warn("could not load object for character("+entry.character+") from database");
 				}
 
 				/* We ask RP Manager to initialize the object */
@@ -635,11 +635,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					return;
 				} else {
 					/* This account doesn't own that character */
-					logger.info("RuleProcessor rejected character(" + msg.getCharacter()+")");
+					logger.warn("RuleProcessor rejected character(" + msg.getCharacter()+")");
 				}
 			} else {
 				/* This account doesn't own that character */
-				logger.info("Client(" + msg.getAddress().toString() + ") hasn't character("
+				logger.warn("Client(" + msg.getAddress().toString() + ") hasn't character("
 						+ msg.getCharacter() + ")");
 			}
 
@@ -1101,7 +1101,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			if (existing != null) {
 				/*
-				 * Warning: Player is alreay logged. So we proceed to store it
+				 * Warning: Player is alreay logged in. So we proceed to store it
 				 * and remove from game.
 				 */
 				logger.warn("Client(" + msg.getAddress().toString() + ") trying to login twice");
