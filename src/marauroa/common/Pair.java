@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.7 2007/11/14 19:49:55 arianne_rpg Exp $ */
+/* $Id: Pair.java,v 1.8 2008/07/20 15:18:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,5 +80,16 @@ public class Pair<T1, T2> {
 		}
 
 		return h1 * h2;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(first);
+		sb.append(", ");
+		sb.append(second);
+		sb.append("]");
+		return sb.toString();
 	}
 }
