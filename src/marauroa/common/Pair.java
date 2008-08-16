@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.8 2008/07/20 15:18:13 nhnb Exp $ */
+/* $Id: Pair.java,v 1.9 2008/08/16 13:48:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.common;
 public class Pair<T1, T2> {
 
 	private T1 first;
-
 	private T2 second;
 
 	public Pair(T1 o1, T2 o2) {
@@ -79,7 +78,7 @@ public class Pair<T1, T2> {
 			h2 = second.hashCode();
 		}
 
-		return h1 * h2;
+		return h1 * 31 + h2;
 	}
 
 	@Override
