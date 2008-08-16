@@ -1,4 +1,4 @@
-/* $Id: Encoder.java,v 1.7 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: Encoder.java,v 1.8 2008/08/16 16:55:00 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -27,9 +27,9 @@ public class Encoder {
 
 	/**
 	 * Constructor
-	 *
 	 */
 	private Encoder() {
+		// hide constructor, this is a Singleton
 	}
 
 	/** the singleton instance */

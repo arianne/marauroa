@@ -1,4 +1,4 @@
-/* $Id: PythonWorld.java,v 1.7 2007/04/09 14:47:12 arianne_rpg Exp $ */
+/* $Id: PythonWorld.java,v 1.8 2008/08/16 16:56:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,10 +23,10 @@ package marauroa.server.game.python;
 public class PythonWorld {
 
 	/**
-	 * Constructor
-	 * 
+	 * Constructor 
 	 */
 	public PythonWorld() {
+		// default constructor
 	}
 
 	/**
@@ -34,6 +34,7 @@ public class PythonWorld {
 	 * 
 	 */
 	public void onInit() {
+		// implement in subclasses
 	}
 
 	/**
@@ -41,5 +42,6 @@ public class PythonWorld {
 	 * 
 	 */
 	public void onFinish() {
+		// implement in subclasses
 	}
 }

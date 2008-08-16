@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.18 2007/12/11 20:09:40 nhnb Exp $ */
+/* $Id: RPWorld.java,v 1.19 2008/08/16 16:57:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -91,6 +91,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/** This method is called when RPWorld is created by RPServerManager */
 	public void onInit() {
+		// implement in subclasses
 	}
 
 	/** This method is called when server is going to shutdown. */

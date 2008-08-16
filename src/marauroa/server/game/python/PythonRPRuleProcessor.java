@@ -1,4 +1,4 @@
-/* $Id: PythonRPRuleProcessor.java,v 1.26 2007/04/09 14:47:12 arianne_rpg Exp $ */
+/* $Id: PythonRPRuleProcessor.java,v 1.27 2008/08/16 16:56:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,9 +49,9 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/**
 	 * Constructor
-	 * 
 	 */
 	public PythonRPRuleProcessor() {
+		// default constructor
 	}
 
 	/**

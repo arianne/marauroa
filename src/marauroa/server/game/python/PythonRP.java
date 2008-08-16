@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.17 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: PythonRP.java,v 1.18 2008/08/16 16:56:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,6 +36,7 @@ public class PythonRP {
 	 * 
 	 */
 	public PythonRP() {
+		// default constructor
 	}
 
 	/** instance of rp manager */
@@ -62,6 +63,7 @@ public class PythonRP {
 	}
 
 	public void beginTurn() {
+		// implement in sub classes
 	}
 
 	public boolean checkGameVersion(String game, String version) {
@@ -77,9 +79,11 @@ public class PythonRP {
 	}
 
 	public void endTurn() {
+		// implement in sub classes
 	}
 
 	public void execute(RPObject object, RPAction action) {
+		// implement in sub classes
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
@@ -87,6 +91,7 @@ public class PythonRP {
 	}
 
 	public void onTimeout(RPObject object) {
+		// implement in sub classes
 	}
 
 	public boolean onExit(RPObject object) {

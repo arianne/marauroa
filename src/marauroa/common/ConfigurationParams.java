@@ -1,4 +1,4 @@
-/* $Id: ConfigurationParams.java,v 1.2 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: ConfigurationParams.java,v 1.3 2008/08/16 16:55:00 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -30,6 +30,7 @@ public class ConfigurationParams {
     private boolean persistence = true;
 
 	public ConfigurationParams() {
+		// default constructor
 	}
 
 	public ConfigurationParams(boolean relativeToHome, String basedir, String configurationFile) {
