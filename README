@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.5
+Version 2.6
 
 
 Requirements
@@ -111,6 +111,11 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.6
+- Attributes.clone() and RPSlot.clone() now conform to the contract of Object.clone()
+- Pair implements toString() to help debugging
+- Fixed some compiler errors
+
 2.5.1
 - Fixed problem on server shutdown
 - Add Attributes.getBool
