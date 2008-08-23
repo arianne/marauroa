@@ -70,6 +70,7 @@ Or for a complete package release write:
 
 Status
 ------
+Version >= 2.5 does support Stendhal 0.68
 Version >= 2.3 does support Stendhal 0.65.1
 Version >= 2.2 does support Stendhal 0.65
 Version >= 2.0 does support Stendhal 0.63
@@ -114,7 +115,7 @@ Changelog
 2.6
 - Attributes.clone() and RPSlot.clone() now conform to the contract of Object.clone()
 - Pair implements toString() to help debugging
-- Fixed some compiler errors
+- Fixed some compiler warnings
 
 2.5.1
 - Fixed problem on server shutdown
