@@ -13,6 +13,10 @@ create table if not exists account
   )
   TYPE=INNODB;
 
+/* create index i_account_username ON account(username); */
+/* create index i_account_password ON account(password); */
+/* create index i_account_email ON account(email); */
+
 create table if not exists characters
   (
   player_id integer not null,
@@ -22,6 +26,9 @@ create table if not exists characters
   PRIMARY KEY(charname)
   )
   TYPE=INNODB;
+
+/* create index i_characters_player_id ON characters(player_id); */
+/* create index i_characters_charname ON characters(charname); */
 
 create table if not exists rpobject
   (
@@ -54,6 +61,11 @@ create table if not exists loginEvent
   primary key(id)
   );
 
+/*create index i_loginEvent_player_id ON loginEvent(player_id);*/
+/*create index i_loginEvent_address ON loginEvent(address);*/
+/*create index i_loginEvent_player_id_address ON loginEvent(player_id, address);*/
+
+
 create table if not exists passwordChange
   (
   id integer auto_increment not null,
@@ -66,6 +78,9 @@ create table if not exists passwordChange
   oldpassword varchar(255),
   primary key(id)
   );
+
+/* create index i_passwordChange_player_id ON passwordChange(player_id);*/
+/* create index i_passwordChange_address ON passwordChange(address);*/
 
 create table if not exists statistics
   (
@@ -80,6 +95,7 @@ create table if not exists statistics
   players_online integer
   );
 
+rename table gameEvents to gameEvents_2008_08_21;
 create table if not exists gameEvents
   (
   id integer auto_increment not null,
