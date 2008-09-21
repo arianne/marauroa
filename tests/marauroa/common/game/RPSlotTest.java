@@ -1,4 +1,4 @@
-/* $Id: RPSlotTest.java,v 1.8 2008/02/28 14:46:24 astridemma Exp $ */
+/* $Id: RPSlotTest.java,v 1.9 2008/09/21 10:33:52 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -16,13 +16,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.RPObject.ID;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RPSlotTest {
@@ -57,12 +56,6 @@ public class RPSlotTest {
 
 
 	@Test
-	@Ignore
-	public final void testSetGetName() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public final void testAddRPObject() {
 		RPSlot slot = new RPSlot("slotname");
 		RPObject owner = new RPObject();
@@ -71,30 +64,6 @@ public class RPSlotTest {
 		slot.add(object);
 		assertEquals(slot, object.getContainerSlot());
 		assertEquals(owner, object.getContainer());
-	}
-
-	@Test
-	@Ignore
-	public final void testAddPreservingId() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testAddRPObjectBoolean() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testGet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testGetFirst() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -108,30 +77,6 @@ public class RPSlotTest {
 		rps.add(rpoWithID );
 		assertSame(rpoWithID,rps.remove(id));
 
-	}
-
-	@Test
-	@Ignore
-	public final void testClear() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testHas() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testHasAsAncestor() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testSize() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -181,70 +126,23 @@ public class RPSlotTest {
 		rps.add(new RPObject());
 	}
 
-	@Test
-	@Ignore
-	public final void testIterator() {
-		fail("Not yet implemented");
-	}
 
 	@Test
-	@Ignore
-	public final void testEqualsObject() {
-		fail("Not yet implemented");
+	public void testRemoveContained() throws Exception {
+		RPObject owner = new RPObject();
+		
+		RPSlot slot = new RPSlot();
+		owner.addSlot(slot);
+		RPObject object = new RPObject();
+		slot.add(object);
+		assertTrue(object.isContained());
+		
+		slot.remove(object.getID());
+		assertFalse(object.isContained());
+		
+		
+		
+		
 	}
-
-	@Test
-	@Ignore
-	public final void testToString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testWriteObjectOutputSerializer() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testWriteObjectOutputSerializerDetailLevel() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testReadObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testClone() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testResetAddedAndDeletedRPObjects() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testSetAddedRPObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testSetDeletedRPObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public final void testClearVisible() {
-		fail("Not yet implemented");
-	}
-
+	
 }
