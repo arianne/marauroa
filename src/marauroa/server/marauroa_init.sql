@@ -95,7 +95,6 @@ create table if not exists statistics
   players_online integer
   );
 
-rename table gameEvents to gameEvents_2008_08_21;
 create table if not exists gameEvents
   (
   id integer auto_increment not null,
