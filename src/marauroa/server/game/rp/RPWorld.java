@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.19 2008/08/16 16:57:10 nhnb Exp $ */
+/* $Id: RPWorld.java,v 1.20 2008/09/28 19:23:35 arianne_rpg Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -149,6 +149,24 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public IRPZone getRPZone(RPObject.ID objectid) {
 		return zones.get(new IRPZone.ID(objectid.getZoneID()));
+	}
+
+	/**
+	 * Removes a zone from world.
+	 * It calls zone.onFinish method to free resources zone could have allocated.	 * 
+	 * 
+	 * @param zoneid
+	 * @return the zone removed or null if not found
+	 * @throws Exception caused by onFinish
+	 */
+	public IRPZone removeRPZone(IRPZone.ID zoneid) throws Exception {
+		IRPZone zone=zones.remove(zoneid);
+		
+		if(zone!=null) {
+		  zone.onFinish();
+		}
+		
+		return zone;
 	}
 
 	/**
