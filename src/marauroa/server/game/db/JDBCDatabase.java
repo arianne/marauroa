@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.71 2008/02/17 13:54:35 arianne_rpg Exp $ */
+/* $Id: JDBCDatabase.java,v 1.72 2008/10/13 18:33:28 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -923,7 +923,7 @@ public class JDBCDatabase implements IDatabase {
 			if (resultSet.next()) {
 				String userNameFromDB = resultSet.getString("username");
 				if (!userNameFromDB.equals(username)) {
-					logger.warn("Username \"" + username + "\" is not the same that stored username\"" + userNameFromDB + "\"");
+					logger.warn("Username \"" + username + "\" is not the same that stored username \"" + userNameFromDB + "\"");
 				}
 				return true;
 			}
