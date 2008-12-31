@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.42 2008/03/03 20:16:11 martinfuchs Exp $ */
+/* $Id: ClientFramework.java,v 1.43 2008/12/31 10:45:47 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -502,6 +502,7 @@ public abstract class ClientFramework {
 	 *
 	 * @param delta
 	 *            unused
+	 * @return true if new messages were received.
 	 */
 	public synchronized boolean loop(int delta) {
 		boolean receivedMessages = false;
