@@ -1,4 +1,4 @@
-/* $Id: RPLink.java,v 1.7 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: RPLink.java,v 1.8 2009/03/02 22:36:37 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -166,6 +166,9 @@ public class RPLink implements marauroa.common.net.Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
 		if (obj instanceof RPLink) {
 			RPLink link = (RPLink) obj;
 			return name.equals(link.name) && object.equals(link.object);

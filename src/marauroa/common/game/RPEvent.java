@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.22 2007/11/04 11:32:31 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.23 2009/03/02 22:36:37 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -161,6 +161,9 @@ public class RPEvent extends Attributes {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
 		if (obj instanceof RPEvent) {
 			RPEvent comp = (RPEvent) obj;
 			return name.equals(comp.name) && super.equals(this);

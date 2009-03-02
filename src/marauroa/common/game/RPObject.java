@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.85 2008/06/16 20:34:36 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.86 2009/03/02 22:36:37 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -885,6 +885,9 @@ public class RPObject extends Attributes {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
 			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events)
