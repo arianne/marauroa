@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.64 2009/03/02 22:36:37 astridemma Exp $ */
+/* $Id: RPSlot.java,v 1.65 2009/03/09 13:42:18 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -480,7 +480,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 
 		objects.clear();
 		for (int i = 0; i < size; ++i) {
-			objects.add((RPObject) in.readObject(new RPObject()));
+			final RPObject readObject = (RPObject) in.readObject(new RPObject());
+			readObject.setContainer(owner, this);
+			objects.add(readObject);
 		}
 	}
 

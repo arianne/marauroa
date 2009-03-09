@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.5 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: RPObjectTest.java,v 1.6 2009/03/09 13:42:18 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -189,6 +189,11 @@ public class RPObjectTest {
 		RPObject result = (RPObject) is.readObject(new RPObject());
 
 		assertEquals(obj, result);
+		
+		RPSlot inslot = result.getSlot("lhand");
+		for ( RPObject contained : inslot) {
+			assertTrue(contained.isContained());
+		}
 	}
 
 	/**
