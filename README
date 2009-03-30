@@ -16,7 +16,7 @@ you own online games using Marauroa as a Content Management system.
 
 Extended Description
 --------------------
-Marauroa is completly written in Java using a multithreaded server architecture
+Marauroa is completely written in Java using a multithreaded server architecture
 with a TCP oriented network protocol, a mySQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable
 by developers and that is able to run scripts on Python for the game's rules.
@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.6
+Version 2.6.1
 
 
 Requirements
@@ -112,6 +112,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.6.1
+- fixed a bug in deserialization, that made objects in slots uncontained, provided regression test
+- added checks for same to equals in some RP*
+
 2.6
 - Attributes.clone() and RPSlot.clone() now conform to the contract of Object.clone()
 - Pair implements toString() to help debugging
