@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.21 2008/09/28 19:27:50 arianne_rpg Exp $ */
+/* $Id: RPWorld.java,v 1.22 2009/05/05 20:46:01 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,8 +12,9 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.IRPZone;
@@ -47,13 +48,13 @@ public class RPWorld implements Iterable<IRPZone> {
 	private static RPWorld instance;
 
 	/** A map containing the zones. */
-	HashMap<IRPZone.ID, IRPZone> zones;
+	Map<IRPZone.ID, IRPZone> zones;
 
 	/** The all-mighty player container. */
 	PlayerEntryContainer playerContainer;
 
 	protected RPWorld() {
-		zones = new HashMap<IRPZone.ID, IRPZone>();
+		zones = new ConcurrentHashMap<IRPZone.ID, IRPZone>();
 	}
 
 	/**
