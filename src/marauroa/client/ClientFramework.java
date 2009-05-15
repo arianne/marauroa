@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.43 2008/12/31 10:45:47 astridemma Exp $ */
+/* $Id: ClientFramework.java,v 1.44 2009/05/15 17:49:27 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -96,6 +96,18 @@ public abstract class ClientFramework {
 		messages = new LinkedList<Message>();
 		perceptionsCount = 0;
 	}
+	
+	/**
+	 * Constructor.
+	 *
+	 */
+	public ClientFramework() {
+		Log4J.init();
+
+		messages = new LinkedList<Message>();
+		perceptionsCount = 0;
+	}
+
 
 	/**
 	 * Call this method to connect to server. This method just configure the
@@ -591,11 +603,15 @@ public abstract class ClientFramework {
 	abstract protected void onPerception(MessageS2CPerception message);
 
 	/**
-	 * It is called on a transfer request so you can choose what items to
-	 * approve or reject
+	 * is called before a content transfer is started.
+	 * 
+	 * <code> items </code> contains a list of names and timestamp. 
+	 * That information can be used to decide if a transfer from server is needed. 
+	 * By setting attribute ack to true in a TransferContent it will be acknowledged.   
+	 * All acknowledges items in the returned List, will be transfered by server.
 	 *
 	 * @param items
-	 *            the items to approve or reject the transmission.
+	 *            in this list by default all items.ack attributes are set to false;
 	 * @return the list of approved and rejected items.
 	 */
 	abstract protected List<TransferContent> onTransferREQ(List<TransferContent> items);

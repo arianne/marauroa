@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.4 2007/04/09 14:39:57 arianne_rpg Exp $ */
+/* $Id: TransferContent.java,v 1.5 2009/05/15 17:49:27 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,7 @@ public class TransferContent {
 	public boolean cacheable;
 
 	/**
-	 * If the client approved this content to be trasfered it will be true.
+	 * If the client approved this content to be transfered it will be true.
 	 */
 	public boolean ack;
 
