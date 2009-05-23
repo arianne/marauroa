@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.6.1
+Version 2.6.2
 
 
 Requirements
@@ -112,6 +112,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+2.6.2
+- changed zones to ConcurrentHashmap to accomodate the needs of multi threading and changing number of zones
+
 2.6.1
 - fixed a bug in deserialization, that made objects in slots uncontained, provided regression test
 - added checks for same to equals in some RP*
