@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.44 2009/05/15 17:49:27 astridemma Exp $ */
+/* $Id: ClientFramework.java,v 1.45 2009/06/03 13:35:57 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -521,16 +521,16 @@ public abstract class ClientFramework {
 
 		/* Check network for new messages. */
 		Message newmsg = null;
-		try {
-			newmsg = netMan.getMessage(30);
-		} catch (InvalidVersionException e) {
-			logger.warn("This should never happen: ", e);
-		}
-
-		if (newmsg != null) {
-			messages.add(newmsg);
-		}
-
+//		try {
+//			newmsg = netMan.getMessage(30);
+//		} catch (InvalidVersionException e) {
+//			logger.warn("This should never happen: ", e);
+//		}
+//
+//		if (newmsg != null) {
+//			messages.add(newmsg);
+//		}
+		messages.addAll(((TCPNetworkClientManager)netMan).getMessages());
 		/* For all the received messages do */
 		for (Message msg : messages) {
 			receivedMessages = true;

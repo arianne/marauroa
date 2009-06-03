@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.23 2008/01/26 23:41:28 arianne_rpg Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.24 2009/06/03 13:35:57 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -206,7 +208,22 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			return null;
 		}
 	}
-
+	
+	
+	
+	/**
+	 * gets all messages received so far and removes them from the queue.
+	 * 
+	 * 
+	 * @return the messages received
+	 */
+	public synchronized Collection<Message> getMessages() {
+		Collection<Message> col = new LinkedList<Message>();
+		 processedMessages.drainTo(col);
+		 return col;
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
