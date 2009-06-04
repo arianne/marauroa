@@ -112,6 +112,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+
+- fixed equals and hashcode of RPObject which was inconsistant for changing IDs, 
+  please review your code if you rely on equality of RPObject other than identity. 
 2.6.2
 - changed zones to ConcurrentHashmap to accomodate the needs of multi threading and changing number of zones
 
