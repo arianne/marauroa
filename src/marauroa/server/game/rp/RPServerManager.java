@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.52 2008/03/03 20:16:10 martinfuchs Exp $ */
+/* $Id: RPServerManager.java,v 1.53 2009/06/05 18:59:29 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game.rp;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -526,8 +527,11 @@ public class RPServerManager extends Thread {
 					playerContainer.getLock().releaseLock();
 					timeEnds[9] = System.currentTimeMillis();
 				}
-
-				stats.set("Objects now", world.size());
+				try {
+					stats.set("Objects now", world.size());
+				} catch ( ConcurrentModificationException e) {
+					//TODO: size is obviously ot threadsafe as it asks the underlying zone.objects for its sizes, which are not threadsafe.
+				}
 				timeEnds[10] = System.currentTimeMillis();
 			}
 		} catch (Throwable e) {
