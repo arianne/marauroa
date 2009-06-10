@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.88 2009/06/10 11:52:54 astridemma Exp $ */
+/* $Id: RPObject.java,v 1.89 2009/06/10 15:05:05 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1115,8 +1115,16 @@ public class RPObject extends Attributes {
 		@Override
 		public boolean equals(Object anotherid) {
 			if (anotherid != null && anotherid instanceof RPObject.ID) {
-				return (id == ((RPObject.ID) anotherid).id && zoneid
-				        .equals(((RPObject.ID) anotherid).zoneid));
+				ID otherId = (RPObject.ID) anotherid;
+				if (id == otherId.id) {
+					if (zoneid == null) {
+						return otherId.zoneid == null;
+					} else {
+						return zoneid.equals(otherId.zoneid);
+					}
+				} else {
+					return false;
+				}
 			} else {
 				return false;
 			}
