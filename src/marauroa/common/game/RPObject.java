@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.87 2009/06/04 09:01:18 astridemma Exp $ */
+/* $Id: RPObject.java,v 1.88 2009/06/10 11:52:54 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -877,7 +877,36 @@ public class RPObject extends Attributes {
 		}
 	}
 
+	/**
+	 * Returns true if two objects are exactly equal
+	 *
+	 * @param obj
+	 *            the object to compare with this one.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
+		if (obj instanceof RPObject) {
+			RPObject object = (RPObject) obj;
+			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events)
+			        && links.equals(object.links);
+		} else {
+			return false;
+		}
+	}
 
+	@Override
+	public int hashCode() {
+		int hash=0;
+		if (has("id")) {
+			hash=getInt("id");
+		}
+		
+		return hash;
+		
+	}
 
 	/**
 	 * Returns true if the object is empty
@@ -1375,7 +1404,7 @@ public class RPObject extends Attributes {
 	}
 
 	/**
-	 * With the differences computed by getDifferences in added and deleted we
+	 * With the diferences computed by getDifferences in added and deleted we
 	 * build an update object by applying the changes.
 	 *
 	 * @param addedChanges
@@ -1417,7 +1446,7 @@ public class RPObject extends Attributes {
 					RPSlot changes = getSlot(slot.getName());
 
 					/*
-					 * For each of the deleted changes, check if they are
+					 * For each of the deletded changes, check if they are
 					 * already on the object so they an update and recursively
 					 * apply differences to it. On the other hand if object is
 					 * not present, it means it is a new object so we can add it
