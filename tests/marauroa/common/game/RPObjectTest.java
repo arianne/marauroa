@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.6 2009/03/09 13:42:18 astridemma Exp $ */
+/* $Id: RPObjectTest.java,v 1.7 2009/06/10 13:16:50 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -273,4 +273,23 @@ public class RPObjectTest {
 		
 	}
 
+	public void testClone() {
+		RPObject obj1 = new RPObject();
+		Object obj2 =  obj1.clone();
+		assertFalse(obj1==obj2);
+		assertTrue(obj2.getClass() == obj1.getClass());
+		assertEquals(obj1, obj2);
+		
+		RPObject subobj1 = new SubRPObject();
+		Object subObj2 = subobj1.clone();
+		assertFalse(subobj1==subObj2);
+		assertTrue(subObj2.getClass() == SubRPObject.class);
+		
+		assertTrue(subObj2.getClass() == subobj1.getClass());
+		assertEquals(subobj1, subObj2);
+	
+	}
+private class SubRPObject extends RPObject{
+	
+}
 }
