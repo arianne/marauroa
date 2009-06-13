@@ -1,4 +1,4 @@
-/* $Id: IDatabase.java,v 1.24 2007/11/17 13:01:50 martinfuchs Exp $ */
+/* $Id: IDatabase.java,v 1.25 2009/06/13 22:00:51 astridemma Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -141,7 +141,10 @@ public interface IDatabase {
 	 *            the player database
 	 * @param username
 	 *            player username
-	 * @return the status of the player
+	 * @return the status of the player:
+	 *   <li>active
+	 *   <li>inactive
+	 *   <li>banned
 	 * @throws SQLException
 	 *             if there is any database problem
 	 */
@@ -207,7 +210,7 @@ public interface IDatabase {
 	 *            the database transaction
 	 * @param username
 	 *            player's username
-	 * @return the list of characters.
+	 * @return the list of characters. must not be null.
 	 * @throws SQLException
 	 *             if there is any database problem.
 	 */
@@ -360,7 +363,7 @@ public interface IDatabase {
 	 *            the username to get login events from
 	 * @param events
 	 *            the amount of events to return
-	 * @return a List of LoginEvent objects
+	 * @return a List of LoginEvent objects, must not be null.
 	 * @throws SQLException
 	 *             if there is any database problem.
 	 */
