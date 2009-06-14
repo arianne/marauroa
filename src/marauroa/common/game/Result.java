@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.9 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: Result.java,v 1.10 2009/06/14 21:58:47 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -105,8 +105,9 @@ public enum Result {
 	}
 
 	/**
-	 *  Returns true if the account is successfuly created.
-	 * @return true if the account is successfuly created.
+	 * checks state of account creation represented by this result.
+	 *  
+	 * @return  true if account creation failed. false if account creation was successful.
 	 */
 	public boolean failed() {
 		return !created;
