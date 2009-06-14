@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.22 2009/05/05 20:46:01 astridemma Exp $ */
+/* $Id: RPWorld.java,v 1.23 2009/06/14 14:47:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -285,7 +285,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public void modify(RPObject object) {
 		IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
-		zone.modify(object);
+		if (zone != null) {
+			zone.modify(object);
+		} else {
+			logger.warn("calling RPWorld.modify on a zoneless object: " + object + " parent: " + object.getBaseContainer(), new Throwable());
+		}
 	}
 
 	/**
