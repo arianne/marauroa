@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.89 2009/06/10 15:05:05 astridemma Exp $ */
+/* $Id: RPObject.java,v 1.90 2009/06/14 14:58:01 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -940,6 +940,7 @@ public class RPObject extends Attributes {
 
 			return total;
 		} catch (Exception e) {
+			logger.error("Cannot determine size", e);
 			return -1;
 		}
 	}
