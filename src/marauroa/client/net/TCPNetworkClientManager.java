@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.24 2009/06/03 13:35:57 astridemma Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.25 2009/06/14 12:20:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -380,7 +380,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 				} catch (IOException e) {
 					// TODO: Notify upper layers about connection broken
 					/* Report the exception */
-					logger.debug("Connection broken.", e);
+					logger.warn("Connection broken.");
 					connected=false;
 					keepRunning = false;
 				}
