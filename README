@@ -114,6 +114,7 @@ Changelog
 ---------
 2.6.3
 - fixed a NullPointerException in modify() when the zone does not exist (anymore)
+- improved error messages in exception
 
 2.6.2
 - changed zones to ConcurrentHashmap to accomodate the needs of multi threading and changing number of zones
