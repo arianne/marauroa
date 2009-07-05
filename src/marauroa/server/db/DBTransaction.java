@@ -128,7 +128,6 @@ public class DBTransaction {
 		databaseAdapter.execute(sql);
 	}	
 
-
     /**
      * queries the database
      *
@@ -139,5 +138,17 @@ public class DBTransaction {
 	public ResultSet query(String query, Map<String, Object> params) throws SQLException {
 		String sql = subst(query, params);
 		return databaseAdapter.query(sql);
+	}
+
+    /**
+     * queries the database and returns the first column in the first row as integer (for example for a count(*)).
+     *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @throws SQLException in case of an database error 
+     */
+	public int querySingleCellInt(String query, Map<String, Object> params) throws SQLException {
+		String sql = subst(query, params);
+		return databaseAdapter.querySingleCellInt(sql);
 	}	
 }
