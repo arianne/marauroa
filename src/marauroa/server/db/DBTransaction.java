@@ -1,6 +1,6 @@
 package marauroa.server.db;
 
-import java.util.Properties;
+import marauroa.server.db.adapter.DatabaseAdapter;
 
 /**
  * a database transaction
@@ -8,8 +8,13 @@ import java.util.Properties;
  * @author hendrik
  */
 public class DBTransaction {
-	
-	public DBTransaction(Properties prop) {
+
+	/**
+	 * creates a new DBTransaction
+	 *
+	 * @param databaseAdapter database adapter for accessing the database
+	 */
+	protected DBTransaction(DatabaseAdapter databaseAdapter) {
 		// TODO
 	}
 

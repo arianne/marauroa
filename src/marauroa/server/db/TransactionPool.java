@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 public class TransactionPool {
     private static Logger logger = Logger.getLogger(TransactionPool.class);
     private static TransactionPool dbtransactionPool = null;
+    private AdapterFactory factory = null;
     private Object wait = new Object();
     private Properties params = new Properties();
     private int count = 10;
@@ -24,12 +25,13 @@ public class TransactionPool {
     /**
      * creates a DBTransactionPool
      *
-     * @param initProps initProps
+     * @param connfiguration connfiguration
      */
-    public TransactionPool(Properties configuration) {
-    	params = configuration;
+    public TransactionPool(Properties connfiguration) {
+    	params = connfiguration;
         count = Integer.parseInt(params.getProperty("count"));
         TransactionPool.dbtransactionPool = this;
+        factory = new AdapterFactory(connfiguration);
     }
 
     public static synchronized TransactionPool getDBTransactionPool() {
@@ -38,7 +40,7 @@ public class TransactionPool {
 
     private void createMinimumDBTransactions() {
         while (dbtransactions.size() < count) {
-            DBTransaction dbtransaction = new DBTransaction(params);
+            DBTransaction dbtransaction = new DBTransaction(factory.create());
             dbtransactions.add(dbtransaction);
             freeDBTransactions.add(dbtransaction);
         }
