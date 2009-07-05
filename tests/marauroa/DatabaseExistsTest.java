@@ -1,4 +1,4 @@
-/* $Id: DatabaseExistsTest.java,v 1.5 2008/02/22 10:28:34 arianne_rpg Exp $ */
+/* $Id: DatabaseExistsTest.java,v 1.6 2009/07/05 11:55:07 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -11,8 +11,6 @@
  *																		   *
  ***************************************************************************/
 package marauroa;
-
-import static org.junit.Assert.fail;
 
 import java.util.Properties;
 
@@ -38,7 +36,7 @@ public class DatabaseExistsTest {
 	}
 
 	@Test
-	public void checkDatabaseExists() {
+	public void checkDatabaseExists() throws Exception {
 		try {
 			Log4J.init("marauroa/server/log4j.properties");
 
@@ -52,8 +50,7 @@ public class DatabaseExistsTest {
 			IDatabase database = new TestJDBC(props);
 			database.close();
 		} catch (Exception e) {
-			fail("Database is not accessible. Please check \"marauroatest\" is created and that user \"junittest\" with password \"passwd\" can access it.");			
-			System.exit(1);
+			throw new Exception("Database is not accessible. Please check \"marauroatest\" is created and that user \"junittest\" with password \"passwd\" can access it.", e);
 		}
 	}
 }
