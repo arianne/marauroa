@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.39 2008/06/03 17:54:03 arianne_rpg Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.40 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -239,7 +239,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 				queue.put(new DataEvent(channel, dataCopy));
 			} catch (InterruptedException e) {
 				/* This is never going to happen */
-				logger.fatal("Not expected",e);
+				logger.error("Not expected",e);
 			}
 		}
 	}

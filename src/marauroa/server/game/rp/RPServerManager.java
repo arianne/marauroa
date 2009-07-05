@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.53 2009/06/05 18:59:29 astridemma Exp $ */
+/* $Id: RPServerManager.java,v 1.54 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -535,7 +535,7 @@ public class RPServerManager extends Thread {
 				timeEnds[10] = System.currentTimeMillis();
 			}
 		} catch (Throwable e) {
-			logger.fatal("Unhandled exception, server will shut down.", e);
+			logger.error("Unhandled exception, server will shut down.", e);
 		} finally {
 			isfinished = true;
 		}

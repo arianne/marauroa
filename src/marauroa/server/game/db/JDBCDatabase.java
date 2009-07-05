@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.72 2008/10/13 18:33:28 kymara Exp $ */
+/* $Id: JDBCDatabase.java,v 1.73 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -102,7 +102,7 @@ public class JDBCDatabase implements IDatabase {
 		try {
 	        conn.close();
         } catch (SQLException e) {
-			logger.fatal("Exception while closing the database connection", e);
+			logger.error("Exception while closing the database connection", e);
 			throw new NoDatabaseConfException(e);
         }
 	}
@@ -134,7 +134,7 @@ public class JDBCDatabase implements IDatabase {
 		try {
 			conf = Configuration.getConfiguration();
 		} catch (Exception e) {
-			logger.fatal("Unable to locate Configuration file: "
+			logger.error("Unable to locate Configuration file: "
 			        + Configuration.getConfigurationFile(), e);
 			throw new NoDatabaseConfException();
 		}
@@ -175,7 +175,7 @@ public class JDBCDatabase implements IDatabase {
 			try {
 				Class.forName((String) connInfo.get("jdbc_class")).newInstance();
 			} catch (Exception e) {
-				logger.fatal("Unable to create Driver class: " + connInfo.get("jdbc_class"), e);
+				logger.error("Unable to create Driver class: " + connInfo.get("jdbc_class"), e);
 				throw new NoDatabaseConfException(e);
 			}
 
@@ -197,7 +197,7 @@ public class JDBCDatabase implements IDatabase {
 
 			return conn;
 		} catch (SQLException e) {
-			logger.fatal("Unable to create a connection to: " + connInfo.get("jdbc_url"), e);
+			logger.error("Unable to create a connection to: " + connInfo.get("jdbc_url"), e);
 			throw new NoDatabaseConfException(e);
 		}
 	}

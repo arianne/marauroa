@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.74 2009/06/27 20:14:15 kymara Exp $ */
+/* $Id: marauroad.java,v 1.75 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -332,7 +332,7 @@ public class marauroad extends Thread {
 			netMan = new marauroa.server.net.nio.NIONetworkServerManager();
 			netMan.start();
 		} catch (Exception e) {
-			logger.fatal("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
+			logger.error("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
 					+ "- You are already running a copy of Marauroa on the same TCP port\n"
 					+ "- You haven't specified a valid configuration file\n"
 					+ "- You haven't create database\n"
@@ -344,7 +344,7 @@ public class marauroad extends Thread {
 			rpMan = new RPServerManager(netMan);
 			rpMan.start();
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 							"Marauroa can't create RPServerManager.\n"
 									+ "Reasons:\n"
 									+ "- You haven't specified a valid configuration file\n"
@@ -361,7 +361,7 @@ public class marauroad extends Thread {
 			gameMan = new GameServerManager(key, netMan, rpMan);			
 			gameMan.start();
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 							"Marauroa can't create GameServerManager.\n"
 									+ "Reasons:\n"
 									+ "- You haven't specified a valid configuration file\n"

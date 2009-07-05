@@ -1,4 +1,4 @@
-/* $Id: PingClient.java,v 1.1 2008/03/25 17:51:15 arianne_rpg Exp $ */
+/* $Id: PingClient.java,v 1.2 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -161,7 +161,7 @@ public class PingClient extends ClientFramework {
 	    try {
 	        handler.apply(message, objects);
         } catch (Exception e) {
-        	logger.fatal(e);
+        	logger.error(e);
         }	    
     }
 

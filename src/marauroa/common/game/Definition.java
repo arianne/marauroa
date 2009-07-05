@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.23 2007/11/04 11:32:31 nhnb Exp $ */
+/* $Id: Definition.java,v 1.24 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -470,7 +470,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		break;
 	        	default:
 	        		/* NOTE: Must never happen */
-	        		logger.fatal("got unknown attribute(" + name + ") type:" + type);
+	        		logger.error("got unknown attribute(" + name + ") type:" + type);
 	        		break;
 	        }
         } catch (IOException e) {

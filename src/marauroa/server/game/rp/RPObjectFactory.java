@@ -1,4 +1,4 @@
-/* $Id: RPObjectFactory.java,v 1.7 2008/02/22 10:28:33 arianne_rpg Exp $ */
+/* $Id: RPObjectFactory.java,v 1.8 2009/07/05 11:55:38 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -49,7 +49,7 @@ public class RPObjectFactory {
 
 	        return get(factoryName);
         } catch (Exception e) {
-        	logger.fatal("Can't create factory", e);
+        	logger.error("Can't create factory", e);
         	throw new NoFactoryConfException(e);
         }
 	}
@@ -71,7 +71,7 @@ public class RPObjectFactory {
 	        java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getFactory");
 	        return (RPObjectFactory) singleton.invoke(null);
         } catch (Exception e) {
-        	logger.fatal("Can't create factory("+factoryName+")", e);
+        	logger.error("Can't create factory("+factoryName+")", e);
         	throw new NoFactoryConfException(e);
         }
 	}
