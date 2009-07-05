@@ -12,4 +12,14 @@ public class DBTransaction {
 	public DBTransaction(Properties prop) {
 		// TODO
 	}
+
+	protected void commit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void rollback() {
+		// TODO Auto-generated method stub
+		
+	}
 }

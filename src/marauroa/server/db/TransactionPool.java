@@ -44,7 +44,7 @@ public class TransactionPool {
         }
     }
 
-    public DBTransaction getDBTransaction() {
+    public DBTransaction beginWork() {
         DBTransaction dbtransaction = null;
         while (dbtransaction == null) {
             synchronized (wait) {
@@ -67,6 +67,16 @@ public class TransactionPool {
         return dbtransaction;
     }
 
+    public void commit(DBTransaction dbtransaction) {
+    	dbtransaction.commit();
+    	freeDBTransaction(dbtransaction);
+    }
+
+    public void rollback(DBTransaction dbtransaction) {
+    	dbtransaction.rollback();
+    	freeDBTransaction(dbtransaction);
+    }
+    
     public void freeDBTransaction(DBTransaction dbtransaction) {
         logger.debug("freeDBTransaction: " + dbtransaction, new Throwable());
         if (dbtransactions.contains(dbtransaction)) {
