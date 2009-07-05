@@ -75,6 +75,9 @@ public class DBTransaction {
      * @throws SQLException in case of an sql injection attack
      */
     public String subst(String sql, Map<String, ?> params) throws SQLException {
+    	if (params == null) {
+    		return sql;
+    	}
         StringBuffer res = new StringBuffer();
         StringTokenizer st = new StringTokenizer(sql, "([]'", true);
         String lastToken = "";
