@@ -1,5 +1,6 @@
 package marauroa.server.db;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -113,5 +114,30 @@ public class DBTransaction {
             res.append(token);
         }
         return res.toString();
-    }	
+    }
+
+    /**
+     * executes an SQL statement with parameter substituion
+     *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @throws SQLException in case of an database error 
+     */
+	public void execute(String query, Map<String, Object> params) throws SQLException {
+		String sql = subst(query, params);
+		databaseAdapter.execute(sql);
+	}	
+
+
+    /**
+     * queries the database
+     *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @throws SQLException in case of an database error 
+     */
+	public ResultSet query(String query, Map<String, Object> params) throws SQLException {
+		String sql = subst(query, params);
+		return databaseAdapter.query(sql);
+	}	
 }
