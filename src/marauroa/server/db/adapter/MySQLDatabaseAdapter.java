@@ -1,8 +1,14 @@
 package marauroa.server.db.adapter;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import marauroa.server.db.DatabaseConnectionException;
@@ -15,6 +21,9 @@ import marauroa.server.db.DatabaseConnectionException;
 public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	private Connection connection;
 
+	private LinkedList<Statement> statements = null;
+	private LinkedList<ResultSet> resultSets = null;
+
 	/**
 	 * creates a new MySQLDatabaseAdapter
 	 *
@@ -23,6 +32,8 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	 */
 	public MySQLDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
 		this.connection = createConnection(connInfo);
+		this.statements = new LinkedList<Statement>();
+		this.resultSets = new LinkedList<ResultSet>();
 	}
 
 	/**
@@ -58,10 +69,88 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public void commit() throws SQLException {
+		close();
 		connection.commit();
 	}
 
 	public void rollback() throws SQLException {
+		close();
 		connection.rollback();
+	}
+
+
+	public int execute(String sql) throws SQLException {
+		int res = -2;
+		Statement statement = connection.createStatement();
+		boolean resultType = statement.execute(sql);
+		if (!resultType) {
+			res = statement.getUpdateCount();
+		}
+		statement.close();
+		return res;
+	}
+
+	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		int i = 1; // yes, jdbc starts counting at 1.
+		for (InputStream inputStream : inputStreams) {
+			statement.setBinaryStream(i, inputStream, inputStream.available());
+			i++;
+		}
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		int i = 1; // yes, jdbc starts counting at 1.
+		for (InputStream inputStream : inputStreams) {
+			statement.setBinaryStream(i, inputStream, inputStream.available());
+			statement.executeUpdate();
+		}
+		statement.close();
+	}
+
+	public ResultSet query(String sql) throws SQLException {
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(sql);
+		addToGarbageLists(stmt, resultSet);
+		return resultSet;
+	}
+
+	public int querySingleCellInt(String sql) throws SQLException {
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(sql);
+		resultSet.next();
+		int res = resultSet.getInt(1);
+		resultSet.close();
+		stmt.close();
+		return res;
+	}
+
+	/**
+	 * Stores open statements and resultSets in garbages lists, so that
+	 * they can be closed with one single close()-method
+	 *
+	 * @param statement Statement
+	 * @param resultSet ResultSet
+	 */
+	void addToGarbageLists(Statement statement, ResultSet resultSet) {
+		statements.add(statement);
+		resultSets.add(resultSet);
+	}
+
+	private void close() throws SQLException {
+		// Note: Some JDBC drivers like Informix require resultSet.close() 
+		// before statement.close() although the second one is supposed to
+		// close open ResultSets by itself according to the API doc.
+		for (ResultSet resultSet : resultSets) {
+			resultSet.close();
+		}
+		for (Statement statement : statements) {
+			statement.close();
+		}
+		resultSets.clear();
+		statements.clear();
 	}
 }
