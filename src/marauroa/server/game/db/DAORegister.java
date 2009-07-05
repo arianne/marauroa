@@ -11,7 +11,7 @@ import java.util.Map;
 public class DAORegister {
 
 	private Map<Class<?>, Object> register = new HashMap<Class<?>, Object>();
-	private DAORegister instance;
+	private static DAORegister instance;
 
 	private DAORegister() {
 		// hide constructor, this is a Singleton
@@ -22,7 +22,7 @@ public class DAORegister {
 	 *
 	 * @return DAORegister
 	 */
-	public DAORegister get() {
+	public static DAORegister get() {
 		if (instance == null) {
 			instance = new DAORegister();
 		}
