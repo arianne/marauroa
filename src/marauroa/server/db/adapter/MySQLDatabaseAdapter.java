@@ -56,4 +56,12 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 			throw new DatabaseConnectionException("Unable to create a connection to: " + connInfo.get("jdbc_url"), e);
 		}
 	}
+
+	public void commit() throws SQLException {
+		connection.commit();
+	}
+
+	public void rollback() throws SQLException {
+		connection.rollback();
+	}
 }

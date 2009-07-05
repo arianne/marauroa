@@ -1,10 +1,12 @@
 package marauroa.server.db;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 
 /**
  * Connection Pool.
@@ -12,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author hendrik
  */
 public class TransactionPool {
-    private static Logger logger = Logger.getLogger(TransactionPool.class);
+    private static Logger logger = Log4J.getLogger(TransactionPool.class);
     private static TransactionPool dbtransactionPool = null;
     private AdapterFactory factory = null;
     private Object wait = new Object();
@@ -69,8 +71,13 @@ public class TransactionPool {
         return dbtransaction;
     }
 
-    public void commit(DBTransaction dbtransaction) {
-    	dbtransaction.commit();
+    public void commit(DBTransaction dbtransaction) throws SQLException {
+    	try {
+			dbtransaction.commit();
+		} catch (SQLException e) {
+			freeDBTransaction(dbtransaction);
+			throw e;
+		}
     	freeDBTransaction(dbtransaction);
     }
 
