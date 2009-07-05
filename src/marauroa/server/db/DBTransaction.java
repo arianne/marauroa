@@ -1,9 +1,6 @@
 package marauroa.server.db;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -24,8 +21,6 @@ public class DBTransaction {
     private static Logger logger = Log4J.getLogger(DBTransaction.class);
 
 	private DatabaseAdapter databaseAdapter = null;
-	private LinkedList<Statement> statements = null;
-	private LinkedList<ResultSet> resultSets = null;
     private RE reInt;
     private RE reIntList;
 
