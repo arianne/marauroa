@@ -1,5 +1,7 @@
 package marauroa.server.db;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
@@ -132,6 +134,20 @@ public class DBTransaction {
 	}	
 
     /**
+     * executes an SQL statement with parameter substituion
+     *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @param inStream input streams to stream into "?" columns
+     * @throws SQLException in case of an database error 
+     * @throws IOException in case of an input/output error
+     */
+	public void execute(String query, Map<String, Object> params, InputStream... inStream) throws SQLException, IOException {
+		String sql = subst(query, params);
+		databaseAdapter.execute(sql, inStream);
+	}
+
+    /**
      * queries the database
      *
      * @param query   SQL statement
@@ -153,5 +169,6 @@ public class DBTransaction {
 	public int querySingleCellInt(String query, Map<String, Object> params) throws SQLException {
 		String sql = subst(query, params);
 		return databaseAdapter.querySingleCellInt(sql);
-	}	
+	}
+
 }

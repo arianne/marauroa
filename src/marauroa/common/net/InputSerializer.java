@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.11 2007/11/10 18:46:37 arianne_rpg Exp $ */
+/* $Id: InputSerializer.java,v 1.12 2009/07/06 18:27:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -288,5 +288,14 @@ public class InputSerializer {
 			buffer[i] = readString();
 		}
 		return buffer;
+	}
+
+	/**
+	 * closes the underlying input stream
+	 *
+	 * @throws IOException in case of an input/output error
+	 */
+	public void close() throws IOException {
+		in.close();
 	}
 }

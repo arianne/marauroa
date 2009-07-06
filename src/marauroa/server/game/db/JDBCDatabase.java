@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.75 2009/07/06 18:19:05 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.76 2009/07/06 18:27:53 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -765,13 +765,13 @@ public class JDBCDatabase implements IDatabase {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer inser = new InputSerializer(szlib);
+			InputSerializer inSer = new InputSerializer(szlib);
 
-			int amount = inser.readInt();
+			int amount = inSer.readInt();
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
+					RPObject object = factory.transform((RPObject) inSer.readObject(new RPObject()));
 
 					if (object != null) {
 						/* Give the object a valid id and add it */
@@ -782,6 +782,7 @@ public class JDBCDatabase implements IDatabase {
 					logger.error("Problem loading RPZone: ", e);
 				}
 			}
+			inSer.close();
 		}
 	}
 
@@ -1144,12 +1145,13 @@ public class JDBCDatabase implements IDatabase {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer inser = new InputSerializer(szlib);
+			InputSerializer inSer = new InputSerializer(szlib);
 
 			RPObject object = null;
 
-			object = factory.transform((RPObject) inser.readObject(new RPObject()));
+			object = factory.transform((RPObject) inSer.readObject(new RPObject()));
 			object.put("#db_id", objectid);
+			inSer.close();
 
 			return object;
 		}

@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.37 2008/06/01 17:27:59 arianne_rpg Exp $ */
+/* $Id: MessageFactory.java,v 1.38 2009/07/06 18:27:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -198,6 +198,7 @@ public class MessageFactory {
 
 					tmp.readObject(s);
 					tmp.setSocketChannel(channel);
+					s.close();
 					return tmp;
 				} catch (Exception e) {
 					logger.error("error in getMessage", e);
