@@ -62,13 +62,13 @@ public class RPZoneDAO {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer inser = new InputSerializer(szlib);
+			InputSerializer insert = new InputSerializer(szlib);
 
-			int amount = inser.readInt();
+			int amount = insert.readInt();
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
+					RPObject object = factory.transform((RPObject) insert.readObject(new RPObject()));
 
 					if (object != null) {
 						/* Give the object a valid id and add it */
