@@ -1,4 +1,4 @@
-/* $Id: JDBCDatabase.java,v 1.74 2009/07/06 18:13:44 nhnb Exp $ */
+/* $Id: JDBCDatabase.java,v 1.75 2009/07/06 18:19:05 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -765,13 +765,13 @@ public class JDBCDatabase implements IDatabase {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer insert = new InputSerializer(szlib);
+			InputSerializer inser = new InputSerializer(szlib);
 
-			int amount = insert.readInt();
+			int amount = inser.readInt();
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObject object = factory.transform((RPObject) insert.readObject(new RPObject()));
+					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
 
 					if (object != null) {
 						/* Give the object a valid id and add it */
@@ -1144,11 +1144,11 @@ public class JDBCDatabase implements IDatabase {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer insert = new InputSerializer(szlib);
+			InputSerializer inser = new InputSerializer(szlib);
 
 			RPObject object = null;
 
-			object = factory.transform((RPObject) insert.readObject(new RPObject()));
+			object = factory.transform((RPObject) inser.readObject(new RPObject()));
 			object.put("#db_id", objectid);
 
 			return object;

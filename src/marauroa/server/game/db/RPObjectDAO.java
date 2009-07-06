@@ -57,11 +57,11 @@ public class RPObjectDAO {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer insert = new InputSerializer(szlib);
+			InputSerializer inser = new InputSerializer(szlib);
 
 			RPObject object = null;
 
-			object = factory.transform((RPObject) insert.readObject(new RPObject()));
+			object = factory.transform((RPObject) inser.readObject(new RPObject()));
 			object.put("#db_id", objectid);
 
 			return object;
