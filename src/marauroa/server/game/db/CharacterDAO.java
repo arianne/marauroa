@@ -11,6 +11,7 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 
 /**
  * @author hendrik
@@ -221,5 +222,93 @@ public class CharacterDAO {
 			logger.warn("Error loading character: " + character, e);
 			throw e;
 		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public void addCharacter(String username, String character, RPObject player) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addCharacter(transaction, username, character, player);
+		TransactionPool.get().commit(transaction);
+	}
+
+	public boolean removeCharacter(String username, String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = removeCharacter(transaction, username, character);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean hasCharacter(String username, String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = hasCharacter(transaction, username, character);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public List<String> getCharacters(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		List<String>  res = getCharacters(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	/**
+ 	 * This method stores a character's avatar in the database and updates the link
+ 	 * with the Character table.
+	 *
+	 * @param username
+	 *            the player's username
+	 * @param character
+	 *            the player's character name
+	 * @param player
+	 *            the RPObject itself.
+	 * @throws SQLException
+	 *             if there is any problem at database.
+	 * @throws IOException
+	 */
+	public void storeCharacter(String username, String character, RPObject player) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		storeCharacter(transaction, username, character, player);
+		TransactionPool.get().commit(transaction);
+	}
+
+	/**
+ 	 * This method loads the character's avatar associated with this
+ 	 * character from the database.
+	 *
+	 * @param username
+	 *            the player's username
+	 * @param character
+	 *            the player's character name
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 */
+	public RPObject loadCharacter(String username, String character) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		RPObject res = loadCharacter(transaction, username, character);
+		TransactionPool.get().commit(transaction);
+		return res;
 	}
 }

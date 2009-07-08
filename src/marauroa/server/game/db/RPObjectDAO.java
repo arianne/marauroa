@@ -19,6 +19,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.RPObjectFactory;
 
 public class RPObjectDAO {
@@ -30,8 +31,7 @@ public class RPObjectDAO {
 		this.factory = factory;
 	}
 	
-	protected RPObject loadRPObject(DBTransaction transaction, int objectid) throws SQLException, IOException {
-
+	public RPObject loadRPObject(DBTransaction transaction, int objectid) throws SQLException, IOException {
 		String query = "select data from rpobject where object_id=[objectid]";
 		logger.debug("loadRPObject is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -70,7 +70,7 @@ public class RPObjectDAO {
 		return null;
 	}
 
-	protected int removeRPObject(DBTransaction transaction, int objectid) throws SQLException {
+	public int removeRPObject(DBTransaction transaction, int objectid) throws SQLException {
 		String query = "delete from rpobject where object_id=[objectid]";
 		logger.debug("removeRPObject is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -81,7 +81,7 @@ public class RPObjectDAO {
 		return objectid;
 	}
 
-	protected boolean hasRPObject(DBTransaction transaction, int objectid) throws SQLException {
+	public boolean hasRPObject(DBTransaction transaction, int objectid) throws SQLException {
 		String query = "select count(*) as amount from rpobject where object_id=[objectid]";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("objectid", objectid);
@@ -92,7 +92,7 @@ public class RPObjectDAO {
 		return count > 0;
 	}
 
-	protected int storeRPObject(DBTransaction transaction, RPObject object) throws IOException, SQLException {
+	public int storeRPObject(DBTransaction transaction, RPObject object) throws IOException, SQLException {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
@@ -139,5 +139,33 @@ public class RPObjectDAO {
 		}
 
 		return object_id;
+	}
+
+	public RPObject loadRPObject(int objectid) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		RPObject res = loadRPObject(transaction, objectid);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public int removeRPObject(int objectid) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		int res = removeRPObject(transaction, objectid);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean hasRPObject(int objectid) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = hasRPObject(transaction, objectid);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public int storeRPObject(RPObject object) throws IOException, SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		int res = storeRPObject(transaction, object);
+		TransactionPool.get().commit(transaction);
+		return res;
 	}
 }

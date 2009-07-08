@@ -6,6 +6,7 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 
 public class GameEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameEventDAO.class);
@@ -35,6 +36,16 @@ public class GameEventDAO {
 			transaction.execute(query, sqlParams);
 		} catch (SQLException sqle) {
 			logger.warn("Error adding game event: " + event, sqle);
+		}
+	}
+
+	public void addGameEvent(String source, String event, String... params) {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addGameEvent(transaction, source, event, params);
+		try {
+			TransactionPool.get().commit(transaction);
+		} catch (SQLException e) {
+			logger.warn("Error adding game event: " + event, e);
 		}
 	}
 

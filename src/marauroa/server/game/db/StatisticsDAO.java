@@ -6,6 +6,7 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.Statistics.Variables;
 
 public class StatisticsDAO {
@@ -25,4 +26,13 @@ public class StatisticsDAO {
 		}
 	}
 
+	public void addStatisticsEvent(Variables var) {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addStatisticsEvent(transaction, var);
+		try {
+			TransactionPool.get().commit(transaction);
+		} catch (SQLException e) {
+			logger.error(e, e);
+		}
+	}
 }

@@ -12,6 +12,7 @@ import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.net.validator.InetAddressMask;
 
@@ -306,5 +307,92 @@ public class AccountDAO {
 			logger.error("Can't remove player\"" + username + "\" from database", e);
 			throw e;
 		}
+	}
+
+	public void addPlayer(String username, byte[] password, String email) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addPlayer(transaction, username, password, email);
+		TransactionPool.get().commit(transaction);
+	}
+
+	public String generatePlayer(String pattern) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		String res = generatePlayer(transaction, pattern);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public void changeEmail(String username, String email) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		changeEmail(transaction, username, email);
+		TransactionPool.get().commit(transaction);
+	}
+
+	public void changePassword(String username, String password) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		changePassword(transaction, username, password);
+		TransactionPool.get().commit(transaction);
+	}
+	
+	public boolean hasPlayer(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = hasPlayer(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public void setAccountStatus(String username, String status) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		setAccountStatus(transaction, username, status);
+		TransactionPool.get().commit(transaction);
+	}
+
+	public String getAccountStatus(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		String res = getAccountStatus(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public String getEmail(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		String res = getEmail(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+	
+	public int getDatabasePlayerId(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		int res = getDatabasePlayerId(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean isAccountBlocked(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = isAccountBlocked(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean verify(PlayerEntry.SecuredLoginInfo informations) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = verify(transaction, informations);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public List<InetAddressMask> getBannedAddresses() throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		List<InetAddressMask> res = getBannedAddresses(transaction);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean removePlayer(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = removePlayer(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
 	}
 }

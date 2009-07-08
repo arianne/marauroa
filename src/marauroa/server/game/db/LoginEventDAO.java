@@ -10,6 +10,7 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 
 public class LoginEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginEventDAO.class);
@@ -112,5 +113,20 @@ public class LoginEventDAO {
 			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
+	}
+
+
+
+	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addLoginEvent(transaction, username, source, correctLogin);
+		TransactionPool.get().commit(transaction);
+	}
+	
+	public List<String> getLoginEvents(String username, int events) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		List<String> res = getLoginEvents(transaction, username, events);
+		TransactionPool.get().commit(transaction);
+		return res;
 	}
 }

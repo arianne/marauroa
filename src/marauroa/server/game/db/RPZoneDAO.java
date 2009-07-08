@@ -20,6 +20,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.RPObjectFactory;
 
 public class RPZoneDAO {
@@ -130,11 +131,31 @@ public class RPZoneDAO {
 		transaction.execute(query, params, inStream);
 	}
 
-	protected boolean hasRPZone(DBTransaction transaction, IRPZone.ID zone) throws SQLException {
+	public boolean hasRPZone(DBTransaction transaction, IRPZone.ID zone) throws SQLException {
 		String query = "SELECT count(*) as amount FROM rpzone where zone_id='[zoneid]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("zoneid", zone.getID());
 		int count = transaction.querySingleCellInt(query, params);
 		return count > 0;
+	}
+
+
+	public void loadRPZone(IRPZone zone) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		loadRPZone(transaction, zone);
+		TransactionPool.get().commit(transaction);		
+	}
+
+	public void storeRPZone(IRPZone zone) throws IOException, SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		storeRPZone(transaction, zone);
+		TransactionPool.get().commit(transaction);	
+	}
+
+	public boolean hasRPZone(IRPZone.ID zone) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = hasRPZone(transaction, zone);
+		TransactionPool.get().commit(transaction);
+		return res;
 	}
 }
