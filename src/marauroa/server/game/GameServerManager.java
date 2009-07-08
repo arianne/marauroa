@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.115 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.116 2009/07/08 20:18:05 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -285,6 +285,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		}
 
+		@Override
 		public void run() {
 			while (keepRunning) {
 				SocketChannel channel = null;
