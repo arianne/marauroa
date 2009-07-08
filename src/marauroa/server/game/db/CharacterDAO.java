@@ -52,11 +52,6 @@ public class CharacterDAO {
 	public boolean removeCharacter(DBTransaction transaction, String username, String character)
 	        throws SQLException {
 		try {
-			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
-				throw new SQLException("Invalid string username=(" + username + ") character=("
-				        + character + ")");
-			}
-
 			int player_id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 
 			String query = "select object_id from characters where player_id=[player_id] and charname='[character]'";
@@ -88,10 +83,6 @@ public class CharacterDAO {
 	public boolean hasCharacter(DBTransaction transaction, String username, String character)
 	        throws SQLException {
 		try {
-			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
-				throw new SQLException("Invalid string username=(" + username + ") character=("
-				        + character + ")");
-			}
 
 			/*
 			 * NOTE: 
@@ -113,10 +104,6 @@ public class CharacterDAO {
 
 	public List<String> getCharacters(DBTransaction transaction, String username) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 			if (id == -1) {
 				/**
@@ -209,10 +196,6 @@ public class CharacterDAO {
 	public RPObject loadCharacter(DBTransaction transaction, String username, String character)
 	        throws SQLException, IOException {
 		try {
-			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
-				throw new SQLException("Invalid string username=(" + username + ") character=("
-				        + character + ")");
-			}
 
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 			String query = "select object_id from characters where charname='[character]' and player_id=[player_id]";

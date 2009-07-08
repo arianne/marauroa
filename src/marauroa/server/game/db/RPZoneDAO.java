@@ -33,9 +33,6 @@ public class RPZoneDAO {
 
 	public void loadRPZone(DBTransaction transaction, IRPZone zone) throws SQLException, IOException {
 		String zoneid = zone.getID().getID();
-		if (!StringChecker.validString(zoneid)) {
-			throw new SQLException("Invalid string zoneid=(" + zoneid + ")");
-		}
 
 		String query = "select data from rpzone where zone_id='[zoneid]'";
 		Map<String, Object> params = new HashMap<String, Object>();

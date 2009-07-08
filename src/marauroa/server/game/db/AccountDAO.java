@@ -113,10 +113,6 @@ public class AccountDAO {
 	
 	public boolean hasPlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			String query = "select count(*) as amount from  account where username like '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
@@ -133,10 +129,6 @@ public class AccountDAO {
 	public void setAccountStatus(DBTransaction transaction, String username, String status)
 	        throws SQLException {
 		try {
-			if (!StringChecker.validString(username) || !StringChecker.validString(status)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			String query = "update account set status='[status]' where username like '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
@@ -152,10 +144,6 @@ public class AccountDAO {
 
 	public String getAccountStatus(DBTransaction transaction, String username) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			String query = "select status from account where username like '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
@@ -178,10 +166,6 @@ public class AccountDAO {
 
 	public String getEmail(DBTransaction transaction, String username) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			String query = "select email from account where username like '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
@@ -201,10 +185,6 @@ public class AccountDAO {
 	}
 	
 	public int getDatabasePlayerId(DBTransaction transaction, String username) throws SQLException {
-		if (!StringChecker.validString(username)) {
-			throw new SQLException("Invalid string username=(" + username + ")");
-		}
-
 		String query = "select id from account where username like '[username]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
@@ -221,10 +201,6 @@ public class AccountDAO {
 	}
 
 	public boolean isAccountBlocked(DBTransaction transaction, String username) throws SQLException {
-		if (!StringChecker.validString(username)) {
-			throw new SQLException("Invalid string username=(" + username + ")");
-		}
-
 		int id = getDatabasePlayerId(transaction, username);
 		String query = "SELECT count(*) as amount FROM loginEvent where player_id=[player_id]"
 		        + " and result=0 and (now()-timedate)<"
@@ -254,10 +230,6 @@ public class AccountDAO {
 		if (password == null) {
 			logger.debug("Password is null");
 			return false;
-		}
-
-		if (!StringChecker.validString(informations.username)) {
-			throw new SQLException("Invalid string username=(" + informations.username + ")");
 		}
 
 		// check new Marauroa 2.0 password type
@@ -317,10 +289,6 @@ public class AccountDAO {
 
 	public boolean removePlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			/* We first remove any characters associated with this player. */
 			CharacterDAO characterDAO = DAORegister.get().get(CharacterDAO.class);
 			for (String character : characterDAO.getCharacters(transaction, username)) {

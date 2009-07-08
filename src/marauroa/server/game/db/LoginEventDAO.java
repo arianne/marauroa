@@ -17,10 +17,6 @@ public class LoginEventDAO {
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source,
 	        boolean correctLogin) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 
 			if (id == -1) {
@@ -85,13 +81,9 @@ public class LoginEventDAO {
 
 	public List<String> getLoginEvents(DBTransaction transaction, String username, int events) throws SQLException {
 		try {
-			if (!StringChecker.validString(username)) {
-				throw new SQLException("Invalid string username=(" + username + ")");
-			}
-
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 			if (id == -1) {
-				/**
+				/*
 				 * This should never happen as we should check previously that
 				 * player exists...
 				 */
