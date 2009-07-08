@@ -153,4 +153,9 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 		resultSets.clear();
 		statements.clear();
 	}
+
+	public int getLastInsertId(String table, String idcolumn) throws SQLException {
+		String query = "select LAST_INSERT_ID() as inserted_id";
+		return querySingleCellInt(query);
+	}
 }
