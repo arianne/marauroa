@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.64 2009/03/02 22:36:37 astridemma Exp $ */
+/* $Id: RPClass.java,v 1.65 2009/07/08 18:44:03 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -539,7 +539,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 			return def.getCode();
 		}
 
-		if (def == null && parent != null) {
+		if (parent != null) {
 			return parent.getCode(clazz, name);
 		}
 
