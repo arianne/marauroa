@@ -36,7 +36,7 @@ public class TransactionPool {
         factory = new AdapterFactory(connfiguration);
     }
 
-    public static synchronized TransactionPool getDBTransactionPool() {
+    public static synchronized TransactionPool get() {
         return dbtransactionPool;
     }
 
