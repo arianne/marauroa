@@ -130,9 +130,7 @@ public class RPObjectDAO {
 
 		// If object is new, get the objectid we gave it.
 		if (object_id == -1) {
-			query = "select LAST_INSERT_ID() as inserted_id";
-			logger.debug("storeRPObject is executing query " + query);
-			object_id = transaction.querySingleCellInt(query, null);
+			object_id = transaction.getLastInsertId("rpobject", "id");
 
 			// We alter the original object to add the proper db_id
 			object.put("#db_id", object_id);
