@@ -3,6 +3,8 @@ package marauroa.server.game.db;
 import java.util.HashMap;
 import java.util.Map;
 
+import marauroa.server.game.rp.RPObjectFactory;
+
 /**
  * registers data access objects, so that they can be overriden by a user of the framework.
  *
@@ -25,9 +27,11 @@ public class DAORegister {
 	public static DAORegister get() {
 		if (instance == null) {
 			instance = new DAORegister();
+			instance.registerDAOs();
 		}
 		return instance;
 	}
+
 
 	/**
 	 * registers a DAO
@@ -55,5 +59,21 @@ public class DAORegister {
 			throw new IllegalArgumentException("No DOA registered for class " + clazz);
 		}
 		return res;
+	}
+
+
+	/**
+	 * registers the core DAOs provided by mararuoa itself.
+	 */
+	private void registerDAOs() {
+		RPObjectFactory factory = RPObjectFactory.get();
+
+		register(AccountDAO.class, new AccountDAO());
+		register(CharacterDAO.class, new CharacterDAO());
+		register(GameEventDAO.class, new GameEventDAO());
+		register(LoginEventDAO.class, new LoginEventDAO());
+		register(RPObjectDAO.class, new RPObjectDAO(factory));
+		register(RPZoneDAO.class, new RPZoneDAO(factory));
+		register(StatisticsDAO.class, new StatisticsDAO());
 	}
 }
