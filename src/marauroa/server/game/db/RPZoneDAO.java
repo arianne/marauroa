@@ -125,7 +125,7 @@ public class RPZoneDAO {
 			query = "insert into rpzone(zone_id, data) values('[zoneid]',?)";
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("zoneid", zone.getID());
+		params.put("zoneid", zoneid);
 		logger.debug("storeRPZone is executing query " + query);
 
 		transaction.execute(query, params, inStream);
