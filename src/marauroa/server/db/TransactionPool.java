@@ -32,7 +32,7 @@ public class TransactionPool {
      */
     public TransactionPool(Properties connfiguration) {
     	params = connfiguration;
-        count = Integer.parseInt(params.getProperty("count"));
+        count = Integer.parseInt(params.getProperty("count", "4"));
         factory = new AdapterFactory(connfiguration);
     }
     
