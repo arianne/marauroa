@@ -69,12 +69,12 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public void commit() throws SQLException {
-		close();
+		closeStatements();
 		connection.commit();
 	}
 
 	public void rollback() throws SQLException {
-		close();
+		closeStatements();
 		connection.rollback();
 	}
 
@@ -140,7 +140,7 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 		resultSets.add(resultSet);
 	}
 
-	private void close() throws SQLException {
+	private void closeStatements() throws SQLException {
 		// Note: Some JDBC drivers like Informix require resultSet.close() 
 		// before statement.close() although the second one is supposed to
 		// close open ResultSets by itself according to the API doc.
@@ -157,5 +157,10 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	public int getLastInsertId(String table, String idcolumn) throws SQLException {
 		String query = "select LAST_INSERT_ID() as inserted_id";
 		return querySingleCellInt(query);
+	}
+
+	public void close() throws SQLException {
+		closeStatements();
+		connection.close();
 	}
 }

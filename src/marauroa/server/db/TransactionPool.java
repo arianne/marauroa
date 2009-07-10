@@ -22,7 +22,8 @@ public class TransactionPool {
     private int count = 10;
 
     private List<DBTransaction> dbtransactions = new LinkedList<DBTransaction>(); 
-    private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>(); 
+    private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>();
+	private boolean closed = false; 
 
     /**
      * creates a DBTransactionPool
@@ -49,6 +50,9 @@ public class TransactionPool {
     }
 
     public DBTransaction beginWork() {
+    	if (closed) {
+    		throw new RuntimeException("transaction pool has been closed");
+    	}
         DBTransaction dbtransaction = null;
         while (dbtransaction == null) {
             synchronized (wait) {
@@ -94,4 +98,14 @@ public class TransactionPool {
             logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
         }
     }
+
+    /**
+     * closes the transaction pool
+     */
+	public void close() {
+		closed  = true;
+		for (DBTransaction transaction : dbtransactions) {
+			transaction.close();
+		}
+	}
 }

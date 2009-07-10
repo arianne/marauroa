@@ -28,7 +28,7 @@ public class DBTransaction {
     private RE reIntList;
 
 	/**
-	 * creates a new DBTransaction
+	 * DO NOT CALL DIRECTLY.<!--sic--> Creates a new DBTransaction.
 	 *
 	 * @param databaseAdapter database adapter for accessing the database
 	 */
@@ -67,6 +67,16 @@ public class DBTransaction {
 		}
 	}
 
+	/**
+	 * closes the database connection
+	 */
+	protected void close() {
+		try {
+			databaseAdapter.close();
+		} catch (SQLException e) {
+			logger.error(e, e);
+		}
+	}
 
     /**
      * Replaces variables SQL-Statements and prevents SQL injection attacks

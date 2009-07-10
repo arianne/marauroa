@@ -38,5 +38,12 @@ public interface DatabaseAdapter {
 	 * @throws SQLException in case of an database error
 	 */
 	public int getLastInsertId(String table, String idcolumn) throws SQLException;
+
+	/**
+	 * closes the database connection
+	 *
+	 * @throws SQLException in case of an database error
+	 */
+	public void close() throws SQLException;
 	
 }
