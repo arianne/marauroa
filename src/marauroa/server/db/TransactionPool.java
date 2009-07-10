@@ -33,8 +33,14 @@ public class TransactionPool {
     public TransactionPool(Properties connfiguration) {
     	params = connfiguration;
         count = Integer.parseInt(params.getProperty("count"));
-        TransactionPool.dbtransactionPool = this;
         factory = new AdapterFactory(connfiguration);
+    }
+    
+    /**
+     * registers this TransactionPool as the global one.
+     */
+    public void registerGlobally() {
+        TransactionPool.dbtransactionPool = this;
     }
 
     public static synchronized TransactionPool get() {

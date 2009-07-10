@@ -28,7 +28,7 @@ public class DBTransaction {
     private RE reIntList;
 
 	/**
-	 * DO NOT CALL DIRECTLY.<!--sic--> Creates a new DBTransaction.
+	 * Creates a new DBTransaction.
 	 *
 	 * @param databaseAdapter database adapter for accessing the database
 	 */
