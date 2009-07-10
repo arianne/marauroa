@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.25 2007/12/29 22:01:06 martinfuchs Exp $ */
+/* $Id: Configuration.java,v 1.26 2009/07/10 22:52:29 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -191,4 +191,12 @@ public class Configuration {
 	    properties.clear();
 	}
 
+	/**
+	 * gets a copy of the configuration as Properties object
+	 *
+	 * @return Properties
+	 */
+	public Properties getAsProperties() {
+		return (Properties) properties.clone();
+	}
 }
