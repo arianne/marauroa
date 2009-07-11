@@ -1,9 +1,11 @@
 package marauroa.server.db;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -23,6 +25,8 @@ public class TransactionPool {
 
     private List<DBTransaction> dbtransactions = new LinkedList<DBTransaction>(); 
     private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>();
+    private ThreadLocal<Set<DBTransaction>> threadTransactions;
+
 	private boolean closed = false; 
 
     /**
@@ -84,6 +88,7 @@ public class TransactionPool {
                 }
 
                 dbtransaction = freeDBTransactions.remove(0);
+                addThreadTransaction(dbtransaction);
                 // TODO: check that the connection is still alive
             }
         }
@@ -119,11 +124,38 @@ public class TransactionPool {
     
     private void freeDBTransaction(DBTransaction dbtransaction) {
         logger.debug("freeDBTransaction: " + dbtransaction, new Throwable());
+        threadTransactions.get().remove(dbtransaction);
         if (dbtransactions.contains(dbtransaction)) {
             freeDBTransactions.add(dbtransaction);
         } else {
             logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
         }
+    }
+
+    private void addThreadTransaction(DBTransaction dbtransaction) {
+    	Set<DBTransaction> set = threadTransactions.get();
+    	if (set == null) {
+    		set = new HashSet<DBTransaction>();
+    		threadTransactions.set(set);
+    	}
+    	set.add(dbtransaction);
+    }
+
+    /**
+     * Kicks all transaction which where started in the current thread
+     */
+    public void kickHangingTransactionOfThisThread() {
+    	Set<DBTransaction> set = threadTransactions.get();
+    	if (set == null) {
+    		return;
+    	}
+    	for (DBTransaction dbtransaction : set) {
+    		dbtransaction.rollback();
+    		dbtransaction.close();
+    		dbtransactions.remove(dbtransaction);
+    		logger.error("Hanging transaction " + dbtransaction + " was kicked.");
+    	}
+    	set.clear();
     }
 
     /**
