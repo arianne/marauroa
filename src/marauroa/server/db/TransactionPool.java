@@ -96,7 +96,7 @@ public class TransactionPool {
     	freeDBTransaction(dbtransaction);
     }
     
-    public void freeDBTransaction(DBTransaction dbtransaction) {
+    private void freeDBTransaction(DBTransaction dbtransaction) {
         logger.debug("freeDBTransaction: " + dbtransaction, new Throwable());
         if (dbtransactions.contains(dbtransaction)) {
             freeDBTransactions.add(dbtransaction);
