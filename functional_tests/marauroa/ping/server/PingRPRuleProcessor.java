@@ -1,4 +1,4 @@
-/* $Id: PingRPRuleProcessor.java,v 1.1 2008/03/25 17:55:26 arianne_rpg Exp $ */
+/* $Id: PingRPRuleProcessor.java,v 1.2 2009/07/11 13:57:57 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -28,10 +28,13 @@ import marauroa.common.game.Result;
 import marauroa.common.net.message.TransferContent;
 import marauroa.functional.basic.BareRPWorld;
 import marauroa.functional.basic.TestHelper;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.JDBCSQLHelper;
+import marauroa.server.db.TransactionPool;
+import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.CharacterDAO;
+import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.DatabaseFactory;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.JDBCSQLHelper;
-import marauroa.server.game.db.Transaction;
 import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.game.rp.RPWorld;
@@ -42,7 +45,7 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(PingRPRuleProcessor.class);
 
-	private IDatabase db;
+	private TransactionPool transactionPool;
 
 	private RPWorld world;
 
@@ -51,17 +54,18 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	private RPServerManager rpman;
 
 	public PingRPRuleProcessor() {
-		db = DatabaseFactory.getDatabase();
+		new DatabaseFactory().initializeDatabase();
+		transactionPool = TransactionPool.get();
 		JDBCSQLHelper sql = JDBCSQLHelper.get();
 		world = BareRPWorld.get();
 
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			Transaction transaction = db.getTransaction();
-			transaction.begin();
 			sql.runDBScript(transaction, "marauroa/test/clear.sql");
 			sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
-			transaction.commit();
+			transactionPool.commit(transaction);
 		} catch (SQLException e) {
+			transactionPool.rollback(transaction);			
 			e.printStackTrace();
 			TestHelper.fail();
 		}
@@ -111,25 +115,19 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	 * Create an account for a player.
 	 */
 	public AccountResult createAccount(String username, String password, String email) {
-		Transaction trans = db.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			trans.begin();
-
-			if (db.hasPlayer(trans, username)) {
+			if (DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username)) {
 				logger.warn("Account already exist: " + username);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 
-			db.addPlayer(trans, username, Hash.hash(password), email);
+			DAORegister.get().get(AccountDAO.class).addPlayer(transaction, username, Hash.hash(password), email);
 
-			trans.commit();
+			transactionPool.commit(transaction);
 			return new AccountResult(Result.OK_CREATED, username);
 		} catch (SQLException e) {
-			try {
-				trans.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			transactionPool.rollback(transaction);
 			TestHelper.fail();
 			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}
@@ -139,7 +137,7 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	 * Create a character for a player
 	 */
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
-		Transaction trans = db.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
 			/*
 			 * We filter too short character names.
@@ -153,19 +151,16 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 			player.put("name", character);
 			player.put("version", "0.00");
 
-			if (db.hasCharacter(trans, username, character)) {
+			if (DAORegister.get().get(CharacterDAO.class).hasCharacter(transaction, username, character)) {
 				logger.warn("Character already exist: " + character);
 				return new CharacterResult(Result.FAILED_PLAYER_EXISTS, character, player);
 			}
 
-			db.addCharacter(trans, username, character, player);
+			DAORegister.get().get(CharacterDAO.class).addCharacter(transaction, username, character, player);
+			transactionPool.commit(transaction);
 			return new CharacterResult(Result.OK_CREATED, character, player);
 		} catch (Exception e) {
-			try {
-				trans.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			transactionPool.rollback(transaction);
 			TestHelper.fail();
 			return new CharacterResult(Result.FAILED_EXCEPTION, character, template);
 		}
