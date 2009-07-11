@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.75 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.76 2009/07/11 13:54:47 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -23,10 +23,10 @@ import javax.management.ObjectName;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
+import marauroa.server.db.DatabaseConnectionException;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.db.DatabaseFactory;
-import marauroa.server.game.db.NoDatabaseConfException;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
 
@@ -242,8 +242,8 @@ public class marauroad extends Thread {
 		
 		// Check access to database is possible.
 		try {
-			DatabaseFactory.getDatabase();
-		} catch (NoDatabaseConfException e) {
+			new DatabaseFactory().initializeDatabase();
+		} catch (DatabaseConnectionException e) {
 			System.out.println("ERROR: Marauroa can't connect to database");
 			System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
 			System.exit(1);
