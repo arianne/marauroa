@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.76 2009/07/11 13:54:47 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.77 2009/07/11 14:07:04 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -153,7 +153,7 @@ public class marauroad extends Thread {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(marauroad.class);
 
 	/** Which marauroa version are we running */
-	private static final String VERSION = "2.6.3";
+	private static final String VERSION = "2.7";
 
 	/** Marauroa is a singleton. */
 	private static marauroad marauroa;
