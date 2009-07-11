@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.54 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.55 2009/07/11 22:12:55 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,6 +32,7 @@ import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.ActionInvalidException;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
@@ -452,7 +453,7 @@ public class RPServerManager extends Thread {
 			long stop;
 			long delay;
 			long timeStart = 0;
-			long[] timeEnds = new long[11];
+			long[] timeEnds = new long[12];
 
 			while (keepRunning) {
 				stop = System.nanoTime();
@@ -533,6 +534,8 @@ public class RPServerManager extends Thread {
 					//TODO: size is obviously ot threadsafe as it asks the underlying zone.objects for its sizes, which are not threadsafe.
 				}
 				timeEnds[10] = System.currentTimeMillis();
+				TransactionPool.get().kickHangingTransactionsOfThisThread();
+				timeEnds[11] = System.currentTimeMillis();
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);

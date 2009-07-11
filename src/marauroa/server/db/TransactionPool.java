@@ -144,7 +144,7 @@ public class TransactionPool {
     /**
      * Kicks all transaction which where started in the current thread
      */
-    public void kickHangingTransactionOfThisThread() {
+    public void kickHangingTransactionsOfThisThread() {
     	Set<DBTransaction> set = threadTransactions.get();
     	if (set == null) {
     		return;
