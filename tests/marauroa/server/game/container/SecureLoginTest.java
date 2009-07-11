@@ -1,4 +1,4 @@
-/* $Id: SecureLoginTest.java,v 1.7 2008/02/22 10:28:36 arianne_rpg Exp $ */
+/* $Id: SecureLoginTest.java,v 1.8 2009/07/11 13:56:59 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.sql.SQLException;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
+import marauroa.server.game.db.DatabaseFactory;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,9 +45,7 @@ public class SecureLoginTest {
 	 */
 	@BeforeClass
 	public static void setUp() throws IOException {
-		/*
-		 * Make sure database is initialized.
-		 */
+		new DatabaseFactory().initializeDatabase();
 		PlayerEntryContainer.getContainer();
 		loadRSAKey();
 	}
