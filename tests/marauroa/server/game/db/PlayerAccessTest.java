@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.5 2008/01/03 13:33:08 astridemma Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.6 2009/07/11 13:57:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -26,9 +26,12 @@ import java.util.Properties;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.SecureLoginTest;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,30 +43,11 @@ import org.junit.Test;
  * 
  */
 public class PlayerAccessTest {
+	private static TransactionPool transactionPool;
+	private static AccountDAO accountDAO;
 
 	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
-	 * instead JDBC Database and create a proper public constructor.
-	 * 
-	 * @author miguel
-	 * 
-	 */
-	static class TestJDBC extends JDBCDatabase {
-
-		public TestJDBC(Properties props) {
-			super(props);
-		}
-		
-		@Override
-		protected void initializeRPObjectFactory() {
-			factory=new marauroa.server.game.rp.RPObjectFactory();
-		}
-	}
-
-	private static TestJDBC database;
-
-	/**
-	 * Setup one time the database.
+	 * Setup one time the accountDAO.
 	 * 
 	 * @throws java.lang.Exception
 	 */
@@ -72,14 +56,25 @@ public class PlayerAccessTest {
 		Log4J.init("marauroa/server/log4j.properties");
 
 		Properties props = new Properties();
-
 		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
 
-		database = new TestJDBC(props);
+		transactionPool = new TransactionPool(props);
+		accountDAO = DAORegister.get().get(AccountDAO.class);
 	}
+
+	/**
+	 * Setup one time the accountDAO.
+	 * 
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void closeDatabase() throws Exception {
+		transactionPool.close();
+	}
+
 
 	/**
 	 * Test if create a player account works by adding it and making sure that
@@ -91,13 +86,12 @@ public class PlayerAccessTest {
 	public void addPlayer() throws SQLException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -116,27 +110,26 @@ public class PlayerAccessTest {
 
 		SecureLoginTest.loadRSAKey();
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
 
 			PlayerEntry.SecuredLoginInfo login = SecureLoginTest.simulateSecureLogin(username,
 			        "testPassword");
-			assertTrue(database.verify(transaction, login));
+			assertTrue(accountDAO.verify(transaction, login));
 
-			database.changePassword(transaction, username, "anewtestPassword");
+			accountDAO.changePassword(transaction, username, "anewtestPassword");
 
 			/*
 			 * To test if password is correct we need to use the Secure login
 			 * test unit
 			 */
 			login = SecureLoginTest.simulateSecureLogin(username, "anewtestPassword");
-			assertTrue(database.verify(transaction, login));
+			assertTrue(accountDAO.verify(transaction, login));
 
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -149,23 +142,21 @@ public class PlayerAccessTest {
 	public void doubleAddedPlayer() throws SQLException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-
-			if (database.hasPlayer(transaction, username)) {
+			if (accountDAO.hasPlayer(transaction, username)) {
 				fail("Player was not expected");
 			}
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 
-			if (!database.hasPlayer(transaction, username)) {
+			if (!accountDAO.hasPlayer(transaction, username)) {
 				fail("Player was expected");
 			}
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 
 			fail("Player was added");
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -179,15 +170,14 @@ public class PlayerAccessTest {
 	public void removePlayer() throws SQLException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-			database.removePlayer(transaction, username);
-			assertFalse(database.hasPlayer(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			accountDAO.removePlayer(transaction, username);
+			assertFalse(accountDAO.hasPlayer(transaction, username));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -200,14 +190,13 @@ public class PlayerAccessTest {
 	public void getStatus() throws SQLException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active", database.getAccountStatus(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertEquals("active", accountDAO.getAccountStatus(transaction, username));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -220,16 +209,15 @@ public class PlayerAccessTest {
 	public void setStatus() throws SQLException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertEquals("active", database.getAccountStatus(transaction, username));
-			database.setAccountStatus(transaction, username, "banned");
-			assertEquals("banned", database.getAccountStatus(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertEquals("active", accountDAO.getAccountStatus(transaction, username));
+			accountDAO.setAccountStatus(transaction, username, "banned");
+			assertEquals("banned", accountDAO.getAccountStatus(transaction, username));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -244,23 +232,22 @@ public class PlayerAccessTest {
 	public void blockAccountPlayer() throws SQLException, UnknownHostException {
 		String username = "testUser";
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
 
 			InetAddress address = InetAddress.getLocalHost();
 
-			assertFalse(database.isAccountBlocked(transaction, username));
+			assertFalse(accountDAO.isAccountBlocked(transaction, username));
 
 			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS + 1; i++) {
-				database.addLoginEvent(transaction, username, address, false);
+				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, false);
 			}
 
-			assertTrue(database.isAccountBlocked(transaction, username));
+			assertTrue(accountDAO.isAccountBlocked(transaction, username));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: CharacterAccessTest.java,v 1.3 2007/12/28 17:17:55 martinfuchs Exp $ */
+/* $Id: CharacterAccessTest.java,v 1.4 2009/07/11 13:57:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,10 @@ import java.util.Properties;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPObject;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,21 +41,9 @@ import org.junit.Test;
  */
 public class CharacterAccessTest {
 
-	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
-	 * instead JDBC Database and create a proper public constructor.
-	 * 
-	 * @author miguel
-	 * 
-	 */
-	static class TestJDBC extends JDBCDatabase {
-
-		public TestJDBC(Properties props) {
-			super(props);
-		}
-	}
-
-	private static TestJDBC database;
+	private static TransactionPool transactionPool;
+	private static AccountDAO accountDAO;
+	private static CharacterDAO characterDAO;
 
 	/**
 	 * Setup one time the database.
@@ -64,14 +55,27 @@ public class CharacterAccessTest {
 		Log4J.init("marauroa/server/log4j.properties");
 
 		Properties props = new Properties();
-
 		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
 
-		database = new TestJDBC(props);
+		transactionPool = new TransactionPool(props);
+		
+		accountDAO = DAORegister.get().get(AccountDAO.class);
+		characterDAO = DAORegister.get().get(CharacterDAO.class);
 	}
+
+	/**
+	 * Setup one time the database.
+	 * 
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void closeDatabase() throws Exception {
+		transactionPool.close();
+	}
+
 
 	/**
 	 * Add a character to a player account and test it existence with
@@ -86,15 +90,14 @@ public class CharacterAccessTest {
 		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-			database.addCharacter(transaction, username, character, player);
-			assertTrue(database.hasCharacter(transaction, username, character));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			characterDAO.addCharacter(transaction, username, character, player);
+			assertTrue(characterDAO.hasCharacter(transaction, username, character));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -110,19 +113,17 @@ public class CharacterAccessTest {
 		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-			database.addCharacter(transaction, username, character, player);
-			assertTrue(database.hasCharacter(transaction, username, character));
-			database.addCharacter(transaction, username, character, player);
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			characterDAO.addCharacter(transaction, username, character, player);
+			assertTrue(characterDAO.hasCharacter(transaction, username, character));
+			characterDAO.addCharacter(transaction, username, character, player);
 
 			fail("Character was added");
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -138,17 +139,16 @@ public class CharacterAccessTest {
 		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-			database.addCharacter(transaction, username, character, player);
-			assertTrue(database.hasCharacter(transaction, username, character));
-			database.removeCharacter(transaction, username, character);
-			assertFalse(database.hasCharacter(transaction, username, character));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			characterDAO.addCharacter(transaction, username, character, player);
+			assertTrue(characterDAO.hasCharacter(transaction, username, character));
+			characterDAO.removeCharacter(transaction, username, character);
+			assertFalse(characterDAO.hasCharacter(transaction, username, character));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -165,17 +165,16 @@ public class CharacterAccessTest {
 		String character = "testCharacterCA";
 		RPObject player = new RPObject();
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
-			assertTrue(database.hasPlayer(transaction, username));
-			database.addCharacter(transaction, username, character, player);
-			assertTrue(database.hasCharacter(transaction, username, character));
-			database.removePlayer(transaction, username);
-			assertFalse(database.hasCharacter(transaction, username, character));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			characterDAO.addCharacter(transaction, username, character, player);
+			assertTrue(characterDAO.hasCharacter(transaction, username, character));
+			accountDAO.removePlayer(transaction, username);
+			assertFalse(characterDAO.hasCharacter(transaction, username, character));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -191,18 +190,17 @@ public class CharacterAccessTest {
 		String username = "testUserCA";
 		String[] characters = { "testCharacterCA1", "testCharacterCA2", "testCharacterCA3" };
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			for (String character : characters) {
-				database.addCharacter(transaction, username, character, new RPObject());
+				characterDAO.addCharacter(transaction, username, character, new RPObject());
 			}
 
-			List<String> result = database.getCharacters(transaction, username);
+			List<String> result = characterDAO.getCharacters(transaction, username);
 			assertArrayEquals(characters, result.toArray());
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -223,19 +221,18 @@ public class CharacterAccessTest {
 		player.put("two", 2);
 		player.put("three", 3.0);
 
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			transaction.begin();
-			assertFalse(database.hasPlayer(transaction, username));
-			database.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertFalse(accountDAO.hasPlayer(transaction, username));
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 
-			assertFalse(database.hasCharacter(transaction, username, character));
-			database.addCharacter(transaction, username, character, player);
+			assertFalse(characterDAO.hasCharacter(transaction, username, character));
+			characterDAO.addCharacter(transaction, username, character, player);
 
-			RPObject loaded = database.loadCharacter(transaction, username, character);
+			RPObject loaded = characterDAO.loadCharacter(transaction, username, character);
 			assertEquals(player, loaded);
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 

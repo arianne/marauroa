@@ -1,4 +1,4 @@
-/* $Id: RPZoneAccessTest.java,v 1.3 2008/02/22 10:28:36 arianne_rpg Exp $ */
+/* $Id: RPZoneAccessTest.java,v 1.4 2009/07/11 13:57:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -20,42 +20,31 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.MarauroaRPZone;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * This test unit test the load and store methods of database.
+ * This test unit test the load and store methods of rpzoneDAO.
  * 
  * @author miguel
  * 
  */
 public class RPZoneAccessTest {
 
-	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
-	 * instead JDBC Database and create a proper public constructor.
-	 * 
-	 * @author miguel
-	 * 
-	 */
-	static class TestJDBC extends JDBCDatabase {
-
-		public TestJDBC(Properties props) {
-			super(props);
-		}
-	}
-
-	private static TestJDBC database;
+	private static TransactionPool transactionPool;
+	private static RPZoneDAO rpzoneDAO;
 
 	private RPObject object;
-
 	private MarauroaRPZone zone;
 
 	/**
-	 * Setup one time the database.
+	 * Setup one time the rpzoneDAO.
 	 * 
 	 * @throws java.lang.Exception
 	 */
@@ -64,15 +53,24 @@ public class RPZoneAccessTest {
 		Log4J.init("marauroa/server/log4j.properties");
 
 		Properties props = new Properties();
-
 		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
 
-		database = new TestJDBC(props);
+		transactionPool = new TransactionPool(props);
+		rpzoneDAO = DAORegister.get().get(RPZoneDAO.class);	
 	}
 
+	/**
+	 * Setup one time the rpzoneDAO.
+	 * 
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void closeDatabase() throws Exception {
+		transactionPool.close();
+	}
 	/**
 	 * Populates the zone with some objects.
 	 * 
@@ -127,20 +125,18 @@ public class RPZoneAccessTest {
 	 */
 	@Test
 	public void storeAndLoadObjects() throws Exception {
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			transaction.begin();
-
-			database.storeRPZone(transaction, zone);
+			rpzoneDAO.storeRPZone(transaction, zone);
 
 			MarauroaRPZone newzone = new MarauroaRPZone("test");
-			database.loadRPZone(transaction, newzone);
+			rpzoneDAO.loadRPZone(transaction, newzone);
 
 			RPObject.ID id = new RPObject.ID(1, "test");
 			assertEquals(zone.get(id), newzone.get(id));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 
@@ -154,28 +150,26 @@ public class RPZoneAccessTest {
 	 */
 	@Test
 	public void storeAndStoreAndLoadObjects() throws Exception {
-		Transaction transaction = database.getTransaction();
+		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			transaction.begin();
-
-			database.storeRPZone(transaction, zone);
+			rpzoneDAO.storeRPZone(transaction, zone);
 
 			MarauroaRPZone newzone = new MarauroaRPZone("test");
-			database.loadRPZone(transaction, newzone);
+			rpzoneDAO.loadRPZone(transaction, newzone);
 
 			RPObject.ID id = new RPObject.ID(1, "test");
 			assertEquals(zone.get(id), newzone.get(id));
 
-			database.storeRPZone(transaction, newzone);
+			rpzoneDAO.storeRPZone(transaction, newzone);
 
 			MarauroaRPZone doublestoredzone = new MarauroaRPZone("test");
-			database.loadRPZone(transaction, doublestoredzone);
+			rpzoneDAO.loadRPZone(transaction, doublestoredzone);
 
 			id = new RPObject.ID(1, "test");
 			assertEquals(zone.get(id), doublestoredzone.get(id));
 		} finally {
-			transaction.rollback();
+			transactionPool.rollback(transaction);
 		}
 	}
 }
