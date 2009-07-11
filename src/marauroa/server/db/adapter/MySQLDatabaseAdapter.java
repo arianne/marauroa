@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.6 2009/07/11 14:49:06 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.7 2009/07/11 17:57:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -102,15 +102,16 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 		return res;
 	}
 
-	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
+	public int execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		int i = 1; // yes, jdbc starts counting at 1.
 		for (InputStream inputStream : inputStreams) {
 			statement.setBinaryStream(i, inputStream, inputStream.available());
 			i++;
 		}
-		statement.executeUpdate();
+		int res = statement.executeUpdate();
 		statement.close();
+		return res;
 	}
 
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {

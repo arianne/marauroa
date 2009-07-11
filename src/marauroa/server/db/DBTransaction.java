@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.14 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.15 2009/07/11 17:57:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -147,11 +147,12 @@ public class DBTransaction {
      *
      * @param query   SQL statement
      * @param params  parameter values
+     * @return number of affected rows
      * @throws SQLException in case of an database error 
      */
-	public void execute(String query, Map<String, Object> params) throws SQLException {
+	public int execute(String query, Map<String, Object> params) throws SQLException {
 		String sql = subst(query, params);
-		databaseAdapter.execute(sql);
+		return databaseAdapter.execute(sql);
 	}	
 
     /**
@@ -160,12 +161,13 @@ public class DBTransaction {
      * @param query   SQL statement
      * @param params  parameter values
      * @param inStream input streams to stream into "?" columns
+     * @return number of affected rows
      * @throws SQLException in case of an database error 
      * @throws IOException in case of an input/output error
      */
-	public void execute(String query, Map<String, Object> params, InputStream... inStream) throws SQLException, IOException {
+	public int execute(String query, Map<String, Object> params, InputStream... inStream) throws SQLException, IOException {
 		String sql = subst(query, params);
-		databaseAdapter.execute(sql, inStream);
+		return databaseAdapter.execute(sql, inStream);
 	}
 
     /**

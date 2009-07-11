@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.7 2009/07/11 14:49:06 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.8 2009/07/11 17:57:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -52,10 +52,11 @@ public interface DatabaseAdapter {
 	 *
 	 * @param sql sql-statement to execute
 	 * @param inputStreams  parameters
+	 * @return number of affected rows
 	 * @throws SQLException in case of an database error
 	 * @throws IOException  in case the stream cannot be read to the end
 	 */
-	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException;
+	public int execute(String sql, InputStream... inputStreams) throws SQLException, IOException;
 
 	/**
 	 * executes a batch of sql-statements
