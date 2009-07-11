@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.17 2007/11/12 13:08:52 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.18 2009/07/11 13:54:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -60,13 +60,6 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
 		/* We initialize the list that will help us sort the player entries. */
 		clientidMap = new HashMap<Integer, PlayerEntry>();
-
-		initializeDatabase();
-	}
-
-	protected void initializeDatabase() {
-		/* Choose the database type using configuration file */
-		PlayerEntry.initDatabase();
 	}
 
 	/**

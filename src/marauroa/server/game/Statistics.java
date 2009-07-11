@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.36 2008/02/11 13:28:23 arianne_rpg Exp $ */
+/* $Id: Statistics.java,v 1.37 2009/07/11 13:54:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -22,9 +22,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.server.game.db.DatabaseFactory;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.Transaction;
+import marauroa.server.game.db.DAORegister;
+import marauroa.server.game.db.StatisticsDAO;
 
 /**
  * This class encapsulate everything related to the statistics recollection and
@@ -262,11 +261,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	private void addStatisticsEventRow(long actualTime) throws SQLException {
-        IDatabase database = DatabaseFactory.getDatabase();
-		Transaction transaction = database.getTransaction();
-
-		database.addStatisticsEvent(transaction, now);
-		transaction.commit();
+		DAORegister.get().get(StatisticsDAO.class).addStatisticsEvent(now);
 
 		now.clear();
 		init();

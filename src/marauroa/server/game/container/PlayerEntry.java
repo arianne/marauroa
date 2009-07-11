@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.37 2008/01/26 17:17:08 arianne_rpg Exp $ */
+/* $Id: PlayerEntry.java,v 1.38 2009/07/11 13:54:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -23,9 +23,12 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.db.DatabaseFactory;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.Transaction;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
+import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.CharacterDAO;
+import marauroa.server.game.db.DAORegister;
+import marauroa.server.game.db.LoginEventDAO;
 
 /**
  * This class represent a player on game. It handles all the bussiness glue that
@@ -34,14 +37,6 @@ import marauroa.server.game.db.Transaction;
  * @author miguel
  */
 public class PlayerEntry {
-
-	/** A object representing the database */
-	static IDatabase playerDatabase;
-
-	/** Get the database object. */
-	public static void initDatabase() {
-		playerDatabase = DatabaseFactory.getDatabase();
-	}
 
 	/**
 	 * This class store the information needed to allow a secure login. Once
@@ -94,7 +89,7 @@ public class PlayerEntry {
 		 *             if there is any database problem.
 		 */
 		public boolean verify() throws SQLException {
-			return playerDatabase.verify(playerDatabase.getTransaction(), this);
+			return DAORegister.get().get(AccountDAO.class).verify(this);
 		}
 
 		/**
@@ -110,11 +105,7 @@ public class PlayerEntry {
 		 *             if there is any database problem.
 		 */
 		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
-			Transaction transaction = playerDatabase.getTransaction();
-
-			transaction.begin();
-			playerDatabase.addLoginEvent(transaction, username, address, loginResult);
-			transaction.commit();
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, loginResult);
 		}
 
 		/**
@@ -127,8 +118,7 @@ public class PlayerEntry {
 		 *             if there is any database problem.
 		 */
 		public boolean isAccountBlocked() throws SQLException {
-			Transaction transaction = playerDatabase.getTransaction();
-			return playerDatabase.isAccountBlocked(transaction, username);
+			return DAORegister.get().get(AccountDAO.class).isAccountBlocked(username);
 		}
 
 		/**
@@ -142,12 +132,17 @@ public class PlayerEntry {
 		 * @throws SQLException
 		 */
 		public String getStatus() throws SQLException {
-			Transaction transaction = playerDatabase.getTransaction();
-			if(playerDatabase.hasPlayer(transaction, username)) {
-				return playerDatabase.getAccountStatus(transaction, username);
-			} else {
-				return null;
-			}			
+			DBTransaction transaction = TransactionPool.get().beginWork();
+			String res = null;
+			try {
+				if (DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username)) {
+					res = DAORegister.get().get(AccountDAO.class).getAccountStatus(transaction, username);
+				}
+				TransactionPool.get().commit(transaction);
+			} catch (SQLException e) {
+				TransactionPool.get().rollback(transaction);
+			}
+			return res;
         }
 	}
 
@@ -311,25 +306,11 @@ public class PlayerEntry {
 	 * @throws SQLException
 	 */
 	public void storeRPObject(RPObject player) throws SQLException, IOException {
-		Transaction transaction = playerDatabase.getTransaction();
+		// We store the object in the database
+		DAORegister.get().get(CharacterDAO.class).storeCharacter(username, character, player);
 
-		try {
-			transaction.begin();
-
-			/* We store the object in the database */
-			playerDatabase.storeCharacter(transaction, username, character, player);
-
-			/* And update the entry */
-			object = player;
-
-			transaction.commit();
-		} catch (SQLException e) {
-			transaction.rollback();
-			throw e;
-		} catch (IOException e) {
-			transaction.rollback();
-			throw e;
-		}
+		// And update the entry
+		object = player;
 	}
 
 	/**
@@ -343,7 +324,7 @@ public class PlayerEntry {
 	 *             If there is a Database exception.
 	 */
 	public boolean hasCharacter(String character) throws SQLException {
-		return playerDatabase.hasCharacter(playerDatabase.getTransaction(), username, character);
+		return DAORegister.get().get(CharacterDAO.class).hasCharacter(username, character);
 	}
 
 	/**
@@ -351,7 +332,7 @@ public class PlayerEntry {
 	 * @throws SQLException
 	 */
 	public void ban() throws SQLException {
-		playerDatabase.setAccountStatus(playerDatabase.getTransaction(), username, "banned");
+		DAORegister.get().get(AccountDAO.class).setAccountStatus(username, "banned");
 	}
 	
 	/**
@@ -366,7 +347,7 @@ public class PlayerEntry {
 	 *             in case of an database error
 	 */
 	public RPObject loadRPObject() throws SQLException, IOException {
-		object = playerDatabase.loadCharacter(playerDatabase.getTransaction(), username, character);
+		object = DAORegister.get().get(CharacterDAO.class).loadCharacter(username, character);
 		return object;
 	}
 
@@ -379,7 +360,7 @@ public class PlayerEntry {
 	 *             if there is any database problem.
 	 */
 	public List<String> getCharacters() throws SQLException {
-		return playerDatabase.getCharacters(playerDatabase.getTransaction(), username);
+		return DAORegister.get().get(CharacterDAO.class).getCharacters(username);
 	}
 
 	/**
@@ -396,7 +377,7 @@ public class PlayerEntry {
 	 * @throws SQLException
 	 */
 	public List<String> getPreviousLogins() throws SQLException {
-		return playerDatabase.getLoginEvents(playerDatabase.getTransaction(), username, 1);
+		return DAORegister.get().get(LoginEventDAO.class).getLoginEvents(username, 1);
 	}
 
 	/**

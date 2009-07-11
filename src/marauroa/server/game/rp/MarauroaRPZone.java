@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.30 2008/01/06 19:44:03 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.31 2009/07/11 13:54:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.server.game.rp;
 
 import java.io.PrintStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,9 +27,8 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
-import marauroa.server.game.db.DatabaseFactory;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.Transaction;
+import marauroa.server.game.db.DAORegister;
+import marauroa.server.game.db.RPZoneDAO;
 
 /**
  * Default implementation of <code>IRPZone</code>. This class implements the
@@ -143,18 +141,9 @@ public class MarauroaRPZone implements IRPZone {
 	 * Store objects that has been tagged as storable to database.
 	 */
 	public void storeToDatabase() {
-		IDatabase db = DatabaseFactory.getDatabase();
-		Transaction transaction = db.getTransaction();
 		try {
-			transaction.begin();
-			db.storeRPZone(transaction, this);
-			transaction.commit();
+			DAORegister.get().get(RPZoneDAO.class).storeRPZone(this);
 		} catch (Exception e) {
-			try {
-				transaction.rollback();
-			} catch (SQLException e1) {
-				logger.error(e1, e1);
-			}
 			logger.error(e, e);
 		}
 	}
@@ -163,9 +152,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * Load objects in database for this zone that were stored
 	 */
 	public void onInit() throws Exception {
-		IDatabase db = DatabaseFactory.getDatabase();
-		Transaction transaction = db.getTransaction();
-		db.loadRPZone(transaction, this);
+		DAORegister.get().get(RPZoneDAO.class).loadRPZone(this);
 	}
 
 	/**
