@@ -116,12 +116,12 @@ public class RPObjectDAO {
 
 		String query;
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("objectid", object_id);
+		params.put("object_id", object_id);
 
 		if (object_id != -1 && hasRPObject(transaction, object_id)) {
 			query = "update rpobject set data=? where object_id=[object_id]";
 		} else {
-			query = "insert into rpobject(object_id,data) values(null,?)";
+			query = "insert into rpobject (object_id, data) values(null, ?)";
 		}
 		logger.debug("storeRPObject is executing query " + query);
 
