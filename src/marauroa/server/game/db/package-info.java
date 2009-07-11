@@ -1,8 +1,11 @@
 /**
- * This package stores an implementation of a JDBC database.
- * <p>
- * Unfortunately, we are only supporting now MySQL.
- * Feel free to create a new implementation for MySQL.
+ * high level database access. By using the data access objects in this 
+ * package, you don't have to worry about how the database works and what 
+ * SQL is.
+ * <br>
+ * Note: Please do not instantiate a DAO class directly but use 
+ * DAORegister.get().get(...DAO.class). This way it is possible for games 
+ * to implement subclasses that are used instead of the original ones.
  */
 package marauroa.server.game.db;
 
