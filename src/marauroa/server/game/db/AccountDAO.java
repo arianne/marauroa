@@ -1,3 +1,15 @@
+/* $Id: AccountDAO.java,v 1.4 2009/07/11 11:52:44 nhnb Exp $ */
+/***************************************************************************
+ *                   (C) Copyright 2003-2009 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.game.db;
 
 import java.sql.ResultSet;
@@ -12,10 +24,15 @@ import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.net.validator.InetAddressMask;
 
+/**
+ * 
+ * @author hendrik
+ */
 public class AccountDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(AccountDAO.class);
 

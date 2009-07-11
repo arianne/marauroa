@@ -1,3 +1,15 @@
+/* $Id: CharacterDAO.java,v 1.5 2009/07/11 11:52:44 nhnb Exp $ */
+/***************************************************************************
+ *                   (C) Copyright 2003-2009 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.game.db;
 
 import java.io.IOException;
@@ -11,6 +23,7 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
 
 /**

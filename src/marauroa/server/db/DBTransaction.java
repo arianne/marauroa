@@ -1,3 +1,15 @@
+/* $Id: DBTransaction.java,v 1.14 2009/07/11 11:52:44 nhnb Exp $ */
+/***************************************************************************
+ *                   (C) Copyright 2003-2009 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.db;
 
 import java.io.IOException;
@@ -10,7 +22,6 @@ import java.util.StringTokenizer;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.adapter.DatabaseAdapter;
-import marauroa.server.game.db.StringChecker;
 
 import com.sun.org.apache.regexp.internal.RE;
 import com.sun.org.apache.regexp.internal.RESyntaxException;
