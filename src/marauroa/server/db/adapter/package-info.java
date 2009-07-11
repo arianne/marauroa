@@ -1,4 +1,4 @@
 /**
- * THIS PACKAGE IS EXPERIMENTAL, DO NOT USE, YET!
+ * database specific low level code.
  */
 package marauroa.server.db.adapter;
