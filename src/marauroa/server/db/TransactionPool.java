@@ -43,6 +43,11 @@ public class TransactionPool {
         TransactionPool.dbtransactionPool = this;
     }
 
+    /**
+     * gets the TransactionPool
+     *
+     * @return TransactionPool
+     */
     public static synchronized TransactionPool get() {
         return dbtransactionPool;
     }
@@ -55,6 +60,11 @@ public class TransactionPool {
         }
     }
 
+    /**
+     * starts a transaction and marks it as reserved
+     *
+     * @return DBTransaction
+     */
     public DBTransaction beginWork() {
     	if (closed) {
     		throw new RuntimeException("transaction pool has been closed");
@@ -81,6 +91,12 @@ public class TransactionPool {
         return dbtransaction;
     }
 
+    /**
+     * commits this transaction and frees it reservation
+     *
+     * @param dbtransaction transaction
+     * @throws SQLException in case of an database error
+     */
     public void commit(DBTransaction dbtransaction) throws SQLException {
     	try {
 			dbtransaction.commit();
@@ -91,6 +107,11 @@ public class TransactionPool {
     	freeDBTransaction(dbtransaction);
     }
 
+    /**
+     * rolls this transaction back and frees the reservation
+     *
+     * @param dbtransaction transaction
+     */
     public void rollback(DBTransaction dbtransaction) {
     	dbtransaction.rollback();
     	freeDBTransaction(dbtransaction);
