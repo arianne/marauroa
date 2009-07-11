@@ -34,8 +34,8 @@ public class CharacterDAO {
 			String query = "insert into characters(player_id, charname, object_id)"
 				+ "values([player_id], '[character]', [object_id])";
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("object_id", Integer.valueOf(id));
-			params.put("player_id", Integer.valueOf(object_id));
+			params.put("player_id", Integer.valueOf(id));
+			params.put("object_id", Integer.valueOf(object_id));
 			params.put("character", character);
 			logger.debug("addCharacter is executing query " + query);
 			logger.debug("Character: " + player);
@@ -223,26 +223,6 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	public void addCharacter(String username, String character, RPObject player) throws SQLException, IOException {
