@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.7 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.8 2009/07/11 13:38:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -34,6 +34,11 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.RPObjectFactory;
 
+/**
+ * data access object for RPObjects
+ *
+ * @author miguel, hendrik
+ */
 public class RPObjectDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObjectDAO.class);
 

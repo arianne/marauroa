@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.4 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.5 2009/07/11 13:38:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -30,8 +30,9 @@ import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.net.validator.InetAddressMask;
 
 /**
- * 
- * @author hendrik
+ * data access object for accounts
+ *
+ * @author miguel, hendrik
  */
 public class AccountDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(AccountDAO.class);

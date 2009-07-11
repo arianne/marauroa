@@ -1,4 +1,4 @@
-/* $Id: StatisticsDAO.java,v 1.3 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: StatisticsDAO.java,v 1.4 2009/07/11 13:38:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -21,6 +21,11 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.Statistics.Variables;
 
+/**
+ * data access object for statistics.
+ *
+ * @author miguel, hendrik
+ */
 public class StatisticsDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(StatisticsDAO.class);
 

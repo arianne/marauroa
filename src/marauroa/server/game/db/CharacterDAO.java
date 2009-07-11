@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.5 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.6 2009/07/11 13:38:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -27,8 +27,9 @@ import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
 
 /**
- * @author hendrik
+ * data access object for characters
  *
+ * @author miguel, hendrik
  */
 public class CharacterDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(CharacterDAO.class);

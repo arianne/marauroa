@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.7 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.8 2009/07/11 13:38:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -36,6 +36,11 @@ import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.RPObjectFactory;
 
+/**
+ * data access object for RPZones
+ *
+ * @author miguel, hendrik
+ */
 public class RPZoneDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPZoneDAO.class);
 
