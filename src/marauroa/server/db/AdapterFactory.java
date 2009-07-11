@@ -23,6 +23,11 @@ class AdapterFactory {
 		this.connInfo = connInfo;
 	}
 
+	/**
+	 * creates a DatabaseAdapter
+	 *
+	 * @return DatabaseAdapter for the specified database
+	 */
 	public DatabaseAdapter create() {
 		// TODO: make this configureable
 		return new MySQLDatabaseAdapter(connInfo);

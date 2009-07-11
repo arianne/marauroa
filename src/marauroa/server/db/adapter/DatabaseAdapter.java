@@ -12,18 +12,65 @@ import java.sql.SQLException;
  */
 public interface DatabaseAdapter {
 
-	void commit() throws SQLException;
+	/**
+	 * commits the current transaction
+	 *
+	 * @throws SQLException in case of an database error
+	 */
+	public void commit() throws SQLException;
 
-	void rollback() throws SQLException;
+	/**
+	 * rolls the current transaction back, undoing all the changes.
+	 *
+	 * @throws SQLException in case of an database error
+	 */
+	public void rollback() throws SQLException;
 
+	/**
+	 * executes an SQL statement
+	 *
+	 * @param sql sql-statement to execute
+	 * @return number of affected rows
+	 * @throws SQLException in case of an database error
+	 */
 	public int execute(String sql) throws SQLException;
 
+	/**
+	 * executes an SQL statement with streamed parameters
+	 *
+	 * @param sql sql-statement to execute
+	 * @param inputStreams  parameters
+	 * @throws SQLException in case of an database error
+	 * @throws IOException  in case the stream cannot be read to the end
+	 */
 	public void execute(String sql, InputStream... inputStreams) throws SQLException, IOException;
 
+	/**
+	 * executes a batch of sql-statements
+	 *
+	 * @param sql           sql-statement to execute
+	 * @param inputStreams  a list of inpurt stream. For each of them the statement is executed
+	 * @throws SQLException in case of an database error
+	 * @throws IOException  in case one of the streams cannot be read to the end
+	 */
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException;
 
+	/**
+	 * queries the database for information
+	 *
+	 * @param sql sql-statement to execute
+	 * @return ResultSet
+	 * @throws SQLException in case of an database error
+	 */
 	public ResultSet query(String sql) throws SQLException;
 
+	/**
+	 * queries for a single row, single column integer response like a count-select
+	 *
+	 * @param sql sql-statement to execute
+	 * @return integer of the first column in the first row
+	 * @throws SQLException in case of an database error
+	 */
 	public int querySingleCellInt(String sql) throws SQLException;
 
 	/**
