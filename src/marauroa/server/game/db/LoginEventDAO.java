@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.5 2009/07/11 13:38:48 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.6 2009/07/11 21:11:40 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -34,16 +34,12 @@ public class LoginEventDAO {
 
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source,
 	        boolean correctLogin) throws SQLException {
+
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
-
-			if (id == -1) {
-				/**
-				 * This will happen when the player doesn't exist at database.
-				 * For example, a mispelled username.
-				 */
-				return;
-			}
+			// Note: playerId == -1 means that the player does not exist. We log this anyway to
+			// be able to notice if someone tries to hack accounts by picking	a fixed password
+			// and bruteforcing matching usernames.
 
 			String query = "insert into loginEvent(player_id, address, timedate, result)"
 				+ "values([player_id], '[address]', NULL, [result])";
