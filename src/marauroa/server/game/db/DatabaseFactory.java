@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.9 2007/12/29 20:26:36 martinfuchs Exp $ */
+/* $Id: DatabaseFactory.java,v 1.10 2009/07/11 11:45:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,8 @@ package marauroa.server.game.db;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.db.DatabaseConnectionException;
+import marauroa.server.db.TransactionPool;
 
 /**
  * Utility class for choosing the right player database.
@@ -23,44 +25,24 @@ public class DatabaseFactory {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(DatabaseFactory.class);
 
-	/**
-	 * This method returns an instance of PlayerDatabase chosen using the
-	 * Configuration file.
-	 *
-	 * @return A shared instance of PlayerDatabase
-	 * @throws NoDatabaseConfException in case the database configuration is broken
-	 */
-	public static IDatabase getDatabase() throws NoDatabaseConfException {
-		try {
-			Configuration conf = Configuration.getConfiguration();
-			String database_type = conf.get("database_implementation");
-
-			return getDatabase(database_type);
-		} catch (Exception e) {
-			logger.debug("cannot get player database", e);
-			throw new NoDatabaseConfException(e);
-		}
-	}
 
 	/**
 	 * This method returns an instance of PlayerDatabase chosen using the
 	 * param.
 	 *
-	 * @param database_type
-	 *            A String containing the type of database. It should be the
-	 *            complete class name. ie: marauroa.server.game.db.JDBCDatabase
-	 *
 	 * @return A shared instance of PlayerDatabase
-	 * @throws NoDatabaseConfException in case the database configuration is broken
+	 * @throws DatabaseConnectionException in case the database configuration is broken
 	 */
-	public static IDatabase getDatabase(String database_type) throws NoDatabaseConfException {
+	public void initializeDatabase() throws DatabaseConnectionException {
 		try {
-			Class<?> databaseClass = Class.forName(database_type);
-			java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getDatabase");
-			return (IDatabase) singleton.invoke(null);
+			if (TransactionPool.get() == null) {
+				TransactionPool pool = new TransactionPool(Configuration.getConfiguration().getAsProperties());
+				pool.registerGlobally();
+			}
+			DAORegister.get();
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);
-			throw new NoDatabaseConfException(e);
+			throw new DatabaseConnectionException(e);
 		}
 	}
 }
