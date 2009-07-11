@@ -1,4 +1,4 @@
-/* $Id: DatabaseExistsTest.java,v 1.6 2009/07/05 11:55:07 nhnb Exp $ */
+/* $Id: DatabaseExistsTest.java,v 1.7 2009/07/11 13:55:06 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,25 +15,11 @@ package marauroa;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.db.IDatabase;
-import marauroa.server.game.db.JDBCDatabase;
+import marauroa.server.db.TransactionPool;
 
 import org.junit.Test;
 
 public class DatabaseExistsTest {
-	/**
-	 * JDBCDatabase can only be instantiated by DatabaseFactory, so we extend
-	 * instead JDBC Database and create a proper public constructor.
-	 * 
-	 * @author miguel
-	 * 
-	 */
-	static class TestJDBC extends JDBCDatabase {
-
-		public TestJDBC(Properties props) {
-			super(props);
-		}
-	}
 
 	@Test
 	public void checkDatabaseExists() throws Exception {
@@ -47,8 +33,9 @@ public class DatabaseExistsTest {
 			props.put("jdbc_user", "junittest");
 			props.put("jdbc_pwd", "passwd");
 
-			IDatabase database = new TestJDBC(props);
-			database.close();
+			TransactionPool pool = new TransactionPool(props);
+			pool.rollback(pool.beginWork());
+			pool.close();
 		} catch (Exception e) {
 			throw new Exception("Database is not accessible. Please check \"marauroatest\" is created and that user \"junittest\" with password \"passwd\" can access it.", e);
 		}
