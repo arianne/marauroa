@@ -77,9 +77,7 @@
 				<pathelement path="${jnlp_jar}"/>
 				<pathelement path="${jython_jar}"/>
 			</classpath>
-			<fileset dir="${src}">
-				<include name="**/*.java"/>
-			</fileset>
+			<packageset dir="src" defaultexcludes="yes" />
 		</javadoc>
 	</target>
 
