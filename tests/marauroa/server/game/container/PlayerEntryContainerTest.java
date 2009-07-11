@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainerTest.java,v 1.6 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: PlayerEntryContainerTest.java,v 1.7 2009/07/11 13:56:41 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -29,16 +29,6 @@ import org.junit.Test;
  * 
  */
 public class PlayerEntryContainerTest {
-	static class MockPlayerEntryContainer extends PlayerEntryContainer {
-		MockPlayerEntryContainer() {
-			super();
-		}
-
-		@Override
-		protected void initializeDatabase() {
-			/* Do nothing, we don't need database on this test. */
-		}
-	}
 
 	private static PlayerEntryContainer cont;
 
@@ -48,7 +38,7 @@ public class PlayerEntryContainerTest {
 	 */
 	@BeforeClass
 	public static void setUp() {
-		cont = new MockPlayerEntryContainer();
+		cont = new PlayerEntryContainer();
 	}
 
 	/**
