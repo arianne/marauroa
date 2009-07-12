@@ -25,7 +25,7 @@ public class TransactionPool {
 
     private List<DBTransaction> dbtransactions = new LinkedList<DBTransaction>(); 
     private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>();
-    private ThreadLocal<Set<DBTransaction>> threadTransactions;
+    private ThreadLocal<Set<DBTransaction>> threadTransactions = new ThreadLocal<Set<DBTransaction>>();
 
 	private boolean closed = false; 
 
