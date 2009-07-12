@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.7 2009/07/11 17:57:48 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.8 2009/07/12 17:25:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -175,5 +175,11 @@ public class MySQLDatabaseAdapter implements DatabaseAdapter {
 	public void close() throws SQLException {
 		closeStatements();
 		connection.close();
+	}
+
+	public PreparedStatement prepareStatement(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statements.add(statement);
+		return statement;
 	}
 }

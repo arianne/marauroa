@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.8 2009/07/11 17:57:48 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.9 2009/07/12 17:25:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.db.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -105,5 +106,15 @@ public interface DatabaseAdapter {
 	 * @throws SQLException in case of an database error
 	 */
 	public void close() throws SQLException;
-	
+
+	/**
+	 * Prepares a statement for a batch operation.
+	 *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @return PreparedStatement
+     * @throws SQLException in case of an database error 
+	 */
+	public PreparedStatement prepareStatement(String sql) throws SQLException;
+
 }

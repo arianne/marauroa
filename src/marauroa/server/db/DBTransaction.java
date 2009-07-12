@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.15 2009/07/11 17:57:48 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.16 2009/07/12 17:25:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.db;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
@@ -207,5 +208,18 @@ public class DBTransaction {
 	 */
 	public int getLastInsertId(String table, String idcolumn) throws SQLException {
 		return databaseAdapter.getLastInsertId(table, idcolumn);
+	}
+
+	/**
+	 * Prepares a statement for a batch operation.
+	 *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @return PreparedStatement
+     * @throws SQLException in case of an database error 
+	 */
+	public PreparedStatement prepareStatement(String query, Map<String, Object> params) throws SQLException {
+		String sql = subst(query, params);
+		return databaseAdapter.prepareStatement(sql);
 	}
 }
