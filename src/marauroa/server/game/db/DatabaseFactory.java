@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.12 2009/07/13 19:53:58 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.13 2009/07/13 20:50:31 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -64,7 +64,7 @@ public class DatabaseFactory {
 	}
 
 
-	public void configureGameDatabaseAccess() {
+	private void configureGameDatabaseAccess() {
 		try {
 			Configuration conf = Configuration.getConfiguration();
 			String database_type = conf.get("database_implementation");
