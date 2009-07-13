@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.7 2009/07/13 19:53:14 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.8 2009/07/13 21:16:23 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -174,7 +174,7 @@ public class CharacterDAO {
 			int objectid = DAORegister.get().get(RPObjectDAO.class).storeRPObject(transaction, player);
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 
-			String query = "update characters set object_id=[objectid] where charname='[character]' and player_id=[player_id]";
+			String query = "update characters set object_id=[object_id] where charname='[character]' and player_id=[player_id]";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("object_id", Integer.valueOf(objectid));
 			params.put("player_id", Integer.valueOf(id));
