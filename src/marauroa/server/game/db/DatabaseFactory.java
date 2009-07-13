@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.13 2009/07/13 20:50:31 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.14 2009/07/13 21:50:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -42,10 +42,10 @@ public class DatabaseFactory {
 			if (TransactionPool.get() == null) {
 				TransactionPool pool = new TransactionPool(Configuration.getConfiguration().getAsProperties());
 				pool.registerGlobally();
+				initialize();
+				DAORegister.get();
+				configureGameDatabaseAccess();
 			}
-			initialize();
-			DAORegister.get();
-			configureGameDatabaseAccess();
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);
 			throw new DatabaseConnectionException(e);
