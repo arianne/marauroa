@@ -1,14 +1,18 @@
 package marauroa.server.db;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.Pair;
 
 /**
  * Connection Pool.
@@ -26,6 +30,7 @@ public class TransactionPool {
     private List<DBTransaction> dbtransactions = new LinkedList<DBTransaction>(); 
     private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>();
     private ThreadLocal<Set<DBTransaction>> threadTransactions = new ThreadLocal<Set<DBTransaction>>();
+    private Map<DBTransaction, Pair<String, StackTraceElement[]>> callers;
 
 	private boolean closed = false; 
 
@@ -37,6 +42,7 @@ public class TransactionPool {
     public TransactionPool(Properties connfiguration) {
     	params = connfiguration;
         count = Integer.parseInt(params.getProperty("count", "4"));
+        callers = new HashMap<DBTransaction, Pair<String, StackTraceElement[]>>(); 
         factory = new AdapterFactory(connfiguration);
     }
     
@@ -81,6 +87,9 @@ public class TransactionPool {
                     createMinimumDBTransactions();
                     try {
                         logger.info("Waiting for a DBTransaction", new Throwable());
+                        for (Pair<String, StackTraceElement[]> pair : callers.values()) {
+                        	logger.info("      * " + pair.first() + " " + Arrays.asList(pair.second()));
+                        }
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         logger.error(e, e);
@@ -93,6 +102,9 @@ public class TransactionPool {
             }
         }
         logger.debug("getDBTransaction: " + dbtransaction, new Throwable());
+        
+        Thread currentThread = Thread.currentThread(); 
+        callers.put(dbtransaction, new Pair<String, StackTraceElement[]>(currentThread.getName(), currentThread.getStackTrace()));
         return dbtransaction;
     }
 
