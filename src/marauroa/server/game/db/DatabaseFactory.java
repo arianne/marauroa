@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.11 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.12 2009/07/13 19:53:58 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,9 +12,13 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import java.sql.SQLException;
+
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.db.DBTransaction;
 import marauroa.server.db.DatabaseConnectionException;
+import marauroa.server.db.JDBCSQLHelper;
 import marauroa.server.db.TransactionPool;
 
 /**
@@ -39,10 +43,39 @@ public class DatabaseFactory {
 				TransactionPool pool = new TransactionPool(Configuration.getConfiguration().getAsProperties());
 				pool.registerGlobally();
 			}
+			initialize();
 			DAORegister.get();
+			configureGameDatabaseAccess();
 		} catch (Exception e) {
 			logger.error("cannot get player database", e);
 			throw new DatabaseConnectionException(e);
+		}
+	}
+	
+	private void initialize() {
+		final DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			JDBCSQLHelper.get().runDBScript(transaction, "marauroa/server/marauroa_init.sql");
+			TransactionPool.get().commit(transaction);
+		} catch (SQLException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+		}
+	}
+
+
+	public void configureGameDatabaseAccess() {
+		try {
+			Configuration conf = Configuration.getConfiguration();
+			String database_type = conf.get("database_implementation");
+
+			if ((database_type != null) && (!database_type.equals("marauroa.server.game.db.JDBCDatabase"))) {
+				Class<?> databaseClass = Class.forName(database_type);
+				java.lang.reflect.Method method = databaseClass.getDeclaredMethod("initialize");
+				method.invoke(databaseClass.newInstance());
+			}
+		} catch (Exception e) {
+			logger.error("error initializing game database", e);
 		}
 	}
 }
