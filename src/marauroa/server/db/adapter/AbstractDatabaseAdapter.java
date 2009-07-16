@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.1 2009/07/14 21:45:30 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.2 2009/07/16 21:43:21 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -64,8 +64,12 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 			}
 
 			Properties connectionInfo = new Properties();
-			connectionInfo.put("user", connInfo.get("jdbc_user"));
-			connectionInfo.put("password", connInfo.get("jdbc_pwd"));
+			if (connInfo.get("jdbc_user") != null) {
+				connectionInfo.put("user", connInfo.get("jdbc_user"));
+			}
+			if (connInfo.get("jdbc_pwd") != null) {
+				connectionInfo.put("password", connInfo.get("jdbc_pwd"));
+			}
 			connectionInfo.put("charSet", "UTF-8");
 
 			Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"), connectionInfo);
