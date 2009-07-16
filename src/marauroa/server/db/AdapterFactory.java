@@ -1,4 +1,4 @@
-/* $Id: AdapterFactory.java,v 1.3 2009/07/11 14:49:06 nhnb Exp $ */
+/* $Id: AdapterFactory.java,v 1.4 2009/07/16 21:52:59 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,8 +12,13 @@
  ***************************************************************************/
 package marauroa.server.db;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Properties;
 
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.server.db.adapter.DatabaseAdapter;
 import marauroa.server.db.adapter.MySQLDatabaseAdapter;
 
@@ -23,6 +28,7 @@ import marauroa.server.db.adapter.MySQLDatabaseAdapter;
  * @author hendrik
  */
 class AdapterFactory {
+	private static Logger logger = Log4J.getLogger(AdapterFactory.class);
 
 	private Properties connInfo;
 
@@ -39,9 +45,21 @@ class AdapterFactory {
 	 * creates a DatabaseAdapter
 	 *
 	 * @return DatabaseAdapter for the specified database
+	 * @throws IOException 
 	 */
 	public DatabaseAdapter create() {
-		// TODO: make this configureable
-		return new MySQLDatabaseAdapter(connInfo);
+		try {
+			Configuration configuration = Configuration.getConfiguration();
+			String adapter = configuration.get("database_adapter");
+			if (adapter == null) {
+				return new MySQLDatabaseAdapter(connInfo);
+			}
+			Class<DatabaseAdapter> clazz= (Class<DatabaseAdapter>) Class.forName(adapter);
+			Constructor<DatabaseAdapter> ctor = clazz.getConstructor(String.class);
+			return ctor.newInstance(connInfo);
+		} catch (Exception e) {
+			logger.error(e, e);
+			return null;
+		}
 	}
 }
