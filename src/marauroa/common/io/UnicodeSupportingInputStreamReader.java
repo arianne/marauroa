@@ -45,8 +45,6 @@ public class UnicodeSupportingInputStreamReader extends Reader {
      * Creates a new UnicodeSupportingInputStreamReader
      *
      * @param in  inputstream to be read
-     * @param defaultEnc default encoding if stream does not have 
-     *                   BOM marker. Give NULL to use system-level default.
      */
     public UnicodeSupportingInputStreamReader(InputStream in) {
         internalIn = new PushbackInputStream(in, BOM_SIZE);
