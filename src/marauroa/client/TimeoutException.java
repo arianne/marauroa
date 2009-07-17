@@ -1,4 +1,4 @@
-/* $Id: TimeoutException.java,v 1.3 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: TimeoutException.java,v 1.4 2009/07/17 21:17:25 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -12,10 +12,17 @@
  ***************************************************************************/
 package marauroa.client;
 
+/**
+ * this exception is thrown if a connection to the server cannot be established
+ * within the given time.
+ */
 public class TimeoutException extends Exception {
 
 	private static final long serialVersionUID = -6977739824675973192L;
 
+	/**
+	 * creates a new TimeoutException
+	 */
 	public TimeoutException() {
 		super("Timeout happened while waiting server reply");
 	}
