@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.46 2009/07/08 18:44:02 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.47 2009/07/17 21:17:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -333,12 +333,11 @@ public abstract class ClientFramework {
 	 *            the player password
 	 * @param email
 	 *            player's email for notifications and/or password reset.
-	 *
+	 * @return AccountResult
 	 * @throws InvalidVersionException
 	 *             if we are not using a compatible version
 	 * @throws TimeoutException
 	 *             if timeout happens while waiting for the message.
-	 * @throws CreateAccountFailedException
 	 * @throws BannedAddressException
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email)
@@ -387,12 +386,11 @@ public abstract class ClientFramework {
 	 *            the character to create
 	 * @param template
 	 *            an object template to create the player avatar.
-	 *
+	 * @return CharacterResult
 	 * @throws InvalidVersionException
 	 *             if we are not using a compatible version
 	 * @throws TimeoutException
 	 *             if timeout happens while waiting for the message.
-	 * @throws CreateCharacterFailedException
 	 * @throws BannedAddressException
 	 */
 	public synchronized CharacterResult createCharacter(String character, RPObject template)
