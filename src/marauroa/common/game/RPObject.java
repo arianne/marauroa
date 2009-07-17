@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.90 2009/06/14 14:58:01 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.91 2009/07/17 21:20:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1008,7 +1008,6 @@ public class RPObject extends Attributes {
 	 * Create a depth copy of the object
 	 *
 	 * @return a copy of this object.
-	 * @throws CloneNotSupportedException 
 	 */
 	@Override
 	public Object clone() {

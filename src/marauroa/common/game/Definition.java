@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.24 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: Definition.java,v 1.25 2009/07/17 21:20:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -402,7 +402,6 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @return the value
 	 * @throws java.io.IOException
 	 *             if there is any problem deserializing the object
-	 * @throws ClassNotFoundException
 	 */
 	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		switch (type) {
