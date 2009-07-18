@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.116 2009/07/08 20:18:05 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.117 2009/07/18 11:32:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1284,7 +1284,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * </ul>
 	 */
 	private static class ServerInfo {
-		private static Logger logger = Logger.getLogger(ServerInfo.class);
+		private static Logger infoLogger = Logger.getLogger(ServerInfo.class);
 
 		private static Configuration config;
 		static {
@@ -1296,7 +1296,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				config.get("server_version");
 				config.get("server_contact");
 			} catch (Exception e) {
-				logger.error("ERROR: Unable to load Server info", e);
+			    infoLogger.error("ERROR: Unable to load Server info", e);
 			}
 		}
 

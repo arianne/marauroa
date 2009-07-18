@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.38 2009/07/18 11:20:35 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.39 2009/07/18 11:32:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.server.game;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -130,8 +129,8 @@ public class Statistics implements StatisticsMBean {
 		/**
 		 * Prints the variable
 		 *
-		 * @param out
-		 * @param diff
+		 * @param out the writer to write to
+		 * @param diff ignored
 		 */
 		public void print(PrintWriter out, double diff) {
 			synchronized (content) {
@@ -237,7 +236,7 @@ public class Statistics implements StatisticsMBean {
 			/*
 			 * Store statistics to database.
 			 */
-			addStatisticsEventRow(currentTime);
+			addStatisticsEventRow();
 
 			PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 
@@ -260,7 +259,7 @@ public class Statistics implements StatisticsMBean {
 		}
 	}
 
-	private void addStatisticsEventRow(long actualTime) throws SQLException {
+	private void addStatisticsEventRow() {
 		DAORegister.get().get(StatisticsDAO.class).addStatisticsEvent(now);
 
 		now.clear();

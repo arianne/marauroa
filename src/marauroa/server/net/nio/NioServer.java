@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.25 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.26 2009/07/18 11:32:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -103,7 +103,6 @@ class NioServer extends Thread {
 	 * 
 	 * @param channel
 	 *            the channel to close.
-	 * @throws IOException
 	 */
 	public void close(SocketChannel channel) {
 		for (IDisconnectedListener listener : listeners) {
@@ -278,7 +277,7 @@ class NioServer extends Thread {
 		worker.onConnect(socketChannel);
 	}
 
-	private void read(SelectionKey key) throws IOException {
+	private void read(SelectionKey key) {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		// Clear out our read buffer so it's ready for new data
@@ -313,7 +312,7 @@ class NioServer extends Thread {
 		this.worker.onData(this, socketChannel, this.readBuffer.array(), numRead);
 	}
 
-	private void write(SelectionKey key) throws IOException {
+	private void write(SelectionKey key) {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		synchronized (this.pendingData) {
