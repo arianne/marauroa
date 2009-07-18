@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.9 2009/07/12 17:25:25 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.10 2009/07/18 11:51:19 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -110,8 +110,7 @@ public interface DatabaseAdapter {
 	/**
 	 * Prepares a statement for a batch operation.
 	 *
-     * @param query   SQL statement
-     * @param params  parameter values
+     * @param sql   SQL statement
      * @return PreparedStatement
      * @throws SQLException in case of an database error 
 	 */

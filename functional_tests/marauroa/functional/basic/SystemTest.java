@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.3 2008/04/18 18:53:27 martinfuchs Exp $ */
+/* $Id: SystemTest.java,v 1.4 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -105,7 +105,6 @@ public class SystemTest implements IFunctionalTest {
 	 * @throws IOException
 	 * @throws TimeoutException
 	 * @throws InvalidVersionException
-	 * @throws CreateAccountFailedException
 	 * @throws BannedAddressException
 	 */
 

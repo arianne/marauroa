@@ -1,4 +1,4 @@
-/* $Id: RPClassTest.java,v 1.5 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: RPClassTest.java,v 1.6 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -162,7 +162,6 @@ public class RPClassTest {
      * deserializing the stream again and checking that it is the same RPClass.
      * 
      * @throws IOException
-     * @throws ClassNotFoundException
      */
     @Test
     public void testSerialization() throws IOException {

@@ -1,4 +1,4 @@
-/* $Id: AttributesTest.java,v 1.11 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: AttributesTest.java,v 1.12 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -93,7 +93,6 @@ public class AttributesTest {
 	 *
 	 * @throws IOException
 	 *             if there is a problem serializing the data.
-	 * @throws ClassNotFoundException
 	 */
 	@Test
 	public void testSerialization() throws IOException {
@@ -124,7 +123,6 @@ public class AttributesTest {
 	 *
 	 * @throws IOException
 	 *             if there is a problem serializing the data.
-	 * @throws ClassNotFoundException
 	 */
 	@Test
 	public void testSerializationWithRPClass() throws IOException {
@@ -171,7 +169,6 @@ public class AttributesTest {
 	 *
 	 * @throws IOException
 	 *             if there is a problem serializing the data.
-	 * @throws ClassNotFoundException
 	 */
 	@Test(expected = IOException.class)
 	public void testSerializationWithRPClassFailure() throws IOException {

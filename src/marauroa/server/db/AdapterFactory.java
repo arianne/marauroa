@@ -1,4 +1,4 @@
-/* $Id: AdapterFactory.java,v 1.4 2009/07/16 21:52:59 nhnb Exp $ */
+/* $Id: AdapterFactory.java,v 1.5 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,7 +12,6 @@
  ***************************************************************************/
 package marauroa.server.db;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Properties;
 
@@ -45,7 +44,6 @@ class AdapterFactory {
 	 * creates a DatabaseAdapter
 	 *
 	 * @return DatabaseAdapter for the specified database
-	 * @throws IOException 
 	 */
 	public DatabaseAdapter create() {
 		try {

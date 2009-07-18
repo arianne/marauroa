@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.14 2009/07/13 21:50:26 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.15 2009/07/18 11:51:19 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -34,7 +34,6 @@ public class DatabaseFactory {
 	 * This method returns an instance of PlayerDatabase chosen using the
 	 * param.
 	 *
-	 * @return A shared instance of PlayerDatabase
 	 * @throws DatabaseConnectionException in case the database configuration is broken
 	 */
 	public void initializeDatabase() throws DatabaseConnectionException {

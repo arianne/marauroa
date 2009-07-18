@@ -1,4 +1,4 @@
-/* $Id: RPObjectFactory.java,v 1.8 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: RPObjectFactory.java,v 1.9 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -40,7 +40,7 @@ public class RPObjectFactory {
 	 * Configuration file.
 	 *
 	 * @return A shared instance of RPObjectFactory
-	 * @throws xception
+     * @throws NoFactoryConfException if the factory is not configured correctly 
 	 */
 	public static RPObjectFactory get() throws NoFactoryConfException {
 		try {
@@ -63,7 +63,7 @@ public class RPObjectFactory {
 	 *            complete class name. ie: marauroa.server.game.rp.RPObjectFactory
 	 *
 	 * @return A shared instance of RPObjectFactory
-	 * @throws Exception 
+	 * @throws NoFactoryConfException if the factory is not configured correctly 
 	 */
 	public static RPObjectFactory get(String factoryName) throws NoFactoryConfException {
 		try {

@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.12 2007/12/06 22:01:16 nhnb Exp $ */
+/* $Id: PythonRPWorld.java,v 1.13 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,8 +47,6 @@ public class PythonRPWorld extends RPWorld {
 	
 	/**
 	 * Constructor
-	 * 
-	 * @throws Exception
 	 */
 	public PythonRPWorld() {
 		super();

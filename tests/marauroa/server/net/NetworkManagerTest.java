@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.8 2007/12/08 15:47:48 martinfuchs Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.9 2009/07/18 11:51:20 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -113,7 +113,7 @@ public class NetworkManagerTest {
 	 * Testing what happens when client send nothing to server, but in fact send a TCP packet.
 	 */
 	@Test
-	public void sendMessageNull() throws IOException, InvalidVersionException {
+	public void sendMessageNull() throws IOException {
 		Socket socket=new Socket("localhost", PORT);
 		OutputStream out=socket.getOutputStream();
 
@@ -128,7 +128,7 @@ public class NetworkManagerTest {
 	 * Testing what happens when client send just one byte to server, but in fact send a TCP packet.
 	 */
 	@Test
-	public void sendMessageOneByte() throws IOException, InvalidVersionException {
+	public void sendMessageOneByte() throws IOException {
 		Socket socket=new Socket("localhost", PORT);
 		OutputStream out=socket.getOutputStream();
 
@@ -143,7 +143,7 @@ public class NetworkManagerTest {
 	 * Testing what happens when client send rubbish to server.
 	 */
 	@Test
-	public void sendMessageRubish() throws IOException, InvalidVersionException {
+	public void sendMessageRubish() throws IOException {
 		/* Send 256 rubbish messages, just to make sure. */
 		for (int j = 0; j < 256; j++) {
 			Socket socket = new Socket("localhost", PORT);

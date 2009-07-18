@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.2 2009/07/16 21:43:21 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.3 2009/07/18 11:51:19 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -51,7 +51,8 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	/**
 	 * This method creates the real connection to database.
 	 *
-	 * @return a cConnection to the database
+	 * @param connInfo connection information like url, username and password
+	 * @return a connection to the database
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {

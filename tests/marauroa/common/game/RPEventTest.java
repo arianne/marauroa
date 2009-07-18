@@ -1,4 +1,4 @@
-/* $Id: RPEventTest.java,v 1.3 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: RPEventTest.java,v 1.4 2009/07/18 11:51:19 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -65,7 +65,6 @@ public class RPEventTest {
 	 * obtain the RPEvent code definition.
 	 *
 	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 */
 	@Test
 	public void testSerialization() throws IOException {
@@ -95,7 +94,6 @@ public class RPEventTest {
 	 * definition
 	 *
 	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 */
 	@Test
 	public void testSerializationWithRPClass() throws IOException {

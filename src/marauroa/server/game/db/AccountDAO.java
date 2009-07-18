@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.5 2009/07/11 13:38:48 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.6 2009/07/18 11:51:19 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -60,7 +60,7 @@ public class AccountDAO {
 		}
 	}
 
-	public String generatePlayer(DBTransaction transaction, String pattern) throws SQLException {
+	public String generatePlayer(String pattern) {
 		int length = pattern.length();
 		Random rand = new Random();
 		StringBuffer os = new StringBuffer();
@@ -331,13 +331,6 @@ public class AccountDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		addPlayer(transaction, username, password, email);
 		TransactionPool.get().commit(transaction);
-	}
-
-	public String generatePlayer(String pattern) throws SQLException {
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		String res = generatePlayer(transaction, pattern);
-		TransactionPool.get().commit(transaction);
-		return res;
 	}
 
 	public void changeEmail(String username, String email) throws SQLException {
