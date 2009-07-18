@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.4 2009/07/18 15:02:24 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.5 2009/07/18 20:16:23 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.db.adapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +24,10 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.Properties;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
+
 
 /**
  * abstract database adapter
@@ -31,6 +35,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
+    private static Logger logger = Log4J.getLogger(AbstractDatabaseAdapter.class);
     /** connection to the database */
 	protected Connection connection;
 
@@ -81,6 +86,11 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 			// enable transaction support
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+			DatabaseMetaData meta = conn.getMetaData();
+			logger.info("Connected to " + connInfo.get("jdbc_url") 
+			    + ": " + meta.getDatabaseProductName() + " " + meta.getDatabaseProductVersion()
+			    + " with driver " +  meta.getDriverName() + " " + meta.getDriverVersion());
 
 			return conn;
 		} catch (SQLException e) {
