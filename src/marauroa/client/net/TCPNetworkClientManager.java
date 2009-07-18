@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.25 2009/06/14 12:20:31 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.26 2009/07/18 11:11:36 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -417,6 +417,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 * 
 		 * @param msg
 		 *            the message to send to server.
+		 * @return true, if the message was sent successfully 
 		 */
 		public boolean write(Message msg) {
 			try {

@@ -1,4 +1,4 @@
-/* $Id: CRC.java,v 1.6 2007/04/09 14:47:03 arianne_rpg Exp $ */
+/* $Id: CRC.java,v 1.7 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,6 +12,9 @@
  ***************************************************************************/
 package marauroa.common;
 
+/**
+ * an implementation of the CRC checksum algorithm.
+ */
 public class CRC {
 
 	// calculating 16-bit CRC

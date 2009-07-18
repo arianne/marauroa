@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.7 2008/02/17 12:58:10 arianne_rpg Exp $ */
+/* $Id: Hash.java,v 1.8 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,6 +144,12 @@ public class Hash {
 		return res;
 	}
 
+	/**
+	 * converts a BigInteger to a byte array
+	 *
+	 * @param b BigInteger
+	 * @return byte array
+	 */
 	public static final byte[] bigIntToBytes(BigInteger b) {
 		byte[] preRes = b.toByteArray();
 		if (preRes[0] != 1) {
@@ -156,6 +162,12 @@ public class Hash {
 		return res;
 	}
 
+	/**
+	 * converts a byte array into a BigInteger object
+	 *
+	 * @param b byte array
+	 * @return BigInteger
+	 */
 	public static final BigInteger bytesToBigInt(byte[] b) {
 		if (b[0] > 1) {
 			return new BigInteger(b);

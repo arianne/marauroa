@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.9 2008/08/16 13:48:54 nhnb Exp $ */
+/* $Id: Pair.java,v 1.10 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,28 +12,60 @@
  ***************************************************************************/
 package marauroa.common;
 
+/**
+ * a pair of two objects
+ *
+ * @param <T1> type of first object
+ * @param <T2> type of second object
+ */
 public class Pair<T1, T2> {
 
 	private T1 first;
 	private T2 second;
 
+	/**
+	 * creates a new pair
+	 *
+	 * @param o1 first object
+	 * @param o2 second object
+	 */
 	public Pair(T1 o1, T2 o2) {
 		first = o1;
 		second = o2;
 	}
 
+	/**
+	 * gets the first object
+	 *
+	 * @return first object
+	 */
 	public T1 first() {
 		return first;
 	}
 
+	/**
+	 * gets the second object
+	 *
+	 * @return second object
+	 */
 	public T2 second() {
 		return second;
 	}
 
+	/**
+	 * sets the first object
+	 *
+	 * @param o1 first object
+	 */
 	public void setFirst(T1 o1) {
 		first = o1;
 	}
 
+	/**
+	 * sets the second object
+	 *
+	 * @param o2 second object
+	 */
 	public void setSecond(T2 o2) {
 		second = o2;
 	}

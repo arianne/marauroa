@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.26 2009/07/10 22:52:29 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.27 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -179,6 +179,8 @@ public class Configuration {
 	/**
 	 * This method returns an enumeration of the properties that the file
 	 * contains
+	 *
+	 * @return enumeration of keys
 	 */
 	public Enumeration<?> propertyNames() {
 		return properties.propertyNames();

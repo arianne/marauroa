@@ -1,4 +1,4 @@
-/* $Id: Log4J.java,v 1.18 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: Log4J.java,v 1.19 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -57,7 +57,11 @@ public class Log4J {
 		init(LOG4J_PROPERTIES);
 	}
 
-	/** initializes log4j with a custom properties file. */
+	/**
+	 * initializes log4j with a custom properties file.
+	 *
+	 * @param filename log4j.properties
+	 */
 	public static void init(String filename) {
 		if (configured) {
 			return;
