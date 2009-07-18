@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.117 2009/07/18 11:32:00 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.118 2009/07/18 11:32:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -240,7 +240,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * Starting this thread makes it to start the thread that disconnect players.
 	 */
 	@Override
-	public void start() {
+	public synchronized void start() {
 		super.start();
 		disconnectThread.start();
 	}
