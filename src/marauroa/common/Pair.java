@@ -1,4 +1,4 @@
-/* $Id: Pair.java,v 1.10 2009/07/18 11:11:37 nhnb Exp $ */
+/* $Id: Pair.java,v 1.11 2009/07/18 11:50:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,7 +72,7 @@ public class Pair<T1, T2> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Pair) {
+		if (o instanceof Pair<?, ?>) {
 			Pair<?,?> object = (Pair<?,?>) o;
 			if (first != null && first.equals(object.first) && second != null
 			        && second.equals(object.second)) {
