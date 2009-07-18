@@ -1,4 +1,4 @@
-/* $Id: StatisticsDAO.java,v 1.4 2009/07/11 13:38:48 nhnb Exp $ */
+/* $Id: StatisticsDAO.java,v 1.5 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -28,6 +28,13 @@ import marauroa.server.game.Statistics.Variables;
  */
 public class StatisticsDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(StatisticsDAO.class);
+
+	/**
+	 * Creates a new StatisticsDAO
+	 */
+	protected StatisticsDAO() {
+	    // hide constructor as this class should only be instantiated by DAORegister
+	}
 
 	public void addStatisticsEvent(DBTransaction transaction, Variables var) {
 		try {

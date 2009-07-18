@@ -1,4 +1,4 @@
-/* $Id: GameEventDAO.java,v 1.4 2009/07/11 13:38:48 nhnb Exp $ */
+/* $Id: GameEventDAO.java,v 1.5 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -27,6 +27,13 @@ import marauroa.server.db.TransactionPool;
  */
 public class GameEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameEventDAO.class);
+
+    /**
+     * Creates a new GameEventDAO
+     */
+    protected GameEventDAO() {
+        // hide constructor as this class should only be instantiated by DAORegister
+    }
 
 	public void addGameEvent(DBTransaction transaction, String source, String event, String... params) {
 		try {

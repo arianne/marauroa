@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.8 2009/07/11 13:38:48 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.9 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -44,9 +44,15 @@ import marauroa.server.game.rp.RPObjectFactory;
 public class RPZoneDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPZoneDAO.class);
 
+    /** factory for creating object instances */
 	protected RPObjectFactory factory;
 
-	public RPZoneDAO(RPObjectFactory factory) {
+	/**
+	 * creates a new RPZoneDAO
+	 *
+	 * @param factory factory for creating object instances
+	 */
+	protected RPZoneDAO(RPObjectFactory factory) {
 		this.factory = factory;
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.8 2009/07/13 21:16:23 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.9 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -33,6 +33,13 @@ import marauroa.server.db.TransactionPool;
  */
 public class CharacterDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(CharacterDAO.class);
+
+    /**
+     * Creates a new CharacterDAO
+     */
+    protected CharacterDAO() {
+        // hide constructor as this class should only be instantiated by DAORegister
+    }
 
 	public void addCharacter(DBTransaction transaction, String username, String character,
 	        RPObject player) throws SQLException, IOException {

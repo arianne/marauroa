@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.7 2009/07/11 22:32:21 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.8 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -32,6 +32,13 @@ import marauroa.server.db.TransactionPool;
  */
 public class LoginEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginEventDAO.class);
+
+    /**
+     * Creates a new LoginEventDAO
+     */
+    protected LoginEventDAO() {
+        // hide constructor as this class should only be instantiated by DAORegister
+    }
 
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
 

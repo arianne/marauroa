@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.6 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.7 2009/07/18 15:30:01 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -36,6 +36,13 @@ import marauroa.server.net.validator.InetAddressMask;
  */
 public class AccountDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(AccountDAO.class);
+
+    /**
+     * Creates a new AccountDAO
+     */
+    protected AccountDAO() {
+        // hide constructor as this class should only be instantiated by DAORegister
+    }
 
 	public void addPlayer(DBTransaction transaction, String username, byte[] password, String email)
 	        throws SQLException {
