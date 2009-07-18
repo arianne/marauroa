@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.3 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.4 2009/07/18 15:02:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -31,9 +31,12 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
+    /** connection to the database */
 	protected Connection connection;
 
+	/** list of open statements */
 	protected LinkedList<Statement> statements = null;
+	/** list of open result sets */
 	protected LinkedList<ResultSet> resultSets = null;
 
 	/**

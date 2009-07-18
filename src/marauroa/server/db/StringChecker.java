@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.1 2009/07/11 11:51:16 nhnb Exp $ */
+/* $Id: StringChecker.java,v 1.2 2009/07/18 15:02:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -91,6 +91,7 @@ public class StringChecker {
 	 *
 	 * @param param
 	 *            string to quote
+	 * @param size maximal length of this string before encoding
 	 * @return quoted string
 	 */
 	public static String trimAndEscapeSQLString(String param, int size) {

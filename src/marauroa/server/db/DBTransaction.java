@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.16 2009/07/12 17:25:25 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.17 2009/07/18 15:02:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -176,6 +176,7 @@ public class DBTransaction {
      *
      * @param query   SQL statement
      * @param params  parameter values
+     * @return ResultSet
      * @throws SQLException in case of an database error 
      */
 	public ResultSet query(String query, Map<String, Object> params) throws SQLException {
@@ -188,6 +189,7 @@ public class DBTransaction {
      *
      * @param query   SQL statement
      * @param params  parameter values
+     * @return value of the first column in the first row
      * @throws SQLException in case of an database error 
      */
 	public int querySingleCellInt(String query, Map<String, Object> params) throws SQLException {

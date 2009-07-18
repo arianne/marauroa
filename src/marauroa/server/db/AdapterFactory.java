@@ -1,4 +1,4 @@
-/* $Id: AdapterFactory.java,v 1.5 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: AdapterFactory.java,v 1.6 2009/07/18 15:02:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -45,7 +45,8 @@ class AdapterFactory {
 	 *
 	 * @return DatabaseAdapter for the specified database
 	 */
-	public DatabaseAdapter create() {
+	@SuppressWarnings("unchecked")
+    public DatabaseAdapter create() {
 		try {
 			Configuration configuration = Configuration.getConfiguration();
 			String adapter = configuration.get("database_adapter");
