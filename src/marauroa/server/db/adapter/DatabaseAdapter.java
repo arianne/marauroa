@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.10 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.11 2009/07/18 20:42:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -115,5 +115,14 @@ public interface DatabaseAdapter {
      * @throws SQLException in case of an database error 
 	 */
 	public PreparedStatement prepareStatement(String sql) throws SQLException;
+
+	/**
+	 * checkes whether the specified table exists
+	 *
+	 * @param table name of table
+	 * @return true, if the table exists, false otherwise
+     * @throws SQLException in case of an database error
+	 */
+	public boolean doesTableExist(String table) throws SQLException;
 
 }

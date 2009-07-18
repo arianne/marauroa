@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.17 2009/07/18 15:02:25 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.18 2009/07/18 20:42:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -223,5 +223,17 @@ public class DBTransaction {
 	public PreparedStatement prepareStatement(String query, Map<String, Object> params) throws SQLException {
 		String sql = subst(query, params);
 		return databaseAdapter.prepareStatement(sql);
+	}
+
+
+	/**
+	 * checkes whether the specified table exists
+	 *
+	 * @param table name of table
+	 * @return true, if the table exists, false otherwise
+     * @throws SQLException in case of an database error
+	 */
+	protected boolean doesTableExist(String table) throws SQLException {
+		return databaseAdapter.doesTableExist(table);
 	}
 }

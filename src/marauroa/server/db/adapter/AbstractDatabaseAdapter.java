@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.5 2009/07/18 20:16:23 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.6 2009/07/18 20:42:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -199,5 +199,13 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statements.add(statement);
 		return statement;
+	}
+
+	public boolean doesTableExist(String table) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getTables(null, null, table, null);
+		boolean res = result.next();
+		result.close();
+		return res;
 	}
 }
