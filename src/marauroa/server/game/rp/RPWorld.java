@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.23 2009/06/14 14:47:11 nhnb Exp $ */
+/* $Id: RPWorld.java,v 1.24 2009/07/18 11:20:36 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,6 +53,9 @@ public class RPWorld implements Iterable<IRPZone> {
 	/** The all-mighty player container. */
 	PlayerEntryContainer playerContainer;
 
+	/**
+	 * creates a new RPWorld. Note this class is designed as a singleton.
+	 */
 	protected RPWorld() {
 		zones = new ConcurrentHashMap<IRPZone.ID, IRPZone>();
 	}
@@ -172,9 +175,9 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Removes a zone from world.
-	 * It calls zone.onFinish method to free resources zone could have allocated.	 * 
+	 * It calls zone.onFinish method to free resources zone could have allocated.
 	 * 
-	 * @param zoneid
+	 * @param objectid
 	 * @return the zone removed or null if not found
 	 * @throws Exception caused by onFinish
 	 */

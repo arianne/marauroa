@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.38 2009/07/11 13:54:30 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.39 2009/07/18 11:20:35 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -266,6 +266,11 @@ public class PlayerEntry {
 		return perceptionCounter++;
 	}
 
+	/**
+	 * returns the current perception timestamp
+	 *
+	 * @return the current perception timestamp
+	 */
 	public int getThisPerceptionTimestamp() {
 		return perceptionCounter;
 	}
@@ -303,7 +308,8 @@ public class PlayerEntry {
 	 *
 	 * @param player
 	 *            the object to store
-	 * @throws SQLException
+	 * @throws SQLException in case of an database error
+	 * @throws IOException in case of an input/output error
 	 */
 	public void storeRPObject(RPObject player) throws SQLException, IOException {
 		// We store the object in the database
@@ -320,7 +326,7 @@ public class PlayerEntry {
 	 * @param character
 	 *            The name we are querying for.
 	 * @return true if it is found or false otherwise.
-	 * @throws Exception
+	 * @throws SQLException
 	 *             If there is a Database exception.
 	 */
 	public boolean hasCharacter(String character) throws SQLException {

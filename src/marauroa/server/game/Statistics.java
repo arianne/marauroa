@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.37 2009/07/11 13:54:30 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.38 2009/07/18 11:20:35 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -268,7 +268,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	/**
-	 * escapes special characerers in XML hand HTML.
+	 * escapes special characters in XML hand HTML.
 	 *
 	 * @param param
 	 *            string to escape
