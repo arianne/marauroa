@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.47 2009/07/17 21:17:43 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.48 2009/07/18 20:51:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,7 +71,7 @@ public abstract class ClientFramework {
 
 	/** How long we should wait for connect. */
 	public final static int TIMEOUT = 10000;
-	
+
 	private int perceptionsCount;
 
 	/**
@@ -96,7 +96,7 @@ public abstract class ClientFramework {
 		messages = new LinkedList<Message>();
 		perceptionsCount = 0;
 	}
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -107,7 +107,6 @@ public abstract class ClientFramework {
 		messages = new LinkedList<Message>();
 		perceptionsCount = 0;
 	}
-
 
 	/**
 	 * Call this method to connect to server. This method just configure the
@@ -135,7 +134,7 @@ public abstract class ClientFramework {
 	public void connect(Proxy proxy, InetSocketAddress serverAddress) throws IOException {
 		netMan = new TCPNetworkClientManager(proxy, serverAddress);
 	}
-	
+
 	/**
 	 * Retrieves a message from network manager.
 	 *
@@ -277,7 +276,7 @@ public abstract class ClientFramework {
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
 
 					throw new LoginFailedException(msgNACK.getResolution());
-				/* If message doesn't match, store it, someone will need it. */
+					/* If message doesn't match, store it, someone will need it. */
 				default:
 					messages.add(msg);
 			}
@@ -367,8 +366,8 @@ public abstract class ClientFramework {
 				/* Account was not created. Reason explained on event. */
 				case S2C_CREATEACCOUNT_NACK:
 					logger.debug("Create account NACK");
-					MessageS2CCreateAccountNACK nack=(MessageS2CCreateAccountNACK) msg;
-					result = new AccountResult(nack.getResolutionCode(),username);
+					MessageS2CCreateAccountNACK nack = (MessageS2CCreateAccountNACK) msg;
+					result = new AccountResult(nack.getResolutionCode(), username);
 
 					recieved++;
 					break;
@@ -434,10 +433,10 @@ public abstract class ClientFramework {
 				/* Account was not created. Reason explained on event and return. */
 				case S2C_CREATECHARACTER_NACK:
 					logger.debug("Create character NACK");
-					MessageS2CCreateCharacterNACK reply= (MessageS2CCreateCharacterNACK) msg;
-					
-					result=new CharacterResult(reply.getResolutionCode(), character, template);
-					return result;					
+					MessageS2CCreateCharacterNACK reply = (MessageS2CCreateCharacterNACK) msg;
+
+					result = new CharacterResult(reply.getResolutionCode(), character, template);
+					return result;
 			}
 		}
 
@@ -456,7 +455,7 @@ public abstract class ClientFramework {
 		 * reset the counter to avoid sending keep alive messages.
 		 */
 		perceptionsCount = 0;
-		
+
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
 		netMan.addMessage(msgAction);
 	}
@@ -518,7 +517,7 @@ public abstract class ClientFramework {
 		boolean receivedMessages = false;
 
 		/* Check network for new messages. */
-		messages.addAll(((TCPNetworkClientManager)netMan).getMessages());
+		messages.addAll(((TCPNetworkClientManager) netMan).getMessages());
 		/* For all the received messages do */
 		for (Message msg : messages) {
 			receivedMessages = true;
@@ -531,9 +530,9 @@ public abstract class ClientFramework {
 					/*
 					 * Only once each 30 perceptions we tell that we are alive.
 					 */
-					if (perceptionsCount%30+1 == 30) {
+					if (perceptionsCount % 30 + 1 == 30) {
 						MessageC2SKeepAlive msgAlive = new MessageC2SKeepAlive();
-						netMan.addMessage(msgAlive);						
+						netMan.addMessage(msgAlive);
 					}
 
 					logger.debug("Processing Message Perception");

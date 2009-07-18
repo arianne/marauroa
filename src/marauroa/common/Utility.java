@@ -1,4 +1,4 @@
-/* $Id: Utility.java,v 1.10 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: Utility.java,v 1.11 2009/07/18 20:51:50 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -86,13 +86,13 @@ public class Utility {
 				result.append(addLeadingZeros(Integer.toHexString(theByte), 2)).append(' ');
 
 				// show chars < 32 and > 127 as '.'
-				if (theByte > 31 && theByte < 128) {
+				if ((theByte > 31) && (theByte < 128)) {
 					chars.append((char) (theByte));
 				} else {
 					chars.append('.');
 				}
 
-				if (index > 0 && (index % 16 == 0)) {
+				if ((index > 0) && (index % 16 == 0)) {
 					result.append(chars).append('\n').append(
 					        addLeadingZeros(Integer.toHexString(index), 8)).append(' ');
 

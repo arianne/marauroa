@@ -1,4 +1,4 @@
-/* $Id: CRC.java,v 1.7 2009/07/18 11:11:37 nhnb Exp $ */
+/* $Id: CRC.java,v 1.8 2009/07/18 20:51:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,9 +23,9 @@ public class CRC {
 	 * generator polynomial
 	 */
 	private static final int POLY = 0x1021; /*
-	 * x16 + x12 + x5 + 1 generator
-	 * polynomial
-	 */
+	                                        * x16 + x12 + x5 + 1 generator
+	                                        * polynomial
+	                                        */
 
 	/* 0x8408 used in European X.25 */
 

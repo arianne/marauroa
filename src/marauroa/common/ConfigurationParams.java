@@ -1,4 +1,4 @@
-/* $Id: ConfigurationParams.java,v 1.3 2008/08/16 16:55:00 nhnb Exp $ */
+/* $Id: ConfigurationParams.java,v 1.4 2009/07/18 20:51:50 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -22,12 +22,12 @@ public class ConfigurationParams {
 
 	private boolean relativeToHome = false;
 
-    private String basedir = "";
+	private String basedir = "";
 
-    /** Default name of configuration file */
-    private String configurationFile = "server.ini";
+	/** Default name of configuration file */
+	private String configurationFile = "server.ini";
 
-    private boolean persistence = true;
+	private boolean persistence = true;
 
 	public ConfigurationParams() {
 		// default constructor
@@ -40,31 +40,35 @@ public class ConfigurationParams {
 	}
 
 	public void setRelativeToHome(boolean relativeToHome) {
-	    this.relativeToHome = relativeToHome;
-    }
+		this.relativeToHome = relativeToHome;
+	}
+
 	public boolean isRelativeToHome() {
-	    return relativeToHome;
-    }
+		return relativeToHome;
+	}
 
 	public void setBasedir(String basedir) {
-	    this.basedir = basedir;
-    }
+		this.basedir = basedir;
+	}
+
 	public String getBasedir() {
-	    return basedir;
-    }
+		return basedir;
+	}
 
 	public void setConfigurationFile(String configurationFile) {
-	    this.configurationFile = configurationFile;
-    }
+		this.configurationFile = configurationFile;
+	}
+
 	public String getConfigurationFile() {
-	    return configurationFile;
-    }
+		return configurationFile;
+	}
 
 	public void setPersistence(boolean persistence) {
-	    this.persistence = persistence;
-    }
+		this.persistence = persistence;
+	}
+
 	public boolean isPersistence() {
-	    return persistence;
-    }
+		return persistence;
+	}
 
 }
