@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.17 2009/07/11 03:31:48 nhnb Exp $ */
+/* $Id: ConnectionValidator.java,v 1.18 2009/07/19 09:40:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 * Temporal bans are added using the API and are lost on each server reset.
 	 * Consider using Database for a permanent ban
 	 */
-	private List<InetAddressMask> temporalBans;
+	List<InetAddressMask> temporalBans;
 
 	/** A timer to remove ban when it is done. */
 	private Timer timer;

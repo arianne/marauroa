@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.77 2009/07/11 14:07:04 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.78 2009/07/19 09:40:28 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -22,6 +22,7 @@ import javax.management.ObjectName;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.common.crypto.RSAKey;
 import marauroa.server.db.DatabaseConnectionException;
 import marauroa.server.game.GameServerManager;
@@ -150,7 +151,7 @@ import marauroa.server.net.INetworkServerManager;
 public class marauroad extends Thread {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(marauroad.class);
+	private static final Logger logger = Log4J.getLogger(marauroad.class);
 
 	/** Which marauroa version are we running */
 	private static final String VERSION = "2.7";
@@ -371,9 +372,11 @@ public class marauroad extends Thread {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			private Logger logger = Log4J.getLogger(marauroad.class);
+
 			@Override
 			public void run() {
-				// Note: Log4J ist shutdown already at this point
+				// Note: Log4J is shutdown already at this point
 				logger.warn("User requesting shutdown");
 				finish();
 				logger.info("Shutdown completed. See you later!");

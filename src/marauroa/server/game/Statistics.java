@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.39 2009/07/18 11:32:00 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.40 2009/07/19 09:40:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -140,6 +140,18 @@ public class Statistics implements StatisticsMBean {
 				}
 			}
 		}
+
+		/**
+		 * escapes special characters in XML hand HTML.
+		 *
+		 * @param param
+		 *            string to escape
+		 * @return escaped strings
+		 */
+		private static String escapeXML(String param) {
+			return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
+			        ">", "&gt;");
+		}
 	}
 
 	/** This is the actual values */
@@ -266,15 +278,4 @@ public class Statistics implements StatisticsMBean {
 		init();
 	}
 
-	/**
-	 * escapes special characters in XML hand HTML.
-	 *
-	 * @param param
-	 *            string to escape
-	 * @return escaped strings
-	 */
-	private static String escapeXML(String param) {
-		return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
-		        ">", "&gt;");
-	}
 }

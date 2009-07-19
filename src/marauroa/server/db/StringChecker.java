@@ -1,4 +1,4 @@
-/* $Id: StringChecker.java,v 1.2 2009/07/18 15:02:25 nhnb Exp $ */
+/* $Id: StringChecker.java,v 1.3 2009/07/19 09:40:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -98,9 +98,10 @@ public class StringChecker {
 		if (param == null) {
 			return param;
 		}
-		if (param.length() > size) {
-			param = param.substring(0, size);
+		String res = param;
+		if (res.length() > size) {
+			res = res.substring(0, size);
 		}
-		return escapeSQLString(param);
+		return escapeSQLString(res);
 	}
 }
