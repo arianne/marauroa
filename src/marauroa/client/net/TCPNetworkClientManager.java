@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.26 2009/07/18 11:11:36 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.27 2009/07/19 09:37:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -53,7 +53,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 	/** The TCP/IP address where the server is running. */
 	private InetSocketAddress address;
 
-	/** While keepRunning is true, we keep recieving messages */
+	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
 
 	/** isFinished is true when the thread has really exited. */
