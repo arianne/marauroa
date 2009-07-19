@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.2 2009/07/19 14:35:34 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.3 2009/07/19 15:09:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -30,6 +30,17 @@ public class JDBCSQLHelper {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
+	private DBTransaction transaction;
+	private String command;
+
+	/**
+	 * creates a new JDBCSQLHelper
+	 *
+	 * @param transaction DBTransaction
+	 */
+	public JDBCSQLHelper(DBTransaction transaction) {
+		this.transaction = transaction;
+	}
 
 	/**
 	 * This method runs a SQL file using the given transaction. You are
@@ -42,7 +53,7 @@ public class JDBCSQLHelper {
 	 *            The file name that contains the SQL commands.
 	 * @return true if the whole file was executed or false in any other error.
 	 */
-	public boolean runDBScript(DBTransaction transaction, String file) {
+	public boolean runDBScript(String file) {
 		boolean ret = true;
 		BufferedReader in = null;
 
@@ -57,9 +68,8 @@ public class JDBCSQLHelper {
 			while ((line = in.readLine()) != null) {
 				is.append(line);
 				if (line.indexOf(';') != -1) {
-					String query = is.toString();
-					logger.debug("runDBScript is executing query " + query);
-					transaction.execute(query, null);
+					command = is.toString();
+					rewriteAndExecuteQuery();
 					is = new StringBuffer();
 				}
 			}
@@ -82,4 +92,8 @@ public class JDBCSQLHelper {
 		}
 	}
 
+	private void rewriteAndExecuteQuery() throws SQLException {
+		logger.debug("runDBScript is executing query " + command);
+		transaction.execute(command, null);
+	}
 }

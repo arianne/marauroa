@@ -1,4 +1,4 @@
-/* $Id: PingRPRuleProcessor.java,v 1.2 2009/07/11 13:57:57 nhnb Exp $ */
+/* $Id: PingRPRuleProcessor.java,v 1.3 2009/07/19 15:09:13 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -56,13 +56,13 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	public PingRPRuleProcessor() {
 		new DatabaseFactory().initializeDatabase();
 		transactionPool = TransactionPool.get();
-		JDBCSQLHelper sql = JDBCSQLHelper.get();
 		world = BareRPWorld.get();
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			sql.runDBScript(transaction, "marauroa/test/clear.sql");
-			sql.runDBScript(transaction, "marauroa/server/marauroa_init.sql");
+			JDBCSQLHelper sql = new JDBCSQLHelper(transaction);
+			sql.runDBScript("marauroa/test/clear.sql");
+			sql.runDBScript("marauroa/server/marauroa_init.sql");
 			transactionPool.commit(transaction);
 		} catch (SQLException e) {
 			transactionPool.rollback(transaction);			
