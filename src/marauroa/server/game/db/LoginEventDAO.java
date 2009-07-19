@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.8 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.9 2009/07/19 09:27:56 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -172,7 +172,7 @@ public class LoginEventDAO {
 		}
 	}	
 
-	public List<Pair<String, Long>> getAmountOfFailedLogins(DBTransaction transaction, long id, int playerId, String service) throws SQLException {
+	public List<Pair<String, Long>> getAmountOfFailedLogins(DBTransaction transaction, long id, int playerId) throws SQLException {
 		try {
 			String query = "SELECT service, count(*) FROM loginEvent"
 				+ " WHERE player_id=[player_id] + AND id > [id] AND result = 0 GROUP BY service";
@@ -198,7 +198,7 @@ public class LoginEventDAO {
 		addLoginEvent(transaction, username, source, correctLogin);
 		TransactionPool.get().commit(transaction);
 	}
-	
+
 	public List<String> getLoginEvents(String username, int events) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		List<String> res = getLoginEvents(transaction, username, events);
