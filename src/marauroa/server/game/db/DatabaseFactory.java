@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.15 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.16 2009/07/19 14:35:34 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -54,7 +54,7 @@ public class DatabaseFactory {
 	private void initialize() {
 		final DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			JDBCSQLHelper.get().runDBScript(transaction, "marauroa/server/marauroa_init.sql");
+			new JDBCSQLHelper().runDBScript(transaction, "marauroa/server/marauroa_init.sql");
 			TransactionPool.get().commit(transaction);
 		} catch (SQLException e) {
 			logger.error(e, e);

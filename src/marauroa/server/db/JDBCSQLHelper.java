@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.1 2009/07/11 07:44:29 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.2 2009/07/19 14:35:34 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -30,25 +30,6 @@ public class JDBCSQLHelper {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
-
-	private static JDBCSQLHelper sqlHelper;
-
-	private JDBCSQLHelper() {
-		// hide constructor; Singleton pattern
-	}
-
-	/**
-	 * Returns an unique instance of the helper.
-	 * 
-	 * @return an unique instance of the helper.
-	 */
-	public static JDBCSQLHelper get() {
-		if (sqlHelper == null) {
-			sqlHelper = new JDBCSQLHelper();
-		}
-
-		return sqlHelper;
-	}
 
 	/**
 	 * This method runs a SQL file using the given transaction. You are
