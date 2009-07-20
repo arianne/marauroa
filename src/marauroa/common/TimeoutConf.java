@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.13 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: TimeoutConf.java,v 1.14 2009/07/20 20:29:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,7 +21,7 @@ package marauroa.common;
 public class TimeoutConf {
 
 	/** This indicate when we stop to wait on the socket. The lower the slower. */
-	final public static int SOCKET_TIMEOUT = 10;
+	public static final int SOCKET_TIMEOUT = 10;
 
 	/**
 	 * It is possible for a player to start login procedure but not complete it
@@ -29,28 +29,28 @@ public class TimeoutConf {
 	 * taking a "slot" of the game and so disallowing other real players to
 	 * play.
 	 */
-	final public static long UNCOMPLETED_LOGIN_TIMEOUT = 60000;
+	public static final long UNCOMPLETED_LOGIN_TIMEOUT = 60000;
 
 	/**
 	 * This indicate how many time we wait for a message to arrive. The lower
 	 * the slower.
 	 */
-	final public static int GAMESERVER_MESSAGE_GET_TIMEOUT = 1000;
+	public static final int GAMESERVER_MESSAGE_GET_TIMEOUT = 1000;
 
 	/** Maximum size of bytes on a message (256KB) */
-	final public static int MAX_BYTE_ARRAY_ELEMENTS = 256 * 1024;
+	public static final int MAX_BYTE_ARRAY_ELEMENTS = 256 * 1024;
 
 	/** Maximum size of elements on a array (256K) */
-	final public static int MAX_ARRAY_ELEMENTS = 256 * 1024;
+	public static final int MAX_ARRAY_ELEMENTS = 256 * 1024;
 
 	/**
 	 * The amount of failed login tries before considering the account blocked.
 	 */
-	final public static int FAILED_LOGIN_ATTEMPS = 3;
+	public static final int FAILED_LOGIN_ATTEMPS = 3;
 
 	/**
 	 * The amount of seconds until being able to retry login after N failed
 	 * attemps.
 	 */
-	final public static long FAILED_LOGIN_BLOCKTIME = 60;
+	public static final long FAILED_LOGIN_BLOCKTIME = 600;
 }
