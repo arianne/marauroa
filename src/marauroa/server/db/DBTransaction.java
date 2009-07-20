@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.18 2009/07/18 20:42:46 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.19 2009/07/20 20:23:41 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -47,8 +47,8 @@ public class DBTransaction {
 	protected DBTransaction(DatabaseAdapter databaseAdapter) {
 		this.databaseAdapter = databaseAdapter;
         try {
-            reInt = new RE("^[0-9 ]*$");
-            reIntList = new RE("^[0-9, ]*$");
+            reInt = new RE("^-?[0-9 ]*$");
+            reIntList = new RE("^-?[0-9, ]*$");
         } catch (RESyntaxException e) {
             logger.error(e, e);
         }
