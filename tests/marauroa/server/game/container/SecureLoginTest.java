@@ -1,4 +1,4 @@
-/* $Id: SecureLoginTest.java,v 1.9 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: SecureLoginTest.java,v 1.10 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -18,6 +18,8 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 
 import marauroa.common.crypto.Hash;
@@ -63,9 +65,10 @@ public class SecureLoginTest {
 	 * It test if verify works correctly with a correct account.
 	 * 
 	 * @throws SQLException
+	 * @throws UnknownHostException 
 	 */
 	@Test
-	public void testLogin() throws SQLException {
+	public void testLogin() throws SQLException, UnknownHostException {
 		String password = "password";
 		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		assertTrue("Unable to verify login",login.verify());
@@ -77,23 +80,24 @@ public class SecureLoginTest {
 	 * correctly with a bad password.
 	 * 
 	 * @throws SQLException
+	 * @throws UnknownHostException 
 	 */
 	@Test
-	public void testLoginFailure() throws SQLException {
+	public void testLoginFailure() throws SQLException, UnknownHostException {
 		String password = "badpassword";
 
 		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		assertFalse(login.verify());
 	}
 
-	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password) {
+	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password) throws UnknownHostException {
 		byte[] serverNonce = Hash.random(Hash.hashLength());
 		byte[] clientNonce = Hash.random(Hash.hashLength());
 
 		byte[] clientNonceHash = Hash.hash(clientNonce);
 
 		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
-		        serverNonce);
+		        serverNonce, InetAddress.getLocalHost());
 
 		byte[] b1 = Hash.xor(clientNonce, serverNonce);
 		if (b1 == null) {

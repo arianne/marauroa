@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.7 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.8 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Random;
 
 import marauroa.common.Log4J;
-import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
@@ -226,18 +225,6 @@ public class AccountDAO {
 		return id;
 	}
 
-	public boolean isAccountBlocked(DBTransaction transaction, String username) throws SQLException {
-		int id = getDatabasePlayerId(transaction, username);
-		String query = "SELECT count(*) as amount FROM loginEvent where player_id=[player_id]"
-		        + " and result=0 and (now()-timedate)<"
-		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("player_id", id);
-
-		int attemps = transaction.querySingleCellInt(query, params);
-		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS;
-	}
-
 	public boolean verify(DBTransaction transaction, PlayerEntry.SecuredLoginInfo informations)
 	        throws SQLException {
 		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
@@ -382,13 +369,6 @@ public class AccountDAO {
 	public int getDatabasePlayerId(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		int res = getDatabasePlayerId(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
-	}
-
-	public boolean isAccountBlocked(String username) throws SQLException {
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = isAccountBlocked(transaction, username);
 		TransactionPool.get().commit(transaction);
 		return res;
 	}

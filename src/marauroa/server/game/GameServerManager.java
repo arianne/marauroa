@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.119 2009/07/20 20:28:53 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.120 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -999,7 +999,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			byte[] clientNonceHash = msgLoginSendPromise.getHash();
 
 			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
-			        serverNonce);
+			        serverNonce, msgLoginSendPromise.getAddress());
 
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg
 			        .getSocketChannel(), serverNonce);
@@ -1039,8 +1039,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * We check that player didn't failed too many time the login, if it
 			 * did, we reject the login request until the block pass.
 			 */
-			if (info.isAccountBlocked()) {
-				logger.debug("Blocked account for player " + info.username);
+			if (info.isBlocked()) {
+				logger.debug("Blocked account for player " + info.username + " and/or address " + info.address);
 
 				/* Send player the Login NACK message */
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),

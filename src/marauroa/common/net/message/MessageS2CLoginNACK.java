@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.7 2007/05/03 18:28:49 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.8 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,6 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import marauroa.common.TimeoutConf;
 import marauroa.common.net.NetConst;
 
 /**
@@ -39,11 +38,11 @@ public class MessageS2CLoginNACK extends Message {
 
 	static private String[] text = {
 	        "Username/Password incorrect.",
-	        "Username/Password has been failed too many times. Account blocked for "
-	                + (TimeoutConf.FAILED_LOGIN_BLOCKTIME / 60) + " minutes",
+	        "There have been to many failed login attempts for your account or network. "
+	        	+ "Please wait a couple of minutes or contact support.",
 		    "Account is banned.",
 	        "Server is full.",
-	        "Server is running an incompatible version of game. Update client",
+	        "Server is running an incompatible version of game. Please update.",
 	        "marauroa.common.network Protocol invalid version: Running "
 	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
 	        "The hash you sent does not correspond to the nonce you sent." };

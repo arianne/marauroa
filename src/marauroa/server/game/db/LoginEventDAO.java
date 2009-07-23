@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.9 2009/07/19 09:27:56 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.10 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.Pair;
+import marauroa.common.TimeoutConf;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 
@@ -193,6 +194,31 @@ public class LoginEventDAO {
 		}
 	}	
 
+	public boolean isAccountBlocked(DBTransaction transaction, String username) throws SQLException {
+		String query = "SELECT count(*) as amount FROM loginEvent, account"
+				+ " WHERE loginEvent.player_id=account.id"
+				+ " AND username='[username']"
+		        + " AND loginEvent.result=0 and (now()-loginEvent.timedate)<"
+		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", username);
+
+		int attemps = transaction.querySingleCellInt(query, params);
+		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS_ACCOUNT;
+	}
+
+	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
+		String query = "SELECT count(*) as amount FROM loginEvent"
+				+ " WHERE address='[address']"
+		        + " AND result=0 and (now()-timedate)<"
+		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("address", address);
+
+		int attemps = transaction.querySingleCellInt(query, params);
+		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS_IP;
+	}
+	
 	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		addLoginEvent(transaction, username, source, correctLogin);
@@ -205,4 +231,20 @@ public class LoginEventDAO {
 		TransactionPool.get().commit(transaction);
 		return res;
 	}
+
+
+	public boolean isAccountBlocked(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = isAccountBlocked(transaction, username);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
+	public boolean isAddressBlocked(String address) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean res = isAddressBlocked(transaction, address);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
 }

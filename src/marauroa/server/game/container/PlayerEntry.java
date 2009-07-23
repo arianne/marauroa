@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.39 2009/07/18 11:20:35 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.40 2009/07/23 17:21:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,8 @@ import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
@@ -43,6 +45,7 @@ public class PlayerEntry {
 	 * login is completed the information is cleared.
 	 */
 	static public class SecuredLoginInfo {
+		private static Logger logger = Log4J.getLogger(SecuredLoginInfo.class);
 
 		/** A long array of bytes that represent the Hash of a random value. */
 		public byte[] serverNonce;
@@ -65,6 +68,9 @@ public class PlayerEntry {
 		/** The server RSA key. */
 		public RSAKey key;
 
+		/** client ip address */
+		public InetAddress address;
+
 		/**
 		 * Constructor
 		 *
@@ -74,11 +80,13 @@ public class PlayerEntry {
 		 *            the client hash
 		 * @param serverNonce
 		 *            the server random bigint
+		 * @param address client ip address 
 		 */
-		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce) {
+		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce, InetAddress address) {
 			this.key = key;
 			this.clientNonceHash = clientNonceHash;
 			this.serverNonce = serverNonce;
+			this.address = address;
 		}
 
 		/**
@@ -117,8 +125,20 @@ public class PlayerEntry {
 		 * @throws SQLException
 		 *             if there is any database problem.
 		 */
-		public boolean isAccountBlocked() throws SQLException {
-			return DAORegister.get().get(AccountDAO.class).isAccountBlocked(username);
+		public boolean isBlocked() throws SQLException {
+			DBTransaction transaction = TransactionPool.get().beginWork();
+			boolean res = true;
+			try {
+				LoginEventDAO loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
+				res = loginEventDAO.isAccountBlocked(transaction, username) 
+					|| loginEventDAO.isAddressBlocked(transaction, address.getHostAddress());
+				
+				TransactionPool.get().commit(transaction);
+			} catch (SQLException e) {
+				TransactionPool.get().rollback(transaction);
+				logger.error(e, e);
+			}
+			return res;
 		}
 
 		/**

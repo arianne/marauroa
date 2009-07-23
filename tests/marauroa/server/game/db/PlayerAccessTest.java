@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.6 2009/07/11 13:57:11 nhnb Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.7 2009/07/23 17:21:39 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,8 @@ import org.junit.Test;
 public class PlayerAccessTest {
 	private static TransactionPool transactionPool;
 	private static AccountDAO accountDAO;
-
+	private static LoginEventDAO loginEventDAO;
+	
 	/**
 	 * Setup one time the accountDAO.
 	 * 
@@ -63,6 +64,7 @@ public class PlayerAccessTest {
 
 		transactionPool = new TransactionPool(props);
 		accountDAO = DAORegister.get().get(AccountDAO.class);
+		loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
 	}
 
 	/**
@@ -239,13 +241,13 @@ public class PlayerAccessTest {
 
 			InetAddress address = InetAddress.getLocalHost();
 
-			assertFalse(accountDAO.isAccountBlocked(transaction, username));
+			assertFalse(loginEventDAO.isAccountBlocked(transaction, username));
 
-			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS + 1; i++) {
+			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS_ACCOUNT + 1; i++) {
 				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, false);
 			}
 
-			assertTrue(accountDAO.isAccountBlocked(transaction, username));
+			assertTrue(loginEventDAO.isAccountBlocked(transaction, username));
 		} finally {
 			transactionPool.rollback(transaction);
 		}
