@@ -1,4 +1,4 @@
-/* $Id: BugAtApplyDifferencesTest.java,v 1.5 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: BugAtApplyDifferencesTest.java,v 1.6 2009/08/01 12:50:14 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -72,20 +72,24 @@ public class BugAtApplyDifferencesTest {
 		zone = new MarauroaRPZone("test") {
 			@Override
 			public void onInit() throws Exception {
+				// no database access as it is done in the super method
 			}
 
 			@Override
 			public void onFinish() throws Exception {
+				// no database access as it is done in the super method
 			}
 		};
 
 		recreatedZone = new MarauroaRPZone("test") {
 			@Override
 			public void onInit() throws Exception {
+				// no database access as it is done in the super method
 			}
 
 			@Override
 			public void onFinish() throws Exception {
+				// no database access as it is done in the super method
 			}
 		};
 	}
