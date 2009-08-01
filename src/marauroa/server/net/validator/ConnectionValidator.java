@@ -1,4 +1,4 @@
-/* $Id: ConnectionValidator.java,v 1.18 2009/07/19 09:40:28 nhnb Exp $ */
+/* $Id: ConnectionValidator.java,v 1.19 2009/08/01 19:06:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,7 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import marauroa.common.Log4J;
-import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.BanListDAO;
 import marauroa.server.game.db.DAORegister;
 
 /**
@@ -205,7 +205,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	public synchronized void loadBannedIPNetworkListFromDB() {
 		try {
 			permanentBans.clear();
-			permanentBans.addAll(DAORegister.get().get(AccountDAO.class).getBannedAddresses());
+			permanentBans.addAll(DAORegister.get().get(BanListDAO.class).getBannedAddresses());
 		} catch (SQLException sqle) {
 			logger.error("cannot read banned networks database table", sqle);
 		}  catch (NullPointerException e) {

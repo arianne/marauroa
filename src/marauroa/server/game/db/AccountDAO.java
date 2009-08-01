@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.8 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.9 2009/08/01 19:06:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -15,8 +15,6 @@ package marauroa.server.game.db;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -26,7 +24,6 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.net.validator.InetAddressMask;
 
 /**
  * data access object for accounts
@@ -280,25 +277,6 @@ public class AccountDAO {
 			throw e;
 		}
 	}
-	
-	public List<InetAddressMask> getBannedAddresses(DBTransaction transaction) throws SQLException {
-		List<InetAddressMask> permanentBans = new LinkedList<InetAddressMask>();
-
-		/* read ban list from DB */
-		String query = "select address, mask from banlist";
-		logger.debug("getBannedAddresses is executing query " + query);
-		ResultSet resultSet = transaction.query(query, null);
-
-		permanentBans.clear();
-		while (resultSet.next()) {
-			String address = resultSet.getString("address");
-			String mask = resultSet.getString("mask");
-			InetAddressMask iam = new InetAddressMask(address, mask);
-			permanentBans.add(iam);
-		}
-
-		return permanentBans;
-	}
 
 	public boolean removePlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
@@ -376,13 +354,6 @@ public class AccountDAO {
 	public boolean verify(PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		boolean res = verify(transaction, informations);
-		TransactionPool.get().commit(transaction);
-		return res;
-	}
-
-	public List<InetAddressMask> getBannedAddresses() throws SQLException {
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		List<InetAddressMask> res = getBannedAddresses(transaction);
 		TransactionPool.get().commit(transaction);
 		return res;
 	}

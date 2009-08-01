@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.4 2009/07/11 11:52:44 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.5 2009/08/01 19:06:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -81,6 +81,7 @@ public class DAORegister {
 		RPObjectFactory factory = RPObjectFactory.get();
 
 		register(AccountDAO.class, new AccountDAO());
+		register(BanListDAO.class, new BanListDAO());
 		register(CharacterDAO.class, new CharacterDAO());
 		register(GameEventDAO.class, new GameEventDAO());
 		register(LoginEventDAO.class, new LoginEventDAO());
