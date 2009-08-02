@@ -36,7 +36,7 @@ Marauroa is a GPL project.
 
 Current Version
 ---------------
-Version 2.7
+Version 3.0
 
 
 Requirements
@@ -70,7 +70,7 @@ Or for a complete package release write:
 
 Status
 ------
-Version >= 2.7 does support Stendhal 0.76
+Version >= 3.0 does support Stendhal 0.76
 Version >= 2.6 does support Stendhal 0.74
 Version >= 2.5 does support Stendhal 0.68
 Version >= 2.3 does support Stendhal 0.65.1
@@ -114,12 +114,14 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-2.7
+3.0
 - splitted JDBCDatabase into several small ...DAO classes
 - added a new package marauroa.server.db for low level database stuff
-- started to work on supporting other database systems besite mysql
+- started to work on supporting other database systems beside mysql
 - for help on how to port your application see http://stendhal.game-host.org/wiki/index.php/Refactoring_Database_Access_in_Marauroa
 - fixed some compiler and javadoc warnings
+
+
 
 2.6.3
 - fixed a NullPointerException in modify() when the zone does not exist (anymore)
