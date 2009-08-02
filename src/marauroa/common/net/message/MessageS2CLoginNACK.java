@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.8 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.9 2009/08/02 13:21:22 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,12 +28,19 @@ public class MessageS2CLoginNACK extends Message {
 
 	public enum Reasons {
 		USERNAME_WRONG, 
+		/** @since will be replaced by TOO_MANY_TRIES_USERNAME and TOO_MANY_TRIES_IP in the future */
 		TOO_MANY_TRIES, 
 		USERNAME_BANNED, 
 		SERVER_IS_FULL, 
 		GAME_MISMATCH, 
 		PROTOCOL_MISMATCH, 
 		INVALID_NONCE,
+		/** @since 3.0, but not used yet */
+		USERNAME_INACTIVE,
+		/** @since 3.0, but not used yet */
+		TOO_MANY_TRIES_USERNAME, 
+		/** @since 3.0, but not used yet */
+		TOO_MANY_TRIES_IP 
 	}
 
 	static private String[] text = {
@@ -45,7 +52,12 @@ public class MessageS2CLoginNACK extends Message {
 	        "Server is running an incompatible version of game. Please update.",
 	        "marauroa.common.network Protocol invalid version: Running "
 	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
-	        "The hash you sent does not correspond to the nonce you sent." };
+	        "The hash you sent does not correspond to the nonce you sent.",
+	        "You account has been marked as inactive, please contact support.",
+	        "There have been to many failed login attempts for your account. "
+        	+ "Please wait a couple of minutes or contact support.",
+	        "There have been to many failed login attempts from your network. "
+        	+ "Please wait a couple of minutes or contact support."};
 
 	/** The reason of login rejection */
 	private Reasons reason;
