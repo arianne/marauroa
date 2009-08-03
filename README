@@ -114,6 +114,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.1
+- made method dumpOpenTransactions public so that games can use it for debugging and monitoring
+
 3.0
 - splitted JDBCDatabase into several small ...DAO classes
 - added a new package marauroa.server.db for low level database stuff
