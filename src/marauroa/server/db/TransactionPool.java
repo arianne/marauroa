@@ -87,9 +87,7 @@ public class TransactionPool {
                     createMinimumDBTransactions();
                     try {
                         logger.info("Waiting for a DBTransaction", new Throwable());
-                        for (Pair<String, StackTraceElement[]> pair : callers.values()) {
-                        	logger.info("      * " + pair.first() + " " + Arrays.asList(pair.second()));
-                        }
+                        dumpOpenTransactions();
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         logger.error(e, e);
@@ -107,6 +105,15 @@ public class TransactionPool {
         callers.put(dbtransaction, new Pair<String, StackTraceElement[]>(currentThread.getName(), currentThread.getStackTrace()));
         return dbtransaction;
     }
+
+    /**
+     * dumps a list of open transactions with their threads and stacktraces to the log file.
+     */
+	public void dumpOpenTransactions() {
+		for (Pair<String, StackTraceElement[]> pair : callers.values()) {
+			logger.info("      * " + pair.first() + " " + Arrays.asList(pair.second()));
+		}
+	}
 
     /**
      * commits this transaction and frees it reservation
