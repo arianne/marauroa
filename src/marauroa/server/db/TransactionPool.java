@@ -144,6 +144,7 @@ public class TransactionPool {
     private void freeDBTransaction(DBTransaction dbtransaction) {
         logger.debug("freeDBTransaction: " + dbtransaction, new Throwable());
         threadTransactions.get().remove(dbtransaction);
+        callers.remove(dbtransaction);
         if (dbtransactions.contains(dbtransaction)) {
             freeDBTransactions.add(dbtransaction);
         } else {
