@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.55 2009/07/11 22:12:55 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.56 2009/08/09 18:10:06 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -368,15 +368,6 @@ public class RPServerManager extends Thread {
 				playersToRemove.add(entry);
 			}
 
-			try{
-				// do not use = 0 because we need a little time until the
-				// player object is fully initialized (e. g. has a charname)
-				if(entry.getThisPerceptionTimestamp()%2000==1999) {
-					entry.storeRPObject(entry.object);
-				}			
-			}catch(Exception e) {
-				logger.error("Error while storing player",e);
-			}
 		}
 
 		for (PlayerEntry entry : playersToRemove) {
@@ -510,14 +501,12 @@ public class RPServerManager extends Thread {
 					/** Tell player what happened */
 					buildPerceptions();
 					timeEnds[5] = System.currentTimeMillis();
+					savePlayersPeriodicly();
+
+					timeEnds[6] = System.currentTimeMillis();
 
 					/** Move zone to the next turn */
 					world.nextTurn();
-					timeEnds[6] = System.currentTimeMillis();
-
-					/** Remove timeout players */
-					/* NOTE: As we use TCP there are not anymore timeout players */
-					// notifyTimedoutPlayers(playersToRemove);
 					timeEnds[7] = System.currentTimeMillis();
 
 					turn++;
@@ -541,6 +530,20 @@ public class RPServerManager extends Thread {
 			logger.error("Unhandled exception, server will shut down.", e);
 		} finally {
 			isfinished = true;
+		}
+	}
+
+	private void savePlayersPeriodicly() {
+		for (PlayerEntry entry : playerContainer) {
+			try {
+				// do not use = 0 because we need a little time until the
+				// player object is fully initialized (e. g. has a charname)
+				if (entry.getThisPerceptionTimestamp() % 2000 == 1999) {
+					entry.storeRPObject(entry.object);
+				}
+			} catch(Exception e) {
+				logger.error("Error while storing player",e);
+			}
 		}
 	}
 
