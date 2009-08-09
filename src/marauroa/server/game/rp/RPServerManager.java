@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.56 2009/08/09 18:10:06 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.57 2009/08/09 19:01:56 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -501,8 +501,9 @@ public class RPServerManager extends Thread {
 					/** Tell player what happened */
 					buildPerceptions();
 					timeEnds[5] = System.currentTimeMillis();
-					savePlayersPeriodicly();
 
+					/** save players regularly to the db */
+					savePlayersPeriodicly();
 					timeEnds[6] = System.currentTimeMillis();
 
 					/** Move zone to the next turn */
