@@ -10,8 +10,7 @@ create table if not exists account
 
   primary key(username),
   key(id)
-  )
-  TYPE=INNODB;
+  ) TYPE=INNODB;
 
 /* create index i_account_username ON account(username); */
 /* create index i_account_password ON account(password); */
@@ -24,8 +23,7 @@ create table if not exists characters
   object_id integer not null,
   
   PRIMARY KEY(charname)
-  )
-  TYPE=INNODB;
+  ) TYPE=INNODB;
 
 /* create index i_characters_player_id ON characters(player_id); */
 /* create index i_characters_charname ON characters(charname); */
@@ -36,8 +34,7 @@ create table if not exists rpobject
   data blob,  
   
   primary key(object_id)
-  )
-  TYPE=INNODB;
+  ) TYPE=INNODB;
 
 create table if not exists rpzone 
   (
@@ -59,7 +56,7 @@ create table if not exists loginEvent
 
   result tinyint,
   primary key(id)
-  );
+  ) TYPE=INNODB;
 
 /*create index i_loginEvent_player_id ON loginEvent(player_id);*/
 /*create index i_loginEvent_address ON loginEvent(address);*/
@@ -77,7 +74,7 @@ create table if not exists passwordChange
 
   oldpassword varchar(255),
   primary key(id)
-  );
+  ) TYPE=INNODB;
 
 /* create index i_passwordChange_player_id ON passwordChange(player_id);*/
 /* create index i_passwordChange_address ON passwordChange(address);*/
@@ -93,7 +90,7 @@ create table if not exists statistics
   players_logout integer,
   players_timeout integer,
   players_online integer
-  );
+  ) TYPE=INNODB;
 
 create table if not exists gameEvents
   (
@@ -104,7 +101,7 @@ create table if not exists gameEvents
   param1 varchar(128),
   param2 varchar(255),
   PRIMARY KEY(id)
-  );
+  ) TYPE=INNODB;
   
 /*create index i_gameEvents_timedate ON gameEvents(timedate);*/
 /*create index i_gameEvents_source ON gameEvents(source);*/
@@ -120,4 +117,4 @@ create table if not exists banlist
   mask    varchar(15),
   reason  varchar(255),
   PRIMARY KEY(id)
-  );
+  ) TYPE=INNODB;
