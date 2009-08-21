@@ -1,4 +1,4 @@
-/* $Id: PingRPRuleProcessor.java,v 1.3 2009/07/19 15:09:13 nhnb Exp $ */
+/* $Id: PingRPRuleProcessor.java,v 1.4 2009/08/21 18:40:25 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -119,6 +119,7 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 		try {
 			if (DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username)) {
 				logger.warn("Account already exist: " + username);
+				transactionPool.commit(transaction);
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 
