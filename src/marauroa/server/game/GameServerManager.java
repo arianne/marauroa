@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.120 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.121 2009/08/22 07:45:27 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -855,6 +855,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			// verify event
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
+				logger.warn("invalid create character event (client unknown, not logged in or wrong ip-address)");
 				return;
 			}
 
