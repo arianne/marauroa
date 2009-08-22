@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.24 2009/07/18 11:20:36 nhnb Exp $ */
+/* $Id: RPWorld.java,v 1.25 2009/08/22 08:10:04 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,6 +202,9 @@ public class RPWorld implements Iterable<IRPZone> {
 	public void add(RPObject object) {
 		if (object.has("zoneid")) {
 			IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+			if (zone == null) {
+				logger.error("Unknown zone: " + object.get("zoneid"));
+			}
 			zone.assignRPObjectID(object);
 
 			zone.add(object);
