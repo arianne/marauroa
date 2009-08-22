@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.80 2009/08/03 18:47:17 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.81 2009/08/22 00:03:10 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -177,7 +177,7 @@ public class marauroad extends Thread {
 			} else if (args[i].equals("-h")) {
 				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
-				System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
+				System.out.println("(C) 1999-2009 Miguel Angel Blanch Lardin and the Arianne project");
 				System.out.println();
 				System.out.println("usage: [-c gamefile]");
 				System.out
