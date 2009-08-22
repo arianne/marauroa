@@ -1,4 +1,4 @@
-/* $Id: RPAction.java,v 1.14 2007/11/14 19:49:56 arianne_rpg Exp $ */
+/* $Id: RPAction.java,v 1.15 2009/08/22 22:01:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,16 +35,4 @@ public class RPAction extends Attributes {
 		super(RPClass.getBaseRPObjectDefault());
 	}
 
-	/**
-	 * Create a depth copy of the action
-	 * 
-	 * @return a copy of this action.
-	 */
-	@Override
-	public Object clone() {
-		RPAction action = new RPAction();
-
-		action.fill(this);
-		return action;
-	}
 }
