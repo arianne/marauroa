@@ -115,6 +115,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.1
+- always hash the password based on UTF-8 instead of the plattform default encoding on login
+  (on account creation UTF-8 was used, so the first login was not possible if the default
+  encoding was not UTF-8 and the password contained special characters)
 - made method dumpOpenTransactions public so that games can use it for debugging and monitoring
 
 3.0
