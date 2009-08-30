@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.8 2009/07/18 11:11:37 nhnb Exp $ */
+/* $Id: Hash.java,v 1.9 2009/08/30 17:53:48 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,10 +12,14 @@
  ***************************************************************************/
 package marauroa.common.crypto;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 
 /**
  * This class is used to create Hashes of byte arrays.
@@ -27,6 +31,7 @@ import java.security.SecureRandom;
  * @author quisar
  */
 public class Hash {
+	private static Logger logger = Log4J.getLogger(Hash.class);
 
 	private static String hex = "0123456789ABCDEF";
 
@@ -52,7 +57,12 @@ public class Hash {
 	 * @return the hash of the string.
 	 */
 	synchronized public static final byte[] hash(final String value) {
-		return hash(value.getBytes());
+		try {
+			return hash(value.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+			return null;
+		}
 	}
 
 	/**
