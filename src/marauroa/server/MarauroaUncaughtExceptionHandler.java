@@ -1,4 +1,4 @@
-/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.3 2008/02/22 10:28:33 arianne_rpg Exp $ */
+/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.4 2009/09/01 18:42:04 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -33,6 +33,10 @@ public class MarauroaUncaughtExceptionHandler implements Thread.UncaughtExceptio
 		if (next != null) {
 			next.uncaughtException(thread, exception);
 		}
+
+		// kill the server
+		// we did no have a single case where an exception causing a thead to die did not have serious impact
+		System.exit(1);
 	}
 
 	/**
