@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.11 2008/01/25 20:44:40 arianne_rpg Exp $ */
+/* $Id: Message.java,v 1.12 2009/09/01 19:14:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,8 @@ public class Message implements Serializable {
 		C2S_CREATECHARACTER, 
 		S2C_CREATECHARACTER_ACK, 
 		S2C_CREATECHARACTER_NACK, 
-		S2C_CONNECT_NACK 
+		S2C_CONNECT_NACK,
+		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED 
 	}
 
 	/** Type of the message */

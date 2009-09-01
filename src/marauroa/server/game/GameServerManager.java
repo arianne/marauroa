@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.121 2009/08/22 07:45:27 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.122 2009/09/01 19:14:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -37,6 +37,7 @@ import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
@@ -1019,8 +1020,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 */
 	private void processSecuredLoginEvent(Message msg) {
 		try {
-			MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
-
 			int clientid = msg.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
 
@@ -1031,10 +1030,17 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 			SecuredLoginInfo info = entry.loginInformations;
 
-			info.clientNonce = msgLogin.getHash();
-			info.username = msgLogin.getUsername();
-			info.password = msgLogin.getPassword();
-
+			if (msg instanceof MessageC2SLoginSendNonceNameAndPassword) {
+				MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
+				info.clientNonce = msgLogin.getHash();
+				info.username = msgLogin.getUsername();
+				info.password = msgLogin.getPassword();
+			} else {
+				MessageC2SLoginSendNonceNamePasswordAndSeed msgLogin = (MessageC2SLoginSendNonceNamePasswordAndSeed) msg;
+				info.clientNonce = msgLogin.getHash();
+				info.username = msgLogin.getUsername();
+				info.password = msgLogin.getPassword();
+			}
 
 			/*
 			 * We check that player didn't failed too many time the login, if it
@@ -1100,7 +1106,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 			
 			/* Now we check if this player is previously logged in */
-			PlayerEntry existing = playerContainer.get(msgLogin.getUsername());
+			PlayerEntry existing = playerContainer.get(info.username);
 
 			if (existing != null) {
 				/*

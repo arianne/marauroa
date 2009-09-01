@@ -119,6 +119,11 @@ Changelog
   (on account creation UTF-8 was used, so the first login was not possible if the default
   encoding was not UTF-8 and the password contained special characters)
 - made method dumpOpenTransactions public so that games can use it for debugging and monitoring
+- moved periodic saving of players out of buildPerceptions so that it gets it on performance profiling index
+- now all tables are created with TYPE=InnoDB
+- improved error messages
+- on serious errors which kill once of the background threads the complete server is now shutted down
+
 
 3.0
 - splitted JDBCDatabase into several small ...DAO classes

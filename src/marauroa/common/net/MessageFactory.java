@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.38 2009/07/06 18:27:54 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.39 2009/09/01 19:14:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -28,6 +28,7 @@ import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
@@ -129,6 +130,8 @@ public class MessageFactory {
 		register(Message.MessageType.S2C_CREATECHARACTER_ACK, MessageS2CCreateCharacterACK.class);
 		register(Message.MessageType.S2C_CREATECHARACTER_NACK, MessageS2CCreateCharacterNACK.class);
 		register(Message.MessageType.S2C_CONNECT_NACK, MessageS2CConnectNACK.class);
+		register(Message.MessageType.C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED,
+				MessageC2SLoginSendNonceNamePasswordAndSeed.class);
 	}
 
 	/**
