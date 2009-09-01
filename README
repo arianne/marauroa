@@ -123,6 +123,7 @@ Changelog
 - now all tables are created with TYPE=InnoDB
 - improved error messages
 - on serious errors which kill once of the background threads the complete server is now shutted down
+- fixed a NoSuchElementException in TransactionPool.beginWork();
 
 
 3.0
