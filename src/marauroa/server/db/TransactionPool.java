@@ -2,6 +2,7 @@ package marauroa.server.db;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,8 +28,8 @@ public class TransactionPool {
     private Properties params = new Properties();
     private int count = 10;
 
-    private List<DBTransaction> dbtransactions = new LinkedList<DBTransaction>(); 
-    private List<DBTransaction> freeDBTransactions = new LinkedList<DBTransaction>();
+    private List<DBTransaction> dbtransactions = Collections.synchronizedList(new LinkedList<DBTransaction>()); 
+    private List<DBTransaction> freeDBTransactions = Collections.synchronizedList(new LinkedList<DBTransaction>());
     private ThreadLocal<Set<DBTransaction>> threadTransactions = new ThreadLocal<Set<DBTransaction>>();
     private Map<DBTransaction, Pair<String, StackTraceElement[]>> callers;
 
@@ -42,7 +43,7 @@ public class TransactionPool {
     public TransactionPool(Properties connfiguration) {
     	params = connfiguration;
         count = Integer.parseInt(params.getProperty("count", "4"));
-        callers = new HashMap<DBTransaction, Pair<String, StackTraceElement[]>>(); 
+        callers = Collections.synchronizedMap(new HashMap<DBTransaction, Pair<String, StackTraceElement[]>>()); 
         factory = new AdapterFactory(connfiguration);
     }
     
@@ -63,10 +64,12 @@ public class TransactionPool {
     }
 
     private void createMinimumDBTransactions() {
-        while (dbtransactions.size() < count) {
-            DBTransaction dbtransaction = new DBTransaction(factory.create());
-            dbtransactions.add(dbtransaction);
-            freeDBTransactions.add(dbtransaction);
+        synchronized (wait) {    	
+	        while (dbtransactions.size() < count) {
+	            DBTransaction dbtransaction = new DBTransaction(factory.create());
+	            dbtransactions.add(dbtransaction);
+	            freeDBTransactions.add(dbtransaction);
+	        }
         }
     }
 
@@ -143,12 +146,14 @@ public class TransactionPool {
     
     private void freeDBTransaction(DBTransaction dbtransaction) {
         logger.debug("freeDBTransaction: " + dbtransaction, new Throwable());
-        threadTransactions.get().remove(dbtransaction);
-        callers.remove(dbtransaction);
-        if (dbtransactions.contains(dbtransaction)) {
-            freeDBTransactions.add(dbtransaction);
-        } else {
-            logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
+        synchronized (wait) {
+	        threadTransactions.get().remove(dbtransaction);
+	        callers.remove(dbtransaction);
+	        if (dbtransactions.contains(dbtransaction)) {
+	            freeDBTransactions.add(dbtransaction);
+	        } else {
+	            logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
+	        }
         }
     }
 
