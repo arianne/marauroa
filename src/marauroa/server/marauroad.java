@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.81 2009/08/22 00:03:10 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.82 2009/09/02 21:24:28 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -198,7 +198,7 @@ public class marauroad extends Thread {
 	public static void main(String[] args) {
 		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2007 Miguel Angel Blanch Lardin");
+		System.out.println("(C) 1999-2009 Miguel Angel Blanch Lardin and the Arianne project");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
