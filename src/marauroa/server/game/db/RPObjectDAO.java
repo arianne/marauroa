@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.9 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.10 2009/09/02 21:47:13 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -53,8 +53,12 @@ public class RPObjectDAO {
 	protected RPObjectDAO(RPObjectFactory factory) {
 		this.factory = factory;
 	}
-	
+
 	public RPObject loadRPObject(DBTransaction transaction, int objectid) throws SQLException, IOException {
+		return loadRPObject(transaction, objectid, true);
+	}
+
+	public RPObject loadRPObject(DBTransaction transaction, int objectid, boolean transform) throws SQLException, IOException {
 		String query = "select data from rpobject where object_id=[objectid]";
 		logger.debug("loadRPObject is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -82,9 +86,12 @@ public class RPObjectDAO {
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
 			InputSerializer inser = new InputSerializer(szlib);
 
-			RPObject object = null;
+			RPObject object = (RPObject) inser.readObject(new RPObject());
 
-			object = factory.transform((RPObject) inser.readObject(new RPObject()));
+			if (transform) {
+				object = factory.transform(object);
+			}
+
 			object.put("#db_id", objectid);
 
 			return object;
@@ -164,9 +171,16 @@ public class RPObjectDAO {
 		return object_id;
 	}
 
+	public RPObject loadRPObject(int objectid, boolean transform) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		RPObject res = loadRPObject(transaction, objectid, transform);
+		TransactionPool.get().commit(transaction);
+		return res;
+	}
+
 	public RPObject loadRPObject(int objectid) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		RPObject res = loadRPObject(transaction, objectid);
+		RPObject res = loadRPObject(transaction, objectid, true);
 		TransactionPool.get().commit(transaction);
 		return res;
 	}
