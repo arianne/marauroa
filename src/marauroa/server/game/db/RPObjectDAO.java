@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.10 2009/09/02 21:47:13 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.11 2009/09/03 06:44:07 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -93,6 +93,8 @@ public class RPObjectDAO {
 			}
 
 			object.put("#db_id", objectid);
+			
+			resultSet.close();
 
 			return object;
 		}
