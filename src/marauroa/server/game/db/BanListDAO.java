@@ -1,4 +1,4 @@
-/* $Id: BanListDAO.java,v 1.1 2009/08/01 19:06:45 nhnb Exp $ */
+/* $Id: BanListDAO.java,v 1.2 2009/09/03 06:48:51 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -45,6 +45,7 @@ public class BanListDAO {
 			permanentBans.add(iam);
 		}
 
+		resultSet.close();
 		return permanentBans;
 	}
 

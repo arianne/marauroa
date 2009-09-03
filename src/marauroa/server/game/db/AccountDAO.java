@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.9 2009/08/01 19:06:45 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -178,6 +178,7 @@ public class AccountDAO {
 			if (result.next()) {
 				status = result.getString("status");
 			}
+			result.close();
 
 			return status;
 		} catch (SQLException e) {
@@ -198,6 +199,7 @@ public class AccountDAO {
 			if (result.next()) {
 				email = result.getString("email");
 			}
+			result.close();
 
 			return email;
 		} catch (SQLException e) {
@@ -218,6 +220,7 @@ public class AccountDAO {
 		if (result.next()) {
 			id = result.getInt("id");
 		}
+		result.close();
 
 		return id;
 	}
@@ -269,8 +272,10 @@ public class AccountDAO {
 				if (!userNameFromDB.equals(username)) {
 					logger.warn("Username \"" + username + "\" is not the same that stored username \"" + userNameFromDB + "\"");
 				}
+				resultSet.close();
 				return true;
 			}
+			resultSet.close();
 			return false;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);

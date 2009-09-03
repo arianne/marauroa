@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.9 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -86,6 +86,7 @@ public class CharacterDAO {
 				int id = result.getInt("object_id");
 				DAORegister.get().get(RPObjectDAO.class).removeRPObject(transaction, id);
 			} else {
+				result.close();
 				throw new SQLException("Character (" + character
 				        + ") without object: Database integrity error.");
 			}
@@ -95,6 +96,7 @@ public class CharacterDAO {
 			logger.debug("removeCharacter is using query: " + query);
 			transaction.execute(query, params);
 
+			result.close();
 			return true;
 		} catch (SQLException e) {
 			logger.error("Can't remove player \"" + username + "\" character \"" + character + "\" from database", e);
@@ -147,6 +149,7 @@ public class CharacterDAO {
 				list.add(charactersSet.getString("charname"));
 			}
 
+			charactersSet.close();
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
@@ -235,6 +238,7 @@ public class CharacterDAO {
 				logger.debug("Character: " + player);
 			}
 
+			result.close();
 			return player;
 		} catch (SQLException sqle) {
 			logger.warn("Error loading character: " + character, sqle);

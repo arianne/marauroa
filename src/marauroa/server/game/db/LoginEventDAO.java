@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.10 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.11 2009/09/03 06:48:51 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -129,6 +129,7 @@ public class LoginEventDAO {
 				list.add(event.toString());
 			}
 
+			resultSet.close();
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
@@ -155,10 +156,12 @@ public class LoginEventDAO {
 
 			// go to this login
 			if (!resultSet.next()) {
+				resultSet.close();
 				return null;
 			}
 			// go to the last login
 			if (!resultSet.next()) {
+				resultSet.close();
 				return null;
 			}
 			
@@ -166,6 +169,7 @@ public class LoginEventDAO {
 					resultSet.getLong("player_id"), resultSet.getString("service"),*/
 					resultSet.getString("address"), resultSet.getString("timedate"),
 					resultSet.getBoolean("result"));
+			resultSet.close();
 			return event;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + playerId + "\"", e);
@@ -187,6 +191,7 @@ public class LoginEventDAO {
 			while (resultSet.next()) {
 				list.add(new Pair<String, Long>(resultSet.getString(1), Long.valueOf(resultSet.getLong(2))));
 			}
+			resultSet.close();
 			return list;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + playerId + "\"", e);

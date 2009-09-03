@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.9 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -102,6 +102,7 @@ public class RPZoneDAO {
 				}
 			}
 		}
+		resultSet.close();
 	}
 
 	public void storeRPZone(DBTransaction transaction, IRPZone zone) throws IOException, SQLException {
