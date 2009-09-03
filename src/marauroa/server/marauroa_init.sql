@@ -51,6 +51,7 @@ create table if not exists loginEvent
   player_id integer not null,
   address varchar(64),
   service char(10),
+  seed varchar(120),
 
   timedate timestamp,
 

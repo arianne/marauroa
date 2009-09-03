@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.11 2009/09/03 06:48:51 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.12 2009/09/03 21:30:44 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -42,6 +42,10 @@ public class LoginEventDAO {
     }
 
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
+		addLoginEvent(transaction, username, source, null, correctLogin);
+	}
+
+	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
 
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
@@ -49,12 +53,16 @@ public class LoginEventDAO {
 			// be able to notice if someone tries to hack accounts by picking	a fixed password
 			// and bruteforcing matching usernames.
 
-			String query = "insert into loginEvent(player_id, address, timedate, result)"
-				+ " values ([player_id], '[address]', NULL, [result])";
+			String query = "insert into loginEvent(player_id, address, seed, result)"
+				+ " values ([player_id], '[address]', '[seed]', [result])";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("address", source.getHostAddress());
 			params.put("result", Integer.valueOf(correctLogin ? 1 : 0));
+			if (seed == null) {
+				seed = "";
+			}
+			params.put("seed", seed);
 			transaction.execute(query, params);
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
@@ -224,12 +232,19 @@ public class LoginEventDAO {
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS_IP;
 	}
 	
+	@Deprecated
 	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addLoginEvent(transaction, username, source, correctLogin);
+		addLoginEvent(transaction, username, source, null, correctLogin);
 		TransactionPool.get().commit(transaction);
 	}
 
+	public void addLoginEvent(String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		addLoginEvent(transaction, username, source, seed, correctLogin);
+		TransactionPool.get().commit(transaction);
+	}
+	
 	public List<String> getLoginEvents(String username, int events) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		List<String> res = getLoginEvents(transaction, username, events);

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.122 2009/09/01 19:14:18 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.123 2009/09/03 21:30:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -420,6 +420,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							processLoginSendPromise(msg);
 							break;
 						case C2S_LOGIN_SENDNONCENAMEANDPASSWORD:
+							/*
+							 * Complete the login stage. It will either success and
+							 * game continue or fail and resources for this player
+							 * are freed.
+							 */
+							logger.debug("Processing C2S Secured Login Message");
+							processSecuredLoginEvent(msg);
+							break;
+						case C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED:
 							/*
 							 * Complete the login stage. It will either success and
 							 * game continue or fail and resources for this player
@@ -1022,7 +1031,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		try {
 			int clientid = msg.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
-
+			
 			// verify event
 			if (!isValidEvent(msg, entry, ClientState.CONNECTION_ACCEPTED)) {
 				return;
@@ -1040,6 +1049,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				info.clientNonce = msgLogin.getHash();
 				info.username = msgLogin.getUsername();
 				info.password = msgLogin.getPassword();
+				info.seed = msgLogin.getSeed();
 			}
 
 			/*

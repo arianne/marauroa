@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.40 2009/07/23 17:21:38 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.41 2009/09/03 21:30:44 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -71,6 +71,9 @@ public class PlayerEntry {
 		/** client ip address */
 		public InetAddress address;
 
+		/** seed identifiying the client */
+		public String seed;
+
 		/**
 		 * Constructor
 		 *
@@ -113,7 +116,7 @@ public class PlayerEntry {
 		 *             if there is any database problem.
 		 */
 		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
-			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, loginResult);
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, seed, loginResult);
 		}
 
 		/**
