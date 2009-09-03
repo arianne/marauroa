@@ -1,5 +1,9 @@
 package marauroa.server.net.nio;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.flood.FloodMeasure;
@@ -20,6 +24,9 @@ public class FloodCheck implements IFloodCheck {
 
 	private INetworkServerManager netMan;
 
+	private int allowedBytesPerSecond = 1024;
+	private int allowedMessagesPerSecond = 20;
+
 	/**
 	 * creates a new FloodChecker
 	 *
@@ -27,10 +34,17 @@ public class FloodCheck implements IFloodCheck {
 	 */
 	public FloodCheck(INetworkServerManager netMan) {
 		this.netMan = netMan;
+		try {
+			Properties config = Configuration.getConfiguration().getAsProperties();
+			allowedBytesPerSecond = Integer.parseInt(config.getProperty("allowed_bytes_per_second", "1024"));
+			allowedMessagesPerSecond = Integer.parseInt(config.getProperty("allowed_messages_per_second", "20"));
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
 	}
 
 	public boolean isFlooding(FloodMeasure entry) {
-		if (entry.getBytesPerSecond() > 1024 || entry.getMessagesPerSecond() > 20) {
+		if (entry.getBytesPerSecond() > allowedBytesPerSecond || entry.getMessagesPerSecond() > allowedMessagesPerSecond) {
 			entry.warning();
 		}
 
