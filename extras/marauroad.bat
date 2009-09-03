@@ -1,2 +1,2 @@
-set LOCALCLASSPATH=.;marauroa-3.1.jar;libs/jython.jar;libs/mysql-connector.jar;libs/log4j.jar
+set LOCALCLASSPATH=.;marauroa-3.1.1.jar;libs/jython.jar;libs/mysql-connector.jar;libs/log4j.jar
 java -cp "%LOCALCLASSPATH%" marauroa.server.marauroad -c server.ini -l
