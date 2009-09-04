@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.69 2009/03/02 22:36:37 astridemma Exp $ */
+/* $Id: Attributes.java,v 1.70 2009/09/04 19:21:35 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -414,7 +414,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		for (Map.Entry<String, String> entry : content.entrySet()) {
 			tmp.append("[" + entry.getKey());
-			tmp.append("=" + entry.getValue() + "]");
+			tmp.append("=" + entry.getValue().replaceAll("\\\\", "\\\\").replaceAll("\\]", "\\]") + "]");
 		}
 
 		return tmp.toString();
