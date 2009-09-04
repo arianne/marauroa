@@ -1,4 +1,4 @@
-/* $Id: AttributesTest.java,v 1.12 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: AttributesTest.java,v 1.13 2009/09/04 19:27:15 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,7 +15,8 @@ package marauroa.common.game;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -287,5 +288,19 @@ public class AttributesTest {
 		assertFalse("Attribute is empty",test.has(null));		
 		
 	}
-	
+
+	/**
+	 * Tests for toString()
+	 */
+	@Test
+	public void testToString() {
+		Attributes test = new Attributes(RPClass.getBaseRPObjectDefault());
+		assertThat(test.toString(), equalTo("Attributes of Class(): "));
+
+		test.put("key", "value");
+		assertThat(test.toString(), equalTo("Attributes of Class(): [key=value]"));
+
+		test.put("key", "va\\lu]e");
+		assertThat(test.toString(), equalTo("Attributes of Class(): [key=va\\\\lu\\]e]"));
+	}
 }
