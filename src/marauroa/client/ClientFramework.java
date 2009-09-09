@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.48 2009/07/18 20:51:50 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.49 2009/09/09 20:19:38 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,8 +13,12 @@
 package marauroa.client;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.Proxy;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +41,7 @@ import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
@@ -73,6 +78,7 @@ public abstract class ClientFramework {
 	public final static int TIMEOUT = 10000;
 
 	private int perceptionsCount;
+	private String seed;
 
 	/**
 	 * We keep an instance of network manager to be able to communicate with
@@ -234,8 +240,13 @@ public abstract class ClientFramework {
 					}
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
-					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
+					if (seed != null) {
+						netMan.addMessage(new MessageC2SLoginSendNonceNamePasswordAndSeed(null,
+					        clientNonce, username, cryptedPassword, seed));
+					} else {
+						netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
 					        clientNonce, username, cryptedPassword));
+					}
 					break;
 				}
 					/* Server replied with ACK to login operation */
@@ -281,6 +292,43 @@ public abstract class ClientFramework {
 					messages.add(msg);
 			}
 		}
+	}
+
+	/**
+	 * creates a seed which allows rerecognition of the client.
+	 *
+	 * Note: In most cases you do not need this seed and should not call this method.
+	 */
+	public void createSeed() {
+		String seed1 = null;
+		String seed2 = null;
+		String seed3 = null;
+		
+		try {
+			Enumeration<NetworkInterface> enm = NetworkInterface.getNetworkInterfaces();
+			while (enm.hasMoreElements()) {
+				NetworkInterface iface = enm.nextElement();
+				// Compatibility with Java 5.0
+				Method method = iface.getClass().getMethod("getHardwareAddress");
+				byte[] addr = (byte[]) method.invoke(iface);
+				if (addr != null) {
+					seed1 = Hash.toHexString(Hash.hash(addr));
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// ignored
+		}
+		
+		try {
+			seed2 = Hash.toHexString(Hash.hash(InetAddress.getLocalHost().getHostName()));
+		} catch (Exception e) {
+			// ignored
+		}
+		if (System.getProperty("user.name") != null) {
+			seed3 = Hash.toHexString(Hash.hash(System.getProperty("user.name")));
+		}
+		seed = seed1 + "/" + seed2 + "/" + seed3;
 	}
 
 	/**
