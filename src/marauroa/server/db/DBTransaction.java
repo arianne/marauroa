@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.19 2009/07/20 20:23:41 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.20 2009/09/10 20:50:22 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -24,20 +24,18 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.adapter.DatabaseAdapter;
 
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.apache.regexp.internal.RESyntaxException;
-
 /**
  * a database transaction
  *
  * @author hendrik
  */
 public class DBTransaction {
+    private static final String RE_INT = "^-?[0-9 ]*$";
+    private static final String RE_INT_LIST = "^-?[0-9, ]*$";
+
     private static Logger logger = Log4J.getLogger(DBTransaction.class);
 
 	private DatabaseAdapter databaseAdapter = null;
-    private RE reInt;
-    private RE reIntList;
 
 	/**
 	 * Creates a new DBTransaction.
@@ -46,12 +44,6 @@ public class DBTransaction {
 	 */
 	protected DBTransaction(DatabaseAdapter databaseAdapter) {
 		this.databaseAdapter = databaseAdapter;
-        try {
-            reInt = new RE("^-?[0-9 ]*$");
-            reIntList = new RE("^-?[0-9, ]*$");
-        } catch (RESyntaxException e) {
-            logger.error(e, e);
-        }
 	}
 
 	/**
@@ -120,7 +112,7 @@ public class DBTransaction {
 
                 // SQL-Injection abfangen
                 if (secondLastToken.equals("(")) {
-                    if (!reIntList.match(token)) {
+                    if (!token.matches(RE_INT_LIST)) {
                         throw new SQLException("Illegal argument: \"" + token + "\" is not an integer list"); 
                     }
                 } else if (secondLastToken.equals("'")) {
@@ -128,7 +120,7 @@ public class DBTransaction {
                         token = StringChecker.escapeSQLString(token);
                     }
                 } else {
-                    if (!reInt.match(token)) {
+                    if (!token.matches(RE_INT)) {
                         throw new SQLException("Illegal argument: \"" + token + "\" is not an integer."); 
                     }
                 }
