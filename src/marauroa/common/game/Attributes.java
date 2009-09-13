@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.71 2009/09/04 19:37:52 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.72 2009/09/13 09:36:17 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -611,7 +611,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Reset the Delta² information of the attribute.
+	 * Reset the Delta^2 information of the attribute.
 	 */
 	public void resetAddedAndDeletedAttributes() {
 		/*
@@ -625,7 +625,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the added infomation of the Delta�.
+	 * Fills this attribute with the added infomation of the Delta^2.
 	 *
 	 * @param attr
 	 *			  the object whose added attributes we are going to copy.
@@ -651,7 +651,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
-	 * Fills this attribute with the deleted infomation of the Delta�.
+	 * Fills this attribute with the deleted infomation of the Delta^2.
 	 *
 	 * @param attr
 	 *			  the object whose deleted attributes we are going to copy.

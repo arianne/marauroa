@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.65 2009/03/09 13:42:18 astridemma Exp $ */
+/* $Id: RPSlot.java,v 1.66 2009/09/13 09:36:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -530,7 +530,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
-	 * Clear stored delta² information.
+	 * Clear stored delta^2 information.
 	 *
 	 */
 	public void resetAddedAndDeletedRPObjects() {

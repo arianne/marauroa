@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.31 2009/07/11 13:54:30 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.32 2009/09/13 09:36:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -32,7 +32,7 @@ import marauroa.server.game.db.RPZoneDAO;
 
 /**
  * Default implementation of <code>IRPZone</code>. This class implements the
- * Delta� algorithm to save bandwidth.
+ * Delta^2 algorithm to save bandwidth.
  * <p>
  * The idea behind the DPA is to avoid sending ALL the objects to a client each
  * time, but only those that have been modified. Imagine that we have 1000
@@ -100,7 +100,7 @@ public class MarauroaRPZone implements IRPZone {
 
 	/**
 	 * Objects that has been modified on zone since last turn. This information
-	 * is useful for Delta² algorithm.
+	 * is useful for Delta^2 algorithm.
 	 */
 	private Set<RPObject> modified;
 
@@ -354,7 +354,7 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * This methods resets the delta² information of objects.
+	 * This methods resets the delta^2 information of objects.
 	 */
 	protected void reset() {
 		/*

@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.91 2009/07/17 21:20:06 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.92 2009/09/13 09:36:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1243,7 +1243,7 @@ public class RPObject extends Attributes {
 
 		/*
 		 * We add to the oadded object the events that exists.
-		 * Because events are cleared on each turn so they have no delta²
+		 * Because events are cleared on each turn so they have no delta^2
 		 */
 		for (RPEvent event : events) {
 			addedChanges.events.add(event);
