@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.4 2009/07/30 19:48:08 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.5 2009/09/13 09:29:59 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -48,8 +48,6 @@ public class JDBCSQLHelper {
 	 * responsible of beginning the transaction and commiting the changes or
 	 * rollback on error.
 	 * 
-	 * @param transaction
-	 *            The JDBC Transaction that we are going to use.
 	 * @param file
 	 *            The file name that contains the SQL commands.
 	 * @return true if the whole file was executed or false in any other error.
