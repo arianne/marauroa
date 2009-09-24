@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.9 2009/08/02 13:21:22 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.10 2009/09/24 06:48:03 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,17 +35,17 @@ public class MessageS2CLoginNACK extends Message {
 		GAME_MISMATCH, 
 		PROTOCOL_MISMATCH, 
 		INVALID_NONCE,
-		/** @since 3.0, but not used yet */
+		/** @since 3.0 */
 		USERNAME_INACTIVE,
-		/** @since 3.0, but not used yet */
+		/** @since 3.0 */
 		TOO_MANY_TRIES_USERNAME, 
-		/** @since 3.0, but not used yet */
+		/** @since 3.0 */
 		TOO_MANY_TRIES_IP 
 	}
 
 	static private String[] text = {
 	        "Username/Password incorrect.",
-	        "There have been to many failed login attempts for your account or network. "
+	        "There have been too many failed login attempts for your account or network. "
 	        	+ "Please wait a couple of minutes or contact support.",
 		    "Account is banned.",
 	        "Server is full.",
@@ -54,9 +54,9 @@ public class MessageS2CLoginNACK extends Message {
 	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
 	        "The hash you sent does not correspond to the nonce you sent.",
 	        "You account has been marked as inactive, please contact support.",
-	        "There have been to many failed login attempts for your account. "
+	        "There have been too many failed login attempts for your account. "
         	+ "Please wait a couple of minutes or contact support.",
-	        "There have been to many failed login attempts from your network. "
+	        "There have been too many failed login attempts from your network. "
         	+ "Please wait a couple of minutes or contact support."};
 
 	/** The reason of login rejection */

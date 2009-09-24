@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.12 2009/09/03 21:30:44 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.13 2009/09/24 06:48:03 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -217,7 +217,7 @@ public class LoginEventDAO {
 		params.put("username", username);
 
 		int attemps = transaction.querySingleCellInt(query, params);
-		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS_ACCOUNT;
+		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT;
 	}
 
 	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
@@ -229,7 +229,7 @@ public class LoginEventDAO {
 		params.put("address", address);
 
 		int attemps = transaction.querySingleCellInt(query, params);
-		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPS_IP;
+		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_IP;
 	}
 	
 	@Deprecated

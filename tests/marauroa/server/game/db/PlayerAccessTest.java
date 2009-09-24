@@ -1,4 +1,4 @@
-/* $Id: PlayerAccessTest.java,v 1.7 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: PlayerAccessTest.java,v 1.8 2009/09/24 06:48:03 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -243,7 +243,7 @@ public class PlayerAccessTest {
 
 			assertFalse(loginEventDAO.isAccountBlocked(transaction, username));
 
-			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPS_ACCOUNT + 1; i++) {
+			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT + 1; i++) {
 				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, false);
 			}
 
