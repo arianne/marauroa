@@ -1,4 +1,4 @@
-/* $Id: AttributesTest.java,v 1.13 2009/09/04 19:27:15 nhnb Exp $ */
+/* $Id: AttributesTest.java,v 1.14 2009/10/12 19:46:05 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -12,11 +12,12 @@
  ***************************************************************************/
 package marauroa.common.game;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
