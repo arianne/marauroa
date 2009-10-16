@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.12 2009/10/16 20:25:33 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.13 2009/10/16 20:32:41 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -125,4 +125,14 @@ public interface DatabaseAdapter {
 	 */
 	public boolean doesTableExist(String table) throws SQLException;
 
+
+	/**
+	 * checks whether the specified column exists
+	 *
+	 * @param table name of table
+	 * @param column name of column
+	 * @return true, if the column exists, false otherwise
+     * @throws SQLException in case of an database error
+	 */
+	public boolean doesColumnExist(String table, String column) throws SQLException;
 }
