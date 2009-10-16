@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.17 2009/07/19 15:09:13 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.18 2009/10/16 20:51:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -20,6 +20,7 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.DatabaseConnectionException;
 import marauroa.server.db.JDBCSQLHelper;
 import marauroa.server.db.TransactionPool;
+import marauroa.server.db.UpdateScript;
 
 /**
  * Utility class for choosing the right player database.
@@ -55,6 +56,7 @@ public class DatabaseFactory {
 		final DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			new JDBCSQLHelper(transaction).runDBScript("marauroa/server/marauroa_init.sql");
+			new UpdateScript().update(transaction);
 			TransactionPool.get().commit(transaction);
 		} catch (SQLException e) {
 			logger.error(e, e);
