@@ -1,4 +1,4 @@
-/* $Id: RPObjectFactory.java,v 1.9 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: RPObjectFactory.java,v 1.10 2009/11/01 15:32:05 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -46,6 +46,9 @@ public class RPObjectFactory {
 		try {
 	        Configuration conf = Configuration.getConfiguration();
 	        String factoryName = conf.get("factory_implementation");
+	        if (factoryName == null) {
+	        	factoryName = RPObjectFactory.class.getName();
+	        }
 
 	        return get(factoryName);
         } catch (Exception e) {
