@@ -91,7 +91,7 @@ public class TransactionPool {
                     try {
                         logger.info("Waiting for a DBTransaction", new Throwable());
                         dumpOpenTransactions();
-                        Thread.sleep(1000);
+                        wait.wait();
                     } catch (InterruptedException e) {
                         logger.error(e, e);
                     }
@@ -154,6 +154,7 @@ public class TransactionPool {
 	        } else {
 	            logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
 	        }
+	        wait.notifyAll();
         }
     }
 

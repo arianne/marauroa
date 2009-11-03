@@ -109,6 +109,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.2.1
+- fixed a deadlock when temporarly running out of database connections
+
 3.2
 - removed dependency on com.sun.*-classes
 - automatically add new columns in existing database tables
