@@ -172,14 +172,18 @@ public class TransactionPool {
      */
     public void kickHangingTransactionsOfThisThread() {
     	Set<DBTransaction> set = threadTransactions.get();
-    	if (set == null) {
+    	if ((set == null) || set.isEmpty()) {
     		return;
     	}
-    	for (DBTransaction dbtransaction : set) {
-    		dbtransaction.rollback();
-    		dbtransaction.close();
-    		dbtransactions.remove(dbtransaction);
-    		logger.error("Hanging transaction " + dbtransaction + " was kicked.");
+
+        synchronized (wait) {
+        	for (DBTransaction dbtransaction : set) {
+	    		dbtransaction.rollback();
+	    		dbtransaction.close();
+	    		dbtransactions.remove(dbtransaction);
+	    		callers.remove(dbtransaction);
+	    		logger.error("Hanging transaction " + dbtransaction + " was kicked.");
+        	}
     	}
     	set.clear();
     }
