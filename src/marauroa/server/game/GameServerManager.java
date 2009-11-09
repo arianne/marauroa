@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.125 2009/11/09 19:14:07 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.126 2009/11/09 21:23:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -514,7 +514,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					playerContainer.getLock().releaseLock();
 					long time = System.currentTimeMillis() - startTime;
 					if (time > 50) {
-						logger.warn("Processing client message of type " + msg.getType() + " from " + msg.getAddress() + " took " + time + " ms.");
+						logger.warn("Processing client message took " + time + " ms: " + msg);
 					}
 				}
 
