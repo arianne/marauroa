@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.12 2009/09/01 19:14:17 nhnb Exp $ */
+/* $Id: Message.java,v 1.13 2009/11/09 21:24:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -199,4 +199,32 @@ public class Message implements Serializable {
 		clientid = in.readInt();
 		timestampMessage = in.readInt();
 	}
+
+	/**
+	 * generates a list of attributes suitable to be used in toString()
+	 *
+	 * @param sb StringBuilder to append the attribute string to
+	 */
+	protected void internalToString(StringBuilder sb) {
+		sb.append(", channel=");
+		sb.append(channel);
+		sb.append(", clientid=");
+		sb.append(clientid);
+		sb.append(", timestampMessage=");
+		sb.append(timestampMessage);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append("[");
+		sb.append("type=");
+		sb.append(type);
+		internalToString(sb);
+		sb.append("]");
+		return sb.toString();
+	}
+
+	
 }
