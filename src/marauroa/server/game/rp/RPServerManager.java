@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.57 2009/08/09 19:01:56 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.58 2009/11/09 22:47:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -543,7 +543,11 @@ public class RPServerManager extends Thread {
 					entry.storeRPObject(entry.object);
 				}
 			} catch(Exception e) {
-				logger.error("Error while storing player",e);
+				String name = "null";
+				if (entry != null) {
+					name = entry.character;
+				}
+				logger.error("Error while storing player " + name, e);
 			}
 		}
 	}
