@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.14 2009/11/11 20:11:14 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.15 2009/11/11 20:17:10 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -211,7 +211,7 @@ public class LoginEventDAO {
 		String query = "SELECT count(*) as amount FROM loginEvent, account"
 				+ " WHERE loginEvent.player_id=account.id"
 				+ " AND username='[username]'"
-		        + " AND loginEvent.result=0 and (now()-loginEvent.timedate)<"
+		        + " AND loginEvent.result=0 and TIME_TO_SEC(TIMEDIFF(now(), loginEvent.timedate))<"
 		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
@@ -223,7 +223,7 @@ public class LoginEventDAO {
 	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
 		String query = "SELECT count(*) as amount FROM loginEvent"
 				+ " WHERE address='[address]'"
-		        + " AND result=0 and (now()-timedate)<"
+		        + " AND result=0 and TIME_TO_SEC(TIMEDIFF(now(), timedate)) <"
 		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("address", address);
