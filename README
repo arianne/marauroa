@@ -109,6 +109,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.3
+- increased visiblity of doesTableExist and doesColumnExist in DBTransaction to public
+
 3.2.1
 - fixed a deadlock when temporarily running out of database connections
 - fixed error message in case the pool runs out of connections (the list contained connections that were kicked because of an exception)

@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.21 2009/10/16 20:51:46 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.22 2009/12/15 21:52:33 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -225,7 +225,7 @@ public class DBTransaction {
 	 * @return true, if the table exists, false otherwise
      * @throws SQLException in case of an database error
 	 */
-	protected boolean doesTableExist(String table) throws SQLException {
+	public boolean doesTableExist(String table) throws SQLException {
 		return databaseAdapter.doesTableExist(table);
 	}
 
@@ -237,7 +237,7 @@ public class DBTransaction {
 	 * @return true, if the column exists, false otherwise
      * @throws SQLException in case of an database error
 	 */
-	protected boolean doesColumnExist(String table, String column) throws SQLException {
+	public boolean doesColumnExist(String table, String column) throws SQLException {
 		return databaseAdapter.doesColumnExist(table, column);
 	}
 
