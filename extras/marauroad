@@ -6,5 +6,5 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-export LOCALCLASSPATH=.:libs/marauroa-3.2.2.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar
+export LOCALCLASSPATH=.:libs/marauroa-3.3.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar
 java -cp $LOCALCLASSPATH marauroa.server.marauroad -c $2
