@@ -1,6 +1,7 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +67,25 @@ public abstract class SlotOwner extends Attributes {
 	 * @throws SlotAlreadyAddedException
 	 *             if the slot already exists
 	 */
-	public abstract void addSlot(String name) throws SlotAlreadyAddedException;
+	/**
+	 * This method add the slot to the object
+	 *
+	 * @param name
+	 *            the RPSlot name to be added
+	 * @throws SlotAlreadyAddedException
+	 *             if the slot already exists
+	 */
+	public void addSlot(String name) throws SlotAlreadyAddedException {
+		if (hasSlot(name)) {
+			throw new SlotAlreadyAddedException(name);
+		}
+
+		RPSlot slot = new RPSlot(name);
+
+		/** First we set the slot owner, so that slot can get access to RPClass */
+		slot.setOwner(this);
+		slots.add(slot);
+	}
 
 	/**
 	 * This method add the slot to the object
@@ -76,7 +95,21 @@ public abstract class SlotOwner extends Attributes {
 	 * @throws SlotAlreadyAddedException
 	 *             if the slot already exists
 	 */
-	public abstract void addSlot(RPSlot slot) throws SlotAlreadyAddedException;
+	public void addSlot(RPSlot slot) throws SlotAlreadyAddedException {
+		if (hasSlot(slot.getName())) {
+			throw new SlotAlreadyAddedException(slot.getName());
+		}
+
+		/* First we set the slot owner, so that slot can get access to RPClass */
+		slot.setOwner(this);
+		slots.add(slot);
+		
+		/* Now we make sure everyRPObject inside the added slot gets a proper id */
+		for(RPObject object: slot) {
+			assignSlotID(object);
+			object.setContainer(this, slot);
+		}
+	}
 
 	/**
 	 * This method is used to remove an slot of the object
@@ -85,7 +118,24 @@ public abstract class SlotOwner extends Attributes {
 	 *            the name of the slot
 	 * @return the removed slot if it is found or null if it is not found.
 	 */
-	public abstract RPSlot removeSlot(String name);
+
+	/**
+	 * This method is used to remove an slot of the object
+	 *
+	 * @param name
+	 *            the name of the slot
+	 * @return the removed slot if it is found or null if it is not found.
+	 */
+	public RPSlot removeSlot(String name) {
+		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
+			RPSlot slot = it.next();
+			if (name.equals(slot.getName())) {
+				it.remove();
+				return slot;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * This method returns a slot whose name is name
@@ -94,21 +144,34 @@ public abstract class SlotOwner extends Attributes {
 	 *            the name of the slot
 	 * @return the slot or null if the slot is not found
 	 */
-	public abstract RPSlot getSlot(String name);
+	public RPSlot getSlot(String name) {
+		for (RPSlot slot : slots) {
+			if (name.equals(slot.getName())) {
+				return slot;
+			}
+		}
+
+		return null;
+	}
 
 	/**
 	 * Returns a iterator over the slots
 	 *
 	 * @return an iterator over the slots
 	 */
-	public abstract Iterator<RPSlot> slotsIterator();
+	public Iterator<RPSlot> slotsIterator() {
+		return slots.iterator();
+	}
 
 	/**
 	 * Returns an unmodifiable list of the slots
 	 *
 	 * @return a list of the slots
 	 */
-	public abstract List<RPSlot> slots();
+	public List<RPSlot> slots() {
+		return Collections.unmodifiableList(slots);
+	}
+
 
 	abstract void assignSlotID(RPObject object);
 
