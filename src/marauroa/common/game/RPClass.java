@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.65 2009/07/08 18:44:03 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.66 2009/12/17 23:07:54 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -312,6 +312,10 @@ public class RPClass implements marauroa.common.net.Serializable {
 				def = Definition.defineEvent(name, flags);
 				rpevents.put(name, def);
 				break;
+			case RPEVENT_WITH_SLOTS:
+				def = Definition.defineEventWithSlots(name, flags);
+				rpevents.put(name, def);
+				break;
 
 			default:
 				throw new SyntaxException(name);
@@ -468,6 +472,18 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
+	 * Adds a definition of an event with the given flags.
+	 *
+	 * @param name
+	 *            name of the definition
+	 * @param flags
+	 *            like visibility, storability, etc...
+	 */
+	public void addRPEventWithSlots(String name, byte flags) {
+		add(DefinitionClass.RPEVENT_WITH_SLOTS, name, flags);
+	}
+
+	/**
 	 * Returns the definition object itself.
 	 *
 	 * @param clazz
@@ -487,6 +503,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 				def = attributes.get(name);
 				break;
 			case RPEVENT:
+			case RPEVENT_WITH_SLOTS:
 				def = rpevents.get(name);
 				break;
 			case RPSLOT:

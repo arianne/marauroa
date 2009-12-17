@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.25 2009/07/17 21:20:06 nhnb Exp $ */
+/* $Id: Definition.java,v 1.26 2009/12/17 23:07:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,7 +62,9 @@ public class Definition implements marauroa.common.net.Serializable {
 		/** This definition is for a RPEvent */
 		RPEVENT,
 		/** This definition is for a RPLink */
-		RPLINK
+		RPLINK,
+		/** This definition is for a RPEvent with slots */
+		RPEVENT_WITH_SLOTS
 	}
 
 	/** Define the possible types of an attribute or event */
@@ -223,6 +225,24 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
+	 * Creates an Event definition
+	 *
+	 * @param name
+	 *            the name of the event
+	 * @param flags
+	 *            flags options.
+	 * @return an Event Definition
+	 */
+	public static Definition defineEventWithSlots(String name, byte flags) {
+		Definition def = new Definition(DefinitionClass.RPEVENT_WITH_SLOTS);
+		def.name = name;
+		def.type = Type.NOTYPE;
+		def.flags = flags;
+		def.capacity = 0;
+		return def;
+	}
+
+	/**
 	 * Creates a RPSLot definition
 	 *
 	 * @param name
@@ -269,6 +289,15 @@ public class Definition implements marauroa.common.net.Serializable {
 	 */
 	public short getCode() {
 		return code;
+	}
+
+	/**
+	 * Returns the DefinitionClass
+	 *
+	 * @return DefinitionClass
+	 */
+	public DefinitionClass getDefinitionClass() {
+		return clazz;
 	}
 
 	/**

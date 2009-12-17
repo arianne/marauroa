@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.66 2009/09/13 09:36:17 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.67 2009/12/17 23:07:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -31,8 +31,8 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/** Name of the slot */
 	private String name;
 
-	/** This slot is linked to an object: its owner. */
-	private RPObject owner;
+	/** This slot is linked to an owner. */
+	private SlotOwner owner;
 
 	/** A List<RPObject> of objects */
 	private LinkedRPObjectList objects;
@@ -74,11 +74,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * This method sets the owner of the slot. Owner is used for having access
 	 * to RPClass.
 	 *
-	 * @param object
-	 *            sets the object that owns this slot.
+	 * @param owner
+	 *            sets owner of this slot.
 	 */
-	void setOwner(RPObject object) {
-		owner = object;
+	void setOwner(SlotOwner owner) {
+		this.owner = owner;
 
 		/*
 		 * Compute now the capacity of the slot
@@ -93,7 +93,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 *
 	 * @return the owner of the slot
 	 */
-	RPObject getOwner() {
+	SlotOwner getOwner() {
 		return owner;
 	}
 
@@ -313,15 +313,15 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return true if this slot is owned (at any depth) by id or false
 	 *         otherwise.
 	 */
-	public boolean hasAsAncestor(RPObject object) {
-		RPObject owner = getOwner();
+	public boolean hasAsAncestor(SlotOwner object) {
+		SlotOwner owner = getOwner();
 		// traverse the owner tree
 		while (owner != null) {
 			// NOTE: We compare pointers.
-			if (owner==object) {
+			if (owner == object) {
 				return true;
 			}
-			owner = owner.getContainer();
+			owner = owner.getContainerOwner();
 		}
 		return false;
 	}

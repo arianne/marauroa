@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.92 2009/09/13 09:36:17 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.93 2009/12/17 23:07:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -41,16 +41,13 @@ import marauroa.common.game.Definition.DefinitionClass;
  * </ul>
  */
 
-public class RPObject extends Attributes {
+public class RPObject extends SlotOwner {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObject.class);
 	
 	/** We are interested in clearing added and deleted only if they have changed. */
 	private boolean modified;
-
-	/** a list of slots that this object contains */
-	private List<RPSlot> slots;
 
 	/** a list of events that this object contains */
 	private List<RPEvent> events;
@@ -59,7 +56,7 @@ public class RPObject extends Attributes {
 	private List<RPLink> links;
 
 	/** Which object contains this one. */
-	private RPObject container;
+	private SlotOwner container;
 
 	/** In which slot are this object contained */
 	private RPSlot containerSlot;
@@ -145,12 +142,6 @@ public class RPObject extends Attributes {
 
 		container = object.container;
 		containerSlot = object.containerSlot;
-
-		for (RPSlot slot : object.slots) {
-			RPSlot added = (RPSlot) slot.clone();
-			added.setOwner(this);
-			slots.add(added);
-		}
 
 		for (RPEvent event : object.events) {
 			RPEvent added = (RPEvent) event.clone();
@@ -296,8 +287,9 @@ public class RPObject extends Attributes {
 	 * @param slot
 	 *            the slot of the object that contains this object.
 	 */
-	public void setContainer(RPObject object, RPSlot slot) {
-		container = object;
+	@Override
+	public void setContainer(SlotOwner slotOwner, RPSlot slot) {
+		container = slotOwner;
 		containerSlot = slot;
 	}
 
@@ -306,7 +298,32 @@ public class RPObject extends Attributes {
 	 *
 	 * @return the container of this object.
 	 */
+	@Deprecated
 	public RPObject getContainer() {
+		return (RPObject) container;
+	}
+
+	/**
+	 * Returns the base container where this object is
+	 *
+	 * @return the base container of this object.
+	 */
+	@Deprecated
+	public RPObject getBaseContainer() {
+		if (container != null) {
+			return (RPObject) container.getContainerBaseOwner();
+		} else {
+			return this;
+		}
+	}
+
+	/**
+	 * Returns the container where this object is
+	 *
+	 * @return the container of this object.
+	 */
+	@Override
+	public SlotOwner getContainerOwner() {
 		return container;
 	}
 
@@ -315,13 +332,15 @@ public class RPObject extends Attributes {
 	 *
 	 * @return the base container of this object.
 	 */
-	public RPObject getBaseContainer() {
+	@Override
+	public SlotOwner getContainerBaseOwner() {
 		if (container != null) {
-			return container.getBaseContainer();
+			return container.getContainerBaseOwner();
 		} else {
 			return this;
 		}
 	}
+
 
 	/**
 	 * Returns the slot where this object is contained
@@ -345,6 +364,7 @@ public class RPObject extends Attributes {
 	 * @param object
 	 *            object to be added to a slot
 	 */
+	@Override
 	void assignSlotID(RPObject object) {
 		if (container != null) {
 			container.assignSlotID(object);
@@ -363,6 +383,7 @@ public class RPObject extends Attributes {
 	 * @param id
 	 *	An ID.
 	 */
+	@Override
 	void usedSlotID(int id) {
 		if (container != null) {
 			container.usedSlotID(id);
@@ -406,21 +427,6 @@ public class RPObject extends Attributes {
 		return found;
 	}
 
-	/**
-	 * This method returns true if the object has that slot
-	 *
-	 * @param name
-	 *            the name of the slot
-	 * @return true if slot exists or false otherwise
-	 */
-	public boolean hasSlot(String name) {
-		for (RPSlot slot : slots) {
-			if (slot.getName().equals(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * This method add the slot to the object
@@ -704,7 +710,7 @@ public class RPObject extends Attributes {
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		try {
-		writeObject(out, DetailLevel.NORMAL);
+			writeObject(out, DetailLevel.NORMAL);
 		} catch(NullPointerException e) {
 			logger.warn(this,e);
 			throw e;
@@ -736,34 +742,13 @@ public class RPObject extends Attributes {
 			out.write((byte) 0);
 		}
 
-		/*
-		 * We compute the amount of slots to serialize first. We don't serialize
-		 * hidden or private slots unless detail level is full.
-		 */
-		int size = 0;
-		for (RPSlot slot : slots) {
-			if (shouldSerialize(DefinitionClass.RPSLOT, slot.getName(), level)) {
-				size++;
-			}
-		}
-
-		/*
-		 * Now write it.
-		 */
-		out.write(size);
-		for (RPSlot slot : slots) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-
-			if (shouldSerialize(def, level)) {
-				slot.writeObject(out, level);
-			}
-		}
+		serializeRPSlots(out, level);
 
 		/*
 		 * We compute the amount of links to serialize first. We don't serialize
 		 * hidden or private slots unless detail level is full.
 		 */
-		size = 0;
+		int size = 0;
 		for (RPLink link : links) {
 			if (shouldSerialize(DefinitionClass.RPLINK, link.getName(), level)) {
 				size++;
@@ -822,28 +807,12 @@ public class RPObject extends Attributes {
 			storable = in.readByte() == 1;
 		}
 
-		/*
-		 * First we load slots
-		 */
-		int size = in.readInt();
-
-		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
-		}
-
-		slots = new LinkedList<RPSlot>();
-
-		for (int i = 0; i < size; ++i) {
-			RPSlot slot = new RPSlot();
-			slot.setOwner(this);
-			slot = (RPSlot) in.readObject(slot);
-			slots.add(slot);
-		}
+		deserializeRPSlots(in);
 
 		/*
 		 * then we load links
 		 */
-		size = in.readInt();
+		int size = in.readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
@@ -1534,4 +1503,5 @@ public class RPObject extends Attributes {
 			}
 		}
 	}
+
 }
