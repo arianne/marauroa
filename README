@@ -111,6 +111,8 @@ Changelog
 ---------
 3.3
 - increased visiblity of doesTableExist and doesColumnExist in DBTransaction to public
+- RPEvents can now have slots when defined using RPClass.addRPEventWithSlots()
+- RPObject.getContainer() and RPObject.getContainerBase() have been deprecated in favour of getContainerOwner() and getContainerOwnerBase()
 
 3.2.1
 - fixed a deadlock when temporarily running out of database connections
