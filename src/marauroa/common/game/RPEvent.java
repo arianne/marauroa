@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.23 2009/03/02 22:36:37 astridemma Exp $ */
+/* $Id: RPEvent.java,v 1.24 2009/12/17 23:33:02 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,10 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
+import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
@@ -32,16 +35,22 @@ import marauroa.common.net.OutputSerializer;
  * <p>
  * A RPEvent is <b>always</b> linked to an RPObject.
  *
- * @author miguel
+ * @author miguel, hendrik
  *
  */
-public class RPEvent extends Attributes {
+public class RPEvent extends SlotOwner {
+
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(RPEvent.class);
 
 	/** Name of the event */
 	private String name;
 
 	/** This event is linked to an object: its owner. */
 	private RPObject owner;
+
+	/** a list of slots that this object contains */
+	private List<RPSlot> slots;
 
 	/**
 	 * Constructor
@@ -51,6 +60,7 @@ public class RPEvent extends Attributes {
 	public RPEvent(String name) {
 		super(RPClass.getBaseRPObjectDefault());
 		this.name = name;
+		this.slots = new LinkedList<RPSlot>();
 	}
 
 	/**
@@ -65,11 +75,35 @@ public class RPEvent extends Attributes {
 	/** This method create a copy of the slot */
 	@Override
 	public Object clone() {
-		RPEvent event = new RPEvent(name);
-		event.owner = owner;
-		event.fill(this);
+		try {
+			RPEvent rpevent = (RPEvent) super.clone();
+			rpevent.fill(this);
+			return rpevent;
+		} catch (CloneNotSupportedException e) {
+			logger.error(e, e);
+			return null;
+		}
+	}
 
-		return event;
+	/**
+	 * Copy constructor
+	 *
+	 * @param object
+	 *            the object that is going to be copied.
+	 */
+	public void fill(RPEvent event) {
+		super.fill(event);
+
+		this.name = event.name;
+		this.owner = event.owner;
+		this.slots.clear();
+
+		for (RPSlot slot : event.slots) {
+			RPSlot added = (RPSlot) slot.clone();
+			added.setOwner(this);
+			slots.add(added);
+		}
+
 	}
 
 	/**
@@ -122,6 +156,11 @@ public class RPEvent extends Attributes {
 		}
 
 		super.writeObject(out, level);
+
+		if (def.getDefinitionClass() == DefinitionClass.RPEVENT_WITH_SLOTS) {
+			serializeRPSlots(out, level);
+		}
+
 	}
 
 	/**
@@ -142,6 +181,11 @@ public class RPEvent extends Attributes {
 		}
 
 		super.readObject(in);
+
+		Definition def = owner.getRPClass().getDefinition(DefinitionClass.RPEVENT, name);
+		if (def.getDefinitionClass() == DefinitionClass.RPEVENT_WITH_SLOTS) {
+			deserializeRPSlots(in);
+		}
 	}
 
 	@Override
@@ -177,4 +221,28 @@ public class RPEvent extends Attributes {
 		return "[" + name + "=" + super.toString() + "]";
 	}
 
+	@Override
+	void assignSlotID(RPObject object) {
+		// ignore, no need for ids be because RPEvents are not subjected to delta^2 processing
+	}
+
+	@Override
+	SlotOwner getContainerBaseOwner() {
+		return null;
+	}
+
+	@Override
+	SlotOwner getContainerOwner() {
+		return null;
+	}
+
+	@Override
+	void setContainer(SlotOwner owner, RPSlot slot) {
+		// ignore, RPEvent is always top level
+	}
+
+	@Override
+	void usedSlotID(int id) {
+		// ignore, no need for ids be because RPEvents are not subjected to delta^2 processing
+	}
 }
