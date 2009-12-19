@@ -278,4 +278,18 @@ public abstract class SlotOwner extends Attributes {
 			slots.add(slot);
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer tmp = new StringBuffer("RPObject with ");
+		tmp.append(super.toString());
+
+		tmp.append(" and RPSlots ");
+		for (RPSlot slot : slots) {
+			tmp.append("[" + slot.toString() + "]");
+		}
+
+		return tmp.toString();
+	}
+
 }
