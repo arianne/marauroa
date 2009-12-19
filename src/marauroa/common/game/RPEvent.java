@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.24 2009/12/17 23:33:02 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.25 2009/12/19 11:22:22 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -222,11 +222,6 @@ public class RPEvent extends SlotOwner {
 	}
 
 	@Override
-	void assignSlotID(RPObject object) {
-		// ignore, no need for ids be because RPEvents are not subjected to delta^2 processing
-	}
-
-	@Override
 	SlotOwner getContainerBaseOwner() {
 		return null;
 	}
@@ -241,8 +236,4 @@ public class RPEvent extends SlotOwner {
 		// ignore, RPEvent is always top level
 	}
 
-	@Override
-	void usedSlotID(int id) {
-		// ignore, no need for ids be because RPEvents are not subjected to delta^2 processing
-	}
 }

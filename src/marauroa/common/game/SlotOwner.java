@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 
@@ -16,15 +17,30 @@ import marauroa.common.game.Definition.DefinitionClass;
  */
 public abstract class SlotOwner extends Attributes {
 
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(SlotOwner.class);
+
+
 	/** a list of slots that this object contains */
 	protected List<RPSlot> slots;
 
+	/**
+	 * Keep track of the lastest assigned id for any object added to the slot of
+	 * this object or any object that is contained by this object.
+	 */
+	private int lastAssignedID;
+
+
+	/**
+	 * creates a new SlowOwner
+	 *
+	 * @param rpclass RPClass definition
+	 */
 	public SlotOwner(RPClass rpclass) {
 		super(rpclass);
 		slots = new LinkedList<RPSlot>();
 	}
 
-	
 
 	@Override
 	public Object fill(Attributes attr) {
@@ -32,6 +48,7 @@ public abstract class SlotOwner extends Attributes {
 		slots.clear();
 		if (attr instanceof SlotOwner) {
 			SlotOwner slotOwner = (SlotOwner) attr;
+			lastAssignedID = slotOwner.lastAssignedID;
 			for (RPSlot slot : slotOwner.slots) {
 				RPSlot added = (RPSlot) slot.clone();
 				added.setOwner(this);
@@ -173,9 +190,41 @@ public abstract class SlotOwner extends Attributes {
 	}
 
 
-	abstract void assignSlotID(RPObject object);
+	/**
+	 * Assign a valid id for a object to be added to a slot. The id is assigned
+	 * by the base object that contains all.
+	 *
+	 * @param object
+	 *            object to be added to a slot
+	 */
+	void assignSlotID(RPObject object) {
+		if (getContainerOwner() != null) {
+			getContainerOwner().assignSlotID(object);
+		} else {
+			object.put("id", lastAssignedID++);
 
-	abstract void usedSlotID(int int1);
+			// If object has zoneid we remove as it is useless inside a slot.
+			if (object.has("zoneid")) {
+				object.remove("zoneid");
+			}
+		}
+	}
+
+	/**
+	 * Mark an ID as used for slot assignments so that it won't be used again.
+	 * @param id
+	 *	An ID.
+	 */
+	void usedSlotID(int id) {
+		if (getContainerOwner() != null) {
+			getContainerOwner().usedSlotID(id);
+		} else {
+			if(id >= lastAssignedID) {
+				logger.debug("Reseting slot ID: " + lastAssignedID + " -> " + (id + 1));
+				lastAssignedID = id + 1;
+			}
+		}
+	}
 
 	abstract void setContainer(SlotOwner owner, RPSlot slot);
 

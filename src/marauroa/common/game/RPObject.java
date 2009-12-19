@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.94 2009/12/17 23:32:50 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.95 2009/12/19 11:22:19 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -137,7 +137,6 @@ public class RPObject extends SlotOwner {
 
 		hidden = object.hidden;
 		storable = object.storable;
-		lastassignedID = object.lastassignedID;
 		modified=object.modified;
 
 		container = object.container;
@@ -349,53 +348,6 @@ public class RPObject extends SlotOwner {
 	 */
 	public RPSlot getContainerSlot() {
 		return containerSlot;
-	}
-
-	/**
-	 * Keep track of the lastest assigned id for any object added to the slot of
-	 * this object or any object that is contained by this object.
-	 */
-	private int lastassignedID;
-
-	/**
-	 * Assign a valid id for a object to be added to a slot. The id is assigned
-	 * by the base object that contains all.
-	 *
-	 * @param object
-	 *            object to be added to a slot
-	 */
-	@Override
-	void assignSlotID(RPObject object) {
-		if (container != null) {
-			container.assignSlotID(object);
-		} else {
-			object.put("id", lastassignedID++);
-
-			// If object has zoneid we remove as it is useless inside a slot.
-			if (object.has("zoneid")) {
-				object.remove("zoneid");
-			}
-		}
-	}
-
-	/**
-	 * Mark an ID as used for slot assignments so that it won't be used again.
-	 * @param id
-	 *	An ID.
-	 */
-	@Override
-	void usedSlotID(int id) {
-		if (container != null) {
-			container.usedSlotID(id);
-		} else {
-			if(id >= lastassignedID) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Reseting slot ID: " + lastassignedID + " -> " + (id + 1));
-				}
-
-				lastassignedID = id + 1;
-			}
-		}
 	}
 
 	/**
