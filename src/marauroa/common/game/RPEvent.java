@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.25 2009/12/19 11:22:22 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.26 2009/12/19 16:01:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,7 +14,6 @@ package marauroa.common.game;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
@@ -48,9 +47,6 @@ public class RPEvent extends SlotOwner {
 
 	/** This event is linked to an object: its owner. */
 	private RPObject owner;
-
-	/** a list of slots that this object contains */
-	private List<RPSlot> slots;
 
 	/**
 	 * Constructor
@@ -93,17 +89,8 @@ public class RPEvent extends SlotOwner {
 	 */
 	public void fill(RPEvent event) {
 		super.fill(event);
-
 		this.name = event.name;
 		this.owner = event.owner;
-		this.slots.clear();
-
-		for (RPSlot slot : event.slots) {
-			RPSlot added = (RPSlot) slot.clone();
-			added.setOwner(this);
-			slots.add(added);
-		}
-
 	}
 
 	/**
