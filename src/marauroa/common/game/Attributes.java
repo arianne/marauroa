@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.72 2009/09/13 09:36:17 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.73 2009/12/19 21:45:43 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -541,7 +541,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return true if it should be serialized.
 	 */
 	boolean shouldSerialize(Definition def, DetailLevel level) {
-		return (level == DetailLevel.PRIVATE && !def.isHidden()) || (def.isVisible())
+		if (level == DetailLevel.FULL && !def.isStorable()){
+			return false;
+		}
+		
+		return (level == DetailLevel.PRIVATE && !def.isHidden()) 
+				|| (def.isVisible())
 				|| (level == DetailLevel.FULL);
 	}
 
