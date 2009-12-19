@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.26 2009/12/19 16:01:28 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.27 2009/12/19 16:43:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -55,6 +55,7 @@ public class RPEvent extends SlotOwner {
 	 */
 	public RPEvent(String name) {
 		super(RPClass.getBaseRPObjectDefault());
+		setRPClass(name);
 		this.name = name;
 		this.slots = new LinkedList<RPSlot>();
 	}
@@ -205,7 +206,9 @@ public class RPEvent extends SlotOwner {
 
 	@Override
 	public String toString() {
-		return "[" + name + "=" + super.toString() + "]";
+		StringBuffer tmp = new StringBuffer("RPEvent " + name + " with ");
+		tmp.append(super.toString());
+		return tmp.toString();
 	}
 
 	@Override
