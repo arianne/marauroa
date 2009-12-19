@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.95 2009/12/19 11:22:19 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.96 2009/12/19 16:00:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -582,10 +582,6 @@ public class RPObject extends SlotOwner {
 		StringBuffer tmp = new StringBuffer("RPObject with ");
 
 		tmp.append(super.toString());
-		tmp.append(" and RPSlots ");
-		for (RPSlot slot : slots) {
-			tmp.append("[" + slot.toString() + "]");
-		}
 
 		tmp.append(" and RPLink ");
 		for (RPLink link : links) {
