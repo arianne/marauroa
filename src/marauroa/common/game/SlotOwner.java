@@ -45,7 +45,7 @@ public abstract class SlotOwner extends Attributes {
 	@Override
 	public Object fill(Attributes attr) {
 		Object res = super.fill(attr);
-		slots.clear();
+		slots = new LinkedList<RPSlot>();
 		if (attr instanceof SlotOwner) {
 			SlotOwner slotOwner = (SlotOwner) attr;
 			lastAssignedID = slotOwner.lastAssignedID;
