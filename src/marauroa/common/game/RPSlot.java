@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.67 2009/12/17 23:07:54 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.68 2009/12/20 00:34:34 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -304,6 +304,20 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return objects.hasByIDIgnoringZone(id);
 	}
 
+	
+	/**
+	 * Traverses up the container tree to see if the slot is owned by object
+	 * or by one of its parents
+	 *
+	 * @param object
+	 *            the object id. Note that only object_id field is relevant.
+	 * @return true if this slot is owned (at any depth) by id or false
+	 *         otherwise.
+	 */
+	public boolean hasAsAncestor(RPObject object) {
+		return hasAsAncestor((SlotOwner) object);
+	}
+	
 	/**
 	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
