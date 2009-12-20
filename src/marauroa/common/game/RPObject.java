@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.97 2009/12/20 00:30:32 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.98 2009/12/20 00:47:58 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1400,60 +1400,6 @@ public class RPObject extends SlotOwner {
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * This method returns true if the object has that slot
 	 *
@@ -1461,6 +1407,7 @@ public class RPObject extends SlotOwner {
 	 *            the name of the slot
 	 * @return true if slot exists or false otherwise
 	 */
+	// this method is here for binary compatiblity
 	@Override
 	public boolean hasSlot(String name) {
 		return super.hasSlot(name);
@@ -1473,6 +1420,7 @@ public class RPObject extends SlotOwner {
 	 *            the name of the slot
 	 * @return the slot or null if the slot is not found
 	 */
+	// this method is here for binary compatiblity
 	@Override
 	public RPSlot getSlot(String name) {
 		return super.getSlot(name);
@@ -1483,6 +1431,7 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return an iterator over the slots
 	 */
+	// this method is here for binary compatiblity
 	@Override
 	public Iterator<RPSlot> slotsIterator() {
 		return super.slotsIterator();
@@ -1493,10 +1442,10 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return a list of the slots
 	 */
+	// this method is here for binary compatiblity
 	@Override
 	public List<RPSlot> slots() {
 		return super.slots();
 	}
-
 
 }
