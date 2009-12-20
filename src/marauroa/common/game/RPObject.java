@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.98 2009/12/20 00:47:58 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.99 2009/12/20 17:13:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -297,7 +297,6 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return the container of this object.
 	 */
-	@Deprecated
 	public RPObject getContainer() {
 		return (RPObject) container;
 	}
@@ -307,7 +306,6 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return the base container of this object.
 	 */
-	@Deprecated
 	public RPObject getBaseContainer() {
 		if (container != null) {
 			return (RPObject) container.getContainerBaseOwner();
@@ -828,6 +826,7 @@ public class RPObject extends SlotOwner {
 
 			if(def==null) {
 				logger.warn("Null Definition for event: "+event.getName()+" of RPClass: "+getRPClass().getName());
+				continue;
 			}
 
 			if (def.isVisible()) {

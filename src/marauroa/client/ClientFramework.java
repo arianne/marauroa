@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.49 2009/09/09 20:19:38 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.50 2009/12/20 17:13:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -197,6 +197,7 @@ public abstract class ClientFramework {
 	 *             if login is rejected
 	 * @throws BannedAddressException
 	 */
+	@SuppressWarnings("null")
 	public synchronized void login(String username, String password)
 	        throws InvalidVersionException, TimeoutException, LoginFailedException,
 	        BannedAddressException {

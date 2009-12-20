@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.127 2009/11/12 21:21:34 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.128 2009/12/20 17:13:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -403,6 +403,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				if (msg != null) {
 					// TODO: Bootleneck because of synchronization.
 					playerContainer.getLock().requestWriteLock();
+					@SuppressWarnings("unused")
 					long startTime = System.currentTimeMillis();
 					switch (msg.getType()) {
 						case C2S_LOGIN_REQUESTKEY:

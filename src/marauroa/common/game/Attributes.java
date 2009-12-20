@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.73 2009/12/19 21:45:43 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.74 2009/12/20 17:13:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -603,6 +603,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			// TODO handle Null Definition for attribute
 			if(def==null) {
 				logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
+				continue;
 			}
 			
 			if (def.isVisible() && !entry.getKey().equals("id")) {

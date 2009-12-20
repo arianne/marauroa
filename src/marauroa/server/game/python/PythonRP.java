@@ -1,4 +1,4 @@
-/* $Id: PythonRP.java,v 1.19 2009/07/19 09:44:51 nhnb Exp $ */
+/* $Id: PythonRP.java,v 1.20 2009/12/20 17:13:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -66,17 +66,14 @@ public class PythonRP {
 		// implement in sub classes
 	}
 
-	@SuppressWarnings("unused")
 	public boolean checkGameVersion(String game, String version) {
 		return true;
 	}
 
-	@SuppressWarnings("unused")
 	public AccountResult createAccount(String username, String password, String email) {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		return null;
 	}
@@ -85,27 +82,22 @@ public class PythonRP {
 		// implement in sub classes
 	}
 
-	@SuppressWarnings("unused")
 	public void execute(RPObject object, RPAction action) {
 		// implement in sub classes
 	}
 
-	@SuppressWarnings("unused")
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {
 		return true;
 	}
 
-	@SuppressWarnings("unused")
 	public void onTimeout(RPObject object) {
 		// implement in sub classes
 	}
 
-	@SuppressWarnings("unused")
 	public boolean onExit(RPObject object) {
 		return true;
 	}
 
-	@SuppressWarnings("unused")
 	public boolean onInit(RPObject object) {
 		return true;
 	}
