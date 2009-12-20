@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.68 2009/12/20 00:34:34 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.69 2009/12/20 00:42:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -314,6 +314,10 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return true if this slot is owned (at any depth) by id or false
 	 *         otherwise.
 	 */
+	// This signature with an RPObject as parameter is here for binary 
+	// compatibilty. Changing the parameter to the parent type SlotOwner
+	// is an incompatible change at binary level (although it is source
+	// compatible)
 	public boolean hasAsAncestor(RPObject object) {
 		return hasAsAncestor((SlotOwner) object);
 	}
