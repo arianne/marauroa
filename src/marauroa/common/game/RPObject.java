@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.96 2009/12/19 16:00:37 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.97 2009/12/20 00:30:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1399,5 +1399,104 @@ public class RPObject extends SlotOwner {
 			}
 		}
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * This method returns true if the object has that slot
+	 *
+	 * @param name
+	 *            the name of the slot
+	 * @return true if slot exists or false otherwise
+	 */
+	@Override
+	public boolean hasSlot(String name) {
+		return super.hasSlot(name);
+	}
+
+	/**
+	 * This method returns a slot whose name is name
+	 *
+	 * @param name
+	 *            the name of the slot
+	 * @return the slot or null if the slot is not found
+	 */
+	@Override
+	public RPSlot getSlot(String name) {
+		return super.getSlot(name);
+	}
+
+	/**
+	 * Returns a iterator over the slots
+	 *
+	 * @return an iterator over the slots
+	 */
+	@Override
+	public Iterator<RPSlot> slotsIterator() {
+		return super.slotsIterator();
+	}
+
+	/**
+	 * Returns an unmodifiable list of the slots
+	 *
+	 * @return a list of the slots
+	 */
+	@Override
+	public List<RPSlot> slots() {
+		return super.slots();
+	}
+
 
 }
