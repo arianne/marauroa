@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.66 2009/12/17 23:07:54 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.67 2009/12/20 13:40:03 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -312,10 +312,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 				def = Definition.defineEvent(name, flags);
 				rpevents.put(name, def);
 				break;
-			case RPEVENT_WITH_SLOTS:
-				def = Definition.defineEventWithSlots(name, flags);
-				rpevents.put(name, def);
-				break;
 
 			default:
 				throw new SyntaxException(name);
@@ -472,18 +468,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Adds a definition of an event with the given flags.
-	 *
-	 * @param name
-	 *            name of the definition
-	 * @param flags
-	 *            like visibility, storability, etc...
-	 */
-	public void addRPEventWithSlots(String name, byte flags) {
-		add(DefinitionClass.RPEVENT_WITH_SLOTS, name, flags);
-	}
-
-	/**
 	 * Returns the definition object itself.
 	 *
 	 * @param clazz
@@ -503,7 +487,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 				def = attributes.get(name);
 				break;
 			case RPEVENT:
-			case RPEVENT_WITH_SLOTS:
 				def = rpevents.get(name);
 				break;
 			case RPSLOT:
@@ -521,6 +504,43 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 
 		return def;
+	}
+
+	/**
+	 * Checks whether there is at least one definition of the specified DefinitionClass.
+	 *
+	 * @param clazz
+	 *            type of definition ( attribute, event or slot )
+	 * @return true, if there is a DefinitionClass, false otherwise
+	 */
+	boolean hasAnyDefinition(Definition.DefinitionClass clazz) {
+		boolean res = false;
+
+		switch (clazz) {
+			case STATIC:
+				res = !staticattributes.isEmpty();
+				break;
+			case ATTRIBUTE:
+				res = !attributes.isEmpty();
+				break;
+			case RPEVENT:
+				res = !rpevents.isEmpty();
+				break;
+			case RPSLOT:
+				res = !rpslots.isEmpty();
+				break;
+			case RPLINK:
+				res = !rplinks.isEmpty();
+				break;
+			default:
+				throw new SyntaxException("Class not found: " + clazz);
+		}
+
+		if (!res && (parent != null)) {
+			return parent.hasAnyDefinition(clazz);
+		}
+
+		return res;
 	}
 
 	/**

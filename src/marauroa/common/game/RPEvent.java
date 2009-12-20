@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.27 2009/12/19 16:43:08 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.28 2009/12/20 13:40:03 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -145,7 +145,8 @@ public class RPEvent extends SlotOwner {
 
 		super.writeObject(out, level);
 
-		if (def.getDefinitionClass() == DefinitionClass.RPEVENT_WITH_SLOTS) {
+		RPClass rpclass = this.getRPClass();
+		if (rpclass.hasAnyDefinition(DefinitionClass.RPSLOT)) {
 			serializeRPSlots(out, level);
 		}
 
@@ -170,8 +171,9 @@ public class RPEvent extends SlotOwner {
 
 		super.readObject(in);
 
-		Definition def = owner.getRPClass().getDefinition(DefinitionClass.RPEVENT, name);
-		if (def.getDefinitionClass() == DefinitionClass.RPEVENT_WITH_SLOTS) {
+		RPClass rpclass = this.getRPClass();
+		if (rpclass.hasAnyDefinition(DefinitionClass.RPSLOT)) {
+			logger.info("readObject: " + this + " rpclass: " + rpclass + " hasAny: " + rpclass.hasAnyDefinition(DefinitionClass.RPSLOT));
 			deserializeRPSlots(in);
 		}
 	}
