@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.28 2009/12/20 13:40:03 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.29 2009/12/20 17:53:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -173,7 +173,6 @@ public class RPEvent extends SlotOwner {
 
 		RPClass rpclass = this.getRPClass();
 		if (rpclass.hasAnyDefinition(DefinitionClass.RPSLOT)) {
-			logger.info("readObject: " + this + " rpclass: " + rpclass + " hasAny: " + rpclass.hasAnyDefinition(DefinitionClass.RPSLOT));
 			deserializeRPSlots(in);
 		}
 	}
