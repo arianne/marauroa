@@ -1,4 +1,4 @@
-/* $Id: Utility.java,v 1.11 2009/07/18 20:51:50 nhnb Exp $ */
+/* $Id: Utility.java,v 1.12 2009/12/23 00:21:18 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -47,12 +47,13 @@ public class Utility {
 	public static String addLeadingZeros(String number, int maxDigits) {
 		StringBuilder result = new StringBuilder(number);
 
-		while (number.length() < maxDigits) {
-			result.append("0");
+		while (result.length() < maxDigits) {
+			result.insert(0, "0");
 		}
 
 		return result.toString();
 	}
+
 
 	/**
 	 * creates a nice hex-dump of the byte array
