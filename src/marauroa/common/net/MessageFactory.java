@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.39 2009/09/01 19:14:18 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.40 2009/12/23 00:22:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import marauroa.common.Log4J;
+import marauroa.common.Utility;
 import marauroa.common.game.Attributes;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
@@ -212,11 +213,8 @@ public class MessageFactory {
 				throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
 			}
 		} else {
-			logger.warn("Message has incorrect protocol version(" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
-			// Deactivated on 2007-11-18 because during a server crash
-			// three threads dumps over a period of about 30 seconds
-			// showed NetworkServerManager in it.
-			// logger.debug("Message is: " + Utility.dumpByteArray(data));
+			logger.error("Message has incorrect protocol version(" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
+			logger.error("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[offset]);
 		}
 	}
