@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
+/* $Id: SystemTest.java,v 1.6 2009/12/24 13:16:55 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -86,7 +86,6 @@ public class SystemTest implements IFunctionalTest {
 		t1_login();
 		t1_1_loginTimeout();
 		t1_1_login();
-		t2_loginBadCase();
 		t3_loginDouble();
 		t4_createCharacter();
 		t4_1_createCharacterFailure();
@@ -186,28 +185,6 @@ public class SystemTest implements IFunctionalTest {
 			e.printStackTrace();
 		}
 
-		client.close();
-	}
-
-	/**
-	 * Test the login process bug when using invalid case in username. It should
-	 * not login
-	 * 
-	 * TODO: Stendhal 0.6x allowed different cases so we are not going to
-	 * consider this bug for now.
-	 * 
-	 * @throws Exception
-	 */
-
-	public void t2_loginBadCase() throws Exception {
-		try {
-			client = new SimpleClient("log4j.properties");
-			client.connect("localhost", PORT);
-			client.login("testusername", "password");
-			fail("It must not login");
-		} catch (LoginFailedException e) {
-			e.printStackTrace();
-		}
 		client.close();
 	}
 
