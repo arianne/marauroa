@@ -1,4 +1,4 @@
-/* $Id: RPEvent.java,v 1.29 2009/12/20 17:53:13 nhnb Exp $ */
+/* $Id: RPEvent.java,v 1.30 2009/12/24 12:41:44 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,7 +85,7 @@ public class RPEvent extends SlotOwner {
 	/**
 	 * Copy constructor
 	 *
-	 * @param object
+	 * @param event
 	 *            the object that is going to be copied.
 	 */
 	public void fill(RPEvent event) {

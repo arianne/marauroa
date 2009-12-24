@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.99 2009/12/20 17:13:15 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.100 2009/12/24 12:41:44 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -281,7 +281,7 @@ public class RPObject extends SlotOwner {
 	/**
 	 * This make this object to be contained in the slot of container.
 	 *
-	 * @param object
+	 * @param slotOwner
 	 *            the object that is going to contain this object.
 	 * @param slot
 	 *            the slot of the object that contains this object.
