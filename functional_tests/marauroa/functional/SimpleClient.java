@@ -1,4 +1,4 @@
-/* $Id: SimpleClient.java,v 1.2 2009/12/24 12:58:17 nhnb Exp $ */
+/* $Id: SimpleClient.java,v 1.3 2009/12/24 13:15:42 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -50,17 +50,17 @@ public class SimpleClient extends ClientFramework {
 		}
 
 		public boolean onAdded(RPObject object) {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
 		public boolean onClear() {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
 		public boolean onDeleted(RPObject object) {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
@@ -70,17 +70,17 @@ public class SimpleClient extends ClientFramework {
 		}
 
 		public boolean onModifiedAdded(RPObject object, RPObject changes) {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
 		public boolean onModifiedDeleted(RPObject object, RPObject changes) {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
 		public boolean onMyRPObject(RPObject added, RPObject deleted) {
-			// TODO Auto-generated method stub
+			// do nothing, but method is required by interface
 			return false;
 		}
 
