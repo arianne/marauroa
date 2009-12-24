@@ -1,4 +1,4 @@
-/* $Id: RPSlotTest.java,v 1.9 2008/09/21 10:33:52 astridemma Exp $ */
+/* $Id: RPSlotTest.java,v 1.10 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -20,19 +20,9 @@ import static org.junit.Assert.assertTrue;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.RPObject.ID;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class RPSlotTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public final void testHashCode() {
@@ -76,7 +66,6 @@ public class RPSlotTest {
 		RPObject rpoWithID = new RPObject(id);
 		rps.add(rpoWithID );
 		assertSame(rpoWithID,rps.remove(id));
-
 	}
 
 	@Test

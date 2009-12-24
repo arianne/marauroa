@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.7 2009/06/10 13:16:50 astridemma Exp $ */
+/* $Id: RPObjectTest.java,v 1.8 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -289,7 +289,9 @@ public class RPObjectTest {
 		assertEquals(subobj1, subObj2);
 	
 	}
-private class SubRPObject extends RPObject{
-	
-}
+
+	class SubRPObject extends RPObject{
+		// just subclass of RPObject used for testing for of the
+		// Object.clone() contract
+	}
 }

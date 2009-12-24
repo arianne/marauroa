@@ -1,4 +1,4 @@
-/* $Id: BareRPRuleProcessor.java,v 1.4 2009/08/21 18:40:25 nhnb Exp $ */
+/* $Id: BareRPRuleProcessor.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -171,6 +171,7 @@ public class BareRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public void endTurn() {
+		// empty method required by interface
 	}
 
 	public void execute(RPObject object, RPAction action) {

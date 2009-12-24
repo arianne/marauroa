@@ -1,4 +1,4 @@
-/* $Id: SimpleClient.java,v 1.1 2008/03/25 17:55:24 arianne_rpg Exp $ */
+/* $Id: SimpleClient.java,v 1.2 2009/12/24 12:58:17 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -89,6 +89,7 @@ public class SimpleClient extends ClientFramework {
 		}
 
 		public void onPerceptionEnd(byte type, int timestamp) {
+			// do nothing, but method is required by interface
 		}
 
 		public void onSynced() {

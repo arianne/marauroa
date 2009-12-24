@@ -37,10 +37,6 @@ public class Speaker extends Observable {
 	  
 	  lines=new LinkedList<String>();
 	}
-	
-	public void initialize(RPObject base) {
-		
-	}
 
 	public void changeState(String newState) {
 		state=newState;
@@ -53,10 +49,10 @@ public class Speaker extends Observable {
 	}
 	
 	public void onAddedChanges(RPObject changes) {
-		
-	}	
+		// do nothing, but method is required by interface
+	}
 
 	public void onDeletedChanges(RPObject changes) {
-		
-	}	
+		// do nothing, but method is required by interface
+	}
 }

@@ -1,4 +1,4 @@
-/* $Id: RPObjectDelta2Test.java,v 1.4 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: RPObjectDelta2Test.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -79,10 +79,12 @@ public class RPObjectDelta2Test {
 
 			@Override
 			public void onInit() throws Exception {
+				// do nothing, but method is required by interface
 			}
 
 			@Override
 			public void onFinish() throws Exception {
+				// do nothing, but method is required by interface
 			}
 		};
 

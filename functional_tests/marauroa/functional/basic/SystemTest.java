@@ -1,4 +1,4 @@
-/* $Id: SystemTest.java,v 1.4 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: SystemTest.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -239,6 +239,8 @@ public class SystemTest implements IFunctionalTest {
 			client.logout();
 			fail("Connection should have been closed");
 		} catch (TimeoutException e) {
+			// ignore timeout during logout as we are going
+			// to close the channel anyway
 		}
 		client.close();
 	}
@@ -396,6 +398,7 @@ public class SystemTest implements IFunctionalTest {
 	 * objects on perceptions.
 	 */
 
+	@SuppressWarnings("deprecation")
 	public void t7_testKeepAlive() throws Exception {
 		try {
 			client = new SimpleClient("log4j.properties");

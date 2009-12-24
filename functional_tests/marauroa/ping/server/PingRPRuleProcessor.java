@@ -1,4 +1,4 @@
-/* $Id: PingRPRuleProcessor.java,v 1.4 2009/08/21 18:40:25 nhnb Exp $ */
+/* $Id: PingRPRuleProcessor.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -97,6 +97,7 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public void endTurn() {
+		// do nothing, but method is required by interface
 	}
 
 	/**
@@ -168,6 +169,7 @@ public class PingRPRuleProcessor implements IRPRuleProcessor {
 	}
 
 	public void execute(RPObject object, RPAction action) {
+		// do nothing, but method is required by interface
 	}
 
 	public boolean onActionAdd(RPObject object, RPAction action, List<RPAction> actionList) {

@@ -1,4 +1,4 @@
-/* $Id: TransferContentTest.java,v 1.5 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: TransferContentTest.java,v 1.6 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -22,19 +22,9 @@ import java.io.IOException;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class TransferContentTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public final void testTransferContent() {

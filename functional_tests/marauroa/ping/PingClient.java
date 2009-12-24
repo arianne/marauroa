@@ -1,4 +1,4 @@
-/* $Id: PingClient.java,v 1.2 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: PingClient.java,v 1.3 2009/12/24 12:58:16 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -54,7 +54,6 @@ public class PingClient extends ClientFramework {
 		 */
 		public boolean onAdded(RPObject object) {
 	        Speaker speaker=new Speaker();
-	        speaker.initialize(object);
 	        speakers.put(object.getID(), speaker);
 	        
 	        SpeakerView view=new SpeakerView(speaker);	        
@@ -106,15 +105,19 @@ public class PingClient extends ClientFramework {
         }
 
 		public void onPerceptionBegin(byte type, int timestamp) {
+			// do nothing, but method is required by interface
         }
 
 		public void onPerceptionEnd(byte type, int timestamp) {
+			// do nothing, but method is required by interface
         }
 
 		public void onSynced() {
+			// do nothing, but method is required by interface
         }
 
 		public void onUnsynced() {
+			// do nothing, but method is required by interface
         }
 	}
 
