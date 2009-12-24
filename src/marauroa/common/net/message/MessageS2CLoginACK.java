@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.5 2007/04/09 15:32:19 arianne_rpg Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.6 2009/12/24 12:40:14 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -60,7 +60,7 @@ public class MessageS2CLoginACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C Login ACK) from (" + getAddress() + ") CONTENTS: ()";
+		return "Message (S2C Login ACK) from (" + getAddress() + ") CONTENTS: (previousLogins: " + previousLogins + ")";
 	}
 
 	@Override
