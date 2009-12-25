@@ -1,6 +1,24 @@
 <FindBugsFilter>
+
+	<!-- a fatal error that kills one thread should shutdown
+	     the complete JVM, because a lot of nasty things can
+	     happen with a missing thread (for example no logging
+	     of item trades or game events. -->
 	<Match> 
 		<Bug pattern="DM_EXIT" />
 		<Class name="marauroa.server.MarauroaUncaughtExceptionHandler" />
 	</Match>
+
+	<!-- if the initialization fails, the JVM is shutdown -->
+	<Match>
+		<Bug pattern="DM_EXIT" />
+		<Class name="marauroa.server.marauroad" />
+	</Match>
+
+	<!-- cannot change this as it is in use for years -->
+	<Match>
+		<Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+		<Class name="marauroa.server.marauroad" />
+	</Match>
+	
 </FindBugsFilter>

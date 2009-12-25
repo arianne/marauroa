@@ -1,4 +1,4 @@
-/* $Id: NetworkManagerTest.java,v 1.9 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: NetworkManagerTest.java,v 1.10 2009/12/25 23:15:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -20,9 +20,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import marauroa.client.net.TCPNetworkClientManager;
+import marauroa.common.Configuration;
 import marauroa.common.game.RPAction;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.NetConst;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.server.net.nio.NIONetworkServerManager;
 
@@ -43,7 +43,7 @@ public class NetworkManagerTest {
 
 	@BeforeClass
 	public static void createNetworkManager() throws Exception {
-		NetConst.tcpPort = PORT;
+		Configuration.getConfiguration().set("tcp_port", Integer.toString(PORT));
 
 		netMan = new NIONetworkServerManager();
 		netMan.start();

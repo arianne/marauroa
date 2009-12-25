@@ -51,7 +51,16 @@ public class TransactionPool {
      * registers this TransactionPool as the global one.
      */
     public void registerGlobally() {
-        TransactionPool.dbtransactionPool = this;
+        registerGlobal(this);
+    }
+
+    /**
+     * registers a TransactionPool as the global one.
+     *
+     * @param dbtransactionPool the pool to register globally
+     */
+    private static void registerGlobal(TransactionPool dbtransactionPool) {
+        TransactionPool.dbtransactionPool = dbtransactionPool;
     }
 
     /**

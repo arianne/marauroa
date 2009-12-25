@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.24 2008/01/25 20:44:40 arianne_rpg Exp $ */
+/* $Id: NetConst.java,v 1.25 2009/12/25 23:15:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,16 +25,17 @@ public class NetConst {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
 
 	/** Port that will use the server for listen to incomming packets */
-	public static int tcpPort;
+	public static final int tcpPort;
 
 	static {
+		int myTcpPort = 3214;
 		try {
 			Configuration conf = Configuration.getConfiguration();
-			tcpPort = Integer.parseInt(conf.get("tcp_port"));
+			myTcpPort = Integer.parseInt(conf.get("tcp_port"));
 		} catch (Exception e) {
-			tcpPort = 3214;
-			logger.warn("Using default port " + tcpPort, e);
+			logger.warn("Using default port " + myTcpPort, e);
 		}
+		tcpPort = myTcpPort;
 	}
 
 	/**

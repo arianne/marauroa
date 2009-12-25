@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.7 2009/10/16 20:32:41 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.8 2009/12/25 23:15:15 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -150,12 +150,19 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public int querySingleCellInt(String sql) throws SQLException {
+		int res = -1;
 		Statement stmt = connection.createStatement();
-		ResultSet resultSet = stmt.executeQuery(sql);
-		resultSet.next();
-		int res = resultSet.getInt(1);
-		resultSet.close();
-		stmt.close();
+		try {
+			ResultSet resultSet = stmt.executeQuery(sql);
+			try {
+				resultSet.next();
+				res = resultSet.getInt(1);
+			} finally {
+				resultSet.close();
+			}
+		} finally {
+			stmt.close();
+		}
 		return res;
 	}
 

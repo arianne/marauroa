@@ -1,13 +1,19 @@
 package marauroa.functional;
 
-import marauroa.common.net.NetConst;
+import java.io.IOException;
+
+import marauroa.common.Configuration;
 import marauroa.server.marauroad;
 
 public class MarauroadLauncher extends marauroad {
 
 	public MarauroadLauncher(int port) {
 		super();
-		NetConst.tcpPort=port;
+		try {
+			Configuration.getConfiguration().set("tcp_port", Integer.toString(port));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.9 2009/08/30 17:53:48 nhnb Exp $ */
+/* $Id: Hash.java,v 1.10 2009/12/25 23:15:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -146,12 +146,12 @@ public class Hash {
 	 * @return a string representing a hexadecimal number.
 	 */
 	public static final String toHexString(final byte[] bs) {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		for (byte b : bs) {
-			res += hex.charAt(((b >>> 4) & 0xF));
-			res += hex.charAt((b & 0xF));
+			res.append(hex.charAt(((b >>> 4) & 0xF)));
+			res.append(hex.charAt((b & 0xF)));
 		}
-		return res;
+		return res.toString();
 	}
 
 	/**
