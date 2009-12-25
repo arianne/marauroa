@@ -1,0 +1,6 @@
+<FindBugsFilter>
+	<Match> 
+		<Bug pattern="DM_EXIT" />
+		<Class name="marauroa.server.MarauroaUncaughtExceptionHandler" />
+	</Match>
+</FindBugsFilter>
