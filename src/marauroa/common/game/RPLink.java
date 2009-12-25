@@ -1,4 +1,4 @@
-/* $Id: RPLink.java,v 1.8 2009/03/02 22:36:37 astridemma Exp $ */
+/* $Id: RPLink.java,v 1.9 2009/12/25 13:10:22 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -35,7 +35,7 @@ import marauroa.common.net.OutputSerializer;
  * @author miguel
  *
  */
-public class RPLink implements marauroa.common.net.Serializable {
+public class RPLink implements marauroa.common.net.Serializable, Cloneable {
 
 	/** Name of the rplink */
 	private String name;
@@ -103,10 +103,14 @@ public class RPLink implements marauroa.common.net.Serializable {
 
 	@Override
 	public Object clone() {
-		RPLink link=new RPLink(name, (RPObject)object.clone());
-		// TODO: Ensure correct cloning.
-		// This cloning is plainly bad.
-		link.owner=owner;
+		RPLink link = null;
+		try {
+			link = (RPLink) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// cloning is supported
+			return null;
+		}
+		link.object = (RPObject) object.clone();
 		return link;
 	}
 
