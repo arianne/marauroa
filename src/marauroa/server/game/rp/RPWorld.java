@@ -1,4 +1,4 @@
-/* $Id: RPWorld.java,v 1.26 2009/12/20 17:13:18 nhnb Exp $ */
+/* $Id: RPWorld.java,v 1.27 2009/12/25 13:15:30 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -86,9 +86,9 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public static RPWorld get() {
 		if (instance == null) {
-			instance = new RPWorld();
+			RPWorld instance = new RPWorld();
 			instance.initialize();
-
+			RPWorld.instance = instance;
 		}
 		return instance;
 	}
