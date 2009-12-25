@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.50 2009/12/20 17:13:18 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.51 2009/12/25 00:52:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -420,6 +420,8 @@ public abstract class ClientFramework {
 
 					recieved++;
 					break;
+				default:
+					logger.debug("Unexpected method while waiting for confirmation of account creation: " + msg);
 			}
 		}
 
