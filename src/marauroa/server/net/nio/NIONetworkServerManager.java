@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.40 2009/07/05 11:55:38 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.41 2009/12/26 16:12:01 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -333,7 +333,11 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					sendMessage(invMsg);
 				} catch (IOException e) {
-					logger.warn("IOException while building message.", e);
+					logger.warn("IOException while building message:" , e);
+					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
+				} catch (RuntimeException e) {
+					logger.warn("RuntimeException while building message:" , e);
+					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
 				}
 			}
 		} catch (InterruptedException e) {
