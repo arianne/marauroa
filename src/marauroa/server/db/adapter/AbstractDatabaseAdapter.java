@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.8 2009/12/25 23:15:15 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.9 2009/12/26 22:50:04 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -112,34 +112,44 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	public int execute(String sql) throws SQLException {
 		int res = -2;
 		Statement statement = connection.createStatement();
-		boolean resultType = statement.execute(sql);
-		if (!resultType) {
-			res = statement.getUpdateCount();
+		try {
+			boolean resultType = statement.execute(sql);
+			if (!resultType) {
+				res = statement.getUpdateCount();
+			}
+		} finally {
+			statement.close();
 		}
-		statement.close();
 		return res;
 	}
 
 	public int execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
+		int res = -2;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		int i = 1; // yes, jdbc starts counting at 1.
-		for (InputStream inputStream : inputStreams) {
-			statement.setBinaryStream(i, inputStream, inputStream.available());
-			i++;
+		try {
+			int i = 1; // yes, jdbc starts counting at 1.
+			for (InputStream inputStream : inputStreams) {
+				statement.setBinaryStream(i, inputStream, inputStream.available());
+				i++;
+			}
+			res = statement.executeUpdate();
+		} finally {
+			statement.close();
 		}
-		int res = statement.executeUpdate();
-		statement.close();
 		return res;
 	}
 
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
 		PreparedStatement statement = connection.prepareStatement(sql);
-		int i = 1; // yes, jdbc starts counting at 1.
-		for (InputStream inputStream : inputStreams) {
-			statement.setBinaryStream(i, inputStream, inputStream.available());
-			statement.executeUpdate();
+		try {
+			int i = 1; // yes, jdbc starts counting at 1.
+			for (InputStream inputStream : inputStreams) {
+				statement.setBinaryStream(i, inputStream, inputStream.available());
+				statement.executeUpdate();
+			}
+		} finally {
+			statement.close();
 		}
-		statement.close();
 	}
 
 	public ResultSet query(String sql) throws SQLException {
