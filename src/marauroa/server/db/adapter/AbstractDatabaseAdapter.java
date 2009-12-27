@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.9 2009/12/26 22:50:04 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.10 2009/12/27 15:46:57 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -154,9 +154,17 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 
 	public ResultSet query(String sql) throws SQLException {
 		Statement stmt = connection.createStatement();
-		ResultSet resultSet = stmt.executeQuery(sql);
-		addToGarbageLists(stmt, resultSet);
-		return resultSet;
+		try {
+			ResultSet resultSet = stmt.executeQuery(sql);
+			addToGarbageLists(stmt, resultSet);
+			return resultSet;
+		} catch (RuntimeException e) {
+			stmt.close();
+			throw e;
+		} catch (SQLException e) {
+			stmt.close();
+			throw e;
+		}
 	}
 
 	public int querySingleCellInt(String sql) throws SQLException {
