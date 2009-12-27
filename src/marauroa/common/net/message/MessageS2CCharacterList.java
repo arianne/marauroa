@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.5 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,8 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+
+import marauroa.common.Utility;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -49,7 +51,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @return the list of characters that the player owns
 	 */
 	public String[] getCharacters() {
-		return characters;
+		return Utility.copy(characters);
 	}
 
 	/**

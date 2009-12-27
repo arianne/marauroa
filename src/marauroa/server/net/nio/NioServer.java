@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.26 2009/07/18 11:32:00 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.27 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -253,8 +253,10 @@ class NioServer extends Thread {
 						this.write(key);
 					}
 				}
-			} catch (Exception e) {
-				logger.error("Error on NIOServer",e);
+			} catch (IOException e) {
+				logger.error("Error on NIOServer", e);
+			} catch (RuntimeException e) {
+				logger.error("Error on NIOServer", e);
 			}
 		}
 

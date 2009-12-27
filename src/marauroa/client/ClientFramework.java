@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.51 2009/12/25 00:52:17 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.52 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,11 +13,13 @@
 package marauroa.client;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Proxy;
+import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -177,7 +179,7 @@ public abstract class ClientFramework {
 	 * are using TCP.
 	 */
 	@Deprecated
-	public void resync() {
+	public synchronized void resync() {
 		MessageC2SOutOfSync msg = new MessageC2SOutOfSync();
 		netMan.addMessage(msg);
 	}
@@ -300,7 +302,7 @@ public abstract class ClientFramework {
 	 *
 	 * Note: In most cases you do not need this seed and should not call this method.
 	 */
-	public void createSeed() {
+	public synchronized void createSeed() {
 		String seed1 = null;
 		String seed2 = null;
 		String seed3 = null;
@@ -317,7 +319,15 @@ public abstract class ClientFramework {
 					break;
 				}
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+			// ignored
+		} catch (SocketException e) {
+			// ignored
+		} catch (NoSuchMethodException e) {
+			// ignored
+		} catch (IllegalAccessException e) {
+			// ignored
+		} catch (InvocationTargetException e) {
 			// ignored
 		}
 		
@@ -500,7 +510,7 @@ public abstract class ClientFramework {
 	 * @param action
 	 *            the action to send to server.
 	 */
-	public void send(RPAction action) {
+	public synchronized void send(RPAction action) {
 		/*
 		 * Each time we send an action we are confirming server our presence, so we 
 		 * reset the counter to avoid sending keep alive messages.

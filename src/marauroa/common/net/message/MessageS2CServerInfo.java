@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.4 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.5 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 
+import marauroa.common.Utility;
 import marauroa.common.game.RPClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
@@ -64,7 +65,8 @@ public class MessageS2CServerInfo extends Message {
 	 * @return the list of strings to describe the server
 	 */
 	public String[] getContents() {
-		return contents;
+		return Utility.copy(contents);
+
 	}
 
 	/**

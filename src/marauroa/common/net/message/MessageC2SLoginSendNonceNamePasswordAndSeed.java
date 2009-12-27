@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.1 2009/09/01 19:14:18 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.2 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
 
 /**
@@ -70,7 +71,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	 * @return the password
 	 */
 	public byte[] getPassword() {
-		return password;
+		return Utility.copy(password);
 	}
 
 	/**

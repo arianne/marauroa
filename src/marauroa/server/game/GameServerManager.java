@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.128 2009/12/20 17:13:17 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.129 2009/12/27 19:30:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,9 @@
  ***************************************************************************/
 package marauroa.server.game;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -1186,7 +1188,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			netMan.sendMessage(msgCharacters);
 
 			entry.state = ClientState.LOGIN_COMPLETE;
-		} catch (Exception e) {
+		} catch (IOException e) {
+			logger.error("error while processing SecuredLoginEvent", e);
+		} catch (RuntimeException e) {
+			logger.error("error while processing SecuredLoginEvent", e);
+		} catch (SQLException e) {
 			logger.error("error while processing SecuredLoginEvent", e);
 		}
 	}
