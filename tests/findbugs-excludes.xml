@@ -15,6 +15,12 @@
 		<Class name="marauroa.server.marauroad" />
 	</Match>
 
+	<!-- the problem does not occur because the singleton 
+	     initialization happens before the multi threading -->
+	<Match>
+		<Bug pattern="LI_LAZY_INIT_STATIC" />
+	</Match>
+
 	<!-- cannot change this as it is in use for years -->
 	<Match>
 		<Bug pattern="NM_CLASS_NAMING_CONVENTION" />

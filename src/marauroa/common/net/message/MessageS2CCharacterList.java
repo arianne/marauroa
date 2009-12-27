@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.5 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,7 @@ public class MessageS2CCharacterList extends Message {
 	 */
 	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
-		this.characters = characters;
+		this.characters = Utility.copy(characters);
 	}
 
 	/**

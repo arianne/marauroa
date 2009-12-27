@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.5 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -50,7 +50,7 @@ public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArra
 	        String username, byte[] password) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD, source, nonce);
 		this.username = username;
-		this.password = password;
+		this.password = Utility.copy(password);
 	}
 
 	/**

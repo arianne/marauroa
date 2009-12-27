@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.4 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.5 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,7 @@ public class MessageSendByteArray extends Message {
 	 */
 	public MessageSendByteArray(MessageType type, SocketChannel source, byte[] hash) {
 		super(type, source);
-		this.hash = hash;
+		this.hash = Utility.copy(hash);
 	}
 
 	/**

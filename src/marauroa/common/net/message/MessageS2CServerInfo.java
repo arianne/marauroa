@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.5 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -56,7 +56,7 @@ public class MessageS2CServerInfo extends Message {
 	 */
 	public MessageS2CServerInfo(SocketChannel source, String[] contents) {
 		super(MessageType.S2C_SERVERINFO, source);
-		this.contents = contents;
+		this.contents = Utility.copy(contents);
 	}
 
 	/**

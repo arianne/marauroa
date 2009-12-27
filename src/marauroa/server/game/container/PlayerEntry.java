@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.41 2009/09/03 21:30:44 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.42 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -21,6 +21,7 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
+import marauroa.common.Utility;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
@@ -44,7 +45,7 @@ public class PlayerEntry {
 	 * This class store the information needed to allow a secure login. Once
 	 * login is completed the information is cleared.
 	 */
-	static public class SecuredLoginInfo {
+	public static class SecuredLoginInfo {
 		private static Logger logger = Log4J.getLogger(SecuredLoginInfo.class);
 
 		/** A long array of bytes that represent the Hash of a random value. */
@@ -87,8 +88,8 @@ public class PlayerEntry {
 		 */
 		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce, InetAddress address) {
 			this.key = key;
-			this.clientNonceHash = clientNonceHash;
-			this.serverNonce = serverNonce;
+			this.clientNonceHash = Utility.copy(clientNonceHash);
+			this.serverNonce = Utility.copy(serverNonce);
 			this.address = address;
 		}
 

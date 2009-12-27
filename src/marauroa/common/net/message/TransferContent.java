@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.6 2009/12/25 13:11:12 nhnb Exp $ */
+/* $Id: TransferContent.java,v 1.7 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,8 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import marauroa.common.Utility;
 
 /**
  * A helper class to transfer content from server to client.
@@ -86,7 +88,7 @@ public class TransferContent {
 	public TransferContent(String name, int timestamp, byte[] data) {
 		this.name = name;
 		this.timestamp = timestamp;
-		this.data = data;
+		this.data = Utility.copy(data);
 		cacheable = true;
 		ack = false;
 	}

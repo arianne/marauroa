@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.6 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.7 2009/12/27 19:57:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,7 +52,7 @@ public class MessageS2CTransfer extends Message {
 	 * @return The list if contents to transfer.
 	 */
 	public List<TransferContent> getContents() {
-		return contents;
+		return new LinkedList<TransferContent>(contents);
 	}
 
 	@Override
