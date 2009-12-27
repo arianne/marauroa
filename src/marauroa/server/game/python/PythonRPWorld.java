@@ -1,4 +1,4 @@
-/* $Id: PythonRPWorld.java,v 1.13 2009/07/18 11:51:20 nhnb Exp $ */
+/* $Id: PythonRPWorld.java,v 1.14 2009/12/27 15:41:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -39,8 +39,9 @@ public class PythonRPWorld extends RPWorld {
 
 	public static PythonRPWorld get() {
 		if (instance == null) {
-			instance = new PythonRPWorld();
-			instance.initialize();
+			PythonRPWorld myInstance = new PythonRPWorld();
+			myInstance.initialize();
+			instance = myInstance;
 		}
 		return instance;
 	}	

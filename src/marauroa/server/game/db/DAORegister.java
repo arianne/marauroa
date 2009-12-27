@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.5 2009/08/01 19:06:45 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.6 2009/12/27 15:41:33 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -38,8 +38,9 @@ public class DAORegister {
 	 */
 	public static DAORegister get() {
 		if (instance == null) {
-			instance = new DAORegister();
-			instance.registerDAOs();
+			DAORegister myInstance = new DAORegister();
+			myInstance.registerDAOs();
+			instance = myInstance;
 		}
 		return instance;
 	}
@@ -75,7 +76,7 @@ public class DAORegister {
 
 
 	/**
-	 * registers the core DAOs provided by mararuoa itself.
+	 * registers the core DAOs provided by marauroa itself.
 	 */
 	private void registerDAOs() {
 		RPObjectFactory factory = RPObjectFactory.get();
