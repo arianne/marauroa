@@ -1,4 +1,4 @@
-/* $Id: Utility.java,v 1.12 2009/12/23 00:21:18 nhnb Exp $ */
+/* $Id: Utility.java,v 1.13 2009/12/27 19:30:09 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -106,5 +106,41 @@ public class Utility {
 		} catch (Exception e) {
 			return result.toString() + "\nException: " + e.getMessage();
 		}
+	}
+
+	/**
+	 * copies an array
+	 *
+	 * @param array array to copy
+	 * @return copy of array
+	 */
+	public static byte[] copy(byte[] array) {
+		byte[] temp = new byte[array.length];
+		System.arraycopy(array, 0, temp, 0, array.length);
+		return temp;
+	}
+
+	/**
+	 * copies an array
+	 *
+	 * @param array array to copy
+	 * @return copy of array
+	 */
+	public static float[] copy(float[] array) {
+		float[] temp = new float[array.length];
+		System.arraycopy(array, 0, temp, 0, array.length);
+		return temp;
+	}
+
+	/**
+	 * copies an array
+	 *
+	 * @param array array to copy
+	 * @return copy of array
+	 */
+	public static String[] copy(String[] array) {
+		String[] temp = new String[array.length];
+		System.arraycopy(array, 0, temp, 0, array.length);
+		return temp;
 	}
 }
