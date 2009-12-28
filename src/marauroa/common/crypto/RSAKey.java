@@ -1,4 +1,4 @@
-/* $Id: RSAKey.java,v 1.8 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: RSAKey.java,v 1.9 2009/12/28 01:15:19 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,7 +61,6 @@ public class RSAKey extends RSAPublicKey {
 		} catch (Exception ex) {
 			System.err.println("Can't happen...");
 			ex.printStackTrace();
-			System.exit(1);
 		}
 
 		if (nonce[0] >= 0) {

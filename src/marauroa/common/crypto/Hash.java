@@ -1,4 +1,4 @@
-/* $Id: Hash.java,v 1.10 2009/12/25 23:15:16 nhnb Exp $ */
+/* $Id: Hash.java,v 1.11 2009/12/28 01:15:19 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,7 +45,6 @@ public class Hash {
 			random = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-			System.exit(1);
 		}
 	}
 
