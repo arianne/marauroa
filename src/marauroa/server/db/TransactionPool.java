@@ -136,7 +136,7 @@ public class TransactionPool {
 		try {
 			dbtransaction.commit();
 		} catch (SQLException e) {
-			freeDBTransaction(dbtransaction);
+			killTransaction(dbtransaction);
 			throw e;
 		}
 		freeDBTransaction(dbtransaction);
@@ -186,14 +186,24 @@ public class TransactionPool {
 
 		synchronized (wait) {
 			for (DBTransaction dbtransaction : set) {
-				dbtransaction.rollback();
-				dbtransaction.close();
-				dbtransactions.remove(dbtransaction);
-				callers.remove(dbtransaction);
+				killTransaction(dbtransaction);
 				logger.error("Hanging transaction " + dbtransaction + " was kicked.");
 			}
 		}
 		set.clear();
+	}
+
+	/**
+	 * kills a transaction by rolling it back and closing it;
+	 * it will be removed from the pool
+	 *
+	 * @param dbtransaction DBTransaction
+	 */
+	private void killTransaction(DBTransaction dbtransaction) {
+		dbtransaction.rollback();
+		dbtransaction.close();
+		dbtransactions.remove(dbtransaction);
+		callers.remove(dbtransaction);
 	}
 
 	/**
