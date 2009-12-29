@@ -21,10 +21,28 @@
 		<Bug pattern="LI_LAZY_INIT_STATIC" />
 	</Match>
 
+	<!-- empty arrays are a valid response in these cases
+	     so returning null on error is a good choice. -->
+	<Match>
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+
 	<!-- cannot change this as it is in use for years -->
 	<Match>
 		<Bug pattern="NM_CLASS_NAMING_CONVENTION" />
 		<Class name="marauroa.server.marauroad" />
 	</Match>
-	
+
+	<!-- this method is the low level database interface so it
+	     is a requirement that it accept dynamic strings.
+	     This method, however, is only supposed to be called
+	     from ...DAO-classes which should provide a method interface. -->
+	<Match>
+		<Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+		<Package name="~marauroa\.server\.db\.adapter.*" />
+	</Match>
+	<Match>
+		<Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" />
+		<Package name="~marauroa\.server\.db\.adapter.*" />
+	</Match>
 </FindBugsFilter>

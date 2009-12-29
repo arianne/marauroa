@@ -1,4 +1,4 @@
-/* $Id: RPLink.java,v 1.9 2009/12/25 13:10:22 nhnb Exp $ */
+/* $Id: RPLink.java,v 1.10 2009/12/29 00:12:49 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -55,6 +55,7 @@ public class RPLink implements marauroa.common.net.Serializable, Cloneable {
 	public RPLink(String name, RPObject object) {
 		this.name = name;
 		this.object = object;
+		this.owner = null;
 	}
 
 	/**

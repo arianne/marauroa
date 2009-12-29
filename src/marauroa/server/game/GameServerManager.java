@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.129 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.130 2009/12/29 00:12:48 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -901,7 +901,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				/*
 				 * Build player character list and send it to client
 				 */
-				String[] characters = entry.getCharacters().toArray(new String[0]);
+				String[] characters = entry.getCharacters().toArray(new String[entry.getCharacters().size()]);
 				MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg
 				        .getSocketChannel(), characters);
 				msgCharacters.setClientID(clientid);
@@ -1181,7 +1181,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			netMan.sendMessage(msgServerInfo);
 
 			/* Build player character list and send it to client */
-			String[] characters = entry.getCharacters().toArray(new String[0]);
+			String[] characters = entry.getCharacters().toArray(new String[entry.getCharacters().size()]);
 			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg
 			        .getSocketChannel(), characters);
 			msgCharacters.setClientID(clientid);

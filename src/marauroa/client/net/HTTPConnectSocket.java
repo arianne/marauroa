@@ -1,4 +1,4 @@
-/* $Id: HTTPConnectSocket.java,v 1.5 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: HTTPConnectSocket.java,v 1.6 2009/12/29 00:12:48 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Locale;
 
 /**
  * See http://www.web-cache.com/Writings/Internet-Drafts/draft-luotonen-web-proxy-tunneling-01.txt
@@ -95,7 +96,7 @@ public class HTTPConnectSocket extends Socket {
 		}
 
 		// verify the server response part 1: Was it a http-connect proxy?
-		String answer = new String(data).toUpperCase();
+		String answer = new String(data).toUpperCase(Locale.ENGLISH);
 		if (!answer.startsWith("HTTP/")) {
 			data = new byte[4096];
 			int size = is.read(data);

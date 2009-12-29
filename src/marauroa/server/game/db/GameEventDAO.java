@@ -1,4 +1,4 @@
-/* $Id: GameEventDAO.java,v 1.5 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: GameEventDAO.java,v 1.6 2009/12/29 00:12:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -55,7 +55,7 @@ public class GameEventDAO {
 			sqlParams.put("source", source);
 			sqlParams.put("event", event);
 			sqlParams.put("param1", (firstParam == null ? null : firstParam.substring(0, Math.min(127, firstParam.length()))));
-			sqlParams.put("param2", (param2 == null ? null : param2.substring(0, Math.min(255, param2.length()))));
+			sqlParams.put("param2", param2.substring(0, Math.min(255, param2.length())));
 
 			transaction.execute(query, sqlParams);
 		} catch (SQLException sqle) {

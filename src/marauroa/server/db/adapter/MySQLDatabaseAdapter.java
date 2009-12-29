@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.9 2009/07/14 21:45:30 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.10 2009/12/29 00:12:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -21,7 +21,7 @@ import marauroa.server.db.DatabaseConnectionException;
  *
  * @author hendrik
  */
-public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter implements DatabaseAdapter {
+public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 
 	/**
 	 * creates a new MySQLDatabaseAdapter
