@@ -1,4 +1,4 @@
-/* $Id: Decoder.java,v 1.26 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: Decoder.java,v 1.27 2009/12/29 18:19:02 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -242,7 +242,10 @@ public class Decoder {
 			if (msg != null) {
 				list.add(msg);
 			} else {
-				return null;
+				if (list.isEmpty()) {
+					return null;
+				}
+				return list;
 			}
 		}
 		
