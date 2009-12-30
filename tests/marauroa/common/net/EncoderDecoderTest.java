@@ -1,4 +1,4 @@
-/* $Id: EncoderDecoderTest.java,v 1.6 2008/02/22 10:28:35 arianne_rpg Exp $ */
+/* $Id: EncoderDecoderTest.java,v 1.7 2009/12/30 14:20:15 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,7 +15,6 @@ package marauroa.common.net;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -170,39 +169,5 @@ public class EncoderDecoderTest {
 		
 		assertEquals(2, decodedMsgs.size());
 	}
-	
-	/**
-	 * Server Crash: thread NetworkServerManager because ArrayIndex.
-	 * Two messages on a row and the second one is not long enough.
-	 * @throws IOException 
-	 * @throws InvalidVersionException 
-	 */
-	@Test
-	public void test1837223() throws IOException, InvalidVersionException {
-		Encoder enc = Encoder.get();
 
-		RPAction action = new RPAction();
-		action.put("one", 1);
-		action.put("two", "2");
-
-		MessageC2SAction message = new MessageC2SAction(null, action);
-
-		byte[] result1 = enc.encode(message);	
-		
-		byte[] crafted_1=new byte[10];
-		byte[] crafted_2=new byte[result1.length-10+3];
-		
-		System.arraycopy(result1, 0, crafted_1, 0, 10);
-		System.arraycopy(result1, 10, crafted_2, 0, result1.length-10);
-		
-		Decoder.MessageParts parts=Decoder.get().new MessageParts(result1.length);
-		parts.add(crafted_1);
-		parts.add(crafted_2);
-		
-		MessageC2SAction rebuild=(MessageC2SAction) parts.build(null);	
-		
-		assertEquals(message.getRPAction(),rebuild.getRPAction());
-		
-		assertTrue("The incomplete message is dumped",parts.isEmpty());
-		}
 }

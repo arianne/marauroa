@@ -1,4 +1,4 @@
-/* $Id: Decoder.java,v 1.27 2009/12/29 18:19:02 nhnb Exp $ */
+/* $Id: Decoder.java,v 1.28 2009/12/30 14:20:14 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -40,12 +40,9 @@ public class Decoder {
 	 */
 	class MessageParts {
 
-		public int size;
-
 		public Vector<byte[]> parts;
 
-		public MessageParts(int size) {
-			this.size = size;
+		public MessageParts() {
 			parts = new Vector<byte[]>();
 		}
 
@@ -67,6 +64,13 @@ public class Decoder {
 			for (byte[] p : parts) {
 				length += p.length;
 			}
+
+			// the first 4 bytes are the size
+			if (length < 4) {
+				return null;
+			}
+			
+			int size = readSizeOfMessage();
 			
 			/*
 			 * If length is bigger than size that means that two messages on
@@ -100,22 +104,12 @@ public class Decoder {
 					 */
 					byte[] rest=new byte[p.length-remaining];
 					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
-
-					if (rest.length < 4) {
-						logger.warn("Reading size lacks of enough data. Deleting.");
-						it.remove();
-					} else {
-						/*
-						 * Compute the new size of the other message
-						 */
-						size = getSizeOfMessage(rest);
-						parts.set(0, rest);
-					}
+					parts.set(0, rest);
 
 					/*
-					 * Stop iterating and process the actual complete message.
+					 * Stop iterating and process the currently complete message.
 					 */
-					break;					
+					break;
 				} else {
 					System.arraycopy(p, 0, data, offset, p.length);
 					offset += p.length;
@@ -134,6 +128,31 @@ public class Decoder {
 
 			Message msg = msgFactory.getMessage(data, channel, 4);
 			return msg;
+		}
+
+		/**
+		 * reads the size of the message. Important: It expects at least 4 bytes in the buffer.
+		 *
+		 * @return size
+		 */
+		private int readSizeOfMessage() {
+			byte[] size = new byte[4];
+			int offset = 0;
+
+			loops:
+			for (byte[] part : parts) {
+				for (int i = 0; i < part.length; i++) {
+					size[offset] = part[i];
+
+					// if we have read four bytes, break
+					if (offset == 3) {
+						break loops;
+					}
+					offset++;
+				}
+			}
+
+			return getSizeOfMessage(size);
 		}
 	}
 
@@ -178,7 +197,7 @@ public class Decoder {
 		content.remove(channel);
 	}
 	
-	private static int getSizeOfMessage(byte[] data) {
+	static int getSizeOfMessage(byte[] data) {
 		return (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
         + ((data[3] & 0xFF) << 24);
 	}
@@ -226,7 +245,7 @@ public class Decoder {
 			} else {
 				logger.debug("Message full body missing ("+size+"), waiting for more data ("+data.length+").");
 				/* If there is still data to store it. */
-				buffers = new MessageParts(size);
+				buffers = new MessageParts();
 				content.put(channel, buffers);
 			}
 		} else {
