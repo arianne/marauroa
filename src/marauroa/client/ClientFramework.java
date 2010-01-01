@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.52 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.53 2010/01/01 22:26:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -510,7 +510,7 @@ public abstract class ClientFramework {
 	 * @param action
 	 *            the action to send to server.
 	 */
-	public synchronized void send(RPAction action) {
+	public void send(RPAction action) {
 		/*
 		 * Each time we send an action we are confirming server our presence, so we 
 		 * reset the counter to avoid sending keep alive messages.

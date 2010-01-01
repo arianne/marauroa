@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.27 2009/07/19 09:37:40 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.28 2010/01/01 22:26:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -400,7 +400,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
-
+		
 		/**
 		 * Constructor
 		 */
@@ -419,7 +419,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 *            the message to send to server.
 		 * @return true, if the message was sent successfully 
 		 */
-		public boolean write(Message msg) {
+		public synchronized boolean write(Message msg) {
 			try {
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
