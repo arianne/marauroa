@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.27 2009/12/20 13:40:03 nhnb Exp $ */
+/* $Id: Definition.java,v 1.28 2010/01/02 20:31:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -485,9 +485,57 @@ public class Definition implements marauroa.common.net.Serializable {
         	logger.warn("Exception caused by name="+name+" type="+type+" code?"+code+" value="+value,e);
 	        throw e;
         } catch (NullPointerException e) {
-			logger.warn("Exception caused by name=" + name + " type=" + type + " code?" + code
+			logger.warn("Exception caused by name=" + name + " type=" + type + " code=" + code
 			        + " value=" + value, e);
 			throw e;
+		}
+	}
+
+	/**
+	 * validates 
+	 *
+	 * @param value
+	 *            the value of the event/attribute
+	 * @param out
+	 *            the output serializer
+	 * @throws IOException
+	 *             if there is any problem on the serialization
+	 */
+	public void validate(String value) throws IllegalArgumentException {
+		Validator validator = new Validator();
+		try {
+			switch (type) {
+				case VERY_LONG_STRING:
+					validator.validateVeryLongString(value);
+					break;
+				case LONG_STRING:
+					validator.validate65536LongString(value);
+					break;
+				case STRING:
+					validator.validate255LongString(value);
+					break;
+				case FLOAT:
+					validator.validateFloat(value);
+					break;
+				case INT:
+					validator.validateInteger(value);
+					break;
+				case SHORT:
+					validator.validateShort(value);
+					break;
+				case BYTE:
+					validator.validateByte(value);
+					break;
+				case FLAG:
+					// values of flags are ignored
+					break;
+				default:
+					/* NOTE: Must never happen */
+					logger.error("got unknown attribute(" + name + ") type:" + type);
+					break;
+				}
+		} catch (RuntimeException e) {
+			throw new IllegalArgumentException(e.getMessage() + " caused by name=" + name + " type=" + type + " code=" + code + " value=" + value,e);
 		}
 	}
 

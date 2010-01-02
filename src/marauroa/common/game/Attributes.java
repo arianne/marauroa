@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.74 2009/12/20 17:13:16 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.75 2010/01/02 20:31:51 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -197,6 +197,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *			  the value we want to set.
 	 */
 	public void put(String attribute, String value) {
+		Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, attribute);
+		def.validate(value);
+
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
 		

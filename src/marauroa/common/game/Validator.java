@@ -1,0 +1,56 @@
+package marauroa.common.game;
+
+import java.io.UnsupportedEncodingException;
+
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+
+/**
+ * validates parameters with respect to their type
+ *
+ * @author hendrik
+ */
+class Validator {
+	private Logger logger = Log4J.getLogger(Validator.class);
+
+	public void validateVeryLongString(String value) {
+		// okay
+	}
+
+	public void validate65536LongString(String value) {
+		try {
+			if (value.getBytes("UTF-8").length >= 65535) {
+				throw new IllegalArgumentException("LongString too long");
+			}
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+		}
+	}
+
+	public void validate255LongString(String value) {
+		try {
+			if (value.getBytes("UTF-8").length >= 255) {
+				throw new IllegalArgumentException("String too long");
+			}
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+		}
+	}
+
+	public void validateFloat(String value) {
+		Float.parseFloat(value);
+	}
+
+	public void validateInteger(String value) {
+		Integer.parseInt(value);
+	}
+
+	public void validateShort(String value) {
+		Short.parseShort(value);
+	}
+
+	public void validateByte(String value) {
+		Byte.parseByte(value);
+	}
+
+}
