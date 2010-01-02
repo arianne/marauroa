@@ -114,6 +114,8 @@ Changelog
 - RPEvents can now have slots when defined using RPClass.addRPEventWithSlots()
 - RPObject.getContainer() and RPObject.getContainerBase() continue to return an RPObject, 
   use the new getContainerOwner() and getContainerOwnerBase() method to get a SlotOwner object
+- properly free transactions in case of exceptions
+- fixed a problem which caused parts of messages to be dropped when the size field was split across two tcp-packets 
 
 3.2.1
 - fixed a deadlock when temporarily running out of database connections
