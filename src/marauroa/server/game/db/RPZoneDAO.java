@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -44,7 +44,7 @@ import marauroa.server.game.rp.RPObjectFactory;
 public class RPZoneDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPZoneDAO.class);
 
-    /** factory for creating object instances */
+	/** factory for creating object instances */
 	protected RPObjectFactory factory;
 
 	/**
@@ -56,6 +56,14 @@ public class RPZoneDAO {
 		this.factory = factory;
 	}
 
+	/**
+	 * loads storable objects for the specified zone from the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param zone IRPZone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void loadRPZone(DBTransaction transaction, IRPZone zone) throws SQLException, IOException {
 		String zoneid = zone.getID().getID();
 
@@ -105,6 +113,14 @@ public class RPZoneDAO {
 		resultSet.close();
 	}
 
+	/**
+	 * saves storable objects for the specified zone to the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param zone IRPZone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void storeRPZone(DBTransaction transaction, IRPZone zone) throws IOException, SQLException {
 		String zoneid = zone.getID().getID();
 		if (!StringChecker.validString(zoneid)) {
@@ -156,6 +172,14 @@ public class RPZoneDAO {
 		transaction.execute(query, params, inStream);
 	}
 
+	/**
+	 * is the specified zone saved to the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param zone id of zone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasRPZone(DBTransaction transaction, IRPZone.ID zone) throws SQLException {
 		String query = "SELECT count(*) as amount FROM rpzone where zone_id='[zoneid]'";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -165,22 +189,52 @@ public class RPZoneDAO {
 	}
 
 
+	/**
+	 * loads storable objects for the specified zone from the database
+	 *
+	 * @param zone IRPZone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void loadRPZone(IRPZone zone) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		loadRPZone(transaction, zone);
-		TransactionPool.get().commit(transaction);		
+		try {
+			loadRPZone(transaction, zone);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * saves storable objects for the specified zone to the database
+	 *
+	 * @param zone IRPZone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void storeRPZone(IRPZone zone) throws IOException, SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		storeRPZone(transaction, zone);
-		TransactionPool.get().commit(transaction);	
+		try {
+			storeRPZone(transaction, zone);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * is the specified zone saved to the database
+	 *
+	 * @param zone id of zone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasRPZone(IRPZone.ID zone) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = hasRPZone(transaction, zone);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = hasRPZone(transaction, zone);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 }

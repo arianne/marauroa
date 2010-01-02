@@ -1,4 +1,4 @@
-/* $Id: BanListDAO.java,v 1.2 2009/09/03 06:48:51 nhnb Exp $ */
+/* $Id: BanListDAO.java,v 1.3 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -29,6 +29,13 @@ import marauroa.server.net.validator.InetAddressMask;
 public class BanListDAO {
 	private Logger logger = Log4J.getLogger(BanListDAO.class);
 
+	/**
+	 * gets a list of all banned ip-address ranges
+	 *
+	 * @param transaction DBTransaction
+	 * @return list of banned ip-address ranges
+	 * @throws SQLException in case of an database error
+	 */
 	public List<InetAddressMask> getBannedAddresses(DBTransaction transaction) throws SQLException {
 		List<InetAddressMask> permanentBans = new LinkedList<InetAddressMask>();
 
@@ -49,11 +56,20 @@ public class BanListDAO {
 		return permanentBans;
 	}
 
+	/**
+	 * gets a list of all banned ip-address ranges
+	 *
+	 * @return list of banned ip-address ranges
+	 * @throws SQLException in case of an database error
+	 */
 	public List<InetAddressMask> getBannedAddresses() throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		List<InetAddressMask> res = getBannedAddresses(transaction);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			List<InetAddressMask> res = getBannedAddresses(transaction);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 }

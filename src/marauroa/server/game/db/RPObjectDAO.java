@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.11 2009/09/03 06:44:07 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.12 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -54,10 +54,29 @@ public class RPObjectDAO {
 		this.factory = factory;
 	}
 
+	/**
+	 * loads an RPObject form the database, using the factory to create the correct subclass
+	 *
+	 * @param transaction DBTransaction
+	 * @param objectid database-id of the RPObject
+	 * @return RPObject
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public RPObject loadRPObject(DBTransaction transaction, int objectid) throws SQLException, IOException {
 		return loadRPObject(transaction, objectid, true);
 	}
 
+	/**
+	 * loads an RPObject form the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param objectid database-id of the RPObject
+	 * @param transform use the factory to create a subclass of RPObject
+	 * @return RPObject
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public RPObject loadRPObject(DBTransaction transaction, int objectid, boolean transform) throws SQLException, IOException {
 		String query = "select data from rpobject where object_id=[objectid]";
 		logger.debug("loadRPObject is executing query " + query);
@@ -102,6 +121,14 @@ public class RPObjectDAO {
 		return null;
 	}
 
+	/**
+	 * deletes an RPObject from the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param objectid database-id of the RPObject
+	 * @return objectid
+	 * @throws SQLException in case of an database error
+	 */
 	public int removeRPObject(DBTransaction transaction, int objectid) throws SQLException {
 		String query = "delete from rpobject where object_id=[objectid]";
 		logger.debug("removeRPObject is executing query " + query);
@@ -113,6 +140,14 @@ public class RPObjectDAO {
 		return objectid;
 	}
 
+	/**
+	 * does the rpobject with the specified database id exist?
+	 *
+	 * @param transaction DBTransaction
+	 * @param objectid database-id of the RPObject
+	 * @return true, if it exists; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasRPObject(DBTransaction transaction, int objectid) throws SQLException {
 		String query = "select count(*) as amount from rpobject where object_id=[objectid]";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -124,6 +159,15 @@ public class RPObjectDAO {
 		return count > 0;
 	}
 
+	/**
+	 * saves an RPObject to the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param object RPObject to save
+	 * @return objectid
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public int storeRPObject(DBTransaction transaction, RPObject object) throws IOException, SQLException {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
@@ -173,38 +217,93 @@ public class RPObjectDAO {
 		return object_id;
 	}
 
+	/**
+	 * loads an RPObject form the database, using the factory to create the correct subclass
+	 *
+	 * @param objectid database-id of the RPObject
+	 * @param transform use the factory to create a subclass of RPObject
+	 * @return RPObject
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public RPObject loadRPObject(int objectid, boolean transform) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		RPObject res = loadRPObject(transaction, objectid, transform);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			RPObject res = loadRPObject(transaction, objectid, transform);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * loads an RPObject form the database
+	 *
+	 * @param objectid database-id of the RPObject
+	 * @return RPObject
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public RPObject loadRPObject(int objectid) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		RPObject res = loadRPObject(transaction, objectid, true);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			RPObject res = loadRPObject(transaction, objectid, true);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * deletes an RPObject from the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param objectid database-id of the RPObject
+	 * @return objectid
+	 * @throws SQLException in case of an database error
+	 */
 	public int removeRPObject(int objectid) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		int res = removeRPObject(transaction, objectid);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			int res = removeRPObject(transaction, objectid);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * does the rpobject with the specified database id exist?
+	 *
+	 * @param objectid database-id of the RPObject
+	 * @return true, if it exists; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasRPObject(int objectid) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = hasRPObject(transaction, objectid);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = hasRPObject(transaction, objectid);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * saves an RPObject to the database
+	 *
+	 * @param object RPObject to save
+	 * @return objectid
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public int storeRPObject(RPObject object) throws IOException, SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		int res = storeRPObject(transaction, object);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			int res = storeRPObject(transaction, object);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 }

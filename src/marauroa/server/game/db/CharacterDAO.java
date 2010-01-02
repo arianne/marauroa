@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -34,13 +34,23 @@ import marauroa.server.db.TransactionPool;
 public class CharacterDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(CharacterDAO.class);
 
-    /**
-     * Creates a new CharacterDAO
-     */
-    protected CharacterDAO() {
-        // hide constructor as this class should only be instantiated by DAORegister
-    }
+	/**
+	 * Creates a new CharacterDAO
+	 */
+	protected CharacterDAO() {
+		// hide constructor as this class should only be instantiated by DAORegister
+	}
 
+	/**
+	 * creates a new character
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @param player RPObject of the player
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void addCharacter(DBTransaction transaction, String username, String character,
 	        RPObject player) throws SQLException, IOException {
 		try {
@@ -71,10 +81,22 @@ public class CharacterDAO {
 		}
 	}
 
+	/**
+	 * deletes a character
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character was deleted, false if it did not exist
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean removeCharacter(DBTransaction transaction, String username, String character)
 	        throws SQLException {
 		try {
 			int player_id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
+			if (player_id < 0) {
+				return false;
+			}
 
 			String query = "select object_id from characters where player_id=[player_id] and charname='[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -84,11 +106,11 @@ public class CharacterDAO {
 
 			if (result.next()) {
 				int id = result.getInt("object_id");
+				result.close();
 				DAORegister.get().get(RPObjectDAO.class).removeRPObject(transaction, id);
 			} else {
 				result.close();
-				throw new SQLException("Character (" + character
-				        + ") without object: Database integrity error.");
+				return false;
 			}
 
 			query = "delete from characters where player_id=[player_id] and charname='[character]'";
@@ -96,7 +118,6 @@ public class CharacterDAO {
 			logger.debug("removeCharacter is using query: " + query);
 			transaction.execute(query, params);
 
-			result.close();
 			return true;
 		} catch (SQLException e) {
 			logger.error("Can't remove player \"" + username + "\" character \"" + character + "\" from database", e);
@@ -104,6 +125,15 @@ public class CharacterDAO {
 		}
 	}
 
+	/**
+	 * checks whether the specified account owns the specified character
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasCharacter(DBTransaction transaction, String username, String character)
 	        throws SQLException {
 		try {
@@ -126,6 +156,14 @@ public class CharacterDAO {
 		}
 	}
 
+	/**
+	 * gets a list of characters for this account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return list of characters
+	 * @throws SQLException in case of an database error
+	 */
 	public List<String> getCharacters(DBTransaction transaction, String username) throws SQLException {
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
@@ -250,31 +288,75 @@ public class CharacterDAO {
 	}
 
 
+	/**
+	 * creates a new character
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @param player RPObject of the player
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
 	public void addCharacter(String username, String character, RPObject player) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addCharacter(transaction, username, character, player);
-		TransactionPool.get().commit(transaction);
+		try {
+			addCharacter(transaction, username, character, player);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * deletes a character
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character was deleted, false if it did not exist
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean removeCharacter(String username, String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = removeCharacter(transaction, username, character);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = removeCharacter(transaction, username, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * checks whether the specified account owns the specified character
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasCharacter(String username, String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = hasCharacter(transaction, username, character);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = hasCharacter(transaction, username, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * gets a list of characters for this account
+	 *
+	 * @param username username
+	 * @return list of characters
+	 * @throws SQLException in case of an database error
+	 */
 	public List<String> getCharacters(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		List<String>  res = getCharacters(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			List<String>  res = getCharacters(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 	/**
@@ -293,13 +375,16 @@ public class CharacterDAO {
 	 */
 	public void storeCharacter(String username, String character, RPObject player) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		storeCharacter(transaction, username, character, player);
-		TransactionPool.get().commit(transaction);
+		try {
+			storeCharacter(transaction, username, character, player);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 	/**
- 	 * This method loads the character's avatar associated with this
- 	 * character from the database.
+	 * This method loads the character's avatar associated with this
+	 * character from the database.
 	 *
 	 * @param username
 	 *            the player's username
@@ -312,8 +397,11 @@ public class CharacterDAO {
 	 */
 	public RPObject loadCharacter(String username, String character) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		RPObject res = loadCharacter(transaction, username, character);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			RPObject res = loadCharacter(transaction, username, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 }

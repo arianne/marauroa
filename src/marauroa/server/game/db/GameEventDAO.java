@@ -1,4 +1,4 @@
-/* $Id: GameEventDAO.java,v 1.6 2009/12/29 00:12:48 nhnb Exp $ */
+/* $Id: GameEventDAO.java,v 1.7 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -28,48 +28,65 @@ import marauroa.server.db.TransactionPool;
 public class GameEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameEventDAO.class);
 
-    /**
-     * Creates a new GameEventDAO
-     */
-    protected GameEventDAO() {
-        // hide constructor as this class should only be instantiated by DAORegister
-    }
-
-	public void addGameEvent(DBTransaction transaction, String source, String event, String... params) {
-		try {
-			String firstParam = (params.length > 0 ? params[0] : "");
-			StringBuffer param = new StringBuffer();
-			if (params.length > 1) {
-				for (int i = 1; i < params.length; i++) {
-					param.append(params[i]);
-					param.append(" ");
-				}
-			}
-			String param2 = param.toString();
-
-			// write the row to the database, escaping and cutting the parameters to column size
-			String query = "insert into gameEvents(timedate, source, event, param1, param2)"
-				+ " values(NULL, '[source]', '[event]', '[param1]', '[param2]');";
-
-			Map<String, Object> sqlParams = new HashMap<String, Object>();
-			sqlParams.put("source", source);
-			sqlParams.put("event", event);
-			sqlParams.put("param1", (firstParam == null ? null : firstParam.substring(0, Math.min(127, firstParam.length()))));
-			sqlParams.put("param2", param2.substring(0, Math.min(255, param2.length())));
-
-			transaction.execute(query, sqlParams);
-		} catch (SQLException sqle) {
-			logger.warn("Error adding game event: " + event, sqle);
-		}
+	/**
+	 * Creates a new GameEventDAO
+	 */
+	protected GameEventDAO() {
+		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
+	/**
+	 * adds an game event to the log
+	 * 
+	 * @param transaction DBTransaction
+	 * @param source player name
+	 * @param event event type
+	 * @param params parameters
+	 * @throws SQLException in case of an database error
+	 */
+	public void addGameEvent(DBTransaction transaction, String source, String event, String... params) throws SQLException {
+		String firstParam = (params.length > 0 ? params[0] : "");
+		StringBuffer param = new StringBuffer();
+		if (params.length > 1) {
+			for (int i = 1; i < params.length; i++) {
+				param.append(params[i]);
+				param.append(" ");
+			}
+		}
+		String param2 = param.toString();
+
+		// write the row to the database, escaping and cutting the parameters to column size
+		String query = "insert into gameEvents(timedate, source, event, param1, param2)"
+			+ " values(NULL, '[source]', '[event]', '[param1]', '[param2]');";
+
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("source", source);
+		sqlParams.put("event", event);
+		sqlParams.put("param1", (firstParam == null ? null : firstParam.substring(0, Math.min(127, firstParam.length()))));
+		sqlParams.put("param2", param2.substring(0, Math.min(255, param2.length())));
+
+		transaction.execute(query, sqlParams);
+	}
+
+	/**
+	 * adds an game event to the log
+	 * 
+	 * @param source player name
+	 * @param event event type
+	 * @param params parameters
+	 * @throws SQLException in case of an database error
+	 */
 	public void addGameEvent(String source, String event, String... params) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addGameEvent(transaction, source, event, params);
 		try {
+			addGameEvent(transaction, source, event, params);
 			TransactionPool.get().commit(transaction);
 		} catch (SQLException e) {
-			logger.warn("Error adding game event: " + event, e);
+			logger.error("Error adding game event: " + event, e);
+			TransactionPool.get().rollback(transaction);
+		} catch (RuntimeException e) {
+			logger.error("Error adding game event: " + event, e);
+			TransactionPool.get().rollback(transaction);
 		}
 	}
 

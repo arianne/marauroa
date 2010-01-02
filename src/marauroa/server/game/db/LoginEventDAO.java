@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.15 2009/11/11 20:17:10 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.16 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -34,17 +34,36 @@ import marauroa.server.db.TransactionPool;
 public class LoginEventDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginEventDAO.class);
 
-    /**
-     * Creates a new LoginEventDAO
-     */
-    protected LoginEventDAO() {
-        // hide constructor as this class should only be instantiated by DAORegister
-    }
+	/**
+	 * Creates a new LoginEventDAO
+	 */
+	protected LoginEventDAO() {
+		// hide constructor as this class should only be instantiated by DAORegister
+	}
 
+	/**
+	 * logs an login attempt
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param source ip-address
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
 		addLoginEvent(transaction, username, source, null, correctLogin);
 	}
 
+	/**
+	 * logs an login attempt
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param source ip-address
+	 * @param seed seed
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
 
 		try {
@@ -109,6 +128,15 @@ public class LoginEventDAO {
 		}
 	}
 
+	/**
+	 * gets a list of recent login events
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param events number of events
+	 * @return list of login attempts
+	 * @throws SQLException in case of an database error
+	 */
 	public List<String> getLoginEvents(DBTransaction transaction, String username, int events) throws SQLException {
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
@@ -145,6 +173,15 @@ public class LoginEventDAO {
 		}
 	}
 
+	/**
+	 * gets the last successful login event
+	 *
+	 * @param transaction DBTransaction
+	 * @param playerId accountId
+	 * @param name of service, may be <code>null</code> for all
+	 * @return last succesful login event
+	 * @throws SQLException in case of an database error
+	 */
 	public LoginEvent getLastSuccessfulLoginEvent(DBTransaction transaction, int playerId, String service) throws SQLException {
 		try {
 			String serviceQuery = "";
@@ -185,6 +222,15 @@ public class LoginEventDAO {
 		}
 	}	
 
+	/**
+	 * gets the amount of failed login attemps
+	 *
+	 * @param transaction DBTransaction
+	 * @param id only look for events younger than this id
+	 * @param playerId accountId
+	 * @return amount of failed login attempts grouped by service name
+	 * @throws SQLException in case of an database error
+	 */
 	public List<Pair<String, Long>> getAmountOfFailedLogins(DBTransaction transaction, long id, int playerId) throws SQLException {
 		try {
 			String query = "SELECT service, count(*) FROM loginEvent"
@@ -207,6 +253,15 @@ public class LoginEventDAO {
 		}
 	}	
 
+	/**
+	 * checks if this account is temporary blocked because of too many failed login attempts.
+	 * Blocking accounts is not related to banning accounts.
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return true, if this account is blocked; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean isAccountBlocked(DBTransaction transaction, String username) throws SQLException {
 		String query = "SELECT count(*) as amount FROM loginEvent, account"
 				+ " WHERE loginEvent.player_id=account.id"
@@ -220,6 +275,15 @@ public class LoginEventDAO {
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT;
 	}
 
+	/**
+	 * checks if the ip-address is temporary blocked because of too many failed login attempts.
+	 * Blocking ip-addresses is not related to banning ip-addresses.
+	 *
+	 * @param transaction DBTransaction
+	 * @param address ip-address
+	 * @return true, if this address is blocked; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
 		String query = "SELECT count(*) as amount FROM loginEvent"
 				+ " WHERE address='[address]'"
@@ -232,39 +296,96 @@ public class LoginEventDAO {
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_IP;
 	}
 	
+
+	/**
+	 * logs an login attempt
+	 *
+	 * @param username username
+	 * @param source ip-address
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	@Deprecated
 	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addLoginEvent(transaction, username, source, null, correctLogin);
-		TransactionPool.get().commit(transaction);
+		try {
+			addLoginEvent(transaction, username, source, null, correctLogin);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+
+	/**
+	 * logs an login attempt
+	 *
+	 * @param username username
+	 * @param source ip-address
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public void addLoginEvent(String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addLoginEvent(transaction, username, source, seed, correctLogin);
-		TransactionPool.get().commit(transaction);
+		try {
+			addLoginEvent(transaction, username, source, seed, correctLogin);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 	
+	/**
+	 * gets a list of recent login events
+	 *
+	 * @param username username
+	 * @param events number of events
+	 * @return list of login attempts
+	 * @throws SQLException in case of an database error
+	 */
 	public List<String> getLoginEvents(String username, int events) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		List<String> res = getLoginEvents(transaction, username, events);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			List<String> res = getLoginEvents(transaction, username, events);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 
+	/**
+	 * checks if this account is temporary blocked because of too many failed login attempts.
+	 * Blocking accounts is not related to banning accounts.
+	 *
+	 * @param username username
+	 * @return true, if this account is blocked; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean isAccountBlocked(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = isAccountBlocked(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = isAccountBlocked(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * checks if the ip-address is temporary blocked because of too many failed login attempts.
+	 * Blocking ip-addresses is not related to banning ip-addresses.
+	 *
+	 * @param address ip-address
+	 * @return true, if this address is blocked; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean isAddressBlocked(String address) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = isAddressBlocked(transaction, address);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = isAddressBlocked(transaction, address);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 }

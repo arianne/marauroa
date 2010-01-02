@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.10 2009/09/03 06:48:51 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -33,15 +33,25 @@ import marauroa.server.game.container.PlayerEntry;
 public class AccountDAO {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(AccountDAO.class);
 
-    /**
-     * Creates a new AccountDAO
-     */
-    protected AccountDAO() {
-        // hide constructor as this class should only be instantiated by DAORegister
-    }
+	/**
+	 Creates a new AccountDAO
+	 */
+	protected AccountDAO() {
+		// hide constructor as this class should only be instantiated by DAORegister
+	}
 
+	
+	/**
+	 * creates an account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param password password
+	 * @param email email-address
+	 * @throws SQLException in case of an database error
+	 */
 	public void addPlayer(DBTransaction transaction, String username, byte[] password, String email)
-	        throws SQLException {
+			throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=(" + username + ") email=(" + email
@@ -63,6 +73,12 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * generates an account name based on the specified pattern (uses for automatic testing)
+	 *
+	 * @param pattern
+	 * @return account name
+	 */
 	public String generatePlayer(String pattern) {
 		int length = pattern.length();
 		Random rand = new Random();
@@ -86,6 +102,14 @@ public class AccountDAO {
 		return os.toString();
 	}
 
+	/**
+	 * changes the email-address
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param email new email-address
+	 * @throws SQLException in case of an database error
+	 */
 	public void changeEmail(DBTransaction transaction, String username, String email)
 	        throws SQLException {
 		try {
@@ -109,6 +133,14 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * changes the password
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param password new password
+	 * @throws SQLException in case of an database error
+	 */
 	public void changePassword(DBTransaction transaction, String username, String password)
 	        throws SQLException {
 		try {
@@ -133,6 +165,14 @@ public class AccountDAO {
 		}
 	}
 	
+	/**
+	 * checks if this account exists
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return true, if the account exists; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasPlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
 			String query = "select count(*) as amount from  account where username like '[username]'";
@@ -148,6 +188,14 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * sets the status of the account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param status account status
+	 * @throws SQLException in case of an database error
+	 */
 	public void setAccountStatus(DBTransaction transaction, String username, String status)
 	        throws SQLException {
 		try {
@@ -164,6 +212,14 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * gets the status of the account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return account status, or <code>null</code> if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public String getAccountStatus(DBTransaction transaction, String username) throws SQLException {
 		try {
 			String query = "select status from account where username like '[username]'";
@@ -187,6 +243,14 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * gets the email-address of the account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return email of account, or <code>null</code> if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public String getEmail(DBTransaction transaction, String username) throws SQLException {
 		try {
 			String query = "select email from account where username like '[username]'";
@@ -208,6 +272,14 @@ public class AccountDAO {
 		}
 	}
 	
+	/**
+	 * gets the id of the account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return id of account, or -1 if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public int getDatabasePlayerId(DBTransaction transaction, String username) throws SQLException {
 		String query = "select id from account where username like '[username]'";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -225,6 +297,14 @@ public class AccountDAO {
 		return id;
 	}
 
+	/**
+	 * verifies username and password
+	 *
+	 * @param transaction DBTransaction
+	 * @param informations login creditials
+	 * @return true, on success; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean verify(DBTransaction transaction, PlayerEntry.SecuredLoginInfo informations)
 	        throws SQLException {
 		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
@@ -258,6 +338,15 @@ public class AccountDAO {
 		return res;
 	}
 	
+	/**
+	 * verifies the account creditials using the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username 
+	 * @param hexPassword hashed password
+	 * @return true on success, false if the account does not exists or the password does not match
+	 * @throws SQLException in case of an database error
+	 */
 	private boolean verifyUsingDB(DBTransaction transaction, String username, String hexPassword) throws SQLException {
 		try {
 			String query = "select username from account where username like "
@@ -283,6 +372,14 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * deletes an account from the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username 
+	 * @return always true
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean removePlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
 			/* We first remove any characters associated with this player. */
@@ -304,69 +401,170 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * creates an account
+	 *
+	 * @param username username
+	 * @param password password
+	 * @param email email-address
+	 * @throws SQLException in case of an database error
+	 */
 	public void addPlayer(String username, byte[] password, String email) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addPlayer(transaction, username, password, email);
-		TransactionPool.get().commit(transaction);
+		try {
+			addPlayer(transaction, username, password, email);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * changes the email-address
+	 *
+	 * @param username username
+	 * @param email new email-address
+	 * @throws SQLException in case of an database error
+	 */
 	public void changeEmail(String username, String email) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		changeEmail(transaction, username, email);
-		TransactionPool.get().commit(transaction);
+		try {
+			changeEmail(transaction, username, email);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * changes the password
+	 *
+	 * @param username username
+	 * @param password new password
+	 * @throws SQLException in case of an database error
+	 */
 	public void changePassword(String username, String password) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		changePassword(transaction, username, password);
-		TransactionPool.get().commit(transaction);
+		try {
+			changePassword(transaction, username, password);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 	
+	/**
+	 * checks if this account exists
+	 *
+	 * @param username username
+	 * @return true, if the account exists; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean hasPlayer(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = hasPlayer(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = hasPlayer(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * sets the status of the account
+	 *
+	 * @param username username
+	 * @param status account status
+	 * @throws SQLException in case of an database error
+	 */
 	public void setAccountStatus(String username, String status) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		setAccountStatus(transaction, username, status);
-		TransactionPool.get().commit(transaction);
+		try {
+			setAccountStatus(transaction, username, status);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * gets the status of the account
+	 *
+	 * @param username username
+	 * @return account status, or <code>null</code> if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public String getAccountStatus(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		String res = getAccountStatus(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			String res = getAccountStatus(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * gets the email-address of the account
+	 *
+	 * @param username username
+	 * @return email of account, or <code>null</code> if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public String getEmail(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		String res = getEmail(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			String res = getEmail(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
-	
+
+	/**
+	 * gets the id of the account
+	 *
+	 * @param username username
+	 * @return id of account, or -1 if no such account exists
+	 * @throws SQLException in case of an database error
+	 */
 	public int getDatabasePlayerId(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		int res = getDatabasePlayerId(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			int res = getDatabasePlayerId(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * verifies username and password
+	 *
+	 * @param informations login creditials
+	 * @return true, on success; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean verify(PlayerEntry.SecuredLoginInfo informations) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = verify(transaction, informations);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = verify(transaction, informations);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
+	/**
+	 * deletes an account from the database
+	 *
+	 * @param username username 
+	 * @return always true
+	 * @throws SQLException in case of an database error
+	 */
 	public boolean removePlayer(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		boolean res = removePlayer(transaction, username);
-		TransactionPool.get().commit(transaction);
-		return res;
+		try {
+			boolean res = removePlayer(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 }

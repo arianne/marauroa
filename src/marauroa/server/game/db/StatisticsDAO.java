@@ -1,4 +1,4 @@
-/* $Id: StatisticsDAO.java,v 1.5 2009/07/18 15:30:01 nhnb Exp $ */
+/* $Id: StatisticsDAO.java,v 1.6 2010/01/02 23:23:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -36,27 +36,39 @@ public class StatisticsDAO {
 	    // hide constructor as this class should only be instantiated by DAORegister
 	}
 
-	public void addStatisticsEvent(DBTransaction transaction, Variables var) {
-		try {
-			String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) "
-				+ " values(NULL, [Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online])";
-			Map<String, Object> params = new HashMap<String, Object>();
-			for (String key : var) {
-				params.put(key, var.get(key));
-			}
-			transaction.execute(query, params);
-		} catch (SQLException sqle) {
-			logger.warn("Error adding statistics event", sqle);
+	/**
+	 * adds an statistics sample to the database log
+	 * 
+	 * @param transaction DBTransaction
+	 * @param var Variables
+	 * @throws SQLException in case of an database error
+	 */
+	public void addStatisticsEvent(DBTransaction transaction, Variables var) throws SQLException {
+		String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) "
+			+ " values(NULL, [Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online])";
+		Map<String, Object> params = new HashMap<String, Object>();
+		for (String key : var) {
+			params.put(key, var.get(key));
 		}
+		transaction.execute(query, params);
 	}
 
+	/**
+	 * adds an statistics sample to the database log
+	 * 
+	 * @param var Variables
+	 */
 	public void addStatisticsEvent(Variables var) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
-		addStatisticsEvent(transaction, var);
 		try {
+			addStatisticsEvent(transaction, var);
 			TransactionPool.get().commit(transaction);
 		} catch (SQLException e) {
 			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+		} catch (RuntimeException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
 		}
 	}
 }
