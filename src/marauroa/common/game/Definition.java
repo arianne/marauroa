@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.28 2010/01/02 20:31:51 nhnb Exp $ */
+/* $Id: Definition.java,v 1.29 2010/01/03 19:14:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -496,8 +496,6 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *
 	 * @param value
 	 *            the value of the event/attribute
-	 * @param out
-	 *            the output serializer
 	 * @throws IOException
 	 *             if there is any problem on the serialization
 	 */

@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.17 2010/01/03 18:14:49 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.18 2010/01/03 19:14:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -278,7 +278,7 @@ public class LoginEventDAO {
 	 *
 	 * @param transaction DBTransaction
 	 * @param playerId accountId
-	 * @param name of service, may be <code>null</code> for all
+	 * @param service name of service, may be <code>null</code> for all
 	 * @return last succesful login event
 	 * @throws SQLException in case of an database error
 	 */

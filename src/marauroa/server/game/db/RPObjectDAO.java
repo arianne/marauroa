@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.12 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.13 2010/01/03 19:14:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -257,7 +257,6 @@ public class RPObjectDAO {
 	/**
 	 * deletes an RPObject from the database
 	 *
-	 * @param transaction DBTransaction
 	 * @param objectid database-id of the RPObject
 	 * @return objectid
 	 * @throws SQLException in case of an database error
