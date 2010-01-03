@@ -16,6 +16,9 @@ public class UpdateScript {
 	 * @throws SQLException in case of an unexpected database error
 	 */
 	public void update(DBTransaction transaction) throws SQLException {
+		if (!transaction.doesColumnExist("loginEvent", "service")) {
+			transaction.execute("ALTER TABLE loginEvent ADD COLUMN (service CHAR(10));", null);
+		}
 		if (!transaction.doesColumnExist("loginEvent", "seed")) {
 			transaction.execute("ALTER TABLE loginEvent ADD COLUMN (seed VARCHAR(120));", null);
 		}
