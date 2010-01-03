@@ -1,4 +1,4 @@
-/* $Id: Decoder.java,v 1.28 2009/12/30 14:20:14 nhnb Exp $ */
+/* $Id: Decoder.java,v 1.29 2010/01/03 19:19:21 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -28,7 +28,7 @@ import marauroa.common.net.message.Message;
  * This class decode a stream of bytes and build a Marauroa message with it.
  * Decoder follows singleton pattern.
  *
- * @author miguel
+ * @author miguel, hendrik
  */
 public class Decoder {
 
@@ -97,12 +97,11 @@ public class Decoder {
 					 * This part completes first message and has stuff from the second one.
 					 */
 					System.arraycopy(p, 0, data, offset, remaining);
-					offset += remaining;
 					
 					/*
 					 * Copy the rest of the array to a new array.					  
 					 */
-					byte[] rest=new byte[p.length-remaining];
+					byte[] rest = new byte[p.length-remaining];
 					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
 					parts.set(0, rest);
 
@@ -117,13 +116,6 @@ public class Decoder {
 					
 					it.remove();
 				}
-			}
-			
-			/* We need to be *sure* that 4 bytes are at least to
-			 * be received...
-			 */
-			if(data.length<4) {
-				throw new IOException("Message is too short. Missing mandatory fields.");
 			}
 
 			Message msg = msgFactory.getMessage(data, channel, 4);
