@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.16 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.17 2010/01/03 18:14:49 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -50,8 +50,9 @@ public class LoginEventDAO {
 	 * @param correctLogin true, if the login was succesful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
-		addLoginEvent(transaction, username, source, null, correctLogin);
+		addLoginEvent(transaction, username, source, null, null, correctLogin);
 	}
 
 	/**
@@ -64,7 +65,23 @@ public class LoginEventDAO {
 	 * @param correctLogin true, if the login was succesful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
+		addLoginEvent(transaction, username, source, null, seed, correctLogin);
+	}
+
+	/**
+	 * logs an login attempt
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param source ip-address
+	 * @param service name of service
+	 * @param seed seed
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
 
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
@@ -72,12 +89,15 @@ public class LoginEventDAO {
 			// be able to notice if someone tries to hack accounts by picking	a fixed password
 			// and bruteforcing matching usernames.
 
-			String query = "insert into loginEvent(player_id, address, seed, result)"
-				+ " values ([player_id], '[address]', '[seed]', [result])";
+			String query = "insert into loginEvent(player_id, address, service, seed, result)"
+				+ " values ([player_id], '[address]', '[service]', '[seed]', [result])";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("address", source.getHostAddress());
 			params.put("result", Integer.valueOf(correctLogin ? 1 : 0));
+			if (service != null) {
+				params.put("service", service);
+			}
 			if (seed == null) {
 				seed = "";
 			}
@@ -92,6 +112,12 @@ public class LoginEventDAO {
 	/** Class to store the login events */
 	public static class LoginEvent {
 
+		private long id = -1;
+		
+		private long playerId = -1;
+		
+		private String service = null;
+
 		/** TCP/IP address of the source of the login message */
 		public String address;
 
@@ -102,7 +128,7 @@ public class LoginEventDAO {
 		public boolean correct;
 
 		/**
-		 * Constructor
+		 * Creates a new LoginEvent object
 		 *
 		 * @param address
 		 *            the address from where the login was tried
@@ -118,14 +144,88 @@ public class LoginEventDAO {
 		}
 
 		/**
+		 * Creates a new LoginEvent object
+		 * 
+		 * @param id database id
+		 * @param playerId database id of account
+		 * @param service name of service
+		 * @param address the address from where the login was tried
+		 * @param date the date at which login was tried
+		 * @param sucessful true, if the attempt was successful; false otherwise
+		 */
+		public LoginEvent(long id, long playerId, String service,
+				String address, String date, boolean sucessful) {
+
+			this(address, date, sucessful);
+			this.id = id;
+			this.playerId = playerId;
+			this.service = service;
+		}
+
+		/**
 		 * This method returns a String that represent the object.
 		 *
 		 * @return a string representing the object.
 		 */
 		@Override
 		public String toString() {
-			return "Login " + (correct ? "SUCCESSFUL" : "FAILED") + " at " + date + " from " + address;
+			return "Login " + (correct ? "successful" : "FAILED") + " at " + date + " from " + address;
 		}
+
+		/**
+		 * gets the id of this database row
+		 *
+		 * @return id or -1
+		 */
+		public long getId() {
+			return id;
+		}
+
+		/**
+		 * gets the id of the account
+		 *
+		 * @return player_id or -1
+		 */
+		public long getPlayerId() {
+			return playerId;
+		}
+
+		/**
+		 * gets the name of the service
+		 *
+		 * @return id or <code>null</code>
+		 */
+		public String getService() {
+			return service;
+		}
+
+		/**
+		 * gets the ip-address
+		 * 
+		 * @return ip-address
+		 */
+		public String getAddress() {
+			return address;
+		}
+
+		/**
+		 * gets the timestamp of the login attempt
+		 *
+		 * @return timestamp
+		 */
+		public String getDate() {
+			return date;
+		}
+
+		/**
+		 * was this a successful login attempt?
+		 *
+		 * @return true, if the attempt was successful; false otherwise
+		 */
+		public boolean isSuccessful() {
+			return correct;
+		}
+
 	}
 
 	/**
@@ -210,8 +310,8 @@ public class LoginEventDAO {
 				return null;
 			}
 			
-			LoginEvent event = new LoginEvent(/*TODO:  resultSet.getLong("id"), 
-					resultSet.getLong("player_id"), resultSet.getString("service"),*/
+			LoginEvent event = new LoginEvent(resultSet.getLong("id"), 
+					resultSet.getLong("player_id"), resultSet.getString("service"),
 					resultSet.getString("address"), resultSet.getString("timedate"),
 					resultSet.getBoolean("result"));
 			resultSet.close();
@@ -309,7 +409,7 @@ public class LoginEventDAO {
 	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			addLoginEvent(transaction, username, source, null, correctLogin);
+			addLoginEvent(transaction, username, source, null, null, correctLogin);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
@@ -324,14 +424,35 @@ public class LoginEventDAO {
 	 * @param correctLogin true, if the login was succesful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addLoginEvent(String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			addLoginEvent(transaction, username, source, seed, correctLogin);
+			addLoginEvent(transaction, username, source, null, seed, correctLogin);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
 	}
+
+	/**
+	 * logs an login attempt
+	 *
+	 * @param username username
+	 * @param source ip-address
+	 * @param service name of service
+	 * @param seed seed
+	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public void addLoginEvent(String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			addLoginEvent(transaction, username, source, service, seed, correctLogin);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
 	
 	/**
 	 * gets a list of recent login events

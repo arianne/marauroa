@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.42 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.43 2010/01/03 18:14:49 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.List;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
@@ -117,7 +118,18 @@ public class PlayerEntry {
 		 *             if there is any database problem.
 		 */
 		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
-			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, seed, loginResult);
+			String service = null;
+			try {
+				Configuration conf = Configuration.getConfiguration();
+				if (conf.has("server_service")) {
+					service = conf.get("server_service");
+				} else {
+					service = conf.get("server_typeGame");
+				}
+			} catch (IOException e) {
+				logger.error(e, e);
+			}
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, service, seed, loginResult);
 		}
 
 		/**
