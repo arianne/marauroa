@@ -1,4 +1,4 @@
-/* $Id: RPEventTest.java,v 1.4 2009/07/18 11:51:19 nhnb Exp $ */
+/* $Id: RPEventTest.java,v 1.5 2010/01/04 08:47:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -70,6 +70,7 @@ public class RPEventTest {
 	public void testSerialization() throws IOException {
 		RPObject obj = new RPObject();
 
+		RPClassTestHelper.generateRPClasses();
 		RPEvent expected = new RPEvent("test");
 		expected.put("value", "work!");
 		expected.setOwner(obj);

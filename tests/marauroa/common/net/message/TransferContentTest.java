@@ -1,4 +1,4 @@
-/* $Id: TransferContentTest.java,v 1.6 2009/12/24 12:58:16 nhnb Exp $ */
+/* $Id: TransferContentTest.java,v 1.7 2010/01/04 08:47:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,7 +44,7 @@ public class TransferContentTest {
 		TransferContent tc = new TransferContent("name", timestamp, bytearray);
 		assertEquals(false, tc.ack);
 		assertEquals(true, tc.cacheable);
-		assertEquals(bytearray, tc.data);
+		assertArrayEquals(bytearray, tc.data);
 		assertEquals("name", tc.name);
 		assertEquals(timestamp, tc.timestamp);
 	}

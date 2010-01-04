@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.8 2009/12/24 12:58:16 nhnb Exp $ */
+/* $Id: RPObjectTest.java,v 1.9 2010/01/04 08:47:09 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -64,6 +64,7 @@ public class RPObjectTest {
 		buddy.put("john", "");
 		buddy.put("anton", "");
 
+		RPClassTestHelper.generateRPClasses();
 		obj.addLink("buddy", buddy);
 
 		RPEvent chat = new RPEvent("chat");

@@ -1,4 +1,4 @@
-/* $Id: BugAtApplyDifferencesTest.java,v 1.6 2009/08/01 12:50:14 nhnb Exp $ */
+/* $Id: BugAtApplyDifferencesTest.java,v 1.7 2010/01/04 08:47:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -54,6 +54,7 @@ public class BugAtApplyDifferencesTest {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
+		RPClassTestHelper.generateRPClasses();
 		RPEvent chat = new RPEvent("chat");
 		chat.put("text", "Hi there");
 		obj.addEvent(chat);

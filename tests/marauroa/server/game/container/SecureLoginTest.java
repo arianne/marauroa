@@ -1,4 +1,4 @@
-/* $Id: SecureLoginTest.java,v 1.10 2009/07/23 17:21:39 nhnb Exp $ */
+/* $Id: SecureLoginTest.java,v 1.11 2010/01/04 08:47:12 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -71,7 +71,7 @@ public class SecureLoginTest {
 	public void testLogin() throws SQLException, UnknownHostException {
 		String password = "password";
 		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
-		assertTrue("Unable to verify login",login.verify());
+		assertTrue("Unable to verify login", login.verify());
 	}
 
 	/**

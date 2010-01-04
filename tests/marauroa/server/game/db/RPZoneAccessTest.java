@@ -1,4 +1,4 @@
-/* $Id: RPZoneAccessTest.java,v 1.4 2009/07/11 13:57:11 nhnb Exp $ */
+/* $Id: RPZoneAccessTest.java,v 1.5 2010/01/04 08:47:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import marauroa.common.Log4J;
+import marauroa.common.game.RPClassTestHelper;
 import marauroa.common.game.RPEvent;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPSlot;
@@ -86,6 +87,7 @@ public class RPZoneAccessTest {
 		object.addSlot("lhand");
 		object.addSlot("rhand");
 
+		RPClassTestHelper.generateRPClasses();
 		RPEvent chat = new RPEvent("chat");
 		chat.put("text", "Hi there");
 		object.addEvent(chat);

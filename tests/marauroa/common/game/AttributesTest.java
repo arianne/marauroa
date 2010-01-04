@@ -1,4 +1,4 @@
-/* $Id: AttributesTest.java,v 1.14 2009/10/12 19:46:05 nhnb Exp $ */
+/* $Id: AttributesTest.java,v 1.15 2010/01/04 08:47:11 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -172,7 +172,7 @@ public class AttributesTest {
 	 * @throws IOException
 	 *             if there is a problem serializing the data.
 	 */
-	@Test(expected = IOException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testSerializationWithRPClassFailure() throws IOException {
 		RPClass clazz = new RPClass("AttributeTest::B");
 
