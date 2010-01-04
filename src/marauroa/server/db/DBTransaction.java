@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.22 2009/12/15 21:52:33 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.23 2010/01/04 18:35:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -52,23 +52,14 @@ public class DBTransaction {
 	 * @throws SQLException in case of an database error
 	 */
 	protected void commit() throws SQLException {
-		try {
-			databaseAdapter.commit();
-		} catch (SQLException e) {
-			databaseAdapter.rollback();
-			throw e;
-		}
+		databaseAdapter.commit();
 	}
 
 	/**
 	 * rollsback this transaction
 	 */
-	protected void rollback() {
-		try {
-			databaseAdapter.rollback();
-		} catch (SQLException e) {
-			logger.error(e, e);
-		}
+	protected void rollback() throws SQLException {
+		databaseAdapter.rollback();
 	}
 
 	/**
@@ -78,7 +69,7 @@ public class DBTransaction {
 		try {
 			databaseAdapter.close();
 		} catch (SQLException e) {
-			logger.error(e, e);
+			logger.warn(e, e);
 		}
 	}
 

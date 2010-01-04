@@ -148,8 +148,13 @@ public class TransactionPool {
 	 * @param dbtransaction transaction
 	 */
 	public void rollback(DBTransaction dbtransaction) {
-		dbtransaction.rollback();
-		freeDBTransaction(dbtransaction);
+		try {
+			dbtransaction.rollback();
+			freeDBTransaction(dbtransaction);
+		} catch (SQLException e) {
+			killTransaction(dbtransaction);
+			logger.warn(e, e);
+		}
 	}
 
 	private void freeDBTransaction(DBTransaction dbtransaction) {
@@ -200,7 +205,11 @@ public class TransactionPool {
 	 * @param dbtransaction DBTransaction
 	 */
 	private void killTransaction(DBTransaction dbtransaction) {
-		dbtransaction.rollback();
+		try {
+			dbtransaction.rollback();
+		} catch (SQLException e) {
+			logger.debug(e, e);
+		}
 		dbtransaction.close();
 		dbtransactions.remove(dbtransaction);
 		callers.remove(dbtransaction);
