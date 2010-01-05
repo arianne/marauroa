@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.67 2009/12/20 13:40:03 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.68 2010/01/05 23:51:05 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -721,7 +721,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * We need a default class for some cases where attributes used are not
 	 * known at compile time.
 	 */
-	static RPClass defaultRPClass;
+	private final static RPClass defaultRPClass = new DefaultRPClass();
 
 	/**
 	 * Returns a default rpclass for lazy developers. You won't get any
@@ -730,42 +730,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @return RPClass
 	 */
 	public static RPClass getBaseRPObjectDefault() {
-		if (defaultRPClass == null) {
-			defaultRPClass = new RPClass("") {
-
-				@Override
-				public short getCode(Definition.DefinitionClass clazz, String name) {
-					return -1;
-				}
-
-				@Override
-				public Definition getDefinition(Definition.DefinitionClass clazz, String name) {
-					Definition def = new Definition(clazz);
-
-					def.setCode((short) -1);
-					def.setName(name);
-					def.setType(Type.VERY_LONG_STRING);
-					/*
-					 * On Default RPClass we assume that strings that start with #
-					 * are hidden.
-					 */
-					if (name.startsWith("#")) {
-						def.setFlags(Definition.HIDDEN);
-					} else {
-						def.setFlags(Definition.STANDARD);
-					}
-
-					def.setCapacity((byte) -1);
-
-					if (name.startsWith("!")) {
-						def.setFlags(Definition.PRIVATE);
-					}
-
-					return def;
-				}
-			};
-		}
-
 		return defaultRPClass;
 	}
 
