@@ -65,6 +65,7 @@ Or for a complete package release write:
 
 Status
 ------
+Version >= 3.3 does support Stendhal 0.80
 Version >= 3.0 does support Stendhal 0.76
 Version >= 2.6 does support Stendhal 0.74
 Version >= 2.5 does support Stendhal 0.68
@@ -110,8 +111,8 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.3
-- increased visiblity of doesTableExist and doesColumnExist in DBTransaction to public
-- RPEvents can now have slots when defined using RPClass.addRPEventWithSlots()
+- games can now check the structure of the database using doesTableExist and doesColumnExist in order to update it automatically
+- RPEvents can now have RPSlots
 - RPObject.getContainer() and RPObject.getContainerBase() continue to return an RPObject, 
   use the new getContainerOwner() and getContainerOwnerBase() method to get a SlotOwner object
 - properly free transactions in case of exceptions
