@@ -10,8 +10,9 @@
 
 Marauroa
 --------
-Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to build
-you own online games using Marauroa as a Content Management system.
+Marauroa is Arianne's Multiplayer Online Engine, that you can use to build
+your own online games using Marauroa for object management, database persistence
+and perception based client-server communication.
 
 
 Extended Description
@@ -135,7 +136,7 @@ Changelog
 - moved periodic saving of players out of buildPerceptions so that it gets it on performance profiling index
 - now all tables are created with TYPE=InnoDB
 - improved error messages
-- on serious errors which kill once of the background threads the complete server is now shutted down
+- on serious errors which kill one of the background threads the complete server is now shutt down
 - fixed a NoSuchElementException in TransactionPool.beginWork();
 
 
