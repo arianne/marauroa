@@ -22,5 +22,9 @@ public class UpdateScript {
 		if (!transaction.doesColumnExist("loginEvent", "seed")) {
 			transaction.execute("ALTER TABLE loginEvent ADD COLUMN (seed VARCHAR(120));", null);
 		}
+		if (!transaction.doesColumnExist("passwordChange", "result")) {
+			transaction.execute("ALTER TABLE passwordChange ADD COLUMN (result TINYINT);", null);
+			transaction.execute("UPDATE passwordChange SET result=1 WHERE result IS NULL", null);
+		}
 	}
 }

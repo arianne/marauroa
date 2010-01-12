@@ -74,6 +74,7 @@ create table if not exists passwordChange
   timedate timestamp,
 
   oldpassword varchar(255),
+  result tinyint,
   primary key(id)
   ) TYPE=INNODB;
 
