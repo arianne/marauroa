@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.76 2010/01/04 08:46:42 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.77 2010/01/23 14:57:27 kiheru Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -379,20 +379,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return the value of the attribute
 	 */
 	public String remove(String attribute) {
-		String has = added.remove(attribute);
+		added.remove(attribute);
 		/*
-		 * We remove from added and if it has been added and remove we tell
-		 * nothing about the attribute. But if it was not found, we add it to
-		 * deleted
+		 * This is for Delta^2 feature, as if it is empty it fails. It must
+		 * be 0 because if attribute is a number it would fail on the
+		 * serialization.
+		 * 
+		 * We can not ignore the change even if it had been added the same turn,
+		 * because then if the attribute had a value before modifying it, the 
+		 * client would get no notice about it being removed.
 		 */
-		if (has == null) {
-			/*
-			 * This is for Delta^2 feature, as if it is empty it fails. It must
-			 * be 0 because if attribute is a number it would fail on the
-			 * serialization
-			 */
-			deleted.put(attribute, "0");
-		}
+		deleted.put(attribute, "0");
 		
 		modified=true;
 

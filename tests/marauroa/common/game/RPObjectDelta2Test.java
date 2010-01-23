@@ -1,4 +1,4 @@
-/* $Id: RPObjectDelta2Test.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
+/* $Id: RPObjectDelta2Test.java,v 1.6 2010/01/23 14:57:27 kiheru Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -245,6 +245,44 @@ public class RPObjectDelta2Test {
 		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
+		/*
+		 * Test Delta^2 on attribute object removal.
+		 */
+		obj.remove("b");
+
+		zone.modify(obj);
+
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
+		assertTrue(expected.addedList.isEmpty());
+		assertTrue(expected.modifiedAddedList.isEmpty());
+		assertFalse(expected.modifiedDeletedList.isEmpty());
+		assertTrue(expected.deletedList.isEmpty());
+
+		/*
+		 * Now we test the resulting object to check everything is ok.
+		 */
+		RPObject result=expected.modifiedDeletedList.get(0);
+		assertEquals(obj.get("id"), result.get("id"));
+		assertTrue(result.has("b"));
+		assertFalse(obj.has("b"));
+		assertEquals(obj.get("zoneid"), result.get("zoneid"));
+		assertEquals("test", result.get("zoneid"));
+	}
+	
+	/**
+	 * Test attribute removal. It must appear at modified deleted list
+	 * even in the case the attribute has been modified the same turn.
+	 */
+	@Test
+	public void testAttributeRemoval2() {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		obj.put("b", "original value");
+		/*
+		 * Next turn. We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
+		obj.put("b", "changed value");
 		/*
 		 * Test Delta^2 on attribute object removal.
 		 */
@@ -625,6 +663,39 @@ public class RPObjectDelta2Test {
 
 		assertEquals(result, obj);
 	}
+	
+	/**
+	 * This test try to show a problem that could happen if you delete and add
+	 * an object on the same turn. It should work correctly. Different change
+	 * order from testApplyDifferences
+	 */
+	@Test
+	public void testApplyDifferences2() {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		/*
+		 * Next turn. We want to clear Delta^2 data.
+		 */
+		zone.nextTurn();
+
+		obj.put("d", "original text");
+		RPObject result = (RPObject) obj.clone();
+
+		// modify
+		obj.put("d", "changed text");
+		// remove attribute that was modified
+		obj.remove("d");
+
+		RPObject added = new RPObject();
+		RPObject deleted = new RPObject();
+
+		obj.getDifferences(added, deleted);
+
+		result.applyDifferences(added, deleted);
+
+		assertEquals(obj, result);
+	}
+
 
 	@Test
 	public void testApplyDifferencesOnSlotObjectRemove() throws Exception {
