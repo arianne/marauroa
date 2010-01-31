@@ -1,6 +1,6 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.10 2009/12/27 15:46:57 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.11 2010/01/31 20:36:18 nhnb Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2007-2009 - Marauroa                    *
+ *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -52,6 +52,16 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	 */
 	public AbstractDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
 		this.connection = createConnection(connInfo);
+		this.statements = new LinkedList<Statement>();
+		this.resultSets = new LinkedList<ResultSet>();
+	}
+
+	/**
+	 * creates a new AbstractDatabaseAdapter for test purpose without conection to the DB
+	 *
+	 * @throws DatabaseConnectionException if the connection cannot be established.
+	 */
+	protected AbstractDatabaseAdapter() throws DatabaseConnectionException {
 		this.statements = new LinkedList<Statement>();
 		this.resultSets = new LinkedList<ResultSet>();
 	}
@@ -110,10 +120,11 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 
 
 	public int execute(String sql) throws SQLException {
+		String mySql = rewriteSql(sql);
 		int res = -2;
 		Statement statement = connection.createStatement();
 		try {
-			boolean resultType = statement.execute(sql);
+			boolean resultType = statement.execute(mySql);
 			if (!resultType) {
 				res = statement.getUpdateCount();
 			}
@@ -241,5 +252,15 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		boolean res = result.next();
 		result.close();
 		return res;
+	}
+
+	/**
+	 * rewrites an SQL statement so that it is accepted by the database server software
+	 *
+	 * @param sql original SQL statement
+	 * @return modified SQL statement
+	 */
+	protected String rewriteSql(String sql) {
+		return sql;
 	}
 }
