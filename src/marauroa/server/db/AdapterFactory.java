@@ -1,4 +1,4 @@
-/* $Id: AdapterFactory.java,v 1.6 2009/07/18 15:02:25 nhnb Exp $ */
+/* $Id: AdapterFactory.java,v 1.7 2010/01/31 20:36:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -54,7 +54,7 @@ class AdapterFactory {
 				return new MySQLDatabaseAdapter(connInfo);
 			}
 			Class<DatabaseAdapter> clazz= (Class<DatabaseAdapter>) Class.forName(adapter);
-			Constructor<DatabaseAdapter> ctor = clazz.getConstructor(String.class);
+			Constructor<DatabaseAdapter> ctor = clazz.getConstructor(Properties.class);
 			return ctor.newInstance(connInfo);
 		} catch (Exception e) {
 			logger.error(e, e);
