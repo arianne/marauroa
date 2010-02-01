@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.16 2009/09/24 06:48:03 nhnb Exp $ */
+/* $Id: TimeoutConf.java,v 1.17 2010/02/01 21:14:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,5 +57,5 @@ public class TimeoutConf {
 	 * The amount of seconds until being able to retry login after N failed
 	 * attemps.
 	 */
-	public static final long FAILED_LOGIN_BLOCKTIME = 600;
+	public static final int FAILED_LOGIN_BLOCKTIME = 600;
 }
