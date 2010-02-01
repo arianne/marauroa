@@ -1,4 +1,4 @@
-/* $Id: H2DatabaseAdapter.java,v 1.1 2010/01/31 20:47:01 nhnb Exp $ */
+/* $Id: H2DatabaseAdapter.java,v 1.2 2010/02/01 07:17:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,6 +12,9 @@
  ***************************************************************************/
 package marauroa.server.db.adapter;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import marauroa.server.db.DatabaseConnectionException;
@@ -60,4 +63,24 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 		}
 		return mySql;
 	}
+
+	@Override
+	public boolean doesTableExist(String table) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getTables(null, null, table.toUpperCase(), null);
+		boolean res = result.next();
+		result.close();
+		return res;
+	}
+
+	@Override
+	public boolean doesColumnExist(String table, String column) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getColumns("", "", table.toUpperCase(), column.toUpperCase());
+		boolean res = result.next();
+		result.close();
+		return res;
+	}
+
+	
 }
