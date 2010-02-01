@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.18 2010/01/03 19:14:28 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.19 2010/02/01 21:16:30 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -15,6 +15,9 @@ package marauroa.server.game.db;
 import java.net.InetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -366,10 +369,14 @@ public class LoginEventDAO {
 		String query = "SELECT count(*) as amount FROM loginEvent, account"
 				+ " WHERE loginEvent.player_id=account.id"
 				+ " AND username='[username]'"
-		        + " AND loginEvent.result=0 and TIME_TO_SEC(TIMEDIFF(now(), loginEvent.timedate))<"
-		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		        + " AND loginEvent.result=0 and loginEvent.timedate > '[timestamp]'";
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
+
+		Calendar calendar = new GregorianCalendar();
+		calendar.add(Calendar.SECOND, -1 * TimeoutConf.FAILED_LOGIN_BLOCKTIME);
+		params.put("timestamp", new Timestamp(calendar.getTimeInMillis()).toString());
 
 		int attemps = transaction.querySingleCellInt(query, params);
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT;
@@ -387,10 +394,13 @@ public class LoginEventDAO {
 	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
 		String query = "SELECT count(*) as amount FROM loginEvent"
 				+ " WHERE address='[address]'"
-		        + " AND result=0 and TIME_TO_SEC(TIMEDIFF(now(), timedate)) <"
-		        + TimeoutConf.FAILED_LOGIN_BLOCKTIME;
+		        + " AND result=0 and timedate > '[timestamp]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("address", address);
+
+		Calendar calendar = new GregorianCalendar();
+		calendar.add(Calendar.SECOND, -1 * TimeoutConf.FAILED_LOGIN_BLOCKTIME);
+		params.put("timestamp", new Timestamp(calendar.getTimeInMillis()).toString());
 
 		int attemps = transaction.querySingleCellInt(query, params);
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_IP;
