@@ -111,6 +111,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+
+3.4
+- The H2 serverless database system is now supported in addition to MySQL.
+
 3.3
 - games can now check the structure of the database using doesTableExist and doesColumnExist in order to update it automatically
 - RPEvents can now have RPSlots
