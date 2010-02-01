@@ -52,7 +52,7 @@ create table if not exists loginEvent
   service char(10),
   seed varchar(120),
 
-  timedate timestamp,
+  timedate timestamp default CURRENT_TIMESTAMP,
 
   result tinyint,
   primary key(id)
@@ -70,7 +70,7 @@ create table if not exists passwordChange
   address varchar(64),
   service char(10),
 
-  timedate timestamp,
+  timedate timestamp default CURRENT_TIMESTAMP,
 
   oldpassword varchar(255),
   result tinyint,
@@ -82,7 +82,7 @@ create table if not exists passwordChange
 
 create table if not exists statistics
   (
-  timedate timestamp,
+  timedate timestamp default CURRENT_TIMESTAMP,
   
   bytes_send integer,
   bytes_recv integer,
@@ -96,7 +96,7 @@ create table if not exists statistics
 create table if not exists gameEvents
   (
   id integer auto_increment not null,
-  timedate timestamp,
+  timedate timestamp default CURRENT_TIMESTAMP,
   source varchar(64),
   event  varchar(64),
   param1 varchar(128),
