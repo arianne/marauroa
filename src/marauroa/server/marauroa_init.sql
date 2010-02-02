@@ -8,10 +8,10 @@ create table if not exists account
   timedate timestamp default CURRENT_TIMESTAMP,
   status char(8) not null default 'active',
 
-  primary key(username)
+  primary key(id)
   );
 
-/* create index i_account_username ON account(username); */
+/* create unique index i_account_username ON account(username); */
 /* create index i_account_password ON account(password); */
 /* create index i_account_email ON account(email); */
 
