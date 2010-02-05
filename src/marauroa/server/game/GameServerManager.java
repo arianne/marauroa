@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.130 2009/12/29 00:12:48 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.131 2010/02/05 19:03:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -209,6 +209,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	
 	private DisconnectPlayers disconnectThread;
 
+	/** maxium number of accepted players */
+	private int maxNumberOfPlayers = 128;
+
 	/**
 	 * Constructor that initialize also the RPManager
 	 *
@@ -230,6 +233,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		this.key = key;
 		this.netMan = netMan;
 		this.rpMan = rpMan;
+		
+		String temp = Configuration.getConfiguration().get("max_number_of_players");
+		if (temp != null) {
+			this.maxNumberOfPlayers  = Integer.parseInt(temp.trim());
+		}
 		
 		netMan.registerDisconnectedListener(this);
 
@@ -975,7 +983,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * actually completed login stage. This client is taking server
 			 * resources but doing nothing useful at all.
 			 */
-			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
+			if (playerContainer.size() >= maxNumberOfPlayers) {
 				logger.info("Server is full, making room now");
 				/* Let's try to make some room for more players. */
 				PlayerEntry candidate = playerContainer.getIdleEntry();
@@ -998,10 +1006,10 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			 * We give a new try to see if we can create a entry for this
 			 * player.
 			 */
-			if (playerContainer.size() == GameConst.MAX_NUMBER_PLAYERS) {
+			if (playerContainer.size() >= maxNumberOfPlayers) {
 				/* Error: Too many clients logged on the server. */
 				logger.warn("Server is full, Client(" + msg.getAddress().toString()
-				        + ") can't login");
+				        + ") can't login. You may want to increase max_number_of_players in your server.init. Current value is: " + maxNumberOfPlayers);
 
 				/* Notify player of the event. */
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
