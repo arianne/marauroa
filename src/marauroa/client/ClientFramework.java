@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.53 2010/01/01 22:26:33 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.54 2010/02/07 19:00:37 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,14 +13,8 @@
 package marauroa.client;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.net.Proxy;
-import java.net.SocketException;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -298,48 +292,12 @@ public abstract class ClientFramework {
 	}
 
 	/**
-	 * creates a seed which allows rerecognition of the client.
+	 * sets a preauthentication seed
 	 *
-	 * Note: In most cases you do not need this seed and should not call this method.
+	 * @param seed the preauthentication seed
 	 */
-	public synchronized void createSeed() {
-		String seed1 = null;
-		String seed2 = null;
-		String seed3 = null;
-		
-		try {
-			Enumeration<NetworkInterface> enm = NetworkInterface.getNetworkInterfaces();
-			while (enm.hasMoreElements()) {
-				NetworkInterface iface = enm.nextElement();
-				// Compatibility with Java 5.0
-				Method method = iface.getClass().getMethod("getHardwareAddress");
-				byte[] addr = (byte[]) method.invoke(iface);
-				if (addr != null) {
-					seed1 = Hash.toHexString(Hash.hash(addr));
-					break;
-				}
-			}
-		} catch (RuntimeException e) {
-			// ignored
-		} catch (SocketException e) {
-			// ignored
-		} catch (NoSuchMethodException e) {
-			// ignored
-		} catch (IllegalAccessException e) {
-			// ignored
-		} catch (InvocationTargetException e) {
-			// ignored
-		}
-		
-		try {
-			seed2 = Hash.toHexString(Hash.hash(InetAddress.getLocalHost().getHostName()));
-		} catch (Exception e) {
-			// ignored
-		}
-		if (System.getProperty("user.name") != null) {
-			seed3 = Hash.toHexString(Hash.hash(System.getProperty("user.name")));
-		}
-		seed = seed1 + "/" + seed2 + "/" + seed3;
+	public synchronized void setSeed(String seed) {
+		this.seed = seed;
 	}
 
 	/**
