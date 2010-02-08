@@ -82,6 +82,7 @@ create table if not exists passwordChange
 
 create table if not exists statistics
   (
+  id integer auto_increment not null,
   timedate timestamp default CURRENT_TIMESTAMP,
   
   bytes_send integer,
@@ -119,3 +120,16 @@ create table if not exists banlist
   reason  varchar(255),
   PRIMARY KEY(id)
   );
+
+create table if not exists accountban
+  (
+  id integer auto_increment not null,
+  player_id integer,
+  reason  varchar(255),
+  timedate timestamp default CURRENT_TIMESTAMP,
+  expire timestamp null default NULL,
+  PRIMARY KEY(id)
+  );
+
+/*create index i_accountban_player_id ON accountban(player_id);*/
+
