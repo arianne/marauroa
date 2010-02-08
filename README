@@ -113,8 +113,10 @@ Changelog
 ---------
 
 3.4
-- The H2 serverless database system is now supported in addition to MySQL.
+- added support for the H2 serverless database system in addition to MySQL.
 - added configuration setting max_number_of_players in server.ini
+- added temporary bans stored in the new table accountban
+- fixed error message on inactive accounts claiming the account was banned.
 
 3.3
 - games can now check the structure of the database using doesTableExist and doesColumnExist in order to update it automatically
