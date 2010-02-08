@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.11 2010/01/31 20:36:13 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.12 2010/02/08 21:48:52 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -36,7 +36,6 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	/**
 	 * creates a new MySQLDatabaseAdapter for test purpose without conection to the DB
 	 *
-	 * @param connInfo parmaters specifying the
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	protected MySQLDatabaseAdapter() throws DatabaseConnectionException {
