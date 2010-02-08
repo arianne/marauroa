@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginMessageNACK.java,v 1.1 2010/02/08 14:58:59 nhnb Exp $ */
+/* $Id: MessageS2CLoginMessageNACK.java,v 1.2 2010/02/08 21:39:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2010 - Marauroa                      *
  ***************************************************************************
@@ -78,7 +78,7 @@ public class MessageS2CLoginMessageNACK extends Message {
 		super.readObject(in);
 		reason = in.read255LongString();
 
-		if (type != MessageType.S2C_LOGIN_NACK) {
+		if (type != MessageType.S2C_LOGIN_MESSAGE_NACK) {
 			throw new IOException();
 		}
 	}
