@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.131 2010/02/05 19:03:42 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.132 2010/02/08 21:44:17 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -52,6 +52,7 @@ import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.common.net.message.MessageS2CLoginACK;
+import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
@@ -1114,14 +1115,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			/*
 			 * We check now the account is not banned or inactive.
 			 */
-			if (!"active".equalsIgnoreCase(info.getStatus())) {
-				logger.debug("Banned/Inactive account for player " + info.username);
+			String accountStatus = info.getStatus();
+			if (accountStatus != null) {
+				logger.info("Banned/Inactive account for player " + info.username);
 
 				/* Send player the Login NACK message */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
-				        MessageS2CLoginNACK.Reasons.USERNAME_BANNED);
+				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(), accountStatus);
 
-				netMan.sendMessage(msgLoginNACK);
+				netMan.sendMessage(msgLoginMessageNACK);
 
 				/*
 				 * Disconnect player of server.

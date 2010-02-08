@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.12 2010/02/08 21:43:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class AccountDAO {
 	 */
 	public boolean hasPlayer(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "select count(*) as amount from  account where username like '[username]'";
+			String query = "select count(*) as amount from account where username = '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			logger.debug("hasPlayer is using query: " + query);
@@ -199,7 +199,7 @@ public class AccountDAO {
 	public void setAccountStatus(DBTransaction transaction, String username, String status)
 	        throws SQLException {
 		try {
-			String query = "update account set status='[status]' where username like '[username]'";
+			String query = "update account set status='[status]' where username = '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("status", status);
@@ -222,7 +222,7 @@ public class AccountDAO {
 	 */
 	public String getAccountStatus(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "select status from account where username like '[username]'";
+			String query = "select status from account where username = '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 
@@ -244,6 +244,48 @@ public class AccountDAO {
 	}
 
 	/**
+	 * gets the ban message of the account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @return ban message, or <code>null</code> if the account is not banned.
+	 * @throws SQLException in case of an database error
+	 */
+	public String getAccountBanMessage(DBTransaction transaction, String username) throws SQLException {
+		try {
+			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND accountban.expire > CURRENT_TIMESTAMP) WHERE username='[username]'";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("username", username);
+
+			logger.debug("getAccountStatus is executing query " + query);
+
+			ResultSet result = transaction.query(query, params);
+
+			String res = null;
+			if (result.next()) {
+				String status = result.getString("status");
+				if ("banned".equals(status)) {
+					res = "You account has been banned. Please contact support.";
+				} else if ("inactive".equals(status)) {
+					res = "You account has been flagged as inactive. Please contact support.";
+				} else {
+					String reason = result.getString("reason");
+					String expire = result.getString("expire");
+					if ((reason != null) || (expire != null)) {
+						res = "You account is temporarily banned until " + expire + ".\nThe reason given was: " + reason;
+					}
+				}
+			}
+			result.close();
+
+			return res;
+		} catch (SQLException e) {
+			logger.error("Can't query player \"" + username + "\"", e);
+			throw e;
+		}
+	}
+
+	/**
 	 * gets the email-address of the account
 	 *
 	 * @param transaction DBTransaction
@@ -253,7 +295,7 @@ public class AccountDAO {
 	 */
 	public String getEmail(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "select email from account where username like '[username]'";
+			String query = "select email from account where username = '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			logger.debug("getEmail is executing query " + query);
@@ -281,7 +323,7 @@ public class AccountDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public int getDatabasePlayerId(DBTransaction transaction, String username) throws SQLException {
-		String query = "select id from account where username like '[username]'";
+		String query = "select id from account where username = '[username]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		logger.debug("getDatabasePlayerId is executing query " + query);
@@ -349,8 +391,8 @@ public class AccountDAO {
 	 */
 	private boolean verifyUsingDB(DBTransaction transaction, String username, String hexPassword) throws SQLException {
 		try {
-			String query = "select username from account where username like "
-				+ "'[username]' and password like '[password]'";
+			String query = "select username from account where username = "
+				+ "'[username]' and password = '[password]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("password", hexPassword);
@@ -494,6 +536,23 @@ public class AccountDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			String res = getAccountStatus(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+	/**
+	 * gets the ban message of an account
+	 *
+	 * @param username username
+	 * @return account ban message, or <code>null</code> if this account is not banned
+	 * @throws SQLException in case of an database error
+	 */
+	public String getAccountBanMessage(String username) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			String res = getAccountBanMessage(transaction, username);
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);

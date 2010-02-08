@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.43 2010/01/03 18:14:49 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.44 2010/02/08 21:44:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -172,7 +172,7 @@ public class PlayerEntry {
 			String res = null;
 			try {
 				if (DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username)) {
-					res = DAORegister.get().get(AccountDAO.class).getAccountStatus(transaction, username);
+					res = DAORegister.get().get(AccountDAO.class).getAccountBanMessage(transaction, username);
 				}
 				TransactionPool.get().commit(transaction);
 			} catch (SQLException e) {
