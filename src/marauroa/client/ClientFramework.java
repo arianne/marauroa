@@ -1,6 +1,6 @@
-/* $Id: ClientFramework.java,v 1.54 2010/02/07 19:00:37 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.55 2010/02/08 14:58:59 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -49,6 +49,7 @@ import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.common.net.message.MessageS2CLoginACK;
+import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
@@ -282,9 +283,15 @@ public abstract class ClientFramework {
 				case S2C_LOGIN_NACK:
 					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
-
 					throw new LoginFailedException(msgNACK.getResolution());
-					/* If message doesn't match, store it, someone will need it. */
+				
+				/* Login failed, explain reason on event */
+				case S2C_LOGIN_MESSAGE_NACK:
+					MessageS2CLoginMessageNACK msgMessageNACK = (MessageS2CLoginMessageNACK) msg;
+					logger.debug("Login failed. Reason: " + msgMessageNACK.getReason());
+					throw new LoginFailedException(msgMessageNACK.getReason());
+
+				/* If message doesn't match, store it, someone will need it. */
 				default:
 					messages.add(msg);
 			}
