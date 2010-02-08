@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.12 2010/02/08 21:43:28 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.13 2010/02/08 21:46:06 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -272,7 +272,14 @@ public class AccountDAO {
 					String reason = result.getString("reason");
 					String expire = result.getString("expire");
 					if ((reason != null) || (expire != null)) {
-						res = "You account is temporarily banned until " + expire + ".\nThe reason given was: " + reason;
+						if (expire != null) {
+							res = "You account is temporarily banned until " + expire + ".\n";
+						} else {
+							res = "You account is banned.\n";
+						}
+						if (reason != null) {
+							res = res + "The reason given was: " + reason;
+						}
 					}
 				}
 			}
