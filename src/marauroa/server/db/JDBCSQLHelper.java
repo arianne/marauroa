@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.5 2009/09/13 09:29:59 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.6 2010/02/09 21:32:19 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -75,10 +75,10 @@ public class JDBCSQLHelper {
 
 			return ret;
 		} catch (SQLException e) {
-			logger.error("error running SQL Script (file: " + file + ")", e);
+			logger.error("error running SQL Script (file: " + file + "): " + command, e);
 			return false;
 		} catch (IOException e) {
-			logger.error("error reading SQL Script (file: " + file + ")", e);
+			logger.error("error reading SQL Script (file: " + file + "): " + command, e);
 			return false;
 		} finally {
 			try {
