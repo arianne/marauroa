@@ -66,6 +66,7 @@ Or for a complete package release write:
 
 Status
 ------
+Version >= 3.4 does support Stendhal 0.81
 Version >= 3.3 does support Stendhal 0.80
 Version >= 3.0 does support Stendhal 0.76
 Version >= 2.6 does support Stendhal 0.74
