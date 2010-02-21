@@ -1,6 +1,11 @@
-package marauroa;
-
 /**
+ * Marauroa is an open source framework and engine to develop turn based and 
+ * real time games. It provides a simple way of creating games on a portable 
+ * and robust server architecture. Marauroa manages the client server communication 
+ * and provides an object orientated view of the world for game developers. It 
+ * further handles database access in a transparent way to store player accounts, 
+ * character progress and the state of the world.
+
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation.
@@ -9,12 +14,6 @@ package marauroa;
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the file LICENSE for more details.
  * 
- * 
- * Marauroa is Arianne's Multiplayer Online Engine Server, that you can use to
- * build you own online games using Marauroa as a Content Management system.
- * 
- * Please before using Marauroa make sure you understand that this software is
- * free software under GNU GPL.
- * 
  * Read COPYING to see License
  */
+package marauroa;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *				(C) Copyright 2003-210 - The Arianne Project			   *
+ *				(C) Copyright 2003-2010 - The Arianne Project			   *
  ***************************************************************************
  ***************************************************************************
  *																		   *
@@ -26,7 +26,8 @@ import marauroa.common.net.message.Message;
 
 
 /**
- * A protocol analyser.
+ * A protocol analyser. You can sniff the network dump with tools like Wireshark or Tcpdump.
+ * The let Wireshark "follow the tcp stream", and save the result in raw format.
  *
  * @author hendrik
  */
