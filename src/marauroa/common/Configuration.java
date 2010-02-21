@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.27 2009/07/18 11:11:37 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.28 2010/02/21 22:57:29 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -138,6 +138,26 @@ public class Configuration {
 			value = value.trim();
 		}
 		return value;
+	}
+
+	/**
+	 * This method returns a String with the value of the property.
+	 *
+	 * @param property the property we want the value
+	 * @param defaultValue a default value in case the property is not defined
+	 * @return a string containing the value of the property
+	 */
+	public int getInt(String property, int defaultValue) {
+		int res = defaultValue;
+		String value = properties.getProperty(property);
+		if (value != null) {
+			try {
+				res = Integer.parseInt(value.trim());
+			} catch (NumberFormatException e) {
+				logger.error("Configuration parameter " + property + " is \"" + value + "\" but an int was expected.");
+			}
+		}
+		return res;
 	}
 
 	/**
