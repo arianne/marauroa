@@ -18,7 +18,7 @@ and perception based client-server communication.
 Extended Description
 --------------------
 Marauroa is completely written in Java using a multithreaded server architecture
-with a TCP oriented network protocol, a mySQL based persistence engine and a
+with a TCP oriented network protocol, a SQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable
 by developers and that is able to run scripts on Python for the game's rules.
 
@@ -43,10 +43,6 @@ To actually compile Marauroa you will need:
 
 In order to get it working with MySQL you will also need:
 - MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
-
-  NOTE: Unfortunatelly, Marauroa uses some SQL features that make its code
-  slightly incompatible with other DBMS. Join us and help to port SQL code
-  to a real standard complaint DBMS.
 
 - JUnit 4.4 in order to run test cases.
 - Jython for Python support.
@@ -112,6 +108,12 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+
+3.5
+
+- limit number of parallel connections from one ip-address
+- limit account creation per ip-address in a timeframe
+- fixed null values on H2 in accout.timedate and gameEvents.timedate
 
 3.4
 - added support for the H2 serverless database system in addition to MySQL.

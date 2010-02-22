@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.133 2010/02/22 16:33:57 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.134 2010/02/22 18:09:27 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -24,6 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.AccountResult;
@@ -1120,7 +1121,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				/* Send player the Login NACK message */
 				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(), accountStatus);
-
 				netMan.sendMessage(msgLoginMessageNACK);
 
 				/*
@@ -1130,7 +1130,28 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				return;
 			}
+
+			/* Now we count the number of connections from this ip-address */
+			int count = info.countConnectionsFromSameIPAddress(playerContainer);
+			Configuration conf = Configuration.getConfiguration();
+			int limit = conf.getInt("parallel_connection_limit", TimeoutConf.PARALLEL_CONNECTION_LIMIT);
+			if (count > limit) {
+				String whiteList = "," + conf.get("account_creation_ip_whitelist", "127.0.0.1") + ",";
+				if (whiteList.indexOf("," + info.address + ",") < 0) {
+					logger.info("to many parallel connections from " + info.address + " rejecting login of " + info.username);
+
+					/* Send player the Login NACK message */
+					MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(),
+						"There are too many connections from your ip-address.\nPlease contact /support, if you are at a conference or something similar.");
+					netMan.sendMessage(msgLoginMessageNACK);
+
+					// Disconnect player of server.
+					netMan.disconnectClient(msg.getSocketChannel());
+					return;
+				}
+			}
 			
+
 			/* Now we check if this player is previously logged in */
 			PlayerEntry existing = playerContainer.get(info.username);
 
