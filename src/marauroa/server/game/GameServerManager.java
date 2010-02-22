@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.134 2010/02/22 18:09:27 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.135 2010/02/22 20:09:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1136,7 +1136,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			Configuration conf = Configuration.getConfiguration();
 			int limit = conf.getInt("parallel_connection_limit", TimeoutConf.PARALLEL_CONNECTION_LIMIT);
 			if (count > limit) {
-				String whiteList = "," + conf.get("account_creation_ip_whitelist", "127.0.0.1") + ",";
+				String whiteList = "," + conf.get("ip_whitelist", "127.0.0.1") + ",";
 				if (whiteList.indexOf("," + info.address + ",") < 0) {
 					logger.info("to many parallel connections from " + info.address + " rejecting login of " + info.username);
 

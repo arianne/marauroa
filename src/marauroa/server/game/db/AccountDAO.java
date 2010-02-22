@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.14 2010/02/22 16:33:56 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.15 2010/02/22 20:09:39 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -468,7 +468,7 @@ public class AccountDAO {
 	public boolean isAccountCreationLimitReached(DBTransaction transaction, String address) throws SQLException, IOException  {
 
 		Configuration conf = Configuration.getConfiguration();
-		String whiteList = "," + conf.get("account_creation_ip_whitelist", "127.0.0.1") + ",";
+		String whiteList = "," + conf.get("ip_whitelist", "127.0.0.1") + ",";
 		if (whiteList.indexOf("," + address + ",") > -1) {
 			return false;
 		}
