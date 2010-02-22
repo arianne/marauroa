@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.10 2009/06/14 21:58:47 astridemma Exp $ */
+/* $Id: Result.java,v 1.11 2010/02/22 16:33:58 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -42,7 +42,6 @@ public enum Result {
 	FAILED_STRING_SIZE(false, "Account was not created because any of the parameters are either too long or too short."),
 
 	/** Account was not created because because this account already exists. */
-
 	FAILED_PLAYER_EXISTS(false, "Account was not created because because this account already exists."),
 
 	/** Account was not created because there was an unspecified exception. */
@@ -87,7 +86,14 @@ public enum Result {
 	 *
 	 * @since 2.1
 	 */
-	FAILED_PASSWORD_TO_WEAK(false, "Account was not created because the password is too weak.");
+	FAILED_PASSWORD_TO_WEAK(false, "Account was not created because the password is too weak."),
+
+	/**
+	 * Too many accounts were created from this ip-address recently.
+	 *
+	 * @since 3.5
+	 */
+	FAILED_TOO_MANY(false, "Account was not created because the account creation limit for your network was reached.\nPlease try again later.");
 
 	/**
 	 * Textual description of the result 

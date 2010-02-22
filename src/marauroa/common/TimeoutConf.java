@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.17 2010/02/01 21:14:51 nhnb Exp $ */
+/* $Id: TimeoutConf.java,v 1.18 2010/02/22 16:33:56 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -58,4 +58,23 @@ public class TimeoutConf {
 	 * attemps.
 	 */
 	public static final int FAILED_LOGIN_BLOCKTIME = 600;
+
+	/**
+	 * The timeframe to check when counting account creations.
+	 */
+	public static final int ACCOUNT_CREATION_COUNTINGTIME = 3600;
+
+	/**
+	 * The number of accounts that may be created within the timeframe
+	 * from one ip-address
+	 */
+	public static final int ACCOUNT_CREATION_LIMIT = 5;
+
+	/**
+	 * The number of parallel connections that may be used from
+	 * one ip-address.
+	 */
+	public static final int PARALLEL_CONNECTION_LIMIT = 10;
+
+
 }

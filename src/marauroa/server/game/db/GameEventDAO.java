@@ -1,4 +1,4 @@
-/* $Id: GameEventDAO.java,v 1.7 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: GameEventDAO.java,v 1.8 2010/02/22 16:33:56 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -56,8 +56,8 @@ public class GameEventDAO {
 		String param2 = param.toString();
 
 		// write the row to the database, escaping and cutting the parameters to column size
-		String query = "insert into gameEvents(timedate, source, event, param1, param2)"
-			+ " values(NULL, '[source]', '[event]', '[param1]', '[param2]');";
+		String query = "insert into gameEvents(source, event, param1, param2)"
+			+ " values('[source]', '[event]', '[param1]', '[param2]');";
 
 		Map<String, Object> sqlParams = new HashMap<String, Object>();
 		sqlParams.put("source", source);

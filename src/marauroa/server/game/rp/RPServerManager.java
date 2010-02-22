@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.58 2009/11/09 22:47:08 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.59 2010/02/22 16:33:56 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -12,7 +12,9 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,6 +31,7 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
 import marauroa.common.game.RPObjectNotFoundException;
+import marauroa.common.game.Result;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.MessageS2CTransferREQ;
 import marauroa.common.net.message.TransferContent;
@@ -38,6 +41,8 @@ import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
+import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.DAORegister;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
@@ -246,10 +251,24 @@ public class RPServerManager extends Thread {
 	 *            player's password
 	 * @param email
 	 *            player's email
-	 * @return a Result indicating if account creation was done successfully or
-	 *         if it is not the cause.
+	 * @return a Result indicating if account creation was done successfully or not.
 	 */
-	public AccountResult createAccount(String username, String password, String email) {
+	public AccountResult createAccount(String username, String password, String email, String address) {
+
+		// check account creation limits
+		try {
+			if (DAORegister.get().get(AccountDAO.class).isAccountCreationLimitReached(address)) {
+				return new AccountResult(Result.FAILED_TOO_MANY, username);
+			}
+		} catch (SQLException e) {
+			logger.error(e, e);
+			return new AccountResult(Result.FAILED_EXCEPTION, username);
+		} catch (IOException e) {
+			logger.error(e, e);
+			return new AccountResult(Result.FAILED_EXCEPTION, username);
+		}
+
+		// forward the creation request to the game
 		return ruleProcessor.createAccount(username, password, email);
 	}
 

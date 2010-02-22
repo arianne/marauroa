@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.13 2010/02/08 21:46:06 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.14 2010/02/22 16:33:56 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,13 +12,19 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
@@ -58,8 +64,8 @@ public class AccountDAO {
 				        + ")");
 			}
 
-			String query = "insert into account(username, password, email, timedate, status)"
-				+ " values('[username','[password]', '[email]', NULL, DEFAULT)";
+			String query = "insert into account(username, password, email, status)"
+				+ " values('[username','[password]', '[email]', DEFAULT)";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("password", Hash.toHexString(password));
@@ -450,6 +456,41 @@ public class AccountDAO {
 		}
 	}
 
+
+	/**
+	 * is account creatoin  recently created accounts
+	 *
+	 * @param address ip-address
+	 * @return true, if too many accounts have been created recently
+	 * @throws SQLException in case of an database error
+	 * @throws IOException in case of an input/output error
+	 */
+	public boolean isAccountCreationLimitReached(DBTransaction transaction, String address) throws SQLException, IOException  {
+
+		Configuration conf = Configuration.getConfiguration();
+		String whiteList = "," + conf.get("account_creation_ip_whitelist", "127.0.0.1") + ",";
+		if (whiteList.indexOf("," + address + ",") > -1) {
+			return false;
+		}
+
+		// count the number of recently created accounts from this ip-address
+		String query = "SELECT count(DISTINCT username) "
+			+ "FROM account, loginEvent "
+			+ "WHERE account.id=loginEvent.player_id AND address='[address]' AND account.timedate>'[timestamp]'";
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("address", address);
+
+		// apply the time frame
+		Calendar calendar = new GregorianCalendar();
+		calendar.add(Calendar.SECOND, -1 * conf.getInt("account_creation_counting_time", TimeoutConf.ACCOUNT_CREATION_COUNTINGTIME));
+		params.put("timestamp", new Timestamp(calendar.getTimeInMillis()).toString());
+
+		// do the database query and evaluate the result
+		int attemps = transaction.querySingleCellInt(query, params);
+		return attemps > conf.getInt("account_creation_limit", TimeoutConf.ACCOUNT_CREATION_LIMIT);
+	}
+
 	/**
 	 * creates an account
 	 *
@@ -628,6 +669,25 @@ public class AccountDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			boolean res = removePlayer(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+
+	/**
+	 * is account creatoin  recently created accounts
+	 *
+	 * @param address ip-address
+	 * @return true, if too many accounts have been created recently
+	 * @throws SQLException in case of an database error
+	 * @throws IOException in case of an input/output error
+	 */
+	public boolean isAccountCreationLimitReached(String address) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			boolean res = isAccountCreationLimitReached(transaction, address);
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);
