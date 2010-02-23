@@ -20,7 +20,7 @@ Extended Description
 Marauroa is completely written in Java using a multithreaded server architecture
 with a TCP oriented network protocol, a SQL based persistence engine and a
 flexible game system based on open systems totally expandible and modifiable
-by developers and that is able to run scripts on Python for the game's rules.
+by developers. 
 
 Marauroa is based on a philosophy we call Action/Perception, on each turn a
 perception is sent to clients explaining them what they percieve and clients
@@ -62,18 +62,18 @@ Or for a complete package release write:
 
 Status
 ------
-Version >= 3.4 does support Stendhal 0.81
-Version >= 3.3 does support Stendhal 0.80
-Version >= 3.0 does support Stendhal 0.76
-Version >= 2.6 does support Stendhal 0.74
-Version >= 2.5 does support Stendhal 0.68
-Version >= 2.3 does support Stendhal 0.65.1
-Version >= 2.2 does support Stendhal 0.65
-Version >= 2.0 does support Stendhal 0.63
-Version >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
-Version >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
-Version >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
-Version >= 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
+Versions >= 3.4 support Stendhal 0.81
+Versions >= 3.3 support Stendhal 0.80
+Versions >= 3.0 support Stendhal 0.76
+Versions >= 2.6 support Stendhal 0.74
+Versions >= 2.5 support Stendhal 0.68
+Versions >= 2.3 support Stendhal 0.65.1
+Versions >= 2.2 support Stendhal 0.65
+Versions >= 2.0 support Stendhal 0.63
+Versions >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
+Versions >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
+Versions >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
+Versions >= 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab a game package in order to be able to play it.
 
@@ -85,7 +85,7 @@ Ok, you have compiled Marauroa. Now what to do?
 Well, if you have built a Marauroa server it is because you
 want to play with the server either because you want to run your own
 game server or because you are a developer wanting to develop your own game.
-If you don't understand the above it is prone that you are looking for
+If you don't understand the above it is likely that you are looking for
 http://arianne.sourceforge.net instead.
 
 Testing
@@ -111,9 +111,9 @@ Changelog
 
 3.5
 
-- limit number of parallel connections from one ip-address
-- limit account creation per ip-address in a timeframe
-- fixed null values on H2 in accout.timedate and gameEvents.timedate
+- limit number of parallel connections from one ip-address, see http://stendhal.game-host.org/wiki/index.php/Configuration_file_server.ini#Limits
+- limit account creation per ip-address in a timeframe, see above
+- fixed null values on H2 in account.timedate and gameEvents.timedate
 
 3.4
 - added support for the H2 serverless database system in addition to MySQL.
