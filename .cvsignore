@@ -27,3 +27,4 @@ dist
 build-archive
 *.euml2
 *.umlproject
+.externalToolBuilders
