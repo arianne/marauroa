@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.3 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.4 2010/02/25 20:58:18 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,8 @@ import marauroa.common.crypto.Hash;
 
 /**
  * This message indicate the server that the client wants to login and send the
- * needed info: username, password and seed to the server.
+ * needed info: username, password and seed to the server. The password is 
+ * protected by Crypt(xor(xor(client nonce, server nonce), password)) 
  * 
  * @see marauroa.common.net.message.Message
  */
