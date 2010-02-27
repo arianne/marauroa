@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.28 2010/01/01 22:26:33 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.29 2010/02/27 16:49:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -320,6 +320,14 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		private byte[] readByteStream() throws IOException {
 			byte[] sizebuffer = new byte[4];
 
+			while (is.available() < 4) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					logger.error(e, e);
+				}				
+			}
+			
 			if (is.read(sizebuffer) < 0) {
 				isfinished = true;
 				return null;
@@ -332,7 +340,7 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
 
 			// read until everything is received. We have to call read
-			// in a loop because the data may be split accross several
+			// in a loop because the data may be split across several
 			// packets.
 			long startTime = System.currentTimeMillis();
 			int start = 4;
