@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.6 2010/02/09 21:32:19 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.7 2010/02/27 21:12:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -93,34 +93,8 @@ public class JDBCSQLHelper {
 
 	private void rewriteAndExecuteQuery() throws SQLException {
 		logger.debug("runDBScript is parsing sql query " + command);
-		/*
-		commandLower = command.toLowerCase();
-		if (commandLower.startsWith("create table ")) {
-			rewriteCreateTableStatement();
-		}
-		*/
 		if (command != null) {
 			transaction.execute(command, null);
-		}
-	}
-
-	private void rewriteCreateTableStatement() throws SQLException {
-
-		// handle "if not exists"
-		int pos = commandLower.indexOf("if not exists");
-		if (pos > -1) {
-			String table = commandLower.substring(pos + 13);
-			int pos2 = table.indexOf("(");
-			table = table.substring(0, pos2 - 1).trim();
-
-			if (transaction.doesTableExist(table)) {
-				command = null;
-				return;
-			} else {
-				command = command.replaceAll("[iI][fF] [nN][oO][tT] [eE][xX][iI][sS][tT][sS]", "");
-				commandLower = commandLower.replaceAll("if not exists", "");
-			}
-
 		}
 	}
 }
