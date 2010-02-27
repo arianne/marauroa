@@ -1,4 +1,4 @@
-/* $Id: H2DatabaseAdapter.java,v 1.2 2010/02/01 07:17:26 nhnb Exp $ */
+/* $Id: H2DatabaseAdapter.java,v 1.3 2010/02/27 21:02:08 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.server.db.adapter;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Properties;
 
 import marauroa.server.db.DatabaseConnectionException;
@@ -54,7 +55,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	protected String rewriteSql(String sql) {
 		String mySql = sql.trim();
-		String mySqlLower = mySql.toLowerCase();
+		String mySqlLower = mySql.toLowerCase(Locale.ENGLISH);
 		if (mySqlLower.startsWith("alter table")) {
 			int posColumn = mySqlLower.indexOf(" column");
 			int posBracket = mySql.indexOf("(", posColumn);
@@ -67,7 +68,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public boolean doesTableExist(String table) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getTables(null, null, table.toUpperCase(), null);
+		ResultSet result = meta.getTables(null, null, table.toUpperCase(Locale.ENGLISH), null);
 		boolean res = result.next();
 		result.close();
 		return res;
@@ -76,7 +77,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns("", "", table.toUpperCase(), column.toUpperCase());
+		ResultSet result = meta.getColumns("", "", table.toUpperCase(), column.toUpperCase(Locale.ENGLISH));
 		boolean res = result.next();
 		result.close();
 		return res;

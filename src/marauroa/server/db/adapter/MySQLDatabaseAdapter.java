@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.12 2010/02/08 21:48:52 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.13 2010/02/27 21:02:08 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.db.adapter;
 
+import java.util.Locale;
 import java.util.Properties;
 
 import marauroa.server.db.DatabaseConnectionException;
@@ -51,7 +52,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	protected String rewriteSql(String sql) {
 		String mySql = sql.trim();
-		if (mySql.toLowerCase().startsWith("create table")) {
+		if (mySql.toLowerCase(Locale.ENGLISH).startsWith("create table")) {
 			mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
 		}
 		return mySql;
