@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.29 2010/01/03 19:14:28 nhnb Exp $ */
+/* $Id: Definition.java,v 1.30 2010/02/27 21:08:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -597,9 +597,14 @@ public class Definition implements marauroa.common.net.Serializable {
 				&& capacity == def.capacity
 		        && flags == def.flags 
 		        && name.equals(def.name) 
-		        && type == def.type
-		        && (value == def.value || value.equals(def.value));
-
+		        && type == def.type;
+		if (result) {
+			if (value == null) {
+				result = (def.value == null);
+			} else {
+				result = value.equals(def.value);
+			}
+		}
 		return result;
 	}
 
