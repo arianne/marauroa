@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.15 2010/02/22 20:09:39 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.16 2010/03/02 22:08:49 kymara Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -65,7 +65,7 @@ public class AccountDAO {
 			}
 
 			String query = "insert into account(username, password, email, status)"
-				+ " values('[username','[password]', '[email]', DEFAULT)";
+				+ " values('[username]','[password]', '[email]', DEFAULT)";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("password", Hash.toHexString(password));
@@ -271,17 +271,17 @@ public class AccountDAO {
 			if (result.next()) {
 				String status = result.getString("status");
 				if ("banned".equals(status)) {
-					res = "You account has been banned. Please contact support.";
+					res = "Your account has been banned. Please contact support.";
 				} else if ("inactive".equals(status)) {
-					res = "You account has been flagged as inactive. Please contact support.";
+					res = "Your account has been flagged as inactive. Please contact support.";
 				} else {
 					String reason = result.getString("reason");
 					String expire = result.getString("expire");
 					if ((reason != null) || (expire != null)) {
 						if (expire != null) {
-							res = "You account is temporarily banned until " + expire + ".\n";
+							res = "Your account is temporarily banned until " + expire + ".\n";
 						} else {
-							res = "You account is banned.\n";
+							res = "Your account is banned.\n";
 						}
 						if (reason != null) {
 							res = res + "The reason given was: " + reason;
@@ -356,7 +356,7 @@ public class AccountDAO {
 	 * verifies username and password
 	 *
 	 * @param transaction DBTransaction
-	 * @param informations login creditials
+	 * @param informations login credentials
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
@@ -385,7 +385,7 @@ public class AccountDAO {
 		boolean res = verifyUsingDB(transaction, informations.username, hexPassword);
 
 		if (!res) {
-			// compatiblity: check new Marauroa 1.0 password type
+			// compatibility: check new Marauroa 1.0 password type
 			hexPassword = Hash.toHexString(Hash.hash(password));
 			res = verifyUsingDB(transaction, informations.username, hexPassword);
 		}
@@ -394,7 +394,7 @@ public class AccountDAO {
 	}
 	
 	/**
-	 * verifies the account creditials using the database
+	 * verifies the account credentials using the database
 	 *
 	 * @param transaction DBTransaction
 	 * @param username username 
@@ -458,7 +458,7 @@ public class AccountDAO {
 
 
 	/**
-	 * is account creatoin  recently created accounts
+	 * is account creation limit reached for recently created accounts
 	 *
 	 * @param address ip-address
 	 * @return true, if too many accounts have been created recently
@@ -644,7 +644,7 @@ public class AccountDAO {
 	/**
 	 * verifies username and password
 	 *
-	 * @param informations login creditials
+	 * @param informations login credentials
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
@@ -677,7 +677,7 @@ public class AccountDAO {
 
 
 	/**
-	 * is account creatoin  recently created accounts
+	 * is account creation limit reached for recently created accounts
 	 *
 	 * @param address ip-address
 	 * @return true, if too many accounts have been created recently
@@ -689,6 +689,55 @@ public class AccountDAO {
 		try {
 			boolean res = isAccountCreationLimitReached(transaction, address);
 			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+	
+	/**
+	 * adds a ban (which may be temporary)
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param reason Reason for the ban
+	 * @param delay 
+	 * @throws SQLException in case of an database error
+	 */
+	public void addBan(DBTransaction transaction, String username, String reason, Timestamp expire)
+			throws SQLException {
+		try {
+			int player_id = getDatabasePlayerId(username);
+			
+			String query = "insert into accountban(player_id, reason, expire)"
+				+ " values('[player_id]','[reason]','[expire]')";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("player_id", player_id);
+			params.put("reason", reason);
+			params.put("expire", expire);
+			logger.debug("addBan is using query: " + query);
+
+			transaction.execute(query, params);
+		} catch (SQLException e) {
+			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
+					expire.toString() + " into database", e);
+			throw e;
+		}
+	}
+	
+	/**
+	 * adds a ban (which may be temporary)
+	 *
+	 * @param username username
+	 * @param reason Reason for the ban
+	 * @param delay 
+	 * @throws SQLException in case of an database error
+	 */
+	public void addBan(String username, String reason, Timestamp expire)
+			throws SQLException {
+		
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			addBan(transaction, username, reason, expire);			
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
