@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.16 2010/03/02 22:08:49 kymara Exp $ */
+/* $Id: AccountDAO.java,v 1.17 2010/03/05 20:36:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -490,6 +490,36 @@ public class AccountDAO {
 		int attemps = transaction.querySingleCellInt(query, params);
 		return attemps > conf.getInt("account_creation_limit", TimeoutConf.ACCOUNT_CREATION_LIMIT);
 	}
+	
+	/**
+	 * adds a ban (which may be temporary)
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param reason Reason for the ban
+	 * @param expire timestamp when this ban will expire, may be <code>null</code>
+	 * @throws SQLException in case of an database error
+	 */
+	public void addBan(DBTransaction transaction, String username, String reason, Timestamp expire)
+			throws SQLException {
+		try {
+			int player_id = getDatabasePlayerId(username);
+			
+			String query = "insert into accountban(player_id, reason, expire)"
+				+ " values('[player_id]','[reason]','[expire]')";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("player_id", player_id);
+			params.put("reason", reason);
+			params.put("expire", expire);
+			logger.debug("addBan is using query: " + query);
+
+			transaction.execute(query, params);
+		} catch (SQLException e) {
+			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
+					expire.toString() + " into database", e);
+			throw e;
+		}
+	}
 
 	/**
 	 * creates an account
@@ -697,39 +727,9 @@ public class AccountDAO {
 	/**
 	 * adds a ban (which may be temporary)
 	 *
-	 * @param transaction DBTransaction
 	 * @param username username
 	 * @param reason Reason for the ban
-	 * @param delay 
-	 * @throws SQLException in case of an database error
-	 */
-	public void addBan(DBTransaction transaction, String username, String reason, Timestamp expire)
-			throws SQLException {
-		try {
-			int player_id = getDatabasePlayerId(username);
-			
-			String query = "insert into accountban(player_id, reason, expire)"
-				+ " values('[player_id]','[reason]','[expire]')";
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("player_id", player_id);
-			params.put("reason", reason);
-			params.put("expire", expire);
-			logger.debug("addBan is using query: " + query);
-
-			transaction.execute(query, params);
-		} catch (SQLException e) {
-			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
-					expire.toString() + " into database", e);
-			throw e;
-		}
-	}
-	
-	/**
-	 * adds a ban (which may be temporary)
-	 *
-	 * @param username username
-	 * @param reason Reason for the ban
-	 * @param delay 
+	 * @param expire timestamp when this ban will expire, may be <code>null</code>
 	 * @throws SQLException in case of an database error
 	 */
 	public void addBan(String username, String reason, Timestamp expire)
