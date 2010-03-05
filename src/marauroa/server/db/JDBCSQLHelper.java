@@ -1,4 +1,4 @@
-/* $Id: JDBCSQLHelper.java,v 1.7 2010/02/27 21:12:52 nhnb Exp $ */
+/* $Id: JDBCSQLHelper.java,v 1.8 2010/03/05 20:35:09 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -32,7 +32,6 @@ public class JDBCSQLHelper {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
 	private DBTransaction transaction;
 	private String command;
-	private String commandLower;
 
 	/**
 	 * creates a new JDBCSQLHelper
@@ -68,7 +67,7 @@ public class JDBCSQLHelper {
 				is.append(line);
 				if (line.indexOf(';') != -1) {
 					command = is.toString().trim();
-					rewriteAndExecuteQuery();
+					transaction.execute(command, null);
 					is = new StringBuffer();
 				}
 			}
@@ -88,13 +87,6 @@ public class JDBCSQLHelper {
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
-		}
-	}
-
-	private void rewriteAndExecuteQuery() throws SQLException {
-		logger.debug("runDBScript is parsing sql query " + command);
-		if (command != null) {
-			transaction.execute(command, null);
 		}
 	}
 }
