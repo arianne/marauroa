@@ -92,6 +92,9 @@ create table if not exists statistics
   players_logout integer,
   players_timeout integer,
   players_online integer,
+
+  ips_online integer,
+
   PRIMARY KEY(id)
   );
 
