@@ -3,6 +3,7 @@
 	<property file="build.ant.properties"/>
 
 	<property name="jarname" value="marauroa-${version}.jar"/>
+	<property name="jarname_client" value="marauroa-client-${version}.jar"/>
 
 	<!-- Clears the instalation -->
 	<target name="clean">
@@ -61,6 +62,23 @@
 		</javac>
 	</target>
 
+
+	<!-- Compiles the project -->
+	<target name="compile-client">
+		<delete dir="${buildroot_client}" quiet="true" />
+		<mkdir dir="${buildroot_client}"/>
+		
+		<!-- Compile it -->
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines">
+			<include name="marauroa/client/**"/>
+			<include name="marauroa/common/**"/>
+			<classpath>
+				<pathelement path="${log4j_jar}"/>
+				<pathelement path="${jnlp_jar}"/>
+			</classpath>
+		</javac>
+	</target>
+
 	<!-- Generate Java docs -->
 	<target name="docs" depends="compile">
 		<javadoc packagenames="marauroa.*"
@@ -89,6 +107,11 @@
 			</manifest>
 		</jar>
 		<copy tofile="${build-archive}/marauroa.jar" file="${build-archive}/${jarname}"/>
+	</target>
+
+	<!-- Create jar file for Marauroa -->
+	<target name="jar-client" depends="compile">
+		<jar jarfile="${build-archive}/${jarname_client}" basedir="${buildroot_client}/" />
 	</target>
 
 	<!-- Prepare the tarball for releases -->
