@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.135 2010/02/22 20:09:43 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.136 2010/03/05 20:34:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -536,6 +536,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 */
 				logger.debug("PlayerEntryContainer size: " + playerContainer.size());
 				stats.set("Players online", playerContainer.size());
+				stats.set("Ips online", playerContainer.countUniqueIps());
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);

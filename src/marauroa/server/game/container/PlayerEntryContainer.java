@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.18 2009/07/11 13:54:30 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.19 2010/03/05 20:34:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -12,9 +12,11 @@
  ***************************************************************************/
 package marauroa.server.game.container;
 
+import java.net.InetAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -245,5 +247,18 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		}
 
 		return null;
+	}
+
+	/**
+	 * counts the number of unique ip addresses
+	 *
+	 * @return number of unique ip-addresses
+	 */
+	public int countUniqueIps() {
+		HashSet<InetAddress> addresses = new HashSet<InetAddress>();
+		for (PlayerEntry entry : clientidMap.values()) {
+			addresses.add(entry.getAddress());
+		}
+		return addresses.size();
 	}
 }

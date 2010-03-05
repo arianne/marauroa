@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.42 2010/01/13 22:53:28 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.43 2010/03/05 20:34:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -178,6 +178,7 @@ public class Statistics implements StatisticsMBean {
 		add("Players logout", 0);
 		add("Players timeout", 0);
 		add("Players logged", 0);
+		add("Ips online", 0);
 
 		add("Bytes send", 0);
 		add("Bytes recv", 0);

@@ -1,4 +1,4 @@
-/* $Id: StatisticsDAO.java,v 1.6 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: StatisticsDAO.java,v 1.7 2010/03/05 20:34:13 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -44,8 +44,8 @@ public class StatisticsDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public void addStatisticsEvent(DBTransaction transaction, Variables var) throws SQLException {
-		String query = "insert into statistics(timedate, bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online) "
-			+ " values(NULL, [Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online])";
+		String query = "insert into statistics(bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online, ips_online) "
+			+ " values([Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online], [Ips online])";
 		Map<String, Object> params = new HashMap<String, Object>();
 		for (String key : var) {
 			params.put(key, var.get(key));
