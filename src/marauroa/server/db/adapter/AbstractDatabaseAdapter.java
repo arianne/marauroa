@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.11 2010/01/31 20:36:18 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.12 2010/03/15 18:49:52 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -77,7 +77,9 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		try {
 			// instantiate the Driver class
 			try {
-				Class.forName((String) connInfo.get("jdbc_class")).newInstance();
+				if  (connInfo.get("jdbc_class") != null) {
+					Class.forName((String) connInfo.get("jdbc_class")).newInstance();
+				}
 			} catch (Exception e) {
 				throw new DatabaseConnectionException("Cannot load driver class " + connInfo.get("jdbc_class"), e);
 			}
