@@ -1,4 +1,4 @@
-/* $Id: GameScript.java,v 1.11 2007/04/09 14:40:00 arianne_rpg Exp $ */
+/* $Id: GameScript.java,v 1.12 2010/03/15 19:05:46 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -57,6 +57,9 @@ class GameScript {
 
 	/**
 	 * Gets an instance of the GameScript
+	 *
+	 * @return GameScript
+	 * @throws Exception in case of an unexpected error
 	 */
 	public static GameScript getGameScript() throws Exception {
 		if (gameScript == null) {
