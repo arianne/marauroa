@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.17 2010/03/05 20:36:46 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.18 2010/03/15 18:54:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -460,6 +460,7 @@ public class AccountDAO {
 	/**
 	 * is account creation limit reached for recently created accounts
 	 *
+	 * @param transaction DBTransaction
 	 * @param address ip-address
 	 * @return true, if too many accounts have been created recently
 	 * @throws SQLException in case of an database error

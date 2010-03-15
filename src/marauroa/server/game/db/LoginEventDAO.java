@@ -1,4 +1,4 @@
-/* $Id: LoginEventDAO.java,v 1.19 2010/02/01 21:16:30 nhnb Exp $ */
+/* $Id: LoginEventDAO.java,v 1.20 2010/03/15 18:54:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -429,6 +429,7 @@ public class LoginEventDAO {
 	/**
 	 * logs an login attempt
 	 *
+	 * @param seed a seed to log
 	 * @param username username
 	 * @param source ip-address
 	 * @param correctLogin true, if the login was succesful; false otherwise

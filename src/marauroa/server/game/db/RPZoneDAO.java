@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.12 2010/03/15 18:54:43 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -177,7 +177,7 @@ public class RPZoneDAO {
 	 *
 	 * @param transaction DBTransaction
 	 * @param zone id of zone
-	 * @throws IOException in case of an input/output error
+	 * @return true, if the zone exists; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	public boolean hasRPZone(DBTransaction transaction, IRPZone.ID zone) throws SQLException {
@@ -225,7 +225,7 @@ public class RPZoneDAO {
 	 * is the specified zone saved to the database
 	 *
 	 * @param zone id of zone
-	 * @throws IOException in case of an input/output error
+	 * @return true, if the zone exists; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	public boolean hasRPZone(IRPZone.ID zone) throws SQLException {

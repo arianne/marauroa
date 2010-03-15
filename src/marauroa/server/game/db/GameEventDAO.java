@@ -1,4 +1,4 @@
-/* $Id: GameEventDAO.java,v 1.8 2010/02/22 16:33:56 nhnb Exp $ */
+/* $Id: GameEventDAO.java,v 1.9 2010/03/15 18:54:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -74,7 +74,6 @@ public class GameEventDAO {
 	 * @param source player name
 	 * @param event event type
 	 * @param params parameters
-	 * @throws SQLException in case of an database error
 	 */
 	public void addGameEvent(String source, String event, String... params) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
