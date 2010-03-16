@@ -108,6 +108,8 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.5.2
+- added number of unique ips to statistics in addition to number of players
 
 3.5.1
 - fixed reading of size from the network stream in case it was split over multiple packets
