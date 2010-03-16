@@ -24,6 +24,7 @@ class DBCommandMetaData {
 	private DBCommand command;
 	private Thread requestingThread;
 	private boolean awaitResult;
+	private long processedTimestamp = -1;
 
 	/**
 	 * creates a new DBCommandMetaData object
@@ -64,6 +65,24 @@ class DBCommandMetaData {
 	 */
 	public boolean isResultAwaited() {
 		return awaitResult;
+	}
+
+	/**
+	 * gets the timestamp when the command was processed.
+	 *
+	 * @return timestamp, -1 indicated that the command was not processed, yet.
+	 */
+	public long getProcessedTimestamp() {
+		return processedTimestamp;
+	}
+
+	/**
+	 * sets the timestamp when the command was processed.
+	 *
+	 * @param timestamp timestamp
+	 */
+	public void setProcessedTimestamp(long processedTimestamp) {
+		this.processedTimestamp = processedTimestamp;
 	}
 
 }
