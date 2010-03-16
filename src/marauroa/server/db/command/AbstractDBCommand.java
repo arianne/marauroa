@@ -11,8 +11,7 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
-import marauroa.common.Log4J;
-import marauroa.common.Logger;
+import java.sql.Timestamp;
 
 /**
  * An abstract asynchronous database command.
@@ -20,8 +19,7 @@ import marauroa.common.Logger;
  * @author hendrik, madmetzger
  */
 public abstract class AbstractDBCommand implements DBCommand {
-	private static Logger logger = Log4J.getLogger(AbstractDBCommand.class);
-
+	private Timestamp enqueueTime = null;
 	private RuntimeException exception = null;
 
 	/**
@@ -34,20 +32,34 @@ public abstract class AbstractDBCommand implements DBCommand {
 	}
 
 	/**
-	 * processes the database request.
+	 * gets the timestamp when this command was added to the queue
+	 *
+	 * @return Timestamp
 	 */
-	public void process() {
-		try {
-			execute();
-		} catch (RuntimeException e) {
-			logger.error(e, e);
-			exception = e;
-		}
+	public Timestamp getEnqueueTime() {
+		return enqueueTime;
 	}
 
-	
+	/**
+	 * remembers an exception
+	 *
+	 * @param exception RuntimeException
+	 */
+	public void setException(RuntimeException exception) {
+		this.exception = exception;
+	}
+
+	/**
+	 * sets the timestamp when this command was added to the queue
+	 *
+	 * @param enqueueTime Timestamp
+	 */
+	public void setEnqueueTime(Timestamp enqueueTime) {
+		this.enqueueTime = enqueueTime;
+	}
+
 	/**
 	 * processes the database request.
 	 */
-	protected abstract void execute();
+	public abstract void execute();
 }

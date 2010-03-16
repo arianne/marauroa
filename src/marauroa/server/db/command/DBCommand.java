@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.sql.Timestamp;
+
 /**
  * a database command that can be processed asynchronously.
  *
@@ -28,6 +30,27 @@ public interface DBCommand {
 	/**
 	 * processes the database request.
 	 */
-	public void process();
+	public void execute();
+
+	/**
+	 * gets the timestamp when this command was added to the queue
+	 *
+	 * @return Timestamp
+	 */
+	public Timestamp getEnqueueTime();
+
+	/**
+	 * remembers an exception
+	 *
+	 * @param exception RuntimeException
+	 */
+	public void setException(RuntimeException exception);
+
+	/**
+	 * sets the timestamp when this command was added to the queue
+	 *
+	 * @param enqueueTime Timestamp
+	 */
+	public void setEnqueueTime(Timestamp enqueueTime);
 
 }
