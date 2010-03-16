@@ -30,6 +30,8 @@ public class DBCommandQueue {
 	private BlockingQueue<DBCommandMetaData> pendingCommands = new LinkedBlockingQueue<DBCommandMetaData>();
 	private List<DBCommandMetaData> processedCommands = Collections.synchronizedList(new LinkedList<DBCommandMetaData>());
 
+	private boolean finished;
+
 	/**
 	 * gets the singleton instance
 	 *
@@ -113,5 +115,21 @@ public class DBCommandQueue {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * shuts the background thread down.
+	 */
+	public void finish() {
+		finished = true;
+	}
+
+	/**
+	 * should the background set be terminated?
+	 *
+	 * @return true, if the background thread should be terminated, false if it should continue.
+	 */
+	protected boolean isFinished() {
+		return finished;
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.89 2010/02/23 21:05:27 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.90 2010/03/16 22:17:56 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.crypto.RSAKey;
 import marauroa.server.db.DatabaseConnectionException;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.db.DatabaseFactory;
@@ -393,5 +394,6 @@ public class marauroad extends Thread {
 	public void finish() {
 		netMan.finish();
 		gameMan.finish();
+		DBCommandQueue.get().finish();
 	}
 }

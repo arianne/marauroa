@@ -37,14 +37,13 @@ class DBCommandQueueBackgroundThread implements Runnable {
 
 			if (metaData != null) {
 				processCommand(metaData);
-
-				if (metaData.isResultAwaited()) {
-					metaData.setProcessedTimestamp(System.currentTimeMillis());
-					queue.addResult(metaData);
+			} else {
+				// There are no more pending commands, check if the server is being shutdown.
+				if (queue.isFinished()) {
+					break;
 				}
 			}
 		}
-		// TODO: exit thread on exit of the jvm
 	}
 
 	/**
@@ -58,6 +57,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 		} catch (RuntimeException e) {
 			logger.error(e, e);
 			metaData.getCommand().setException(e);
+		}
+
+		if (metaData.isResultAwaited()) {
+			metaData.setProcessedTimestamp(System.currentTimeMillis());
+			DBCommandQueue.get().addResult(metaData);
 		}
 	}
 
