@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An asynchronous command queue.
@@ -42,6 +43,14 @@ public class DBCommandQueue {
 	}
 
 	/**
+	 * createsa a new DBCommandQueue
+	 */
+	private DBCommandQueue() {
+		Thread thread = new Thread(new DBCommandQueueBackgroundThread());
+		thread.start();
+	}
+
+	/**
 	 * enqueues a "fire and forget" command.
 	 *
 	 * @param command DBCommand to add to the queue
@@ -57,6 +66,25 @@ public class DBCommandQueue {
 	 */
 	public void enqueueAndAwaitResult(DBCommand command) {
 		pendingCommands.add(new DBCommandMetaData(command, Thread.currentThread(), true));
+	}
+
+	/**
+	 * gets the next command in the queue.
+	 *
+	 * @return next command or <code>null</code>
+	 * @throws InterruptedException in case the waiting was interrupted
+	 */
+	protected DBCommandMetaData getNextCommand() throws InterruptedException {
+		return pendingCommands.poll(1, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * adds a result to be fetched later
+	 *
+	 * @params metaData a processed DBCommandMetaData
+	 */
+	protected void addResult(DBCommandMetaData metaData) {
+		processedCommands.add(metaData);
 	}
 
 	/**
