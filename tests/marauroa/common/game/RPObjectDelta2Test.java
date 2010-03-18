@@ -1,4 +1,4 @@
-/* $Id: RPObjectDelta2Test.java,v 1.6 2010/01/23 14:57:27 kiheru Exp $ */
+/* $Id: RPObjectDelta2Test.java,v 1.7 2010/03/18 23:01:28 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import marauroa.common.game.Definition.Type;
 import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
@@ -52,6 +53,11 @@ public class RPObjectDelta2Test {
 
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
+
+		if (!RPClass.hasRPClass("chat")) {
+			RPClass rpclass = new RPClass("chat");
+			rpclass.addAttribute("text", Type.STRING);
+		}
 
 		RPEvent chat = new RPEvent("chat");
 		chat.put("text", "Hi there");
@@ -359,6 +365,11 @@ public class RPObjectDelta2Test {
 		 * Test Delta^2 on slot object event addition
 		 */
 		RPObject slotcoin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+
+		if (!RPClass.hasRPClass("tax")) {
+			RPClass rpclass = new RPClass("tax");
+			rpclass.addAttribute("bill", Type.STRING);
+		}
 
 		RPEvent tax = new RPEvent("tax");
 		tax.put("bill", "10%");
