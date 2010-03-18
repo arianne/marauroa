@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.43 2010/03/05 20:34:13 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.44 2010/03/18 21:54:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -21,8 +21,8 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
-import marauroa.server.game.db.DAORegister;
-import marauroa.server.game.db.StatisticsDAO;
+import marauroa.server.db.command.DBCommandQueue;
+import marauroa.server.game.dbcommand.LogStatisticsCommand;
 
 /**
  * This class encapsulate everything related to the statistics recollection and
@@ -48,7 +48,7 @@ public class Statistics implements StatisticsMBean {
 	 *
 	 * @author miguel
 	 */
-	public static class Variables implements Iterable<String> {
+	public static class Variables implements Iterable<String>, Cloneable {
 
 		private Map<String, Long> content;
 
@@ -151,6 +151,18 @@ public class Statistics implements StatisticsMBean {
 		private static String escapeXML(String param) {
 			return param.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(
 			        ">", "&gt;");
+		}
+
+		@Override
+		public Object clone(){
+			try {
+				Variables var = (Variables) super.clone();
+				var.content = Collections.synchronizedMap(new HashMap<String, Long>(this.content));
+				return var;
+			} catch (CloneNotSupportedException e) {
+				logger.error(e, e);
+				return null;
+			}
 		}
 	}
 
@@ -273,7 +285,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	private void addStatisticsEventRow() {
-		DAORegister.get().get(StatisticsDAO.class).addStatisticsEvent(now);
+		DBCommandQueue.get().enqueue(new LogStatisticsCommand(now));
 
 		now.clear();
 		init();

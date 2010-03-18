@@ -1,4 +1,4 @@
-/* $Id: StatisticsDAO.java,v 1.7 2010/03/05 20:34:13 nhnb Exp $ */
+/* $Id: StatisticsDAO.java,v 1.8 2010/03/18 21:54:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -33,7 +33,7 @@ public class StatisticsDAO {
 	 * Creates a new StatisticsDAO
 	 */
 	protected StatisticsDAO() {
-	    // hide constructor as this class should only be instantiated by DAORegister
+		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
 	/**
