@@ -11,8 +11,12 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.sql.SQLException;
+
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 
 /**
  * processes DBCommands in the background
@@ -52,10 +56,17 @@ class DBCommandQueueBackgroundThread implements Runnable {
 	 * @param metaData meta data about the command to process
 	 */
 	private void processCommand(DBCommandMetaData metaData) {
+		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			metaData.getCommand().execute();
+			metaData.getCommand().execute(transaction);
+			TransactionPool.get().commit(transaction);
+		} catch (SQLException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+			metaData.getCommand().setException(e);
 		} catch (RuntimeException e) {
 			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
 			metaData.getCommand().setException(e);
 		}
 
@@ -64,5 +75,4 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			DBCommandQueue.get().addResult(metaData);
 		}
 	}
-
 }

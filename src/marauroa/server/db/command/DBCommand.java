@@ -11,7 +11,10 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import marauroa.server.db.DBTransaction;
 
 /**
  * a database command that can be processed asynchronously.
@@ -25,12 +28,15 @@ public interface DBCommand {
 	 *
 	 * @return RuntimeException or <code>null</code> in case no exception was thrown.
 	 */
-	public RuntimeException getException();
+	public Exception getException();
 
 	/**
 	 * processes the database request.
+	 *
+	 * @param transaction DBTransaction
+	 * @throws SQLException in case of an database error
 	 */
-	public void execute();
+	public void execute(DBTransaction transaction) throws SQLException;
 
 	/**
 	 * gets the timestamp when this command was added to the queue
@@ -44,7 +50,7 @@ public interface DBCommand {
 	 *
 	 * @param exception RuntimeException
 	 */
-	public void setException(RuntimeException exception);
+	public void setException(Exception exception);
 
 	/**
 	 * sets the timestamp when this command was added to the queue

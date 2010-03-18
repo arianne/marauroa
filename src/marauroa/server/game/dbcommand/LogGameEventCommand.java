@@ -11,6 +11,9 @@
  ***************************************************************************/
 package marauroa.server.game.dbcommand;
 
+import java.sql.SQLException;
+
+import marauroa.server.db.DBTransaction;
 import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.GameEventDAO;
@@ -39,11 +42,8 @@ public class LogGameEventCommand extends AbstractDBCommand {
 		System.arraycopy(params, 0, this.params, 0, params.length);
 	}
 
-
 	@Override
-	public void execute() {
-		// TODO: use timestamp of enqueueing
-		DAORegister.get().get(GameEventDAO.class).addGameEvent(source, event, params);
+	public void execute(DBTransaction transaction) throws SQLException {
+		DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, source, event, params);
 	}
-
 }

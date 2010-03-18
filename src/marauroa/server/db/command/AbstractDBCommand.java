@@ -11,7 +11,10 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import marauroa.server.db.DBTransaction;
 
 /**
  * An abstract asynchronous database command.
@@ -20,14 +23,14 @@ import java.sql.Timestamp;
  */
 public abstract class AbstractDBCommand implements DBCommand {
 	private Timestamp enqueueTime = null;
-	private RuntimeException exception = null;
+	private Exception exception = null;
 
 	/**
 	 * gets the exception in case one was thrown during processing.
 	 *
 	 * @return RuntimeException or <code>null</code> in case no exception was thrown.
 	 */
-	public RuntimeException getException() {
+	public Exception getException() {
 		return exception;
 	}
 
@@ -45,7 +48,7 @@ public abstract class AbstractDBCommand implements DBCommand {
 	 *
 	 * @param exception RuntimeException
 	 */
-	public void setException(RuntimeException exception) {
+	public void setException(Exception exception) {
 		this.exception = exception;
 	}
 
@@ -60,6 +63,10 @@ public abstract class AbstractDBCommand implements DBCommand {
 
 	/**
 	 * processes the database request.
+	 *
+	 * @param transaction DBTransaction
+	 * @throws SQLException in case of an database error
 	 */
-	public abstract void execute();
+	public abstract void execute(DBTransaction transaction) throws SQLException;
+
 }
