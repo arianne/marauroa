@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.23 2010/01/04 18:35:00 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.24 2010/03/19 22:58:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -57,6 +57,8 @@ public class DBTransaction {
 
 	/**
 	 * rollsback this transaction
+	 *
+	 * @throws SQLException in case of an database error
 	 */
 	protected void rollback() throws SQLException {
 		databaseAdapter.rollback();
