@@ -58,16 +58,17 @@ public class DBCommandQueue {
 	 * @param command DBCommand to add to the queue
 	 */
 	public void enqueue(DBCommand command) {
-		pendingCommands.add(new DBCommandMetaData(command, Thread.currentThread(), false));
+		pendingCommands.add(new DBCommandMetaData(command, null, Thread.currentThread(), false));
 	}
 
 	/**
 	 * enqueues a command and remembers the result.
 	 *
 	 * @param command DBCommand to add to the queue
+	 * @param handle ResultHandle
 	 */
-	public void enqueueAndAwaitResult(DBCommand command) {
-		pendingCommands.add(new DBCommandMetaData(command, Thread.currentThread(), true));
+	public void enqueueAndAwaitResult(DBCommand command, ResultHandle handle) {
+		pendingCommands.add(new DBCommandMetaData(command, handle, Thread.currentThread(), true));
 	}
 
 	/**
@@ -95,12 +96,12 @@ public class DBCommandQueue {
 	 *
 	 * @param <T> the type of the DBCommand
 	 * @param clazz the type of the DBCommand
+	 * @param handle a handle to the expected results
 	 * @return a list of processed DBCommands; it may be empty
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends DBCommand> List<T> getResults(Class<T> clazz) {
+	public <T extends DBCommand> List<T> getResults(Class<T> clazz, ResultHandle handle) {
 		LinkedList<T> res = new LinkedList<T>();
-		Thread currentThread = Thread.currentThread();
 
 		synchronized(processedCommands) {
 			Iterator<DBCommandMetaData> itr = processedCommands.iterator();
@@ -108,7 +109,7 @@ public class DBCommandQueue {
 				DBCommandMetaData metaData = itr.next();
 				DBCommand command = metaData.getCommand();
 				if (clazz.isAssignableFrom(command.getClass())) {
-					if (metaData.getRequestingThread() == currentThread)
+					if (metaData.getResultHandle() == handle)
 					res.add((T) command);
 					itr.remove();
 				}

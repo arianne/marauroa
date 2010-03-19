@@ -22,6 +22,7 @@ import java.util.Date;
 class DBCommandMetaData {
 
 	private DBCommand command;
+	private ResultHandle handle;
 	private Thread requestingThread;
 	private boolean awaitResult;
 	private long processedTimestamp = -1;
@@ -30,11 +31,13 @@ class DBCommandMetaData {
 	 * creates a new DBCommandMetaData object
 	 *
 	 * @param command DBCommand
+	 * @param handle ResultHandle
 	 * @param requestingThread the thread requesting the execution of the DBCommand
 	 * @param awaitResult does the thread want a result back?
 	 */
-	public DBCommandMetaData(DBCommand command, Thread requestingThread, boolean awaitResult) {
+	public DBCommandMetaData(DBCommand command, ResultHandle handle, Thread requestingThread, boolean awaitResult) {
 		this.command = command;
+		this.handle = handle;
 		this.requestingThread = requestingThread;
 		this.awaitResult = awaitResult;
 		command.setEnqueueTime(new Timestamp(new Date().getTime()));
@@ -85,4 +88,12 @@ class DBCommandMetaData {
 		this.processedTimestamp = processedTimestamp;
 	}
 
+	/**
+	 * gets the result handle.
+	 *
+	 * @return ResultHandle
+	 */
+	public ResultHandle getResultHandle() {
+		return handle;
+	}
 }
