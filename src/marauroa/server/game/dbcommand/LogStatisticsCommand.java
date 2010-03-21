@@ -30,8 +30,6 @@ public class LogStatisticsCommand extends AbstractDBCommand {
 
 	/**
 	 * creates a new LogStatisticsCommand
-	 *
-	 * @param frozenNow
 	 */
 	public LogStatisticsCommand(Variables now) {
 		this.frozenNow = (Variables) now.clone();

@@ -84,7 +84,7 @@ public class DBCommandQueue {
 	/**
 	 * adds a result to be fetched later
 	 *
-	 * @params metaData a processed DBCommandMetaData
+	 * @param metaData a processed DBCommandMetaData
 	 */
 	protected void addResult(DBCommandMetaData metaData) {
 		processedCommands.add(metaData);
