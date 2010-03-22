@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.44 2010/03/18 21:54:45 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.45 2010/03/22 18:45:07 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,10 +87,11 @@ public class Statistics implements StatisticsMBean {
 		 *            value to add
 		 */
 		public void add(String type, long value) {
-			if (content.get(type) == null) {
+			Long old = content.get(type);
+			if (old == null) {
 				put(type, value);
 			} else {
-				content.put(type, content.get(type) + value);
+				content.put(type, old + value);
 			}
 		}
 
