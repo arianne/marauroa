@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.41 2009/12/26 16:12:01 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.42 2010/03/22 05:48:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -329,6 +329,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 					}
 				} catch (InvalidVersionException e) {
 					logger.warn("Invalid version message", e);
+					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					sendMessage(invMsg);
