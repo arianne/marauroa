@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.45 2010/02/22 18:09:30 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.46 2010/03/22 18:33:03 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -139,9 +139,12 @@ public class PlayerEntry {
 		 * @return number of active connections
 		 */
 		public int countConnectionsFromSameIPAddress(PlayerEntryContainer playerContainer) {
+			if (address == null) {
+				return 0;
+			}
 			int counter = 0;
 			for (PlayerEntry playerEntry : playerContainer) {
-				if (playerEntry.getAddress().getHostAddress().equals(address.getHostAddress())) {
+				if (address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
 					counter++;
 				}
 			}
