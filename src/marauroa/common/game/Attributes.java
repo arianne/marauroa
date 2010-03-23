@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.78 2010/02/05 23:50:34 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.79 2010/03/23 22:45:47 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -13,11 +13,14 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -91,18 +94,18 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public Attributes(RPClass rpclass) {
 		rpClass = rpclass;
 
-		content = new HashMap<String, String>();
-		added = new HashMap<String, String>();
-		deleted = new HashMap<String, String>();
+		content = Collections.synchronizedMap(new HashMap<String, String>());
+		added = Collections.synchronizedMap(new HashMap<String, String>());
+		deleted = Collections.synchronizedMap(new HashMap<String, String>());
 		modified = false;
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Attributes clone = (Attributes) super.clone();
-		clone.content = new HashMap<String, String>(content);
-		clone.added = new HashMap<String, String>(added);
-		clone.deleted = new HashMap<String, String>(deleted);
+		clone.content = Collections.synchronizedMap(new HashMap<String, String>(content));
+		clone.added = Collections.synchronizedMap(new HashMap<String, String>(added));
+		clone.deleted = Collections.synchronizedMap(new HashMap<String, String>(deleted));
 		return clone;
 	}
 
@@ -426,9 +429,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public String toString() {
 		StringBuffer tmp = new StringBuffer("Attributes of Class(" + rpClass.getName() + "): ");
 
-		for (Map.Entry<String, String> entry : content.entrySet()) {
-			tmp.append("[" + entry.getKey());
-			tmp.append("=" + entry.getValue().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\]", "\\\\]") + "]");
+		synchronized(content) {
+			for (Map.Entry<String, String> entry : content.entrySet()) {
+				tmp.append("[" + entry.getKey());
+				tmp.append("=" + entry.getValue().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\]", "\\\\]") + "]");
+			}
 		}
 
 		return tmp.toString();
@@ -461,9 +466,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return result;
 	}
 
-	/** returns an iterator over the attribute names */
+	/** 
+	 * returns an iterator over the attribute names
+	 *
+	 * @return Iterator
+	 */
 	public Iterator<String> iterator() {
-		return content.keySet().iterator();
+		Set<String> keySet = null;
+		synchronized(content) {
+			keySet = new HashSet<String>(content.keySet());
+		}
+		return keySet.iterator();
 	}
 
 	/**
@@ -494,37 +507,41 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		 * private attributes
 		 */
 		int size = 0;
-		for (String key : content.keySet()) {
-			try {
-			if (shouldSerialize(DefinitionClass.ATTRIBUTE, key, level)) {
-				size++;
-			}
-			} catch(NullPointerException e) {
-				logger.warn("Not found key: "+key,e);
-				logger.warn(this);
-				throw e;
+		synchronized(content) {
+			for (String key : content.keySet()) {
+				try {
+				if (shouldSerialize(DefinitionClass.ATTRIBUTE, key, level)) {
+					size++;
+				}
+				} catch(NullPointerException e) {
+					logger.warn("Not found key: "+key,e);
+					logger.warn(this);
+					throw e;
+				}
 			}
 		}
 
 		out.write(rpClass.getName());
 		out.write(size);
 
-		for (Map.Entry<String, String> entry : content.entrySet()) {
-			String key = entry.getKey();
-
-			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
-
-			if (shouldSerialize(def, level)) {
-				boolean serializeKeyText = (level == DetailLevel.FULL) || (def.getCode() == -1);
-
-				if (serializeKeyText) {
-					out.write((short) -1);
-					out.write(def.getName());
-				} else {
-					out.write(def.getCode());
+		synchronized(content) {
+			for (Map.Entry<String, String> entry : content.entrySet()) {
+				String key = entry.getKey();
+	
+				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+	
+				if (shouldSerialize(def, level)) {
+					boolean serializeKeyText = (level == DetailLevel.FULL) || (def.getCode() == -1);
+	
+					if (serializeKeyText) {
+						out.write((short) -1);
+						out.write(def.getName());
+					} else {
+						out.write(def.getCode());
+					}
+	
+					def.serialize(entry.getValue(), out);
 				}
-
-				def.serialize(entry.getValue(), out);
 			}
 		}
 	}
@@ -612,24 +629,27 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param sync keep the structure intact, by not removing empty slots and links.
 	 */
 	public void clearVisible(boolean sync) {
-		Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, String> entry = it.next();
+		synchronized(content) {
 
-			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-
-			// TODO handle Null Definition for attribute
-			if(def==null) {
-				logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
-				continue;
-			}
-			
-			if (def.isVisible() && !entry.getKey().equals("id")) {
-				it.remove();
-
-				modified=true;
-				deleted.remove(entry.getKey());
-				added.remove(entry.getKey());
+			Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, String> entry = it.next();
+	
+				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
+	
+				// TODO handle Null Definition for attribute
+				if(def==null) {
+					logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
+					continue;
+				}
+				
+				if (def.isVisible() && !entry.getKey().equals("id")) {
+					it.remove();
+	
+					modified=true;
+					deleted.remove(entry.getKey());
+					added.remove(entry.getKey());
+				}
 			}
 		}
 	}
@@ -659,9 +679,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		int i = 0;
 		/* Copy each of the added attributes to this object. */
-		for (Map.Entry<String, String> entry : attr.added.entrySet()) {
-			++i;
-			content.put(entry.getKey(), entry.getValue());
+		synchronized(attr.added) {
+			for (Map.Entry<String, String> entry : attr.added.entrySet()) {
+				++i;
+				content.put(entry.getKey(), entry.getValue());
+			}
 		}
 
 		/* If we have added any attributes, we set the object id */
@@ -684,10 +706,12 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		rpClass = attr.rpClass;
 
 		int i = 0;
-		/* Copy each of the deleted attributes to this object. */
-		for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
-			++i;
-			content.put(entry.getKey(), entry.getValue());
+		synchronized(attr.deleted) {
+			/* Copy each of the deleted attributes to this object. */
+			for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
+				++i;
+				content.put(entry.getKey(), entry.getValue());
+			}
 		}
 
 		/* If we have added any attributes, we set the object id */
