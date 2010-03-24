@@ -60,20 +60,6 @@ Or for a complete package release write:
   ant
 
 
-Status
-------
-Versions >= 3.4 support Stendhal 0.81
-Versions >= 3.3 support Stendhal 0.80
-Versions >= 3.0 support Stendhal 0.76
-Versions >= 2.6 support Stendhal 0.74
-Versions >= 2.5 support Stendhal 0.68
-Versions >= 2.3 support Stendhal 0.65.1
-Versions >= 2.2 support Stendhal 0.65
-Versions >= 2.0 support Stendhal 0.63
-Versions >= 0.90 && < 1.90 support Stendhal: a multiplayer Zelda like game using Java and Java2D
-Versions >= 0.90 support JMapacman: a multiplayer pacman game using Java and Java2D
-Versions >= 0.33 && < 0.90 support mapacman: a multiplayer pacman game using the Python rules.
-Versions >= 0.20 && < 0.33 support a simple Gladiators game using the Marauroa engine.
 
 You need to grab a game package in order to be able to play it.
 
@@ -108,7 +94,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-3.5.2
+3.6
 - added number of unique ips to statistics in addition to number of players
 - provided an infrastructure for asynchronous database access (not used at all places yet)
 
