@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.11 2010/02/22 16:33:58 nhnb Exp $ */
+/* $Id: Result.java,v 1.12 2010/04/02 13:58:17 kymara Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -72,7 +72,7 @@ public enum Result {
 	 *
 	 * @since 2.1
 	 */
-	FAILED_RESERVED_NAME(false, "Account was not created because the name is reservered (or contains a reserved name)."),
+	FAILED_RESERVED_NAME(false, "Account was not created because the name is reserved (or contains a reserved name)."),
 
 	/**
 	 * Password is too close to the username
