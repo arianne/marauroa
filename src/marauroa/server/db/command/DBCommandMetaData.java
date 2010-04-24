@@ -96,4 +96,10 @@ class DBCommandMetaData {
 	public ResultHandle getResultHandle() {
 		return handle;
 	}
+
+	@Override
+    public String toString() {
+	    return "[" + requestingThread.getName() + ": " + command + "]";
+    }
+
 }
