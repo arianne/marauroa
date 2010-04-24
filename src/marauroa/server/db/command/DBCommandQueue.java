@@ -48,7 +48,7 @@ public class DBCommandQueue {
 	 * createsa a new DBCommandQueue
 	 */
 	private DBCommandQueue() {
-		Thread thread = new Thread(new DBCommandQueueBackgroundThread());
+		Thread thread = new Thread(new DBCommandQueueBackgroundThread(), "Asynchronous Database Access Thread");
 		thread.start();
 	}
 
