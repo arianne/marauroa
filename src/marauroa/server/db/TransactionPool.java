@@ -114,6 +114,7 @@ public class TransactionPool {
 
 		Thread currentThread = Thread.currentThread();
 		callers.put(dbtransaction, new Pair<String, StackTraceElement[]>(currentThread.getName(), currentThread.getStackTrace()));
+		dbtransaction.setThread(Thread.currentThread());
 		return dbtransaction;
 	}
 
@@ -162,6 +163,7 @@ public class TransactionPool {
 		synchronized (wait) {
 			threadTransactions.get().remove(dbtransaction);
 			callers.remove(dbtransaction);
+			dbtransaction.setThread(null);
 			if (dbtransactions.contains(dbtransaction)) {
 				freeDBTransactions.add(dbtransaction);
 			} else {

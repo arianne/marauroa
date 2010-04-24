@@ -94,6 +94,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.6.1
+- added detailed error message if a transaction is access from another thread
+
 3.6
 - added number of unique ips to statistics in addition to number of players
 - provided an infrastructure for asynchronous database access (not used at all places yet)
