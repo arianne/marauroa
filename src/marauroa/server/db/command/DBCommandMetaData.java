@@ -82,7 +82,7 @@ class DBCommandMetaData {
 	/**
 	 * sets the timestamp when the command was processed.
 	 *
-	 * @param timestamp timestamp
+	 * @param processedTimestamp timestamp
 	 */
 	public void setProcessedTimestamp(long processedTimestamp) {
 		this.processedTimestamp = processedTimestamp;
