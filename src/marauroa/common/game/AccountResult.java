@@ -1,4 +1,4 @@
-/* $Id: AccountResult.java,v 1.5 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: AccountResult.java,v 1.6 2010/04/30 20:50:35 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -67,6 +67,13 @@ public class AccountResult {
 	 * @return true if the creation of the account failed.
 	 */
 	public boolean failed() {
-	    return result.failed();
-    }
+		return result.failed();
+	}
+
+	@Override
+	public String toString() {
+		return "AccountResult [result=" + result + ", username=" + username
+				+ "]";
+	}
+
 }
