@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.137 2010/03/27 22:05:43 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.138 2010/05/02 16:38:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -315,8 +315,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					 */
 				}
 
-				playerContainer.getLock().requestWriteLock();
-
 				PlayerEntry entry = playerContainer.get(channel);
 				if (entry != null) {
 					/*
@@ -351,8 +349,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					 */
 					logger.debug("No player entry for channel: " + channel);
 				}
-
-				playerContainer.getLock().releaseLock();
 			}
 		}
 	}
@@ -413,9 +409,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage();
 
 				if (msg != null) {
-					// TODO: Bootleneck because of synchronization.
-					playerContainer.getLock().requestWriteLock();
-					@SuppressWarnings("unused")
 					long startTime = System.currentTimeMillis();
 					switch (msg.getType()) {
 						case C2S_LOGIN_REQUESTKEY:
@@ -524,21 +517,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 							logger.debug("Unknown Message[" + msg.getType() + "]");
 							break;
 					}
-					playerContainer.getLock().releaseLock();
-					/*long time = System.currentTimeMillis() - startTime;
+					long time = System.currentTimeMillis() - startTime;
 					if (time > 50) {
 						logger.warn("Processing client message took " + time + " ms: " + msg);
-					}*/
+					}
 				}
 
 				/*
 				 * Finally store stats about logged players.
 				 */
-				playerContainer.getLock().requestReadLock();
 				logger.debug("PlayerEntryContainer size: " + playerContainer.size());
 				stats.set("Players online", playerContainer.size());
 				stats.set("Ips online", playerContainer.countUniqueIps());
-				playerContainer.getLock().releaseLock();
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);
@@ -1135,7 +1125,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 
 			/* Now we count the number of connections from this ip-address */
-			int count = info.countConnectionsFromSameIPAddress(playerContainer);
+			int count = playerContainer.countConnectionsFromSameIPAddress(info.address);
 			Configuration conf = Configuration.getConfiguration();
 			int limit = conf.getInt("parallel_connection_limit", TimeoutConf.PARALLEL_CONNECTION_LIMIT);
 			if (count > limit) {

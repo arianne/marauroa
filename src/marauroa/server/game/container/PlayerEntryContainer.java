@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.19 2010/03/05 20:34:13 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.20 2010/05/02 16:38:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -14,15 +14,16 @@ package marauroa.server.game.container;
 
 import java.net.InetAddress;
 import java.nio.channels.SocketChannel;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
 import marauroa.common.game.RPObject;
-import marauroa.server.RWLock;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -41,9 +42,6 @@ import marauroa.server.RWLock;
  */
 public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 
-	/** A reader/writers lock for controlling the access */
-	private RWLock lock;
-
 	/** A random number generator instance. */
 	private Random rand;
 
@@ -58,10 +56,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		rand = new Random();
 		rand.setSeed(new Date().getTime());
 
-		lock = new RWLock();
-
 		/* We initialize the list that will help us sort the player entries. */
-		clientidMap = new HashMap<Integer, PlayerEntry>();
+		clientidMap = Collections.synchronizedMap(new HashMap<Integer, PlayerEntry>());
 	}
 
 	/**
@@ -82,17 +78,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the iterator
 	 */
 	public Iterator<PlayerEntry> iterator() {
-		return clientidMap.values().iterator();
-	}
-
-	/**
-	 * This method returns the lock so that you can control how the resource is
-	 * used
-	 *
-	 * @return the RWLock of the object
-	 */
-	public RWLock getLock() {
-		return lock;
+		return new LinkedList<PlayerEntry>(clientidMap.values()).iterator();
 	}
 
 	/**
@@ -177,15 +163,16 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(RPObject object) {
-		for (PlayerEntry entry : clientidMap.values()) {
-			/*
-			 * We want really to do a fast comparasion
-			 */
-			if (entry.object == object) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				/*
+				 * We want really to do a fast comparasion
+				 */
+				if (entry.object == object) {
+					return entry;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -240,12 +227,13 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return an idle PlayerEntry or null if not found
 	 */
 	public PlayerEntry getIdleEntry() {
-		for (PlayerEntry entry : clientidMap.values()) {
-			if (entry.isRemovable()) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				if (entry.isRemovable()) {
+					return entry;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -256,9 +244,33 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 */
 	public int countUniqueIps() {
 		HashSet<InetAddress> addresses = new HashSet<InetAddress>();
-		for (PlayerEntry entry : clientidMap.values()) {
-			addresses.add(entry.getAddress());
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				addresses.add(entry.getAddress());
+			}
 		}
 		return addresses.size();
+	}
+
+
+	/**
+	 * counts the number of connections from this ip-address
+	 *
+	 * @param playerContainer PlayerEntryContainer
+	 * @return number of active connections
+	 */
+	public int countConnectionsFromSameIPAddress(InetAddress address) {
+		if (address == null) {
+			return 0;
+		}
+		int counter = 0;
+		synchronized (clientidMap) {
+			for (PlayerEntry playerEntry : clientidMap.values()) {
+				if (address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
+					counter++;
+				}
+			}
+		}
+		return counter;
 	}
 }

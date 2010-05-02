@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.46 2010/03/22 18:33:03 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.47 2010/05/02 16:38:33 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -130,25 +130,6 @@ public class PlayerEntry {
 				logger.error(e, e);
 			}
 			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, service, seed, loginResult);
-		}
-
-		/**
-		 * counts the number of connections from this ip-address
-		 *
-		 * @param playerContainer PlayerEntryContainer
-		 * @return number of active connections
-		 */
-		public int countConnectionsFromSameIPAddress(PlayerEntryContainer playerContainer) {
-			if (address == null) {
-				return 0;
-			}
-			int counter = 0;
-			for (PlayerEntry playerEntry : playerContainer) {
-				if (address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
-					counter++;
-				}
-			}
-			return counter;
 		}
 
 		/**
