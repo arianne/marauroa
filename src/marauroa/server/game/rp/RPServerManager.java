@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.60 2010/05/02 16:38:33 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.61 2010/05/02 17:01:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -463,7 +463,7 @@ public class RPServerManager extends Thread {
 			long stop;
 			long delay;
 			long timeStart = 0;
-			long[] timeEnds = new long[11];
+			long[] timeEnds = new long[12];
 
 			while (keepRunning) {
 				stop = System.nanoTime();
@@ -496,48 +496,55 @@ public class RPServerManager extends Thread {
 				start = System.nanoTime();
 				timeStart = System.currentTimeMillis();
 
-				timeEnds[0] = System.currentTimeMillis();
+				playerContainer.getLock().requestWriteLock();
 
-				/** Get actions that players send */
-				scheduler.nextTurn();
-				timeEnds[1] = System.currentTimeMillis();
+				try {
+					timeEnds[0] = System.currentTimeMillis();
 
-				/** Execute them all */
-				scheduler.visit(ruleProcessor);
-				timeEnds[2] = System.currentTimeMillis();
+					/** Get actions that players send */
+					scheduler.nextTurn();
+					timeEnds[1] = System.currentTimeMillis();
 
-				/** Compute game RP rules to move to the next turn */
-				ruleProcessor.endTurn();
-				timeEnds[3] = System.currentTimeMillis();
+					/** Execute them all */
+					scheduler.visit(ruleProcessor);
+					timeEnds[2] = System.currentTimeMillis();
 
-				/** Send content that is waiting to players */
-				deliverTransferContent();
-				timeEnds[4] = System.currentTimeMillis();
+					/** Compute game RP rules to move to the next turn */
+					ruleProcessor.endTurn();
+					timeEnds[3] = System.currentTimeMillis();
 
-				/** Tell player what happened */
-				buildPerceptions();
-				timeEnds[5] = System.currentTimeMillis();
+					/** Send content that is waiting to players */
+					deliverTransferContent();
+					timeEnds[4] = System.currentTimeMillis();
 
-				/** save players regularly to the db */
-				savePlayersPeriodicly();
-				timeEnds[6] = System.currentTimeMillis();
+					/** Tell player what happened */
+					buildPerceptions();
+					timeEnds[5] = System.currentTimeMillis();
 
-				/** Move zone to the next turn */
-				world.nextTurn();
-				timeEnds[7] = System.currentTimeMillis();
+					/** save players regularly to the db */
+					savePlayersPeriodicly();
+					timeEnds[6] = System.currentTimeMillis();
 
-				turn++;
+					/** Move zone to the next turn */
+					world.nextTurn();
+					timeEnds[7] = System.currentTimeMillis();
 
-				ruleProcessor.beginTurn();
-				timeEnds[8] = System.currentTimeMillis();
+					turn++;
+
+					ruleProcessor.beginTurn();
+					timeEnds[8] = System.currentTimeMillis();
+				} finally {
+					playerContainer.getLock().releaseLock();
+					timeEnds[9] = System.currentTimeMillis();
+				}
 				try {
 					stats.set("Objects now", world.size());
 				} catch ( ConcurrentModificationException e) {
 					//TODO: size is obviously ot threadsafe as it asks the underlying zone.objects for its sizes, which are not threadsafe.
 				}
-				timeEnds[9] = System.currentTimeMillis();
-				TransactionPool.get().kickHangingTransactionsOfThisThread();
 				timeEnds[10] = System.currentTimeMillis();
+				TransactionPool.get().kickHangingTransactionsOfThisThread();
+				timeEnds[11] = System.currentTimeMillis();
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);
