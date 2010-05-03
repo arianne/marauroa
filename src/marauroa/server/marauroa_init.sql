@@ -115,7 +115,7 @@ create table if not exists gameEvents
 /*create index i_gameEvents_param1 ON gameEvents(param1);*/
 /*create index i_gameEvents_param2 ON gameEvents(param2);*/
 
-create table if not exists seed
+create table if not exists loginseed
   (
   id integer auto_increment not null,
   seed varchar(120),
@@ -125,7 +125,7 @@ create table if not exists seed
   primary key(id)
   );
 
-/* create unique index i_seed on seed(seed); */
+/* create unique index i_loginseed on loginseed(seed); */
 
 create table if not exists banlist
   (
