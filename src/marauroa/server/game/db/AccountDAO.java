@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.20 2010/05/03 21:21:35 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.21 2010/05/03 22:08:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -364,6 +364,21 @@ public class AccountDAO {
 		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
 			logger.debug("Different hashs for client Nonce");
 			return false;
+		}
+
+		// if a login seed was provided, check it
+		if (informations.seed != null) {
+			LoginSeedDAO loginSeedDAO = DAORegister.get().get(LoginSeedDAO.class);
+			Boolean seedVerified = loginSeedDAO.verifySeed(transaction, informations.username, informations.seed);
+			if (seedVerified == null) {
+				return false;
+			}
+			// the provided see is valid, use it up
+			loginSeedDAO.useSeed(informations.seed);
+			if (seedVerified == Boolean.TRUE) {
+				// the seed was even pre authenticated, so we are done here
+				return true;
+			}
 		}
 
 		byte[] b1 = informations.key.decodeByteArray(informations.password);
