@@ -1,4 +1,4 @@
-/* $Id: LoginSeedDAO.java,v 1.1 2010/05/03 21:20:48 nhnb Exp $ */
+/* $Id: LoginSeedDAO.java,v 1.2 2010/05/03 22:08:35 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -41,6 +41,7 @@ public class LoginSeedDAO {
 	 * checks if the ip-address is temporary blocked because of too many failed login attempts.
 	 * Blocking ip-addresses is not related to banning ip-addresses.
 	 *
+	 * @param transaction DBTransaction
 	 * @param username username
 	 * @param seed seed
 	 * @return <code>true</code>, if this seed is already authenticated;
@@ -49,7 +50,9 @@ public class LoginSeedDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public Boolean verifySeed(DBTransaction transaction, String username, String seed) throws SQLException {
-		String query = "SELECT complete FROM account, loginseed WHERE account.id=loginseed.player_id AND loginseed.seed='[seed]' AND account.username='[username]'";
+		String query = "SELECT complete FROM account, loginseed " +
+				"WHERE account.id=loginseed.player_id AND loginseed.seed='[seed]' AND account.username='[username]' " +
+				"AND loginseed.used = 0";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("seed", seed);
 		params.put("username", username);
@@ -59,7 +62,26 @@ public class LoginSeedDAO {
 		if (!resultSet.next()) {
 			return null;
 		}
-		return resultSet.getBoolean("complete");
+		if (resultSet.getInt("complete") == 1) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+
+	/**
+	 * marks a seed as used
+	 *
+	 * @param transaction DBTransaction
+	 * @param seed seed
+	 * @throws SQLException in case of an database error
+	 */
+	public void useSeed(DBTransaction transaction, String seed) throws SQLException {
+		String query = "UPDATE loginseed SET used = 1 WHERE seed='[seed]'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("seed", seed);
+		logger.debug("useSeed is executing query " + query);
+		transaction.execute(query, params);
 	}
 
 
@@ -78,6 +100,22 @@ public class LoginSeedDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			return verifySeed(transaction, username, seed);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+
+	/**
+	 * marks a seed as used
+	 *
+	 * @param seed seed
+	 * @throws SQLException in case of an database error
+	 */
+	public void useSeed(String seed) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			useSeed(transaction, seed);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
