@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.55 2010/02/08 14:58:59 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.56 2010/05/03 17:52:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -75,7 +75,6 @@ public abstract class ClientFramework {
 	public final static int TIMEOUT = 10000;
 
 	private int perceptionsCount;
-	private String seed;
 
 	/**
 	 * We keep an instance of network manager to be able to communicate with
@@ -194,8 +193,29 @@ public abstract class ClientFramework {
 	 *             if login is rejected
 	 * @throws BannedAddressException
 	 */
-	@SuppressWarnings("null")
 	public synchronized void login(String username, String password)
+	        throws InvalidVersionException, TimeoutException, LoginFailedException,
+	        BannedAddressException {
+		login(username, password, null);
+	}
+
+	/**
+	 * Login to server using the given username and password.
+	 *
+	 * @param username
+	 *            Player username
+	 * @param password
+	 *            Player password
+	 * @throws InvalidVersionException
+	 *             if we are not using a compatible version
+	 * @throws TimeoutException
+	 *             if timeout happens while waiting for the message.
+	 * @throws LoginFailedException
+	 *             if login is rejected
+	 * @throws BannedAddressException
+	 */
+	@SuppressWarnings("null")
+	public synchronized void login(String username, String password, String seed)
 	        throws InvalidVersionException, TimeoutException, LoginFailedException,
 	        BannedAddressException {
 		int received = 0;
@@ -296,15 +316,6 @@ public abstract class ClientFramework {
 					messages.add(msg);
 			}
 		}
-	}
-
-	/**
-	 * sets a preauthentication seed
-	 *
-	 * @param seed the preauthentication seed
-	 */
-	public synchronized void setSeed(String seed) {
-		this.seed = seed;
 	}
 
 	/**
