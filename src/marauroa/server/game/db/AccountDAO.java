@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.19 2010/03/22 17:48:47 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.20 2010/05/03 21:21:35 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -384,7 +384,7 @@ public class AccountDAO {
 		boolean res = verifyUsingDB(transaction, informations.username, hexPassword);
 
 		if (!res) {
-			// compatibility: check new Marauroa 1.0 password type
+			// compatibility: check old Marauroa 1.0 password type
 			hexPassword = Hash.toHexString(Hash.hash(password));
 			res = verifyUsingDB(transaction, informations.username, hexPassword);
 		}
