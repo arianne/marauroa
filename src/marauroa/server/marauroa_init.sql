@@ -121,7 +121,8 @@ create table if not exists loginseed
   player_id integer,
   seed varchar(120),
   address varchar(64),
-  complete int,
+  complete integer,
+  used integer,
   timedate timestamp default CURRENT_TIMESTAMP,
   primary key(id)
   );
