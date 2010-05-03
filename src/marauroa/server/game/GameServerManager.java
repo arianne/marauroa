@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.139 2010/05/02 17:01:54 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.140 2010/05/03 19:25:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -1069,7 +1070,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				info.clientNonce = msgLogin.getHash();
 				info.username = msgLogin.getUsername();
 				info.password = msgLogin.getPassword();
-				info.seed = msgLogin.getSeed();
+				info.seed = decode(info, msgLogin.getSeed());
 			}
 
 			/*
@@ -1226,6 +1227,23 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			logger.error("error while processing SecuredLoginEvent", e);
 		} catch (SQLException e) {
 			logger.error("error while processing SecuredLoginEvent", e);
+		}
+	}
+
+	private String decode(SecuredLoginInfo info, byte[] data) {
+		byte[] b1 = info.key.decodeByteArray(data);
+		byte[] b2 = Hash.xor(info.clientNonce, info.serverNonce);
+		if (b2 == null) {
+			logger.debug("B2 is null");
+			return null;
+		}
+
+		byte[] result = Hash.xor(b1, b2);
+		try {
+			return new String(result, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+			return null;
 		}
 	}
 

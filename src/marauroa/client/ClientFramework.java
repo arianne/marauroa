@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.56 2010/05/03 17:52:24 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.57 2010/05/03 19:25:53 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.client;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.LinkedList;
@@ -259,8 +260,18 @@ public abstract class ClientFramework {
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
 					if (seed != null) {
+						byte[] b3 = null;
+						try {
+							b3 = Hash.xor(b1, seed.getBytes("UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							logger.error(e, e);
+						}
+						if (b3 == null) {
+							throw new LoginFailedException("Incorrect hash seed");
+						}
+						byte[] cryptedSeed = key.encodeByteArray(b3);
 						netMan.addMessage(new MessageC2SLoginSendNonceNamePasswordAndSeed(null,
-					        clientNonce, username, cryptedPassword, seed));
+					        clientNonce, username, cryptedPassword, cryptedSeed));
 					} else {
 						netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
 					        clientNonce, username, cryptedPassword));

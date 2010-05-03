@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.4 2010/02/25 20:58:18 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNamePasswordAndSeed.java,v 1.5 2010/05/03 19:25:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -29,7 +29,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 
 	private String username;
 	private byte[] password;
-	private String seed;
+	private byte[] seed;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginSendNonceNamePasswordAndSeed() {
@@ -50,11 +50,11 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	 *            the seed
 	 */
 	public MessageC2SLoginSendNonceNamePasswordAndSeed(SocketChannel source, byte[] nonce,
-	        String username, byte[] password, String seed) {
+	        String username, byte[] password, byte[] seed) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, source, nonce);
 		this.username = username;
 		this.password = Utility.copy(password);
-		this.seed = seed;
+		this.seed = Utility.copy(seed);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	 * 
 	 * @return the seed
 	 */
-	public String getSeed() {
+	public byte[] getSeed() {
 		return seed;
 	}
 	/**
@@ -92,7 +92,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	public String toString() {
 		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
 		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
-		        + Hash.toHexString(password) + "\tseed:" + seed + ")";
+		        + Hash.toHexString(password) + "\tseed:" + Hash.toHexString(seed) + ")";
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 		super.readObject(in);
 		username = in.readString();
 		password = in.readByteArray();
-		seed = in.readString();
+		seed = in.readByteArray();
 		if (type != MessageType.C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED) {
 			throw new IOException();
 		}
