@@ -126,7 +126,8 @@ create table if not exists loginseed
   primary key(id)
   );
 
-/* create unique index i_loginseed on loginseed(seed); */
+/*create unique index i_loginseed on loginseed(seed); */
+/*create index i_loginseed_player_id on loginseed(player_id);*/
 
 create table if not exists banlist
   (
