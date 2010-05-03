@@ -119,7 +119,7 @@ create table if not exists seed
   (
   id integer auto_increment not null,
   seed varchar(120),
-  address varchar(15),
+  address varchar(64),
   complete int,
   timedate timestamp default CURRENT_TIMESTAMP,
   primary key(id)
@@ -130,7 +130,7 @@ create table if not exists seed
 create table if not exists banlist
   (
   id integer auto_increment not null,
-  address varchar(15),
+  address varchar(64),
   mask    varchar(15),
   reason  varchar(255),
   PRIMARY KEY(id)
