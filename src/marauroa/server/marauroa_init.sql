@@ -115,7 +115,18 @@ create table if not exists gameEvents
 /*create index i_gameEvents_param1 ON gameEvents(param1);*/
 /*create index i_gameEvents_param2 ON gameEvents(param2);*/
 
-  
+create table if not exists seed
+  (
+  id integer auto_increment not null,
+  seed varchar(120),
+  address varchar(15),
+  complete int,
+  timedate timestamp default CURRENT_TIMESTAMP,
+  primary key(id)
+  );
+
+/* create unique index i_seed on seed(seed); */
+
 create table if not exists banlist
   (
   id integer auto_increment not null,
