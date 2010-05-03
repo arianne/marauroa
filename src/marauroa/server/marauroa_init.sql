@@ -118,6 +118,7 @@ create table if not exists gameEvents
 create table if not exists loginseed
   (
   id integer auto_increment not null,
+  player_id integer,
   seed varchar(120),
   address varchar(64),
   complete int,
