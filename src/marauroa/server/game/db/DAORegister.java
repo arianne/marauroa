@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.6 2009/12/27 15:41:33 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.7 2010/05/03 21:23:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -86,6 +86,7 @@ public class DAORegister {
 		register(CharacterDAO.class, new CharacterDAO());
 		register(GameEventDAO.class, new GameEventDAO());
 		register(LoginEventDAO.class, new LoginEventDAO());
+		register(LoginSeedDAO.class, new LoginSeedDAO());
 		register(RPObjectDAO.class, new RPObjectDAO(factory));
 		register(RPZoneDAO.class, new RPZoneDAO(factory));
 		register(StatisticsDAO.class, new StatisticsDAO());
