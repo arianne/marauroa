@@ -1,4 +1,4 @@
-/* $Id: DBTransactionTest.java,v 1.2 2010/01/31 20:45:07 nhnb Exp $ */
+/* $Id: DBTransactionTest.java,v 1.3 2010/05/08 23:03:37 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -22,6 +22,12 @@ import java.util.Map;
 
 import org.junit.Test;
 
+/**
+ * Tests for DBTransaction
+ *
+ * @author hendrik
+ *
+ */
 public class DBTransactionTest {
 
 	/**
