@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.21 2010/05/02 17:01:54 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.22 2010/05/09 15:28:01 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,7 @@ package marauroa.server.game.container;
 
 import java.net.InetAddress;
 import java.nio.channels.SocketChannel;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +62,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		lock = new RWLock();
 
 		/* We initialize the list that will help us sort the player entries. */
-		clientidMap = new HashMap<Integer, PlayerEntry>();
+		clientidMap = Collections.synchronizedMap(new HashMap<Integer, PlayerEntry>());
 	}
 
 	/**
@@ -137,9 +138,11 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found.
 	 */
 	public PlayerEntry get(SocketChannel channel) {
-		for (PlayerEntry entry : clientidMap.values()) {
-			if (entry.channel == channel) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				if (entry.channel == channel) {
+					return entry;
+				}
 			}
 		}
 
@@ -155,16 +158,17 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(String username) {
-		for (PlayerEntry entry : clientidMap.values()) {
-			/*
-			 * NOTE: Bug fix: We use ignore case to detect already logged
-			 * players better.
-			 */
-			if (username.equalsIgnoreCase(entry.username)) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				/*
+				 * NOTE: Bug fix: We use ignore case to detect already logged
+				 * players better.
+				 */
+				if (username.equalsIgnoreCase(entry.username)) {
+					return entry;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -177,15 +181,16 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the PlayerEntry or null if it is not found
 	 */
 	public PlayerEntry get(RPObject object) {
-		for (PlayerEntry entry : clientidMap.values()) {
-			/*
-			 * We want really to do a fast comparasion
-			 */
-			if (entry.object == object) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				/*
+				 * We want really to do a fast comparasion
+				 */
+				if (entry.object == object) {
+					return entry;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -224,8 +229,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private int generateClientID() {
 		int clientid = rand.nextInt();
 
-		while (has(clientid) && clientid > 0) {
-			clientid = rand.nextInt();
+		synchronized (clientidMap) {
+			while (has(clientid) && clientid > 0) {
+				clientid = rand.nextInt();
+			}
 		}
 
 		return clientid;
@@ -240,12 +247,13 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return an idle PlayerEntry or null if not found
 	 */
 	public PlayerEntry getIdleEntry() {
-		for (PlayerEntry entry : clientidMap.values()) {
-			if (entry.isRemovable()) {
-				return entry;
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				if (entry.isRemovable()) {
+					return entry;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -256,8 +264,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 */
 	public int countUniqueIps() {
 		HashSet<InetAddress> addresses = new HashSet<InetAddress>();
-		for (PlayerEntry entry : clientidMap.values()) {
-			addresses.add(entry.getAddress());
+		synchronized (clientidMap) {
+			for (PlayerEntry entry : clientidMap.values()) {
+				addresses.add(entry.getAddress());
+			}
 		}
 		return addresses.size();
 	}
