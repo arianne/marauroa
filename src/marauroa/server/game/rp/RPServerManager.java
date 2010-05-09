@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.61 2010/05/02 17:01:54 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.62 2010/05/09 15:27:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -540,7 +540,7 @@ public class RPServerManager extends Thread {
 				try {
 					stats.set("Objects now", world.size());
 				} catch ( ConcurrentModificationException e) {
-					//TODO: size is obviously ot threadsafe as it asks the underlying zone.objects for its sizes, which are not threadsafe.
+					//TODO: size is obviously not threadsafe as it asks the underlying zone.objects for its sizes, which are not threadsafe.
 				}
 				timeEnds[10] = System.currentTimeMillis();
 				TransactionPool.get().kickHangingTransactionsOfThisThread();
