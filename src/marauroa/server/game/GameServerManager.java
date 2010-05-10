@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.143 2010/05/10 19:38:34 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.144 2010/05/10 19:39:07 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -221,7 +221,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *
 	 */
 	class DisconnectPlayers extends Thread {
-		BlockingQueue<SocketChannel> players;
+		BlockingQueue<SocketChannel> channels;
 		
 		/**
 		 * Constructor.
@@ -229,7 +229,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		 */
 		public DisconnectPlayers() {
 			super("GameServerManagerDisconnectPlayers");
-			players=new LinkedBlockingQueue<SocketChannel>();
+			channels=new LinkedBlockingQueue<SocketChannel>();
 		}
 		
 		/**
@@ -241,7 +241,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		 */
 		public void disconnect(SocketChannel channel) {
 			try {
-				players.put(channel);
+				channels.put(channel);
 			} catch (InterruptedException e) {
 				/*
 				 * Not really instereted in.
@@ -259,7 +259,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				 * This way we avoid wasting CPU cycles.
 				 */
 				try {
-					channel = players.take();
+					channel = channels.take();
 				} catch (InterruptedException e1) {
 					/*
 					 * Not interested.
