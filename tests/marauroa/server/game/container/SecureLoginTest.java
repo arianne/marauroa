@@ -1,4 +1,4 @@
-/* $Id: SecureLoginTest.java,v 1.11 2010/01/04 08:47:12 nhnb Exp $ */
+/* $Id: SecureLoginTest.java,v 1.12 2010/05/10 21:14:27 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -24,6 +24,8 @@ import java.sql.SQLException;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
+import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.DatabaseFactory;
 
 import org.junit.BeforeClass;
@@ -69,8 +71,13 @@ public class SecureLoginTest {
 	 */
 	@Test
 	public void testLogin() throws SQLException, UnknownHostException {
+		String username = "testUsername3z23798";
 		String password = "password";
-		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
+		boolean exists = DAORegister.get().get(AccountDAO.class).hasPlayer(username);
+		if (!exists) {
+			DAORegister.get().get(AccountDAO.class).addPlayer(username, Hash.hash(password), "example@example.com");
+		}
+		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin(username, password);
 		assertTrue("Unable to verify login", login.verify());
 	}
 
