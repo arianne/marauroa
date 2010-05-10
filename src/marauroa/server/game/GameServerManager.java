@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.142 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.143 2010/05/10 19:38:34 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -276,7 +276,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 					playerContainer.remove(entry.clientid);
 
 					/*
-					 * If client is still login, don't notify RP as it knows nothing about
+					 * If client is still loging in, don't notify RP as it knows nothing about
 					 * this client. That means state != of GAME_BEGIN
 					 */
 					if (entry.state == ClientState.GAME_BEGIN) {
