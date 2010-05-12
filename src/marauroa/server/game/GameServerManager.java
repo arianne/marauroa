@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.145 2010/05/12 07:00:36 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.146 2010/05/12 23:08:41 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -367,16 +367,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage();
 
 				if (msg != null) {
-					// TODO: Bootleneck because of synchronization.
 					playerContainer.getLock().requestWriteLock();
-					@SuppressWarnings("unused")
-					long startTime = System.currentTimeMillis();
 					messageDispatcher.dispatchMessage(msg);
 					playerContainer.getLock().releaseLock();
-					/*long time = System.currentTimeMillis() - startTime;
-					if (time > 50) {
-						logger.warn("Processing client message took " + time + " ms: " + msg);
-					}*/
 				}
 
 				/*
