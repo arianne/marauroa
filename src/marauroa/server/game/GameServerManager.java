@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.144 2010/05/10 19:39:07 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.145 2010/05/12 07:00:36 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -272,8 +272,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				if (entry != null) {
 					/*
 					 * First we remove the entry from the player container.
+					 * null means it was already removed by another thread.
 					 */
-					playerContainer.remove(entry.clientid);
+					if (playerContainer.remove(entry.clientid) == null) {
+						continue;
+					}
 
 					/*
 					 * If client is still loging in, don't notify RP as it knows nothing about
