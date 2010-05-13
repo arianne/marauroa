@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.2 2010/05/13 15:02:34 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -42,6 +42,16 @@ class CreateAccountHandler extends MessageHandler {
 	public void process(Message message) {
 		MessageC2SCreateAccount msg = (MessageC2SCreateAccount) message;
 		try {
+			// the rpMan.createAccount line threw an NPE during a test without the
+			// PlayerEntryContainer lock.
+			if ((rpMan == null) || (msg == null) || (msg.getAddress() == null)) {
+				logger.error("Unexpected null value in CreateAccountHandler.process: rpMan=" + rpMan + " msg=" + msg);
+				if (msg != null) {
+					logger.error("addres=" + msg.getAddress());
+				}
+				return;
+			}
+
 			/*
 			 * We request RP Manager to create an account for our player. This
 			 * will return a <b>result</b> of the operation.
