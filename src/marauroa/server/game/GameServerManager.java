@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.147 2010/05/13 18:36:24 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.148 2010/05/13 20:53:04 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -15,15 +15,13 @@ package marauroa.server.game;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.Message;
-import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
+import marauroa.server.game.messagehandler.AddRemoveCharacterThread;
 import marauroa.server.game.messagehandler.MessageDispatcher;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
@@ -163,7 +161,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
 	
-	private DisconnectPlayers disconnectThread;
+	private AddRemoveCharacterThread disconnectThread;
 	
 	private MessageDispatcher messageDispatcher;
 
@@ -180,7 +178,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *             is there is any problem.
 	 */
 	public GameServerManager(RSAKey key, INetworkServerManager netMan, RPServerManager rpMan)
-	        throws Exception {
+			throws Exception {
 		super("GameServerManager");
 		keepRunning = true;
 		isfinished = false;
@@ -194,7 +192,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 		
-		disconnectThread= new DisconnectPlayers();
+		disconnectThread= new AddRemoveCharacterThread(playerContainer, rpMan);
 
 		messageDispatcher = new MessageDispatcher();
 		messageDispatcher.init(netMan, rpMan, playerContainer, stats, key);
@@ -209,107 +207,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		disconnectThread.start();
 	}
 
-	/**
-	 * Thread that disconnect players.
-	 * It has to be done this way because we can't run it on the main loop of GameServerManager,
-	 * because it locks waiting for new messages to arrive, so the player keeps unremoved until a 
-	 * message is recieved.
-	 * 
-	 * This way players are removed as they are requested to be.
-	 * 
-	 * @author miguel
-	 *
-	 */
-	class DisconnectPlayers extends Thread {
-		BlockingQueue<SocketChannel> channels;
-		
-		/**
-		 * Constructor.
-		 * It just gives a nice name to the thread.
-		 */
-		public DisconnectPlayers() {
-			super("GameServerManagerDisconnectPlayers");
-			channels=new LinkedBlockingQueue<SocketChannel>();
-		}
-		
-		/**
-		 * This method is used mainly by onDisconnect and RPServerManager to force
-		 * the disconnection of a player entry.
-		 *
-		 * @param channel
-		 *            the socket channel of the player entry to remove.
-		 */
-		public void disconnect(SocketChannel channel) {
-			try {
-				channels.put(channel);
-			} catch (InterruptedException e) {
-				/*
-				 * Not really instereted in.
-				 */
-			}
-		}
-
-		@Override
-		public void run() {
-			while (keepRunning) {
-				SocketChannel channel = null;
-
-				/*
-				 * We keep waiting until we are signaled to remove a player.
-				 * This way we avoid wasting CPU cycles.
-				 */
-				try {
-					channel = channels.take();
-				} catch (InterruptedException e1) {
-					/*
-					 * Not interested.
-					 */
-				}
-
-				playerContainer.getLock().requestWriteLock();
-
-				PlayerEntry entry = playerContainer.get(channel);
-				if (entry != null) {
-					/*
-					 * First we remove the entry from the player container.
-					 * null means it was already removed by another thread.
-					 */
-					if (playerContainer.remove(entry.clientid) == null) {
-						continue;
-					}
-
-					/*
-					 * If client is still loging in, don't notify RP as it knows nothing about
-					 * this client. That means state != of GAME_BEGIN
-					 */
-					if (entry.state == ClientState.GAME_BEGIN) {
-						/*
-						 * If client was playing the game request the RP to disconnected it.
-						 */
-						try {
-							rpMan.onTimeout(entry.object);
-							entry.storeRPObject(entry.object);
-						} catch (Exception e) {
-							logger.error("Error disconnecting player" + entry, e);
-						}
-					}
-
-					/*
-					 * We set the entry to LOGOUT_ACCEPTED state so it can also be freed by
-					 * GameServerManager to make room for new players.
-					 */
-					entry.state = ClientState.LOGOUT_ACCEPTED;
-				} else {
-					/*
-					 * Player may have logout correctly or may have even not started.
-					 */
-					logger.debug("No player entry for channel: " + channel);
-				}
-
-				playerContainer.getLock().releaseLock();
-			}
-		}
-	}
 
 	/**
 	 * This method request the active object to finish its execution and store
@@ -323,7 +220,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		keepRunning = false;
 		
 		interrupt();
-		disconnectThread.interrupt();
+		disconnectThread.setKeepRunning(false);
+		
 		
 		while (isfinished == false) {
 			Thread.yield();
