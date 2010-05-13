@@ -11,14 +11,15 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.io.IOException;
 import java.sql.SQLException;
-
-import org.apache.log4j.MDC;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
+
+import org.apache.log4j.MDC;
 
 /**
  * processes DBCommands in the background
@@ -63,6 +64,10 @@ class DBCommandQueueBackgroundThread implements Runnable {
 		try {
 			metaData.getCommand().execute(transaction);
 			TransactionPool.get().commit(transaction);
+		} catch (IOException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+			metaData.getCommand().setException(e);
 		} catch (SQLException e) {
 			logger.error(e, e);
 			TransactionPool.get().rollback(transaction);

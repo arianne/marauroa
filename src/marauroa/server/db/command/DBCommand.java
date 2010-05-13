@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -35,8 +36,9 @@ public interface DBCommand {
 	 *
 	 * @param transaction DBTransaction
 	 * @throws SQLException in case of an database error
+	 * @throws IOException in case of an input/output error
 	 */
-	public void execute(DBTransaction transaction) throws SQLException;
+	public void execute(DBTransaction transaction) throws SQLException, IOException;
 
 	/**
 	 * gets the timestamp when this command was added to the queue

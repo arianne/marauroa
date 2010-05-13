@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -66,7 +67,8 @@ public abstract class AbstractDBCommand implements DBCommand {
 	 *
 	 * @param transaction DBTransaction
 	 * @throws SQLException in case of an database error
+	 * @throws IOException in case of an input/output error
 	 */
-	public abstract void execute(DBTransaction transaction) throws SQLException;
+	public abstract void execute(DBTransaction transaction) throws SQLException, IOException;
 
 }
