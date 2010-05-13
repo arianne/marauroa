@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.22 2010/05/09 15:28:01 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.23 2010/05/13 00:12:02 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
@@ -83,7 +84,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * @return the iterator
 	 */
 	public Iterator<PlayerEntry> iterator() {
-		return clientidMap.values().iterator();
+		return new LinkedList<PlayerEntry>(clientidMap.values()).iterator();
 	}
 
 	/**
