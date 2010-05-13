@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.48 2010/05/02 17:01:54 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.49 2010/05/13 12:29:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -467,6 +467,7 @@ public class PlayerEntry {
 		os.append("[state=" + state + "]");
 		os.append("[username=" + username + "]");
 		os.append("[character=" + character + "]");
+		os.append("[object defined=" + (object != null) + "]");
 
 		return os.toString();
 	}

@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.62 2010/05/09 15:27:50 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.63 2010/05/13 12:29:53 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -424,7 +424,7 @@ public class RPServerManager extends Thread {
 
 				PlayerEntry entry = playerContainer.get(target);
 				if(entry==null) {
-					logger.warn("Entry for player ("+target+") was null");
+					logger.warn("Entry for player ("+target+") does not exist: " + playerContainer, new Throwable());
 					continue;
 				}
 				

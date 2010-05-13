@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.23 2010/05/13 00:12:02 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.24 2010/05/13 12:29:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -271,5 +271,15 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 			}
 		}
 		return addresses.size();
+	}
+
+	/**
+	 * a string representation useful for debugging.
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString() {
+		return "PlayerEntryContainer [clientidMap=" + clientidMap + "]";
 	}
 }
