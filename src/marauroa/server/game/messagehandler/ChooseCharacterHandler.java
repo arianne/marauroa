@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.2 2010/05/13 18:36:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -62,6 +62,7 @@ class ChooseCharacterHandler extends MessageHandler {
 				entry.character = msg.getCharacter();
 
 				/* We restore back the character to the world */
+				playerContainer.getLock().requestWriteLock();
 				RPObject object = entry.loadRPObject();
 
 				if (object != null) {
@@ -76,19 +77,21 @@ class ChooseCharacterHandler extends MessageHandler {
 
 				/* We ask RP Manager to initialize the object */
 				if(rpMan.onInit(object)) {
-					/* And finally sets this connection state to GAME_BEGIN */
-					entry.state = ClientState.GAME_BEGIN;
-
 					/* Correct: Character exist */
 					MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(
 							msg.getSocketChannel());
 					msgChooseCharacterACK.setClientID(clientid);
 					netMan.sendMessage(msgChooseCharacterACK);
+
+					/* And finally sets this connection state to GAME_BEGIN */
+					entry.state = ClientState.GAME_BEGIN;
+					playerContainer.getLock().releaseLock();
 					return;
 				} else {
 					/* This account doesn't own that character */
 					logger.warn("RuleProcessor rejected character(" + msg.getCharacter()+")");
 				}
+				playerContainer.getLock().releaseLock();
 			} else {
 				/* This account doesn't own that character */
 				logger.warn("Client(" + msg.getAddress().toString() + ") hasn't character("

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.146 2010/05/12 23:08:41 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.147 2010/05/13 18:36:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -367,9 +367,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage();
 
 				if (msg != null) {
-					playerContainer.getLock().requestWriteLock();
+//					playerContainer.getLock().requestWriteLock();
 					messageDispatcher.dispatchMessage(msg);
-					playerContainer.getLock().releaseLock();
+//					playerContainer.getLock().releaseLock();
 				}
 
 				/*
