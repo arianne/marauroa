@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.2 2010/05/13 18:36:24 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.3 2010/05/13 20:45:05 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,6 +12,9 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
@@ -21,6 +24,8 @@ import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.db.CharacterDAO;
+import marauroa.server.game.db.DAORegister;
 
 /**
  * Process the choose character message from client.
@@ -58,40 +63,9 @@ class ChooseCharacterHandler extends MessageHandler {
 
 			/* We check if this account has such player. */
 			if (entry.hasCharacter(msg.getCharacter())) {
-				/* We set the character in the entry info */
-				entry.character = msg.getCharacter();
-
-				/* We restore back the character to the world */
-				playerContainer.getLock().requestWriteLock();
-				RPObject object = entry.loadRPObject();
-
-				if (object != null) {
-					/*
-					 * We set the clientid attribute to link easily the object with
-					 * is player runtime information
-					 */
-					object.put("#clientid", clientid);
-				} else {
-					logger.warn("could not load object for character("+entry.character+") from database");
-				}
-
-				/* We ask RP Manager to initialize the object */
-				if(rpMan.onInit(object)) {
-					/* Correct: Character exist */
-					MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(
-							msg.getSocketChannel());
-					msgChooseCharacterACK.setClientID(clientid);
-					netMan.sendMessage(msgChooseCharacterACK);
-
-					/* And finally sets this connection state to GAME_BEGIN */
-					entry.state = ClientState.GAME_BEGIN;
-					playerContainer.getLock().releaseLock();
+				if (loadAndPlaceInWorld(msg, clientid, entry)) {
 					return;
-				} else {
-					/* This account doesn't own that character */
-					logger.warn("RuleProcessor rejected character(" + msg.getCharacter()+")");
 				}
-				playerContainer.getLock().releaseLock();
 			} else {
 				/* This account doesn't own that character */
 				logger.warn("Client(" + msg.getAddress().toString() + ") hasn't character("
@@ -113,6 +87,46 @@ class ChooseCharacterHandler extends MessageHandler {
 
 		} catch (Exception e) {
 			logger.error("error when processing character event", e);
+		}
+	}
+
+	private boolean loadAndPlaceInWorld(MessageC2SChooseCharacter msg,
+			int clientid, PlayerEntry entry) throws SQLException, IOException {
+		/* We set the character in the entry info */
+		entry.character = msg.getCharacter();
+		RPObject object = DAORegister.get().get(CharacterDAO.class).loadCharacter(entry.username, entry.character);
+		entry.setObject(object);
+
+		/* We restore back the character to the world */
+		playerContainer.getLock().requestWriteLock();
+
+		if (object != null) {
+			/*
+			 * We set the clientid attribute to link easily the object with
+			 * is player runtime information
+			 */
+			object.put("#clientid", clientid);
+		} else {
+			logger.warn("could not load object for character("+entry.character+") from database");
+		}
+
+		/* We ask RP Manager to initialize the object */
+		if(rpMan.onInit(object)) {
+			/* Correct: Character exist */
+			MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(
+					msg.getSocketChannel());
+			msgChooseCharacterACK.setClientID(clientid);
+			netMan.sendMessage(msgChooseCharacterACK);
+
+			/* And finally sets this connection state to GAME_BEGIN */
+			entry.state = ClientState.GAME_BEGIN;
+			playerContainer.getLock().releaseLock();
+			return true;
+		} else {
+			/* This account doesn't own that character */
+			logger.warn("RuleProcessor rejected character(" + msg.getCharacter()+")");
+			playerContainer.getLock().releaseLock();
+			return false;
 		}
 	}
 

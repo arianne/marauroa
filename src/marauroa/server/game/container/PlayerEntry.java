@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.49 2010/05/13 12:29:42 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.50 2010/05/13 20:45:05 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -397,19 +397,12 @@ public class PlayerEntry {
 	}
 	
 	/**
-	 * This method loads the object pointed by username and character from
-	 * database and assign already it to the entry.
+	 * sets the RPObject for this entry.
 	 *
-	 * @return the loaded object
-	 * @throws IOException
-	 * @throws IOException
-	 *             if the load fails.
-	 * @throws SQLException
-	 *             in case of an database error
+	 * @param object RPObject
 	 */
-	public RPObject loadRPObject() throws SQLException, IOException {
-		object = DAORegister.get().get(CharacterDAO.class).loadCharacter(username, character);
-		return object;
+	public void setObject(RPObject object) {
+		this.object = object;
 	}
 
 	/**
