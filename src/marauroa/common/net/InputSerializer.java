@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.12 2009/07/06 18:27:54 nhnb Exp $ */
+/* $Id: InputSerializer.java,v 1.13 2010/05/14 19:37:07 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,7 +19,7 @@ import marauroa.common.TimeoutConf;
 
 /**
  * InputSerializer is used to serialize classes that implement the Serializable
- * interface from a InputStream.
+ * interface from an InputStream.
  *
  */
 public class InputSerializer {
@@ -27,7 +27,7 @@ public class InputSerializer {
 	private InputStream in;
 
 	/**
-	 * Constructor that pass the InputStream to the serializer
+	 * Constructor that passes the InputStream to the serializer
 	 *
 	 * @param in
 	 *            the InputStream
@@ -37,11 +37,11 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method serialize an object that implements the interface
-	 * Serializable allowing to implement this behaviour in several classes
+	 * This method serializes an object that implements the interface
+	 * Serializable, allowing to implement this behaviour in several classes
 	 *
 	 * @param obj
-	 *            the object were we will serialize the data
+	 *            the object where we will serialize the data
 	 * @return the object serialized, just for interface coherence
 	 * @throws java.io.IOException
 	 *             if there is an IO error
@@ -52,7 +52,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a byte from the Serializer
+	 * This method reads a byte from the Serializer
 	 *
 	 * @return the byte serialized
 	 * @throws java.io.IOException
@@ -68,7 +68,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a byte array from the Serializer
+	 * This method reads a byte array from the Serializer
 	 *
 	 * @return the byte array serialized
 	 * @throws java.io.IOException
@@ -78,7 +78,7 @@ public class InputSerializer {
 		int size = readInt();
 
 		if (size > TimeoutConf.MAX_BYTE_ARRAY_ELEMENTS) {
-			throw new IOException("Ilegal request of an array of " + size + " size");
+			throw new IOException("Illegal request of an array of " + size + " size");
 		}
 
 		byte[] buffer = new byte[size];
@@ -107,7 +107,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a byte array from the Serializer
+	 * This method reads a byte array from the Serializer
 	 *
 	 * @return the byte array serialized
 	 * @throws java.io.IOException
@@ -135,7 +135,7 @@ public class InputSerializer {
 		int size = readShort();
 
 		if (size < 0) {
-			throw new IOException("Ilegal request of an array of " + size + " size");
+			throw new IOException("Illegal request of an array of " + size + " size");
 		}
 
 		byte[] buffer = new byte[size];
@@ -154,7 +154,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a short from the Serializer
+	 * This method reads a short from the Serializer
 	 *
 	 * @return the short serialized
 	 * @throws java.io.IOException
@@ -182,7 +182,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a int from the Serializer
+	 * This method reads a int from the Serializer
 	 *
 	 * @return the int serialized
 	 * @throws java.io.IOException
@@ -212,7 +212,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a float from the Serializer
+	 * This method reads a float from the Serializer
 	 *
 	 * @return the float serialized
 	 * @throws java.io.IOException
@@ -242,7 +242,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a String from the Serializer
+	 * This method reads a String from the Serializer
 	 *
 	 * @return the String serialized
 	 * @throws java.io.IOException
@@ -253,7 +253,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a short string ( whose size is smaller than 255 chars
+	 * This method reads a short string ( whose size is smaller than 255 chars
 	 * long ) from the Serializer
 	 *
 	 * @return the String serialized
@@ -269,7 +269,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method read a String array from the Serializer
+	 * This method reads a String array from the Serializer
 	 *
 	 * @return the String array serialized
 	 * @throws java.io.IOException
@@ -279,7 +279,7 @@ public class InputSerializer {
 		int size = readInt();
 
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
-			throw new IOException("Ilegal request of an array of " + String.valueOf(size) + " size");
+			throw new IOException("Illegal request of an array of " + String.valueOf(size) + " size");
 		}
 
 		String[] buffer = new String[size];
