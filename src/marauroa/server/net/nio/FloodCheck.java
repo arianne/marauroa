@@ -72,7 +72,7 @@ public class FloodCheck implements IFloodCheck {
 			logger.info("Disconnecting " + entry.channel + " for flooding server: " + entry);
 			netMan.disconnectClient(entry.channel);
 		} else {
-			logger.info("Giving another change to" + entry.channel + " for flooding server: " + entry);
+			logger.info("Giving another chance to " + entry.channel + " for flooding server: " + entry);
 			/*
 			 * Give another chance.
 			 */
