@@ -1,4 +1,4 @@
-/* $Id: AddRemoveCharacterThread.java,v 1.1 2010/05/13 20:53:04 nhnb Exp $ */
+/* $Id: AddRemoveCharacterThread.java,v 1.2 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -23,10 +23,10 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.rp.RPServerManager;
 
 /**
- * Thread that disconnect players.
+ * Thread that disconnects players.
  * It has to be done this way because we can't run it on the main loop of GameServerManager,
- * because it locks waiting for new messages to arrive, so the player keeps unremoved until a 
- * message is recieved.
+ * because it locks waiting for new messages to arrive, so the player is not removed until a 
+ * message is received.
  * 
  * This way players are removed as they are requested to be.
  * 
@@ -70,7 +70,7 @@ public class AddRemoveCharacterThread extends Thread {
 			channels.put(channel);
 		} catch (InterruptedException e) {
 			/*
-			 * Not really instereted in.
+			 * Not really interested in.
 			 */
 		}
 	}
@@ -81,7 +81,7 @@ public class AddRemoveCharacterThread extends Thread {
 			SocketChannel channel = null;
 
 			/*
-			 * We keep waiting until we are signaled to remove a player.
+			 * We keep waiting until we are signalled to remove a player.
 			 * This way we avoid wasting CPU cycles.
 			 */
 			try {
@@ -105,7 +105,7 @@ public class AddRemoveCharacterThread extends Thread {
 				}
 
 				/*
-				 * If client is still loging in, don't notify RP as it knows nothing about
+				 * If client is still logging in, don't notify RP as it knows nothing about
 				 * this client. That means state != of GAME_BEGIN
 				 */
 				if (entry.state == ClientState.GAME_BEGIN) {
@@ -127,7 +127,7 @@ public class AddRemoveCharacterThread extends Thread {
 				entry.state = ClientState.LOGOUT_ACCEPTED;
 			} else {
 				/*
-				 * Player may have logout correctly or may have even not started.
+				 * Player may have logged out correctly or may have even not started.
 				 */
 				logger.debug("No player entry for channel: " + channel);
 			}

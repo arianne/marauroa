@@ -1,4 +1,4 @@
-/* $Id: Decoder.java,v 1.29 2010/01/03 19:19:21 nhnb Exp $ */
+/* $Id: Decoder.java,v 1.30 2010/05/14 19:38:11 kymara Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -25,7 +25,7 @@ import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
 
 /**
- * This class decode a stream of bytes and build a Marauroa message with it.
+ * This class decodes a stream of bytes and builds a Marauroa message with it.
  * Decoder follows singleton pattern.
  *
  * @author miguel, hendrik
@@ -36,7 +36,7 @@ public class Decoder {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Decoder.class);
 
 	/**
-	 * This class handle not completed messages.
+	 * This class handles incomplete messages.
 	 */
 	class MessageParts {
 
@@ -195,12 +195,12 @@ public class Decoder {
 	}
 
 	/**
-	 * Decodes a message from a stream of bytes recieved from channel
+	 * Decodes a message from a stream of bytes received from channel
 	 *
 	 * @param channel
-	 *            the socket from where data was recieved
+	 *            the socket from where data was received
 	 * @param data
-	 *            the data recieved
+	 *            the data received
 	 * @return a message or null if it was not possible
 	 * @throws IOException
 	 *             if there is a problem building the message
@@ -215,7 +215,7 @@ public class Decoder {
 			/* First part of the message */
 			/*
 			 * We need to be *sure* that 4 bytes are at least to
-			 * be recieved...
+			 * be received...
 			 */
 			if(data.length<4) {
 				throw new IOException("Message is too short. Missing mandatory fields.");

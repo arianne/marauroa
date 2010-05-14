@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.18 2010/02/22 16:33:56 nhnb Exp $ */
+/* $Id: TimeoutConf.java,v 1.19 2010/05/14 19:38:11 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,7 +20,7 @@ package marauroa.common;
  */
 public class TimeoutConf {
 
-	/** This indicate when we stop to wait on the socket. The lower the slower. */
+	/** This indicates when we stop waiting for the socket. The lower, the slower. */
 	public static final int SOCKET_TIMEOUT = 10;
 
 	/**
@@ -32,7 +32,7 @@ public class TimeoutConf {
 	public static final long UNCOMPLETED_LOGIN_TIMEOUT = 60000;
 
 	/**
-	 * This indicate how many time we wait for a message to arrive. The lower
+	 * This indicates how much time we wait for a message to arrive. The lower,
 	 * the slower.
 	 */
 	public static final int GAMESERVER_MESSAGE_GET_TIMEOUT = 1000;
@@ -55,7 +55,7 @@ public class TimeoutConf {
 	
 	/**
 	 * The amount of seconds until being able to retry login after N failed
-	 * attemps.
+	 * attempts.
 	 */
 	public static final int FAILED_LOGIN_BLOCKTIME = 600;
 

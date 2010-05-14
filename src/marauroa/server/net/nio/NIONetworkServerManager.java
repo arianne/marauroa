@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.42 2010/03/22 05:48:43 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.43 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -35,8 +35,8 @@ import marauroa.server.net.flood.IFloodCheck;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
- * This is the implementation of a worker that send messages, receive it, ...
- * This class also handles validation of connections and disconnections events
+ * This is the implementation of a worker that sends messages, receives them, ...
+ * This class also handles validation of connection and disconnection events
  * 
  * @author miguel
  * 
@@ -51,7 +51,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	/** We store the server for sending stuff. */
 	private NioServer server;
 
-	/** While keepRunning is true, we keep recieving messages */
+	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
 
 	/** isFinished is true when the thread has really exited. */
@@ -87,7 +87,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	public NIONetworkServerManager() throws IOException {
 		super("NetworkServerManager");
 		/*
-		 * init the packet validater (which can now only check if the address is
+		 * init the packet validator (which can now only check if the address is
 		 * banned)
 		 */
 		connectionValidator = new ConnectionValidator();
@@ -134,7 +134,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	}
 
 	/**
-	 * This method notify the thread to finish it execution
+	 * This method notifies the thread to finish the execution
 	 */
 	public void finish() {
 		logger.debug("shutting down NetworkServerManager");
@@ -173,7 +173,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 		Socket socket = channel.socket();
 
 		if (connectionValidator.checkBanned(socket)) {
-			logger.debug("Reject connect from banned IP: " + socket.getInetAddress());
+			logger.debug("Reject connection from banned IP: " + socket.getInetAddress());
 
 			/*
 			 * Sends a connect NACK message if the address is banned.
@@ -184,7 +184,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 
 			/*
 			 * NOTE: We should wait a bit to close the channel... to make sure
-			 * message is send *before* closing it, otherwise client won't know
+			 * message is sent *before* closing it, otherwise client won't know
 			 * about it.
 			 */
 
@@ -213,7 +213,7 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 	 *            the amount of data received.
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
-		logger.debug("Recv from channel:"+channel+" "+count+" bytes");
+		logger.debug("Received from channel:"+channel+" "+count+" bytes");
 		
 		stats.add("Bytes recv", count);
 		stats.add("Message recv", 1);

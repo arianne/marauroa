@@ -1,4 +1,4 @@
-/* $Id: Logger.java,v 1.22 2009/07/18 20:51:50 nhnb Exp $ */
+/* $Id: Logger.java,v 1.23 2010/05/14 19:38:11 kymara Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -22,7 +22,7 @@ import org.apache.log4j.spi.LoggerRepository;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * A wrapper around Log4J logger so that it is easy for us to reemplace it on
+ * A wrapper around Log4J logger so that it is easy for us to replace it in
  * the future.
  *
  * @author durkham

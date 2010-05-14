@@ -1,4 +1,4 @@
-/* $Id: Configuration.java,v 1.29 2010/02/22 16:33:36 nhnb Exp $ */
+/* $Id: Configuration.java,v 1.30 2010/05/14 19:38:11 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -186,7 +186,7 @@ public class Configuration {
 	}
 
 	/**
-	 * This method set a property with the value we pass as parameter
+	 * This method sets a property with the value we pass as parameter
 	 *
 	 * @param property
 	 *            the property we want to set the value

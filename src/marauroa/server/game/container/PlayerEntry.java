@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.50 2010/05/13 20:45:05 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.51 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -35,7 +35,7 @@ import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 
 /**
- * This class represent a player on game. It handles all the bussiness glue that
+ * This class represent a player on game. It handles all the business glue that
  * it is needed by the server.
  *
  * @author miguel
@@ -43,7 +43,7 @@ import marauroa.server.game.db.LoginEventDAO;
 public class PlayerEntry {
 
 	/**
-	 * This class store the information needed to allow a secure login. Once
+	 * This class stores the information needed to allow a secure login. Once
 	 * login is completed the information is cleared.
 	 */
 	public static class SecuredLoginInfo {
@@ -55,7 +55,7 @@ public class PlayerEntry {
 		/** A long array of bytes that represent a random value. */
 		public byte[] clientNonce;
 
-		/** A long byte array that represetn the hash of the client Nonce field */
+		/** A long byte array that represent the hash of the client Nonce field */
 		public byte[] clientNonceHash;
 
 		/** Username of the player */
@@ -73,7 +73,7 @@ public class PlayerEntry {
 		/** client ip address */
 		public InetAddress address;
 
-		/** seed identifiying the client */
+		/** seed identifying the client */
 		public String seed;
 
 		/**
@@ -152,11 +152,11 @@ public class PlayerEntry {
 		}
 
 		/**
-		 * Returns true if an account is temporally blocked due to too many
-		 * tries on the defined time frame.
+		 * Returns true if an account is temporarily blocked due to too many
+		 * tries in the defined time frame.
 		 *
-		 * @return true if an account is temporally blocked due to too many
-		 *         tries on the defined time frame.
+		 * @return true if an account is temporarily blocked due to too many
+		 *         tries in the defined time frame.
 		 * @throws SQLException
 		 *             if there is any database problem.
 		 */
@@ -294,11 +294,11 @@ public class PlayerEntry {
 	}
 	
 	/**
-	 * Returns true when nothing has been recieved from client in TIMEOUT_SECONDS.
+	 * Returns true when nothing has been received from client in TIMEOUT_SECONDS.
 	 * Note that client sends confirmations to perceptions, so this mean that client is
 	 * for whatever reason not working.
 	 * 
-	 * @return  true when nothing has been recieved from client in TIMEOUT_SECONDS.
+	 * @return  true when nothing has been received from client in TIMEOUT_SECONDS.
 	 */
 	public boolean isTimeout() {
 		return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_MILLISECONDS;		
@@ -425,9 +425,9 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * Return a list of the previous login attemps.
+	 * Return a list of the previous login attempts.
 	 *
-	 * @return a list of the previous login attemps.
+	 * @return a list of the previous login attempts.
 	 * @throws SQLException
 	 */
 	public List<String> getPreviousLogins() throws SQLException {
@@ -440,7 +440,7 @@ public class PlayerEntry {
 	 * entry and the actual time and the entry has not completed the login
 	 * stage.
 	 *
-	 * @return true, if it is removeable, false otherwise
+	 * @return true, if it is removable, false otherwise
 	 */
 	boolean isRemovable() {
 		/*

@@ -1,4 +1,4 @@
-/* $Id: NioServer.java,v 1.27 2009/12/27 19:30:37 nhnb Exp $ */
+/* $Id: NioServer.java,v 1.28 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -49,7 +49,7 @@ class NioServer extends Thread {
 
 	private int port;
 
-	/** While keepRunning is true, we keep recieving messages */
+	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
 
 	/** isFinished is true when the thread has really exited. */
@@ -78,7 +78,7 @@ class NioServer extends Thread {
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
 	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
-	/** A list of the listener to the onDisconnect event. */
+	/** A list of the listeners to the onDisconnect event. */
 	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
@@ -117,7 +117,7 @@ class NioServer extends Thread {
 		}
 		
 		/*
-		 * Wake up to make effective the closing.
+		 * Wake up to make the closure effective.
 		 */
 		selector.wakeup();
 	}
@@ -220,7 +220,7 @@ class NioServer extends Thread {
 										 */
 										change.socket.close();
 									} catch (Exception e) {
-										logger.info("Exception happend when closing socket", e);
+										logger.info("Exception happened when closing socket", e);
 									}
 									break;
 							}

@@ -1,4 +1,4 @@
-/* $Id: Encoder.java,v 1.8 2008/08/16 16:55:00 nhnb Exp $ */
+/* $Id: Encoder.java,v 1.9 2010/05/14 19:38:11 kymara Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.io.IOException;
 import marauroa.common.net.message.Message;
 
 /**
- * This class encode a Message as a stream of bytes.
+ * This class encodes a Message as a stream of bytes.
  * Encoder follows singleton pattern.
  *
  * @author miguel
@@ -49,7 +49,7 @@ public class Encoder {
 	}
 
 	/**
-	 * This method encodes using the Marauroa protocol a Message as a stream of
+	 * This method uses the Marauroa protocol to encode a Message as a stream of
 	 * bytes.
 	 *
 	 * @param msg

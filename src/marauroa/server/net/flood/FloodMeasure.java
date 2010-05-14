@@ -1,4 +1,4 @@
-/* $Id: FloodMeasure.java,v 1.9 2008/02/22 10:28:33 arianne_rpg Exp $ */
+/* $Id: FloodMeasure.java,v 1.10 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,7 +15,7 @@ package marauroa.server.net.flood;
 import java.nio.channels.SocketChannel;
 
 /**
- * Stores for each player the amount of messages and bytes send since the last
+ * Stores for each player the amount of messages and bytes sent since the last
  * timestamp.
  *
  * @author miguel
@@ -32,7 +32,7 @@ public class FloodMeasure {
 	/** The amount of messages received from client since the timestamp. */
 	public int sendMessages;
 
-	/** The amount of bytes recieved from client since the timestamp */
+	/** The amount of bytes received from client since the timestamp */
 	public int sendBytes;
 
 	/** When this entry was created. */
