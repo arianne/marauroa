@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.14 2010/02/08 14:58:59 nhnb Exp $ */
+/* $Id: Message.java,v 1.15 2010/05/15 12:21:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -192,8 +192,10 @@ public class Message implements Serializable {
 	 *                if the serializations fails
 	 */
 	public void readObject(InputSerializer in) throws IOException {
-		if (in.readByte() != NetConst.NETWORK_PROTOCOL_VERSION) {
-			throw new IOException();
+		int protocolVersion = in.readByte();
+		if (protocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
+				|| protocolVersion > NetConst.NETWORK_PROTOCOL_VERSION_MAX) {
+			throw new IOException("Unsupported protocol version.");
 		}
 
 		type = MessageType.values()[in.readByte()];

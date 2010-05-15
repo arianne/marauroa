@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.41 2010/02/08 21:40:22 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.42 2010/05/15 12:21:27 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -182,42 +182,43 @@ public class MessageFactory {
 	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException,
 	        InvalidVersionException {
 		/*
-		 * We do a fast check to see if protocol versions match.
+		 * Check the version of the network protocol.
 		 */
 		int networkProtocolVersion = data[offset];
-		
-		if (networkProtocolVersion == NetConst.NETWORK_PROTOCOL_VERSION) {
-			int messageTypeIndex = data[offset + 1];
-			/*
-			 * Now we check if we have this message class implemented.
-			 */
-			if (factoryArray.containsKey(messageTypeIndex)) {
-				Message tmp = null;
-				try {
-					Class<?> messageType = factoryArray.get(messageTypeIndex);
-					tmp = (Message) messageType.newInstance();
-					ByteArrayInputStream in = new ByteArrayInputStream(data);
-					if (offset > 0) {
-						in.skip(offset);
-					}
-					InputSerializer s = new InputSerializer(in);
-
-					tmp.readObject(s);
-					tmp.setSocketChannel(channel);
-					s.close();
-					return tmp;
-				} catch (Exception e) {
-					logger.error("error in getMessage", e);
-					throw new IOException(e.getMessage());
-				}
-			} else {
-				logger.warn("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
-				throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
-			}
-		} else {
+		if (networkProtocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
+				|| networkProtocolVersion > NetConst.NETWORK_PROTOCOL_VERSION_MAX) {
 			logger.error("Message has incorrect protocol version(" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
 			logger.error("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[offset]);
+		}
+
+
+		int messageTypeIndex = data[offset + 1];
+		/*
+		 * Now we check if we have this message class implemented.
+		 */
+		if (factoryArray.containsKey(messageTypeIndex)) {
+			Message tmp = null;
+			try {
+				Class<?> messageType = factoryArray.get(messageTypeIndex);
+				tmp = (Message) messageType.newInstance();
+				ByteArrayInputStream in = new ByteArrayInputStream(data);
+				if (offset > 0) {
+					in.skip(offset);
+				}
+				InputSerializer s = new InputSerializer(in);
+
+				tmp.readObject(s);
+				tmp.setSocketChannel(channel);
+				s.close();
+				return tmp;
+			} catch (Exception e) {
+				logger.error("error in getMessage", e);
+				throw new IOException(e.getMessage());
+			}
+		} else {
+			logger.warn("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
+			throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
 		}
 	}
 };

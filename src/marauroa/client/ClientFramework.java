@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.57 2010/05/03 19:25:53 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.58 2010/05/15 12:21:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -207,6 +207,8 @@ public abstract class ClientFramework {
 	 *            Player username
 	 * @param password
 	 *            Player password
+	 * @param seed
+	 *            preauthentication seed
 	 * @throws InvalidVersionException
 	 *             if we are not using a compatible version
 	 * @throws TimeoutException
@@ -561,7 +563,7 @@ public abstract class ClientFramework {
 	 *            unused
 	 * @return true if new messages were received.
 	 */
-	public synchronized boolean loop(int delta) {
+	public synchronized boolean loop(@SuppressWarnings("unused") int delta) {
 		boolean receivedMessages = false;
 
 		/* Check network for new messages. */
