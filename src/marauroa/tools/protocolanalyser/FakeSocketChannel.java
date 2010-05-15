@@ -139,7 +139,7 @@ class FakeSocketChannel extends SocketChannel {
 	/**
 	 * returns 0
 	 * 
-	 * @param dst ignored
+	 * @param dsts ignored
 	 * @param offset ignored
 	 * @param length ignored
 	 * @return 0
@@ -173,7 +173,7 @@ class FakeSocketChannel extends SocketChannel {
 	/**
 	 * ignores
 	 *
-	 * @param src ignored
+	 * @param srcs ignored
 	 * @param offset ignored
 	 * @param length ignored
 	 * @return 0

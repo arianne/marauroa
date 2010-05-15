@@ -1,4 +1,4 @@
-/* $Id: Statistics.java,v 1.45 2010/03/22 18:45:07 nhnb Exp $ */
+/* $Id: Statistics.java,v 1.46 2010/05/15 13:29:47 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -133,7 +133,7 @@ public class Statistics implements StatisticsMBean {
 		 * @param out the writer to write to
 		 * @param diff ignored
 		 */
-		public void print(PrintWriter out, double diff) {
+		public void print(PrintWriter out, @SuppressWarnings("unused") double diff) {
 			synchronized (content) {
 				for (String type : content.keySet()) {
 					out.println("<attrib name=\"" + escapeXML(type) + "\" value=\""

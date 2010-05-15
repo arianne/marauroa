@@ -78,6 +78,8 @@ public class ProtocolAnalyser {
 	/**
 	 * reads a network dump file and prints the packages, their content and the
 	 * way how Marauroa parses the data.
+	 *
+	 * @param args 
 	 */
 	public static void main(String[] args) throws IOException, InvalidVersionException {
 		Log4J.init();

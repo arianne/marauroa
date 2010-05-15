@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.91 2010/03/24 19:01:46 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.92 2010/05/15 13:29:47 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -373,14 +373,13 @@ public class marauroad extends Thread {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			private Logger logger = Log4J.getLogger(marauroad.class);
+			private Logger log = Log4J.getLogger(marauroad.class);
 
 			@Override
 			public void run() {
-				// Note: Log4J is shutdown already at this point
-				logger.warn("User requesting shutdown");
+				log.warn("User requesting shutdown");
 				finish();
-				logger.info("Shutdown completed. See you later!");
+				log.info("Shutdown completed. See you later!");
 			}
 		});
 
