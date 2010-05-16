@@ -1,4 +1,4 @@
-/* $Id: DelayedEventHandlerThread.java,v 1.2 2010/05/16 15:24:24 nhnb Exp $ */
+/* $Id: DelayedEventHandlerThread.java,v 1.3 2010/05/16 16:13:06 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -38,6 +38,16 @@ public class DelayedEventHandlerThread extends Thread {
 	/** We need rp manager to run the messages and actions from players */
 	private RPServerManager rpMan;
 
+	private static DelayedEventHandlerThread instance;
+
+	/**
+	 * gets the last instantiated DelayedEventHandlerThread
+	 *
+	 * @return DelayedEventHandlerThread or <code>null</code> if it has never been instantiated
+	 */
+	public static DelayedEventHandlerThread get() {
+		return instance;
+	}
 
 	/**
 	 * Constructor.
@@ -47,6 +57,7 @@ public class DelayedEventHandlerThread extends Thread {
 		super("DelayedEventHandlerThread");
 		queue = new LinkedBlockingQueue<Pair<DelayedEventHandler, Object>>();
 		this.rpMan = rpMan;
+		DelayedEventHandlerThread.instance = this;
 	}
 	
 
