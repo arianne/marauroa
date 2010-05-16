@@ -94,7 +94,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-3.6.1
+3.7
+- Note: Make sure that you place the player into the world in RPRuleProcessor.onInit() and not in RPObjectFactory.transform
+- improved performance by processing client message outside the PlayerEntryContainer lock
 - added detailed error message if a transaction is access from another thread
 
 3.6
