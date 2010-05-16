@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.150 2010/05/16 15:01:15 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.151 2010/05/16 15:24:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -22,6 +22,7 @@ import marauroa.common.net.message.Message;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
+import marauroa.server.game.messagehandler.DisconnectHandler;
 import marauroa.server.game.messagehandler.MessageDispatcher;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
@@ -160,10 +161,15 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
-	
+
+	/** processes delayed events */
 	private DelayedEventHandlerThread delayedEventHandler;
 	
+	/** dispatches messages to the appropriate handlers */
 	private MessageDispatcher messageDispatcher;
+
+	/** handles disconnects */
+	private DisconnectHandler disconnectHandler = new DisconnectHandler();
 
 	/**
 	 * Constructor that initialize also the RPManager
@@ -192,7 +198,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 		
-		delayedEventHandler= new DelayedEventHandlerThread(playerContainer, rpMan);
+		delayedEventHandler= new DelayedEventHandlerThread(rpMan);
 
 		messageDispatcher = new MessageDispatcher();
 		messageDispatcher.init(netMan, rpMan, playerContainer, stats, key);
@@ -292,8 +298,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the channel that was closed.
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		logger.info("GAME Disconnecting " + channel);		
-		delayedEventHandler.disconnect(channel);
+		logger.info("GAME Disconnecting " + channel);
+		delayedEventHandler.addDelayedEvent(disconnectHandler, channel);
 	}
 
 }
