@@ -1,4 +1,4 @@
-/* $Id: AddRemoveCharacterThread.java,v 1.2 2010/05/14 19:39:42 kymara Exp $ */
+/* $Id: DelayedEventHandler.java,v 1.1 2010/05/16 15:00:15 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -23,19 +23,19 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.rp.RPServerManager;
 
 /**
- * Thread that disconnects players.
+ * Thread that disconnect players.
  * It has to be done this way because we can't run it on the main loop of GameServerManager,
- * because it locks waiting for new messages to arrive, so the player is not removed until a 
- * message is received.
+ * because it locks waiting for new messages to arrive, so the player keeps unremoved until a 
+ * message is recieved.
  * 
  * This way players are removed as they are requested to be.
  * 
  * @author miguel, hendrik
  *
  */
-public class AddRemoveCharacterThread extends Thread {
+public class DelayedEventHandler extends Thread {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(AddRemoveCharacterThread.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(DelayedEventHandler.class);
 
 	private boolean keepRunning = true;
 	private BlockingQueue<SocketChannel> channels;
@@ -51,7 +51,7 @@ public class AddRemoveCharacterThread extends Thread {
 	 * Constructor.
 	 * It just gives a nice name to the thread.
 	 */
-	public AddRemoveCharacterThread(PlayerEntryContainer playerContainer, RPServerManager rpMan) {
+	public DelayedEventHandler(PlayerEntryContainer playerContainer, RPServerManager rpMan) {
 		super("AddRemoveCharacterThread");
 		channels = new LinkedBlockingQueue<SocketChannel>();
 		this.playerContainer = playerContainer;
@@ -70,7 +70,7 @@ public class AddRemoveCharacterThread extends Thread {
 			channels.put(channel);
 		} catch (InterruptedException e) {
 			/*
-			 * Not really interested in.
+			 * Not really instereted in.
 			 */
 		}
 	}
@@ -81,7 +81,7 @@ public class AddRemoveCharacterThread extends Thread {
 			SocketChannel channel = null;
 
 			/*
-			 * We keep waiting until we are signalled to remove a player.
+			 * We keep waiting until we are signaled to remove a player.
 			 * This way we avoid wasting CPU cycles.
 			 */
 			try {
@@ -105,7 +105,7 @@ public class AddRemoveCharacterThread extends Thread {
 				}
 
 				/*
-				 * If client is still logging in, don't notify RP as it knows nothing about
+				 * If client is still loging in, don't notify RP as it knows nothing about
 				 * this client. That means state != of GAME_BEGIN
 				 */
 				if (entry.state == ClientState.GAME_BEGIN) {
@@ -127,7 +127,7 @@ public class AddRemoveCharacterThread extends Thread {
 				entry.state = ClientState.LOGOUT_ACCEPTED;
 			} else {
 				/*
-				 * Player may have logged out correctly or may have even not started.
+				 * Player may have logout correctly or may have even not started.
 				 */
 				logger.debug("No player entry for channel: " + channel);
 			}
