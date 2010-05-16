@@ -1,4 +1,4 @@
-/* $Id: DelayedEventHandler.java,v 1.1 2010/05/16 15:00:15 nhnb Exp $ */
+/* $Id: DelayedEventHandlerThread.java,v 1.1 2010/05/16 15:01:15 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -33,9 +33,9 @@ import marauroa.server.game.rp.RPServerManager;
  * @author miguel, hendrik
  *
  */
-public class DelayedEventHandler extends Thread {
+public class DelayedEventHandlerThread extends Thread {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(DelayedEventHandler.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(DelayedEventHandlerThread.class);
 
 	private boolean keepRunning = true;
 	private BlockingQueue<SocketChannel> channels;
@@ -51,8 +51,8 @@ public class DelayedEventHandler extends Thread {
 	 * Constructor.
 	 * It just gives a nice name to the thread.
 	 */
-	public DelayedEventHandler(PlayerEntryContainer playerContainer, RPServerManager rpMan) {
-		super("AddRemoveCharacterThread");
+	public DelayedEventHandlerThread(PlayerEntryContainer playerContainer, RPServerManager rpMan) {
+		super("DelayedEventHandlerThread");
 		channels = new LinkedBlockingQueue<SocketChannel>();
 		this.playerContainer = playerContainer;
 		this.rpMan = rpMan;

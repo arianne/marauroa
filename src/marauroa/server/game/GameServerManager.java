@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.149 2010/05/16 15:00:15 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.150 2010/05/16 15:01:15 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -21,7 +21,7 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.Message;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
-import marauroa.server.game.messagehandler.DelayedEventHandler;
+import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 import marauroa.server.game.messagehandler.MessageDispatcher;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
@@ -161,7 +161,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** isFinished is true when the thread has really exited. */
 	private boolean isfinished;
 	
-	private DelayedEventHandler delayedEventHandler;
+	private DelayedEventHandlerThread delayedEventHandler;
 	
 	private MessageDispatcher messageDispatcher;
 
@@ -192,7 +192,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		playerContainer = PlayerEntryContainer.getContainer();
 		stats = Statistics.getStatistics();
 		
-		delayedEventHandler= new DelayedEventHandler(playerContainer, rpMan);
+		delayedEventHandler= new DelayedEventHandlerThread(playerContainer, rpMan);
 
 		messageDispatcher = new MessageDispatcher();
 		messageDispatcher.init(netMan, rpMan, playerContainer, stats, key);
