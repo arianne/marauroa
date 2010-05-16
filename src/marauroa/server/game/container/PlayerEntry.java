@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.51 2010/05/14 19:39:42 kymara Exp $ */
+/* $Id: PlayerEntry.java,v 1.52 2010/05/16 16:56:14 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -29,10 +29,13 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
+import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
+import marauroa.server.game.dbcommand.StoreCharacterCommand;
 
 /**
  * This class represent a player on game. It handles all the business glue that
@@ -367,11 +370,12 @@ public class PlayerEntry {
 	 * @throws IOException in case of an input/output error
 	 */
 	public void storeRPObject(RPObject player) throws SQLException, IOException {
-		// We store the object in the database
-		DAORegister.get().get(CharacterDAO.class).storeCharacter(username, character, player);
-
 		// And update the entry
 		object = player;
+
+		// We store the object in the database
+		DBCommand command = new StoreCharacterCommand(username, character, player);
+		DBCommandQueue.get().enqueue(command);
 	}
 
 	/**

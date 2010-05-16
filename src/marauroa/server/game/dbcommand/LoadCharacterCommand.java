@@ -70,7 +70,7 @@ public class LoadCharacterCommand  extends AbstractDBCommand {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		object = DAORegister.get().get(CharacterDAO.class).loadCharacter(username, character);
+		object = DAORegister.get().get(CharacterDAO.class).loadCharacter(transaction, username, character);
 		if (callback != null) {
 			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
 		}
