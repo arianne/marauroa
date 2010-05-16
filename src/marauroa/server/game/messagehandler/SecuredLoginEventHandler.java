@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginEventHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: SecuredLoginEventHandler.java,v 1.2 2010/05/16 20:48:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -175,9 +175,14 @@ class SecuredLoginEventHandler extends MessageHandler {
 				logger.warn("Client(" + msg.getAddress().toString() + ") trying to login twice");
 
 				if (existing.state == ClientState.GAME_BEGIN) {
+					/* We restore back the character to the world */
+					
 					RPObject object = existing.object;
 
+					playerContainer.getLock().requestWriteLock();
 					rpMan.onTimeout(object);
+					playerContainer.getLock().releaseLock();
+
 					existing.storeRPObject(object);
 				}
 				logger.debug("Disconnecting PREVIOUS " + existing.channel + " with " + existing);
