@@ -1,4 +1,4 @@
-/* $Id: MessageDispatcher.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: MessageDispatcher.java,v 1.2 2010/05/16 20:56:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -55,8 +55,8 @@ public class MessageDispatcher {
 	private void initMap() {
 		handlers.put(C2S_LOGIN_REQUESTKEY, new LoginRequestKeyHandler());
 		handlers.put(C2S_LOGIN_SENDPROMISE, new LoginSendPromiseHandler());
-		handlers.put(C2S_LOGIN_SENDNONCENAMEANDPASSWORD, new SecuredLoginEventHandler());
-		handlers.put(C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, new SecuredLoginEventHandler());
+		handlers.put(C2S_LOGIN_SENDNONCENAMEANDPASSWORD, new SecuredLoginHandler());
+		handlers.put(C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, new SecuredLoginHandler());
 		handlers.put(C2S_CHOOSECHARACTER, new ChooseCharacterHandler());
 		handlers.put(C2S_LOGOUT, new LogoutHandler());
 		handlers.put(C2S_ACTION, new ActionHandler());

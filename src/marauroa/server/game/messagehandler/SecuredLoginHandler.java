@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginEventHandler.java,v 1.2 2010/05/16 20:48:28 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.1 2010/05/16 20:56:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
  * game continue or fail and resources for this player
  * are freed.
  */
-class SecuredLoginEventHandler extends MessageHandler {
+class SecuredLoginHandler extends MessageHandler {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
 
