@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.12 2010/04/02 13:58:17 kymara Exp $ */
+/* $Id: Result.java,v 1.13 2010/05/16 18:51:09 astridemma Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -41,11 +41,14 @@ public enum Result {
 	 */
 	FAILED_STRING_SIZE(false, "Account was not created because any of the parameters are either too long or too short."),
 
-	/** Account was not created because because this account already exists. */
-	FAILED_PLAYER_EXISTS(false, "Account was not created because because this account already exists."),
+	/** Account was not created because this account already exists. */
+	FAILED_PLAYER_EXISTS(false, "Account was not created because this account already exists."),
 
 	/** Account was not created because there was an unspecified exception. */
 	FAILED_EXCEPTION(false, "Account was not created because there was an unspecified exception."),
+
+	/** Character was not created because this character already exists. */
+	FAILED_CHARACTER_EXISTS(false, "Character was not created because this Character already exists."),
 
 	/**
 	 * The template passed to the create character method is not valid because
