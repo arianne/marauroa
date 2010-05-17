@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.2 2010/05/16 22:13:00 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.3 2010/05/17 19:25:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -23,7 +23,6 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
-import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
@@ -162,9 +161,6 @@ class SecuredLoginHandler extends MessageHandler {
 					return;
 				}
 			}
-			
-
-			kickOldPlayer(msg, info);
 
 			logger.debug("Correct username/password");
 
@@ -208,43 +204,6 @@ class SecuredLoginHandler extends MessageHandler {
 			logger.error("error while processing SecuredLoginEvent", e);
 		} catch (SQLException e) {
 			logger.error("error while processing SecuredLoginEvent", e);
-		}
-	}
-
-	private void kickOldPlayer(Message msg, SecuredLoginInfo info)
-			throws SQLException, IOException {
-		/* Now we check if this player is previously logged in */
-		PlayerEntry existing = playerContainer.get(info.username);
-
-		if (existing != null) {
-			/*
-			 * Warning: Player is alreay logged in. So we proceed to store it
-			 * and remove from game.
-			 */
-			logger.warn("Client(" + msg.getAddress().toString() + ") trying to login twice");
-
-			if (existing.state == ClientState.GAME_BEGIN) {
-				/* We restore back the character to the world */
-				
-				RPObject object = existing.object;
-
-				playerContainer.getLock().requestWriteLock();
-				rpMan.onTimeout(object);
-				playerContainer.getLock().releaseLock();
-
-				existing.storeRPObject(object);
-			}
-			logger.debug("Disconnecting PREVIOUS " + existing.channel + " with " + existing);
-
-			/*
-			 * Disconnect player of server.
-			 */
-			netMan.disconnectClient(existing.channel);
-
-			/*
-			 * HACK: Remove the entry now so we can continue.
-			 */				
-			playerContainer.remove(existing.clientid);
 		}
 	}
 

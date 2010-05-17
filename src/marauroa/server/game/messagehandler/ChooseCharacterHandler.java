@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.4 2010/05/16 16:13:06 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.5 2010/05/17 19:25:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -27,6 +27,7 @@ import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.dbcommand.LoadCharacterCommand;
 import marauroa.server.game.rp.RPServerManager;
 
@@ -64,6 +65,15 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 				return;
 			}
 
+			/* We set the character in the entry info */
+			entry.character = msg.getCharacter();
+
+			PlayerEntry oldEntry = playerContainer.getOldEntry(entry);
+			if ((oldEntry != null) && (oldEntry.state == ClientState.GAME_BEGIN)) {
+				reownOldEntry(oldEntry, entry);
+				return;
+			}
+
 			/* We check if this account has such player. */
 			if (entry.hasCharacter(msg.getCharacter())) {
 				loadAndPlaceInWorld(msg, clientid, entry);
@@ -80,26 +90,25 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		}
 	}
 
-	private void rejectClient(SocketChannel channel, int clientid,
-			PlayerEntry entry) {
-		/*
-		 * If the account doesn't own the character OR if the rule processor rejected it.
-		 * So we return it back to login complete stage.
-		 */
-		entry.state = ClientState.LOGIN_COMPLETE;
+	private void reownOldEntry(PlayerEntry oldEntry, PlayerEntry entry) {
+		// remove character from world
+		playerContainer.getLock().requestWriteLock();
+		RPObject object = oldEntry.object; // (RPObject) oldEntry.object.clone();
+		rpMan.onTimeout(oldEntry.object);
 
-		/* Error: There is no such character */
-		MessageS2CChooseCharacterNACK msgChooseCharacterNACK = 
-			new MessageS2CChooseCharacterNACK(channel);
+		// Disconnect player of server.
+		logger.debug("Disconnecting PREVIOUS " + oldEntry.channel + " with " + oldEntry);
+		netMan.disconnectClient(oldEntry.channel);
+		playerContainer.remove(oldEntry.clientid);
 
-		msgChooseCharacterNACK.setClientID(clientid);
-		netMan.sendMessage(msgChooseCharacterNACK);
+		// add player object again (create a new instance of the object to clear the internal state)
+		object = DAORegister.get().getRPObjectFactory().transform(object);
+		completeLoadingCharacterIntoWorld(rpMan, entry.clientid, entry.channel, entry, object);
+		playerContainer.getLock().releaseLock();
 	}
 
 	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg,
 			int clientid, PlayerEntry entry) throws SQLException, IOException {
-		/* We set the character in the entry info */
-		entry.character = msg.getCharacter();
 		DBCommand command = new LoadCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel());
 		DBCommandQueue.get().enqueue(command);
 	}
@@ -116,15 +125,21 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		
 		/* We restore back the character to the world */
 		playerContainer.getLock().requestWriteLock();
+		completeLoadingCharacterIntoWorld(rpMan, clientid, cmd.getChannel(), entry, object);
+		playerContainer.getLock().releaseLock();
+	}
+
+	private void completeLoadingCharacterIntoWorld(RPServerManager rpMan,
+			int clientid, SocketChannel channel, PlayerEntry entry, RPObject object) {
 
 		if (object != null) {
 			/*
 			 * We set the clientid attribute to link easily the object with
 			 * is player runtime information
 			 */
-			object.put("#clientid", cmd.getClientid());
+			object.put("#clientid", clientid);
 		} else {
-			logger.warn("could not load object for character(" + cmd.getCharacterName() +") from database");
+			logger.warn("could not load object for character(" + entry.character + ") from database");
 		}
 
 		entry.setObject(object);
@@ -132,19 +147,34 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		/* We ask RP Manager to initialize the object */
 		if(rpMan.onInit(object)) {
 			/* Correct: Character exist */
-			MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(cmd.getChannel());
+			MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(channel);
 			msgChooseCharacterACK.setClientID(clientid);
 			netMan.sendMessage(msgChooseCharacterACK);
 
 			/* And finally sets this connection state to GAME_BEGIN */
 			entry.state = ClientState.GAME_BEGIN;
-			playerContainer.getLock().releaseLock();
 		} else {
 			/* This account doesn't own that character */
-			logger.warn("RuleProcessor rejected character(" + cmd.getCharacterName()+")");
-			playerContainer.getLock().releaseLock();
-			rejectClient(cmd.getChannel(), clientid, entry);
+			logger.warn("RuleProcessor rejected character(" + entry.character + ")");
+			rejectClient(channel, clientid, entry);
 		}
+	}
+
+
+	private void rejectClient(SocketChannel channel, int clientid,
+			PlayerEntry entry) {
+		/*
+		 * If the account doesn't own the character OR if the rule processor rejected it.
+		 * So we return it back to login complete stage.
+		 */
+		entry.state = ClientState.LOGIN_COMPLETE;
+
+		/* Error: There is no such character */
+		MessageS2CChooseCharacterNACK msgChooseCharacterNACK = 
+			new MessageS2CChooseCharacterNACK(channel);
+
+		msgChooseCharacterNACK.setClientID(clientid);
+		netMan.sendMessage(msgChooseCharacterNACK);
 	}
 
 }

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.25 2010/05/16 22:18:26 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.26 2010/05/17 19:25:48 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -174,18 +174,20 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the entry that has been associated to this player or
-	 * null if it does not exists.
+	 * This method returns the old entry that has been associated to this player or
+	 * null if there is no old entry
 	 *
-	 * @param charname
-	 *            the character name to look for
-	 * @return the PlayerEntry or null if it is not found
+	 * @param entry
+	 *            entry with username and password
+	 * @return the PlayerEntry or null if there is none
 	 */
-	public PlayerEntry getByCharacterName(String charname) {
+	public PlayerEntry getOldEntry(PlayerEntry oldEntry) {
 		synchronized (clientidMap) {
 			for (PlayerEntry entry : clientidMap.values()) {
 
-				if (charname.equalsIgnoreCase(entry.character)) {
+				if (oldEntry.username.equalsIgnoreCase(entry.username)
+					&& oldEntry.character.equalsIgnoreCase(entry.character)
+					&& entry != oldEntry) {
 					return entry;
 				}
 			}
