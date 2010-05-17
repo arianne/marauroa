@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.26 2010/05/17 19:25:48 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.27 2010/05/17 23:02:00 yoriy Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -177,8 +177,8 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * This method returns the old entry that has been associated to this player or
 	 * null if there is no old entry
 	 *
-	 * @param entry
-	 *            entry with username and password
+	 * @param oldEntry
+	 *            old entry with username and password
 	 * @return the PlayerEntry or null if there is none
 	 */
 	public PlayerEntry getOldEntry(PlayerEntry oldEntry) {
