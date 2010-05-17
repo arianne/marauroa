@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.7 2010/05/03 21:23:27 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.8 2010/05/17 19:23:19 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.server.game.rp.RPObjectFactory;
 public class DAORegister {
 
 	private Map<Class<?>, Object> register = new HashMap<Class<?>, Object>();
+	private RPObjectFactory factory;
 	private static DAORegister instance;
 
 	private DAORegister() {
@@ -79,7 +80,7 @@ public class DAORegister {
 	 * registers the core DAOs provided by marauroa itself.
 	 */
 	private void registerDAOs() {
-		RPObjectFactory factory = RPObjectFactory.get();
+		factory = RPObjectFactory.get();
 
 		register(AccountDAO.class, new AccountDAO());
 		register(BanListDAO.class, new BanListDAO());
@@ -91,4 +92,14 @@ public class DAORegister {
 		register(RPZoneDAO.class, new RPZoneDAO(factory));
 		register(StatisticsDAO.class, new StatisticsDAO());
 	}
+
+	/**
+	 * gets the RPObjectFactory
+	 *
+	 * @return RPObjectFactory
+	 */
+	public RPObjectFactory getRPObjectFactory() {
+		return factory;
+	}
+
 }
