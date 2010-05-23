@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.21 2010/05/03 22:08:45 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.22 2010/05/23 21:02:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -26,6 +26,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
@@ -371,9 +372,10 @@ public class AccountDAO {
 			LoginSeedDAO loginSeedDAO = DAORegister.get().get(LoginSeedDAO.class);
 			Boolean seedVerified = loginSeedDAO.verifySeed(transaction, informations.username, informations.seed);
 			if (seedVerified == null) {
+				informations.reason = MessageS2CLoginNACK.Reasons.SEED_WRONG;
 				return false;
 			}
-			// the provided see is valid, use it up
+			// the provided seed is valid, use it up
 			loginSeedDAO.useSeed(informations.seed);
 			if (seedVerified == Boolean.TRUE) {
 				// the seed was even pre authenticated, so we are done here

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.10 2009/09/24 06:48:03 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.11 2010/05/23 21:02:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,7 +40,9 @@ public class MessageS2CLoginNACK extends Message {
 		/** @since 3.0 */
 		TOO_MANY_TRIES_USERNAME, 
 		/** @since 3.0 */
-		TOO_MANY_TRIES_IP 
+		TOO_MANY_TRIES_IP,
+		/** @since 3.7 */
+		SEED_WRONG;
 	}
 
 	static private String[] text = {

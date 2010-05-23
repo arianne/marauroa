@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.52 2010/05/16 16:56:14 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.53 2010/05/23 21:02:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -27,6 +27,7 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
+import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.db.command.DBCommand;
@@ -78,6 +79,9 @@ public class PlayerEntry {
 
 		/** seed identifying the client */
 		public String seed;
+
+		/** reason why a login failed */
+		public Reasons reason;
 
 		/**
 		 * Constructor

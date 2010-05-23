@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.3 2010/05/17 19:25:48 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.4 2010/05/23 21:02:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -115,8 +115,11 @@ class SecuredLoginHandler extends MessageHandler {
 				info.addLoginEvent(msg.getAddress(), false);
 
 				/* Send player the Login NACK message */
+				if (info.reason == null) {
+					info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
+				}
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
-				        MessageS2CLoginNACK.Reasons.USERNAME_WRONG);
+						info.reason);
 
 				netMan.sendMessage(msgLoginNACK);
 				playerContainer.remove(clientid);
