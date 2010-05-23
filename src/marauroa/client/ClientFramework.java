@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.58 2010/05/15 12:21:27 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.59 2010/05/23 20:14:51 kymara Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -290,7 +290,7 @@ public abstract class ClientFramework {
 					break;
 				/* Server send the character list */
 				case S2C_CHARACTERLIST:
-					logger.debug("Recieved Character list");
+					logger.debug("Received Character list");
 					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 					/*
@@ -305,7 +305,7 @@ public abstract class ClientFramework {
 				 * versions, homepage, etc...
 				 */
 				case S2C_SERVERINFO:
-					logger.debug("Recieved Server info");
+					logger.debug("Received Server info");
 					String[] info = ((MessageS2CServerInfo) msg).getContents();
 
 					/* We notify client of this info by calling the callback method. */
@@ -348,9 +348,9 @@ public abstract class ClientFramework {
 		Message msgCC = new MessageC2SChooseCharacter(null, character);
 		netMan.addMessage(msgCC);
 
-		int recieved = 0;
+		int received = 0;
 
-		while (recieved != 1) {
+		while (received != 1) {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
@@ -393,11 +393,11 @@ public abstract class ClientFramework {
 
 		netMan.addMessage(msgCA);
 
-		int recieved = 0;
+		int received = 0;
 
 		AccountResult result = null;
 
-		while (recieved != 1) {
+		while (received != 1) {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
@@ -408,7 +408,7 @@ public abstract class ClientFramework {
 					MessageS2CCreateAccountACK msgack = (MessageS2CCreateAccountACK) msg;
 					result = new AccountResult(Result.OK_CREATED, msgack.getUsername());
 
-					recieved++;
+					received++;
 					break;
 
 				/* Account was not created. Reason explained on event. */
@@ -417,7 +417,7 @@ public abstract class ClientFramework {
 					MessageS2CCreateAccountNACK nack = (MessageS2CCreateAccountNACK) msg;
 					result = new AccountResult(nack.getResolutionCode(), username);
 
-					recieved++;
+					received++;
 					break;
 				default:
 					logger.debug("Unexpected method while waiting for confirmation of account creation: " + msg);
@@ -469,7 +469,7 @@ public abstract class ClientFramework {
 
 				/* Server send the character list */
 				case S2C_CHARACTERLIST:
-					logger.debug("Recieved Character list");
+					logger.debug("Received Character list");
 					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 					/*
