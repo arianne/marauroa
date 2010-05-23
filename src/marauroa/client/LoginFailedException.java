@@ -1,4 +1,4 @@
-/* $Id: LoginFailedException.java,v 1.4 2009/07/17 21:17:25 nhnb Exp $ */
+/* $Id: LoginFailedException.java,v 1.5 2010/05/23 21:38:13 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -12,12 +12,15 @@
  ***************************************************************************/
 package marauroa.client;
 
+import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
+
 /**
  * this exception is thrown when a login failed for example because of a wrong password.
  */
 public class LoginFailedException extends Exception {
 
 	private static final long serialVersionUID = -6977739824675973192L;
+	private Reasons reason;
 
 	/**
 	 * creates a new LoginFailedException
@@ -27,4 +30,26 @@ public class LoginFailedException extends Exception {
 	public LoginFailedException(String reason) {
 		super("Login failed: " + reason);
 	}
+
+
+	/**
+	 * creates a new LoginFailedException
+	 *
+	 * @param reason a human readable error message
+	 * @param reasonCode enumeration instance
+	 */
+	public LoginFailedException(String reason, Reasons reasonCode) {
+		this(reason);
+		this.reason= reasonCode;
+    }
+
+
+	/**
+	 * gets the reason
+	 *
+	 * @return Reason
+	 */
+	public Reasons getReason() {
+    	return reason;
+    }
 }

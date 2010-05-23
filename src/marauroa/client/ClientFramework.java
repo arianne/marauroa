@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.59 2010/05/23 20:14:51 kymara Exp $ */
+/* $Id: ClientFramework.java,v 1.60 2010/05/23 21:38:13 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -316,7 +316,7 @@ public abstract class ClientFramework {
 				case S2C_LOGIN_NACK:
 					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
-					throw new LoginFailedException(msgNACK.getResolution());
+					throw new LoginFailedException(msgNACK.getResolution(), msgNACK.getResolutionCode());
 				
 				/* Login failed, explain reason on event */
 				case S2C_LOGIN_MESSAGE_NACK:
