@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.11 2010/05/23 21:02:26 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.12 2010/05/23 21:28:27 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -59,7 +59,8 @@ public class MessageS2CLoginNACK extends Message {
 	        "There have been too many failed login attempts for your account. "
         	+ "Please wait a couple of minutes or contact support.",
 	        "There have been too many failed login attempts from your network. "
-        	+ "Please wait a couple of minutes or contact support."};
+        	+ "Please wait a couple of minutes or contact support.",
+        	"Preauthentication failed, please try again."};
 
 	/** The reason of login rejection */
 	private Reasons reason;
