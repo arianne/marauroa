@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.62 2010/05/24 18:38:59 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.63 2010/05/24 22:15:32 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -50,6 +50,7 @@ import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
+import marauroa.common.net.message.MessageS2CInvalidMessage;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
@@ -234,6 +235,9 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
+				case S2C_INVALIDMESSAGE: {
+					throw new LoginFailedException(((MessageS2CInvalidMessage) msg).getReason());
+				}
 				/* Server sends its public RSA key */
 				case S2C_LOGIN_SENDKEY: {
 					logger.debug("Received Key");
@@ -409,6 +413,9 @@ public abstract class ClientFramework {
 			Message msg = getMessage();
 
 			switch (msg.getType()) {
+				case S2C_INVALIDMESSAGE: {
+					result = new AccountResult(Result.FAILED_EXCEPTION, username);
+				}
 				/* Account was created */
 				case S2C_CREATEACCOUNT_ACK:
 					logger.debug("Create account ACK");
