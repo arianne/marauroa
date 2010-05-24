@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.11 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.12 2010/05/24 14:49:55 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -175,7 +175,7 @@ public class CharacterDAO {
 				throw new SQLException("Unable to find player(" + username + ")");
 			}
 
-			String query = "select charname from characters where player_id=[player_id]";
+			String query = "select charname from characters where player_id=[player_id] order by charname";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			logger.debug("getCharacterList is executing query " + query);
