@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.42 2010/05/15 12:21:27 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.43 2010/05/24 22:16:55 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -202,6 +202,7 @@ public class MessageFactory {
 			try {
 				Class<?> messageType = factoryArray.get(messageTypeIndex);
 				tmp = (Message) messageType.newInstance();
+				tmp.setProtocolVersion(networkProtocolVersion);
 				ByteArrayInputStream in = new ByteArrayInputStream(data);
 				if (offset > 0) {
 					in.skip(offset);

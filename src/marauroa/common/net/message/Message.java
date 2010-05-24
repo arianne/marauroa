@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.15 2010/05/15 12:21:27 nhnb Exp $ */
+/* $Id: Message.java,v 1.16 2010/05/24 22:16:22 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -75,6 +75,8 @@ public class Message implements Serializable {
 
 	/** Timestamp about when the message was created */
 	protected int timestampMessage;
+	/** version of this message */
+	protected int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
 	/**
 	 * The socket channel that the message will use to be send or from where it
@@ -167,6 +169,25 @@ public class Message implements Serializable {
 	public int getMessageTimestamp() {
 		return timestampMessage;
 	}
+
+	/**
+	 * gets the protocol version
+	 *
+	 * @return protocol version
+	 */
+	public int getProtocolVersion() {
+    	return protocolVersion;
+    }
+
+	/**
+	 * sets the protocol version
+	 *
+	 * @param protocolVersion protocol versoin
+	 */
+	public void setProtocolVersion(int protocolVersion) {
+    	this.protocolVersion = protocolVersion;
+    }
+
 
 	/**
 	 * Serialize the object into an ObjectOutput
