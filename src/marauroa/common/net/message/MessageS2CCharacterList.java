@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.7 2010/05/24 18:09:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,8 +14,10 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
-import marauroa.common.Utility;
+import marauroa.common.game.RPObject;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -24,7 +26,7 @@ import marauroa.common.Utility;
 public class MessageS2CCharacterList extends Message {
 
 	/** The list of available characters to choose. */
-	private String[] characters;
+	private Map<String, RPObject> characters;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CCharacterList() {
@@ -42,16 +44,37 @@ public class MessageS2CCharacterList extends Message {
 	 */
 	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
-		this.characters = Utility.copy(characters);
+		this.characters = new HashMap<String, RPObject>();
+		for (String character : characters) {
+			this.characters.put(character, new RPObject());
+		}
 	}
 
+
+	/**
+	 * Constructor with a TCP/IP source/destination of the message and a list with the
+	 * characters available to be played.
+	 *
+	 * @param source
+	 *            The TCP/IP address associated to this message
+	 * @param characters
+	 *            the list of characters of the player
+	 */
+	public MessageS2CCharacterList(SocketChannel source, Map<String, RPObject> characters) {
+		super(MessageType.S2C_CHARACTERLIST, source);
+		this.characters = new HashMap<String, RPObject>(characters);
+	}
+
+	
 	/**
 	 * This method returns the list of characters that the player owns
 	 *
 	 * @return the list of characters that the player owns
 	 */
 	public String[] getCharacters() {
-		return Utility.copy(characters);
+		String[] res = new String[characters.size()];
+		characters.keySet().toArray(res);
+		return res;
 	}
 
 	/**
@@ -61,25 +84,24 @@ public class MessageS2CCharacterList extends Message {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer text = new StringBuffer(" ");
-
-		for (int i = 0; i < characters.length; ++i) {
-			text.append(characters[i] + ",");
-		}
 		return "Message (S2C Character List) from (" + getAddress() + ") CONTENTS: ("
-		        + text.substring(0, text.length() - 1) + ")";
+		        + characters.keySet() + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
-		out.write(characters);
+		out.write(getCharacters());
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		characters = in.readStringArray();
+		String[] characters = in.readStringArray();
+		this.characters = new HashMap<String, RPObject>();
+		for (String character : characters) {
+			this.characters.put(character, new RPObject());
+		}
 
 		if (type != MessageType.S2C_CHARACTERLIST) {
 			throw new IOException();
