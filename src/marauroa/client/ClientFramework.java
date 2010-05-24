@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.61 2010/05/24 08:52:13 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.62 2010/05/24 18:38:59 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import marauroa.client.net.INetworkClientManagerInterface;
 import marauroa.client.net.TCPNetworkClientManager;
@@ -296,13 +297,15 @@ public abstract class ClientFramework {
 				/* Server send the character list */
 				case S2C_CHARACTERLIST:
 					logger.debug("Received Character list");
-					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 
 					/*
 					 * We notify client of characters by calling the callback
 					 * method.
 					 */
+					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 					onAvailableCharacters(characters);
+					Map<String, RPObject> characterDetails = ((MessageS2CCharacterList) msg).getCharacterDetails();
+					onAvailableCharacterDetails(characterDetails);
 					received++;
 					break;
 				/*
@@ -475,13 +478,15 @@ public abstract class ClientFramework {
 				/* Server send the character list */
 				case S2C_CHARACTERLIST:
 					logger.debug("Received Character list");
-					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
-
 					/*
 					 * We notify client of characters by calling the callback
 					 * method.
 					 */
+					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
 					onAvailableCharacters(characters);
+					Map<String, RPObject> characterDetails = ((MessageS2CCharacterList) msg).getCharacterDetails();
+					onAvailableCharacterDetails(characterDetails);
+
 					received++;
 					break;
 
@@ -674,6 +679,18 @@ public abstract class ClientFramework {
 	 */
 	abstract protected void onAvailableCharacters(String[] characters);
 
+
+	/**
+	 * It is called when we get the list of characters
+	 *
+	 * @param characters
+	 *            the characters we have available at this account.
+	 */
+	protected void onAvailableCharacterDetails(Map<String, RPObject> characters) {
+		// stub
+	};
+	
+	
 	/**
 	 * It is called when we get the list of server information strings
 	 *

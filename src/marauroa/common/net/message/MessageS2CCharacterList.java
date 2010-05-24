@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.7 2010/05/24 18:09:31 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.8 2010/05/24 18:38:59 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,6 +75,15 @@ public class MessageS2CCharacterList extends Message {
 		String[] res = new String[characters.size()];
 		characters.keySet().toArray(res);
 		return res;
+	}
+
+	/**
+	 * This method returns the list of characters that the player owns
+	 *
+	 * @return the list of characters that the player owns
+	 */
+	public HashMap<String, RPObject> getCharacterDetails() {
+		return new HashMap<String, RPObject>(characters);
 	}
 
 	/**
