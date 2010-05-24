@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.60 2010/05/23 21:38:13 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.61 2010/05/24 08:52:13 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -262,12 +262,17 @@ public abstract class ClientFramework {
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
 					if (seed != null) {
-						byte[] b3 = null;
+						byte[] bs = null;
 						try {
-							b3 = Hash.xor(b1, seed.getBytes("UTF-8"));
+							bs = seed.getBytes("UTF-8");
 						} catch (UnsupportedEncodingException e) {
 							logger.error(e, e);
 						}
+						if (bs.length != 16) {
+							throw new LoginFailedException("Seed has not the correct length.");
+						}
+						byte[] b3 = null;
+						b3 = Hash.xor(b1, bs);
 						if (b3 == null) {
 							throw new LoginFailedException("Incorrect hash seed");
 						}
