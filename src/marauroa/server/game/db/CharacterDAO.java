@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.12 2010/05/24 14:49:55 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.13 2010/05/24 17:49:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -13,6 +13,7 @@
 package marauroa.server.game.db;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -287,6 +288,53 @@ public class CharacterDAO {
 		}
 	}
 
+	/**
+ 	 * This method loads all the characters associated with this
+ 	 * username from the database.
+	 *
+	 * @param transaction
+	 *            the database transaction
+	 * @param username
+	 *            the player's username
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 *             if there is a problem reading the blob 
+	 */
+	public Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username)
+	        throws SQLException, IOException {
+		try {
+			Map<String, RPObject> res = new HashMap<String, RPObject>();
+
+			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
+			String query = "SELECT characters.name As name, rpobject.data As data, rpojbect.object_id As object_id from rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
+			logger.debug("loadAllCharacters is executing query " + query);
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("player_id", Integer.valueOf(id));
+			
+			ResultSet result = transaction.query(query, params);
+
+			RPObject player = null;
+			while (result.next()) {
+				int objectid = result.getInt("object_id");
+				String name = result.getString("name");
+				Blob data = result.getBlob("data");
+				RPObject rpobject = DAORegister.get().get(RPObjectDAO.class).readRPObject(objectid, data, false);
+				logger.debug("Character: " + player);
+				res.put(name, rpobject);
+			}
+
+			result.close();
+			return res;
+		} catch (SQLException sqle) {
+			logger.warn("Error loading characters for account: " + username, sqle);
+			throw sqle;
+		} catch (IOException e) {
+			logger.warn("Error loading characters for account: " + username, e);
+			throw e;
+		}
+	}
 
 	/**
 	 * creates a new character
@@ -403,5 +451,27 @@ public class CharacterDAO {
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
+	}
+
+	/**
+ 	 * This method loads all the characters associated with this
+ 	 * username from the database.
+	 *
+	 * @param username
+	 *            the player's username
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 *             if there is a problem reading the blob 
+	 */
+	public Map<String, RPObject> loadAllCharacters(String username) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			Map<String, RPObject> res = loadAllCharacters(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}		
 	}
 }

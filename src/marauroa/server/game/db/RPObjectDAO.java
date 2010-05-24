@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.13 2010/01/03 19:14:28 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.14 2010/05/24 17:49:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -86,40 +86,53 @@ public class RPObjectDAO {
 		ResultSet resultSet = transaction.query(query, params);
 
 		if (resultSet.next()) {
-			Blob data = resultSet.getBlob("data");
-			InputStream input = data.getBinaryStream();
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-			// set read buffer size
-			byte[] rb = new byte[1024];
-			int ch = 0;
-			// process blob
-			while ((ch = input.read(rb)) != -1) {
-				output.write(rb, 0, ch);
-			}
-			byte[] content = output.toByteArray();
-			input.close();
-			output.close();
-
-			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
-			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer inser = new InputSerializer(szlib);
-
-			RPObject object = (RPObject) inser.readObject(new RPObject());
-
-			if (transform) {
-				object = factory.transform(object);
-			}
-
-			object.put("#db_id", objectid);
-			
-			resultSet.close();
-
+		    Blob data = resultSet.getBlob("data");
+			RPObject object = readRPObject(objectid, data, transform);
+		    resultSet.close();
 			return object;
 		}
-
+	    resultSet.close();
 		return null;
 	}
+
+	/**
+	 * reads an RPObject that has already been loaded from the database
+	 *
+	 * @param objectid  object_id of RPObject
+	 * @param data      blob data
+	 * @param transform should it be transformed using the RPObjectFactory
+	 * @return RPBobject
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public RPObject readRPObject(int objectid, Blob data, boolean transform) throws SQLException, IOException {
+	    InputStream input = data.getBinaryStream();
+	    ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+	    // set read buffer size
+	    byte[] rb = new byte[1024];
+	    int ch = 0;
+	    // process blob
+	    while ((ch = input.read(rb)) != -1) {
+	    	output.write(rb, 0, ch);
+	    }
+	    byte[] content = output.toByteArray();
+	    input.close();
+	    output.close();
+
+	    ByteArrayInputStream inStream = new ByteArrayInputStream(content);
+	    InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
+	    InputSerializer inser = new InputSerializer(szlib);
+
+	    RPObject object = (RPObject) inser.readObject(new RPObject());
+
+	    if (transform) {
+	    	object = factory.transform(object);
+	    }
+
+	    object.put("#db_id", objectid);
+	    return object;
+    }
 
 	/**
 	 * deletes an RPObject from the database
