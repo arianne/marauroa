@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.13 2010/05/14 19:37:07 kymara Exp $ */
+/* $Id: InputSerializer.java,v 1.14 2010/05/24 22:16:04 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -289,6 +289,38 @@ public class InputSerializer {
 		}
 		return buffer;
 	}
+
+	/**
+	 * This method reads a String array from the Serializer
+	 *
+	 * @param clazz class of the object
+	 * @return the object array
+	 * @throws java.io.IOException
+	 *             if there is an IO error
+	 */
+	public Object[] readObjectArray(Class<? extends marauroa.common.net.Serializable> clazz) throws IOException {
+		int size = readInt();
+
+		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
+			throw new IOException("Illegal request of an array of " + String.valueOf(size) + " size");
+		}
+
+		Object[] buffer = new Object[size];
+
+		for (int i = 0; i < size; i++) {
+			marauroa.common.net.Serializable object;
+            try {
+	            object = clazz.newInstance();
+            } catch (InstantiationException e) {
+	            throw new IOException(e.toString());
+            } catch (IllegalAccessException e) {
+	            throw new IOException(e.toString());
+            }
+			buffer[i] = readObject(object);
+		}
+		return buffer;
+	}
+
 
 	/**
 	 * closes the underlying input stream

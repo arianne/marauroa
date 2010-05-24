@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.11 2007/11/10 18:46:37 arianne_rpg Exp $ */
+/* $Id: OutputSerializer.java,v 1.12 2010/05/24 22:16:04 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,6 +14,8 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import marauroa.common.game.RPObject;
 
 /**
  * OutputSerializer is used to serialize classes that implement the Serializable
@@ -217,4 +219,20 @@ public class OutputSerializer {
 			write(a[i]);
 		}
 	}
+
+	/**
+	 * Add the Object array to the serializer, if it implements the
+	 * marauroa.common.net.Serializable interface
+	 *
+	 * @param objs
+	 *            the object array to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
+	 */
+	public void write(marauroa.common.net.Serializable[] objs) throws IOException {
+		write(objs.length);
+		for (int i = 0; i < objs.length; i++) {
+			write(objs[i]);
+		}	    
+    }
 };
