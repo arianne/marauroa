@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.8 2010/05/24 18:38:59 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.9 2010/05/24 22:16:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -101,6 +101,14 @@ public class MessageS2CCharacterList extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(getCharacters());
+		if (super.protocolVersion >= 32) {
+			String[] character = getCharacters();
+			RPObject[] objects = new RPObject[characters.size()];
+			for (int i = 0; i < characters.size(); i++) {
+				objects[i] = this.characters.get(character[i]);
+			}
+			out.write(objects);
+		}
 	}
 
 	@Override
@@ -108,8 +116,17 @@ public class MessageS2CCharacterList extends Message {
 		super.readObject(in);
 		String[] characters = in.readStringArray();
 		this.characters = new HashMap<String, RPObject>();
-		for (String character : characters) {
-			this.characters.put(character, new RPObject());
+	
+		// read the map or list, depending on protocol version
+		if (super.protocolVersion >= 32) {
+			Object[] objects = in.readObjectArray(RPObject.class);
+			for (int i = 0; i < characters.length; i++) {
+				this.characters.put(characters[i], (RPObject) objects[i]);
+			}
+		} else {
+			for (String character : characters) {
+				this.characters.put(character, new RPObject());
+			}
 		}
 
 		if (type != MessageType.S2C_CHARACTERLIST) {
