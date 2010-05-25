@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.5 2010/05/17 19:25:48 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.6 2010/05/25 12:39:37 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,9 +12,7 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.io.IOException;
 import java.nio.channels.SocketChannel;
-import java.sql.SQLException;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
@@ -46,7 +44,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	 *
 	 * This method will send also the reply ACK or NACK to the message.
 	 *
-	 * @param msg
+	 * @param message
 	 *            The ChooseCharacter message
 	 */
 	@Override
@@ -108,7 +106,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	}
 
 	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg,
-			int clientid, PlayerEntry entry) throws SQLException, IOException {
+			int clientid, PlayerEntry entry) {
 		DBCommand command = new LoadCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel());
 		DBCommandQueue.get().enqueue(command);
 	}
