@@ -96,8 +96,9 @@ Changelog
 ---------
 3.7
 - Note: Make sure that you place the player into the world in RPRuleProcessor.onInit() and not in RPObjectFactory.transform
+- character list now includes the RPObject to provide details if the network protocol version is >= 32
 - improved performance by processing client message outside the PlayerEntryContainer lock
-- added detailed error message if a transaction is access from another thread
+- added detailed error message if a transaction is accessed from another thread
 
 3.6
 - added number of unique ips to statistics in addition to number of players

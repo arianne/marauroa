@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.2 2010/05/25 12:43:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -17,12 +17,14 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
-import marauroa.common.net.message.MessageS2CCharacterList;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
+import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.dbcommand.LoadAllCharactersCommand;
 
 /**
  * This is a create character request. It require that
@@ -38,7 +40,7 @@ class CreateCharacterHandler extends MessageHandler {
 	 * This message is used to create a character in a game account. It may fail
 	 * if the player already exists or if any of the fields are empty.
 	 *
-	 * @param msg
+	 * @param message
 	 *            The create account message.
 	 */
 	@Override
@@ -78,11 +80,10 @@ class CreateCharacterHandler extends MessageHandler {
 				/*
 				 * Build player character list and send it to client
 				 */
-				String[] characters = entry.getCharacters().toArray(new String[entry.getCharacters().size()]);
-				MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg
-				        .getSocketChannel(), characters);
-				msgCharacters.setClientID(clientid);
-				netMan.sendMessage(msgCharacters);
+				DBCommand command = new LoadAllCharactersCommand(entry.username,
+						new SendCharacterListHandler(netMan, msg.getProtocolVersion()), 
+						clientid, msg.getSocketChannel());
+				DBCommandQueue.get().enqueue(command);
 			} else {
 				/*
 				 * It also may fail to create the character. Explain the reasons

@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.4 2010/05/23 21:02:26 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.5 2010/05/25 12:43:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -26,15 +26,17 @@ import marauroa.common.crypto.Hash;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
-import marauroa.common.net.message.MessageS2CCharacterList;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
+import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
+import marauroa.server.game.dbcommand.LoadAllCharactersCommand;
 
 import org.apache.log4j.Logger;
 
@@ -194,11 +196,10 @@ class SecuredLoginHandler extends MessageHandler {
 			netMan.sendMessage(msgServerInfo);
 
 			/* Build player character list and send it to client */
-			String[] characters = entry.getCharacters().toArray(new String[entry.getCharacters().size()]);
-			MessageS2CCharacterList msgCharacters = new MessageS2CCharacterList(msg
-			        .getSocketChannel(), characters);
-			msgCharacters.setClientID(clientid);
-			netMan.sendMessage(msgCharacters);
+			DBCommand command = new LoadAllCharactersCommand(entry.username, 
+					new SendCharacterListHandler(netMan, msg.getProtocolVersion()), 
+					clientid, msg.getSocketChannel());
+			DBCommandQueue.get().enqueue(command);
 
 			entry.state = ClientState.LOGIN_COMPLETE;
 		} catch (IOException e) {
