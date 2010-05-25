@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.13 2010/05/24 17:49:00 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.14 2010/05/25 12:38:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -308,7 +308,7 @@ public class CharacterDAO {
 			Map<String, RPObject> res = new HashMap<String, RPObject>();
 
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
-			String query = "SELECT characters.name As name, rpobject.data As data, rpojbect.object_id As object_id from rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
+			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
 			logger.debug("loadAllCharacters is executing query " + query);
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
@@ -318,7 +318,7 @@ public class CharacterDAO {
 			RPObject player = null;
 			while (result.next()) {
 				int objectid = result.getInt("object_id");
-				String name = result.getString("name");
+				String name = result.getString("charname");
 				Blob data = result.getBlob("data");
 				RPObject rpobject = DAORegister.get().get(RPObjectDAO.class).readRPObject(objectid, data, false);
 				logger.debug("Character: " + player);
