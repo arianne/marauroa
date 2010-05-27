@@ -1,4 +1,4 @@
-/* $Id: Decoder.java,v 1.30 2010/05/14 19:38:11 kymara Exp $ */
+/* $Id: Decoder.java,v 1.31 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -46,7 +46,11 @@ public class Decoder {
 			parts = new Vector<byte[]>();
 		}
 
-		/** Adds a new part to complete the message */
+		/**
+		 * Adds a new part to complete the message
+		 *
+		 * @param data data to add
+		 */
 		public void add(byte[] data) {
 			parts.add(data);
 		}
@@ -58,6 +62,11 @@ public class Decoder {
 		/**
 		 * Try to build the message for the channel using the existing parts or
 		 * return null if it is not completed yet.
+		 *
+		 * @param channel SocketChannel to read from
+		 * @return Message read message
+		 * @throws IOException in case of an input / output error
+		 * @throws InvalidVersionException in case the protocol version is not supported
 		 */
 		public Message build(SocketChannel channel) throws IOException, InvalidVersionException {
 			int length = 0;

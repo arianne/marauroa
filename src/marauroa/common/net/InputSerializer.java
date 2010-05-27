@@ -1,4 +1,4 @@
-/* $Id: InputSerializer.java,v 1.14 2010/05/24 22:16:04 nhnb Exp $ */
+/* $Id: InputSerializer.java,v 1.15 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -107,7 +107,7 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method reads a byte array from the Serializer
+	 * This method reads a byte array of a maximum length of 255 entries
 	 *
 	 * @return the byte array serialized
 	 * @throws java.io.IOException
@@ -131,6 +131,13 @@ public class InputSerializer {
 		return buffer;
 	}
 
+	/**
+	 * This method reads a byte array of a maximum length of 65536 entries
+	 *
+	 * @return the byte array serialized
+	 * @throws java.io.IOException
+	 *             if there is an IO error
+	 */
 	public byte[] read65536LongByteArray() throws IOException {
 		int size = readShort();
 
@@ -253,8 +260,8 @@ public class InputSerializer {
 	}
 
 	/**
-	 * This method reads a short string ( whose size is smaller than 255 chars
-	 * long ) from the Serializer
+	 * This method reads a short string (whose size is smaller than 255 bytes
+	 * long)
 	 *
 	 * @return the String serialized
 	 * @throws java.io.IOException
@@ -264,6 +271,14 @@ public class InputSerializer {
 		return new String(read255LongByteArray(), "UTF-8");
 	}
 
+	/**
+	 * This method reads a long string (whose size is smaller than 65536 bytes
+	 * long)
+	 *
+	 * @return the String serialized
+	 * @throws java.io.IOException
+	 *             if there is an IO error
+	 */
 	public String read65536LongString() throws IOException {
 		return new String(read65536LongByteArray(), "UTF-8");
 	}

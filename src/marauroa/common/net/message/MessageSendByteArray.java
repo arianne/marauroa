@@ -1,4 +1,4 @@
-/* $Id: MessageSendByteArray.java,v 1.5 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: MessageSendByteArray.java,v 1.6 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,7 +26,11 @@ public class MessageSendByteArray extends Message {
 
 	protected byte[] hash;
 
-	/** Constructor for allowing creation of an empty message */
+	/** 
+	 * Constructor for allowing creation of an empty message
+	 *
+	 * @param type tpye of message
+	 */
 	public MessageSendByteArray(MessageType type) {
 		super(type, null);
 	}
@@ -35,6 +39,7 @@ public class MessageSendByteArray extends Message {
 	 * Constructor with a TCP/IP source/destination of the message and the byte
 	 * array to send.
 	 * 
+	 * @param type tpye of message
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param hash

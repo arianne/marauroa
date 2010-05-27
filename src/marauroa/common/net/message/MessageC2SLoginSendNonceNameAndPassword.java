@@ -1,4 +1,4 @@
-/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.7 2010/02/25 20:58:18 nhnb Exp $ */
+/* $Id: MessageC2SLoginSendNonceNameAndPassword.java,v 1.8 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,8 @@ public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArra
 	 * 
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param nonce
+	 *            random number to prevent replay attacks
 	 * @param username
 	 *            the username of the user that wants to login
 	 * @param password

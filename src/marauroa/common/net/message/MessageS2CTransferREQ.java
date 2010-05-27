@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransferREQ.java,v 1.5 2007/04/09 14:47:09 arianne_rpg Exp $ */
+/* $Id: MessageS2CTransferREQ.java,v 1.6 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Prior to transfer we send client a transfer request so it can decide whenever to ACK it and have it
+ * Prior to transfer we send client a transfer offer so it can decide whenever to ACK it and have it
  * transfered or rejected it and use a local cache instead.
  *
  * @author miguel
@@ -33,12 +33,22 @@ public class MessageS2CTransferREQ extends Message {
 		super(MessageType.S2C_TRANSFER_REQ, null);
 	}
 
+	/**
+	 * creates a new MessageS2CTransferREQ
+	 * @param source   socket channel
+	 * @param contents content offered for transfer
+	 */
 	public MessageS2CTransferREQ(SocketChannel source, List<TransferContent> contents) {
 		super(MessageType.S2C_TRANSFER_REQ, source);
 
 		this.contents = contents;
 	}
 
+	/**
+	 * gets the content
+	 *
+	 * @return content
+	 */
 	public List<TransferContent> getContents() {
 		return contents;
 	}

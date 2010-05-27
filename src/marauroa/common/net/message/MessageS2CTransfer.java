@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.7 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.8 2010/05/27 19:13:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -40,6 +40,12 @@ public class MessageS2CTransfer extends Message {
 		super(MessageType.S2C_TRANSFER, null);
 	}
 
+	/**
+	 * Creates a new MessageS2CTransfer
+	 *
+	 * @param source  socket channel
+	 * @param content content to transfer
+	 */
 	public MessageS2CTransfer(SocketChannel source, TransferContent content) {
 		super(MessageType.S2C_TRANSFER, source);
 
