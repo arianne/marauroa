@@ -1,4 +1,4 @@
-/* $Id: OutOfSyncHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: OutOfSyncHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -33,7 +33,7 @@ class OutOfSyncHandler extends MessageHandler {
 	 * This message is send from client to notify that client suffered a network
 	 * problem and request data to be resend again to it.
 	 *
-	 * @param msg
+	 * @param message
 	 *            the out of sync message
 	 */
 	@Override

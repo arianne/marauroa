@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.2 2010/05/13 15:02:34 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.3 2010/05/27 18:51:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -35,7 +35,7 @@ class CreateAccountHandler extends MessageHandler {
 	 * already exists or if any of the fields are empty. This method does not
 	 * make room for the player at the server.
 	 *
-	 * @param msg
+	 * @param message
 	 *            The create account message.
 	 */
 	@Override

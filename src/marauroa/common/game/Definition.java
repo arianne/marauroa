@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.30 2010/02/27 21:08:40 nhnb Exp $ */
+/* $Id: Definition.java,v 1.31 2010/05/27 18:51:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -496,7 +496,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *
 	 * @param value
 	 *            the value of the event/attribute
-	 * @throws IOException
+	 * @throws IllegalArgumentException
 	 *             if there is any problem on the serialization
 	 */
 	public void validate(String value) throws IllegalArgumentException {

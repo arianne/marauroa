@@ -1,4 +1,4 @@
-/* $Id: LogoutHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: LogoutHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -35,7 +35,7 @@ class LogoutHandler extends MessageHandler {
 	 * player. It handles all the logic to effectively logout the player and
 	 * free the associated resources.
 	 *
-	 * @param msg
+	 * @param message
 	 *            the logout message
 	 */
 	@Override

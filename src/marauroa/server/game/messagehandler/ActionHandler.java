@@ -1,4 +1,4 @@
-/* $Id: ActionHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: ActionHandler.java,v 1.2 2010/05/27 18:51:44 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -34,7 +34,7 @@ class ActionHandler extends MessageHandler {
 	 * This method process actions send from client. In fact, the action is
 	 * passed to RPManager that will, when the turn arrives, execute it.
 	 *
-	 * @param msg
+	 * @param message
 	 *            the action message
 	 */
 	@Override

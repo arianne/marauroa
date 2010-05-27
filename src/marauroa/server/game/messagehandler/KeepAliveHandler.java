@@ -1,4 +1,4 @@
-/* $Id: KeepAliveHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: KeepAliveHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -29,7 +29,7 @@ class KeepAliveHandler extends MessageHandler {
 	/**
 	 * This message is send from client to confirm that he is still alive and has not timeout. 
 	 *
-	 * @param alive
+	 * @param message
 	 *            the keep alive message
 	 */
 	@Override
