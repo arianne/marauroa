@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.13 2010/02/27 21:02:08 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapter.java,v 1.14 2010/05/29 21:30:11 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -12,9 +12,14 @@
  ***************************************************************************/
 package marauroa.server.db.adapter;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
 
 /**
@@ -23,6 +28,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
+    private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
 
 	/**
 	 * creates a new MySQLDatabaseAdapter
@@ -42,6 +48,22 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	protected MySQLDatabaseAdapter() throws DatabaseConnectionException {
 		super();
 	}
+
+	@Override
+    protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+	    Connection con = super.createConnection(connInfo);
+		DatabaseMetaData meta;
+        try {
+	        meta = con.getMetaData();
+			String name = meta.getDatabaseProductName();
+		    if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
+		    	logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
+		    }
+        } catch (SQLException e) {
+	        logger.error(e, e);
+        }
+	    return con;
+    }
 
 	/**
 	 * rewrites CREATE TABLE statements to add TYPE=InnoDB
