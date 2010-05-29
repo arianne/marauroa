@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.8 2010/05/17 19:23:19 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.9 2010/05/29 20:00:39 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -18,7 +18,18 @@ import java.util.Map;
 import marauroa.server.game.rp.RPObjectFactory;
 
 /**
- * registers data access objects, so that they can be overriden by a user of the framework.
+ * <p>Keeps track of the DAOs (data access objects) to use. They are registered 
+ * using their class name:<br>
+ * <code>register(CharacterDAO.class, new CharacterDAO());</code></p>
+ *
+ * <p>Games can add their own DAOs. They can even replace framework DAOs
+ * with their own subclasses: <br>
+ * <code>DAORegister.get().register(CharacterDAO.class, new StendhalCharacterDAO());</code></p>
+ * 
+ * <p>Game should register their DAOs in the "initialize()" method of their DatabaseFactory,
+ * as defined in the server.ini: <br>
+ * <code>database_implementation=games.demo.server.DemoDatabaseFactory</code>
+ * </p>
  *
  * @author hendrik
  */
