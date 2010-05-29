@@ -1,4 +1,4 @@
-/* $Id: DatabaseFactory.java,v 1.19 2010/05/29 20:00:39 nhnb Exp $ */
+/* $Id: DatabaseFactory.java,v 1.20 2010/05/29 20:02:14 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -37,7 +37,7 @@ public class DatabaseFactory {
 	 *
 	 * @throws DatabaseConnectionException in case the database configuration is broken
 	 */
-	public final void initializeDatabase() throws DatabaseConnectionException {
+	public void initializeDatabase() throws DatabaseConnectionException {
 		try {
 			if (TransactionPool.get() == null) {
 				TransactionPool pool = new TransactionPool(Configuration.getConfiguration().getAsProperties());
