@@ -1,4 +1,4 @@
-/* $Id: H2DatabaseAdapter.java,v 1.3 2010/02/27 21:02:08 nhnb Exp $ */
+/* $Id: H2DatabaseAdapter.java,v 1.4 2010/05/29 21:38:37 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,12 +12,15 @@
  ***************************************************************************/
 package marauroa.server.db.adapter;
 
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
 
 /**
@@ -26,6 +29,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
+    private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
 
 	/**
 	 * creates a new H2Adapter
@@ -46,6 +50,21 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 		super();
 	}
 
+	@Override
+    protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+	    Connection con = super.createConnection(connInfo);
+		DatabaseMetaData meta;
+        try {
+	        meta = con.getMetaData();
+			String name = meta.getDatabaseProductName();
+		    if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
+		    	logger.warn("Using H2DatabaseAdapter to connect to " + name);
+		    }
+        } catch (SQLException e) {
+	        logger.error(e, e);
+        }
+	    return con;
+    }
 	/**
 	 * rewrites ALTER TABLE statements to remove the "COLUMS (" part
 	 *
