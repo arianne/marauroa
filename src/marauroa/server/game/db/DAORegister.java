@@ -1,4 +1,4 @@
-/* $Id: DAORegister.java,v 1.9 2010/05/29 20:00:39 nhnb Exp $ */
+/* $Id: DAORegister.java,v 1.10 2010/05/29 20:06:08 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -23,7 +23,9 @@ import marauroa.server.game.rp.RPObjectFactory;
  * <code>register(CharacterDAO.class, new CharacterDAO());</code></p>
  *
  * <p>Games can add their own DAOs. They can even replace framework DAOs
- * with their own subclasses: <br>
+ * with their own subclasses. Stendhal for example enhances the normal 
+ * CharacterDAO with its own subclass to update a redundant table used 
+ * by the Stendhal website: <br>
  * <code>DAORegister.get().register(CharacterDAO.class, new StendhalCharacterDAO());</code></p>
  * 
  * <p>Game should register their DAOs in the "initialize()" method of their DatabaseFactory,
