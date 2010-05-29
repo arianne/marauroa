@@ -23,7 +23,7 @@ flexible game system based on open systems totally expandible and modifiable
 by developers. 
 
 Marauroa is based on a philosophy we call Action/Perception, on each turn a
-perception is sent to clients explaining them what they percieve and clients
+perception is sent to clients explaining them what they perceive and clients
 can ask server to do any action in their names using actions.
 Marauroa is totally game agnostic and makes very little assumptions about what
 are you trying to do, allowing a great freedom to create whatever type of game
@@ -108,7 +108,7 @@ Changelog
 - fixed reading of size from the network stream in case it was split over multiple packets
 
 3.5
-- limit number of parallel connections from one ip-address, see http://stendhal.game-host.org/wiki/index.php/Configuration_file_server.ini#Limits
+- limit number of parallel connections from one ip-address, see http://stendhalgame.org/wiki/index.php/Configuration_file_server.ini#Limits
 - limit account creation per ip-address in a timeframe, see above
 - fixed null values on H2 in account.timedate and gameEvents.timedate
 
@@ -151,7 +151,7 @@ Changelog
 - splitted JDBCDatabase into several small ...DAO classes
 - added a new package marauroa.server.db for low level database stuff
 - started to work on supporting other database systems beside mysql
-- for help on how to port your application see http://stendhal.game-host.org/wiki/index.php/Refactoring_Database_Access_in_Marauroa
+- for help on how to port your application see http://stendhalgame.org/wiki/index.php/Refactoring_Database_Access_in_Marauroa
 - fixed some compiler and javadoc warnings
 
 
