@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.14 2010/05/25 12:38:14 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.15 2010/05/30 16:59:10 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -337,6 +337,31 @@ public class CharacterDAO {
 	}
 
 	/**
+	 * gets the name of the account to which the specified character belongs.
+	 *
+	 * @param transaction the database transaction
+	 * @param character name of character
+	 * @return name of account, or <code>null<code> in case the character does not exist
+	 * @throws SQLException if there is any problem at database
+	 */
+	public String getAccountName(DBTransaction transaction, String character) throws SQLException {
+		String res = null;
+
+		String query = "SELECT username FROM account, characters WHERE characters.charname='[charname]' AND characters.player_id=account.id";
+		logger.debug("getAccountName is executing query " + query);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("charname", character);
+		
+		ResultSet result = transaction.query(query, params);
+		if (result.next()) {
+			res = result.getString("username");
+		}
+		result.close();
+
+		return res;
+	}
+
+	/**
 	 * creates a new character
 	 *
 	 * @param username username
@@ -472,6 +497,24 @@ public class CharacterDAO {
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);
-		}		
+		}
 	}
+
+	/**
+	 * gets the name of the account to which the specified character belongs.
+	 *
+	 * @param character name of character
+	 * @return name of account, or <code>null<code> in case the character does not exist
+	 * @throws SQLException if there is any problem at database
+	 */
+	public String getAccountName(String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			String res = getAccountName(transaction, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
 }
