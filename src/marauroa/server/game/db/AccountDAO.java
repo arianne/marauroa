@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.22 2010/05/23 21:02:25 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.23 2010/05/30 16:58:44 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -522,8 +522,13 @@ public class AccountDAO {
 		try {
 			int player_id = getDatabasePlayerId(username);
 			
+			String expireStr = "'[expire]'";
+			if (expire == null) {
+				expireStr = "null";
+			}
+
 			String query = "insert into accountban(player_id, reason, expire)"
-				+ " values('[player_id]','[reason]','[expire]')";
+				+ " values('[player_id]','[reason]', " + expireStr + ")";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", player_id);
 			params.put("reason", reason);
@@ -533,7 +538,7 @@ public class AccountDAO {
 			transaction.execute(query, params);
 		} catch (SQLException e) {
 			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
-					expire.toString() + " into database", e);
+					expire + " into database", e);
 			throw e;
 		}
 	}
