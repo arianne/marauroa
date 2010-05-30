@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.5 2010/05/25 12:43:14 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.6 2010/05/30 22:04:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -133,7 +133,7 @@ class SecuredLoginHandler extends MessageHandler {
 			 */
 			String accountStatus = info.getStatus();
 			if (accountStatus != null) {
-				logger.info("Banned/Inactive account for player " + info.username);
+				logger.info("Banned/Inactive account for player " + info.username + ": " + accountStatus);
 
 				/* Send player the Login NACK message */
 				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(), accountStatus);
