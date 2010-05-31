@@ -94,6 +94,11 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.7.5
+
+
+
+
 3.7
 - Note: Make sure that you place the player into the world in RPRuleProcessor.onInit() and not in RPObjectFactory.transform
 - character list now includes the RPObject to provide details if the network protocol version is >= 32
@@ -555,3 +560,5 @@ Legal
 -----
 Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007
 arianne_rpg at users dot sourceforge dot net
+Marauroa(c) is copyright of the Arianne Project, 2006-2010
+arianne-general at lists dot sourceforge dot net
