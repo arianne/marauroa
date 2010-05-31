@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.23 2010/05/30 16:58:44 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.24 2010/05/31 09:11:11 kymara Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -260,7 +260,7 @@ public class AccountDAO {
 	 */
 	public String getAccountBanMessage(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND accountban.expire > CURRENT_TIMESTAMP) WHERE username='[username]'";
+			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND (accountban.expire > CURRENT_TIMESTAMP OR accountban.expire IS NULL)) WHERE username='[username]' order by if(expire is null, '9999-12-31', expire) desc limit 1 ";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 
@@ -271,23 +271,20 @@ public class AccountDAO {
 			String res = null;
 			if (result.next()) {
 				String status = result.getString("status");
-				if ("banned".equals(status)) {
+				String reason = result.getString("reason");
+				String expire = result.getString("expire");
+				if (reason != null) {
+					if (expire != null) {
+						res = "Your account is temporarily banned until " + expire + " server time.\n";
+					} else {
+						res = "Your account is banned.\n";
+					}
+					res = res + "The reason given was: " + reason;
+				} else if ("banned".equals(status)) {
 					res = "Your account has been banned. Please contact support.";
 				} else if ("inactive".equals(status)) {
 					res = "Your account has been flagged as inactive. Please contact support.";
-				} else {
-					String reason = result.getString("reason");
-					String expire = result.getString("expire");
-					if (reason != null) {
-						if (expire != null) {
-							res = "Your account is temporarily banned until " + expire + " server time.\n";
-						} else {
-							res = "Your account is banned.\n";
-						}
-
-						res = res + "The reason given was: " + reason;
-					}
-				}
+				} 
 			}
 			result.close();
 
@@ -536,6 +533,11 @@ public class AccountDAO {
 			logger.debug("addBan is using query: " + query);
 
 			transaction.execute(query, params);
+			
+			if("null".equals(expireStr)) {
+				setAccountStatus(transaction, username, "banned");
+			}
+			
 		} catch (SQLException e) {
 			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
 					expire + " into database", e);
