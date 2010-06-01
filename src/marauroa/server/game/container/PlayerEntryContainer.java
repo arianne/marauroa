@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.27 2010/05/17 23:02:00 yoriy Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.28 2010/06/01 20:00:35 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -23,8 +23,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
+import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.server.RWLock;
+import marauroa.server.game.Statistics;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -42,6 +44,8 @@ import marauroa.server.RWLock;
  *
  */
 public class PlayerEntryContainer implements Iterable<PlayerEntry> {
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
 
 	/** A reader/writers lock for controlling the access */
 	private RWLock lock;
@@ -53,6 +57,9 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	Map<Integer, PlayerEntry> clientidMap;
 
 	private static PlayerEntryContainer playerEntryContainer;
+
+	/** Statistics about actions runs */
+	private Statistics stats = Statistics.getStatistics();
 
 	/** Constructor */
 	protected PlayerEntryContainer() {
@@ -281,19 +288,23 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * counts the number of unique ip addresses
-	 *
-	 * @return number of unique ip-addresses
+	 * dumps the statistics
 	 */
-	public int countUniqueIps() {
+	public void dumpStatistics() {
 		HashSet<InetAddress> addresses = new HashSet<InetAddress>();
+		int counter = 0;
 		synchronized (clientidMap) {
 			for (PlayerEntry entry : clientidMap.values()) {
-				addresses.add(entry.getAddress());
+				if (entry.state == ClientState.GAME_BEGIN) {
+					addresses.add(entry.getAddress());
+					counter++;
+				}
 			}
 		}
-		return addresses.size();
-	}
+		logger.debug("PlayerEntryContainer size: " + counter);
+		stats.set("Players online", counter);
+		stats.set("Ips online", addresses.size());
+	}	
 
 	/**
 	 * a string representation useful for debugging.
@@ -304,4 +315,6 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	public String toString() {
 		return "PlayerEntryContainer [clientidMap=" + clientidMap + "]";
 	}
+
+
 }

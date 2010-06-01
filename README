@@ -95,7 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.7.5
-
+- only count clients that are in game in the statistics (not the ones waiting to connect or waiting to logout)
 
 
 

@@ -1,4 +1,4 @@
-/* $Id: GameServerManager.java,v 1.151 2010/05/16 15:24:24 nhnb Exp $ */
+/* $Id: GameServerManager.java,v 1.152 2010/06/01 20:00:35 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -153,9 +153,6 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	/** The playerContainer handles all the player management */
 	private PlayerEntryContainer playerContainer;
 
-	/** Statistics about actions runs */
-	private Statistics stats;
-
 	/** The thread will be running while keepRunning is true */
 	private boolean keepRunning;
 
@@ -196,12 +193,11 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		netMan.registerDisconnectedListener(this);
 
 		playerContainer = PlayerEntryContainer.getContainer();
-		stats = Statistics.getStatistics();
 		
 		delayedEventHandler= new DelayedEventHandlerThread(rpMan);
 
 		messageDispatcher = new MessageDispatcher();
-		messageDispatcher.init(netMan, rpMan, playerContainer, stats, key);
+		messageDispatcher.init(netMan, rpMan, playerContainer, Statistics.getStatistics(), key);
 	}
 	
 	/**
@@ -276,12 +272,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 //					playerContainer.getLock().releaseLock();
 				}
 
-				/*
-				 * Finally store stats about logged players.
-				 */
-				logger.debug("PlayerEntryContainer size: " + playerContainer.size());
-				stats.set("Players online", playerContainer.size());
-				stats.set("Ips online", playerContainer.countUniqueIps());
+				// Finally store stats about logged players.
+				playerContainer.dumpStatistics();
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);
