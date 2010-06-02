@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.53 2010/05/23 21:02:25 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.54 2010/06/02 18:32:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -151,6 +151,11 @@ public class PlayerEntry {
 			}
 			int counter = 0;
 			for (PlayerEntry playerEntry : playerContainer) {
+				logger.info(address);
+				logger.info(address.getHostAddress());
+				logger.info(playerEntry);
+				logger.info(playerEntry);
+				logger.info(playerEntry.getAddress());
 				if (address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
 					counter++;
 				}
