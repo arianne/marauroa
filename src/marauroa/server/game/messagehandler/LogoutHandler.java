@@ -1,4 +1,4 @@
-/* $Id: LogoutHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
+/* $Id: LogoutHandler.java,v 1.3 2010/06/03 17:22:38 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -63,6 +63,7 @@ class LogoutHandler extends MessageHandler {
 			 * fail and we keep on game.
 			 */
 			if (entry.state == ClientState.GAME_BEGIN) {
+				playerContainer.getLock().requestWriteLock();
 				if (rpMan.onExit(object)) {
 					/* NOTE: Set the Object so that it is stored in Database */
 					entry.storeRPObject(object);
@@ -74,6 +75,7 @@ class LogoutHandler extends MessageHandler {
 					 */
 					shouldLogout = false;
 				}
+				playerContainer.getLock().releaseLock();
 			}
 
 			if (shouldLogout) {
