@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.100 2009/12/24 12:41:44 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.101 2010/06/03 20:28:34 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -14,9 +14,12 @@ package marauroa.common.game;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
@@ -54,6 +57,9 @@ public class RPObject extends SlotOwner {
 
 	/** a list of links that this object contains. */
 	private List<RPLink> links;
+	
+	/** a map to store maps with keys and values **/
+	private Map<String, RPObject> maps;
 
 	/** Which object contains this one. */
 	private SlotOwner container;
@@ -64,15 +70,21 @@ public class RPObject extends SlotOwner {
 	/** added slots, used at Delta^2 */
 	private List<String> addedSlots;
 
-	/** delete slots, used at Delta^2 */
+	/** deleted slots, used at Delta^2 */
 	private List<String> deletedSlots;
 
 	/** added slots, used at Delta^2 */
 	private List<String> addedLinks;
 
-	/** delete slots, used at Delta^2 */
+	/** deleted slots, used at Delta^2 */
 	private List<String> deletedLinks;
-
+	
+	/** added maps, used at Delta^2 */
+	private List<String> addedMaps;
+	
+	/** deleted maps, used at Delta^2 */
+	private List<String> deletedMaps;
+	
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
@@ -103,6 +115,10 @@ public class RPObject extends SlotOwner {
 		links = new LinkedList<RPLink>();
 		addedLinks = new LinkedList<String>();
 		deletedLinks = new LinkedList<String>();
+		
+		maps = new HashMap<String, RPObject>();
+		addedMaps = new LinkedList<String>();
+		deletedMaps = new LinkedList<String>();
 		
 		modified = false;
 
@@ -137,7 +153,7 @@ public class RPObject extends SlotOwner {
 
 		hidden = object.hidden;
 		storable = object.storable;
-		modified=object.modified;
+		modified = object.modified;
 
 		container = object.container;
 		containerSlot = object.containerSlot;
@@ -153,10 +169,23 @@ public class RPObject extends SlotOwner {
 			added.setOwner(this);
 			links.add(added);
 		}
+		
+		for (Entry<String, RPObject> entry : object.maps.entrySet()) {
+			RPObject toAdd = (RPObject) entry.getValue().clone();
+			maps.put(entry.getKey(), toAdd);
+		}
 
 		/*
 		 * Copy also the delta^2 info.
 		 */
+		for (String slot : object.addedSlots) {
+			addedSlots.add(slot);
+		}
+
+		for (String slot : object.deletedSlots) {
+			deletedSlots.add(slot);
+		}
+		
 		for (String link : object.addedLinks) {
 			addedLinks.add(link);
 		}
@@ -165,12 +194,12 @@ public class RPObject extends SlotOwner {
 			deletedLinks.add(link);
 		}
 
-		for (String slot : object.addedSlots) {
-			addedSlots.add(slot);
+		for (String entry : object.addedMaps) {
+			addedMaps.add(entry);
 		}
-
-		for (String slot : object.deletedSlots) {
-			deletedSlots.add(slot);
+		
+		for (String entry : object.deletedMaps) {
+			deletedMaps.add(entry);
 		}
 	}
 
@@ -567,6 +596,161 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
+		return null;
+	}
+	
+	/**
+	 * Puts a value for a key in a given map
+	 * 
+	 * @param map the name of the map to put in the value
+	 * @param key the key to store for the value
+	 * @param value the value
+	 */
+	public void put(String map, String key, String value) {
+		if (!this.maps.containsKey(map)) {
+			RPObject newMap = new RPObject();
+			this.maps.put(map, newMap);
+			this.addedMaps.add(map);
+			this.modified = true;
+		}
+		this.maps.get(map).put(key, value);
+	}
+	
+	/**
+	 * Puts a value for a key in a given map
+	 * 
+	 * @param map the name of the map to put in the value
+	 * @param key the key to store for the value
+	 * @param value the value
+	 */
+	public void put(String map, String key, int value) {
+		if (!this.maps.containsKey(map)) {
+			RPObject newMap = new RPObject();
+			this.maps.put(map, newMap);
+			this.addedMaps.add(map);
+			this.modified = true;
+		}
+		this.maps.get(map).put(key, Integer.toString(value));
+	}
+	
+	/**
+	 * Puts a value for a key in a given map
+	 * 
+	 * @param map the name of the map to put in the value
+	 * @param key the key to store for the value
+	 * @param value the value
+	 */
+	public void put(String map, String key, double value) {
+		if (!this.maps.containsKey(map)) {
+			RPObject newMap = new RPObject();
+			this.maps.put(map, newMap);
+			this.addedMaps.add(map);
+			this.modified = true;
+		}
+		this.maps.get(map).put(key, Double.toString(value));
+	}
+	
+	/**
+	 * Puts a value for a key in a given map
+	 * 
+	 * @param map the name of the map to put in the value
+	 * @param key the key to store for the value
+	 * @param value the value
+	 */
+	public void put(String map, String key, boolean value) {
+		if (!this.maps.containsKey(map)) {
+			RPObject newMap = new RPObject();
+			this.maps.put(map, newMap);
+			this.addedMaps.add(map);
+			this.modified = true;
+		}
+		this.maps.get(map).put(key, Boolean.toString(value));
+	}
+	
+	/**
+	 * Retrieves a value
+	 * 
+	 * @param map the name of the map to search in
+	 * @param key the key to search for
+	 * @return the value found
+	 */
+	public String get(String map, String key) {
+		if (!this.maps.containsKey(map)) {
+			throw new IllegalArgumentException("Map "+ map +" not found");
+		}
+		return this.maps.get(map).get(key);
+	}
+	
+	/**
+	 * Retrieves a value
+	 * 
+	 * @param map the name of the map to search in
+	 * @param key the key to search for
+	 * @return the value found
+	 */
+	public int getInt(String map, String key) {
+		if (!this.maps.containsKey(map)) {
+			throw new IllegalArgumentException("Map "+ map +" not found");
+		}
+		return this.maps.get(map).getInt(key);
+	}
+	
+	/**
+	 * Retrieves a value
+	 * 
+	 * @param map the name of the map to search in
+	 * @param key the key to search for
+	 * @return the value found
+	 */
+	public double getDouble(String map, String key) {
+		if (!this.maps.containsKey(map)) {
+			throw new IllegalArgumentException("Map "+ map +" not found");
+		}
+		return this.maps.get(map).getDouble(key);
+	}
+	
+	/**
+	 * Retrieves a value
+	 * 
+	 * @param map the name of the map to search in
+	 * @param key the key to search for
+	 * @return the value found
+	 */
+	public boolean getBoolean(String map, String key) {
+		if (!this.maps.containsKey(map)) {
+			throw new IllegalArgumentException("Map "+ map +" not found");
+		}
+		return this.maps.get(map).getBool(key);
+	}
+	
+	/**
+	 * Retrieves a full map with the given name
+	 * 
+	 * @param map the name of the map
+	 * @return a copy of the map
+	 */
+	public Map<String, String> getMap(String map) {
+		HashMap<String, String> newMap = new HashMap<String, String>();
+		RPObject rpObject = this.maps.get(map);
+		for(String key : rpObject) {
+			newMap.put(key, rpObject.get(key));
+		}
+		return newMap;
+	}
+	
+	/**
+	 * Remove a map from this RPObject
+	 * 
+	 * @param map the name of the map to remove
+	 * @return the RPObject representing the map or null if map not existing
+	 */
+	public RPObject removeMap(String map) {
+		if(maps.containsKey(map)) {
+			RPObject rpo = maps.get(map);
+			this.deletedMaps.add(map);
+			modified = true;
+			return rpo;
+		}
 		return null;
 	}
 
@@ -1021,6 +1205,7 @@ public class RPObject extends SlotOwner {
 		resetAddedAndDeletedAttributes();
 		resetAddedAndDeletedRPSlot();
 		resetAddedAndDeletedRPLink();
+		resetAddedAndDeletedMaps();
 		
 		clearEvents();
 		
@@ -1057,6 +1242,20 @@ public class RPObject extends SlotOwner {
 		if (modified) {
 			addedLinks.clear();
 			deletedLinks.clear();
+		}
+	}
+	
+	/**
+	 * Clean delta^2 data in the maps. It is called by Marauroa, don't use :)
+	 */
+	public void resetAddedAndDeletedMaps() {
+		for(RPObject map : maps.values()) {
+			map.resetAddedAndDeleted();
+		}
+		
+		if(modified ) {
+			addedMaps.clear();
+			deletedMaps.clear();
 		}
 	}
 
