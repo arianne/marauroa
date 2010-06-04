@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.24.2.2 2010/06/01 19:31:09 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.24.2.3 2010/06/04 06:23:21 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -260,7 +260,7 @@ public class AccountDAO {
 	 */
 	public String getAccountBanMessage(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND (accountban.expire > CURRENT_TIMESTAMP OR accountban.expire IS NULL)) WHERE username='[username]' order by nullif(expire,'9999-12-31') desc limit 1";
+			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND (accountban.expire > CURRENT_TIMESTAMP OR accountban.expire IS NULL)) WHERE username='[username]' order by ifnull(expire,'9999-12-31') desc limit 1";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 
