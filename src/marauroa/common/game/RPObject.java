@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.101 2010/06/03 20:28:34 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.102 2010/06/05 10:49:43 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -753,7 +753,21 @@ public class RPObject extends SlotOwner {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * adds a Map to this RPObject
+	 * 
+	 * @param map
+	 */
+	public void addMap(String map) {
+		if(maps.containsKey(map)) {
+			//throw new SomeException 
+		}
+		maps.put(map, new RPObject());
+		addedMaps.add(map);
+		modified = true;
+	}
+	
 	/**
 	 * This method returns a String that represent the object
 	 *
@@ -958,11 +972,11 @@ public class RPObject extends SlotOwner {
 	/**
 	 * Returns true if the object is empty
 	 *
-	 * @return true if the object lacks of any attribute, slots or events.
+	 * @return true if the object lacks of any attribute, slots, maps or events.
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty();
+		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty() && maps.isEmpty();
 	}
 
 	/**
@@ -1284,6 +1298,18 @@ public class RPObject extends SlotOwner {
 			addSlot(slot);
 		}
 	}
+	
+	public void setAddedMaps(RPObject object) {
+		for(String map : object.addedMaps) {
+			addMap(map);
+		}
+	}
+	
+	public void setDeletedMaps(RPObject object) {
+		for(String map : object.deletedMaps) {
+			addMap(map);
+		}
+	}
 
 	/**
 	 * Retrieve the differences stored in this object and add them to two new
@@ -1305,7 +1331,7 @@ public class RPObject extends SlotOwner {
 		deletedChanges.setDeletedAttributes(this);
 
 		/*
-		 * We add to the oadded object the events that exists.
+		 * We add to the added object the events that exists.
 		 * Because events are cleared on each turn so they have no delta^2
 		 */
 		for (RPEvent event : events) {
@@ -1327,7 +1353,7 @@ public class RPObject extends SlotOwner {
 		}
 
 		/*
-		 * We now get the diffs for the link
+		 * We now get the diffs for the links
 		 */
 		for (RPLink link : links) {
 			RPObject linkadded = new RPObject();
@@ -1454,6 +1480,19 @@ public class RPObject extends SlotOwner {
 					}
 				}
 			}
+		}
+		
+		/*
+		 * now we deal with the diff of maps
+		 */
+		addedChanges.setAddedMaps(this);
+		deletedChanges.setDeletedMaps(this);
+		
+		/*
+		 * We now get the diffs for the maps
+		 */
+		for (Entry<String, RPObject> entry : maps.entrySet()) {
+			// do some work here
 		}
 
 		/*
