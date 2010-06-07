@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.31 2010/05/27 18:51:45 nhnb Exp $ */
+/* $Id: Definition.java,v 1.32 2010/06/07 13:03:26 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,7 +84,9 @@ public class Definition implements marauroa.common.net.Serializable {
 		/** an integer of 8 bits */
 		BYTE,
 		/** an boolean attribute that either is present or not. */
-		FLAG
+		FLAG,
+		/** a map attribute **/
+		MAP
 	}
 
 	/* Visibility of a attribute/event/slot */
