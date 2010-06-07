@@ -163,6 +163,7 @@ create table if not exists accountLink
   username    varchar(255),
   nickname    varchar(255),
   email       varchar(255),
+  secret      varchar(255),
   PRIMARY KEY(id)
   );
 
