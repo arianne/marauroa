@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.103 2010/06/06 21:24:06 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.104 2010/06/07 13:03:52 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1492,8 +1492,19 @@ public class RPObject extends SlotOwner {
 		 * We now get the diffs for the maps
 		 */
 		for (Entry<String, RPObject> entry : maps.entrySet()) {
-			System.out.println(entry);
-			// do some work here
+			RPObject addedMapChanges = new RPObject();
+			RPObject deletedMapChanges = new RPObject();
+			entry.getValue().getDifferences(addedMapChanges, deletedMapChanges);
+			if(!addedMapChanges.isEmpty()) {
+				for(String attribute : addedMapChanges) {
+					addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+				}
+			}
+			if(!deletedMapChanges.isEmpty()) {
+				for(String attribute : deletedMapChanges) {
+					deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+				}
+			}
 		}
 
 		/*
