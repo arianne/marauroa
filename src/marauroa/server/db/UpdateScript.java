@@ -32,5 +32,9 @@ public class UpdateScript {
 			transaction.execute("ALTER TABLE statistics ADD COLUMN (ips_online INTEGER);", null);
 		}
 
+		// 3.7.1
+		if (!transaction.doesColumnExist("loginEvent", "account_link_id")) {
+			transaction.execute("ALTER TABLE loginEvent ADD COLUMN (account_link_id INTEGER);", null);
+		}
 	}
 }
