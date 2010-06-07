@@ -15,6 +15,7 @@ create table if not exists account
 /* create index i_account_password ON account(password); */
 /* create index i_account_email ON account(email); */
 
+
 create table if not exists characters
   (
   player_id integer not null,
@@ -48,6 +49,7 @@ create table if not exists loginEvent
   (
   id integer auto_increment not null,
   player_id integer not null,
+  account_link_id integer,
   address varchar(64),
   service char(10),
   seed varchar(120),
@@ -151,3 +153,18 @@ create table if not exists accountban
 
 /*create index i_accountban_player_id ON accountban(player_id);*/
 
+
+
+create table if not exists accountLink
+  (
+  id          integer auto_increment not null,
+  player_id   integer,
+  type        char(10),
+  username    varchar(255),
+  nickname    varchar(255),
+  email       varchar(255),
+  PRIMARY KEY(id)
+  );
+
+/*create index i_accountLink_player_id ON accountLink(player_id);*/
+/*create index i_accountLink_username ON accountLink(username);*/
