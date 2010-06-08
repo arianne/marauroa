@@ -1,4 +1,4 @@
-/* $Id: DelayedEventHandlerThread.java,v 1.3 2010/05/16 16:13:06 nhnb Exp $ */
+/* $Id: DelayedEventHandlerThread.java,v 1.4 2010/06/08 06:35:44 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -50,8 +50,9 @@ public class DelayedEventHandlerThread extends Thread {
 	}
 
 	/**
-	 * Constructor.
-	 * It just gives a nice name to the thread.
+	 * Creates a new DelayedEventHandlerThread
+	 *
+	 * @param rpMan RPServerManager
 	 */
 	public DelayedEventHandlerThread(RPServerManager rpMan) {
 		super("DelayedEventHandlerThread");
