@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.105 2010/06/08 17:46:58 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.106 2010/06/08 19:31:28 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1576,11 +1576,11 @@ public class RPObject extends SlotOwner {
 			/*
 			 * we apply the deleted changes to each map 
 			 */
-			for (String map : deletedChanges.maps.keySet()) {
-				if (deletedChanges.maps.get(map).isEmpty()) {
-					removeMap(map);
+			for (Entry<String, RPObject> entry : deletedChanges.maps.entrySet()) {
+				if (entry.getValue().isEmpty()) {
+					removeMap(entry.getKey());
 				} else {
-					maps.get(map).applyDifferences(null, deletedChanges.maps.get(map));
+					maps.get(entry.getKey()).applyDifferences(null, entry.getValue());
 				}
 			}
 
@@ -1643,6 +1643,17 @@ public class RPObject extends SlotOwner {
 					links.add(link);
 				} else {
 					getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
+				}
+			}
+			
+			/*
+			 * we apply the added changes for the maps
+			 */
+			for (Entry<String, RPObject> entry : addedChanges.maps.entrySet()) {
+				if(!maps.containsKey(entry.getKey())) {
+					maps.put(entry.getKey(), entry.getValue());
+				} else {
+					maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
 				}
 			}
 
