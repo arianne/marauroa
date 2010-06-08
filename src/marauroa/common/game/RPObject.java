@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.104 2010/06/07 13:03:52 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.105 2010/06/08 17:46:58 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -761,7 +761,7 @@ public class RPObject extends SlotOwner {
 	 */
 	public void addMap(String map) {
 		if(maps.containsKey(map)) {
-			//throw new SomeException 
+			throw new SlotAlreadyAddedException(map); 
 		}
 		maps.put(map, new RPObject());
 		addedMaps.add(map);
@@ -858,6 +858,22 @@ public class RPObject extends SlotOwner {
 				link.writeObject(out, level);
 			}
 		}
+		
+		/*
+		 * we compute the amount of maps before serializing 
+		 */
+		// TODO: remove comment when serialization is going to be implemented complete
+//		size=0;
+//		for (Entry<String, RPObject> entry : maps.entrySet()) {
+//			Definition def = getRPClass().getDefinition(DefinitionClass.MAP, entry.getKey());
+//			if(shouldSerialize(def, level)) {
+//				size++;
+//			}
+//		}
+//		out.write(size);
+		/*
+		 * now we write the maps
+		 */
 
 		/*
 		 * We compute the amount of events to serialize first. We don't
@@ -1554,6 +1570,17 @@ public class RPObject extends SlotOwner {
 					removeLink(link.getName());
 				} else {
 					getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
+				}
+			}
+			
+			/*
+			 * we apply the deleted changes to each map 
+			 */
+			for (String map : deletedChanges.maps.keySet()) {
+				if (deletedChanges.maps.get(map).isEmpty()) {
+					removeMap(map);
+				} else {
+					maps.get(map).applyDifferences(null, deletedChanges.maps.get(map));
 				}
 			}
 
