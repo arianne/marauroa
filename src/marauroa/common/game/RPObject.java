@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.107 2010/06/09 17:37:15 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.108 2010/06/09 17:47:01 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -865,7 +865,7 @@ public class RPObject extends SlotOwner {
 		 */
 		size=0;
 		for (Entry<String, RPObject> entry : maps.entrySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.MAP, entry.getKey());
+			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
 			if(shouldSerialize(def, level)) {
 				size++;
 			}
@@ -877,13 +877,13 @@ public class RPObject extends SlotOwner {
 		 * 2. the maps
 		 */
 		for (String map : maps.keySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.MAP, map);
+			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
 			if(shouldSerialize(def, level)) {
 				out.write(map);
 			}
 		}
 		for (String map : maps.keySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.MAP, map);
+			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
 			if(shouldSerialize(def, level)) {
 				maps.get(map).writeObject(out, level);
 			}
