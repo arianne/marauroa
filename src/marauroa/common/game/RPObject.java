@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.108 2010/06/09 17:47:01 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.109 2010/06/10 23:05:39 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -863,31 +862,18 @@ public class RPObject extends SlotOwner {
 		/*
 		 * we compute the amount of maps before serializing 
 		 */
-		size=0;
-		for (Entry<String, RPObject> entry : maps.entrySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-			if(shouldSerialize(def, level)) {
-				size++;
-			}
-		}
-		out.write(size);
+		// TODO: remove comment when serialization is going to be implemented complete
+//		size=0;
+//		for (Entry<String, RPObject> entry : maps.entrySet()) {
+//			Definition def = getRPClass().getDefinition(DefinitionClass.MAP, entry.getKey());
+//			if(shouldSerialize(def, level)) {
+//				size++;
+//			}
+//		}
+//		out.write(size);
 		/*
-		 * now we write the maps in two steps
-		 * 1. the names of the maps
-		 * 2. the maps
+		 * now we write the maps
 		 */
-		for (String map : maps.keySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-			if(shouldSerialize(def, level)) {
-				out.write(map);
-			}
-		}
-		for (String map : maps.keySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-			if(shouldSerialize(def, level)) {
-				maps.get(map).writeObject(out, level);
-			}
-		}
 
 		/*
 		 * We compute the amount of events to serialize first. We don't
@@ -948,21 +934,7 @@ public class RPObject extends SlotOwner {
 			link = (RPLink) in.readObject(link);
 			links.add(link);
 		}
-		
-		// get the number of maps
-		int numberOfMaps = in.readInt();
-		// get the names of the maps and store them in a list
-		List<String> mapNames = new ArrayList<String>();
-		for (int j = 0; j < numberOfMaps; j++) {
-			mapNames.add(in.readString());
-		}
-		// get the map objects and put them into the internal maps
-		for (int k = 0; k < numberOfMaps; k++) {
-			RPObject rpo = new RPObject(); 
-			rpo = (RPObject) in.readObject(rpo);
-			maps.put(mapNames.get(0), rpo);
-		}
-		
+
 		/*
 		 * And now we load events
 		 */
