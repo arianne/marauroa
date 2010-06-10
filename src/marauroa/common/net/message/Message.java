@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.16 2010/05/24 22:16:22 nhnb Exp $ */
+/* $Id: Message.java,v 1.17 2010/06/10 05:42:14 madmetzger Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -198,7 +198,7 @@ public class Message implements Serializable {
 	 *                if the serializations fails
 	 */
 	public void writeObject(OutputSerializer out) throws IOException {
-		out.write(NetConst.NETWORK_PROTOCOL_VERSION);
+		out.write((byte)protocolVersion);
 		out.write((byte) type.ordinal());
 		out.write(clientid);
 		out.write(timestampMessage);
