@@ -17,7 +17,6 @@ import java.sql.SQLException;
 
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
@@ -28,14 +27,10 @@ import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
  *
  * @author hendrik
  */
-public class LoadCharacterCommand  extends AbstractDBCommand {
+public class LoadCharacterCommand  extends DBCommandWithCallback {
 	private String username;
 	private String character;
 	private RPObject object;
-
-	private int clientid;
-	private SocketChannel channel;
-	private DelayedEventHandler callback;
 
 	/**
 	 * Creates a new LoadCharacterCommand
@@ -60,11 +55,9 @@ public class LoadCharacterCommand  extends AbstractDBCommand {
 	 */
 	public LoadCharacterCommand(String username, String character,
 			DelayedEventHandler callback, int clientid, SocketChannel channel) {
+		super(callback, clientid, channel);
 		this.username = username;
 		this.character = character;
-		this.callback = callback;
-		this.clientid = clientid;
-		this.channel = channel;
 	}
 
 
@@ -92,23 +85,5 @@ public class LoadCharacterCommand  extends AbstractDBCommand {
 	 */
 	public String getCharacterName() {
 		return character;
-	}
-
-	/**
-	 * gets the clientid
-	 *
-	 * @return clientid
-	 */
-	public int getClientid() {
-		return clientid;
-	}
-
-	/**
-	 * gets the SocketChannel
-	 *
-	 * @return SocketChannel
-	 */
-	public SocketChannel getChannel() {
-		return channel;
 	}
 }

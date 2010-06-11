@@ -18,7 +18,6 @@ import java.util.Map;
 
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
@@ -29,25 +28,18 @@ import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
  *
  * @author hendrik
  */
-public class LoadAllCharactersCommand  extends AbstractDBCommand {
+public class LoadAllCharactersCommand  extends DBCommandWithCallback {
 	private String username;
-	private String character;
 	private Map<String, RPObject> characters;
-
-	private int clientid;
-	private SocketChannel channel;
-	private DelayedEventHandler callback;
 
 	/**
 	 * Creates a new LoadCharacterCommand
 	 *
 	 * @param username name of account
-	 * @param character name of character
 	 */
-	public LoadAllCharactersCommand(String username, String character) {
+	public LoadAllCharactersCommand(String username) {
 		super();
 		this.username = username;
-		this.character = character;
 	}
 
 	/**
@@ -60,10 +52,8 @@ public class LoadAllCharactersCommand  extends AbstractDBCommand {
 	 */
 	public LoadAllCharactersCommand(String username,
 			DelayedEventHandler callback, int clientid, SocketChannel channel) {
+		super(callback, clientid, channel);
 		this.username = username;
-		this.callback = callback;
-		this.clientid = clientid;
-		this.channel = channel;
 	}
 
 
@@ -82,32 +72,5 @@ public class LoadAllCharactersCommand  extends AbstractDBCommand {
 	 */
 	public Map<String, RPObject> getCharacters() {
 		return characters;
-	}
-
-	/**
-	 * gets the name of the character
-	 *
-	 * @return name of character
-	 */
-	public String getCharacterName() {
-		return character;
-	}
-
-	/**
-	 * gets the clientid
-	 *
-	 * @return clientid
-	 */
-	public int getClientid() {
-		return clientid;
-	}
-
-	/**
-	 * gets the SocketChannel
-	 *
-	 * @return SocketChannel
-	 */
-	public SocketChannel getChannel() {
-		return channel;
 	}
 }
