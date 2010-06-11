@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.12 2010/03/15 18:54:43 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.13 2010/06/11 19:02:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -30,6 +30,7 @@ import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InputSerializer;
+import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
@@ -67,7 +68,7 @@ public class RPZoneDAO {
 	public void loadRPZone(DBTransaction transaction, IRPZone zone) throws SQLException, IOException {
 		String zoneid = zone.getID().getID();
 
-		String query = "select data from rpzone where zone_id='[zoneid]'";
+		String query = "select data, protocol_version from rpzone where zone_id='[zoneid]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("zoneid", zoneid);
 		logger.debug("loadRPZone is executing query " + query);
@@ -92,13 +93,20 @@ public class RPZoneDAO {
 
 			ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-			InputSerializer inser = new InputSerializer(szlib);
+			InputSerializer inputSerializer = new InputSerializer(szlib);
 
-			int amount = inser.readInt();
+			int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+			Object temp = resultSet.getObject("protocol_version");
+			if (temp != null) {
+				protocolVersion = ((Integer) temp).intValue(); 
+			}
+			inputSerializer.setProtocolVersion(protocolVersion);
+
+			int amount = inputSerializer.readInt();
 
 			for (int i = 0; i < amount; i++) {
 				try {
-					RPObject object = factory.transform((RPObject) inser.readObject(new RPObject()));
+					RPObject object = factory.transform((RPObject) inputSerializer.readObject(new RPObject()));
 
 					if (object != null) {
 						/* Give the object a valid id and add it */
@@ -157,16 +165,17 @@ public class RPZoneDAO {
 		String query;
 
 		if (hasRPZone(transaction, zone.getID())) {
-			query = "update rpzone set data=? where zone_id='[zoneid]'";
+			query = "update rpzone set data=?, protocol_version=[protocolVersion] where zone_id='[zoneid]'";
 		} else {
 			// do not add empty zones
 			if (empty) {
 				return;
 			}
-			query = "insert into rpzone(zone_id, data) values('[zoneid]',?)";
+			query = "insert into rpzone(zone_id, data, protocol_version) values('[zoneid]', ?, [protocolVersion])";
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("zoneid", zoneid);
+		params.put("protocolVersion", os.getProtocolVersion());
 		logger.debug("storeRPZone is executing query " + query);
 
 		transaction.execute(query, params, inStream);

@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.15 2010/05/30 16:59:10 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.16 2010/06/11 19:02:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.NetConst;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
@@ -308,7 +309,7 @@ public class CharacterDAO {
 			Map<String, RPObject> res = new HashMap<String, RPObject>();
 
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
-			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
+			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.protocol_version As protocol_version, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
 			logger.debug("loadAllCharacters is executing query " + query);
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
@@ -320,7 +321,12 @@ public class CharacterDAO {
 				int objectid = result.getInt("object_id");
 				String name = result.getString("charname");
 				Blob data = result.getBlob("data");
-				RPObject rpobject = DAORegister.get().get(RPObjectDAO.class).readRPObject(objectid, data, false);
+				int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+				Object temp = result.getObject("protocol_version");
+				if (temp != null) {
+					protocolVersion = ((Integer) temp).intValue(); 
+				}
+				RPObject rpobject = DAORegister.get().get(RPObjectDAO.class).readRPObject(objectid, data, protocolVersion, false);
 				logger.debug("Character: " + player);
 				res.put(name, rpobject);
 			}

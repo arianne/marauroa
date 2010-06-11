@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.14 2010/05/24 17:49:00 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.15 2010/06/11 19:02:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -29,6 +29,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.InputSerializer;
+import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
@@ -78,7 +79,7 @@ public class RPObjectDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public RPObject loadRPObject(DBTransaction transaction, int objectid, boolean transform) throws SQLException, IOException {
-		String query = "select data from rpobject where object_id=[objectid]";
+		String query = "select data, protocol_version from rpobject where object_id=[objectid]";
 		logger.debug("loadRPObject is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("objectid", objectid);
@@ -87,7 +88,12 @@ public class RPObjectDAO {
 
 		if (resultSet.next()) {
 		    Blob data = resultSet.getBlob("data");
-			RPObject object = readRPObject(objectid, data, transform);
+			int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+			Object temp = resultSet.getObject("protocol_version");
+			if (temp != null) {
+				protocolVersion = ((Integer) temp).intValue(); 
+			}
+			RPObject object = readRPObject(objectid, data, protocolVersion, transform);
 		    resultSet.close();
 			return object;
 		}
@@ -100,12 +106,13 @@ public class RPObjectDAO {
 	 *
 	 * @param objectid  object_id of RPObject
 	 * @param data      blob data
+	 * @param protocolVersion version of serialization protocol
 	 * @param transform should it be transformed using the RPObjectFactory
 	 * @return RPBobject
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
-	public RPObject readRPObject(int objectid, Blob data, boolean transform) throws SQLException, IOException {
+	public RPObject readRPObject(int objectid, Blob data, int protocolVersion, boolean transform) throws SQLException, IOException {
 	    InputStream input = data.getBinaryStream();
 	    ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -122,9 +129,10 @@ public class RPObjectDAO {
 
 	    ByteArrayInputStream inStream = new ByteArrayInputStream(content);
 	    InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
-	    InputSerializer inser = new InputSerializer(szlib);
+	    InputSerializer inputSerializer = new InputSerializer(szlib);
+	    inputSerializer.setProtocolVersion(protocolVersion);
 
-	    RPObject object = (RPObject) inser.readObject(new RPObject());
+	    RPObject object = (RPObject) inputSerializer.readObject(new RPObject());
 
 	    if (transform) {
 	    	object = factory.transform(object);
@@ -185,6 +193,7 @@ public class RPObjectDAO {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
+		int protocolVersion = serializer.getProtocolVersion();
 
 		try {
 			object.writeObject(serializer, DetailLevel.FULL);
@@ -206,11 +215,13 @@ public class RPObjectDAO {
 		String query;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("object_id", object_id);
+		params.put("protocolVersion", protocolVersion);
+
 
 		if (object_id != -1 && hasRPObject(transaction, object_id)) {
-			query = "update rpobject set data=? where object_id=[object_id]";
+			query = "update rpobject set data=?, protocol_version=[protocolVersion] where object_id=[object_id]";
 		} else {
-			query = "insert into rpobject (object_id, data) values(null, ?)";
+			query = "insert into rpobject (data, protocol_version) values(?, [protocolVersion])";
 		}
 		logger.debug("storeRPObject is executing query " + query);
 
