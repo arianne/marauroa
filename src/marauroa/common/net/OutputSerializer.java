@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.13 2010/05/27 18:51:53 nhnb Exp $ */
+/* $Id: OutputSerializer.java,v 1.14 2010/06/11 19:00:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,6 +23,7 @@ import java.io.OutputStream;
 public class OutputSerializer {
 
 	private OutputStream out;
+	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
 	/**
 	 * Constructor that defines a specified OutputStream for the serializer
@@ -232,5 +233,23 @@ public class OutputSerializer {
 		for (int i = 0; i < objs.length; i++) {
 			write(objs[i]);
 		}	    
+    }
+
+	/**
+	 * gets the protocolVersion
+	 *
+	 * @return protocol version
+	 */
+	public int getProtocolVersion() {
+    	return protocolVersion;
+    }
+
+	/**
+	 * sets the protocol version
+	 *
+	 * @param protocolVersion protocol version
+	 */
+	public void setProtocolVersion(int protocolVersion) {
+    	this.protocolVersion = protocolVersion;
     }
 };

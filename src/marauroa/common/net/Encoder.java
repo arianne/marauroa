@@ -1,4 +1,4 @@
-/* $Id: Encoder.java,v 1.9 2010/05/14 19:38:11 kymara Exp $ */
+/* $Id: Encoder.java,v 1.10 2010/06/11 19:00:57 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -62,6 +62,7 @@ public class Encoder {
 		int size = 0;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		OutputSerializer s = new OutputSerializer(out);
+		s.setProtocolVersion(msg.getProtocolVersion());
 
 		/*
 		 * HACK: We make room for 4 bytes that we will set later to specify how big the packet is.
