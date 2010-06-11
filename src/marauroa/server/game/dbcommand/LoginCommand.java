@@ -1,4 +1,4 @@
-/* $Id: LoginCommand.java,v 1.1 2010/06/11 20:41:22 nhnb Exp $ */
+/* $Id: LoginCommand.java,v 1.2 2010/06/11 21:08:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -24,6 +24,7 @@ import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
+import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 
 /**
@@ -85,6 +86,11 @@ public class LoginCommand extends DBCommandWithCallback {
 		/* Successful login */
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(info.username, 1);
 		info.addLoginEvent(info.address, true);
+
+		/* notify callback */
+		if (callback != null) {
+			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+		}
 	}
 
 	/**

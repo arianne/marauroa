@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.6 2010/05/30 22:04:28 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.7 2010/06/11 21:08:46 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -14,7 +14,7 @@ package marauroa.server.game.messagehandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -35,8 +35,11 @@ import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
 import marauroa.server.game.dbcommand.LoadAllCharactersCommand;
+import marauroa.server.game.dbcommand.LoginCommand;
+import marauroa.server.game.rp.RPServerManager;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +48,7 @@ import org.apache.log4j.Logger;
  * game continue or fail and resources for this player
  * are freed.
  */
-class SecuredLoginHandler extends MessageHandler {
+class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
 
@@ -58,7 +61,6 @@ class SecuredLoginHandler extends MessageHandler {
 	 */
 	@Override
 	public void process(Message msg) {
-		try {
 			int clientid = msg.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
 			
@@ -67,148 +69,60 @@ class SecuredLoginHandler extends MessageHandler {
 				return;
 			}
 
-			SecuredLoginInfo info = entry.loginInformations;
-
-			if (msg instanceof MessageC2SLoginSendNonceNameAndPassword) {
-				MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
-				info.clientNonce = msgLogin.getHash();
-				info.username = msgLogin.getUsername();
-				info.password = msgLogin.getPassword();
-			} else {
-				MessageC2SLoginSendNonceNamePasswordAndSeed msgLogin = (MessageC2SLoginSendNonceNamePasswordAndSeed) msg;
-				info.clientNonce = msgLogin.getHash();
-				info.username = msgLogin.getUsername();
-				info.password = msgLogin.getPassword();
-				info.seed = decode(info, msgLogin.getSeed());
-			}
-
-			/*
-			 * We check that player didn't failed too many time the login, if it
-			 * did, we reject the login request until the block pass.
-			 */
-			if (info.isBlocked()) {
-				logger.debug("Blocked account for player " + info.username + " and/or address " + info.address);
-
-				/* Send player the Login NACK message */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
-				        MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
-
-				netMan.sendMessage(msgLoginNACK);
-				
-				/*
-				 * Disconnect player of server.
-				 */
-				netMan.disconnectClient(msg.getSocketChannel());
-
-				return;
-			}
-			
-			/*
-			 * We verify the username and the password to make sure player is
-			 * who he/she says he/she is.
-			 */
-			if (!info.verify()) {
-				/*
-				 * If the verification fails we send player a NACK and record
-				 * the event
-				 */
-				logger.debug("Incorrect username/password for player " + info.username);
-				stats.add("Players invalid login", 1);
-				info.addLoginEvent(msg.getAddress(), false);
-
-				/* Send player the Login NACK message */
-				if (info.reason == null) {
-					info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
-				}
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
-						info.reason);
-
-				netMan.sendMessage(msgLoginNACK);
-				playerContainer.remove(clientid);
-				return;
-			}
-
-			/*
-			 * We check now the account is not banned or inactive.
-			 */
-			String accountStatus = info.getStatus();
-			if (accountStatus != null) {
-				logger.info("Banned/Inactive account for player " + info.username + ": " + accountStatus);
-
-				/* Send player the Login NACK message */
-				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(), accountStatus);
-				netMan.sendMessage(msgLoginMessageNACK);
-
-				/*
-				 * Disconnect player of server.
-				 */
-				netMan.disconnectClient(msg.getSocketChannel());
-
-				return;
-			}
-
-			/* Now we count the number of connections from this ip-address */
-			int count = info.countConnectionsFromSameIPAddress(playerContainer);
-			Configuration conf = Configuration.getConfiguration();
-			int limit = conf.getInt("parallel_connection_limit", TimeoutConf.PARALLEL_CONNECTION_LIMIT);
-			if (count > limit) {
-				String whiteList = "," + conf.get("ip_whitelist", "127.0.0.1") + ",";
-				if (whiteList.indexOf("," + info.address + ",") < 0) {
-					logger.info("to many parallel connections from " + info.address + " rejecting login of " + info.username);
-
-					/* Send player the Login NACK message */
-					MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(msg.getSocketChannel(),
-						"There are too many connections from your ip-address.\nPlease contact /support, if you are at a conference or something similar.");
-					netMan.sendMessage(msgLoginMessageNACK);
-
-					// Disconnect player of server.
-					netMan.disconnectClient(msg.getSocketChannel());
-					return;
-				}
-			}
-
-			logger.debug("Correct username/password");
-
-			/* Correct: The login is correct */
-			entry.username = info.username;
-
-			/* Obtain previous logins attemps */
-			List<String> previousLogins = entry.getPreviousLogins();
-
-			/* Now we store at database the login event */
-			info.addLoginEvent(msg.getAddress(), true);
-
-			/* We clean the login information as it is not longer useful. */
-			entry.loginInformations = null;
-
-			stats.add("Players login", 1);
-
-			/* Send player the Login ACK message */
-			MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(msg.getSocketChannel(),
-			        previousLogins);
-			msgLoginACK.setClientID(clientid);
-			netMan.sendMessage(msgLoginACK);
-
-			/* Send player the ServerInfo */
-			MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(msg.getSocketChannel(),
-			        ServerInfo.get());
-			msgServerInfo.setClientID(clientid);
-			netMan.sendMessage(msgServerInfo);
-
-			/* Build player character list and send it to client */
-			DBCommand command = new LoadAllCharactersCommand(entry.username, 
-					new SendCharacterListHandler(netMan, msg.getProtocolVersion()), 
-					clientid, msg.getSocketChannel());
+			SecuredLoginInfo info = fillLoginInfo(msg, entry);
+			DBCommand command = new LoginCommand(info, 
+					this, entry.clientid, 
+					msg.getSocketChannel(), msg.getProtocolVersion());
 			DBCommandQueue.get().enqueue(command);
+	}
 
-			entry.state = ClientState.LOGIN_COMPLETE;
-		} catch (IOException e) {
-			logger.error("error while processing SecuredLoginEvent", e);
-		} catch (RuntimeException e) {
-			logger.error("error while processing SecuredLoginEvent", e);
-		} catch (SQLException e) {
-			logger.error("error while processing SecuredLoginEvent", e);
+	private void completeLogin(SocketChannel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
+		PlayerEntry entry = PlayerEntryContainer.getContainer().get(clientid);
+		logger.debug("Correct username/password");
+
+		/* Correct: The login is correct */
+		entry.username = info.username;
+
+		/* We clean the login information as it is not longer useful. */
+		entry.loginInformations = null;
+
+		stats.add("Players login", 1);
+
+		/* Send player the Login ACK message */
+		MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(channel, previousLogins);
+		msgLoginACK.setClientID(clientid);
+		netMan.sendMessage(msgLoginACK);
+
+		/* Send player the ServerInfo */
+		MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(channel, ServerInfo.get());
+		msgServerInfo.setClientID(clientid);
+		netMan.sendMessage(msgServerInfo);
+
+		/* Build player character list and send it to client */
+		DBCommand command = new LoadAllCharactersCommand(entry.username, 
+				new SendCharacterListHandler(netMan, protocolVersion), 
+				clientid, channel, protocolVersion);
+		DBCommandQueue.get().enqueue(command);
+
+		entry.state = ClientState.LOGIN_COMPLETE;
+	}
+
+	private SecuredLoginInfo fillLoginInfo(Message msg, PlayerEntry entry) {
+		SecuredLoginInfo info = entry.loginInformations;
+
+		if (msg instanceof MessageC2SLoginSendNonceNameAndPassword) {
+			MessageC2SLoginSendNonceNameAndPassword msgLogin = (MessageC2SLoginSendNonceNameAndPassword) msg;
+			info.clientNonce = msgLogin.getHash();
+			info.username = msgLogin.getUsername();
+			info.password = msgLogin.getPassword();
+		} else {
+			MessageC2SLoginSendNonceNamePasswordAndSeed msgLogin = (MessageC2SLoginSendNonceNamePasswordAndSeed) msg;
+			info.clientNonce = msgLogin.getHash();
+			info.username = msgLogin.getUsername();
+			info.password = msgLogin.getPassword();
+			info.seed = decode(info, msgLogin.getSeed());
 		}
+		return info;
 	}
 
 	private String decode(SecuredLoginInfo info, byte[] data) {
@@ -273,6 +187,107 @@ class SecuredLoginHandler extends MessageHandler {
 			}
 			String[] result = new String[l_result.size()];
 			return l_result.toArray(result);
+		}
+	}
+
+
+
+	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
+		try {
+			LoginCommand command = (LoginCommand) data;
+			SecuredLoginInfo info = command.getInfo();
+
+			/*
+			 * We check that player didn't failed too many time the login, if it
+			 * did, we reject the login request until the block pass.
+			 */
+			if (command.getFailReason() == MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES) {
+				logger.debug("Blocked account for player " + info.username + " and/or address " + info.address);
+
+				/* Send player the Login NACK message */
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(command.getChannel(),
+				        MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
+
+				netMan.sendMessage(msgLoginNACK);
+				
+				/*
+				 * Disconnect player of server.
+				 */
+				netMan.disconnectClient(command.getChannel());
+
+				return;
+			}
+			
+			/*
+			 * We verify the username and the password to make sure player is
+			 * who he/she says he/she is.
+			 */
+			if (command.getFailReason() != null) {
+				/*
+				 * If the verification fails we send player a NACK and record
+				 * the event
+				 */
+				logger.debug("Incorrect username/password for player " + info.username);
+				stats.add("Players invalid login", 1);
+
+				/* Send player the Login NACK message */
+				if (info.reason == null) {
+					info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
+				}
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(command.getChannel(),
+						info.reason);
+
+				netMan.sendMessage(msgLoginNACK);
+				playerContainer.remove(command.getClientid());
+				return;
+			}
+
+			/*
+			 * We check now the account is not banned or inactive.
+			 */
+			if (command.getFailMessage() != null) {
+				logger.info("Banned/Inactive account for player " + info.username + ": " + command.getFailMessage());
+
+				/* Send player the Login NACK message */
+				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(command.getChannel(), command.getFailMessage());
+				netMan.sendMessage(msgLoginMessageNACK);
+
+				/*
+				 * Disconnect player of server.
+				 */
+				netMan.disconnectClient(command.getChannel());
+
+				return;
+			}
+
+			/* Now we count the number of connections from this ip-address */
+			int count = info.countConnectionsFromSameIPAddress(playerContainer);
+			Configuration conf = Configuration.getConfiguration();
+			int limit = conf.getInt("parallel_connection_limit", TimeoutConf.PARALLEL_CONNECTION_LIMIT);
+			if (count > limit) {
+				String whiteList = "," + conf.get("ip_whitelist", "127.0.0.1") + ",";
+				if (whiteList.indexOf("," + info.address + ",") < 0) {
+					logger.info("to many parallel connections from " + info.address + " rejecting login of " + info.username);
+
+					/* Send player the Login NACK message */
+					MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(command.getChannel(),
+						"There are too many connections from your ip-address.\nPlease contact /support, if you are at a conference or something similar.");
+					netMan.sendMessage(msgLoginMessageNACK);
+
+					// Disconnect player of server.
+					netMan.disconnectClient(command.getChannel());
+					return;
+				}
+			}
+
+			/* Obtain previous logins attemps */
+			List<String> previousLogins = command.getPreviousLogins();
+
+			completeLogin(command.getChannel(), command.getClientid(), command.getProtocolVersion(), info, previousLogins);
+		} catch (IOException e) {
+			logger.error("error while processing SecuredLoginEvent", e);
+		} catch (RuntimeException e) {
+			logger.error("error while processing SecuredLoginEvent", e);
 		}
 	}
 }
