@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.10 2007/06/17 19:49:03 astridemma Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.11 2010/06/11 19:01:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -206,7 +206,7 @@ public class MessageS2CPerception extends Message {
 
 		super.writeObject(out);
 		out.write(getPrecomputedStaticPartPerception());
-		out.write(getDynamicPartPerception());
+		out.write(getDynamicPartPerception(out.getProtocolVersion()));
 	}
 
 	private void setZoneid(RPObject object, String zoneid) {
@@ -230,6 +230,7 @@ public class MessageS2CPerception extends Message {
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
 		        new java.util.zip.Inflater());
 		InputSerializer ser = new InputSerializer(szlib);
+		ser.setProtocolVersion(protocolVersion);
 
 		try {
 			typePerception = ser.readByte();
@@ -384,6 +385,7 @@ public class MessageS2CPerception extends Message {
 				ByteArrayOutputStream array = new ByteArrayOutputStream();
 				DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 				OutputSerializer serializer = new OutputSerializer(out_stream);
+				serializer.setProtocolVersion(perception.getProtocolVersion());
 
 				perception.computeStaticPartPerception(serializer);
 				out_stream.close();
@@ -406,9 +408,10 @@ public class MessageS2CPerception extends Message {
 		return cache.get(this);
 	}
 
-	private byte[] getDynamicPartPerception() throws IOException {
+	private byte[] getDynamicPartPerception(int protocolVersion) throws IOException {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		OutputSerializer serializer = new OutputSerializer(array);
+		serializer.setProtocolVersion(protocolVersion);
 
 		serializer.write(timestampPerception);
 		if (myRPObjectModifiedAdded == null) {

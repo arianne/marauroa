@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.7 2010/06/11 19:01:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -92,6 +92,7 @@ public class MessageS2CServerInfo extends Message {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
+		serializer.setProtocolVersion(out.getProtocolVersion());
 
 		serializer.write(contents);
 		int size = RPClass.size();
@@ -128,6 +129,7 @@ public class MessageS2CServerInfo extends Message {
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
 		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
+		serializer.setProtocolVersion(protocolVersion);
 
 		contents = serializer.readStringArray();
 

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CTransfer.java,v 1.8 2010/05/27 19:13:32 nhnb Exp $ */
+/* $Id: MessageS2CTransfer.java,v 1.9 2010/06/11 19:01:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -84,6 +84,7 @@ public class MessageS2CTransfer extends Message {
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
 		DeflaterOutputStream out_stream = new DeflaterOutputStream(array);
 		OutputSerializer serializer = new OutputSerializer(out_stream);
+		serializer.setProtocolVersion(out.getProtocolVersion());
 
 		int size = contents.size();
 		serializer.write(size);
@@ -105,6 +106,7 @@ public class MessageS2CTransfer extends Message {
 		java.util.zip.InflaterInputStream szlib = new java.util.zip.InflaterInputStream(array,
 		        new java.util.zip.Inflater());
 		InputSerializer serializer = new InputSerializer(szlib);
+		serializer.setProtocolVersion(protocolVersion);
 
 		int size = serializer.readInt();
 		contents = new LinkedList<TransferContent>();
