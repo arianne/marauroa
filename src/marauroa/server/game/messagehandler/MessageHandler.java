@@ -1,4 +1,4 @@
-/* $Id: MessageHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: MessageHandler.java,v 1.2 2010/06/11 21:08:36 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -56,8 +56,9 @@ abstract class MessageHandler {
 	 * <li>Must have the correct IP<->clientid relation </li>
 	 * </ul>
 	 *
-	 * @param msg
-	 *            the message to check
+	 * @param msg the message to check
+	 * @param entry PlayerEntry
+	 * @param states valid client states
 	 * @return true, the event is valid, else false
 	 */
 	protected boolean isValidEvent(Message msg, PlayerEntry entry, ClientState... states) {
