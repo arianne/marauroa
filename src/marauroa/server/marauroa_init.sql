@@ -32,7 +32,7 @@ create table if not exists rpobject
   (
   object_id integer auto_increment not null,
   data blob,  
-  
+  protocol_version integer,
   primary key(object_id)
   );
 
@@ -40,7 +40,7 @@ create table if not exists rpzone
   (
   zone_id varchar(32) not null,
   data blob,
-
+  protocol_version integer,
   primary key(zone_id)
   )
  ;
