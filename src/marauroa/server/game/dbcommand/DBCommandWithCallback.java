@@ -22,8 +22,9 @@ import marauroa.server.game.messagehandler.DelayedEventHandler;
  * @author hendrik
  */
 public abstract class DBCommandWithCallback extends AbstractDBCommand {
-	protected int clientid;
-	protected SocketChannel channel;
+	private int clientid;
+	private SocketChannel channel;
+	private int protocolVersion;
 	protected DelayedEventHandler callback;
 
 	/**
@@ -39,28 +40,40 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	 * @param callback DelayedEventHandler
 	 * @param clientid optional parameter available to the callback
 	 * @param channel optional parameter available to the callback
+	 * @param protocolVersion protocolVersion
 	 */
-	protected DBCommandWithCallback(DelayedEventHandler callback, int clientid, SocketChannel channel) {
+	protected DBCommandWithCallback(DelayedEventHandler callback, int clientid, SocketChannel channel, int protocolVersion) {
 		this.callback = callback;
 		this.clientid = clientid;
 		this.channel = channel;
+		this.protocolVersion = protocolVersion;
 	}
 
 	/**
-     * gets the clientid
-     *
-     * @return clientid
-     */
-    public int getClientid() {
-    	return clientid;
-    }
+	 * gets the clientid
+	 *
+	 * @return clientid
+	 */
+	public int getClientid() {
+		return clientid;
+	}
 
 	/**
-     * gets the SocketChannel
-     *
-     * @return SocketChannel
-     */
-    public SocketChannel getChannel() {
-    	return channel;
-    }
+	 * gets the SocketChannel
+	 *
+	 * @return SocketChannel
+	 */
+	public SocketChannel getChannel() {
+		return channel;
+	}
+
+	/**
+	 * gets the protocol version
+	 * 
+	 * @return protocolVersion
+	 */
+	public int getProtocolVersion() {
+		return protocolVersion;
+	}
+
 }

@@ -52,10 +52,11 @@ public class LoadCharacterCommand  extends DBCommandWithCallback {
 	 * @param callback DelayedEventHandler
 	 * @param clientid optional parameter available to the callback
 	 * @param channel optional parameter available to the callback
+	 * @param protocolVersion version of protocol
 	 */
 	public LoadCharacterCommand(String username, String character,
-			DelayedEventHandler callback, int clientid, SocketChannel channel) {
-		super(callback, clientid, channel);
+			DelayedEventHandler callback, int clientid, SocketChannel channel, int protocolVersion) {
+		super(callback, clientid, channel, protocolVersion);
 		this.username = username;
 		this.character = character;
 	}

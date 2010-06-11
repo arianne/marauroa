@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.6 2010/05/25 12:39:37 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.7 2010/06/11 20:21:40 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -107,7 +107,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 
 	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg,
 			int clientid, PlayerEntry entry) {
-		DBCommand command = new LoadCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel());
+		DBCommand command = new LoadCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel(), msg.getProtocolVersion());
 		DBCommandQueue.get().enqueue(command);
 	}
 

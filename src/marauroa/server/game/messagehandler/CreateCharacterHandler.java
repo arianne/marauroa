@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.2 2010/05/25 12:43:14 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.3 2010/06/11 20:21:40 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -82,7 +82,7 @@ class CreateCharacterHandler extends MessageHandler {
 				 */
 				DBCommand command = new LoadAllCharactersCommand(entry.username,
 						new SendCharacterListHandler(netMan, msg.getProtocolVersion()), 
-						clientid, msg.getSocketChannel());
+						clientid, msg.getSocketChannel(), msg.getProtocolVersion());
 				DBCommandQueue.get().enqueue(command);
 			} else {
 				/*
