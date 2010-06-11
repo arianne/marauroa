@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.9 2010/05/24 22:16:40 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.10 2010/06/11 21:18:32 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import marauroa.common.game.RPObject;
+import marauroa.common.net.NetConst;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -101,7 +102,7 @@ public class MessageS2CCharacterList extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(getCharacters());
-		if (super.protocolVersion >= 32) {
+		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
 			String[] character = getCharacters();
 			RPObject[] objects = new RPObject[characters.size()];
 			for (int i = 0; i < characters.size(); i++) {
@@ -118,7 +119,7 @@ public class MessageS2CCharacterList extends Message {
 		this.characters = new HashMap<String, RPObject>();
 	
 		// read the map or list, depending on protocol version
-		if (super.protocolVersion >= 32) {
+		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
 			Object[] objects = in.readObjectArray(RPObject.class);
 			for (int i = 0; i < characters.length; i++) {
 				this.characters.put(characters[i], (RPObject) objects[i]);

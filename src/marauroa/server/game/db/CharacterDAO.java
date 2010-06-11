@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.16 2010/06/11 19:02:26 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.17 2010/06/11 21:18:32 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -321,7 +321,7 @@ public class CharacterDAO {
 				int objectid = result.getInt("object_id");
 				String name = result.getString("charname");
 				Blob data = result.getBlob("data");
-				int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+				int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 				Object temp = result.getObject("protocol_version");
 				if (temp != null) {
 					protocolVersion = ((Integer) temp).intValue(); 

@@ -1,4 +1,4 @@
-/* $Id: RPObjectDAO.java,v 1.15 2010/06/11 19:02:26 nhnb Exp $ */
+/* $Id: RPObjectDAO.java,v 1.16 2010/06/11 21:18:32 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -88,7 +88,7 @@ public class RPObjectDAO {
 
 		if (resultSet.next()) {
 		    Blob data = resultSet.getBlob("data");
-			int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+			int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 			Object temp = resultSet.getObject("protocol_version");
 			if (temp != null) {
 				protocolVersion = ((Integer) temp).intValue(); 

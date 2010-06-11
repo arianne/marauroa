@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.13 2010/06/11 19:02:26 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.14 2010/06/11 21:18:32 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -95,7 +95,7 @@ public class RPZoneDAO {
 			InflaterInputStream szlib = new InflaterInputStream(inStream, new Inflater());
 			InputSerializer inputSerializer = new InputSerializer(szlib);
 
-			int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+			int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 			Object temp = resultSet.getObject("protocol_version");
 			if (temp != null) {
 				protocolVersion = ((Integer) temp).intValue(); 
