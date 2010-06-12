@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.31 2010/06/12 09:29:05 madmetzger Exp $ */
+/* $Id: NetConst.java,v 1.32 2010/06/12 09:30:53 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,5 +87,8 @@ public class NetConst {
 
 	/** the first version with support for older versions. */
 	public static final byte FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT = 33;
+	
+	/** the first version that supports maps in rpobjects. */
+	public static final byte FIRST_VERSION_WITH_MAP_SUPPORT = 33;
 	
 }
