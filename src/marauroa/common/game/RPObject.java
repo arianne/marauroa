@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.115 2010/06/12 09:37:20 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.116 2010/06/12 10:19:34 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -768,6 +768,13 @@ public class RPObject extends SlotOwner {
 		maps.put(map, new RPObject());
 		addedMaps.add(map);
 		modified = true;
+	}
+	
+	public void remove(String map, String key) {
+		if(maps.containsKey(map)) {
+			this.maps.get(map).remove(key);
+			this.modified = true;
+		}
 	}
 	
 	/**
