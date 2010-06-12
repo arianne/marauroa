@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.64 2010/06/12 14:37:08 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.65 2010/06/12 14:51:10 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -694,7 +694,7 @@ public abstract class ClientFramework {
 	 * @param characters
 	 *            the characters we have available at this account.
 	 */
-	protected void onAvailableCharacterDetails(Map<String, RPObject> characters) {
+	protected void onAvailableCharacterDetails(@SuppressWarnings("unused") Map<String, RPObject> characters) {
 		// stub
 	};
 	
