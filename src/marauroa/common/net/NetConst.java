@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.30 2010/06/12 09:27:12 madmetzger Exp $ */
+/* $Id: NetConst.java,v 1.31 2010/06/12 09:29:05 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -85,7 +85,7 @@ public class NetConst {
 	/** the first version with details on the MessageS2CCharacterList. */
 	public static final byte FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST = 32;
 
-	/** the first version with support for older versions and maps in rpobjects. */
-	public static final byte FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT_AND_MAPS = 33;
+	/** the first version with support for older versions. */
+	public static final byte FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT = 33;
 	
 }
