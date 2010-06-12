@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.79 2010/03/23 22:45:47 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.80 2010/06/12 09:37:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -427,7 +427,16 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer("Attributes of Class(" + rpClass.getName() + "): ");
+		return "Attributes of Class(" + rpClass.getName() + "): " + toAttributeString();
+	}
+
+	/**
+	 * This method returns a String that represent the attributes
+	 *
+	 * @return a string representing the object.
+	 */
+	public String toAttributeString() {
+		StringBuffer tmp = new StringBuffer();
 
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
