@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.80 2010/06/12 09:37:20 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.81 2010/06/12 10:31:44 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -208,7 +208,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		modified=true;
 		
 		if(value==null) {
-			throw new IllegalArgumentException(attribute);
+			throw new IllegalArgumentException(attribute + " is null");
 		}
 
 		content.put(attribute, value);
