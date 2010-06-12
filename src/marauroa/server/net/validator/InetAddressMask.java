@@ -1,4 +1,4 @@
-/* $Id: InetAddressMask.java,v 1.6 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: InetAddressMask.java,v 1.7 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -30,12 +30,21 @@ public class InetAddressMask {
 	private byte mask[];
 
 	/**
-	 * address in form aaa.bbb.ccc.ddd mask in form aaa.bbb.ccc.ddd
+	 * creates a new InetAddressMask object.
+	 *
+	 * @param address address in form aaa.bbb.ccc.ddd
+	 * @param mask network mask in form aaa.bbb.ccc.ddd
 	 */
 	public InetAddressMask(String address, String mask) {
 		this(string2bytes(address), string2bytes(mask));
 	}
 
+	/**
+	 * creates a new InetAddressMask object.
+	 *
+	 * @param address address
+	 * @param mask network mask
+	 */
 	public InetAddressMask(byte address[], byte mask[]) {
 		this.address = Utility.copy(address);
 		this.mask = Utility.copy(mask);
@@ -45,6 +54,13 @@ public class InetAddressMask {
 		address[3] = (byte) (address[3] & mask[3]);
 	}
 
+	/**
+	 * checks whether the provided InetAddress object is within the range
+	 * specified in this object.
+	 *
+	 * @param anotherAddress address to check
+	 * @return true if it is within this range, false otherwise
+	 */
 	public boolean matches(InetAddress anotherAddress) {
 		byte ob[] = anotherAddress.getAddress();
 		ob[0] = (byte) (ob[0] & mask[0]);
@@ -98,6 +114,9 @@ public class InetAddressMask {
 	/**
 	 * converts string in form aaa.bbb.ccc.ddd into byte
 	 * array[]{aaa,bbb,ccc,ddd}
+	 *
+	 * @param ipv4Address address string
+	 * @return byte array
 	 */
 	public static byte[] string2bytes(String ipv4Address) {
 		String[] str_bytes = ipv4Address.split("\\.");

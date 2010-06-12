@@ -1,4 +1,4 @@
-/* $Id: IRPRuleProcessor.java,v 1.14 2007/12/04 20:00:12 martinfuchs Exp $ */
+/* $Id: IRPRuleProcessor.java,v 1.15 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -135,6 +135,7 @@ public interface IRPRuleProcessor {
 	 * @param object
 	 *            the new player that enters in the game.
 	 * @return true if object has been added.
+	 * @throws RPObjectInvalidException if the object was not accepted
 	 */
 	public boolean onInit(RPObject object) throws RPObjectInvalidException;
 
@@ -144,6 +145,7 @@ public interface IRPRuleProcessor {
 	 * @param object
 	 *            the new player that exits the game.
 	 * @return true to allow player to exit
+	 * @throws RPObjectNotFoundException if the object was not found
 	 */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException;
 
@@ -153,6 +155,7 @@ public interface IRPRuleProcessor {
 	 *
 	 * @param object
 	 *            the new player that timeouts.
+	 * @throws RPObjectNotFoundException if the object was not found
 	 */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException;
 }

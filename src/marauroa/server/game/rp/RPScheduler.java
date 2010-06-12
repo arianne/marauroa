@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.10 2007/04/09 14:47:13 arianne_rpg Exp $ */
+/* $Id: RPScheduler.java,v 1.11 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,6 +61,7 @@ public class RPScheduler {
 	 *            the RPAction to add.
 	 * @param ruleProcessor
 	 *            where the actions are going to checked.
+	 * @return true, if the action was added successfully, false otherwise
 	 */
 	public synchronized boolean addRPAction(RPObject object, RPAction action,
 	        IRPRuleProcessor ruleProcessor) {

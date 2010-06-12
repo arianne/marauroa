@@ -1,4 +1,4 @@
-/* $Id: RPObjectFactory.java,v 1.10 2009/11/01 15:32:05 nhnb Exp $ */
+/* $Id: RPObjectFactory.java,v 1.11 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -80,7 +80,12 @@ public class RPObjectFactory {
 	}
 	
 	private static RPObjectFactory singleton;
-	
+
+	/**
+	 * gets the ObjectFactory, creating a default one in case it does not exist already
+	 *
+	 * @return RPObjectFactory
+	 */
 	public static RPObjectFactory getFactory() {
 		if(singleton==null) {
 			singleton=new RPObjectFactory();

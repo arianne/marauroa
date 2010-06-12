@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.32 2009/09/13 09:36:17 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.33 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -118,6 +118,11 @@ public class MarauroaRPZone implements IRPZone {
 
 	private static Random rand = new Random();
 
+	/**
+	 * Creates a new MarauroaRPZone
+	 *
+	 * @param zoneid name of zone
+	 */
 	public MarauroaRPZone(String zoneid) {
 		this.zoneid = new ID(zoneid);
 		rand.setSeed(new Date().getTime());

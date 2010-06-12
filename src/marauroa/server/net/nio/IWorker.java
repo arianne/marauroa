@@ -1,4 +1,4 @@
-/* $Id: IWorker.java,v 1.8 2007/12/04 20:00:10 martinfuchs Exp $ */
+/* $Id: IWorker.java,v 1.9 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,16 +19,30 @@ import java.nio.channels.SocketChannel;
  * workers to NIOServer
  * 
  * @author miguel
- * 
  */
 public interface IWorker {
 
-	/** This method associate this worker with a NIO Server. */
-	public abstract void setServer(NioServer server);
+	/**
+	 * This method associate this worker with a NIO Server.
+	 *
+	 * @param server NioServer
+	 */
+	public void setServer(NioServer server);
 
-	/** This is a callback method that is called onConnect */
-	public abstract void onConnect(SocketChannel socket);
+	/** 
+	 * This is a callback method that is called onConnect
+	 *
+	 * @param channel SocketChannel
+	 */
+	public void onConnect(SocketChannel channel);
 
-	/** This method is called when data is received from a socket channel */
-	public abstract void onData(NioServer server, SocketChannel socket, byte[] data, int count);
+	/**
+	 * This method is called when data is received from a socket channel
+	 *
+	 * @param server NioServer
+	 * @param channel SocketChannel
+	 * @param data byte area containing the data
+	 * @param count number of bytes used in the provided array
+	 */
+	public void onData(NioServer server, SocketChannel channel, byte[] data, int count);
 }

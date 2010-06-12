@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.63 2010/05/13 12:29:53 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.64 2010/06/12 15:08:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -111,6 +111,7 @@ public class RPServerManager extends Thread {
 	 *
 	 * @param netMan
 	 *            the NetworkServerManager so that we can send message
+	 * @throws Exception in case of an unexpected error
 	 */
 	public RPServerManager(INetworkServerManager netMan) throws Exception {
 		super("RPServerManager");
@@ -251,6 +252,8 @@ public class RPServerManager extends Thread {
 	 *            player's password
 	 * @param email
 	 *            player's email
+	 * @param address
+	 *            ip address of client
 	 * @return a Result indicating if account creation was done successfully or not.
 	 */
 	public AccountResult createAccount(String username, String password, String email, String address) {
@@ -501,31 +504,31 @@ public class RPServerManager extends Thread {
 				try {
 					timeEnds[0] = System.currentTimeMillis();
 
-					/** Get actions that players send */
+					/* Get actions that players send */
 					scheduler.nextTurn();
 					timeEnds[1] = System.currentTimeMillis();
 
-					/** Execute them all */
+					/* Execute them all */
 					scheduler.visit(ruleProcessor);
 					timeEnds[2] = System.currentTimeMillis();
 
-					/** Compute game RP rules to move to the next turn */
+					/* Compute game RP rules to move to the next turn */
 					ruleProcessor.endTurn();
 					timeEnds[3] = System.currentTimeMillis();
 
-					/** Send content that is waiting to players */
+					/* Send content that is waiting to players */
 					deliverTransferContent();
 					timeEnds[4] = System.currentTimeMillis();
 
-					/** Tell player what happened */
+					/* Tell player what happened */
 					buildPerceptions();
 					timeEnds[5] = System.currentTimeMillis();
 
-					/** save players regularly to the db */
+					/* save players regularly to the db */
 					savePlayersPeriodicly();
 					timeEnds[6] = System.currentTimeMillis();
 
-					/** Move zone to the next turn */
+					/* Move zone to the next turn */
 					world.nextTurn();
 					timeEnds[7] = System.currentTimeMillis();
 
