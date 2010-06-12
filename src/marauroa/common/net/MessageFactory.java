@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.44 2010/06/11 19:00:57 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.45 2010/06/12 09:18:08 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -187,7 +187,7 @@ public class MessageFactory {
 		int networkProtocolVersion = data[offset];
 		if (networkProtocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
 				|| networkProtocolVersion > NetConst.NETWORK_PROTOCOL_VERSION_MAX) {
-			logger.error("Message has incorrect protocol version(" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
+			logger.error("Message has incorrect protocol version (" + networkProtocolVersion + ") expected (" + NetConst.NETWORK_PROTOCOL_VERSION + ")");
 			logger.error("Message is: " + Utility.dumpByteArray(data));
 			throw new InvalidVersionException(data[offset]);
 		}
