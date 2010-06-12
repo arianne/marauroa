@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.63 2010/05/24 22:15:32 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.64 2010/06/12 14:37:08 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -415,6 +415,7 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
 					result = new AccountResult(Result.FAILED_EXCEPTION, username);
+					break;
 				}
 				/* Account was created */
 				case S2C_CREATEACCOUNT_ACK:
