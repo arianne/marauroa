@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.111 2010/06/12 09:26:43 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.112 2010/06/12 09:27:12 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -864,7 +864,7 @@ public class RPObject extends SlotOwner {
 		/*
 		 * we compute the amount of maps before serializing 
 		 */
-		if(out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT) {
+		if(out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT_AND_MAPS) {
 			size=0;
 			for (Entry<String, RPObject> entry : maps.entrySet()) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
@@ -950,7 +950,7 @@ public class RPObject extends SlotOwner {
 			link = (RPLink) in.readObject(link);
 			links.add(link);
 		}
-		if(in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT) {
+		if(in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT_AND_MAPS) {
 			// get the number of maps
 			int numberOfMaps = in.readInt();
 			// get the names of the maps and store them in a list
