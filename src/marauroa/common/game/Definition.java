@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.32 2010/06/07 13:03:26 madmetzger Exp $ */
+/* $Id: Definition.java,v 1.33 2010/06/12 15:52:31 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -245,17 +245,15 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * Creates a RPSLot definition
+	 * Creates a RPLink definition
 	 *
 	 * @param name
 	 *            the name of the slot
-	 * @param capacity
-	 *            the capacity of the slot
 	 * @param flags
 	 *            flags options.
 	 * @return an RPSlot Definition
 	 */
-	public static Definition defineLink(String name, byte capacity, byte flags) {
+	public static Definition defineLink(String name, byte flags) {
 		Definition def = new Definition(DefinitionClass.RPLINK);
 		def.name = name;
 		def.capacity = 0;
