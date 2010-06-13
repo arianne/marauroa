@@ -1,4 +1,4 @@
-/* $Id: TimeoutConf.java,v 1.19 2010/05/14 19:38:11 kymara Exp $ */
+/* $Id: TimeoutConf.java,v 1.20 2010/06/13 20:16:44 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -71,10 +71,20 @@ public class TimeoutConf {
 	public static final int ACCOUNT_CREATION_LIMIT = 5;
 
 	/**
+	 * The timeframe to check when counting character creations.
+	 */
+	public static final int CHARACTER_CREATION_COUNTINGTIME = 3600;
+
+	/**
+	 * The number of characters that may be created within the timeframe
+	 * from one ip-address
+	 */
+	public static final int CHARACTER_CREATION_LIMIT = 5;
+
+	/**
 	 * The number of parallel connections that may be used from
 	 * one ip-address.
 	 */
 	public static final int PARALLEL_CONNECTION_LIMIT = 10;
-
 
 }

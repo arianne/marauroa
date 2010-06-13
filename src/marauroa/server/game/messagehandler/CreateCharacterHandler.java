@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.3 2010/06/11 20:21:40 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.4 2010/06/13 20:16:44 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -58,11 +58,11 @@ class CreateCharacterHandler extends MessageHandler {
 
 			/*
 			 * We request the creation of an account for a logged player. It
-			 * will also return a result of the character that we must follow to
+			 * will also return a result of the character that we must forward to
 			 * player.
 			 */
-			CharacterResult val = rpMan.createCharacter(entry.username, msg.getCharacter(), msg
-			        .getTemplate());
+			CharacterResult val = rpMan.createCharacter(entry.username, msg.getCharacter(), 
+					msg.getTemplate(), msg.getAddress().getHostAddress());
 			Result result = val.getResult();
 
 			if (result == Result.OK_CREATED) {

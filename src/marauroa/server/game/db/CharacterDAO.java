@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.17 2010/06/11 21:18:32 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.18 2010/06/13 20:16:43 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -16,12 +16,17 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.NetConst;
 import marauroa.server.db.DBTransaction;
@@ -367,6 +372,56 @@ public class CharacterDAO {
 		return res;
 	}
 
+
+	/**
+	 * is the character creation limit reached?
+	 *
+	 * @param transaction the database transaction
+	 * @param username username of account
+	 * @param address  ip-address of client
+	 * @return true if too many characters have been created
+	 * @throws IOException in case of an input output error
+	 * @throws SQLException if there is any problem at database
+	 */
+	public boolean isCharacterCreationLimitReached(DBTransaction transaction,
+			String username, String address) throws IOException, SQLException {
+
+		Configuration conf = Configuration.getConfiguration();
+		String whiteList = "," + conf.get("ip_whitelist", "127.0.0.1") + ",";
+		if (whiteList.indexOf("," + address + ",") > -1) {
+			return false;
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("address", address);
+		params.put("username", username);
+
+		// apply the time frame
+		Calendar calendar = new GregorianCalendar();
+		calendar.add(Calendar.SECOND, -1 * conf.getInt("character_creation_counting_time", TimeoutConf.CHARACTER_CREATION_COUNTINGTIME));
+		params.put("timestamp", new Timestamp(calendar.getTimeInMillis()).toString());
+
+		// count the number of recently created characters from this ip-address
+		String query = "SELECT count(DISTINCT charname) "
+			+ "FROM characters, account "
+			+ "WHERE characters.player_id=account.id AND account.username='[username]' AND characters.timedate>'[timestamp]'";
+
+		// do the database query and evaluate the result
+		int attemps = transaction.querySingleCellInt(query, params);
+		if (attemps > conf.getInt("character_creation_limit", TimeoutConf.CHARACTER_CREATION_LIMIT)) {
+			return true;
+		}
+
+		// count the number of recently created characters from this ip-address
+		query = "SELECT count(DISTINCT charname) "
+			+ "FROM characters, account, loginEvent "
+			+ "WHERE characters.player_id=account.id AND account.id=loginEvent.player_id AND address='[address]' AND characters.timedate>'[timestamp]'";
+
+		attemps = transaction.querySingleCellInt(query, params);
+		return attemps > conf.getInt("character_creation_limit", TimeoutConf.CHARACTER_CREATION_LIMIT);
+	}
+
+
 	/**
 	 * creates a new character
 	 *
@@ -518,6 +573,24 @@ public class CharacterDAO {
 		try {
 			String res = getAccountName(transaction, character);
 			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+	/**
+	 * is the character creation limit reached?
+	 *
+	 * @param username username of account
+	 * @param address  ip-address of client
+	 * @return true if too many characters have been created
+	 * @throws IOException in case of an input output error
+	 * @throws SQLException if there is any problem at database
+	 */
+	public boolean isCharacterCreationLimitReached(String username, String address) throws IOException, SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			return isCharacterCreationLimitReached(transaction, username, address);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}

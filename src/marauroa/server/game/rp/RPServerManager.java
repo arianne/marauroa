@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.64 2010/06/12 15:08:42 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.65 2010/06/13 20:16:44 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,6 +42,7 @@ import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.db.AccountDAO;
+import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
@@ -283,10 +284,25 @@ public class RPServerManager extends Thread {
 	 * @param character
 	 * @param template
 	 *            the template we are going to use to create the object.
+	 * @param address
+	 *            ip address of client
 	 * @return a Result indicating if account creation was done successfully or
 	 *         if it is not the cause.
 	 */
-	public CharacterResult createCharacter(String username, String character, RPObject template) {
+	public CharacterResult createCharacter(String username, String character, RPObject template, String address) {
+
+		// check account creation limits
+		try {
+			if (DAORegister.get().get(CharacterDAO.class).isCharacterCreationLimitReached(username, address)) {
+				return new CharacterResult(Result.FAILED_TOO_MANY, character, template);
+			}
+		} catch (SQLException e) {
+			logger.error(e, e);
+			return new CharacterResult(Result.FAILED_EXCEPTION, character, template);
+		} catch (IOException e) {
+			logger.error(e, e);
+			return new CharacterResult(Result.FAILED_EXCEPTION, character, template);
+		}
 		return ruleProcessor.createCharacter(username, character, template);
 	}
 
