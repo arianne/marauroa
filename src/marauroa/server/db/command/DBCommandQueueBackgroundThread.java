@@ -60,6 +60,10 @@ class DBCommandQueueBackgroundThread implements Runnable {
 	 */
 	private void processCommand(DBCommandMetaData metaData) {
 		MDC.put("context", metaData + " ");
+		if (TransactionPool.get() == null) {
+			logger.warn("Database not initialized, skipping database operation");
+			return;
+		}
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			metaData.getCommand().execute(transaction);
