@@ -21,7 +21,7 @@ create table if not exists characters
   player_id integer not null,
   charname varchar(32) not null,
   object_id integer not null,
-  
+  timedate timestamp default CURRENT_TIMESTAMP,
   PRIMARY KEY(charname)
   );
 
