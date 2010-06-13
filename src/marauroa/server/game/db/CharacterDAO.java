@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.18 2010/06/13 20:16:43 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.19 2010/06/13 20:28:53 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -311,10 +312,10 @@ public class CharacterDAO {
 	public Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username)
 	        throws SQLException, IOException {
 		try {
-			Map<String, RPObject> res = new HashMap<String, RPObject>();
+			Map<String, RPObject> res = new LinkedHashMap<String, RPObject>();
 
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
-			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.protocol_version As protocol_version, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]";
+			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.protocol_version As protocol_version, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id] ORDER BY characters.charname";
 			logger.debug("loadAllCharacters is executing query " + query);
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));

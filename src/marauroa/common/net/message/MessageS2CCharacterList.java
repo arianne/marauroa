@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.10 2010/06/11 21:18:32 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.11 2010/06/13 20:28:53 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import marauroa.common.game.RPObject;
@@ -45,7 +46,7 @@ public class MessageS2CCharacterList extends Message {
 	 */
 	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
-		this.characters = new HashMap<String, RPObject>();
+		this.characters = new LinkedHashMap<String, RPObject>();
 		for (String character : characters) {
 			this.characters.put(character, new RPObject());
 		}
@@ -63,7 +64,7 @@ public class MessageS2CCharacterList extends Message {
 	 */
 	public MessageS2CCharacterList(SocketChannel source, Map<String, RPObject> characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
-		this.characters = new HashMap<String, RPObject>(characters);
+		this.characters = new LinkedHashMap<String, RPObject>(characters);
 	}
 
 	
@@ -84,7 +85,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @return the list of characters that the player owns
 	 */
 	public HashMap<String, RPObject> getCharacterDetails() {
-		return new HashMap<String, RPObject>(characters);
+		return new LinkedHashMap<String, RPObject>(characters);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class MessageS2CCharacterList extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		String[] characters = in.readStringArray();
-		this.characters = new HashMap<String, RPObject>();
+		this.characters = new LinkedHashMap<String, RPObject>();
 	
 		// read the map or list, depending on protocol version
 		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
