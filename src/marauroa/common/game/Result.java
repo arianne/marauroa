@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.13 2010/05/16 18:51:09 astridemma Exp $ */
+/* $Id: Result.java,v 1.14 2010/06/13 20:15:28 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -33,7 +33,7 @@ public enum Result {
 	 * Account was not created because an invalid characters (letter, sign,
 	 * number) was used
 	 */
-	FAILED_INVALID_CHARACTER_USED (false, "Account was not created because an invalid characters (letter, sign, number) was used."),
+	FAILED_INVALID_CHARACTER_USED (false, "Account was not created because an invalid character (special letters, signs, numbers) was used."),
 
 	/**
 	 * Account was not created because any of the parameters are either too long
