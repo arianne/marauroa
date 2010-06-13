@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.117 2010/06/12 10:21:38 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.118 2010/06/13 02:05:36 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1560,14 +1560,14 @@ public class RPObject extends SlotOwner {
 		if(!addedChanges.isEmpty()) {
 			addedChanges.put("id",get("id"));
 			if(has("zoneid")) {
-				addedChanges.put("zoneid",get("zoneid"));				
+				addedChanges.put("zoneid",get("zoneid"));
 			}
 		}
 
 		if(!deletedChanges.isEmpty()) {
 			deletedChanges.put("id",get("id"));
 			if(has("zoneid")) {
-				deletedChanges.put("zoneid",get("zoneid"));				
+				deletedChanges.put("zoneid",get("zoneid"));
 			}
 		}
 	}
