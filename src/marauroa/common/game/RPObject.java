@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.119 2010/06/14 15:11:55 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.120 2010/06/14 18:48:03 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.Definition.Type;
 import marauroa.common.net.NetConst;
 
 /**
@@ -752,6 +753,11 @@ public class RPObject extends SlotOwner {
 	public void addMap(String map) {
 		if(maps.containsKey(map)) {
 			throw new SlotAlreadyAddedException(map); 
+		}
+		if(getRPClass()!= null) {
+			if(getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map).getType() != Type.MAP) {
+				throw new IllegalArgumentException("The type of the attribute "+map+" is not MAP type.");
+			}
 		}
 		RPObject newMap = new RPObject();
 		newMap.setID(RPObject.INVALID_ID);

@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.81 2010/06/12 10:31:44 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.82 2010/06/14 18:48:03 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -26,6 +26,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.Definition.Type;
 
 /**
  * This class hosts a list of Attributes stored as pairs String=String. There
@@ -225,6 +226,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, attribute);
 			if (def != null) {
 				def.validate(value);
+			}
+			if (def.getType() == Type.MAP) {
+				throw new IllegalArgumentException("Attribute "+attribute+" is a map type attribute and must not be accessed via standard attributes.");
 			}
 		}
 	}

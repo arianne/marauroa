@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.9 2010/01/04 08:47:09 nhnb Exp $ */
+/* $Id: RPObjectTest.java,v 1.10 2010/06/14 18:48:03 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -290,9 +290,38 @@ public class RPObjectTest {
 		assertEquals(subobj1, subObj2);
 	
 	}
-
+	
+	@Test
+	public void testPutInMapAttribute() {
+		RPClass cls = new RPClass("testmaps");
+		cls.addAttribute("testmap", Type.MAP);
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(cls);
+		try {
+			rpo.put("testmap", "testvalue");
+			fail("An IllegalArgumentException should have been thrown.");
+		} catch (IllegalArgumentException e) {
+			// should just be caught
+		}
+	}
+	
+	@Test
+	public void testPutInMapAttributeNotBeingMap() {
+		RPClass cls = new RPClass("testmaps-2");
+		cls.addAttribute("testmap", Type.STRING);
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(cls);
+		try {
+			rpo.put("testmap", "testkey", "testvalue");
+			fail("An IllegalArgumentException should have been thrown.");
+		} catch (IllegalArgumentException e) {
+			// should just be caught
+		}
+	}
+	
 	class SubRPObject extends RPObject{
 		// just subclass of RPObject used for testing for of the
 		// Object.clone() contract
 	}
+	
 }
