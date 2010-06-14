@@ -38,6 +38,7 @@ public class UpdateScript {
 		}
 		if (!transaction.doesColumnExist("characters", "timedate")) {
 			transaction.execute("ALTER TABLE characters ADD COLUMN (timedate TIMESTAMP default CURRENT_TIMESTAMP);", null);
+			transaction.execute("UPDATE characters, account SET characters.timedate = account.timedate WHERE characters.player_id=account.id AND characters.timedate IS NULL;", null);
 		}
 		if (!transaction.doesColumnExist("rpobject", "protocol_version")) {
 			transaction.execute("ALTER TABLE rpobject ADD COLUMN (protocol_version INTEGER);", null);
