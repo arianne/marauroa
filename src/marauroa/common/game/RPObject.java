@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.118 2010/06/13 02:05:36 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.119 2010/06/14 15:11:55 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -753,7 +753,9 @@ public class RPObject extends SlotOwner {
 		if(maps.containsKey(map)) {
 			throw new SlotAlreadyAddedException(map); 
 		}
-		maps.put(map, new RPObject());
+		RPObject newMap = new RPObject();
+		newMap.setID(RPObject.INVALID_ID);
+		maps.put(map, newMap);
 		addedMaps.add(map);
 		modified = true;
 	}
