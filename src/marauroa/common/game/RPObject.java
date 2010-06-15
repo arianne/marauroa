@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.120 2010/06/14 18:48:03 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.121 2010/06/15 15:25:04 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -614,6 +614,9 @@ public class RPObject extends SlotOwner {
 			this.addMap(map);
 		}
 		this.maps.get(map).put(key, value);
+		if(!this.addedMaps.contains(map)) {
+			this.addedMaps.add(map);
+		}
 	}
 	
 	/**
@@ -624,10 +627,7 @@ public class RPObject extends SlotOwner {
 	 * @param value the value
 	 */
 	public void put(String map, String key, int value) {
-		if (!this.maps.containsKey(map)) {
-			this.addMap(map);
-		}
-		this.maps.get(map).put(key, Integer.toString(value));
+		this.put(map, key, Integer.toString(value));
 	}
 	
 	/**
@@ -638,10 +638,7 @@ public class RPObject extends SlotOwner {
 	 * @param value the value
 	 */
 	public void put(String map, String key, double value) {
-		if (!this.maps.containsKey(map)) {
-			this.addMap(map);
-		}
-		this.maps.get(map).put(key, Double.toString(value));
+		this.put(map, key, Double.toString(value));
 	}
 	
 	/**
@@ -652,10 +649,7 @@ public class RPObject extends SlotOwner {
 	 * @param value the value
 	 */
 	public void put(String map, String key, boolean value) {
-		if (!this.maps.containsKey(map)) {
-			this.addMap(map);
-		}
-		this.maps.get(map).put(key, Boolean.toString(value));
+		this.put(map, key, Boolean.toString(value));
 	}
 	
 	/**
@@ -770,6 +764,9 @@ public class RPObject extends SlotOwner {
 		if(maps.containsKey(map)) {
 			this.maps.get(map).remove(key);
 			this.modified = true;
+			if(!this.deletedMaps.contains(map)) {
+				this.deletedMaps.add(map);
+			}
 		}
 	}
 	

@@ -1,4 +1,4 @@
-/* $Id: RPObjectDelta2Test.java,v 1.7 2010/03/18 23:01:28 nhnb Exp $ */
+/* $Id: RPObjectDelta2Test.java,v 1.8 2010/06/15 15:25:04 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -15,6 +15,7 @@ package marauroa.common.game;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -24,6 +25,8 @@ import marauroa.server.game.rp.MarauroaRPZone;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * Test delta² algorithm This test unit needs MarauroaRPZone and RPObject.
@@ -775,4 +778,31 @@ public class RPObjectDelta2Test {
 		 */
 		zone.nextTurn();
 	}
+	
+	@Test
+	public void testMapDelta() {
+		RPClass rpClass = new RPClass("mymapdeltatestclass");
+		rpClass.addAttribute("testmap", Type.MAP);
+		RPObject newObject = new RPObject();
+		newObject.setRPClass(rpClass);
+		newObject.setID(RPObject.INVALID_ID);
+		RPObject added =  new RPObject();
+		RPObject deleted = new RPObject();
+		newObject.getDifferences(added, deleted);
+		newObject.put("testmap", "testkey", "testvalue");
+		newObject.getDifferences(added, deleted);
+		assertFalse(newObject.isEmpty());
+		assertFalse(added.isEmpty());
+		assertThat(added.get("testmap", "testkey"), is("testvalue"));
+		assertTrue(deleted.isEmpty());
+		newObject.resetAddedAndDeleted();
+		newObject.remove("testmap", "testkey");
+		RPObject added2 = new RPObject();
+		RPObject deleted2 = new RPObject();
+		newObject.getDifferences(added2, deleted2);
+		assertTrue(added2.isEmpty());
+		assertFalse(deleted2.isEmpty());
+		assertThat(deleted2.get("testmap", "testkey"), is("0"));
+	}
+	
 }
