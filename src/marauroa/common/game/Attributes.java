@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.82 2010/06/14 18:48:03 madmetzger Exp $ */
+/* $Id: Attributes.java,v 1.83 2010/06/15 18:53:15 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -226,9 +226,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, attribute);
 			if (def != null) {
 				def.validate(value);
-			}
-			if (def.getType() == Type.MAP) {
-				throw new IllegalArgumentException("Attribute "+attribute+" is a map type attribute and must not be accessed via standard attributes.");
+				if (def.getType() == Type.MAP) {
+					throw new IllegalArgumentException("Attribute "+attribute+" is a map type attribute and must not be accessed via standard attributes.");
+				}
 			}
 		}
 	}
