@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.68 2010/01/05 23:51:05 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.69 2010/06/15 18:16:14 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -91,6 +91,9 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/** Stores RPLink definitions */
 	private Map<String, Definition> rplinks;
+
+	/** Is this class baked (parent definitions copied into this class)? */
+	private boolean baked = false;
 
 	/**
 	 * Constructor Only used in serialization.
@@ -499,11 +502,40 @@ public class RPClass implements marauroa.common.net.Serializable {
 				throw new SyntaxException("Class not found: " + clazz);
 		}
 
-		if (def == null && parent != null) {
+		if (def == null && parent != null && !baked) {
 			return parent.getDefinition(clazz, name);
 		}
 
 		return def;
+	}
+
+
+	/**
+	 * Bakes the RPClass by including copies of all the definitions of the 
+	 * parent class to improve performance.
+	 */
+	public void bake() {
+		if (!baked) {
+			RPClass aParent = parent;
+			while (aParent != null) {
+				staticattributes.putAll(aParent.staticattributes);
+				attributes.putAll(aParent.attributes);
+				rpevents.putAll(aParent.rpevents);
+				rpslots.putAll(aParent.rpslots);
+				rplinks.putAll(aParent.rplinks);
+				aParent = aParent.parent;
+			}
+		}
+		baked = true;
+	}
+
+	/**
+	 * Bales all RPClasses to optimize performance.
+	 */
+	public static void bakeAll() {
+		for (RPClass rpClass : rpClassList.values()) {
+			rpClass.bake();
+		}
 	}
 
 	/**
