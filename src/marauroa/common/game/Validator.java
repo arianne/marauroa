@@ -11,7 +11,7 @@ import marauroa.common.Logger;
  * @author hendrik
  */
 class Validator {
-	private Logger logger = Log4J.getLogger(Validator.class);
+	private static Logger logger = Log4J.getLogger(Validator.class);
 
 	public void validateVeryLongString(@SuppressWarnings("unused") String value) {
 		// okay

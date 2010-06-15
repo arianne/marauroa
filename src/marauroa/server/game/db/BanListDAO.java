@@ -1,4 +1,4 @@
-/* $Id: BanListDAO.java,v 1.3 2010/01/02 23:23:14 nhnb Exp $ */
+/* $Id: BanListDAO.java,v 1.4 2010/06/15 18:14:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -27,7 +27,7 @@ import marauroa.server.net.validator.InetAddressMask;
  * data access object the ban list
  */
 public class BanListDAO {
-	private Logger logger = Log4J.getLogger(BanListDAO.class);
+	private static Logger logger = Log4J.getLogger(BanListDAO.class);
 
 	/**
 	 * gets a list of all banned ip-address ranges
