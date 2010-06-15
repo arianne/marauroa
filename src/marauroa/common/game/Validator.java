@@ -53,4 +53,8 @@ class Validator {
 		Byte.parseByte(value);
 	}
 
+	public void validateMap(@SuppressWarnings("unused") String value) {
+		throw new IllegalArgumentException("Trying to set a value into a map type argument");
+	}
+
 }

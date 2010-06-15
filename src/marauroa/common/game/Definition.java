@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.33 2010/06/12 15:52:31 nhnb Exp $ */
+/* $Id: Definition.java,v 1.34 2010/06/15 19:09:28 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -526,6 +526,9 @@ public class Definition implements marauroa.common.net.Serializable {
 					break;
 				case FLAG:
 					// values of flags are ignored
+					break;
+				case MAP:
+					validator.validateMap(value);
 					break;
 				default:
 					/* NOTE: Must never happen */
