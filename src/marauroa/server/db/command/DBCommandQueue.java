@@ -109,9 +109,10 @@ public class DBCommandQueue {
 				DBCommandMetaData metaData = itr.next();
 				DBCommand command = metaData.getCommand();
 				if (clazz.isAssignableFrom(command.getClass())) {
-					if (metaData.getResultHandle() == handle)
-					res.add((T) command);
-					itr.remove();
+					if (metaData.getResultHandle() == handle) {
+						res.add((T) command);
+						itr.remove();
+					}
 				}
 			}
 		}
