@@ -1,4 +1,4 @@
-/* $Id: Definition.java,v 1.34 2010/06/15 19:09:28 nhnb Exp $ */
+/* $Id: Definition.java,v 1.35 2010/06/15 19:10:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -45,6 +45,8 @@ public class Definition implements marauroa.common.net.Serializable {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Definition.class);
+
+	private static final Validator validator = new Validator();
 
 	/**
 	 * This enum determine to which entity the definition belogs: either
@@ -500,7 +502,6 @@ public class Definition implements marauroa.common.net.Serializable {
 	 *             if there is any problem on the serialization
 	 */
 	public void validate(String value) throws IllegalArgumentException {
-		Validator validator = new Validator();
 		try {
 			switch (type) {
 				case VERY_LONG_STRING:
