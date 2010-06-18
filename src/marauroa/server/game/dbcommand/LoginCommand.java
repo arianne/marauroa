@@ -1,4 +1,4 @@
-/* $Id: LoginCommand.java,v 1.2 2010/06/11 21:08:46 nhnb Exp $ */
+/* $Id: LoginCommand.java,v 1.3 2010/06/18 16:28:35 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -65,6 +65,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		if (info.isBlocked()) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
+			callback();
 			return;
 		}
 
@@ -74,12 +75,14 @@ public class LoginCommand extends DBCommandWithCallback {
 			}
 			failReason = info.reason;
 			info.addLoginEvent(info.address, false);
+			callback();
 			return;
 		}
 
 		String accountStatus = info.getStatus();
 		if (accountStatus != null) {
 			failMessage = accountStatus;
+			callback();
 			return;
 		}
 
@@ -87,6 +90,10 @@ public class LoginCommand extends DBCommandWithCallback {
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(info.username, 1);
 		info.addLoginEvent(info.address, true);
 
+		callback();
+	}
+
+	private void callback() {
 		/* notify callback */
 		if (callback != null) {
 			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
