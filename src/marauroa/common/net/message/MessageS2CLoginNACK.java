@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginNACK.java,v 1.12 2010/05/23 21:28:27 nhnb Exp $ */
+/* $Id: MessageS2CLoginNACK.java,v 1.13 2010/06/18 15:57:43 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,9 @@ public class MessageS2CLoginNACK extends Message {
 		/** @since 3.0 */
 		TOO_MANY_TRIES_IP,
 		/** @since 3.7 */
-		SEED_WRONG;
+		SEED_WRONG,
+		/** @since 3.7.1 */
+		ACCOUNT_MERGED;
 	}
 
 	static private String[] text = {
@@ -60,7 +62,9 @@ public class MessageS2CLoginNACK extends Message {
         	+ "Please wait a couple of minutes or contact support.",
 	        "There have been too many failed login attempts from your network. "
         	+ "Please wait a couple of minutes or contact support.",
-        	"Preauthentication failed, please try again."};
+        	"Preauthentication failed, please try again.",
+        	"This account was merged into another account. Please use the username "
+        	+"of the other account to login or contact support."};
 
 	/** The reason of login rejection */
 	private Reasons reason;
