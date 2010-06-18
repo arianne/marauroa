@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.27 2010/06/04 06:23:07 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.28 2010/06/18 16:27:50 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -284,7 +284,9 @@ public class AccountDAO {
 					res = "Your account has been banned. Please contact support.";
 				} else if ("inactive".equals(status)) {
 					res = "Your account has been flagged as inactive. Please contact support.";
-				} 
+				} else if ("merged".equals(status)) {
+					res = "Your account has been merged into another account.\nPlease login with that account or contact support.";
+				}
 			}
 			result.close();
 
