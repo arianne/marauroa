@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.55 2010/06/12 14:53:42 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.56 2010/06/21 21:26:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -257,8 +257,14 @@ public class PlayerEntry {
 	/**
 	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
 	 */	
-	public static final long TIMEOUT_MILLISECONDS= 30 * 1000;
+	private static final long TIMEOUT_IN_GAME_MILLISECONDS= 30 * 1000;
 
+	/**
+	 * We need a longer timeout pre-game because players might want to create a character here,
+	 * there is no keep-alive yet.
+	 */
+	private static final long TIMEOUT_PRE_GAME_MILLISECONDS= 10 * 60 * 1000;
+	
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
 	 * enumerate each perception so client can know in which order it is
@@ -317,7 +323,11 @@ public class PlayerEntry {
 	 * @return  true when nothing has been received from client in TIMEOUT_SECONDS.
 	 */
 	public boolean isTimeout() {
-		return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_MILLISECONDS;		
+		if (state==ClientState.GAME_BEGIN) {
+			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_IN_GAME_MILLISECONDS;
+		} else {
+			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_PRE_GAME_MILLISECONDS;
+		}
 	}
 	
 	/**
