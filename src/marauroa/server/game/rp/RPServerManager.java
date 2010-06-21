@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.65 2010/06/13 20:16:44 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.66 2010/06/21 21:26:41 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -388,16 +388,14 @@ public class RPServerManager extends Thread {
 
 		for (PlayerEntry entry : playerContainer) {
 			try {
+				// Before creating the perception we check the player is still there.
+				if(entry.isTimeout()) {
+					logger.info("Request (TIMEOUT) disconnection of Player "+entry.channel);
+					playersToRemove.add(entry);
+					continue;
+				}
+
 				if (entry.state == ClientState.GAME_BEGIN) {
-					/*
-					 * Before creating the perception we check the player is still there.
-					 */
-					if(entry.isTimeout()) {
-						logger.info("Request (TIMEOUT) disconnection of Player "+entry.channel);
-						playersToRemove.add(entry);
-						continue;
-					}
-					
 					Perception perception = getPlayerPerception(entry);
 					sendPlayerPerception(entry, perception, entry.object);
 				}
