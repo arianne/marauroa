@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.34 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: NetConst.java,v 1.35 2010/06/22 20:05:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -75,7 +75,7 @@ public class NetConst {
 	 * 32 - Include RPObjects in S2CCharacterList
 	 * 33 - Added support for maps as attributes
 	 */
-	public static final byte NETWORK_PROTOCOL_VERSION = 33;
+	public static final byte NETWORK_PROTOCOL_VERSION = 32;
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
