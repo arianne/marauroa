@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.56 2010/06/21 21:26:52 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.57 2010/06/22 06:13:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -152,7 +152,7 @@ public class PlayerEntry {
 			int counter = 0;
 			for (PlayerEntry playerEntry : playerContainer) {
 				try {
-					if (address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
+					if ((playerEntry.getAddress() != null) && address.getHostAddress().equals(playerEntry.getAddress().getHostAddress())) {
 						counter++;
 					}
 				} catch (NullPointerException e) {
@@ -214,7 +214,7 @@ public class PlayerEntry {
 				TransactionPool.get().rollback(transaction);
 			}
 			return res;
-        }
+		}
 	}
 
 	/**
