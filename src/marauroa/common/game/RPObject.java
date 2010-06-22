@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.121 2010/06/15 15:25:04 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.122 2010/06/22 19:44:30 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -768,6 +768,19 @@ public class RPObject extends SlotOwner {
 				this.deletedMaps.add(map);
 			}
 		}
+	}
+	
+	/**
+	 * gets all maps and their names as a map
+	 * 
+	 * @return a map with key name of map and value the map itself
+	 */
+	public Map<String, Map<String, String>> maps() {
+		Map<String, Map<String, String>> maps = new HashMap<String, Map<String, String>>();
+		for (String map : this.maps.keySet()) {
+			maps.put(map, getMap(map));
+		}
+		return maps;
 	}
 	
 	/**
