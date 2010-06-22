@@ -1,4 +1,4 @@
-/* $Id: LoginRequestKeyHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: LoginRequestKeyHandler.java,v 1.2 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -52,6 +52,7 @@ class LoginRequestKeyHandler extends MessageHandler {
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
 			        .getSocketChannel(), key);
 			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
 		} else {
 			/* Error: Incompatible game version. Update client */
@@ -61,6 +62,7 @@ class LoginRequestKeyHandler extends MessageHandler {
 			/* Notify player of the event by denying the login. */
 			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
 			        MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
+			msgLoginNACK.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginNACK);
 		}
 	}

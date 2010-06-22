@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.66 2010/06/21 21:26:41 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.67 2010/06/22 18:17:01 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -376,6 +376,7 @@ public class RPServerManager extends Thread {
 
 		messages2cPerception.setClientID(entry.clientid);
 		messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
+		messages2cPerception.setProtocolVersion(entry.getProtocolVersion());
 
 		netMan.sendMessage(messages2cPerception);
 	}
@@ -450,6 +451,7 @@ public class RPServerManager extends Thread {
 
 				MessageS2CTransferREQ mes = new MessageS2CTransferREQ(entry.channel, content);
 				mes.setClientID(entry.clientid);
+				mes.setProtocolVersion(entry.getProtocolVersion());
 
 				netMan.sendMessage(mes);
 			}

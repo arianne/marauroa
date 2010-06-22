@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.3 2010/05/27 18:51:45 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.4 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -67,6 +67,7 @@ class CreateAccountHandler extends MessageHandler {
 				logger.debug("Account (" + msg.getUsername() + ") created.");
 				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg
 				        .getSocketChannel(), val.getUsername());
+				msgCreateAccountACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				/*
@@ -75,6 +76,7 @@ class CreateAccountHandler extends MessageHandler {
 				 */
 				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(
 				        msg.getSocketChannel(), result);
+				msgCreateAccountNACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountNACK);
 			}
 		} catch (Exception e) {

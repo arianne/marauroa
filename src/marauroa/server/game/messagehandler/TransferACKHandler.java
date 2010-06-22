@@ -1,4 +1,4 @@
-/* $Id: TransferACKHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
+/* $Id: TransferACKHandler.java,v 1.3 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -73,6 +73,7 @@ class TransferACKHandler extends MessageHandler {
 						MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.channel,
 								contentToTransfer);
 						msgTransfer.setClientID(clientid);
+						msgTransfer.setProtocolVersion(msg.getProtocolVersion());
 						netMan.sendMessage(msgTransfer);
 					} else {
 						logger.info("CAN'T transfer content (" + content.name

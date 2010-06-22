@@ -1,4 +1,4 @@
-/* $Id: LoginSendPromiseHandler.java,v 1.1 2010/05/09 19:42:51 nhnb Exp $ */
+/* $Id: LoginSendPromiseHandler.java,v 1.2 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -93,6 +93,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 				/* Notify player of the event. */
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
 				        MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
+				msgLoginNACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
 				return;
 			}
@@ -100,6 +101,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 
 			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getSocketChannel());
+			entry.setProtocolVersion(msg.getProtocolVersion());
 
 			byte[] serverNonce = Hash.random(Hash.hashLength());
 			byte[] clientNonceHash = msgLoginSendPromise.getHash();
@@ -110,6 +112,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg
 			        .getSocketChannel(), serverNonce);
 			msgLoginSendNonce.setClientID(entry.clientid);
+			msgLoginSendNonce.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendNonce);
 		} catch (Exception e) {
 			logger.error("client not found", e);

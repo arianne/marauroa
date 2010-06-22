@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.4 2010/06/13 20:16:44 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.5 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -75,6 +75,7 @@ class CreateCharacterHandler extends MessageHandler {
 				MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(
 				        msg.getSocketChannel(), val.getCharacter(), val.getTemplate());
 				msgCreateCharacterACK.setClientID(clientid);
+				msgCreateCharacterACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgCreateCharacterACK);
 
 				/*
@@ -91,6 +92,8 @@ class CreateCharacterHandler extends MessageHandler {
 				 */
 				MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
 				        msg.getSocketChannel(), result);
+				msgCreateCharacterNACK.setClientID(clientid);
+				msgCreateCharacterNACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgCreateCharacterNACK);
 			}
 		} catch (Exception e) {

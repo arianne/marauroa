@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.33 2010/06/13 20:54:35 nhnb Exp $ */
+/* $Id: NetConst.java,v 1.34 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -72,9 +72,10 @@ public class NetConst {
 	 * 30 - Marauroa 2.0 refactoring
 	 *    - Dropped UDP support
 	 * 31 - Added KeepAlive message.
-	 * 32 - include RPObjects in S2CCharacterList
+	 * 32 - Include RPObjects in S2CCharacterList
+	 * 33 - Added support for maps as attributes
 	 */
-	public static final byte NETWORK_PROTOCOL_VERSION = 32;
+	public static final byte NETWORK_PROTOCOL_VERSION = 33;
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;

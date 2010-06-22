@@ -1,4 +1,4 @@
-/* $Id: InvalidVersionException.java,v 1.9 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: InvalidVersionException.java,v 1.10 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -38,6 +38,15 @@ public class InvalidVersionException extends Exception {
 	 * @return the version number
 	 */
 	public int getVersion() {
+		return version;
+	}
+
+	/**
+	 * gets the wrong version
+	 *
+	 * @return protocolVersion
+	 */
+	public int getProtocolVersion() {
 		return version;
 	}
 }

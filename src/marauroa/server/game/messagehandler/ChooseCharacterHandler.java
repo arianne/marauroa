@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.7 2010/06/11 20:21:40 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.8 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -147,6 +147,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			/* Correct: Character exist */
 			MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(channel);
 			msgChooseCharacterACK.setClientID(clientid);
+			msgChooseCharacterACK.setProtocolVersion(entry.getProtocolVersion());
 			netMan.sendMessage(msgChooseCharacterACK);
 
 			/* And finally sets this connection state to GAME_BEGIN */
@@ -172,6 +173,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			new MessageS2CChooseCharacterNACK(channel);
 
 		msgChooseCharacterNACK.setClientID(clientid);
+		msgChooseCharacterNACK.setProtocolVersion(entry.getProtocolVersion());
 		netMan.sendMessage(msgChooseCharacterNACK);
 	}
 

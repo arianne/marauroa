@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.7 2010/06/11 21:08:46 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.8 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -91,11 +91,13 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		/* Send player the Login ACK message */
 		MessageS2CLoginACK msgLoginACK = new MessageS2CLoginACK(channel, previousLogins);
 		msgLoginACK.setClientID(clientid);
+		msgLoginACK.setProtocolVersion(protocolVersion);
 		netMan.sendMessage(msgLoginACK);
 
 		/* Send player the ServerInfo */
 		MessageS2CServerInfo msgServerInfo = new MessageS2CServerInfo(channel, ServerInfo.get());
 		msgServerInfo.setClientID(clientid);
+		msgServerInfo.setProtocolVersion(protocolVersion);
 		netMan.sendMessage(msgServerInfo);
 
 		/* Build player character list and send it to client */
@@ -208,6 +210,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(command.getChannel(),
 				        MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES);
 
+				msgLoginNACK.setProtocolVersion(command.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
 				
 				/*
@@ -237,6 +240,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(command.getChannel(),
 						info.reason);
 
+				msgLoginNACK.setProtocolVersion(command.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
 				playerContainer.remove(command.getClientid());
 				return;
@@ -250,6 +254,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 
 				/* Send player the Login NACK message */
 				MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(command.getChannel(), command.getFailMessage());
+				msgLoginMessageNACK.setProtocolVersion(command.getProtocolVersion());
 				netMan.sendMessage(msgLoginMessageNACK);
 
 				/*
@@ -272,6 +277,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 					/* Send player the Login NACK message */
 					MessageS2CLoginMessageNACK msgLoginMessageNACK = new MessageS2CLoginMessageNACK(command.getChannel(),
 						"There are too many connections from your ip-address.\nPlease contact /support, if you are at a conference or something similar.");
+					msgLoginMessageNACK.setProtocolVersion(command.getProtocolVersion());
 					netMan.sendMessage(msgLoginMessageNACK);
 
 					// Disconnect player of server.

@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.57 2010/06/22 06:13:57 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.58 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
@@ -279,6 +280,9 @@ public class PlayerEntry {
 	/** Contains the content that is going to be transfered to client */
 	public List<TransferContent> contentToTransfer;
 
+	/** version of protocol this client speaks */
+	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
+
 	/**
 	 * Constructor
 	 *
@@ -479,6 +483,26 @@ public class PlayerEntry {
 		        && System.currentTimeMillis() - creationTime > TimeoutConf.UNCOMPLETED_LOGIN_TIMEOUT;
 	}
 
+	/**
+	 * gets the version of the protocol this clients speaks
+	 *
+	 * @return protocolVersion
+	 */
+	public int getProtocolVersion() {
+		return protocolVersion;
+	}
+
+
+	/**
+	 * sets the protocol version
+	 *
+	 * @param protocolVersion protocol version
+	 */
+	public void setProtocolVersion(int protocolVersion) {
+		this.protocolVersion = protocolVersion;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuffer os = new StringBuffer("PlayerEntry");
@@ -491,4 +515,5 @@ public class PlayerEntry {
 
 		return os.toString();
 	}
+
 }

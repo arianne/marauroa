@@ -1,4 +1,4 @@
-/* $Id: LogoutHandler.java,v 1.3 2010/06/03 17:22:38 nhnb Exp $ */
+/* $Id: LogoutHandler.java,v 1.4 2010/06/22 18:17:00 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -87,12 +87,14 @@ class LogoutHandler extends MessageHandler {
 				MessageS2CLogoutACK msgLogout = new MessageS2CLogoutACK(msg.getSocketChannel());
 
 				msgLogout.setClientID(clientid);
+				msgLogout.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLogout);
 
 				entry.state = ClientState.LOGOUT_ACCEPTED;
 			} else {
 				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getSocketChannel());
 				msgLogout.setClientID(clientid);
+				msgLogout.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLogout);
 			}
 		} catch (Exception e) {
