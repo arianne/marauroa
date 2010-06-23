@@ -1,4 +1,4 @@
-/* $Id: NetConst.java,v 1.35 2010/06/22 20:05:51 nhnb Exp $ */
+/* $Id: NetConst.java,v 1.36 2010/06/23 17:08:34 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -81,7 +81,7 @@ public class NetConst {
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
 	
 	/** Newest supported protocol version */
-	public static final byte NETWORK_PROTOCOL_VERSION_MAX = 33;
+	public static final byte NETWORK_PROTOCOL_VERSION_MAX = 40;
 
 	/** the first version with details on the MessageS2CCharacterList. */
 	public static final byte FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST = 32;
