@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.17 2010/06/10 05:42:14 madmetzger Exp $ */
+/* $Id: Message.java,v 1.18 2010/06/23 15:33:06 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -180,12 +180,12 @@ public class Message implements Serializable {
     }
 
 	/**
-	 * sets the protocol version
+	 * sets the protocol version, limited to the max supported version
 	 *
 	 * @param protocolVersion protocol versoin
 	 */
 	public void setProtocolVersion(int protocolVersion) {
-    	this.protocolVersion = protocolVersion;
+    	this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
     }
 
 
