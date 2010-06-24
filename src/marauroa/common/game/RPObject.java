@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.124 2010/06/24 13:36:24 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.125 2010/06/24 13:44:21 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -798,6 +798,19 @@ public class RPObject extends SlotOwner {
 	 */
 	public boolean hasMap(String map) {
 		return this.maps.containsKey(map);
+	}
+	
+	/**
+	 * check if a map of this object contains a key
+	 * @param map the name of the map
+	 * @param key the key to check for
+	 * @return true iff map has a value stored for key
+	 */
+	public boolean containsKey(String map, String key) {
+		if (hasMap(map)) {
+			return getMap(map).containsKey(key);
+		}
+		return false;
 	}
 	
 	/**
