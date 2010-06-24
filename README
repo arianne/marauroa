@@ -94,9 +94,13 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-3.7.5
+3.8
+- attributes of type map
+- multi protocol version support for client server communication (from version 31 to 40)
+- multi protocol version support for database storage
+- added ability to RPClass.bake() the RPClass to speed up performance.
+- logins are now processed asynchronously to speed up performance
 - only count clients that are in game in the statistics (not the ones waiting to connect or waiting to logout)
-
 
 
 3.7
