@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.122 2010/06/22 19:44:30 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.123 2010/06/24 13:29:23 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -661,7 +661,15 @@ public class RPObject extends SlotOwner {
 	 */
 	public String get(String map, String key) {
 		if (!this.maps.containsKey(map)) {
-			throw new IllegalArgumentException("Map "+ map +" not found");
+			Definition def = getRPClass().getDefinition(DefinitionClass.STATIC, map);
+			if(def!=null) {
+				/*
+				 * It is possible that the attribute itself doesn't exist as static attribute, 
+				 * so we should return null instead.
+				 */
+				return def.getValue();
+			}
+			return null;
 		}
 		return this.maps.get(map).get(key);
 	}
