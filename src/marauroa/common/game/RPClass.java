@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.69 2010/06/15 18:16:14 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.70 2010/06/25 17:17:10 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -517,6 +517,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public void bake() {
 		if (!baked) {
 			RPClass aParent = parent;
+			// TODO: inverse order so that attributes defined lower in the hierarchy win
 			while (aParent != null) {
 				staticattributes.putAll(aParent.staticattributes);
 				attributes.putAll(aParent.attributes);
