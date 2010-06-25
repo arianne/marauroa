@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.125 2010/06/24 13:44:21 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.126 2010/06/25 19:18:58 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -613,6 +613,9 @@ public class RPObject extends SlotOwner {
 		if (!this.maps.containsKey(map)) {
 			this.addMap(map);
 		}
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserverd keys that may not be used");
+		}
 		this.maps.get(map).put(key, value);
 		if(!this.addedMaps.contains(map)) {
 			this.addedMaps.add(map);
@@ -726,7 +729,9 @@ public class RPObject extends SlotOwner {
 		HashMap<String, String> newMap = new HashMap<String, String>();
 		RPObject rpObject = this.maps.get(map);
 		for(String key : rpObject) {
-			newMap.put(key, rpObject.get(key));
+			if ((!key.equals("id") || !key.equals("zoneid"))) {
+				newMap.put(key, rpObject.get(key));
+			}
 		}
 		return newMap;
 	}
@@ -767,8 +772,11 @@ public class RPObject extends SlotOwner {
 		addedMaps.add(map);
 		modified = true;
 	}
-	
+
 	public void remove(String map, String key) {
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserverd keys that may not be used");
+		}
 		if(maps.containsKey(map)) {
 			this.maps.get(map).remove(key);
 			this.modified = true;
@@ -777,7 +785,7 @@ public class RPObject extends SlotOwner {
 			}
 		}
 	}
-	
+
 	/**
 	 * gets all maps and their names as a map
 	 * 
@@ -1592,12 +1600,16 @@ public class RPObject extends SlotOwner {
 			entry.getValue().getDifferences(addedMapChanges, deletedMapChanges);
 			if(!addedMapChanges.isEmpty()) {
 				for(String attribute : addedMapChanges) {
-					addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
+						addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+					}
 				}
 			}
 			if(!deletedMapChanges.isEmpty()) {
 				for(String attribute : deletedMapChanges) {
-					deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
+						deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+					}
 				}
 			}
 		}
