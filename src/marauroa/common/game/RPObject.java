@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.126 2010/06/25 19:18:58 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.127 2010/06/25 19:24:00 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -614,7 +614,7 @@ public class RPObject extends SlotOwner {
 			this.addMap(map);
 		}
 		if ((key.equals("id") || key.equals("zoneid"))) {
-			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserverd keys that may not be used");
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
 		this.maps.get(map).put(key, value);
 		if(!this.addedMaps.contains(map)) {
