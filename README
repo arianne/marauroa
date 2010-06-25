@@ -94,6 +94,9 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.8.5
+
+
 3.8
 - attributes of type map
 - multi protocol version support for client server communication (from version 31 to 40)
@@ -109,9 +112,11 @@ Changelog
 - improved performance by processing client message outside the PlayerEntryContainer lock
 - added detailed error message if a transaction is accessed from another thread
 
+
 3.6
 - added number of unique ips to statistics in addition to number of players
 - provided an infrastructure for asynchronous database access (not used at all places yet)
+
 
 3.5.1
 - fixed reading of size from the network stream in case it was split over multiple packets
@@ -121,11 +126,13 @@ Changelog
 - limit account creation per ip-address in a timeframe, see above
 - fixed null values on H2 in account.timedate and gameEvents.timedate
 
+
 3.4
 - added support for the H2 serverless database system in addition to MySQL.
 - added configuration setting max_number_of_players in server.ini
 - added temporary bans stored in the new table accountban
 - fixed error message on inactive accounts claiming the account was banned.
+
 
 3.3
 - games can now check the structure of the database using doesTableExist and doesColumnExist in order to update it automatically
@@ -135,6 +142,7 @@ Changelog
 - properly free transactions in case of exceptions
 - fixed a problem which caused parts of messages to be dropped when the size field was split across two tcp-packets 
 
+
 3.2.1
 - fixed a deadlock when temporarily running out of database connections
 - fixed error message in case the pool runs out of connections (the list contained connections that were kicked because of an exception)
@@ -143,6 +151,7 @@ Changelog
 - removed dependency on com.sun.*-classes
 - automatically add new columns in existing database tables
 - improved logging
+
 
 3.1
 - always hash the password based on UTF-8 instead of the plattform default encoding on login
