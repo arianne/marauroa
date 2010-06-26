@@ -39,22 +39,28 @@ public class ProtocolAnalyser {
 	 * way how Marauroa parses the data.
 	 *
 	 * @param is InputStream
+	 * @param dumpRawData should the raw data be dumped as hex?
 	 * @throws IOException in case of an I/O error
 	 * @throws InvalidVersionException if the version of Marauroa used to create
 	 *         the dump and the one used to parse it are incompatible
 	 */
-	public void dump(InputStream is) throws IOException, InvalidVersionException {
+	public void dump(InputStream is, boolean dumpRawData) throws IOException, InvalidVersionException {
 		SocketChannel channel = new FakeSocketChannel(InetAddress.getByName("localhost"), 32123);
 
 		while (true) {
 			//read a packet from the opened file
 			byte[] data = new byte[100];
 			int cnt = is.read(data);
-			System.out.println(Utility.dumpByteArray(data));
+			if (dumpRawData) {
+				System.out.println(Utility.dumpByteArray(data));
+			}
 			List<Message> messages = decoder.decode(channel, data);
 //			breakPoint(messages);
-			System.out.println(messages);
-			System.out.println();
+
+			if (messages != null || dumpRawData) {
+				System.out.println(messages);
+				System.out.println();
+			}
 			if (cnt < data.length) {
 				break;
 			}
@@ -87,15 +93,19 @@ public class ProtocolAnalyser {
 	public static void main(String[] args) throws IOException, InvalidVersionException {
 		Log4J.init();
 
-		if (args.length != 1) {
-			System.out.println("java " + ProtocolAnalyser.class.getName() + " <filename>");
+		boolean dumpRawData = true;
+		if (args.length < 1 || args.length > 2) {
+			System.out.println("java " + ProtocolAnalyser.class.getName() + " <filename> [<boolean__dump_raw_data>]");
 			return;
+		}
+		if (args.length == 2) {
+			dumpRawData = Boolean.parseBoolean(args[1]);
 		}
 
 		//open a file to read saved packets
 		InputStream is = new FileInputStream(args[0]);
 
-		new ProtocolAnalyser().dump(is);
+		new ProtocolAnalyser().dump(is, dumpRawData);
 
 		is.close();
 	}
