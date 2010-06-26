@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.128 2010/06/25 21:13:38 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.129 2010/06/26 09:53:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -773,6 +773,12 @@ public class RPObject extends SlotOwner {
 		modified = true;
 	}
 
+	/**
+	 * removes an entry from a map
+	 *
+	 * @param map the name of the map
+	 * @param key the key of the entry to remove
+	 */
 	public void remove(String map, String key) {
 		if ((key.equals("id") || key.equals("zoneid"))) {
 			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
@@ -1401,13 +1407,23 @@ public class RPObject extends SlotOwner {
 			addSlot(slot);
 		}
 	}
-	
+
+	/**
+	 * adds the maps added in the specified object as maps to this object
+	 *
+	 * @param object RPObject to copy the added maps from
+	 */
 	public void setAddedMaps(RPObject object) {
 		for(String map : object.addedMaps) {
 			addMap(map);
 		}
 	}
 	
+	/**
+	 * adds the maps deleted in the specified object as maps to this object
+	 *
+	 * @param object RPObject to copy the deleted maps from
+	 */
 	public void setDeletedMaps(RPObject object) {
 		for(String map : object.deletedMaps) {
 			addMap(map);
