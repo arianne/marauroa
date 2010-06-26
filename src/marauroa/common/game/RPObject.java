@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.129 2010/06/26 09:53:26 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.130 2010/06/26 10:39:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1376,10 +1376,8 @@ public class RPObject extends SlotOwner {
 			map.resetAddedAndDeleted();
 		}
 		
-		if(modified ) {
-			addedMaps.clear();
-			deletedMaps.clear();
-		}
+		addedMaps.clear();
+		deletedMaps.clear();
 	}
 
 	/**
