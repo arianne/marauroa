@@ -104,7 +104,7 @@ Changelog
 - added ability to RPClass.bake() the RPClass to speed up performance.
 - logins are now processed asynchronously to speed up performance
 - only count clients that are in game in the statistics (not the ones waiting to connect or waiting to logout)
-
+Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those features
 
 3.7
 - Note: Make sure that you place the player into the world in RPRuleProcessor.onInit() and not in RPObjectFactory.transform
