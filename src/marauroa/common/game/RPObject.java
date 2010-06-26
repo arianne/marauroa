@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.125 2010/06/24 13:44:21 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.125.2.1 2010/06/26 10:42:50 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -613,6 +613,9 @@ public class RPObject extends SlotOwner {
 		if (!this.maps.containsKey(map)) {
 			this.addMap(map);
 		}
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used.");
+		}
 		this.maps.get(map).put(key, value);
 		if(!this.addedMaps.contains(map)) {
 			this.addedMaps.add(map);
@@ -726,7 +729,9 @@ public class RPObject extends SlotOwner {
 		HashMap<String, String> newMap = new HashMap<String, String>();
 		RPObject rpObject = this.maps.get(map);
 		for(String key : rpObject) {
-			newMap.put(key, rpObject.get(key));
+			if ((!key.equals("id") && !key.equals("zoneid"))) {
+				newMap.put(key, rpObject.get(key));
+			}
 		}
 		return newMap;
 	}
@@ -767,8 +772,17 @@ public class RPObject extends SlotOwner {
 		addedMaps.add(map);
 		modified = true;
 	}
-	
+
+	/**
+	 * removes an entry from a map
+	 *
+	 * @param map the name of the map
+	 * @param key the key of the entry to remove
+	 */
 	public void remove(String map, String key) {
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
+		}
 		if(maps.containsKey(map)) {
 			this.maps.get(map).remove(key);
 			this.modified = true;
@@ -777,7 +791,7 @@ public class RPObject extends SlotOwner {
 			}
 		}
 	}
-	
+
 	/**
 	 * gets all maps and their names as a map
 	 * 
@@ -1362,10 +1376,8 @@ public class RPObject extends SlotOwner {
 			map.resetAddedAndDeleted();
 		}
 		
-		if(modified ) {
-			addedMaps.clear();
-			deletedMaps.clear();
-		}
+		addedMaps.clear();
+		deletedMaps.clear();
 	}
 
 	/**
@@ -1393,13 +1405,23 @@ public class RPObject extends SlotOwner {
 			addSlot(slot);
 		}
 	}
-	
+
+	/**
+	 * adds the maps added in the specified object as maps to this object
+	 *
+	 * @param object RPObject to copy the added maps from
+	 */
 	public void setAddedMaps(RPObject object) {
 		for(String map : object.addedMaps) {
 			addMap(map);
 		}
 	}
 	
+	/**
+	 * adds the maps deleted in the specified object as maps to this object
+	 *
+	 * @param object RPObject to copy the deleted maps from
+	 */
 	public void setDeletedMaps(RPObject object) {
 		for(String map : object.deletedMaps) {
 			addMap(map);
@@ -1592,12 +1614,16 @@ public class RPObject extends SlotOwner {
 			entry.getValue().getDifferences(addedMapChanges, deletedMapChanges);
 			if(!addedMapChanges.isEmpty()) {
 				for(String attribute : addedMapChanges) {
-					addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
+						addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+					}
 				}
 			}
 			if(!deletedMapChanges.isEmpty()) {
 				for(String attribute : deletedMapChanges) {
-					deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
+						deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+					}
 				}
 			}
 		}
