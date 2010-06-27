@@ -2,12 +2,16 @@ package marauroa.server.db;
 
 import java.sql.SQLException;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+
 /**
  * updates the structure of the database to the newest versoin
  *
  * @author hendrik
  */
 public class UpdateScript {
+	private static Logger logger = Log4J.getLogger(UpdateScript.class);
 
 	/**
 	 * updates the structure of the database
@@ -16,6 +20,7 @@ public class UpdateScript {
 	 * @throws SQLException in case of an unexpected database error
 	 */
 	public void update(DBTransaction transaction) throws SQLException {
+		logger.info("Checking database structure and updating it if needed.");
 		if (!transaction.doesColumnExist("loginEvent", "service")) {
 			transaction.execute("ALTER TABLE loginEvent ADD COLUMN (service CHAR(10));", null);
 		}
@@ -46,5 +51,6 @@ public class UpdateScript {
 		if (!transaction.doesColumnExist("rpzone", "protocol_version")) {
 			transaction.execute("ALTER TABLE rpzone ADD COLUMN (protocol_version INTEGER);", null);
 		}
+		logger.info("Completed database update.");
 	}
 }
