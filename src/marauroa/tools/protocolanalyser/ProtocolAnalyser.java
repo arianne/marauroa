@@ -58,7 +58,12 @@ public class ProtocolAnalyser {
 //			breakPoint(messages);
 
 			if (messages != null || dumpRawData) {
-				System.out.println(messages);
+				if (messages != null) {
+					for (Message message : messages) {
+						System.out.println("version: " + message.getProtocolVersion());
+						System.out.println(message);
+					}
+				}
 				System.out.println();
 			}
 			if (cnt < data.length) {
