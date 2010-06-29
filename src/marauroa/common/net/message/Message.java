@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.18 2010/06/23 15:33:06 nhnb Exp $ */
+/* $Id: Message.java,v 1.19 2010/06/29 21:30:48 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -84,6 +84,8 @@ public class Message implements Serializable {
 	 */
 	protected SocketChannel channel;
 
+	private InetAddress inetAddres;
+
 	/**
 	 * Constructor with a TCP/IP source/destination of the message
 	 *
@@ -96,6 +98,10 @@ public class Message implements Serializable {
 		this.type = type;
 		this.clientid = CLIENTID_INVALID;
 		this.channel = channel;
+		if (channel != null) {
+			Socket socket = channel.socket();
+			inetAddres = socket.getInetAddress();
+		}
 		timestampMessage = (int) (System.currentTimeMillis());
 	}
 
@@ -107,6 +113,12 @@ public class Message implements Serializable {
 	 */
 	public void setSocketChannel(SocketChannel channel) {
 		this.channel = channel;
+		if (channel != null) {
+			Socket socket = channel.socket();
+			inetAddres = socket.getInetAddress();
+		} else {
+			inetAddres = null;
+		}
 	}
 
 	/**
@@ -124,12 +136,7 @@ public class Message implements Serializable {
 	 * @return the address of the channel associated.
 	 */
 	public InetAddress getAddress() {
-		if (channel == null) {
-			return null;
-		}
-
-		Socket socket = channel.socket();
-		return socket.getInetAddress();
+		return inetAddres;
 	}
 
 	/**
