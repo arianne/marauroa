@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.4 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.5 2010/06/29 21:29:21 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -19,7 +19,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateAccount;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
-import marauroa.server.game.GameServerManager;
 
 /**
  * This is a create account request. It just create the
@@ -27,7 +26,7 @@ import marauroa.server.game.GameServerManager;
  */
 class CreateAccountHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(CreateAccountHandler.class);
 
 
 	/**
