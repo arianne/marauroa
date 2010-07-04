@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.11 2010/06/11 19:01:51 nhnb Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.12 2010/07/04 18:22:12 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -330,20 +330,23 @@ public class MessageS2CPerception extends Message {
 
 		static class CacheKey {
 
-			byte type;
+			private byte type;
 
-			IRPZone.ID zoneid;
+			private IRPZone.ID zoneid;
 
-			public CacheKey(byte type, IRPZone.ID zoneid) {
+			private int protocolVersion;
+
+			public CacheKey(byte type, IRPZone.ID zoneid, int protocolVersion) {
 				this.type = type;
 				this.zoneid = zoneid;
+				this.protocolVersion = protocolVersion;
 			}
 
 			@Override
 			public boolean equals(Object obj) {
 				if (obj instanceof CacheKey) {
 					CacheKey a = (CacheKey) obj;
-					if (a.type == type && a.zoneid.equals(zoneid)) {
+					if (a.type == type && a.zoneid.equals(zoneid) && a.protocolVersion == protocolVersion) {
 						return true;
 					}
 				}
@@ -353,7 +356,7 @@ public class MessageS2CPerception extends Message {
 
 			@Override
 			public int hashCode() {
-				return (type + 1) * zoneid.hashCode();
+				return (type + 1) * zoneid.hashCode() * protocolVersion;
 			}
 		}
 
@@ -378,7 +381,7 @@ public class MessageS2CPerception extends Message {
 		}
 
 		synchronized public byte[] get(MessageS2CPerception perception) throws IOException {
-			CacheKey key = new CacheKey(perception.typePerception, perception.zoneid);
+			CacheKey key = new CacheKey(perception.typePerception, perception.zoneid, perception.protocolVersion);
 
 			if (!cachedContent.containsKey(key)) {
 				logger.debug("Perception not found in cache");
