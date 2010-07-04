@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.58 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.59 2010/07/04 17:29:02 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -499,7 +499,7 @@ public class PlayerEntry {
 	 * @param protocolVersion protocol version
 	 */
 	public void setProtocolVersion(int protocolVersion) {
-		this.protocolVersion = protocolVersion;
+		this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
 	}
 
 
