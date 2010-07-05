@@ -1,4 +1,4 @@
-/* $Id: MessageS2CPerception.java,v 1.12 2010/07/04 18:22:12 nhnb Exp $ */
+/* $Id: MessageS2CPerception.java,v 1.13 2010/07/05 06:33:54 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -305,6 +305,7 @@ public class MessageS2CPerception extends Message {
 		/** Dynamic part */
 		array = new ByteArrayInputStream(in.readByteArray());
 		ser = new InputSerializer(array);
+		ser.setProtocolVersion(protocolVersion);
 
 		timestampPerception = ser.readInt();
 
