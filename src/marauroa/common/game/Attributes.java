@@ -1,4 +1,4 @@
-/* $Id: Attributes.java,v 1.84 2010/06/15 19:09:28 nhnb Exp $ */
+/* $Id: Attributes.java,v 1.85 2010/07/08 20:12:21 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -569,7 +569,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	boolean shouldSerialize(DefinitionClass clazz, String key, DetailLevel level) {
 		Definition def = rpClass.getDefinition(clazz, key);
 		if (def == null) {
-			logger.error("Missing definition on class " + clazz + " for " + key, new Throwable());
+			logger.error("No definition " + clazz + " named " + key + " for class " + rpClass, new Throwable());
 			return false;
 		}
 		return shouldSerialize(def, level);
