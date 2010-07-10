@@ -119,6 +119,35 @@ public class DBCommandQueue {
 		return res;
 	}
 
+
+	/**
+	 * gets one processed result of the specified DBCommand class that have
+	 * been requested in the current thread.
+	 *
+	 * @param <T> the type of the DBCommand
+	 * @param clazz the type of the DBCommand
+	 * @param handle a handle to the expected results
+	 * @return a list of processed DBCommands; it may be empty
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends DBCommand> T getOneResult(Class<T> clazz, ResultHandle handle) {
+		synchronized(processedCommands) {
+			Iterator<DBCommandMetaData> itr = processedCommands.iterator();
+			while (itr.hasNext()) {
+				DBCommandMetaData metaData = itr.next();
+				DBCommand command = metaData.getCommand();
+				if (clazz.isAssignableFrom(command.getClass())) {
+					if (metaData.getResultHandle() == handle) {
+						itr.remove();
+						return (T) command;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
 	/**
 	 * shuts the background thread down.
 	 */
