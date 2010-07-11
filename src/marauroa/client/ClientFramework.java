@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.65 2010/06/12 14:51:10 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.66 2010/07/11 12:25:22 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -637,6 +637,15 @@ public abstract class ClientFramework {
 		messages.clear();
 
 		return receivedMessages;
+	}
+
+
+	/**
+	 * sends a KeepAliveMessage
+	 */
+	public void sendKeepAlive() {
+		MessageC2SKeepAlive msg = new MessageC2SKeepAlive();
+		netMan.addMessage(msg);
 	}
 
 	/**
