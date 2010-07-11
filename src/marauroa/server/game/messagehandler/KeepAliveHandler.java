@@ -1,4 +1,4 @@
-/* $Id: KeepAliveHandler.java,v 1.2 2010/05/27 18:51:45 nhnb Exp $ */
+/* $Id: KeepAliveHandler.java,v 1.3 2010/07/11 11:49:16 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -40,7 +40,7 @@ class KeepAliveHandler extends MessageHandler {
 			PlayerEntry entry = playerContainer.get(clientid);
 
 			// verify event
-			if (!isValidEvent(alive, entry, ClientState.GAME_BEGIN)) {
+			if (!isValidEvent(alive, entry, ClientState.GAME_BEGIN, ClientState.LOGIN_COMPLETE)) {
 				return;
 			}
 
