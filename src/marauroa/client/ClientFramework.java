@@ -1,4 +1,4 @@
-/* $Id: ClientFramework.java,v 1.66 2010/07/11 12:25:22 nhnb Exp $ */
+/* $Id: ClientFramework.java,v 1.67 2010/07/11 12:31:11 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -641,7 +641,8 @@ public abstract class ClientFramework {
 
 
 	/**
-	 * sends a KeepAliveMessage
+	 * sends a KeepAliveMessage, this is automatically done in game, but you may
+	 * be required to call this method very five minutes in pre game.
 	 */
 	public void sendKeepAlive() {
 		MessageC2SKeepAlive msg = new MessageC2SKeepAlive();

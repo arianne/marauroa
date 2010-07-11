@@ -95,6 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.5
+- added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game
 - added new method DBCommandQueue.getOneResult
 
 3.8
