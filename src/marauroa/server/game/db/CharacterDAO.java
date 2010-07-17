@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.19 2010/06/13 20:28:53 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.20 2010/07/17 23:43:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -309,13 +309,14 @@ public class CharacterDAO {
 	 * @throws IOException
 	 *             if there is a problem reading the blob 
 	 */
-	public Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username)
+	private Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username, String condition)
 	        throws SQLException, IOException {
 		try {
 			Map<String, RPObject> res = new LinkedHashMap<String, RPObject>();
 
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
-			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.protocol_version As protocol_version, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id] ORDER BY characters.charname";
+			String query = "SELECT characters.charname As charname, rpobject.data As data, rpobject.protocol_version As protocol_version, rpobject.object_id As object_id from characters, rpobject where rpobject.object_id=characters.object_id AND player_id=[player_id]"
+					+ condition + " ORDER BY characters.charname";
 			logger.debug("loadAllCharacters is executing query " + query);
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
@@ -347,6 +348,44 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
+
+	/**
+ 	 * This method loads all the characters associated with this
+ 	 * username from the database.
+	 *
+	 * @param transaction
+	 *            the database transaction
+	 * @param username
+	 *            the player's username
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 *             if there is a problem reading the blob 
+	 */
+	public Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username) throws SQLException, IOException {
+		return loadAllCharacters(transaction, username, "");
+	}
+
+
+	/**
+ 	 * This method loads all active the characters associated with this
+ 	 * username from the database.
+	 *
+	 * @param transaction
+	 *            the database transaction
+	 * @param username
+	 *            the player's username
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 *             if there is a problem reading the blob 
+	 */
+	public Map<String, RPObject> loadAllActiveCharacters(DBTransaction transaction, String username) throws SQLException, IOException {
+		return loadAllCharacters(transaction, username, " AND characters.status='active' ");
+	}
+
 
 	/**
 	 * gets the name of the account to which the specified character belongs.
@@ -556,6 +595,28 @@ public class CharacterDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			Map<String, RPObject> res = loadAllCharacters(transaction, username);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+	/**
+ 	 * This method loads all active the characters associated with this
+ 	 * username from the database.
+	 *
+	 * @param username
+	 *            the player's username
+	 * @return The loaded RPObject
+	 * @throws SQLException
+	 *             if there is any problem at database
+	 * @throws IOException
+	 *             if there is a problem reading the blob 
+	 */
+	public Map<String, RPObject> loadAllActiveCharacters(String username) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			Map<String, RPObject> res = loadAllActiveCharacters(transaction, username);
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);

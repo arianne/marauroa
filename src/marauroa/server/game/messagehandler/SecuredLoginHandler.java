@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.8 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.9 2010/07/17 23:43:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -35,9 +35,9 @@ import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
-import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
-import marauroa.server.game.dbcommand.LoadAllCharactersCommand;
+import marauroa.server.game.container.PlayerEntryContainer;
+import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.dbcommand.LoginCommand;
 import marauroa.server.game.rp.RPServerManager;
 
@@ -101,7 +101,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		netMan.sendMessage(msgServerInfo);
 
 		/* Build player character list and send it to client */
-		DBCommand command = new LoadAllCharactersCommand(entry.username, 
+		DBCommand command = new LoadAllActiveCharactersCommand(entry.username, 
 				new SendCharacterListHandler(netMan, protocolVersion), 
 				clientid, channel, protocolVersion);
 		DBCommandQueue.get().enqueue(command);

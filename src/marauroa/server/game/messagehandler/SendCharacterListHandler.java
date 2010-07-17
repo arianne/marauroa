@@ -1,4 +1,4 @@
-/* $Id: SendCharacterListHandler.java,v 1.1 2010/05/25 12:43:14 nhnb Exp $ */
+/* $Id: SendCharacterListHandler.java,v 1.2 2010/07/17 23:43:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -17,7 +17,7 @@ import java.util.Map;
 
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.MessageS2CCharacterList;
-import marauroa.server.game.dbcommand.LoadAllCharactersCommand;
+import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
 
@@ -35,13 +35,13 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 	/**
 	 * creates a new SendCharacterListhHandler
 	 *
-     * @param netMan network manager
-     * @param protocolVersion version of protocol
-     */
-    public SendCharacterListHandler(INetworkServerManager netMan, int protocolVersion) {
-	    this.netMan = netMan;
-	    this.protocolVersion = protocolVersion;
-    }
+	 @param netMan network manager
+	 * @param protocolVersion version of protocol
+	 */
+	public SendCharacterListHandler(INetworkServerManager netMan, int protocolVersion) {
+		this.netMan = netMan;
+		this.protocolVersion = protocolVersion;
+	}
 
 	/**
 	 * sends the character list back to the user
@@ -50,7 +50,7 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 	 * @param data LoadAllCharactersCommand
 	 */
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
-		LoadAllCharactersCommand cmd = (LoadAllCharactersCommand) data;
+		LoadAllActiveCharactersCommand cmd = (LoadAllActiveCharactersCommand) data;
 		Map<String, RPObject> characters = cmd.getCharacters();
 		int clientid = cmd.getClientid();
 		SocketChannel channel = cmd.getChannel();
