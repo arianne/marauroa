@@ -1,4 +1,4 @@
-/* $Id: H2DatabaseAdapter.java,v 1.4 2010/05/29 21:38:37 nhnb Exp $ */
+/* $Id: H2DatabaseAdapter.java,v 1.5 2010/07/17 23:38:03 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -77,9 +77,12 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 		String mySqlLower = mySql.toLowerCase(Locale.ENGLISH);
 		if (mySqlLower.startsWith("alter table")) {
 			int posColumn = mySqlLower.indexOf(" column");
-			int posBracket = mySql.indexOf("(", posColumn);
-			int posClose = mySql.lastIndexOf(")");
-			mySql = mySql.substring(0, posColumn + 1) + mySql.substring(posBracket + 1, posClose) + ";";
+			if (posColumn > -1) {
+				int posBracket = mySql.indexOf("(", posColumn);
+				int posClose = mySql.lastIndexOf(")");
+				mySql = mySql.substring(0, posColumn + 1) + mySql.substring(posBracket + 1, posClose) + ";";
+				mySql = mySql.replace(", PRIMARY KEY(id)", "");
+			}
 		}
 		return mySql;
 	}
