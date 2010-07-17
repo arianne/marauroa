@@ -51,6 +51,18 @@ public class UpdateScript {
 		if (!transaction.doesColumnExist("rpzone", "protocol_version")) {
 			transaction.execute("ALTER TABLE rpzone ADD COLUMN (protocol_version INTEGER);", null);
 		}
+
+		// 3.8.5
+		if (!transaction.doesColumnExist("characters", "id")) {
+			transaction.execute("ALTER TABLE characters DROP PRIMARY KEY;", null);
+			transaction.execute("ALTER TABLE characters ADD COLUMN(id integer auto_increment not null, PRIMARY KEY(id));", null);
+			transaction.execute("CREATE UNIQUE INDEX i_characters ON characters(charname);", null);
+		}
+		if (!transaction.doesColumnExist("characters", "status")) {
+			transaction.execute("ALTER TABLE characters ADD COLUMN(status char(8) not null default 'active');", null);
+			transaction.execute("UPDATE characters SET status='active' WHERE status IS NULL;", null);
+		}
+		
 		logger.info("Completed database update.");
 	}
 }

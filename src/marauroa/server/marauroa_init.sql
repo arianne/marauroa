@@ -18,15 +18,17 @@ create table if not exists account
 
 create table if not exists characters
   (
+  id integer auto_increment not null,
   player_id integer not null,
   charname varchar(32) not null,
   object_id integer not null,
   timedate timestamp default CURRENT_TIMESTAMP,
+  status char(8) not null default 'active',
   PRIMARY KEY(charname)
   );
 
 /* create index i_characters_player_id ON characters(player_id); */
-/* create index i_characters_charname ON characters(charname); */
+/* create unique index i_characters_charname ON characters(charname); */
 
 create table if not exists rpobject
   (
