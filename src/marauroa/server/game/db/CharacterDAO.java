@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.20 2010/07/17 23:43:27 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.21 2010/07/18 13:46:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -133,6 +133,32 @@ public class CharacterDAO {
 		}
 	}
 
+
+	/**
+	 * checks whether the specified character exists
+	 *
+	 * @param transaction DBTransaction
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean hasCharacter(DBTransaction transaction, String character) throws SQLException {
+		try {
+			String query = "SELECT count(*) As amount FROM characters WHERE charname = '[character]'";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("character", character);
+			logger.debug("hasCharacter is executing query " + query);
+
+			int count = transaction.querySingleCellInt(query, params);
+			return count > 0;
+		} catch (SQLException e) {
+			logger.error("Can't query for character \"" + character + "\"", e);
+			throw e;
+		}
+	}
+	
+
+
 	/**
 	 * checks whether the specified account owns the specified character
 	 *
@@ -142,17 +168,40 @@ public class CharacterDAO {
 	 * @return true, if the character exists and belongs to the account; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean hasCharacter(DBTransaction transaction, String username, String character)
-	        throws SQLException {
+	public boolean hasCharacter(DBTransaction transaction, String username, String character) throws SQLException {
 		try {
-
-			/*
-			 * NOTE: 
-			 * Perse we have agreed that character name is unique per server, 
-			 * so we check just characters ignoring username.
-			 */
-			String query = "select count(*) as amount from  characters where charname like '[character]'";
+			String query = "SELECT count(*) as amount FROM characters, account "
+				+" WHERE account.username='[username]' AND account.id=characters.player_id AND charname='[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("username", username);
+			params.put("character", character);
+			logger.debug("hasCharacter is executing query " + query);
+
+			int count = transaction.querySingleCellInt(query, params);
+			return count > 0;
+		} catch (SQLException e) {
+			logger.error("Can't query for player \"" + username + "\" character \"" + character + "\"", e);
+			throw e;
+		}
+	}
+
+
+	/**
+	 * checks whether the specified account owns the specified character and it is active
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean hasActiveCharacter(DBTransaction transaction, String username, String character) throws SQLException {
+		try {
+			String query = "SELECT count(*) as amount FROM characters, account "
+				+ " WHERE account.username='[username]' AND account.id=characters.player_id "
+				+ " AND characters.status='active' AND charname='[character]'";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("username", username);
 			params.put("character", character);
 			logger.debug("hasCharacter is executing query " + query);
 
@@ -498,6 +547,24 @@ public class CharacterDAO {
 		}
 	}
 
+
+	/**
+	 * checks whether the specified character exists
+	 *
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean hasCharacter(String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			boolean res = hasCharacter(transaction, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
 	/**
 	 * checks whether the specified account owns the specified character
 	 *
@@ -510,6 +577,25 @@ public class CharacterDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			boolean res = hasCharacter(transaction, username, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+
+	/**
+	 * checks whether the specified account owns the specified character and it is active
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @return true, if the character exists and belongs to the account; false otherwise
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean hasActiveCharacter(String username, String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			boolean res = hasActiveCharacter(transaction, username, character);
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);
@@ -657,5 +743,6 @@ public class CharacterDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
+
 
 }

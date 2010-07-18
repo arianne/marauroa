@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 
-import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
@@ -23,14 +22,12 @@ import marauroa.server.game.messagehandler.DelayedEventHandler;
 import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 /**
- * asynchronously loads a character's RPObject.
+ * asynchronously loads a charcater's RPObject if the character is active 
+ * and belongs to the account.
  *
  * @author hendrik
  */
-public class LoadCharacterCommand extends DBCommandWithCallback {
-	private String username;
-	private String character;
-	private RPObject object;
+public class LoadActiveCharacterCommand extends LoadCharacterCommand {
 
 	/**
 	 * Creates a new LoadCharacterCommand
@@ -38,10 +35,8 @@ public class LoadCharacterCommand extends DBCommandWithCallback {
 	 * @param username name of account
 	 * @param character name of character
 	 */
-	public LoadCharacterCommand(String username, String character) {
-		super();
-		this.username = username;
-		this.character = character;
+	public LoadActiveCharacterCommand(String username, String character) {
+		super(username, character);
 	}
 
 	/**
@@ -54,46 +49,21 @@ public class LoadCharacterCommand extends DBCommandWithCallback {
 	 * @param channel optional parameter available to the callback
 	 * @param protocolVersion version of protocol
 	 */
-	public LoadCharacterCommand(String username, String character,
+	public LoadActiveCharacterCommand(String username, String character,
 			DelayedEventHandler callback, int clientid, SocketChannel channel, int protocolVersion) {
-		super(callback, clientid, channel, protocolVersion);
-		this.username = username;
-		this.character = character;
+		super(username, character, callback, clientid, channel, protocolVersion);
 	}
 
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		object = DAORegister.get().get(CharacterDAO.class).loadCharacter(transaction, username, character);
-		if (callback != null) {
-			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+		if (DAORegister.get().get(CharacterDAO.class).hasActiveCharacter(getUsername(), getCharacterName())) {
+			super.execute(transaction);
+		} else {
+			// We have to do the callback ourselves because we do not call super.execute().
+			if (callback != null) {
+				DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+			}
 		}
-	}
-
-	/**
-	 * Gets the RPObject
-	 *
-	 * @return RPObject
-	 */
-	public RPObject getObject() {
-		return object;
-	}
-
-	/**
-	 * gets the name of the character
-	 *
-	 * @return name of character
-	 */
-	public String getCharacterName() {
-		return character;
-	}
-
-	/**
-	 * gets the username
-	 *
-	 * @return username
-	 */
-	public String getUsername() {
-		return username;
 	}
 }

@@ -1,4 +1,4 @@
-/* $Id: BareRPRuleProcessor.java,v 1.5 2009/12/24 12:58:16 nhnb Exp $ */
+/* $Id: BareRPRuleProcessor.java,v 1.6 2010/07/18 13:46:26 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -155,7 +155,7 @@ public class BareRPRuleProcessor implements IRPRuleProcessor {
 			player.put("version", "0.00");
 			player.put("ATK", 50);
 
-			if (DAORegister.get().get(CharacterDAO.class).hasCharacter(transaction, username, character)) {
+			if (DAORegister.get().get(CharacterDAO.class).hasCharacter(transaction, character)) {
 				logger.warn("Character already exist: " + character);
 				return new CharacterResult(Result.FAILED_PLAYER_EXISTS, character, player);
 			}

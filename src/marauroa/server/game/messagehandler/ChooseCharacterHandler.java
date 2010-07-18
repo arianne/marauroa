@@ -1,4 +1,4 @@
-/* $Id: ChooseCharacterHandler.java,v 1.8 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: ChooseCharacterHandler.java,v 1.9 2010/07/18 13:46:27 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -26,6 +26,7 @@ import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.db.DAORegister;
+import marauroa.server.game.dbcommand.LoadActiveCharacterCommand;
 import marauroa.server.game.dbcommand.LoadCharacterCommand;
 import marauroa.server.game.rp.RPServerManager;
 
@@ -72,16 +73,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 				return;
 			}
 
-			/* We check if this account has such player. */
-			if (entry.hasCharacter(msg.getCharacter())) {
-				loadAndPlaceInWorld(msg, clientid, entry);
-				return;
-			} else {
-				/* This account doesn't own that character */
-				logger.warn("Client(" + msg.getAddress().toString() + ") hasn't character("
-						+ msg.getCharacter() + ")");
-			}
-			rejectClient(msg.getSocketChannel(), clientid, entry);
+			loadAndPlaceInWorld(msg, clientid, entry);
 
 		} catch (Exception e) {
 			logger.error("error when processing character event", e);
@@ -105,12 +97,25 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		playerContainer.getLock().releaseLock();
 	}
 
-	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg,
-			int clientid, PlayerEntry entry) {
-		DBCommand command = new LoadCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel(), msg.getProtocolVersion());
+	/**
+	 * Asynchronously loads a player from the database and later places it into the world
+	 *
+	 * @param msg MessageC2SChooseCharacter
+	 * @param clientid clientid
+	 * @param entry PlayerEntry
+	 */
+	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg, int clientid, PlayerEntry entry) {
+		DBCommand command = new LoadActiveCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel(), msg.getProtocolVersion());
 		DBCommandQueue.get().enqueue(command);
 	}
 
+	/**
+	 * After validating that both the player entry and and the loaded player object are valid,
+	 * places the player into the world.
+	 *
+	 * @param rpMan RPServerManager
+	 * @param data LoadCharacterCommand
+	 */
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
 		LoadCharacterCommand cmd = (LoadCharacterCommand) data;
 		RPObject object = cmd.getObject();
@@ -120,7 +125,14 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		if (entry == null) {
 			return;
 		}
-		
+
+		// does the character exist and belong to the user?
+		if (object == null) {
+			logger.warn("could not load object for character " + entry.character + " for user " + cmd.getUsername() + " from database");
+			rejectClient(cmd.getChannel(), clientid, entry);
+			return;
+		}
+
 		/* We restore back the character to the world */
 		playerContainer.getLock().requestWriteLock();
 		completeLoadingCharacterIntoWorld(rpMan, clientid, cmd.getChannel(), entry, object);
@@ -131,13 +143,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			int clientid, SocketChannel channel, PlayerEntry entry, RPObject object) {
 
 		if (object != null) {
-			/*
-			 * We set the clientid attribute to link easily the object with
-			 * is player runtime information
-			 */
 			object.put("#clientid", clientid);
-		} else {
-			logger.warn("could not load object for character(" + entry.character + ") from database");
 		}
 
 		entry.setObject(object);
@@ -153,19 +159,21 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			/* And finally sets this connection state to GAME_BEGIN */
 			entry.state = ClientState.GAME_BEGIN;
 		} else {
-			/* This account doesn't own that character */
 			logger.warn("RuleProcessor rejected character(" + entry.character + ")");
 			rejectClient(channel, clientid, entry);
 		}
 	}
 
 
-	private void rejectClient(SocketChannel channel, int clientid,
-			PlayerEntry entry) {
-		/*
-		 * If the account doesn't own the character OR if the rule processor rejected it.
-		 * So we return it back to login complete stage.
-		 */
+	/**
+	 * If the account doesn't own the character OR if the rule processor rejected it.
+	 * So we return it back to login complete stage.
+	 *
+	 * @param channel SocketChannel
+	 * @param clientid clientid
+	 * @param entry PlayerEntry
+	 */
+	private void rejectClient(SocketChannel channel, int clientid, PlayerEntry entry) {
 		entry.state = ClientState.LOGIN_COMPLETE;
 
 		/* Error: There is no such character */
