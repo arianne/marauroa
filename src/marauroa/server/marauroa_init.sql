@@ -24,7 +24,7 @@ create table if not exists characters
   object_id integer not null,
   timedate timestamp default CURRENT_TIMESTAMP,
   status char(8) not null default 'active',
-  PRIMARY KEY(charname)
+  PRIMARY KEY(id)
   );
 
 /* create index i_characters_player_id ON characters(player_id); */
