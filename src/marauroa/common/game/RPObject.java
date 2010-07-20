@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.131 2010/07/04 13:32:58 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.132 2010/07/20 17:14:47 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -737,17 +737,20 @@ public class RPObject extends SlotOwner {
 	 * Retrieves a full map with the given name
 	 * 
 	 * @param map the name of the map
-	 * @return a copy of the map
+	 * @return a copy of the map or null if no map with the given name is present
 	 */
 	public Map<String, String> getMap(String map) {
-		HashMap<String, String> newMap = new HashMap<String, String>();
-		RPObject rpObject = this.maps.get(map);
-		for(String key : rpObject) {
-			if ((!key.equals("id") && !key.equals("zoneid"))) {
-				newMap.put(key, rpObject.get(key));
+		if(this.maps.containsKey(map)) {
+			HashMap<String, String> newMap = new HashMap<String, String>();
+			RPObject rpObject = this.maps.get(map);
+			for(String key : rpObject) {
+				if ((!key.equals("id") && !key.equals("zoneid"))) {
+					newMap.put(key, rpObject.get(key));
+				}
 			}
+			return newMap;
 		}
-		return newMap;
+		return null;
 	}
 	
 	/**
