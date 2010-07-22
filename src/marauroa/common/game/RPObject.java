@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.132 2010/07/20 17:14:47 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.133 2010/07/22 19:04:56 madmetzger Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -1042,7 +1042,7 @@ public class RPObject extends SlotOwner {
 			for (int k = 0; k < numberOfMaps; k++) {
 				RPObject rpo = new RPObject(); 
 				rpo = (RPObject) in.readObject(rpo);
-				maps.put(mapNames.get(0), rpo);
+				maps.put(mapNames.get(k), rpo);
 			}
 		}
 		/*
@@ -1077,7 +1077,7 @@ public class RPObject extends SlotOwner {
 		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && events.equals(object.events)
+			return super.equals(obj) && slots.equals(object.slots) && maps.equals(object.maps) && events.equals(object.events)
 			        && links.equals(object.links);
 		} else {
 			return false;
