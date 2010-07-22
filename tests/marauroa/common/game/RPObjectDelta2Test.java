@@ -1,4 +1,4 @@
-/* $Id: RPObjectDelta2Test.java,v 1.8 2010/06/15 15:25:04 madmetzger Exp $ */
+/* $Id: RPObjectDelta2Test.java,v 1.9 2010/07/22 15:51:01 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -779,6 +779,9 @@ public class RPObjectDelta2Test {
 		zone.nextTurn();
 	}
 	
+	/**
+	 * Test for the delta algorithm with maps
+	 */
 	@Test
 	public void testMapDelta() {
 		RPClass rpClass = new RPClass("mymapdeltatestclass");
@@ -803,6 +806,71 @@ public class RPObjectDelta2Test {
 		assertTrue(added2.isEmpty());
 		assertFalse(deleted2.isEmpty());
 		assertThat(deleted2.get("testmap", "testkey"), is("0"));
+	}
+	
+	/**
+	 * Test for the delta algorithm on maps with two maps within a RPObject 
+	 */
+	@Test
+	public void testMapDeltaWithTwoMaps() {
+		RPClass rpClass = new RPClass("mytwomapdeltatestclass");
+		rpClass.addAttribute("testmap", Type.MAP);
+		rpClass.addAttribute("secondMap", Type.MAP);
+		RPObject newObject = new RPObject();
+		newObject.setRPClass(rpClass);
+		newObject.setID(RPObject.INVALID_ID);
+		RPObject added =  new RPObject();
+		RPObject deleted = new RPObject();
+		newObject.getDifferences(added, deleted);
+		newObject.put("testmap", "testkey", "testvalue");
+		newObject.getDifferences(added, deleted);
+		assertFalse(newObject.isEmpty());
+		assertFalse(added.isEmpty());
+		assertThat(added.get("testmap", "testkey"), is("testvalue"));
+		assertTrue(deleted.isEmpty());
+		newObject.resetAddedAndDeleted();
+		newObject.put("secondMap", "key", "value");
+		RPObject added2 = new RPObject();
+		RPObject deleted2 = new RPObject();
+		newObject.getDifferences(added2, deleted2);
+		assertTrue(added2.hasMap("secondMap"));
+		assertTrue(added2.get("secondMap", "key").equals("value"));
+		assertTrue(deleted2.isEmpty());
+	}
+	
+	/**
+	 * Test for applyDifferences with two maps
+	 */
+	@Test
+	public void testMapDeltaWithTwoMapsApplyDifferences() {
+		RPClass rpClass = new RPClass("mytwomapapplydeltatestclass");
+		rpClass.addAttribute("testmap", Type.MAP);
+		rpClass.addAttribute("secondMap", Type.MAP);
+		RPObject newObject = new RPObject();
+		RPObject client = new RPObject();
+		newObject.setRPClass(rpClass);
+		newObject.setID(RPObject.INVALID_ID);
+		RPObject added =  new RPObject();
+		RPObject deleted = new RPObject();
+		newObject.getDifferences(added, deleted);
+		newObject.put("testmap", "testkey", "testvalue");
+		newObject.getDifferences(added, deleted);
+		assertFalse(newObject.isEmpty());
+		assertFalse(added.isEmpty());
+		assertThat(added.get("testmap", "testkey"), is("testvalue"));
+		assertTrue(deleted.isEmpty());
+		client.applyDifferences(added, deleted);
+		assertEquals(newObject, client);
+		newObject.resetAddedAndDeleted();
+		newObject.put("secondMap", "key", "value");
+		RPObject added2 = new RPObject();
+		RPObject deleted2 = new RPObject();
+		newObject.getDifferences(added2, deleted2);
+		assertTrue(added2.hasMap("secondMap"));
+		assertTrue(added2.get("secondMap", "key").equals("value"));
+		assertTrue(deleted2.isEmpty());
+		client.applyDifferences(added2, deleted2);
+		assertEquals(newObject, client);
 	}
 	
 }
