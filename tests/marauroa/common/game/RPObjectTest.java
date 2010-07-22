@@ -1,4 +1,4 @@
-/* $Id: RPObjectTest.java,v 1.10 2010/06/14 18:48:03 madmetzger Exp $ */
+/* $Id: RPObjectTest.java,v 1.11 2010/07/22 16:25:30 madmetzger Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -317,6 +317,43 @@ public class RPObjectTest {
 		} catch (IllegalArgumentException e) {
 			// should just be caught
 		}
+	}
+	
+	@Test
+	public void testMapSerialization() throws IOException {
+		RPClass cls = new RPClass("testmaps-serialization");
+		cls.addAttribute("map1", Type.MAP);
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(cls);
+		rpo.put("map1", "key11", "value11");
+		rpo.put("map1", "key12", "value12");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+		os.write(rpo);
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+		RPObject result = (RPObject) is.readObject(new RPObject());
+		assertEquals(rpo, result);
+	}
+	
+	@Test
+	public void testMapSerializationTwoMaps() throws IOException {
+		RPClass cls = new RPClass("testmaps-serialization-2");
+		cls.addAttribute("map1", Type.MAP);
+		cls.addAttribute("map2", Type.MAP);
+		RPObject rpo = new RPObject();
+		rpo.setRPClass(cls);
+		rpo.put("map1", "key11", "value11");
+		rpo.put("map1", "key12", "value12");
+		rpo.put("map2", "key21", "value21");
+		rpo.put("map2", "key22", "value22");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		OutputSerializer os = new OutputSerializer(out);
+		os.write(rpo);
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		InputSerializer is = new InputSerializer(in);
+		RPObject result = (RPObject) is.readObject(new RPObject());
+		assertEquals(rpo, result);
 	}
 	
 	class SubRPObject extends RPObject{
