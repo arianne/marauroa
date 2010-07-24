@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.6 2010/07/17 23:43:27 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.7 2010/07/24 15:41:10 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,8 +12,11 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
+import java.nio.channels.SocketChannel;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.CharacterResult;
+import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
@@ -48,21 +51,29 @@ class CreateCharacterHandler extends MessageHandler {
 		MessageC2SCreateCharacter msg = (MessageC2SCreateCharacter) message;
 		try {
 			int clientid = msg.getClientID();
+			int protocolVersion = msg.getProtocolVersion();
+			SocketChannel channel = msg.getSocketChannel();
+			RPObject template = msg.getTemplate();
+			String character = msg.getCharacter();
+			
 			PlayerEntry entry = playerContainer.get(clientid);
+			String address = msg.getAddress().getHostAddress();
 
 			// verify event
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
 				logger.warn("invalid create character event (client unknown, not logged in or wrong ip-address)");
 				return;
 			}
+			String username = entry.username;
+			boolean sendListOfCharacters = true;
 
 			/*
 			 * We request the creation of an account for a logged player. It
 			 * will also return a result of the character that we must forward to
 			 * player.
 			 */
-			CharacterResult val = rpMan.createCharacter(entry.username, msg.getCharacter(), 
-					msg.getTemplate(), msg.getAddress().getHostAddress());
+			CharacterResult val = rpMan.createCharacter(username, character, 
+					template, address);
 			Result result = val.getResult();
 
 			if (result == Result.OK_CREATED) {
@@ -70,30 +81,32 @@ class CreateCharacterHandler extends MessageHandler {
 				 * If the character is created notify player and send him a
 				 * Character list message.
 				 */
-				logger.debug("Character (" + msg.getCharacter() + ") created for account "
-				        + entry.username);
+				logger.debug("Character (" + character + ") created for account "
+				        + username);
 				MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(
-				        msg.getSocketChannel(), val.getCharacter(), val.getTemplate());
+						channel, val.getCharacter(), val.getTemplate());
 				msgCreateCharacterACK.setClientID(clientid);
-				msgCreateCharacterACK.setProtocolVersion(msg.getProtocolVersion());
+				msgCreateCharacterACK.setProtocolVersion(protocolVersion);
 				netMan.sendMessage(msgCreateCharacterACK);
 
 				/*
 				 * Build player character list and send it to client
 				 */
-				DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
-						new SendCharacterListHandler(netMan, msg.getProtocolVersion()), 
-						clientid, msg.getSocketChannel(), msg.getProtocolVersion());
-				DBCommandQueue.get().enqueue(command);
+				if (sendListOfCharacters) {
+					DBCommand command = new LoadAllActiveCharactersCommand(username,
+							new SendCharacterListHandler(netMan, protocolVersion), 
+							clientid, channel, protocolVersion);
+					DBCommandQueue.get().enqueue(command);
+				}
 			} else {
 				/*
 				 * It also may fail to create the character. Explain the reasons
 				 * to player.
 				 */
 				MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
-				        msg.getSocketChannel(), result);
+						channel, result);
 				msgCreateCharacterNACK.setClientID(clientid);
-				msgCreateCharacterNACK.setProtocolVersion(msg.getProtocolVersion());
+				msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
 				netMan.sendMessage(msgCreateCharacterNACK);
 			}
 		} catch (Exception e) {
