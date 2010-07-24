@@ -1,4 +1,4 @@
-/* $Id: Message.java,v 1.20 2010/07/22 19:19:21 nhnb Exp $ */
+/* $Id: Message.java,v 1.21 2010/07/24 18:50:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -65,7 +65,8 @@ public class Message implements Serializable {
 		S2C_CONNECT_NACK,
 		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, 
 		S2C_LOGIN_MESSAGE_NACK,
-		P2S_CREATECHARACTER
+		P2S_CREATECHARACTER,
+		P2S_CREATEACCOUNT
 	}
 
 	/** Type of the message */

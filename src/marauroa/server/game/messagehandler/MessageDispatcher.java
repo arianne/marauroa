@@ -1,4 +1,4 @@
-/* $Id: MessageDispatcher.java,v 1.3 2010/07/24 18:10:26 nhnb Exp $ */
+/* $Id: MessageDispatcher.java,v 1.4 2010/07/24 18:50:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -24,6 +24,7 @@ import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDPROM
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGOUT;
 import static marauroa.common.net.message.Message.MessageType.C2S_OUTOFSYNC;
 import static marauroa.common.net.message.Message.MessageType.C2S_TRANSFER_ACK;
+import static marauroa.common.net.message.Message.MessageType.P2S_CREATEACCOUNT;
 import static marauroa.common.net.message.Message.MessageType.P2S_CREATECHARACTER;
 
 import java.util.HashMap;
@@ -67,6 +68,7 @@ public class MessageDispatcher {
 		handlers.put(C2S_CREATEACCOUNT, new CreateAccountHandler());
 		handlers.put(C2S_CREATECHARACTER, new CreateCharacterHandler());
 
+		handlers.put(P2S_CREATEACCOUNT, new CreateAccountHandler());
 		handlers.put(P2S_CREATECHARACTER, new CreateCharacterHandler());
 	}
 

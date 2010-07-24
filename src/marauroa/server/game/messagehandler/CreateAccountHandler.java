@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.5 2010/06/29 21:29:21 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.6 2010/07/24 18:50:25 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,11 +12,13 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageP2SCreateAccount;
 import marauroa.common.net.message.MessageS2CCreateAccountACK;
 import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 
@@ -39,23 +41,44 @@ class CreateAccountHandler extends MessageHandler {
 	 */
 	@Override
 	public void process(Message message) {
-		MessageC2SCreateAccount msg = (MessageC2SCreateAccount) message;
 		try {
 			// the rpMan.createAccount line threw an NPE during a test without the
 			// PlayerEntryContainer lock.
-			if ((rpMan == null) || (msg == null) || (msg.getAddress() == null)) {
-				logger.error("Unexpected null value in CreateAccountHandler.process: rpMan=" + rpMan + " msg=" + msg);
-				if (msg != null) {
-					logger.error("addres=" + msg.getAddress());
+			if ((rpMan == null) || (message == null) || (message.getAddress() == null)) {
+				logger.error("Unexpected null value in CreateAccountHandler.process: rpMan=" + rpMan + " msg=" + message);
+				if (message != null) {
+					logger.error("addres=" + message.getAddress());
 				}
 				return;
+			}
+			
+			String username = null;
+			String pasword = null;
+			String email = null;
+			String address = null;
+
+			if (message instanceof MessageC2SCreateAccount) {
+				MessageC2SCreateAccount msg = (MessageC2SCreateAccount) message;
+				username = msg.getUsername();
+				pasword = msg.getPassword();
+				email = msg.getEmail();
+				address = msg.getAddress().getHostAddress();
+			} else {
+				MessageP2SCreateAccount msg = (MessageP2SCreateAccount) message;
+				if ((msg.getCredentials() == null) || !(msg.getCredentials().equals(Configuration.getConfiguration().get("proxy_credentials")))) {
+					return;
+				}
+				username = msg.getUsername();
+				pasword = msg.getPassword();
+				email = msg.getEmail();
+				address = msg.getForwardedFor();
 			}
 
 			/*
 			 * We request RP Manager to create an account for our player. This
 			 * will return a <b>result</b> of the operation.
 			 */
-			AccountResult val = rpMan.createAccount(msg.getUsername(), msg.getPassword(), msg.getEmail(), msg.getAddress().getHostAddress());
+			AccountResult val = rpMan.createAccount(username, pasword, email, address);
 			Result result = val.getResult();
 
 			if (result == Result.OK_CREATED) {
@@ -63,10 +86,10 @@ class CreateAccountHandler extends MessageHandler {
 				 * If result is OK then the account was created and we notify
 				 * player about that.
 				 */
-				logger.debug("Account (" + msg.getUsername() + ") created.");
-				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(msg
-				        .getSocketChannel(), val.getUsername());
-				msgCreateAccountACK.setProtocolVersion(msg.getProtocolVersion());
+				logger.debug("Account (" + username + ") created.");
+				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(
+						message.getSocketChannel(), val.getUsername());
+				msgCreateAccountACK.setProtocolVersion(message.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
 				/*
@@ -74,8 +97,8 @@ class CreateAccountHandler extends MessageHandler {
 				 * failure.
 				 */
 				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(
-				        msg.getSocketChannel(), result);
-				msgCreateAccountNACK.setProtocolVersion(msg.getProtocolVersion());
+						message.getSocketChannel(), result);
+				msgCreateAccountNACK.setProtocolVersion(message.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountNACK);
 			}
 		} catch (Exception e) {
