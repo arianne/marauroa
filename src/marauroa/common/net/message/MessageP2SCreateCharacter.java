@@ -1,4 +1,4 @@
-/* $Id: MessageP2SCreateCharacter.java,v 1.1 2010/07/22 19:19:21 nhnb Exp $ */
+/* $Id: MessageP2SCreateCharacter.java,v 1.2 2010/07/24 18:10:26 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -26,6 +26,9 @@ public class MessageP2SCreateCharacter extends Message {
 	/** authentication */
 	private String credentials;
 
+	/** the ip address this request is forwarded for */
+	private String forwardedFor;
+
 	/** name of account */
 	private String username;
 
@@ -48,6 +51,8 @@ public class MessageP2SCreateCharacter extends Message {
 	 *            TCP/IP address associated to this message
 	 * @param credentials
 	 *            authentication
+	 * @param forwardedFor
+	 *            forwarded for
 	 * @param username 
 	 *            name of account
 	 * @param character
@@ -56,9 +61,10 @@ public class MessageP2SCreateCharacter extends Message {
 	 *            a RPObject that contains attributes that will be used on the
 	 *            created character.
 	 */
-	public MessageP2SCreateCharacter(SocketChannel source, String credentials, String username, String character, RPObject template) {
+	public MessageP2SCreateCharacter(SocketChannel source, String credentials, String forwardedFor, String username, String character, RPObject template) {
 		super(MessageType.P2S_CREATECHARACTER, source);
 		this.credentials = credentials;
+		this.forwardedFor = forwardedFor;
 		this.username = username;
 		this.character = character;
 		this.template = template;
@@ -69,7 +75,7 @@ public class MessageP2SCreateCharacter extends Message {
 	 *
 	 * @return the credentials
 	 */
-	protected String getCredentials() {
+	public String getCredentials() {
 		return credentials;
 	}
 
@@ -92,6 +98,15 @@ public class MessageP2SCreateCharacter extends Message {
 	}
 
 	/**
+	 * the ip-address this request is forwarded for
+	 *
+	 * @return IP-address
+	 */
+	public String getForwardedFor() {
+	    return forwardedFor;
+    }
+
+	/**
 	 * Returns the object template
 	 *
 	 * @return the object template
@@ -107,7 +122,7 @@ public class MessageP2SCreateCharacter extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (P2S CreateCharacter) from (" + getAddress() + ") CONTENTS: ("
+		return "Message (P2S CreateCharacter) from (" + getAddress() + " claiming to act for " + forwardedFor + ") CONTENTS: ("
 			+ username + ";" + character + ";" + template + ")";
 	}
 
@@ -115,6 +130,7 @@ public class MessageP2SCreateCharacter extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(credentials);
+		out.write(forwardedFor);
 		out.write(username);
 		out.write(character);
 		out.write(template);
@@ -124,12 +140,14 @@ public class MessageP2SCreateCharacter extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		credentials = in.readString();
+		forwardedFor = in.readString();
 		username = in.readString();
 		character = in.readString();
 		template = (RPObject) in.readObject(new RPObject());
 
-		if (type != MessageType.C2S_CREATECHARACTER) {
+		if (type != MessageType.P2S_CREATECHARACTER) {
 			throw new IOException();
 		}
 	}
+
 };
