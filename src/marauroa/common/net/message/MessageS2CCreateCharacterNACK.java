@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.6 2007/11/25 17:51:14 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.7 2010/07/25 16:19:12 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
