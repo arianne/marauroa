@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.134 2010/07/27 15:02:08 madmetzger Exp $ */
+/* $Id: RPObject.java,v 1.135 2010/07/27 17:08:12 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -613,8 +613,8 @@ public class RPObject extends SlotOwner {
 		if (!this.maps.containsKey(map)) {
 			this.addMap(map);
 		}
-		if ((key.equals("id") || key.equals("zoneid") || key.equals("db_id") || key.equals("#db_id"))) {
-			throw new IllegalArgumentException("\"id\", \"db_id\" and \"zoneid\" are reserved keys that may not be used.");
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used.");
 		}
 		this.maps.get(map).put(key, value);
 		if(!this.addedMaps.contains(map)) {
@@ -744,7 +744,7 @@ public class RPObject extends SlotOwner {
 			HashMap<String, String> newMap = new HashMap<String, String>();
 			RPObject rpObject = this.maps.get(map);
 			for(String key : rpObject) {
-				if ((!key.equals("id") && !key.equals("zoneid") && !key.equals("db_id") && !key.equals("#db_id"))) {
+				if ((!key.equals("id") && !key.equals("zoneid"))) {
 					newMap.put(key, rpObject.get(key));
 				}
 			}
@@ -797,8 +797,8 @@ public class RPObject extends SlotOwner {
 	 * @param key the key of the entry to remove
 	 */
 	public void remove(String map, String key) {
-		if ((key.equals("id") || key.equals("zoneid") || key.equals("db_id") || key.equals("#db_id"))) {
-			throw new IllegalArgumentException("\"id\", \"db_id\" and \"zoneid\" are reserved keys that may not be used");
+		if ((key.equals("id") || key.equals("zoneid"))) {
+			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
 		if(maps.containsKey(map)) {
 			this.maps.get(map).remove(key);
@@ -855,7 +855,7 @@ public class RPObject extends SlotOwner {
 
 		tmp.append(super.toString());
 
-		tmp.append(" with maps ");
+		tmp.append(" with maps");
 		for (Map.Entry<String, RPObject> map : maps.entrySet()) {
 			tmp.append(" " + map.getKey());
 			tmp.append("=[" + map.getValue().toAttributeString() + "]");
