@@ -1,4 +1,4 @@
-/* $Id: MessageP2SCreateAccount.java,v 1.1 2010/07/24 18:50:25 nhnb Exp $ */
+/* $Id: MessageP2SCreateAccount.java,v 1.2 2010/07/29 19:47:42 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -47,6 +47,10 @@ public class MessageP2SCreateAccount extends Message {
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param credentials
+	 *            authentication
+	 * @param forwardedFor
+	 *            forwarded for
 	 * @param username
 	 *            desired username
 	 * @param password
@@ -136,7 +140,7 @@ public class MessageP2SCreateAccount extends Message {
 		password = in.readString();
 		email = in.readString();
 
-		if (type != MessageType.C2S_CREATEACCOUNT) {
+		if (type != MessageType.P2S_CREATEACCOUNT) {
 			throw new IOException();
 		}
 	}
