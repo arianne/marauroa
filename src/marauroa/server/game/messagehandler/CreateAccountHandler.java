@@ -1,4 +1,4 @@
-/* $Id: CreateAccountHandler.java,v 1.6 2010/07/24 18:50:25 nhnb Exp $ */
+/* $Id: CreateAccountHandler.java,v 1.7 2010/07/29 19:49:06 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -66,6 +66,7 @@ class CreateAccountHandler extends MessageHandler {
 			} else {
 				MessageP2SCreateAccount msg = (MessageP2SCreateAccount) message;
 				if ((msg.getCredentials() == null) || !(msg.getCredentials().equals(Configuration.getConfiguration().get("proxy_credentials")))) {
+					logger.warn("Invalid credentials for proxy method.");
 					return;
 				}
 				username = msg.getUsername();

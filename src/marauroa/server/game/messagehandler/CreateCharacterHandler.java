@@ -1,4 +1,4 @@
-/* $Id: CreateCharacterHandler.java,v 1.8 2010/07/24 18:10:26 nhnb Exp $ */
+/* $Id: CreateCharacterHandler.java,v 1.9 2010/07/29 19:49:06 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -83,6 +83,8 @@ class CreateCharacterHandler extends MessageHandler {
 				if ((msg.getCredentials() != null) && (msg.getCredentials().equals(Configuration.getConfiguration().get("proxy_credentials")))) {
 					createCharacter(msg.getUsername(), character, template, clientid, address, channel,
 	                    protocolVersion, false);
+				} else {
+					logger.warn("Invalid credentials for proxy method.");
 				}
 			}
 		} catch (Exception e) {
