@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.44 2010/06/22 18:17:01 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.45 2010/07/30 16:53:35 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Log4J;
+import marauroa.common.Utility;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
@@ -328,17 +329,17 @@ public class NIONetworkServerManager extends Thread implements IWorker, IDisconn
 						}
 					}
 				} catch (InvalidVersionException e) {
-					logger.warn("Invalid version message", e);
+					logger.warn("Invalid version message: \n" + Utility.dumpByteArray(event.data), e);
 					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(event.channel, "Invalid client version: Update client");
 					invMsg.setProtocolVersion(e.getProtocolVersion());
 					sendMessage(invMsg);
 				} catch (IOException e) {
-					logger.warn("IOException while building message:" , e);
+					logger.warn("IOException while building message:\n" + Utility.dumpByteArray(event.data), e);
 					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
 				} catch (RuntimeException e) {
-					logger.warn("RuntimeException while building message:" , e);
+					logger.warn("RuntimeException while building message:\n" + Utility.dumpByteArray(event.data), e);
 					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
 				}
 			}
