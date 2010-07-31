@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.21 2010/07/18 13:46:26 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.22 2010/07/31 19:37:49 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -463,6 +463,32 @@ public class CharacterDAO {
 
 
 	/**
+	 * gets the canonical spelling of the character name
+	 *
+	 * @param transaction the database transaction
+	 * @param character name of character
+	 * @return name of character, or <code>null<code> in case the character does not exist
+	 * @throws SQLException if there is any problem at database
+	 */
+	public String getCanonicalName(DBTransaction transaction, String character) throws SQLException {
+		String res = null;
+
+		String query = "SELECT charname FROM characters WHERE charname='[charname]'";
+		logger.debug("getCanonicalName is executing query " + query);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("charname", character);
+		
+		ResultSet result = transaction.query(query, params);
+		if (result.next()) {
+			res = result.getString("charname");
+		}
+		result.close();
+
+		return res;
+	}
+
+
+	/**
 	 * is the character creation limit reached?
 	 *
 	 * @param transaction the database transaction
@@ -720,6 +746,23 @@ public class CharacterDAO {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			String res = getAccountName(transaction, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+	/**
+	 * gets the canonical spelling of the character name
+	 *
+	 * @param character name of character
+	 * @return name of character, or <code>null<code> in case the character does not exist
+	 * @throws SQLException if there is any problem at database
+	 */
+	public String getCanonicalName(String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			String res = getCanonicalName(transaction, character);
 			return res;
 		} finally {
 			TransactionPool.get().commit(transaction);
