@@ -1,4 +1,4 @@
-/* $Id: CharacterDAO.java,v 1.22 2010/07/31 19:37:49 nhnb Exp $ */
+/* $Id: CharacterDAO.java,v 1.23 2010/08/07 20:43:55 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -331,6 +331,8 @@ public class CharacterDAO {
 				int objectid = result.getInt("object_id");
 				player = DAORegister.get().get(RPObjectDAO.class).loadRPObject(transaction, objectid);
 				logger.debug("Character: " + player);
+			} else {
+				logger.warn("No object for character " + character + " on account " + id + " username " + username);
 			}
 
 			result.close();
