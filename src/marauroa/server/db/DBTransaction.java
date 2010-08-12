@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.25 2010/04/24 20:59:19 nhnb Exp $ */
+/* $Id: DBTransaction.java,v 1.26 2010/08/12 18:37:27 madmetzger Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -269,6 +269,18 @@ public class DBTransaction {
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		ensureCorrectThread();
 		return databaseAdapter.doesColumnExist(table, column);
+	}
+	
+	/**
+	 * Gets the length of the specified column
+	 * @param table name of table
+	 * @param column name of column
+	 * @return the length of the column
+	 * @throws SQLException in case of a database error
+	 */
+	public int getColumnLength(String table, String column) throws SQLException {
+		ensureCorrectThread();
+		return databaseAdapter.getColumnLength(table, column);
 	}
 
 }

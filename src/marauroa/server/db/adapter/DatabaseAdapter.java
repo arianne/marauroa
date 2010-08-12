@@ -1,4 +1,4 @@
-/* $Id: DatabaseAdapter.java,v 1.13 2009/10/16 20:32:41 nhnb Exp $ */
+/* $Id: DatabaseAdapter.java,v 1.14 2010/08/12 18:37:27 madmetzger Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2009 - Marauroa                    *
  ***************************************************************************
@@ -135,4 +135,12 @@ public interface DatabaseAdapter {
      * @throws SQLException in case of an database error
 	 */
 	public boolean doesColumnExist(String table, String column) throws SQLException;
+
+	/**
+	 * Gets the length of the specified column
+	 * @param table name of table
+	 * @param column name of column
+	 * @return the length of the column or -1 if no column with the given name in the given table exists
+	 */
+	public int getColumnLength(String table, String column) throws SQLException;
 }

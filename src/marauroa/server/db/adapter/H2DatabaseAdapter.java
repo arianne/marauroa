@@ -1,4 +1,4 @@
-/* $Id: H2DatabaseAdapter.java,v 1.5 2010/07/17 23:38:03 nhnb Exp $ */
+/* $Id: H2DatabaseAdapter.java,v 1.6 2010/08/12 18:37:27 madmetzger Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -105,5 +105,14 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 		return res;
 	}
 
+	@Override
+	public int getColumnLength(String table, String column) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getColumns("", "", table.toUpperCase(Locale.ENGLISH), column.toUpperCase(Locale.ENGLISH));
+		if (result.next()) {
+			return result.getInt("COLUMN_SIZE");
+		}
+		return -1; 
+	}
 	
 }

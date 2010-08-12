@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.12 2010/03/15 18:49:52 nhnb Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.13 2010/08/12 18:37:27 madmetzger Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -254,6 +254,15 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		boolean res = result.next();
 		result.close();
 		return res;
+	}
+	
+	public int getColumnLength(String table, String column) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getColumns("", "", table, column);
+		if (result.next()) {
+			return result.getInt("COLUMN_SIZE");
+		}
+		return -1; 
 	}
 
 	/**
