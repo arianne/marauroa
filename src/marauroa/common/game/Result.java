@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.14 2010/06/13 20:15:28 nhnb Exp $ */
+/* $Id: Result.java,v 1.15 2010/08/15 16:23:43 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -96,7 +96,14 @@ public enum Result {
 	 *
 	 * @since 3.5
 	 */
-	FAILED_TOO_MANY(false, "Account was not created because the account creation limit for your network was reached.\nPlease try again later.");
+	FAILED_TOO_MANY(false, "Account was not created because the account creation limit for your network was reached.\nPlease try again later."),
+
+	/**
+	 * Server is offline, obviously not returned by the server but can be generated client side.
+	 *
+	 * @since 3.8.5
+	 */
+	FAILED_OFFLINE(false, "Creation failed because the server is temporary not available. Please try again later.");
 
 	/**
 	 * Textual description of the result 
