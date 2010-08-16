@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.94 2010/06/25 06:08:46 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.95 2010/08/16 20:22:12 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -23,6 +23,7 @@ import javax.management.ObjectName;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.server.db.DatabaseConnectionException;
 import marauroa.server.db.command.DBCommandQueue;
@@ -330,6 +331,17 @@ public class marauroad extends Thread {
 		logger.debug("staring initialize");
 		MarauroaUncaughtExceptionHandler.setup();
 
+		// Initialize Secure random in an extra thread because it can take up 
+		// to 20 seconds on some computers with low entropy. The hard disk 
+		// access during start up will speed it up.
+		new Thread() {
+			@Override
+			public void run() {
+				Hash.random(4);
+			}
+		}.start();
+
+
 		try {
 			netMan = new marauroa.server.net.nio.NIONetworkServerManager();
 			netMan.start();
@@ -360,7 +372,7 @@ public class marauroad extends Thread {
 					new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
 							Configuration.getConfiguration().get("e")));
 
-			gameMan = new GameServerManager(key, netMan, rpMan);			
+			gameMan = new GameServerManager(key, netMan, rpMan);
 			gameMan.start();
 		} catch (Exception e) {
 			logger.error(
