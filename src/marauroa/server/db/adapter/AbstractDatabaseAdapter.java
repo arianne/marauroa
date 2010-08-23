@@ -1,4 +1,4 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.13 2010/08/12 18:37:27 madmetzger Exp $ */
+/* $Id: AbstractDatabaseAdapter.java,v 1.14 2010/08/23 21:30:34 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -137,8 +137,9 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public int execute(String sql, InputStream... inputStreams) throws SQLException, IOException {
+		String mySql = rewriteSql(sql);
 		int res = -2;
-		PreparedStatement statement = connection.prepareStatement(sql);
+		PreparedStatement statement = connection.prepareStatement(mySql);
 		try {
 			int i = 1; // yes, jdbc starts counting at 1.
 			for (InputStream inputStream : inputStreams) {
@@ -153,7 +154,8 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public void executeBatch(String sql, InputStream... inputStreams) throws SQLException, IOException {
-		PreparedStatement statement = connection.prepareStatement(sql);
+		String mySql = rewriteSql(sql);
+		PreparedStatement statement = connection.prepareStatement(mySql);
 		try {
 			int i = 1; // yes, jdbc starts counting at 1.
 			for (InputStream inputStream : inputStreams) {
@@ -166,9 +168,10 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public ResultSet query(String sql) throws SQLException {
+		String mySql = rewriteSql(sql);
 		Statement stmt = connection.createStatement();
 		try {
-			ResultSet resultSet = stmt.executeQuery(sql);
+			ResultSet resultSet = stmt.executeQuery(mySql);
 			addToGarbageLists(stmt, resultSet);
 			return resultSet;
 		} catch (RuntimeException e) {
@@ -181,10 +184,11 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	public int querySingleCellInt(String sql) throws SQLException {
+		String mySql = rewriteSql(sql);
 		int res = -1;
 		Statement stmt = connection.createStatement();
 		try {
-			ResultSet resultSet = stmt.executeQuery(sql);
+			ResultSet resultSet = stmt.executeQuery(mySql);
 			try {
 				resultSet.next();
 				res = resultSet.getInt(1);

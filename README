@@ -95,6 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.5
+- always call rewriteSql
 - speed up first connection time on servers with low entropy
 
 3.8.1
