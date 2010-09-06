@@ -97,6 +97,7 @@ Changelog
 3.8.5
 - always call rewriteSql
 - speed up first connection time on servers with low entropy
+- increased visiblity of RPSlot.add(RPObject object, boolean assignId) to protected
 
 3.8.1
 - added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game

@@ -1,4 +1,4 @@
-/* $Id: RPSlot.java,v 1.69 2009/12/20 00:42:32 nhnb Exp $ */
+/* $Id: RPSlot.java,v 1.70 2010/09/06 09:23:53 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -152,7 +152,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @param assignId true to assign a new, conflict free ID.
 	 * @return the id of the object
 	 */
-	int add(RPObject object, boolean assignId) {
+	protected int add(RPObject object, boolean assignId) {
 		if (isFull()) {
 			throw new SlotIsFullException(name);
 		}
