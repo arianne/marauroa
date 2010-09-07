@@ -101,6 +101,7 @@ Changelog
 - speed up first connection time on servers with low entropy
 - increased visiblity of RPSlot.add(RPObject object, boolean assignId) to protected
 - add method to check the length of a column during database update
+- added new Result.FAILED_OFFLINE of account/character creation to be used when the server is not reachable
 
 3.8.1
 - added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game
