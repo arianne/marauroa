@@ -1,4 +1,4 @@
-/* $Id: Persistence.java,v 1.9 2008/02/22 10:28:32 arianne_rpg Exp $ */
+/* $Id: Persistence.java,v 1.10 2010/09/08 21:23:37 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.AccessControlException;
 
-import org.apache.log4j.Logger;
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+
 
 /**
  * Allows transparent access to files. Subclasses implement Persistence for
@@ -27,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class Persistence {
 
-	private final static Logger logger = Logger.getLogger(Persistence.class);
+	private final static Logger logger = Log4J.getLogger(Persistence.class);
 
 	private static Persistence instance = null;
 
