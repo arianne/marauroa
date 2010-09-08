@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.22 2007/11/25 19:03:16 arianne_rpg Exp $ */
+/* $Id: PerceptionHandler.java,v 1.23 2010/09/08 21:21:41 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -23,7 +23,6 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 
-import org.apache.log4j.NDC;
 
 /**
  * The PerceptionHandler class is in charge of applying correctly the
@@ -250,14 +249,12 @@ public class PerceptionHandler {
 				}
 			}
 		} catch (RPObjectNotFoundException e) {
-			NDC.push("world is [" + world.toString() + "]");
 			logger.error("error in applyModifiedRPObjects", e);
-			NDC.pop();
+			logger.error("world is [" + world.toString() + "]");
 			throw e;
 		} catch (Exception e) {
-			NDC.push("world is [" + world.toString() + "]");
 			logger.error("error in applyModifiedRPObjects", e);
-			NDC.pop();
+			logger.error("world is [" + world.toString() + "]");
 			throw new RPObjectNotFoundException(RPObject.INVALID_ID);
 		}
 	}
