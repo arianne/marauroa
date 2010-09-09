@@ -94,7 +94,8 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
-3.8.5
+3.8.3
+- increased visiblity of RPSlot.getOwner() to protected
 
 3.8.2
 - always call rewriteSql
