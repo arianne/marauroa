@@ -95,12 +95,12 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.3
-- increased visiblity of RPSlot.getOwner() to protected
+- increased visibility of RPSlot.getOwner() to protected
 
 3.8.2
 - always call rewriteSql
 - speed up first connection time on servers with low entropy
-- increased visiblity of RPSlot.add(RPObject object, boolean assignId) to protected
+- increased visibility of RPSlot.add(RPObject object, boolean assignId) to protected
 - add method to check the length of a column during database update
 - added new Result.FAILED_OFFLINE of account/character creation to be used when the server is not reachable
 
