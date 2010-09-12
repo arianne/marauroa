@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.28 2010/06/18 16:27:50 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.29 2010/09/12 09:32:17 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -376,7 +376,7 @@ public class AccountDAO {
 			}
 			// the provided seed is valid, use it up
 			loginSeedDAO.useSeed(informations.seed);
-			if (seedVerified == Boolean.TRUE) {
+			if (seedVerified.booleanValue()) {
 				// the seed was even pre authenticated, so we are done here
 				return true;
 			}
