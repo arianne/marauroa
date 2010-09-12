@@ -1,4 +1,4 @@
-/* $Id: DelayedEventHandlerThread.java,v 1.4 2010/06/08 06:35:44 nhnb Exp $ */
+/* $Id: DelayedEventHandlerThread.java,v 1.5 2010/09/12 08:35:33 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -58,9 +58,17 @@ public class DelayedEventHandlerThread extends Thread {
 		super("DelayedEventHandlerThread");
 		queue = new LinkedBlockingQueue<Pair<DelayedEventHandler, Object>>();
 		this.rpMan = rpMan;
-		DelayedEventHandlerThread.instance = this;
+		set(this);
 	}
-	
+
+	/**
+	 * sets the instance references
+	 *
+	 * @param thread DelayedEventHandlerThread
+	 */
+	private static void set(DelayedEventHandlerThread thread) {
+		DelayedEventHandlerThread.instance = thread;
+	}
 
 	/**
 	 * adds a delayed event for processing.
