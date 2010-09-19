@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.29 2010/09/12 09:32:17 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.30 2010/09/19 18:30:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -428,8 +428,10 @@ public class AccountDAO {
 			ResultSet resultSet = transaction.query(query, params);
 			if (resultSet.next()) {
 				String userNameFromDB = resultSet.getString("username");
-				if (!userNameFromDB.equals(username)) {
+				if (!userNameFromDB.equalsIgnoreCase(username)) {
 					logger.warn("Username \"" + username + "\" is not the same that stored username \"" + userNameFromDB + "\"");
+					resultSet.close();
+					return false;
 				}
 				resultSet.close();
 				return true;

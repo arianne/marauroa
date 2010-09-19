@@ -1,4 +1,4 @@
-/* $Id: LoginSeedDAO.java,v 1.2 2010/05/03 22:08:35 nhnb Exp $ */
+/* $Id: LoginSeedDAO.java,v 1.3 2010/09/19 18:30:28 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -50,7 +50,7 @@ public class LoginSeedDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public Boolean verifySeed(DBTransaction transaction, String username, String seed) throws SQLException {
-		String query = "SELECT complete FROM account, loginseed " +
+		String query = "SELECT complete, username FROM account, loginseed " +
 				"WHERE account.id=loginseed.player_id AND loginseed.seed='[seed]' AND account.username='[username]' " +
 				"AND loginseed.used = 0";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -62,7 +62,10 @@ public class LoginSeedDAO {
 		if (!resultSet.next()) {
 			return null;
 		}
-		if (resultSet.getInt("complete") == 1) {
+		if (!resultSet.getString("username").equalsIgnoreCase(username)) {
+			return null;
+		}
+		if ((resultSet.getInt("complete") == 1)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;

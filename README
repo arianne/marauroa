@@ -95,6 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.3
+- security fix preventing multiple logins of the same character on MySQL
 - increased visibility of RPSlot.getOwner() to protected
 
 3.8.2
