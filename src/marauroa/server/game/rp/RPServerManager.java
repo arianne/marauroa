@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.67 2010/06/22 18:17:01 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.68 2010/10/01 22:50:01 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -258,6 +258,13 @@ public class RPServerManager extends Thread {
 	 * @return a Result indicating if account creation was done successfully or not.
 	 */
 	public AccountResult createAccount(String username, String password, String email, String address) {
+		try {
+			if (!Boolean.parseBoolean(Configuration.getConfiguration().get("allow_account_creation", "true"))) {
+				return new AccountResult(Result.FAILED_CREATE_ON_MAIN_INSTEAD, username);
+			}
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
 
 		// check account creation limits
 		try {

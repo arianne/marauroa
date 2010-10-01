@@ -1,4 +1,4 @@
-/* $Id: Result.java,v 1.15 2010/08/15 16:23:43 nhnb Exp $ */
+/* $Id: Result.java,v 1.16 2010/10/01 22:50:00 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -101,9 +101,16 @@ public enum Result {
 	/**
 	 * Server is offline, obviously not returned by the server but can be generated client side.
 	 *
-	 * @since 3.8.5
+	 * @since 3.8.2
 	 */
-	FAILED_OFFLINE(false, "Creation failed because the server is temporary not available. Please try again later.");
+	FAILED_OFFLINE(false, "Creation failed because the server is temporary not available. Please try again later."),
+
+	/**
+	 * This server does not accept account creation
+	 *
+	 * @since 3.8.4
+	 */
+	FAILED_CREATE_ON_MAIN_INSTEAD(false, "Accounts cannot be created on this server. Please create the account on the main server and wait a while.");
 
 	/**
 	 * Textual description of the result 
