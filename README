@@ -94,6 +94,10 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.8.4
+- added configurations parameters allow_account_creation and allow_character_creation
+- added new REsult.FAILED_CREATE_ON_MAIN_INSTEAD of account/character if it was disabled
+
 3.8.3
 - security fix preventing multiple logins of the same character on MySQL
 - increased visibility of RPSlot.getOwner() to protected

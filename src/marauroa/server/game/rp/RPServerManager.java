@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.68 2010/10/01 22:50:01 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.69 2010/10/01 22:56:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -297,6 +297,13 @@ public class RPServerManager extends Thread {
 	 *         if it is not the cause.
 	 */
 	public CharacterResult createCharacter(String username, String character, RPObject template, String address) {
+		try {
+			if (!Boolean.parseBoolean(Configuration.getConfiguration().get("allow_account_creation", "true"))) {
+				return new CharacterResult(Result.FAILED_CREATE_ON_MAIN_INSTEAD, character, template);
+			}
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
 
 		// check account creation limits
 		try {
