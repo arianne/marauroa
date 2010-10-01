@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateCharacterNACK.java,v 1.7 2010/07/25 16:19:12 nhnb Exp $ */
+/* $Id: MessageS2CCreateCharacterNACK.java,v 1.8 2010/10/01 22:54:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.common.game.Result;
 
 /**
@@ -24,6 +26,8 @@ import marauroa.common.game.Result;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateCharacterNACK extends Message {
+	private static Logger logger = Log4J.getLogger(MessageS2CCreateAccountNACK.class);
+
 	/** The reason to reject character creation */
 	private Result reason;
 
@@ -85,7 +89,12 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		reason = Result.values()[in.readByte()];
+		try {
+			reason = Result.values()[in.readByte()];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.error(e, e);
+			reason = Result.FAILED_EXCEPTION;
+		}
 
 		if (type != MessageType.S2C_CREATECHARACTER_NACK) {
 			throw new IOException();

@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.6 2007/05/26 12:16:29 arianne_rpg Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.7 2010/10/01 22:54:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,7 +16,10 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.common.game.Result;
+
 
 /**
  * This message indicate the client that the server has reject its create account Message
@@ -24,6 +27,8 @@ import marauroa.common.game.Result;
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CCreateAccountNACK extends Message {
+	private static Logger logger = Log4J.getLogger(MessageS2CCreateAccountNACK.class);
+
 	private Result reason;
 
 	/** Constructor for allowing creation of an empty message */
@@ -84,7 +89,12 @@ public class MessageS2CCreateAccountNACK extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		reason = Result.values()[in.readByte()];
+		try {
+			reason = Result.values()[in.readByte()];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.error(e, e);
+			reason = Result.FAILED_EXCEPTION;
+		}
 
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
 			throw new IOException();
