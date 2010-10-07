@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.59 2010/07/04 17:29:02 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.60 2010/10/07 19:50:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -46,6 +46,7 @@ import marauroa.server.game.dbcommand.StoreCharacterCommand;
  * @author miguel
  */
 public class PlayerEntry {
+	private static Logger logger = Log4J.getLogger(PlayerEntry.class);
 
 	/**
 	 * This class stores the information needed to allow a secure login. Once
@@ -376,6 +377,7 @@ public class PlayerEntry {
 	 */
 	public TransferContent getContent(String name) {
 		if (contentToTransfer == null) {
+			logger.warn("contentToTransfer is null.");
 			return null;
 		}
 
@@ -385,6 +387,7 @@ public class PlayerEntry {
 			}
 		}
 
+		logger.warn("content " + name + " not found.");
 		return null;
 	}
 

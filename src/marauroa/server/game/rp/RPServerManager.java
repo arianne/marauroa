@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.69 2010/10/01 22:56:51 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.70 2010/10/07 19:50:52 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -461,6 +461,12 @@ public class RPServerManager extends Thread {
 				}
 				
 
+				if (entry.contentToTransfer != null) {
+					logger.warn("Replacing content to transfer");
+				}
+				if (content == null) {
+					logger.warn("content is null");
+				}
 				entry.contentToTransfer = content;
 
 				MessageS2CTransferREQ mes = new MessageS2CTransferREQ(entry.channel, content);

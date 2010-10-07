@@ -1,4 +1,4 @@
-/* $Id: TransferACKHandler.java,v 1.3 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: TransferACKHandler.java,v 1.4 2010/10/07 19:50:53 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -76,7 +76,7 @@ class TransferACKHandler extends MessageHandler {
 						msgTransfer.setProtocolVersion(msg.getProtocolVersion());
 						netMan.sendMessage(msgTransfer);
 					} else {
-						logger.info("CAN'T transfer content (" + content.name
+						logger.warn("Cannot transfer content (" + content.name
 						        + ") because it is null");
 					}
 				} else {
