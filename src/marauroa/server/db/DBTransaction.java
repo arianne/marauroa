@@ -1,4 +1,4 @@
-/* $Id: DBTransaction.java,v 1.26 2010/08/12 18:37:27 madmetzger Exp $ */
+/* $Id: DBTransaction.java,v 1.27 2010/10/08 18:11:33 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -61,9 +61,11 @@ public class DBTransaction {
 	 * prints an error if a DBTransaction is accessed outside the thread 
 	 * it was bound to.
 	 */
-	private void ensureCorrectThread() {
+	private void ensureCorrectThread(boolean acceptUnused) {
 		if (thread == null) {
-			logger.error("Accessing DBTransaction " + this + " that is supposed to be available", new Throwable());
+			if (!acceptUnused) {
+				logger.error("Accessing DBTransaction " + this + " that is supposed to be available", new Throwable());
+			}
 		} else if (thread != Thread.currentThread()) {
 			logger.error("Transaction " + this + " is bound to thread " + thread.getName() + " is used in thread " + Thread.currentThread(), new Throwable());
 			for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
@@ -78,7 +80,7 @@ public class DBTransaction {
 	 * @throws SQLException in case of an database error
 	 */
 	protected void commit() throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		databaseAdapter.commit();
 	}
 
@@ -88,7 +90,7 @@ public class DBTransaction {
 	 * @throws SQLException in case of an database error
 	 */
 	protected void rollback() throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		databaseAdapter.rollback();
 	}
 
@@ -96,7 +98,7 @@ public class DBTransaction {
 	 * closes the database connection
 	 */
 	protected void close() {
-		ensureCorrectThread();
+		ensureCorrectThread(true);
 		try {
 			databaseAdapter.close();
 		} catch (SQLException e) {
@@ -166,7 +168,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error 
      */
 	public int execute(String query, Map<String, Object> params) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.execute(sql);
 	}	
@@ -182,7 +184,7 @@ public class DBTransaction {
      * @throws IOException in case of an input/output error
      */
 	public int execute(String query, Map<String, Object> params, InputStream... inStream) throws SQLException, IOException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.execute(sql, inStream);
 	}
@@ -196,7 +198,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error 
      */
 	public ResultSet query(String query, Map<String, Object> params) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.query(sql);
 	}
@@ -210,7 +212,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error 
      */
 	public int querySingleCellInt(String query, Map<String, Object> params) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.querySingleCellInt(sql);
 	}
@@ -227,7 +229,7 @@ public class DBTransaction {
 	 * @throws SQLException in case of an database error
 	 */
 	public int getLastInsertId(String table, String idcolumn) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		return databaseAdapter.getLastInsertId(table, idcolumn);
 	}
 
@@ -240,7 +242,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error 
 	 */
 	public PreparedStatement prepareStatement(String query, Map<String, Object> params) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.prepareStatement(sql);
 	}
@@ -254,7 +256,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error
 	 */
 	public boolean doesTableExist(String table) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		return databaseAdapter.doesTableExist(table);
 	}
 
@@ -267,7 +269,7 @@ public class DBTransaction {
      * @throws SQLException in case of an database error
 	 */
 	public boolean doesColumnExist(String table, String column) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		return databaseAdapter.doesColumnExist(table, column);
 	}
 	
@@ -279,7 +281,7 @@ public class DBTransaction {
 	 * @throws SQLException in case of a database error
 	 */
 	public int getColumnLength(String table, String column) throws SQLException {
-		ensureCorrectThread();
+		ensureCorrectThread(false);
 		return databaseAdapter.getColumnLength(table, column);
 	}
 
