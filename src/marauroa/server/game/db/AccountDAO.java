@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.30 2010/09/19 18:30:28 nhnb Exp $ */
+/* $Id: AccountDAO.java,v 1.31 2010/10/09 17:20:05 astridemma Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -553,7 +553,7 @@ public class AccountDAO {
 	 * creates an account
 	 *
 	 * @param username username
-	 * @param password password
+	 * @param password the hashed password's bytearray
 	 * @param email email-address
 	 * @throws SQLException in case of an database error
 	 */
