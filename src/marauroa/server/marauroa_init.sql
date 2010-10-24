@@ -1,8 +1,8 @@
 create table if not exists account
   (
   id integer auto_increment not null,
-  username varchar(32) not null,
-  password varchar(255) not null,
+  username varchar(255) not null,
+  password varchar(255) ,
   
   email varchar(64) not null,
   timedate timestamp default CURRENT_TIMESTAMP,
