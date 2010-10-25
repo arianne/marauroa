@@ -52,7 +52,7 @@ public class UpdateScript {
 			transaction.execute("ALTER TABLE rpzone ADD COLUMN (protocol_version INTEGER);", null);
 		}
 
-		// 3.8.5
+		// 3.8.3
 		if (!transaction.doesColumnExist("characters", "id")) {
 			transaction.execute("ALTER TABLE characters DROP PRIMARY KEY;", null);
 			transaction.execute("ALTER TABLE characters ADD COLUMN(id integer auto_increment not null, PRIMARY KEY(id));", null);
@@ -62,7 +62,12 @@ public class UpdateScript {
 			transaction.execute("ALTER TABLE characters ADD COLUMN(status char(8) not null default 'active');", null);
 			transaction.execute("UPDATE characters SET status='active' WHERE status IS NULL;", null);
 		}
-		
+
+		// 3.8.4
+		if (!transaction.doesColumnExist("accountLink", "secret")) {
+			transaction.execute("ALTER TABLE accountLink ADD COLUMN(secret varchar(255));", null);
+		}
+
 		logger.info("Completed database update.");
 	}
 }
