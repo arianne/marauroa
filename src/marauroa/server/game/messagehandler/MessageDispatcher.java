@@ -1,4 +1,4 @@
-/* $Id: MessageDispatcher.java,v 1.4 2010/07/24 18:50:25 nhnb Exp $ */
+/* $Id: MessageDispatcher.java,v 1.5 2010/10/28 22:41:42 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -34,7 +34,6 @@ import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.Message.MessageType;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.rp.RPServerManager;
@@ -47,7 +46,7 @@ import marauroa.server.net.INetworkServerManager;
  */
 public class MessageDispatcher {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(MessageDispatcher.class);
 
 	private Map<MessageType, MessageHandler> handlers = new HashMap<MessageType, MessageHandler>();
 

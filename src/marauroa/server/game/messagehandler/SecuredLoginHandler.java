@@ -1,4 +1,4 @@
-/* $Id: SecuredLoginHandler.java,v 1.9 2010/07/17 23:43:27 nhnb Exp $ */
+/* $Id: SecuredLoginHandler.java,v 1.10 2010/10/28 22:41:42 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -291,9 +291,9 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 
 			completeLogin(command.getChannel(), command.getClientid(), command.getProtocolVersion(), info, previousLogins);
 		} catch (IOException e) {
-			logger.error("error while processing SecuredLoginEvent", e);
+			logger.error("error while processing SecuredLoginEvent: " + data, e);
 		} catch (RuntimeException e) {
-			logger.error("error while processing SecuredLoginEvent", e);
+			logger.error("error while processing SecuredLoginEvent: " + data, e);
 		}
 	}
 }
