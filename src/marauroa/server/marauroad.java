@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.96 2010/11/03 20:57:20 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.97 2010/11/03 20:58:24 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -23,6 +23,7 @@ import javax.management.ObjectName;
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.MarauroaUncaughtExceptionHandler;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.server.db.DatabaseConnectionException;

@@ -1,4 +1,4 @@
-/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.5 2010/11/03 20:57:20 nhnb Exp $ */
+/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.1 2010/11/03 20:58:25 nhnb Exp $ */
 /***************************************************************************
  *					(C) Copyright 2003-2010 - Marauroa					   *
  ***************************************************************************
@@ -10,10 +10,8 @@
  *	 (at your option) any later version.								   *
  *																		   *
  ***************************************************************************/
-package marauroa.server;
+package marauroa.common;
 
-import marauroa.common.Log4J;
-import marauroa.common.Logger;
 
 /**
  * logs uncaught exceptions to the logging system before
