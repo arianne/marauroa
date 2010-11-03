@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.95 2010/08/16 20:22:12 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.96 2010/11/03 20:57:20 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -329,7 +329,7 @@ public class marauroad extends Thread {
 	 */
 	public boolean init() {
 		logger.debug("staring initialize");
-		MarauroaUncaughtExceptionHandler.setup();
+		MarauroaUncaughtExceptionHandler.setup(true);
 
 		// Initialize Secure random in an extra thread because it can take up 
 		// to 20 seconds on some computers with low entropy. The hard disk 

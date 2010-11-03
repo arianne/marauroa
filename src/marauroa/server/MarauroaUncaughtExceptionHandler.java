@@ -1,6 +1,6 @@
-/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.4 2009/09/01 18:42:04 nhnb Exp $ */
+/* $Id: MarauroaUncaughtExceptionHandler.java,v 1.5 2010/11/03 20:57:20 nhnb Exp $ */
 /***************************************************************************
- *						(C) Copyright 2003 - Marauroa					   *
+ *					(C) Copyright 2003-2010 - Marauroa					   *
  ***************************************************************************
  ***************************************************************************
  *																		   *
@@ -24,7 +24,18 @@ import marauroa.common.Logger;
  */
 public class MarauroaUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 	private static Logger logger = Log4J.getLogger(MarauroaUncaughtExceptionHandler.class);
+
 	private Thread.UncaughtExceptionHandler next;
+	private boolean killOnError = false;
+
+	/**
+	 * creates a new MarauroaUncaughtExceptionHandler
+	 *
+	 * @param killOnError should the VM be killed?
+	 */
+	public MarauroaUncaughtExceptionHandler(boolean killOnError) {
+		this.killOnError = killOnError;
+	}
 
 	public void uncaughtException(Thread thread, Throwable exception) {
 		logger.error("Exception in thread " + thread.getName(), exception);
@@ -35,15 +46,20 @@ public class MarauroaUncaughtExceptionHandler implements Thread.UncaughtExceptio
 		}
 
 		// kill the server
-		// we did no have a single case where an exception causing a thead to die did not have serious impact
-		System.exit(1);
+		// we did no have a single case where an exception causing a thead to die
+		//  did not have serious impact on the server
+		if (killOnError) {
+			System.exit(1);
+		}
 	}
 
 	/**
 	 * installs this uncaught exception handler
+	 *
+	 * @param killOnError should the VM be killed?
 	 */
-	public static void setup() {
-		MarauroaUncaughtExceptionHandler handler = new MarauroaUncaughtExceptionHandler();
+	public static void setup(boolean killOnError) {
+		MarauroaUncaughtExceptionHandler handler = new MarauroaUncaughtExceptionHandler(killOnError);
 		handler.next = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(handler);
 	}
