@@ -1,4 +1,4 @@
-/* $Id: Utility.java,v 1.13 2009/12/27 19:30:09 nhnb Exp $ */
+/* $Id: Utility.java,v 1.14 2010/11/05 21:40:50 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -63,6 +63,9 @@ public class Utility {
 	 * @return a hex-dump of the array.
 	 */
 	public static String dumpByteArray(byte[] byteArray) {
+		if (byteArray == null) {
+			return "null";
+		}
 		return dumpInputStream(new ByteArrayInputStream(byteArray));
 	}
 
