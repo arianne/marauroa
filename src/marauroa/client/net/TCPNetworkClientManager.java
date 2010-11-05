@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.30 2010/11/03 21:43:46 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.31 2010/11/05 21:30:09 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -25,6 +25,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Log4J;
+import marauroa.common.Utility;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
@@ -319,56 +320,66 @@ public class TCPNetworkClientManager implements INetworkClientManagerInterface {
 		 */
 		private byte[] readByteStream() throws IOException {
 			byte[] sizebuffer = new byte[4];
+			byte[] buffer = null;
+			int size = -1;
+			int start = -1;
+			try {
+				while (is.available() < 4) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						logger.error(e, e);
+					}
+				}
 
-			while (is.available() < 4) {
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					logger.error(e, e);
-				}				
-			}
-			
-			if (is.read(sizebuffer) < 0) {
-				isfinished = true;
-				return null;
-			}
-
-			int size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8)
-			        + ((sizebuffer[2] & 0xFF) << 16) + ((sizebuffer[3] & 0xFF) << 24);
-
-			byte[] buffer = new byte[size];
-			System.arraycopy(sizebuffer, 0, buffer, 0, 4);
-
-			// read until everything is received. We have to call read
-			// in a loop because the data may be split across several
-			// packets.
-			long startTime = System.currentTimeMillis();
-			int start = 4;
-			int read = 0;
-			long waittime = 10;
-			int counter = 0;
-			do {
-				start = start + read;
-				read = is.read(buffer, start, size - start);
-				if (read < 0) {
+				if (is.read(sizebuffer) < 0) {
 					isfinished = true;
 					return null;
 				}
 
-				if (System.currentTimeMillis() - 2000 > startTime) {
-					waittime = 1000;
-				}
-				try {
-					Thread.sleep(waittime);
-				} catch (InterruptedException e) {
-					logger.error(e, e);
-				}
-				counter++;
-			} while (start + read < size);
+				size = (sizebuffer[0] & 0xFF) + ((sizebuffer[1] & 0xFF) << 8)
+				        + ((sizebuffer[2] & 0xFF) << 16) + ((sizebuffer[3] & 0xFF) << 24);
 
-			logger.debug("Received Marauroa Packet");
+				buffer = new byte[size];
+				System.arraycopy(sizebuffer, 0, buffer, 0, 4);
 
-			return buffer;
+				// read until everything is received. We have to call read
+				// in a loop because the data may be split across several
+				// packets.
+				long startTime = System.currentTimeMillis();
+				start = 4;
+				int read = 0;
+				long waittime = 10;
+				int counter = 0;
+				do {
+					start = start + read;
+					read = is.read(buffer, start, size - start);
+					if (read < 0) {
+						isfinished = true;
+						return null;
+					}
+
+					if (System.currentTimeMillis() - 2000 > startTime) {
+						logger.warn("Waiting for more data");
+						waittime = 1000;
+					}
+					try {
+						Thread.sleep(waittime);
+					} catch (InterruptedException e) {
+						logger.error(e, e);
+					}
+					counter++;
+				} while (start + read < size);
+
+				logger.debug("Received Marauroa Packet");
+
+				return buffer;
+			} catch (IOException e) {
+				logger.warn("size buffer: " + Utility.dumpByteArray(sizebuffer));
+				logger.warn("size: " + size + " start: " + start);
+				logger.warn("buffer: " +  Utility.dumpByteArray(buffer));
+				throw e;
+			}
 		}
 
 		/** Method that execute the reading. It runs as a active thread forever. */
