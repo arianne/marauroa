@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.60 2010/10/07 19:50:51 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.61 2010/11/10 22:47:13 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -284,6 +284,9 @@ public class PlayerEntry {
 	/** version of protocol this client speaks */
 	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
+	/** grant a longer timeout during login */
+	private boolean gotKeepAliveInGameState = false;
+
 	/**
 	 * Constructor
 	 *
@@ -329,7 +332,11 @@ public class PlayerEntry {
 	 */
 	public boolean isTimeout() {
 		if (state==ClientState.GAME_BEGIN) {
-			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_IN_GAME_MILLISECONDS;
+			if (gotKeepAliveInGameState) {
+				return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_IN_GAME_MILLISECONDS;
+			} else {
+				return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_IN_GAME_MILLISECONDS * 4;
+			}
 		} else {
 			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_PRE_GAME_MILLISECONDS;
 		}
@@ -341,6 +348,9 @@ public class PlayerEntry {
 	 */
 	public void update() {
 		activityTimestamp=System.currentTimeMillis();
+		if (state==ClientState.GAME_BEGIN) {
+			gotKeepAliveInGameState  = true;
+		}
 	}
 
 	/**
