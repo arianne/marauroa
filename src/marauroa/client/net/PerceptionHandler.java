@@ -1,4 +1,4 @@
-/* $Id: PerceptionHandler.java,v 1.23 2010/09/08 21:21:41 nhnb Exp $ */
+/* $Id: PerceptionHandler.java,v 1.24 2010/11/10 21:50:39 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -20,6 +20,7 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
+import marauroa.common.game.RPObject.ID;
 import marauroa.common.game.RPObjectNotFoundException;
 import marauroa.common.net.message.MessageS2CPerception;
 
@@ -274,6 +275,8 @@ public class PerceptionHandler {
 			RPObject added = message.getMyRPObjectAdded();
 			RPObject deleted = message.getMyRPObjectDeleted();
 
+			addMyRPObjectToWorldIfPrivate(added, world);
+
 			if (!listener.onMyRPObject(added, deleted)) {
 				RPObject.ID id = null;
 
@@ -296,6 +299,25 @@ public class PerceptionHandler {
 		} catch (Exception e) {
 			logger.error("error in applyPerceptionMyRPObject", e);
 			throw new RPObjectNotFoundException(RPObject.INVALID_ID);
+		}
+	}
+
+	/**
+	 * adds our RPObject to the world in case it was not already added by the public perception.
+	 *
+	 * @param added added changes of my object
+	 * @param world the container of objects
+	 */
+	private void addMyRPObjectToWorldIfPrivate(RPObject added, Map<ID, RPObject> world) {
+		if (added == null) {
+			return;
+		}
+		if (world.get(added.getID()) != null) {
+			return;
+		}
+		RPObject object = (RPObject) added.clone();
+		if (!listener.onAdded(object)) {
+			world.put(object.getID(), object);
 		}
 	}
 }

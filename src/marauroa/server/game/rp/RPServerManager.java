@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.70 2010/10/07 19:50:52 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.71 2010/11/10 21:50:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -359,7 +359,9 @@ public class RPServerManager extends Thread {
 		RPObject copy = (RPObject) object.clone();
 
 		if (perception.type == Perception.SYNC) {
-			copy.clearVisible(true);
+			if (!object.isHidden()) {
+				copy.clearVisible(true);
+			}
 			messages2cPerception.setMyRPObject(copy, null);
 		} else {
 			RPObject added = new RPObject();
@@ -367,8 +369,10 @@ public class RPServerManager extends Thread {
 
 			try {
 				copy.getDifferences(added, deleted);
-				added.clearVisible(false);
-				deleted.clearVisible(false);
+				if (!object.isHidden()) {
+					added.clearVisible(false);
+					deleted.clearVisible(false);
+				}
 
 				if (added.size() == 0) {
 					added = null;
@@ -384,7 +388,6 @@ public class RPServerManager extends Thread {
 				added = null;
 				deleted = null;
 			}
-
 			messages2cPerception.setMyRPObject(added, deleted);
 		}
 

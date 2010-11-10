@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.33 2010/06/12 15:08:42 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.34 2010/11/10 21:50:40 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -195,11 +195,6 @@ public class MarauroaRPZone implements IRPZone {
 	 */
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
-			if (object.isHidden()) {
-				// If object is hidden we don't notify any modification
-				return;
-			}
-
 			modified.add(object);
 		} catch (Exception e) {
 			throw new RPObjectInvalidException(e.getMessage());
@@ -217,8 +212,6 @@ public class MarauroaRPZone implements IRPZone {
 		RPObject object = objects.remove(id);
 
 		if (object != null) {
-			// If objects has been removed, remove from modified
-			modified.remove(object);
 			/* We create an empty copy of the object */
 			RPObject deleted = new RPObject();
 			deleted.setID(object.getID());
@@ -240,8 +233,6 @@ public class MarauroaRPZone implements IRPZone {
 	public void hide(RPObject object) {
 		object.hide();
 
-		// If objects has been removed, remove from modified
-		modified.remove(object);
 		/* We create an empty copy of the object */
 		RPObject deleted = new RPObject();
 		deleted.setID(object.getID());
@@ -329,6 +320,9 @@ public class MarauroaRPZone implements IRPZone {
 				prebuildDeltaPerception = perception;
 
 				for (RPObject modified_obj : modified) {
+					if (modified_obj.isHidden()) {
+						continue;
+					}
 					try {
 						if(!has(modified_obj.getID())) {
 							logger.warn("Modifying a non existing object: "+modified_obj);
