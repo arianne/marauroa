@@ -95,6 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.4
+- fixed "Replacing content to transfer"
 - added configurations parameters allow_account_creation and allow_character_creation
 - added new Result.FAILED_CREATE_ON_MAIN_INSTEAD of account/character if it was disabled
 - fixed bogus error message about accessing available transactions on closing the TransactionPool
