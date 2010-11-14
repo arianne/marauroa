@@ -1,4 +1,4 @@
-/* $Id: TransferContent.java,v 1.7 2009/12/27 19:57:51 nhnb Exp $ */
+/* $Id: TransferContent.java,v 1.8 2010/11/14 15:49:16 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -13,7 +13,6 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import marauroa.common.Utility;
 
@@ -70,10 +69,8 @@ public class TransferContent {
 
 		sstr.append("TransferContent: [name=\"");
 		sstr.append(name);
-		sstr.append("\" timestamp=");
+		sstr.append("\" timestamp=\"");
 		sstr.append(timestamp);
-		sstr.append(" data=\"");
-		sstr.append(Arrays.toString(data));
 		sstr.append("\"]");
 
 		return sstr.toString();

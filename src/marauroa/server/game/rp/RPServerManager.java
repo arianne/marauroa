@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.71 2010/11/10 21:50:40 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.72 2010/11/14 15:49:14 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -464,13 +464,15 @@ public class RPServerManager extends Thread {
 				}
 				
 
-				if (entry.contentToTransfer != null) {
-					logger.warn("Replacing content to transfer");
-				}
 				if (content == null) {
 					logger.warn("content is null");
 				}
-				entry.contentToTransfer = content;
+				if (entry.contentToTransfer != null) {
+					logger.warn("Adding to existing contenToTransfer. old: " + entry.contentToTransfer + " added " + content);
+					entry.contentToTransfer.addAll(content);
+				} else {
+					entry.contentToTransfer = content;
+				}
 
 				MessageS2CTransferREQ mes = new MessageS2CTransferREQ(entry.channel, content);
 				mes.setClientID(entry.clientid);

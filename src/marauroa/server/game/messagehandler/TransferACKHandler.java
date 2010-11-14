@@ -1,4 +1,4 @@
-/* $Id: TransferACKHandler.java,v 1.4 2010/10/07 19:50:53 nhnb Exp $ */
+/* $Id: TransferACKHandler.java,v 1.5 2010/11/14 15:49:15 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -17,7 +17,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2STransferACK;
 import marauroa.common.net.message.MessageS2CTransfer;
 import marauroa.common.net.message.TransferContent;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 
@@ -27,7 +26,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class TransferACKHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(TransferACKHandler.class);
 
 
 	
