@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.61 2010/11/10 22:47:13 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.62 2010/11/18 23:11:57 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Configuration;
@@ -27,8 +29,8 @@ import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
-import marauroa.common.net.message.TransferContent;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
+import marauroa.common.net.message.TransferContent;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.db.command.DBCommand;
@@ -308,7 +310,7 @@ public class PlayerEntry {
 		 * player as soon as possible.
 		 */
 		requestedSync = true;
-		contentToTransfer = null;
+		contentToTransfer = Collections.synchronizedList(new LinkedList<TransferContent>());
 		
 		creationTime = System.currentTimeMillis();
 		activityTimestamp=creationTime;
@@ -372,10 +374,14 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * Clears the contents to be transfered
+	 * Clears the specified content to be transfered
+	 *
+	 * @param content TransferContent to remove from the queue
 	 */
-	public void clearContent() {
-		contentToTransfer = null;
+	public void removeContent(TransferContent content) {
+		if (!contentToTransfer.remove(content)) {
+			logger.warn("Trying to clean unknown content: " + content);
+		}
 	}
 
 	/**
@@ -391,9 +397,11 @@ public class PlayerEntry {
 			return null;
 		}
 
-		for (TransferContent item : contentToTransfer) {
-			if (item.name.equals(name)) {
-				return item;
+		synchronized(contentToTransfer) {
+			for (TransferContent item : contentToTransfer) {
+				if (item.name.equals(name)) {
+					return item;
+				}
 			}
 		}
 

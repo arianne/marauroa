@@ -1,4 +1,4 @@
-/* $Id: TransferACKHandler.java,v 1.5 2010/11/14 15:49:15 nhnb Exp $ */
+/* $Id: TransferACKHandler.java,v 1.6 2010/11/18 23:11:58 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -55,6 +55,7 @@ class TransferACKHandler extends MessageHandler {
 			 * them to client for those of them which client told us ACK.
 			 */
 			for (TransferContent content : msg.getContents()) {
+				TransferContent contentToTransfer = entry.getContent(content.name);
 				if (content.ack == true) {
 					logger.debug("Trying transfer content " + content);
 
@@ -62,7 +63,6 @@ class TransferACKHandler extends MessageHandler {
 					 * We get the content from those of that this client are
 					 * waiting for being sent to it.
 					 */
-					TransferContent contentToTransfer = entry.getContent(content.name);
 					if (contentToTransfer != null) {
 						stats.add("Transfer content", 1);
 						stats.add("Tranfer content size", contentToTransfer.data.length);
@@ -81,12 +81,11 @@ class TransferACKHandler extends MessageHandler {
 				} else {
 					stats.add("Transfer content cache", 1);
 				}
-			}
 
-			/*
-			 * We clear the content pending to be sent
-			 */
-			entry.clearContent();
+				if (contentToTransfer != null) {
+					entry.removeContent(contentToTransfer);
+				}
+			}
 		} catch (Exception e) {
 			logger.error("error while processing TransferACK", e);
 		}
