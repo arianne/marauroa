@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author hendrik, madmetzger
  */
-public class DBCommandQueue {
+public final class DBCommandQueue {
 	private static DBCommandQueue instance;
 
 	private BlockingQueue<DBCommandMetaData> pendingCommands = new LinkedBlockingQueue<DBCommandMetaData>();

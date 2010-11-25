@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.31 2010/11/05 21:30:09 nhnb Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.32 2010/11/25 08:25:04 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -36,7 +36,7 @@ import marauroa.common.net.message.Message;
  * 
  * @author hendrik
  */
-public class TCPNetworkClientManager implements INetworkClientManagerInterface {
+public final class TCPNetworkClientManager implements INetworkClientManagerInterface {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J

@@ -1,4 +1,4 @@
-/* $Id: NIONetworkServerManager.java,v 1.45 2010/07/30 16:53:35 nhnb Exp $ */
+/* $Id: NIONetworkServerManager.java,v 1.46 2010/11/25 08:25:03 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -42,7 +42,7 @@ import marauroa.server.net.validator.ConnectionValidator;
  * @author miguel
  * 
  */
-public class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener,
+public final class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener,
         INetworkServerManager {
 
 	/** the logger instance. */
