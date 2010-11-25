@@ -1,4 +1,4 @@
-/* $Id: BareRPRuleProcessor.java,v 1.6 2010/07/18 13:46:26 nhnb Exp $ */
+/* $Id: BareRPRuleProcessor.java,v 1.7 2010/11/25 08:26:25 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -218,7 +218,7 @@ public class BareRPRuleProcessor implements IRPRuleProcessor {
 		
 		TransferContent content = new TransferContent("test_content", 1, new byte[] {1,2,3,4,5,6,7,8,9,10});
 		
-		System.out.println("PreT("+(old==object?1:0)+"): "+object);
+		System.out.println("PreT("+(old==object?1:0)+"): "+object);//TODO the reference variable object can't ever be change in this function
 		rpman.transferContent(object, content);
 		System.out.println("PostT("+(old==object?1:0)+"): "+object);
 
