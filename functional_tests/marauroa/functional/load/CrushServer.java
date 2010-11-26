@@ -1,4 +1,4 @@
-/* $Id: CrushServer.java,v 1.2 2008/03/27 11:32:51 arianne_rpg Exp $ */
+/* $Id: CrushServer.java,v 1.3 2010/11/26 20:03:21 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -80,7 +80,7 @@ public class CrushServer implements IFunctionalTest {
 	 * Test the perception management in game.
 	 */
 	public void launch() throws Exception {
-		for (int i = 0; i < NUM_CLIENTS; i++) {
+		for (int clnt = 0; clnt < NUM_CLIENTS; clnt++) {
 			new Thread() {
 
 				int i;
