@@ -1,4 +1,4 @@
-/* $Id: OutputSerializer.java,v 1.14 2010/06/11 19:00:57 nhnb Exp $ */
+/* $Id: OutputSerializer.java,v 1.15 2010/11/26 20:05:17 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -252,4 +252,4 @@ public class OutputSerializer {
 	public void setProtocolVersion(int protocolVersion) {
     	this.protocolVersion = protocolVersion;
     }
-};
+}

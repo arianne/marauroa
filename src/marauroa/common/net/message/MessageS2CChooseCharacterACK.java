@@ -1,4 +1,4 @@
-/* $Id: MessageS2CChooseCharacterACK.java,v 1.3 2007/04/09 14:39:56 arianne_rpg Exp $ */
+/* $Id: MessageS2CChooseCharacterACK.java,v 1.4 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -61,4 +61,4 @@ public class MessageS2CChooseCharacterACK extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

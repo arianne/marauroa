@@ -1,4 +1,4 @@
-/* $Id: MessageC2SAction.java,v 1.4 2007/04/09 14:47:07 arianne_rpg Exp $ */
+/* $Id: MessageC2SAction.java,v 1.5 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -80,4 +80,4 @@ public class MessageC2SAction extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

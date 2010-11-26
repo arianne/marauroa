@@ -1,4 +1,4 @@
-/* $Id: MessageP2SCreateAccount.java,v 1.2 2010/07/29 19:47:42 nhnb Exp $ */
+/* $Id: MessageP2SCreateAccount.java,v 1.3 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -144,4 +144,4 @@ public class MessageP2SCreateAccount extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

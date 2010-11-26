@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginACK.java,v 1.6 2009/12/24 12:40:14 nhnb Exp $ */
+/* $Id: MessageS2CLoginACK.java,v 1.7 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -87,4 +87,4 @@ public class MessageS2CLoginACK extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

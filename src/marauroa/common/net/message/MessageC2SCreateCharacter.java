@@ -1,4 +1,4 @@
-/* $Id: MessageC2SCreateCharacter.java,v 1.6 2010/07/25 16:19:12 nhnb Exp $ */
+/* $Id: MessageC2SCreateCharacter.java,v 1.7 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,4 +100,4 @@ public class MessageC2SCreateCharacter extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

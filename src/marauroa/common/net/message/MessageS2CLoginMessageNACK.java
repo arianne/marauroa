@@ -1,4 +1,4 @@
-/* $Id: MessageS2CLoginMessageNACK.java,v 1.2 2010/02/08 21:39:57 nhnb Exp $ */
+/* $Id: MessageS2CLoginMessageNACK.java,v 1.3 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2010 - Marauroa                      *
  ***************************************************************************
@@ -82,4 +82,4 @@ public class MessageS2CLoginMessageNACK extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

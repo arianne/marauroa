@@ -1,4 +1,4 @@
-/* $Id: MessageS2CServerInfo.java,v 1.7 2010/06/11 19:01:51 nhnb Exp $ */
+/* $Id: MessageS2CServerInfo.java,v 1.8 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -142,4 +142,4 @@ public class MessageS2CServerInfo extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

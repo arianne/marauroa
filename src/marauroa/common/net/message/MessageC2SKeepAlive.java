@@ -1,4 +1,4 @@
-/* $Id: MessageC2SKeepAlive.java,v 1.1 2008/01/25 20:44:00 arianne_rpg Exp $ */
+/* $Id: MessageC2SKeepAlive.java,v 1.2 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -62,4 +62,4 @@ public class MessageC2SKeepAlive extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

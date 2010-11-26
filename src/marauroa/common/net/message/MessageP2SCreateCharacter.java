@@ -1,4 +1,4 @@
-/* $Id: MessageP2SCreateCharacter.java,v 1.2 2010/07/24 18:10:26 nhnb Exp $ */
+/* $Id: MessageP2SCreateCharacter.java,v 1.3 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -150,4 +150,4 @@ public class MessageP2SCreateCharacter extends Message {
 		}
 	}
 
-};
+}

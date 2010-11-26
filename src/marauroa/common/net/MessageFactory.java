@@ -1,4 +1,4 @@
-/* $Id: MessageFactory.java,v 1.47 2010/07/29 19:47:16 nhnb Exp $ */
+/* $Id: MessageFactory.java,v 1.48 2010/11/26 20:05:17 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -227,4 +227,4 @@ public class MessageFactory {
 			throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
 		}
 	}
-};
+}

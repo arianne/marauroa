@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCharacterList.java,v 1.11 2010/06/13 20:28:53 nhnb Exp $ */
+/* $Id: MessageS2CCharacterList.java,v 1.12 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -135,4 +135,4 @@ public class MessageS2CCharacterList extends Message {
 			throw new IOException();
 		}
 	}
-};
+}

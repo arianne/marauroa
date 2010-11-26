@@ -1,4 +1,4 @@
-/* $Id: DetailLevel.java,v 1.5 2008/02/22 10:28:31 arianne_rpg Exp $ */
+/* $Id: DetailLevel.java,v 1.6 2010/11/26 20:05:19 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -25,4 +25,4 @@ public enum DetailLevel {
 	PRIVATE,
 	/** Full objects */
 	FULL
-};
+}

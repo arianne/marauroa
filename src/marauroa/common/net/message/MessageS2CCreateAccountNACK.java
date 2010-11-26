@@ -1,4 +1,4 @@
-/* $Id: MessageS2CCreateAccountNACK.java,v 1.7 2010/10/01 22:54:16 nhnb Exp $ */
+/* $Id: MessageS2CCreateAccountNACK.java,v 1.8 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -100,4 +100,4 @@ public class MessageS2CCreateAccountNACK extends Message {
 			throw new IOException();
 		}
 	}
-};
+}
