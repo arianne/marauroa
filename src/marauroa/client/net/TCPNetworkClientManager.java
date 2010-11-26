@@ -1,4 +1,4 @@
-/* $Id: TCPNetworkClientManager.java,v 1.32 2010/11/25 08:25:04 martinfuchs Exp $ */
+/* $Id: TCPNetworkClientManager.java,v 1.33 2010/11/26 20:04:32 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -246,10 +246,11 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	}
 
 	/**
-	 * The active thread in charge of recieving messages from the network.
+	 * The active thread in charge of receiving messages from the network.
 	 */
 	class NetworkClientManagerRead extends Thread {
 
+		@SuppressWarnings("hiding")
 		private final marauroa.common.Logger logger = Log4J
 		        .getLogger(NetworkClientManagerRead.class);
 
@@ -414,6 +415,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	class NetworkClientManagerWrite {
 
 		/** the logger instance. */
+		@SuppressWarnings("hiding")
 		private final marauroa.common.Logger logger = Log4J
 		        .getLogger(NetworkClientManagerWrite.class);
 

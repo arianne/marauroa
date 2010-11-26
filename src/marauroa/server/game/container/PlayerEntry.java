@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.62 2010/11/18 23:11:57 nhnb Exp $ */
+/* $Id: PlayerEntry.java,v 1.63 2010/11/26 20:03:41 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -55,6 +55,7 @@ public class PlayerEntry {
 	 * login is completed the information is cleared.
 	 */
 	public static class SecuredLoginInfo {
+		@SuppressWarnings("hiding")
 		private static Logger logger = Log4J.getLogger(SecuredLoginInfo.class);
 
 		/** A long array of bytes that represent the Hash of a random value. */
