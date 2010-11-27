@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.34 2010/11/10 21:50:40 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.35 2010/11/27 21:02:51 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -325,7 +325,7 @@ public class MarauroaRPZone implements IRPZone {
 					}
 					try {
 						if(!has(modified_obj.getID())) {
-							logger.warn("Modifying a non existing object: "+modified_obj);
+							logger.debug("Modifying a non existing object: "+modified_obj);
 						}
 						
 						prebuildDeltaPerception.modified(modified_obj);
