@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
@@ -28,6 +30,7 @@ import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
  * @author hendrik
  */
 public class LoadActiveCharacterCommand extends LoadCharacterCommand {
+	private static Logger logger = Log4J.getLogger(LoadActiveCharacterCommand.class);
 
 	/**
 	 * Creates a new LoadCharacterCommand
@@ -60,6 +63,7 @@ public class LoadActiveCharacterCommand extends LoadCharacterCommand {
 		if (DAORegister.get().get(CharacterDAO.class).hasActiveCharacter(getUsername(), getCharacterName())) {
 			super.execute(transaction);
 		} else {
+			logger.warn("Trying to load a non active character. username: " + getUsername() + " charactername: " + getCharacterName());
 			// We have to do the callback ourselves because we do not call super.execute().
 			if (callback != null) {
 				DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
