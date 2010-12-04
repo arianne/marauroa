@@ -1,4 +1,4 @@
-/* $Id: StringCheckerTest.java,v 1.1 2009/07/11 13:56:00 nhnb Exp $ */
+/* $Id: StringCheckerTest.java,v 1.2 2010/12/04 15:58:36 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -11,8 +11,6 @@
  *																		   *
  ***************************************************************************/
 package marauroa.server.db;
-
-import marauroa.server.db.StringChecker;
 
 import org.junit.Assert;
 import org.junit.Test;

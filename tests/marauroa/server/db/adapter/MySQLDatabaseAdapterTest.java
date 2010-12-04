@@ -1,4 +1,4 @@
-/* $Id: MySQLDatabaseAdapterTest.java,v 1.1 2010/01/31 20:39:52 nhnb Exp $ */
+/* $Id: MySQLDatabaseAdapterTest.java,v 1.2 2010/12/04 15:58:35 martinfuchs Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -12,8 +12,8 @@
  ***************************************************************************/
 package marauroa.server.db.adapter;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
