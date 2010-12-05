@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.135 2010/07/27 17:08:12 nhnb Exp $ */
+/* $Id: RPObject.java,v 1.136 2010/12/05 12:28:42 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ import marauroa.common.net.NetConst;
  * An object is the basic abstraction at marauroa. Players are objects,
  * creatures are objects, the maze at pacman is an object, each gladiator is an
  * object... everything is an object.<br>
- * But don't get confused with all the object keyword usage outthere. An object
+ * But don't get confused with all the object keyword usage out there. An object
  * is anything that can be though as an object ( physical or logical thing ).
  * <p>
  * Objects are stored at IRPZones.
@@ -1091,8 +1091,7 @@ public class RPObject extends SlotOwner {
 			hash=getInt("id");
 		}
 		
-		return hash;
-		
+		return hash;	
 	}
 
 	/**
@@ -1816,7 +1815,7 @@ public class RPObject extends SlotOwner {
 	 *            the name of the slot
 	 * @return true if slot exists or false otherwise
 	 */
-	// this method is here for binary compatiblity
+	// this method is here for binary compatibility
 	@Override
 	public boolean hasSlot(String name) {
 		return super.hasSlot(name);
@@ -1829,7 +1828,7 @@ public class RPObject extends SlotOwner {
 	 *            the name of the slot
 	 * @return the slot or null if the slot is not found
 	 */
-	// this method is here for binary compatiblity
+	// this method is here for binary compatibility
 	@Override
 	public RPSlot getSlot(String name) {
 		return super.getSlot(name);
@@ -1840,7 +1839,7 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return an iterator over the slots
 	 */
-	// this method is here for binary compatiblity
+	// this method is here for binary compatibility
 	@Override
 	public Iterator<RPSlot> slotsIterator() {
 		return super.slotsIterator();
@@ -1851,7 +1850,7 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @return a list of the slots
 	 */
-	// this method is here for binary compatiblity
+	// this method is here for binary compatibility
 	@Override
 	public List<RPSlot> slots() {
 		return super.slots();
