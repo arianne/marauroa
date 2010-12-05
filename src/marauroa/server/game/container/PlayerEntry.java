@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.63 2010/11/26 20:03:41 martinfuchs Exp $ */
+/* $Id: PlayerEntry.java,v 1.64 2010/12/05 12:02:32 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -246,7 +246,7 @@ public class PlayerEntry {
 	/** The name of the player */
 	public String username;
 
-	/** The name of the choosen character */
+	/** The name of the chosen character */
 	public String character;
 
 	/** The object of the player */
@@ -262,19 +262,19 @@ public class PlayerEntry {
 	/**
 	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
 	 */	
-	private static final long TIMEOUT_IN_GAME_MILLISECONDS= 30 * 1000;
+	private static final long TIMEOUT_IN_GAME_MILLISECONDS = 30 * 1000;
 
 	/**
 	 * We need a longer timeout pre-game because players might want to create a character here,
 	 * there is no keep-alive yet.
 	 */
-	private static final long TIMEOUT_PRE_GAME_MILLISECONDS= 10 * 60 * 1000;
+	private static final long TIMEOUT_PRE_GAME_MILLISECONDS = 10 * 60 * 1000;
 	
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
 	 * enumerate each perception so client can know in which order it is
 	 * expected to apply them. When using TCP there is no problem as delivery is
-	 * guaranted.
+	 * guaranteed.
 	 */
 	public int perceptionCounter;
 
