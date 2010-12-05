@@ -1,4 +1,4 @@
-/* $Id: LogoutHandler.java,v 1.4 2010/06/22 18:17:00 nhnb Exp $ */
+/* $Id: LogoutHandler.java,v 1.5 2010/12/05 12:05:15 martinfuchs Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -47,7 +47,7 @@ class LogoutHandler extends MessageHandler {
 			PlayerEntry entry = playerContainer.get(clientid);
 
 			/*
-			 * verify event so that we can trust that it comes from our player
+			 * Verify event so that we can trust that it comes from our player
 			 * and that it has completed the login stage.
 			 */
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE, ClientState.GAME_BEGIN)) {
@@ -59,7 +59,7 @@ class LogoutHandler extends MessageHandler {
 			boolean shouldLogout = true;
 
 			/*
-			 * We request to logout of game to RP Manager If may be succesful or
+			 * We request to logout of game to RP Manager If may be successful or
 			 * fail and we keep on game.
 			 */
 			if (entry.state == ClientState.GAME_BEGIN) {
@@ -101,6 +101,5 @@ class LogoutHandler extends MessageHandler {
 			logger.error("error while processing LogoutEvent", e);
 		}
 	}
-
 
 }
