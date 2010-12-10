@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.70 2010/06/25 17:17:10 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.71 2010/12/10 23:27:22 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -139,7 +139,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer os=new StringBuffer();
+		StringBuffer os = new StringBuffer();
 		os.append("RPCLASS name: "+name+"\n");
 		os.append("isa: "+(parent!=null?parent.getName():null)+"\n");
 

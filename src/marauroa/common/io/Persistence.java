@@ -1,4 +1,4 @@
-/* $Id: Persistence.java,v 1.10 2010/09/08 21:23:37 nhnb Exp $ */
+/* $Id: Persistence.java,v 1.11 2010/12/10 23:27:21 martinfuchs Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -36,7 +36,7 @@ public abstract class Persistence {
 	private static boolean WEB_START_SANDBOX = false;
 
 	/**
-	 * Returns the Persistence manager for this environmen
+	 * Returns the Persistence manager for this environment
 	 * 
 	 * @return Persistence
 	 */
@@ -50,10 +50,8 @@ public abstract class Persistence {
 
 			if (WEB_START_SANDBOX) {
 				try {
-					// we use reflection to prevent any runtime dependency on
-					// jnlp.jar
-					// outside webstart. So we do not have to distribute
-					// jnlp.jar
+					// We use reflection to prevent any runtime dependency on jnlp.jar
+					// outside webstart. So we do not have to distribute jnlp.jar.
 					Class<?> clazz = Class.forName("marauroa.common.io.WebstartPersistence");
 					instance = (Persistence) clazz.newInstance();
 				} catch (Exception e) {
@@ -78,7 +76,7 @@ public abstract class Persistence {
 	 *            filename (without path)
 	 * @return InputStream
 	 * @throws IOException
-	 *             on io error
+	 *             on IO error
 	 */
 	public abstract InputStream getInputStream(boolean relativeToHome, String basedir,
 	        String filename) throws IOException;
@@ -94,7 +92,7 @@ public abstract class Persistence {
 	 *            filename (without path)
 	 * @return OutputStream
 	 * @throws IOException
-	 *             on io error
+	 *             on IO error
 	 */
 	public abstract OutputStream getOutputStream(boolean relativeToHome, String basedir,
 	        String filename) throws IOException;
