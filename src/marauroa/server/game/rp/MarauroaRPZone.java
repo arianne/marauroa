@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.35 2010/11/27 21:02:51 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.36 2010/12/11 08:46:15 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -27,8 +27,10 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.RPZoneDAO;
+import marauroa.server.game.dbcommand.StoreZoneCommand;
 
 /**
  * Default implementation of <code>IRPZone</code>. This class implements the
@@ -143,18 +145,17 @@ public class MarauroaRPZone implements IRPZone {
 	}
 
 	/**
-	 * Store objects that has been tagged as storable to database.
+	 * Store objects that has been tagged as storable to database asynchronously.
+	 * Note: This methods returns before the saving is completed.
 	 */
 	public void storeToDatabase() {
-		try {
-			DAORegister.get().get(RPZoneDAO.class).storeRPZone(this);
-		} catch (Exception e) {
-			logger.error(e, e);
-		}
+		DBCommandQueue.get().enqueue(new StoreZoneCommand(this));
 	}
 
+
 	/**
-	 * Load objects in database for this zone that were stored
+	 * Load objects in database for this zone that were stored 
+	 * and waits for the database operation to complete.
 	 */
 	public void onInit() throws Exception {
 		DAORegister.get().get(RPZoneDAO.class).loadRPZone(this);
