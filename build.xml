@@ -56,6 +56,7 @@
 				<pathelement path="${log4j_jar}"/>
 				<pathelement path="${junit_jar}"/>
 				<pathelement path="${connectorJ_jar}"/>
+				<pathelement path="${h2_jar}"/>
 				<pathelement path="${jnlp_jar}"/>
 				<pathelement path="${jython_jar}"/>
 			</classpath>
@@ -92,6 +93,7 @@
 				<pathelement path="${log4j_jar}"/>
 				<pathelement path="${junit_jar}"/>
 				<pathelement path="${connectorJ_jar}"/>
+				<pathelement path="${h2_jar}"/>
 				<pathelement path="${jnlp_jar}"/>
 				<pathelement path="${jython_jar}"/>
 			</classpath>
@@ -118,12 +120,12 @@
 	<target name="dist_binary" depends="jar">
 		<replaceregexp file="${extras}/marauroad.bat"
                    match="set LOCALCLASSPATH=.*"
-                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${connectorJ_jar};${log4j_jar}"
+                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${h2_jar};${connectorJ_jar};${log4j_jar}"
                    byline="true"/>
 
 		<replaceregexp file="${extras}/marauroad"
 	    	       match="export LOCALCLASSPATH=.*"
-    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/mysql-connector.jar:libs/log4j.jar"
+    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/h2.jar:libs/mysql-connector.jar:libs/log4j.jar"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>
@@ -133,6 +135,7 @@
 		<copy todir="marauroa-${version}" file="${extras}/Makefile"/>
 		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname}"/>
 		<copy todir="marauroa-${version}/libs" file="${connectorJ_jar}"/>
+		<copy todir="marauroa-${version}/libs" file="${h2_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${log4j_jar}"/>
 		<copy todir="marauroa-${version}" file="AUTHORS"/>
