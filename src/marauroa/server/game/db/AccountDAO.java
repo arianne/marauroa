@@ -1,4 +1,4 @@
-/* $Id: AccountDAO.java,v 1.31 2010/10/09 17:20:05 astridemma Exp $ */
+/* $Id: AccountDAO.java,v 1.32 2010/12/13 21:35:50 kymara Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -66,7 +66,7 @@ public class AccountDAO {
 			}
 
 			String query = "insert into account(username, password, email, status)"
-				+ " values('[username]','[password]', '[email]', DEFAULT)";
+				+ " values('[username]','[password]', '[email]', 'active')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("password", Hash.toHexString(password));
