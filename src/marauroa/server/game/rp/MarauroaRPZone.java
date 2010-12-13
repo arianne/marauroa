@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.36 2010/12/11 08:46:15 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.37 2010/12/13 20:08:10 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -300,7 +301,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @return an iterator
 	 */
 	public Iterator<RPObject> iterator() {
-		return objects.values().iterator();
+		return new LinkedList<RPObject>(objects.values()).iterator();
 	}
 
 	/**
