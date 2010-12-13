@@ -1,4 +1,4 @@
-/* $Id: RPServerManager.java,v 1.73 2010/11/18 23:08:11 nhnb Exp $ */
+/* $Id: RPServerManager.java,v 1.74 2010/12/13 20:30:11 kymara Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -476,7 +476,7 @@ public class RPServerManager extends Thread {
 							}
 						}
 					}
-					logger.warn("Adding to existing contenToTransfer. old: " + entry.contentToTransfer + " added " + content);
+					logger.warn("Adding to existing contentToTransfer. old: " + entry.contentToTransfer + " added " + content);
 				}
 				entry.contentToTransfer.addAll(content);
 
