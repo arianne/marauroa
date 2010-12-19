@@ -1,4 +1,4 @@
-/* $Id: RPScheduler.java,v 1.11 2010/06/12 15:08:42 nhnb Exp $ */
+/* $Id: RPScheduler.java,v 1.12 2010/12/19 20:35:34 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.MDC;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
@@ -110,11 +112,13 @@ public class RPScheduler {
 			List<RPAction> list = entry.getValue();
 
 			for (RPAction action : list) {
+				MDC.put("context", object + " " + action);
 				try {
 					ruleProcessor.execute(object, action);
 				} catch (Exception e) {
 					logger.error("error in visit()", e);
 				}
+				MDC.remove("context");
 			}
 		}
 	}
