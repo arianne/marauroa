@@ -96,6 +96,7 @@ Changelog
 ---------
 3.8.5
 - fixed an issue on account renaming
+- zones are now stored asynchronously to the database
 
 
 3.8.4

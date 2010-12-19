@@ -1,4 +1,4 @@
-/* $Id: StoreZoneCommand.java,v 1.1 2010/12/11 08:46:19 nhnb Exp $ */
+/* $Id: StoreZoneCommand.java,v 1.2 2010/12/19 16:59:26 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -14,8 +14,10 @@ package marauroa.server.game.dbcommand;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import marauroa.common.game.IRPZone;
+import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.db.DAORegister;
@@ -28,18 +30,21 @@ import marauroa.server.game.db.RPZoneDAO;
  */
 public class StoreZoneCommand extends AbstractDBCommand {
 	private IRPZone zone;
+	private List<RPObject> frozenContent;
 
 	/**
 	 * Asynchronously stores a zone
 	 * 
 	 * @param zone  IRPZone
+	 * @param frozenContent the content of the 
 	 */
-	public StoreZoneCommand(IRPZone zone) {
+	public StoreZoneCommand(IRPZone zone, List<RPObject> frozenContent) {
 		this.zone = zone;
+		this.frozenContent = frozenContent;
 	}
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		DAORegister.get().get(RPZoneDAO.class).storeRPZone(transaction, zone);
+		DAORegister.get().get(RPZoneDAO.class).storeRPZone(transaction, zone, frozenContent);
 	}
 }

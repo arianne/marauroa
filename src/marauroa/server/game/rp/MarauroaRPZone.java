@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.37 2010/12/13 20:08:10 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.38 2010/12/19 16:59:25 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -150,7 +150,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * Note: This methods returns before the saving is completed.
 	 */
 	public void storeToDatabase() {
-		DBCommandQueue.get().enqueue(new StoreZoneCommand(this));
+		DBCommandQueue.get().enqueue(new StoreZoneCommand(this, new LinkedList<RPObject>(objects.values())));
 	}
 
 
@@ -301,7 +301,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @return an iterator
 	 */
 	public Iterator<RPObject> iterator() {
-		return new LinkedList<RPObject>(objects.values()).iterator();
+		return objects.values().iterator();
 	}
 
 	/**

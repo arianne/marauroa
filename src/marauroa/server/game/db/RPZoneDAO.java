@@ -1,4 +1,4 @@
-/* $Id: RPZoneDAO.java,v 1.14 2010/06/11 21:18:32 nhnb Exp $ */
+/* $Id: RPZoneDAO.java,v 1.15 2010/12/19 16:59:24 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
@@ -130,6 +130,20 @@ public class RPZoneDAO {
 	 * @throws SQLException in case of an database error
 	 */
 	public void storeRPZone(DBTransaction transaction, IRPZone zone) throws IOException, SQLException {
+		storeRPZone(transaction, zone, zone);
+	}
+
+
+	/**
+	 * saves storable objects for the specified zone to the database
+	 *
+	 * @param transaction DBTransaction
+	 * @param zone IRPZone
+	 * @param content the RPObjects of that zone
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void storeRPZone(DBTransaction transaction, IRPZone zone, Iterable<RPObject> content) throws IOException, SQLException {
 		String zoneid = zone.getID().getID();
 		if (!StringChecker.validString(zoneid)) {
 			throw new SQLException("Invalid string zoneid=(" + zoneid + ")");
@@ -141,7 +155,7 @@ public class RPZoneDAO {
 
 		/* compute how many storable objects exists in zone. */
 		int amount = 0;
-		for (RPObject object : zone) {
+		for (RPObject object : content) {
 			if (object.isStorable()) {
 				amount++;
 			}
@@ -150,7 +164,7 @@ public class RPZoneDAO {
 		os.write(amount);
 
 		boolean empty = true;
-		for (RPObject object : zone) {
+		for (RPObject object : content) {
 			if (object.isStorable()) {
 				object.writeObject(os, DetailLevel.FULL);
 				empty = false;
@@ -180,6 +194,7 @@ public class RPZoneDAO {
 
 		transaction.execute(query, params, inStream);
 	}
+
 
 	/**
 	 * is the specified zone saved to the database
