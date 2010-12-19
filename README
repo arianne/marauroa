@@ -95,7 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.5
-
+- fixed an issue on account renaming
 
 
 3.8.4

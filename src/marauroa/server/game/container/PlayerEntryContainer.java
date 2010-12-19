@@ -1,4 +1,4 @@
-/* $Id: PlayerEntryContainer.java,v 1.29 2010/09/19 17:59:53 nhnb Exp $ */
+/* $Id: PlayerEntryContainer.java,v 1.30 2010/12/19 10:31:45 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -192,8 +192,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		synchronized (clientidMap) {
 			for (PlayerEntry entry : clientidMap.values()) {
 
-				if (oldEntry.username.equalsIgnoreCase(entry.username)
-					&& oldEntry.character.equalsIgnoreCase(entry.character)
+				if (oldEntry.character.equalsIgnoreCase(entry.character)
 					&& entry != oldEntry) {
 					return entry;
 				}
