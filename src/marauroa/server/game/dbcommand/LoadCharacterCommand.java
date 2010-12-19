@@ -96,4 +96,15 @@ public class LoadCharacterCommand extends DBCommandWithCallback {
 	public String getUsername() {
 		return username;
 	}
+
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "LoadCharacterCommand [username=" + username + ", character="
+				+ character + ", object=" + object + "]";
+	}
 }

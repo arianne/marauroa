@@ -74,4 +74,15 @@ public class LoadAllCharactersCommand  extends DBCommandWithCallback {
 	public Map<String, RPObject> getCharacters() {
 		return characters;
 	}
+
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "LoadAllCharactersCommand [username=" + username
+				+ ", characters=" + characters + "]";
+	}
 }

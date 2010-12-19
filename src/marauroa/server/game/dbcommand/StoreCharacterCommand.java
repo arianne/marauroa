@@ -1,4 +1,4 @@
-/* $Id: StoreCharacterCommand.java,v 1.1 2010/05/16 16:56:14 nhnb Exp $ */
+/* $Id: StoreCharacterCommand.java,v 1.2 2010/12/19 21:17:23 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -27,6 +27,7 @@ import marauroa.server.game.db.DAORegister;
  * @author hendrik
  */
 public class StoreCharacterCommand extends AbstractDBCommand {
+
 	private String username;
 	private String character;
 	private RPObject frozenObject;
@@ -47,5 +48,16 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		DAORegister.get().get(CharacterDAO.class).storeCharacter(transaction, username, character, frozenObject);
+	}
+
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "StoreCharacterCommand [username=" + username + ", character="
+				+ character + ", frozenObject=" + frozenObject + "]";
 	}
 }

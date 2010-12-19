@@ -12,6 +12,7 @@
 package marauroa.server.game.dbcommand;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.command.AbstractDBCommand;
@@ -45,5 +46,16 @@ public class LogGameEventCommand extends AbstractDBCommand {
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException {
 		DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, source, event, params);
+	}
+
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "LogGameEventCommand [source=" + source + ", event=" + event
+				+ ", params=" + Arrays.toString(params) + "]";
 	}
 }

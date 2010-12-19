@@ -1,4 +1,4 @@
-/* $Id: LoginCommand.java,v 1.3 2010/06/18 16:28:35 nhnb Exp $ */
+/* $Id: LoginCommand.java,v 1.4 2010/12/19 21:17:23 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -138,4 +138,15 @@ public class LoginCommand extends DBCommandWithCallback {
 		return new LinkedList<String>(previousLogins);
 	}
 
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "LoginCommand [info=" + info + ", failReason=" + failReason
+				+ ", failMessage=" + failMessage + ", previousLogins="
+				+ previousLogins + "]";
+	}
 }

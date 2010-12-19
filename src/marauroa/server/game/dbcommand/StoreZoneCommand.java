@@ -1,4 +1,4 @@
-/* $Id: StoreZoneCommand.java,v 1.2 2010/12/19 16:59:26 nhnb Exp $ */
+/* $Id: StoreZoneCommand.java,v 1.3 2010/12/19 21:17:23 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -46,5 +46,15 @@ public class StoreZoneCommand extends AbstractDBCommand {
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		DAORegister.get().get(RPZoneDAO.class).storeRPZone(transaction, zone, frozenContent);
+	}
+
+	/**
+	 * returns a string suitable for debug output of this DBCommand.
+	 *
+	 * @return debug string
+	 */
+	@Override
+	public String toString() {
+		return "StoreZoneCommand [zone=" + zone + ", frozenContent=" + frozenContent + "]";
 	}
 }
