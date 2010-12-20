@@ -1,4 +1,4 @@
-/* $Id: PlayerEntry.java,v 1.64 2010/12/05 12:02:32 martinfuchs Exp $ */
+/* $Id: PlayerEntry.java,v 1.65 2010/12/20 22:56:11 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2007 - Marauroa                      *
  ***************************************************************************
@@ -219,6 +219,17 @@ public class PlayerEntry {
 				TransactionPool.get().rollback(transaction);
 			}
 			return res;
+		}
+
+		/**
+		 * returns a string suitable for debug output of this DBCommand.
+		 *
+		 * @return debug string
+		 */
+		@Override
+		public String toString() {
+			return "SecuredLoginInfo [username=" + username + ", address="
+					+ address + ", seed=" + seed + ", reason=" + reason + "]";
 		}
 	}
 
