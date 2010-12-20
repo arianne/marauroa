@@ -1,4 +1,4 @@
-/* $Id: StoreZoneCommand.java,v 1.3 2010/12/19 21:17:23 nhnb Exp $ */
+/* $Id: StoreZoneCommand.java,v 1.4 2010/12/20 22:52:16 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
@@ -55,6 +55,6 @@ public class StoreZoneCommand extends AbstractDBCommand {
 	 */
 	@Override
 	public String toString() {
-		return "StoreZoneCommand [zone=" + zone + ", frozenContent=" + frozenContent + "]";
+		return "StoreZoneCommand [zone=" + zone + ", frozenContent.size()=" + frozenContent.size() + "]";
 	}
 }

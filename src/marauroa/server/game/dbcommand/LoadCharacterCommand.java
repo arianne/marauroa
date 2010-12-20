@@ -105,6 +105,6 @@ public class LoadCharacterCommand extends DBCommandWithCallback {
 	@Override
 	public String toString() {
 		return "LoadCharacterCommand [username=" + username + ", character="
-				+ character + ", object=" + object + "]";
+				+ character + "]";
 	}
 }
