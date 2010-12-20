@@ -1,4 +1,4 @@
-/* $Id: MarauroaRPZone.java,v 1.38 2010/12/19 16:59:25 nhnb Exp $ */
+/* $Id: MarauroaRPZone.java,v 1.39 2010/12/20 22:51:47 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -150,7 +151,11 @@ public class MarauroaRPZone implements IRPZone {
 	 * Note: This methods returns before the saving is completed.
 	 */
 	public void storeToDatabase() {
-		DBCommandQueue.get().enqueue(new StoreZoneCommand(this, new LinkedList<RPObject>(objects.values())));
+		List<RPObject> list = new LinkedList<RPObject>();
+		for (RPObject object : objects.values()) {
+			list.add((RPObject) object.clone());
+		}
+		DBCommandQueue.get().enqueue(new StoreZoneCommand(this, list));
 	}
 
 
