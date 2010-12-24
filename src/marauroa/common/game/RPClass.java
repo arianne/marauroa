@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.71 2010/12/10 23:27:22 martinfuchs Exp $ */
+/* $Id: RPClass.java,v 1.72 2010/12/24 23:26:04 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -507,6 +507,22 @@ public class RPClass implements marauroa.common.net.Serializable {
 		}
 
 		return def;
+	}
+
+
+	/**
+	 * Returns a list of all definitions of this class (not including parent classes)
+	 *
+	 * @return list of definitions
+	 */
+	public List<Definition> getDefinitions() {
+		List<Definition> res = new LinkedList<Definition>();
+		res.addAll(staticattributes.values());
+		res.addAll(attributes.values());
+		res.addAll(rpevents.values());
+		res.addAll(rpslots.values());
+		res.addAll(rplinks.values());
+		return res;
 	}
 
 
