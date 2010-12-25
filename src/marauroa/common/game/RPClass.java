@@ -1,4 +1,4 @@
-/* $Id: RPClass.java,v 1.72 2010/12/24 23:26:04 nhnb Exp $ */
+/* $Id: RPClass.java,v 1.73 2010/12/25 02:22:48 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -237,6 +237,15 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * gets the parent class or <code>null</code> if this is a root class.
+	 *
+	 * @return RPClass or <code>null</code>.
+	 */
+	public RPClass getParent() {
+		return parent;
 	}
 
 	private short lastCode = 0;
