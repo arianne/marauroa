@@ -1,0 +1,17 @@
+arianne_rpg=miguel <arianne_rpg@users.sourceforge.net>
+astridemma=astridemma <astridemma@users.sourceforge.net>
+chad3f=chad3f <chad3f@users.sourceforge.net>
+intensifly=intensifly <intensifly@users.sourceforge.net>
+kiheru=kiheru <kiheru@users.sourceforge.net>
+kymara=kymara <kymara@users.sourceforge.net>
+madmetzger=madmetzger <madmetzger@users.sourceforge.net>
+martinfuchs=martinfuchs <martinfuchs@users.sourceforge.net>
+mtotz=mtotz <mtotz@users.sourceforge.net>
+nhnb=hendrik <nhnb@users.sourceforge.net>
+quisar=quisar <quisar@users.sourceforge.net>
+root=root <root@users.sourceforge.net>
+root777=root <root777@users.sourceforge.net>
+seather=root <seather@users.sourceforge.net>
+thriceforged=Steve Ierodiaconou <thriceforged@users.sourceforge.net>
+wikipedian=wikipedian <wikipedian@users.sourceforge.net>
+yoriy=Yoriy <yoriy@users.sourceforge.net>
