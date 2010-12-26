@@ -37,7 +37,7 @@ public class TransactionPool {
 	/**
 	 * creates a DBTransactionPool
 	 *
-	 * @param connfiguration connfiguration
+	 * @param connfiguration configuration
 	 */
 	public TransactionPool(Properties connfiguration) {
 		params = connfiguration;
