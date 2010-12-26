@@ -1,4 +1,4 @@
-/* $Id: IPerceptionListener.java,v 1.10 2007/04/09 14:39:50 arianne_rpg Exp $ */
+/* $Id: IPerceptionListener.java,v 1.11 2010/12/26 00:09:51 martinfuchs Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -34,7 +34,7 @@ public interface IPerceptionListener {
 	/**
 	 * onModifiedAdded is called when an object is modified by adding or
 	 * changing one of its attributes. Return true to stop further processing.
-	 * Note that the method is called *before* modifing the object.
+	 * Note that the method is called *before* modifying the object.
 	 *
 	 * @param object
 	 *            the original object
@@ -47,7 +47,7 @@ public interface IPerceptionListener {
 	/**
 	 * onModifiedDeleted is called each time the object has one of its
 	 * attributes removed. Return true to stop further processing. Note that the
-	 * method is called *before* modifing the object.
+	 * method is called *before* modifying the object.
 	 *
 	 * @param object
 	 *            the original object
