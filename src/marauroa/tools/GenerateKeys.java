@@ -1,4 +1,4 @@
-/* $Id: GenerateKeys.java,v 1.1 2010/12/11 11:49:53 nhnb Exp $ */
+/* $Id: GenerateKeys.java,v 1.2 2010/12/26 00:09:31 martinfuchs Exp $ */
 /***************************************************************************
  *					(C) Copyright 2003-2010 - Marauroa					   *
  ***************************************************************************
@@ -60,7 +60,7 @@ public class GenerateKeys {
 		
 		/* The size of the RSA Key in bits, usually 512 */
 		System.out.print("# How long should the key be? [512]: ");
-		final String keySize = getStringWithDefault("512");;
+		final String keySize = getStringWithDefault("512");
 		System.out.println();
 		System.out.println("# Using key of " + keySize + " bits.");
 		System.out.println("# Please wait while the key is generated.");
