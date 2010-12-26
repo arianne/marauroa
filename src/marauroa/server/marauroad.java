@@ -1,4 +1,4 @@
-/* $Id: marauroad.java,v 1.97 2010/11/03 20:58:24 nhnb Exp $ */
+/* $Id: marauroad.java,v 1.98 2010/12/26 21:12:35 nhnb Exp $ */
 /***************************************************************************
  *						(C) Copyright 2003 - Marauroa					   *
  ***************************************************************************
@@ -180,11 +180,10 @@ public class marauroad extends Thread {
 			} else if (args[i].equals("-h")) {
 				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
-				System.out.println("(C) 1999-2009 Miguel Angel Blanch Lardin and the Arianne project");
+				System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
 				System.out.println();
-				System.out.println("usage: [-c gamefile]");
-				System.out
-						.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
+				System.out.println("usage: [-c server.ini]");
+				System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
 				System.out.println("\t    different location to the file.");
 				System.out.println("\t-h: print this help message");
 				System.exit(0);
@@ -201,7 +200,7 @@ public class marauroad extends Thread {
 	public static void main(String[] args) {
 		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2009 Miguel Angel Blanch Lardin and the Arianne project");
+		System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
