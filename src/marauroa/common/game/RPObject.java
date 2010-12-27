@@ -1,4 +1,4 @@
-/* $Id: RPObject.java,v 1.136 2010/12/05 12:28:42 martinfuchs Exp $ */
+/* $Id: RPObject.java,v 1.137 2010/12/27 13:38:56 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
  ***************************************************************************
@@ -795,18 +795,20 @@ public class RPObject extends SlotOwner {
 	 *
 	 * @param map the name of the map
 	 * @param key the key of the entry to remove
+	 * @return old value
 	 */
-	public void remove(String map, String key) {
+	public String remove(String map, String key) {
 		if ((key.equals("id") || key.equals("zoneid"))) {
 			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
 		if(maps.containsKey(map)) {
-			this.maps.get(map).remove(key);
 			this.modified = true;
 			if(!this.deletedMaps.contains(map)) {
 				this.deletedMaps.add(map);
 			}
+			return this.maps.get(map).remove(key);
 		}
+		return null;
 	}
 
 	/**
