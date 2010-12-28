@@ -17,25 +17,44 @@ package marauroa.common.game;
  *
  * @author hendrik
  */
-public interface ChangeContainer {
+public abstract class ChangeContainer {
+	private static ChangeContainer instance;
+
+	/**
+	 * gets the change container
+	 *
+	 * @return ChangeContainer
+	 */
+	public static ChangeContainer get() {
+		return instance;
+	}
+
+	/**
+	 * sets the change container implementation
+	 *
+	 * @param instance ChangeContainer
+	 */
+	public static void setChangeContainerImpl(ChangeContainer instance) {
+		ChangeContainer.instance = instance;
+	}
 
 	/**
 	 * marks an attribute as new or a new value of an attribute
 	 * 
 	 * @param zone name of zone
 	 * @param id   id of the object
-	 * @param attribute name of attibute
+	 * @param attribute name of attribute
 	 * @param value new value
 	 */
-	public void addAttribute(String zone, String id, String attribute, String value);
+	public abstract void addAttribute(String zone, String id, String attribute, String value);
 
 	/**
 	 * marks attributes as deleted
 	 * 
 	 * @param zone name of zone
 	 * @param id   id of the object
-	 * @param attribute name of attibute
+	 * @param attribute name of attribute
 	 */
-	public void removeAttribute(String zone, String id, String attribute);
+	public abstract void removeAttribute(String zone, String id, String attribute);
 
 }
