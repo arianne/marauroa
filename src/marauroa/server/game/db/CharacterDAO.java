@@ -144,13 +144,19 @@ public class CharacterDAO {
 	 */
 	public boolean hasCharacter(DBTransaction transaction, String character) throws SQLException {
 		try {
-			String query = "SELECT count(*) As amount FROM characters WHERE charname = '[character]'";
+			String query = "SELECT charname FROM characters WHERE charname = '[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("character", character);
 			logger.debug("hasCharacter is executing query " + query);
 
-			int count = transaction.querySingleCellInt(query, params);
-			return count > 0;
+			ResultSet result = transaction.query(query, params);
+
+			String actualName = null;
+			if (result.next()) {
+				actualName = result.getString("charname");
+			}
+			result.close();
+			return (actualName != null) && (actualName.equalsIgnoreCase(character));
 		} catch (SQLException e) {
 			logger.error("Can't query for character \"" + character + "\"", e);
 			throw e;
@@ -170,15 +176,23 @@ public class CharacterDAO {
 	 */
 	public boolean hasCharacter(DBTransaction transaction, String username, String character) throws SQLException {
 		try {
-			String query = "SELECT count(*) as amount FROM characters, account "
+			String query = "SELECT charname, username FROM characters, account "
 				+" WHERE account.username='[username]' AND account.id=characters.player_id AND charname='[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("character", character);
 			logger.debug("hasCharacter is executing query " + query);
 
-			int count = transaction.querySingleCellInt(query, params);
-			return count > 0;
+			ResultSet result = transaction.query(query, params);
+
+			String actualName = null;
+			String actualUsername = null;
+			if (result.next()) {
+				actualName = result.getString("charname");
+				actualUsername = result.getString("username");
+			}
+			result.close();
+			return (actualName != null) && (actualName.equalsIgnoreCase(character)) && (actualUsername != null) && (actualUsername.equalsIgnoreCase(username));
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\" character \"" + character + "\"", e);
 			throw e;
@@ -197,7 +211,7 @@ public class CharacterDAO {
 	 */
 	public boolean hasActiveCharacter(DBTransaction transaction, String username, String character) throws SQLException {
 		try {
-			String query = "SELECT count(*) as amount FROM characters, account "
+			String query = "SELECT charname, username FROM characters, account "
 				+ " WHERE account.username='[username]' AND account.id=characters.player_id "
 				+ " AND characters.status='active' AND charname='[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -205,8 +219,16 @@ public class CharacterDAO {
 			params.put("character", character);
 			logger.debug("hasCharacter is executing query " + query);
 
-			int count = transaction.querySingleCellInt(query, params);
-			return count > 0;
+			ResultSet result = transaction.query(query, params);
+
+			String actualName = null;
+			String actualUsername = null;
+			if (result.next()) {
+				actualName = result.getString("charname");
+				actualUsername = result.getString("username");
+			}
+			result.close();
+			return (actualName != null) && (actualName.equalsIgnoreCase(character)) && (actualUsername != null) && (actualUsername.equalsIgnoreCase(username));
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\" character \"" + character + "\"", e);
 			throw e;
