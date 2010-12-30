@@ -101,7 +101,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 
-			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getSocketChannel());
+			PlayerEntry entry = playerContainer.add(netMan, msgLoginSendPromise.getSocketChannel());
 			entry.setProtocolVersion(msg.getProtocolVersion());
 
 			byte[] serverNonce = Hash.random(Hash.hashLength());

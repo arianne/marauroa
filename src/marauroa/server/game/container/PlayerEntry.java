@@ -34,6 +34,7 @@ import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.dbcommand.StoreCharacterCommand;
+import marauroa.server.net.INetworkServerManager;
 
 /**
  * This class represent a player on game. It handles all the business glue that
@@ -55,6 +56,9 @@ public class PlayerEntry {
 
 	/** The runtime clientid */
 	public int clientid;
+
+	/** network manager for this client */
+	private INetworkServerManager netMan;
 
 	/** The client associated SocketChannel */
 	public SocketChannel channel;
@@ -112,13 +116,16 @@ public class PlayerEntry {
 	/** grant a longer timeout during login */
 	private boolean gotKeepAliveInGameState = false;
 
+
 	/**
 	 * Constructor
 	 *
+	 * @param netMan NetworkServerManager to use for this client
 	 * @param channel
 	 *            the socket channel
 	 */
-	public PlayerEntry(SocketChannel channel) {
+	public PlayerEntry(INetworkServerManager netMan, SocketChannel channel) {
+		this.netMan = netMan;
 		this.channel = channel;
 
 		clientid = Message.CLIENTID_INVALID;
@@ -140,6 +147,15 @@ public class PlayerEntry {
 	}
 
 	/**
+	 * gets the INetworkManager responsible for this entry
+	 *
+	 * @return INetworkManager
+	 */
+	public INetworkServerManager getNetMan() {
+		return netMan;
+	}
+
+	/**
 	 * Return the inet address of this PlayerEntry.
 	 *
 	 * @return the inet address of this PlayerEntry.
@@ -147,7 +163,7 @@ public class PlayerEntry {
 	public InetAddress getAddress() {
 		return channel.socket().getInetAddress();
 	}
-	
+
 	/**
 	 * Returns true when nothing has been received from client in TIMEOUT_SECONDS.
 	 * Note that client sends confirmations to perceptions, so this mean that client is
@@ -166,7 +182,7 @@ public class PlayerEntry {
 			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_PRE_GAME_MILLISECONDS;
 		}
 	}
-	
+
 	/**
 	 * Refresh player timeout timestamp.
 	 * This method is invoked when a new message arrives from client.

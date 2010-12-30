@@ -27,6 +27,7 @@ import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
 import marauroa.server.RWLock;
 import marauroa.server.game.Statistics;
+import marauroa.server.net.INetworkServerManager;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -240,13 +241,14 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * Add a new Player entry to the container. This method assigns
 	 * automatically a random clientid to this player entry.
 	 *
+	 * @param netMan NetworkServerManager to use for this client
 	 * @param channel
 	 *            the socket channel associated with the client
 	 * @return client id resulting
 	 */
-	public PlayerEntry add(SocketChannel channel) {
+	public PlayerEntry add(INetworkServerManager netMan, SocketChannel channel) {
 		/* We create an entry */
-		PlayerEntry entry = new PlayerEntry(channel);
+		PlayerEntry entry = new PlayerEntry(netMan, channel);
 		entry.clientid = generateClientID();
 
 		/* Finally adds it to map */

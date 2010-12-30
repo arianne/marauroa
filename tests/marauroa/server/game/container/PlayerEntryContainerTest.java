@@ -48,7 +48,7 @@ public class PlayerEntryContainerTest {
 	 */
 	@Test
 	public void testAdd() {
-		PlayerEntry entry = cont.add(null);
+		PlayerEntry entry = cont.add(null, null);
 
 		entry.username = "test0";
 
@@ -65,7 +65,7 @@ public class PlayerEntryContainerTest {
 	 */
 	@Test
 	public void testGet() {
-		PlayerEntry entry = cont.add(null);
+		PlayerEntry entry = cont.add(null, null);
 		entry.username = "test1";
 
 		assertEquals(entry, cont.get(entry.clientid));
@@ -79,7 +79,7 @@ public class PlayerEntryContainerTest {
 	 */
 	@Test
 	public void testRemove() {
-		PlayerEntry entry = cont.add(null);
+		PlayerEntry entry = cont.add(null, null);
 		entry.username = "test2";
 
 		PlayerEntry removed = cont.remove(entry.clientid);

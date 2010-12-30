@@ -97,7 +97,6 @@ public class RPServerManager extends Thread {
 
 	private Statistics stats;
 
-	/** The networkServerManager so that we can send perceptions */
 	private INetworkServerManager netMan;
 
 	/** The PlayerEntryContainer so that we know where to send perceptions */
@@ -395,7 +394,7 @@ public class RPServerManager extends Thread {
 		messages2cPerception.setPerceptionTimestamp(entry.getPerceptionTimestamp());
 		messages2cPerception.setProtocolVersion(entry.getProtocolVersion());
 
-		netMan.sendMessage(messages2cPerception);
+		entry.getNetMan().sendMessage(messages2cPerception);
 	}
 
 	private void buildPerceptions() {
@@ -426,7 +425,7 @@ public class RPServerManager extends Thread {
 
 		for (PlayerEntry entry : playersToRemove) {
 			logger.warn("RP Disconnecting entry: " + entry);
-			netMan.disconnectClient(entry.channel);
+			entry.getNetMan().disconnectClient(entry.channel);
 		}
 	}
 
@@ -484,7 +483,7 @@ public class RPServerManager extends Thread {
 				mes.setClientID(entry.clientid);
 				mes.setProtocolVersion(entry.getProtocolVersion());
 
-				netMan.sendMessage(mes);
+				entry.getNetMan().sendMessage(mes);
 			}
 
 			contentsToTransfer.clear();
@@ -640,7 +639,7 @@ public class RPServerManager extends Thread {
 			return;
 		}
 
-		netMan.disconnectClient(entry.channel);
+		entry.getNetMan().disconnectClient(entry.channel);
 	}
 
 	/**
