@@ -103,9 +103,15 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Attributes clone = (Attributes) super.clone();
-		clone.content = Collections.synchronizedMap(new HashMap<String, String>(content));
-		clone.added = Collections.synchronizedMap(new HashMap<String, String>(added));
-		clone.deleted = Collections.synchronizedMap(new HashMap<String, String>(deleted));
+		synchronized (content) {
+			clone.content = Collections.synchronizedMap(new HashMap<String, String>(content));
+		}
+		synchronized (added) {
+			clone.added = Collections.synchronizedMap(new HashMap<String, String>(added));
+		}
+		synchronized (deleted) {
+			clone.deleted = Collections.synchronizedMap(new HashMap<String, String>(deleted));
+		}
 		return clone;
 	}
 

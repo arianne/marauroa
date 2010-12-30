@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.python.modules.synchronize;
+
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.server.db.command.DBCommandQueue;
@@ -158,7 +160,9 @@ public class Statistics implements StatisticsMBean {
 		public Object clone(){
 			try {
 				Variables var = (Variables) super.clone();
-				var.content = Collections.synchronizedMap(new HashMap<String, Long>(this.content));
+				synchronized (this.content) {
+					var.content = Collections.synchronizedMap(new HashMap<String, Long>(this.content));
+				}
 				return var;
 			} catch (CloneNotSupportedException e) {
 				logger.error(e, e);
