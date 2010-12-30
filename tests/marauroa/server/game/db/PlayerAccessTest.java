@@ -28,8 +28,8 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
-import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.SecureLoginTest;
+import marauroa.server.game.container.SecuredLoginInfo;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -117,7 +117,7 @@ public class PlayerAccessTest {
 			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
 			assertTrue(accountDAO.hasPlayer(transaction, username));
 
-			PlayerEntry.SecuredLoginInfo login = SecureLoginTest.simulateSecureLogin(username,
+			SecuredLoginInfo login = SecureLoginTest.simulateSecureLogin(username,
 			        "testPassword");
 			assertTrue(accountDAO.verify(transaction, login));
 

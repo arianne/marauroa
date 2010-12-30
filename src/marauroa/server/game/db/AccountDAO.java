@@ -30,7 +30,7 @@ import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
-import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.SecuredLoginInfo;
 
 /**
  * data access object for accounts
@@ -359,7 +359,7 @@ public class AccountDAO {
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean verify(DBTransaction transaction, PlayerEntry.SecuredLoginInfo informations)
+	public boolean verify(DBTransaction transaction, SecuredLoginInfo informations)
 	        throws SQLException {
 		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
 			logger.debug("Different hashs for client Nonce");
@@ -706,7 +706,7 @@ public class AccountDAO {
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean verify(PlayerEntry.SecuredLoginInfo informations) throws SQLException {
+	public boolean verify(SecuredLoginInfo informations) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			boolean res = verify(transaction, informations);

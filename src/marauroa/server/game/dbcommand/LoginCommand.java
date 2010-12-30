@@ -20,7 +20,7 @@ import java.util.List;
 
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
+import marauroa.server.game.container.SecuredLoginInfo;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.messagehandler.DelayedEventHandler;

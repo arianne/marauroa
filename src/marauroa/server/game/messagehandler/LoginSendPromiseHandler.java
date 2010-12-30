@@ -23,6 +23,7 @@ import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
 import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.SecuredLoginInfo;
 
 /**
  * Receive the client hash promise of the password. Now
@@ -106,7 +107,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 			byte[] serverNonce = Hash.random(Hash.hashLength());
 			byte[] clientNonceHash = msgLoginSendPromise.getHash();
 
-			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
+			entry.loginInformations = new SecuredLoginInfo(key, clientNonceHash,
 			        serverNonce, msgLoginSendPromise.getAddress());
 
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg
