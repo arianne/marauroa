@@ -94,12 +94,15 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 
 Changelog
 ---------
+3.8.6
+- 
+
+
 3.8.5
 - fixed an issue on account renaming
 - fixed an issue with special characters in character names
 - zones are now stored asynchronously to the database
 - fixed a co-modifcation issue in Attributes.clone() and Statistics.clone()
-
 
 3.8.4
 - fixed "Replacing content to transfer"
