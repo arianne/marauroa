@@ -158,8 +158,9 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	}
 
 	/**
-	 * This method returns the entry that has been associated to this player or
-	 * null if it does not exists.
+	 * This method returns the first entry that has been associated to this player or
+	 * null if it does not exists. Note: It is possible to login with the same account
+	 * and different character multiple times.
 	 *
 	 * @param username
 	 *            the username to look for
