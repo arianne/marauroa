@@ -18,20 +18,37 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.glines.socketio.common.DisconnectReason;
+import com.glines.socketio.server.SocketIOInbound;
+import com.glines.socketio.server.SocketIOInbound.SocketIOOutbound;
+
 /**
  * a websocket channel which identifies a connection to a webclient.
  *
  * @author hendrik
  */
 // TODO: don't extend SocketChannel but use some
-public class WebSocketChannel extends SocketChannel {
+public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
+
+	private String sessionId;
+	private SocketIOOutbound outbound;
+	private WebSocketServerManager webSocketServerManager;
 
 	/**
 	 * creates a new WebSocketChannel
+	 *
+	 * @param webSocketServerManager 
+	 * @param sessionId sessionid
 	 */
-	public WebSocketChannel() {
+	public WebSocketChannel(WebSocketServerManager webSocketServerManager, String sessionId) {
 		super(null);
+		this.webSocketServerManager = webSocketServerManager;
+		this.sessionId = sessionId;
 	}
+	
+	//
+	// SocketChannel
+	//
 
 	@Override
 	public Socket socket() {
@@ -86,6 +103,32 @@ public class WebSocketChannel extends SocketChannel {
 	@Override
 	protected void implConfigureBlocking(boolean block) throws IOException {
 		// ignore
+	}
+
+	//
+	// SocketIOInbound
+	//
+
+	@Override
+	public String getProtocol() {
+		return null;
+	}
+
+	@Override
+	public void onConnect(SocketIOOutbound outbound) {
+		this.outbound = outbound;
+		webSocketServerManager.onConnect(this);
+	}
+
+	@Override
+	public void onDisconnect(DisconnectReason reason, String errorMessage) {
+		webSocketServerManager.onDisconnect(this);
+	}
+
+	@Override
+	public void onMessage(int messageType, String message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
