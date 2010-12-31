@@ -105,9 +105,7 @@ class NioServer extends Thread {
 	 *            the channel to close.
 	 */
 	public void close(SocketChannel channel) {
-		for (IDisconnectedListener listener : listeners) {
-			listener.onDisconnect(channel);
-		}
+		notifyDisconnectListener(channel);
 
 		/*
 		 * We ask the server to close the channel
@@ -120,6 +118,17 @@ class NioServer extends Thread {
 		 * Wake up to make the closure effective.
 		 */
 		selector.wakeup();
+	}
+
+	/**
+	 * notify the DisconnectListeners
+	 *
+	 * @param channel SocketChannel
+	 */
+	void notifyDisconnectListener(SocketChannel channel) {
+		for (IDisconnectedListener listener : listeners) {
+			listener.onDisconnect(channel);
+		}
 	}
 
 	/**

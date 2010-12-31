@@ -361,4 +361,14 @@ public final class NIONetworkServerManager extends Thread implements IWorker, ID
 		logger.info("NET Disconnecting " + channel);
 		decoder.clear(channel);
 	}
+
+	/**
+	 * notify disconnect listeners
+	 * 
+	 * @param channel SocketChannel
+	 */
+	// TODO: this method is a temporary Hack to allow other INetworkServerManagers to share one listener pool
+	public void notifyDisconnectListener(SocketChannel channel) {
+		server.notifyDisconnectListener(channel);
+	}
 }
