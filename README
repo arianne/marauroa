@@ -125,7 +125,7 @@ Changelog
 - added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game
 - added new method DBCommandQueue.getOneResult
 - database: added id and status to characters table
-- fixed an issue if a client with version 32 and a client with version 32 are in the same zone
+- fixed an issue if a client with version 32 and a client with version 33 are in the same zone
 
 3.8
 - attributes of type map
