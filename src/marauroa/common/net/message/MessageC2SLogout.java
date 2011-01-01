@@ -14,6 +14,7 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.Map;
 
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
@@ -54,6 +55,15 @@ public class MessageC2SLogout extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
+		if (type != MessageType.C2S_LOGOUT) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
 
 		if (type != MessageType.C2S_LOGOUT) {
 			throw new IOException();

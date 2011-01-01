@@ -603,8 +603,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * Fills this object with the data that has been serialized.
 	 *
-	 * @param in
-	 *			  the input serializer
+	 * @param in the input serializer
+	 * @throws IOException in case of unexpected attributes
 	 */
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		modified = true;
@@ -633,6 +633,42 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			if (def != null) {
 				String value = def.deserialize(in);
 				content.put(key, value);
+			} else {
+				throw new IOException("RPClass("+rpClass+") definition for attribute not found: " + key);
+			}
+		}
+	}
+
+	/**
+	 * Fills this object with the data that has been serialized into a map.
+	 *
+	 * @param in
+	 *			  the input map
+	 * @throws IOException in case of unexpected attributes
+	 */
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		modified = true;
+		String rpClassName = (String) in.get("_rpclass");
+		if (rpClassName == null) {
+			rpClassName = "";
+		}
+		rpClass = RPClass.getRPClass(rpClassName);
+
+		content.clear();
+
+		for (Map.Entry<String, Object> entry : in.entrySet()) {
+
+			String key = entry.getKey();
+			if (key.startsWith("_")) {
+				continue;
+			}
+
+			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+
+			if (def != null) {
+				if (entry.getValue() instanceof String) {
+					content.put(key, (String) entry.getValue());
+				}
 			} else {
 				throw new IOException("RPClass("+rpClass+") definition for attribute not found: " + key);
 			}

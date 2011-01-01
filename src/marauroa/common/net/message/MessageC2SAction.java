@@ -14,6 +14,7 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.Map;
 
 import marauroa.common.game.RPAction;
 
@@ -75,6 +76,18 @@ public class MessageC2SAction extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		action = (RPAction) in.readObject(new RPAction());
+
+		if (type != MessageType.C2S_ACTION) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		action = new RPAction();
+		action.readFromMap((Map<String, Object>) in.get("a"));
 
 		if (type != MessageType.C2S_ACTION) {
 			throw new IOException();

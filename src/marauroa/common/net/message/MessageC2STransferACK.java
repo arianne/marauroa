@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This message is for confirming server the content we want to be transfered to
@@ -84,6 +85,24 @@ public class MessageC2STransferACK extends Message {
 		for (int i = 0; i < size; i++) {
 			TransferContent content = new TransferContent();
 			content.readACK(in);
+			contents.add(content);
+		}
+
+		if (type != MessageType.C2S_TRANSFER_ACK) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+
+		contents = new LinkedList<TransferContent>();
+		Map<String, Map<String, Object>> contentsMap = (Map<String, Map<String, Object>>) in.get("contents");
+		for (Map<String, Object> contentMap : contentsMap.values()) {
+			TransferContent content = new TransferContent();
+			content.readACKFromMap(contentMap);
 			contents.add(content);
 		}
 

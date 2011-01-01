@@ -14,6 +14,7 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.Map;
 
 /**
  * This message is sent from client to server to indicate that he is still there
@@ -57,6 +58,15 @@ public class MessageC2SKeepAlive extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
+		if (type != MessageType.C2S_KEEPALIVE) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
 
 		if (type != MessageType.C2S_KEEPALIVE) {
 			throw new IOException();

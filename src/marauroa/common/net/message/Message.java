@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+import java.util.Map;
 
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
@@ -231,6 +232,19 @@ public class Message implements Serializable {
 		type = MessageType.values()[in.readByte()];
 		clientid = in.readInt();
 		timestampMessage = in.readInt();
+	}
+
+	/**
+	 * reads a message from a map
+	 *
+	 * @param in Map to read from
+	 * @exception IOException
+	 *                if the serializations fails
+	 */
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		this.type = MessageType.values()[Byte.parseByte((String) in.get("t"))];
+		this.clientid = Integer.parseInt((String) in.get("c"));
+		this.timestampMessage = Integer.parseInt((String) in.get("s"));
 	}
 
 	/**

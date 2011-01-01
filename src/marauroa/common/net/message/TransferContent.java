@@ -13,6 +13,7 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.util.Map;
 
 import marauroa.common.Utility;
 
@@ -133,6 +134,16 @@ public class TransferContent {
 	}
 
 	/**
+	 * Reads the content acceptance from client
+	 * @param in
+	 * @throws IOException
+	 */
+	public void readACKFromMap(Map<String, Object> in) throws IOException {
+		name = (String) in.get("name");
+		ack = Boolean.parseBoolean((String) in.get("ack"));
+	}
+
+	/**
 	 * Write the content data to client
 	 * @param out
 	 * @throws IOException
@@ -155,4 +166,5 @@ public class TransferContent {
 		timestamp = in.readInt();
 		cacheable = (in.readByte() == 1);
 	}
+
 }
