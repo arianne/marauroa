@@ -102,7 +102,7 @@ Changelog
 - fixed an issue on account renaming
 - fixed an issue with special characters in character names
 - zones are now stored asynchronously to the database
-- fixed a co-modifcation issue in Attributes.clone() and Statistics.clone()
+- fixed a co-modification issue in Attributes.clone() and Statistics.clone()
 
 3.8.4
 - fixed "Replacing content to transfer"
