@@ -12,18 +12,25 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.nio.NIONetworkServerManager;
 import marauroa.server.net.validator.ConnectionValidator;
+
+import org.eclipse.jetty.util.ajax.JSON;
 
 import com.glines.socketio.server.SocketIOInbound;
 import com.glines.socketio.server.SocketIOServlet;
@@ -36,6 +43,8 @@ import com.glines.socketio.server.SocketIOServlet;
 public class WebSocketServerManager extends SocketIOServlet implements INetworkServerManager {
 
 	private static final long serialVersionUID = 4898279536921406401L;
+	private static Logger logger = Log4J.getLogger(WebSocketServerManager.class);
+
 	private NIONetworkServerManager netMan;
 	private Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<WebSocketChannel>());
 
@@ -106,6 +115,27 @@ public class WebSocketServerManager extends SocketIOServlet implements INetworkS
 	public void onDisconnect(WebSocketChannel webSocketChannel) {
 		channels.remove(webSocketChannel);
 		netMan.notifyDisconnectListener(webSocketChannel);
+	}
+
+	/**
+	 * a client sent a message
+	 *
+	 * @param webSocketChannel channel to the client
+	 * @param messageType type of message
+	 * @param message message
+	 */
+	@SuppressWarnings("unchecked")
+	public void onMessage(WebSocketChannel webSocketChannel, int messageType, String message) {
+		logger.info("messateType: " + messageType + " message: " + message);
+		Map<String, Object> map = (Map<String, Object>) JSON.parse(message);
+		try {
+			Message msg = MessageFactory.getFactory().getMessage(map, webSocketChannel);
+			netMan.addMessage(msg);
+		} catch (IOException e) {
+			logger.error(map);
+		} catch (RuntimeException e) {
+			logger.error(map);
+		}
 	}
 
 }

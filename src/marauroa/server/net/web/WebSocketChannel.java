@@ -20,7 +20,6 @@ import java.nio.channels.SocketChannel;
 
 import com.glines.socketio.common.DisconnectReason;
 import com.glines.socketio.server.SocketIOInbound;
-import com.glines.socketio.server.SocketIOInbound.SocketIOOutbound;
 
 /**
  * a websocket channel which identifies a connection to a webclient.
@@ -31,7 +30,7 @@ import com.glines.socketio.server.SocketIOInbound.SocketIOOutbound;
 public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
 
 	private String sessionId;
-	private SocketIOOutbound outbound;
+	private SocketIOOutbound outboundSocket;
 	private WebSocketServerManager webSocketServerManager;
 
 	/**
@@ -116,7 +115,7 @@ public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
 
 	@Override
 	public void onConnect(SocketIOOutbound outbound) {
-		this.outbound = outbound;
+		this.outboundSocket = outbound;
 		webSocketServerManager.onConnect(this);
 	}
 
@@ -127,8 +126,7 @@ public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
 
 	@Override
 	public void onMessage(int messageType, String message) {
-		// TODO Auto-generated method stub
-		
+		webSocketServerManager.onMessage(this, messageType, message);
 	}
 
 }

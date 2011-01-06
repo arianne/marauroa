@@ -227,4 +227,38 @@ public class MessageFactory {
 			throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
 		}
 	}
+
+	/**
+	 * Returns a object of the right class from a stream of serialized data.
+	 *
+	 * @param in
+	 *            the serialized data
+	 * @param channel
+	 *            the source of the message needed to build the object.
+	 * @return a message of the right class
+	 * @throws IOException
+	 *             in case of problems with the message
+	 */
+	public Message getMessage(Map<String, Object> in, SocketChannel channel) throws IOException {
+		int messageTypeIndex = Byte.parseByte((String) in.get("t"));
+		/*
+		 * Now we check if we have this message class implemented.
+		 */
+		if (factoryArray.containsKey(messageTypeIndex)) {
+			Message tmp = null;
+			try {
+				Class<?> messageType = factoryArray.get(messageTypeIndex);
+				tmp = (Message) messageType.newInstance();
+				tmp.readFromMap(in);
+				tmp.setSocketChannel(channel);
+				return tmp;
+			} catch (Exception e) {
+				logger.error("error in getMessage", e);
+				throw new IOException(e.getMessage());
+			}
+		} else {
+			logger.warn("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
+			throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
+		}
+	}
 }

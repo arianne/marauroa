@@ -371,4 +371,14 @@ public final class NIONetworkServerManager extends Thread implements IWorker, ID
 	public void notifyDisconnectListener(SocketChannel channel) {
 		server.notifyDisconnectListener(channel);
 	}
+
+	/**
+	 * adds a message to the queue
+	 *
+	 * @param msg Message
+	 */
+	// TODO: this method is a temporary Hack to allow other INetworkServerManagers to share one message pool
+	public void addMessage(Message msg) {
+		messages.add(msg);
+	}
 }
