@@ -86,7 +86,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 		/* create a flood check on connections */
 		IFloodCheck check = new FloodCheck((INetworkServerManager) serverManager);
-		floodValidator = new FloodValidator(check);
+		floodValidator = new FloodValidator((INetworkServerManager) serverManager, check);
 
 		keepRunning = true;
 		isFinished = false;

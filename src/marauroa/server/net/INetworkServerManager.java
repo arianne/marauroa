@@ -12,6 +12,8 @@
  ***************************************************************************/
 package marauroa.server.net;
 
+import java.nio.channels.SocketChannel;
+
 import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
@@ -93,5 +95,13 @@ public interface INetworkServerManager {
 	 * This method notify the active object to finish it execution
 	 */
 	public abstract void finish();
+
+	/**
+	 * gets the channel associated with an internalChannel
+	 *
+	 * @param internalChannel internel channel
+	 * @return Channel
+	 */
+	public abstract Object getChannel(Object internalChannel);
 
 }

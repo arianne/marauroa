@@ -191,6 +191,15 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		this.listeners.add(listener);
 	}
 
+	/**
+	 * gets the channel associated with an internalChannel
+	 *
+	 * @param internalChannel internel channel
+	 * @return Channel
+	 */
+	public Channel getChannel(Object internalChannel) {
+		return channels.get(internalChannel);
+	}
 
 	//
 	// IServerManager
