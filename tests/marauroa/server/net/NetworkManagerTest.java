@@ -24,7 +24,7 @@ import marauroa.common.Configuration;
 import marauroa.common.game.RPAction;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.MessageC2SAction;
-import marauroa.server.net.nio.NIONetworkServerManager;
+import marauroa.server.net.nio.NIONetworkConnectionManager;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -37,7 +37,7 @@ import org.junit.Test;
  *
  */
 public class NetworkManagerTest {
-	private static NIONetworkServerManager netMan;
+	private static NIONetworkConnectionManager netMan;
 
 	private static final int PORT = 3215;
 
@@ -45,7 +45,7 @@ public class NetworkManagerTest {
 	public static void createNetworkManager() throws Exception {
 		Configuration.getConfiguration().set("tcp_port", Integer.toString(PORT));
 
-		netMan = new NIONetworkServerManager(null);
+		netMan = new NIONetworkConnectionManager(null);
 		netMan.start();
 
 		Thread.sleep(2000);
