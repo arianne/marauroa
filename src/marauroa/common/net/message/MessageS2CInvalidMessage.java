@@ -13,7 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicates the client that it is running an incompatible version
@@ -40,7 +41,7 @@ public class MessageS2CInvalidMessage extends Message {
 	 * @param reason
 	 *            Explains why the message is tagged as invalid.
 	 */
-	public MessageS2CInvalidMessage(SocketChannel source, String reason) {
+	public MessageS2CInvalidMessage(Channel source, String reason) {
 		super(MessageType.S2C_INVALIDMESSAGE, source);
 		this.reason = reason;
 	}

@@ -13,9 +13,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has accepted its login
@@ -40,7 +41,7 @@ public class MessageS2CLoginACK extends Message {
 	 * @param events
 	 * 			  The list of previous logins.
 	 */
-	public MessageS2CLoginACK(SocketChannel source, List<String> events) {
+	public MessageS2CLoginACK(Channel source, List<String> events) {
 		super(MessageType.S2C_LOGIN_ACK, source);
 		previousLogins = events;
 	}

@@ -14,11 +14,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
+import marauroa.common.net.Channel;
 
 
 /**
@@ -45,7 +45,7 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the create account
 	 */
-	public MessageS2CCreateAccountNACK(SocketChannel source, Result resolution) {
+	public MessageS2CCreateAccountNACK(Channel source, Result resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
 		reason = resolution;
 	}

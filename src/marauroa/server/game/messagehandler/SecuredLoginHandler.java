@@ -14,7 +14,6 @@ package marauroa.server.game.messagehandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,6 +22,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
@@ -72,11 +72,11 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			SecuredLoginInfo info = fillLoginInfo(msg, entry);
 			DBCommand command = new LoginCommand(info, 
 					this, entry.clientid, 
-					msg.getSocketChannel(), msg.getProtocolVersion());
+					msg.getChannel(), msg.getProtocolVersion());
 			DBCommandQueue.get().enqueue(command);
 	}
 
-	private void completeLogin(SocketChannel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
+	private void completeLogin(Channel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
 		PlayerEntry entry = PlayerEntryContainer.getContainer().get(clientid);
 		logger.debug("Correct username/password");
 

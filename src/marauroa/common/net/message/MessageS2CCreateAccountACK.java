@@ -13,7 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has accepted its create
@@ -38,7 +39,7 @@ public class MessageS2CCreateAccountACK extends Message {
 	 * @param username
 	 * 			  The confirmed username from server.
 	 */
-	public MessageS2CCreateAccountACK(SocketChannel source, String username) {
+	public MessageS2CCreateAccountACK(Channel source, String username) {
 		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
 		this.username = username;
 	}

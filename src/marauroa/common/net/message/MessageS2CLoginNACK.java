@@ -14,8 +14,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
 
 /**
@@ -82,7 +82,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CLoginNACK(SocketChannel source, Reasons resolution) {
+	public MessageS2CLoginNACK(Channel source, Reasons resolution) {
 		super(MessageType.S2C_LOGIN_NACK, source);
 		reason = resolution;
 	}

@@ -13,8 +13,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
@@ -33,7 +34,7 @@ public class MessageC2SLogout extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SLogout(SocketChannel source) {
+	public MessageC2SLogout(Channel source) {
 		super(MessageType.C2S_LOGOUT, source);
 	}
 

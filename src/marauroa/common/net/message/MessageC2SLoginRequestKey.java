@@ -13,8 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -43,7 +43,7 @@ public class MessageC2SLoginRequestKey extends Message {
 	 * @param game the game name
 	 * @param version the version of the game.
 	 */
-	public MessageC2SLoginRequestKey(SocketChannel source, String game, String version) {
+	public MessageC2SLoginRequestKey(Channel source, String game, String version) {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
 		this.game = game;
 		this.version = version;

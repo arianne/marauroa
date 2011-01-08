@@ -13,8 +13,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message is sent from client to server to indicate that he is still there
@@ -36,7 +37,7 @@ public class MessageC2SKeepAlive extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SKeepAlive(SocketChannel source) {
+	public MessageC2SKeepAlive(Channel source) {
 		super(MessageType.C2S_KEEPALIVE, source);
 	}
 

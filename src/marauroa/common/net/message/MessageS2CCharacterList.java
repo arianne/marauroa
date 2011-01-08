@@ -13,12 +13,12 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
 
 /**
@@ -44,7 +44,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @param characters
 	 *            the list of characters of the player
 	 */
-	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
+	public MessageS2CCharacterList(Channel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
 		this.characters = new LinkedHashMap<String, RPObject>();
 		for (String character : characters) {
@@ -62,7 +62,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @param characters
 	 *            the list of characters of the player
 	 */
-	public MessageS2CCharacterList(SocketChannel source, Map<String, RPObject> characters) {
+	public MessageS2CCharacterList(Channel source, Map<String, RPObject> characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
 		this.characters = new LinkedHashMap<String, RPObject>(characters);
 	}

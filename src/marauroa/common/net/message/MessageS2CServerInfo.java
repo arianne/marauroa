@@ -15,12 +15,12 @@ package marauroa.common.net.message;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 
 import marauroa.common.Utility;
 import marauroa.common.game.RPClass;
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -54,7 +54,7 @@ public class MessageS2CServerInfo extends Message {
 	 * @param contents
 	 *            the list of strings to describe the server.
 	 */
-	public MessageS2CServerInfo(SocketChannel source, String[] contents) {
+	public MessageS2CServerInfo(Channel source, String[] contents) {
 		super(MessageType.S2C_SERVERINFO, source);
 		this.contents = Utility.copy(contents);
 	}

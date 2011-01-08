@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +29,7 @@ import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -82,7 +82,7 @@ public class MessageS2CPerception extends Message {
 	 * @param perception
 	 *            the perception we are going to send.
 	 */
-	public MessageS2CPerception(SocketChannel source, Perception perception) {
+	public MessageS2CPerception(Channel source, Perception perception) {
 		super(MessageType.S2C_PERCEPTION, source);
 
 		typePerception = perception.type;

@@ -12,10 +12,10 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.nio.channels.SocketChannel;
 import java.util.Map;
 
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.MessageS2CCharacterList;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.rp.RPServerManager;
@@ -53,7 +53,7 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 		LoadAllActiveCharactersCommand cmd = (LoadAllActiveCharactersCommand) data;
 		Map<String, RPObject> characters = cmd.getCharacters();
 		int clientid = cmd.getClientid();
-		SocketChannel channel = cmd.getChannel();
+		Channel channel = cmd.getChannel();
 		
 		MessageS2CCharacterList msg = new MessageS2CCharacterList(channel, characters);
 		msg.setProtocolVersion(protocolVersion);

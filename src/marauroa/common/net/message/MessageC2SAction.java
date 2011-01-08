@@ -13,10 +13,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Map;
 
 import marauroa.common.game.RPAction;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server the action the player's avatar wants to perform.
@@ -41,7 +41,7 @@ public class MessageC2SAction extends Message {
 	 * @param action
 	 *            the action that we sent to server.
 	 */
-	public MessageC2SAction(SocketChannel source, RPAction action) {
+	public MessageC2SAction(Channel source, RPAction action) {
 		super(MessageType.C2S_ACTION, source);
 		this.action = action;
 	}

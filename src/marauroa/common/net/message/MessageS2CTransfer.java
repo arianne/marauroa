@@ -15,11 +15,11 @@ package marauroa.common.net.message;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -46,7 +46,7 @@ public class MessageS2CTransfer extends Message {
 	 * @param source  socket channel
 	 * @param content content to transfer
 	 */
-	public MessageS2CTransfer(SocketChannel source, TransferContent content) {
+	public MessageS2CTransfer(Channel source, TransferContent content) {
 		super(MessageType.S2C_TRANSFER, source);
 
 		this.contents = new LinkedList<TransferContent>();

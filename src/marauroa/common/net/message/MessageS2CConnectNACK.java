@@ -1,3 +1,4 @@
+
 /* $Id: MessageS2CConnectNACK.java,v 1.5 2010/07/25 16:19:12 nhnb Exp $ */
 /***************************************************************************
  *                      (C) Copyright 2003 - Marauroa                      *
@@ -13,7 +14,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has rejected its connection
@@ -37,7 +39,7 @@ public class MessageS2CConnectNACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CConnectNACK(SocketChannel source) {
+	public MessageS2CConnectNACK(Channel source) {
 		super(MessageType.S2C_CONNECT_NACK, source);
 	}
 

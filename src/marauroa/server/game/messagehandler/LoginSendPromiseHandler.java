@@ -92,7 +92,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 				        + ") can't login. You may want to increase max_number_of_players in your server.init. Current value is: " + maxNumberOfPlayers);
 
 				/* Notify player of the event. */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getChannel(),
 				        MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
 				msgLoginNACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
@@ -101,7 +101,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 
-			PlayerEntry entry = playerContainer.add(netMan, msgLoginSendPromise.getSocketChannel());
+			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getChannel());
 			entry.setProtocolVersion(msg.getProtocolVersion());
 
 			byte[] serverNonce = Hash.random(Hash.hashLength());
@@ -111,7 +111,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 			        serverNonce, msgLoginSendPromise.getAddress());
 
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg
-			        .getSocketChannel(), serverNonce);
+			        .getChannel(), serverNonce);
 			msgLoginSendNonce.setClientID(entry.clientid);
 			msgLoginSendNonce.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendNonce);

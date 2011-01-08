@@ -12,13 +12,12 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageP2SCreateCharacter;
@@ -30,7 +29,6 @@ import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
-
 /**
  * This is a create character request. It require that
  * client has correctly logged to server. Once client
@@ -53,7 +51,7 @@ class CreateCharacterHandler extends MessageHandler {
 		try {
 			int clientid = message.getClientID();
 			int protocolVersion = message.getProtocolVersion();
-			SocketChannel channel = message.getSocketChannel();
+			Channel channel = message.getChannel();
 
 			if (message instanceof MessageC2SCreateCharacter) {
 				MessageC2SCreateCharacter msg = (MessageC2SCreateCharacter) message;
@@ -93,7 +91,7 @@ class CreateCharacterHandler extends MessageHandler {
 	}
 
 	private void createCharacter(String username, String character, RPObject template,
-            int clientid, String address, SocketChannel channel, int protocolVersion,
+            int clientid, String address, Channel channel, int protocolVersion,
             boolean sendListOfCharacters) {
 	    /*
 	     * We request the creation of an character for a logged player. It

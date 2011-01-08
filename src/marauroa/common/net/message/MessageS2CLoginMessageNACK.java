@@ -14,7 +14,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has reject its login Message
@@ -40,7 +41,7 @@ public class MessageS2CLoginMessageNACK extends Message {
 	 * @param reason
 	 *            the reason to deny the login
 	 */
-	public MessageS2CLoginMessageNACK(SocketChannel source, String reason) {
+	public MessageS2CLoginMessageNACK(Channel source, String reason) {
 		super(MessageType.S2C_LOGIN_MESSAGE_NACK, source);
 		this.reason = reason;
 		if (this.reason.length() > 250) {

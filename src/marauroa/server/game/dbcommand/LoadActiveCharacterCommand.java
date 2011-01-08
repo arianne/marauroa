@@ -12,11 +12,11 @@
 package marauroa.server.game.dbcommand;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.net.Channel;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
@@ -53,7 +53,7 @@ public class LoadActiveCharacterCommand extends LoadCharacterCommand {
 	 * @param protocolVersion version of protocol
 	 */
 	public LoadActiveCharacterCommand(String username, String character,
-			DelayedEventHandler callback, int clientid, SocketChannel channel, int protocolVersion) {
+			DelayedEventHandler callback, int clientid, Channel channel, int protocolVersion) {
 		super(username, character, callback, clientid, channel, protocolVersion);
 	}
 

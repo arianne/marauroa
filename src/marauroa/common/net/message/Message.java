@@ -14,10 +14,9 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.channels.SocketChannel;
 import java.util.Map;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
@@ -85,7 +84,7 @@ public class Message implements Serializable {
 	 * The socket channel that the message will use to be send or from where it
 	 * was received
 	 */
-	protected SocketChannel channel;
+	protected Channel channel;
 
 	private InetAddress inetAddres;
 
@@ -97,13 +96,12 @@ public class Message implements Serializable {
 	 * @param channel
 	 *            The TCP/IP address associated to this message
 	 */
-	protected Message(MessageType type, SocketChannel channel) {
+	protected Message(MessageType type, Channel channel) {
 		this.type = type;
 		this.clientid = CLIENTID_INVALID;
 		this.channel = channel;
 		if (channel != null) {
-			Socket socket = channel.socket();
-			inetAddres = socket.getInetAddress();
+			inetAddres = channel.getInetAddress();
 		}
 		timestampMessage = (int) (System.currentTimeMillis());
 	}
@@ -114,11 +112,10 @@ public class Message implements Serializable {
 	 * @param channel
 	 *            The TCP/IP socket associated to this message
 	 */
-	public void setSocketChannel(SocketChannel channel) {
+	public void setChannel(Channel channel) {
 		this.channel = channel;
 		if (channel != null) {
-			Socket socket = channel.socket();
-			inetAddres = socket.getInetAddress();
+			inetAddres = channel.getInetAddress();
 		} else {
 			inetAddres = null;
 		}
@@ -129,7 +126,7 @@ public class Message implements Serializable {
 	 *
 	 * @return the TCP/IP socket associatted with this message
 	 */
-	public SocketChannel getSocketChannel() {
+	public Channel getChannel() {
 		return channel;
 	}
 

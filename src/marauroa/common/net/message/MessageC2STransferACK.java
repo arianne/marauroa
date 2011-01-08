@@ -13,10 +13,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message is for confirming server the content we want to be transfered to
@@ -43,7 +44,7 @@ public class MessageC2STransferACK extends Message {
 	 * @param content
 	 * 			  the list of contents to confirm to server.
 	 */
-	public MessageC2STransferACK(SocketChannel source, List<TransferContent> content) {
+	public MessageC2STransferACK(Channel source, List<TransferContent> content) {
 		super(MessageType.C2S_TRANSFER_ACK, source);
 
 		this.contents = content;

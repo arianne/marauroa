@@ -444,7 +444,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 			try {
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
-					msg.setSocketChannel(null);
+					msg.setChannel(null);
 					msg.setClientID(clientid);
 
 					/*

@@ -13,7 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server to create an account.
@@ -49,7 +50,7 @@ public class MessageC2SCreateAccount extends Message {
 	 * @param email
 	 *            email of the player
 	 */
-	public MessageC2SCreateAccount(SocketChannel source, String username, String password,
+	public MessageC2SCreateAccount(Channel source, String username, String password,
 	        String email) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;

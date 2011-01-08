@@ -13,7 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has accepted its
@@ -34,7 +35,7 @@ public class MessageS2CChooseCharacterACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CChooseCharacterACK(SocketChannel source) {
+	public MessageS2CChooseCharacterACK(Channel source) {
 		super(MessageType.S2C_CHOOSECHARACTER_ACK, source);
 	}
 

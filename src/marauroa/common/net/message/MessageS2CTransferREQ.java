@@ -13,9 +13,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+
+import marauroa.common.net.Channel;
 
 /**
  * Prior to transfer we send client a transfer offer so it can decide whenever to ACK it and have it
@@ -38,7 +39,7 @@ public class MessageS2CTransferREQ extends Message {
 	 * @param source   socket channel
 	 * @param contents content offered for transfer
 	 */
-	public MessageS2CTransferREQ(SocketChannel source, List<TransferContent> contents) {
+	public MessageS2CTransferREQ(Channel source, List<TransferContent> contents) {
 		super(MessageType.S2C_TRANSFER_REQ, source);
 
 		this.contents = contents;

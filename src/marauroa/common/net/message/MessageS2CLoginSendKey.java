@@ -14,9 +14,9 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.RSAPublicKey;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -42,7 +42,7 @@ public class MessageS2CLoginSendKey extends Message {
 	 * @param key
 	 *            the server public key.
 	 */
-	public MessageS2CLoginSendKey(SocketChannel source, RSAPublicKey key) {
+	public MessageS2CLoginSendKey(Channel source, RSAPublicKey key) {
 		super(MessageType.S2C_LOGIN_SENDKEY, source);
 		this.key = key;
 	}

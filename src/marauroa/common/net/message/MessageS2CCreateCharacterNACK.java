@@ -14,11 +14,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has reject its create character Message
@@ -45,7 +45,7 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateCharacterNACK(SocketChannel source, Result resolution) {
+	public MessageS2CCreateCharacterNACK(Channel source, Result resolution) {
 		super(MessageType.S2C_CREATECHARACTER_NACK, source);
 		reason = resolution;
 	}

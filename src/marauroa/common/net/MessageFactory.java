@@ -14,7 +14,6 @@ package marauroa.common.net;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,17 +154,15 @@ public class MessageFactory {
 	 *
 	 * @param data
 	 *            the serialized data
-	 * @param channel
-	 *            the source of the message needed to build the object.
 	 * @return a message of the right class
 	 * @throws IOException
 	 *             in case of problems with the message
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel) throws IOException,
+	public Message getMessage(byte[] data) throws IOException,
 	        InvalidVersionException {
-		return getMessage(data, channel, 0);
+		return getMessage(data, 0);
 	}
 
 	/**
@@ -173,8 +170,6 @@ public class MessageFactory {
 	 *
 	 * @param data
 	 *            the serialized data
-	 * @param channel
-	 *            the source of the message needed to build the object.
 	 * @param offset
 	 *            where to start reading in the data-array.
 	 * @return a message of the right class
@@ -183,7 +178,7 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException,
+	public Message getMessage(byte[] data, int offset) throws IOException,
 	        InvalidVersionException {
 		/*
 		 * Check the version of the network protocol.
@@ -215,7 +210,6 @@ public class MessageFactory {
 				s.setProtocolVersion(networkProtocolVersion);
 
 				tmp.readObject(s);
-				tmp.setSocketChannel(channel);
 				s.close();
 				return tmp;
 			} catch (Exception e) {
@@ -233,13 +227,11 @@ public class MessageFactory {
 	 *
 	 * @param in
 	 *            the serialized data
-	 * @param channel
-	 *            the source of the message needed to build the object.
 	 * @return a message of the right class
 	 * @throws IOException
 	 *             in case of problems with the message
 	 */
-	public Message getMessage(Map<String, Object> in, SocketChannel channel) throws IOException {
+	public Message getMessage(Map<String, Object> in) throws IOException {
 		int messageTypeIndex = Byte.parseByte((String) in.get("t"));
 		/*
 		 * Now we check if we have this message class implemented.
@@ -250,7 +242,6 @@ public class MessageFactory {
 				Class<?> messageType = factoryArray.get(messageTypeIndex);
 				tmp = (Message) messageType.newInstance();
 				tmp.readFromMap(in);
-				tmp.setSocketChannel(channel);
 				return tmp;
 			} catch (Exception e) {
 				logger.error("error in getMessage", e);

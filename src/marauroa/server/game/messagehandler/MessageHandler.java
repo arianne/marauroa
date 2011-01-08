@@ -98,7 +98,7 @@ abstract class MessageHandler {
 		 * Finally we check if another player is trying to inject messages into
 		 * a different player avatar.
 		 */
-		if (entry.channel != msg.getSocketChannel()) {
+		if (entry.channel != msg.getChannel()) {
 			/*
 			 * Info: Player is using a different socket to communicate with
 			 * server.

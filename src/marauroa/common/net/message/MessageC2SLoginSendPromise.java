@@ -13,9 +13,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -38,7 +38,7 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 	 * @param hash
 	 *            The hash code of the nonce to use.
 	 */
-	public MessageC2SLoginSendPromise(SocketChannel source, byte[] hash) {
+	public MessageC2SLoginSendPromise(Channel source, byte[] hash) {
 		super(MessageType.C2S_LOGIN_SENDPROMISE, source, hash);
 	}
 

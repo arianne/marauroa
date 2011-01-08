@@ -12,9 +12,8 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.common.Log4J;
+import marauroa.common.net.Channel;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
@@ -32,7 +31,7 @@ public class DisconnectHandler implements DelayedEventHandler {
 	private PlayerEntryContainer playerContainer = PlayerEntryContainer.getContainer();
 
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
-		SocketChannel channel = (SocketChannel) data;
+		Channel channel = (Channel) data;
 
 		playerContainer.getLock().requestWriteLock();
 

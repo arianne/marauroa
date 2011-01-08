@@ -13,7 +13,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * If client gets out of sync with server because of a problem in communications, it can
@@ -32,7 +33,7 @@ public class MessageC2SOutOfSync extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SOutOfSync(SocketChannel source) {
+	public MessageC2SOutOfSync(Channel source) {
 		super(MessageType.C2S_OUTOFSYNC, source);
 	}
 

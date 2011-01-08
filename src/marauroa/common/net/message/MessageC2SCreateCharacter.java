@@ -13,9 +13,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server to create a character.
@@ -48,7 +48,7 @@ public class MessageC2SCreateCharacter extends Message {
 	 *            a RPObject that contains attributes that will be used on the
 	 *            created character.
 	 */
-	public MessageC2SCreateCharacter(SocketChannel source, String character, RPObject template) {
+	public MessageC2SCreateCharacter(Channel source, String character, RPObject template) {
 		super(MessageType.C2S_CREATECHARACTER, source);
 		this.character = character;
 		this.template = template;
