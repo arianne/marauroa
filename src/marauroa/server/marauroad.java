@@ -343,7 +343,7 @@ public class marauroad extends Thread {
 
 
 		try {
-			netMan = new marauroa.server.net.nio.NIONetworkServerManager();
+			netMan = new marauroa.server.net.NetworkServerManager();
 			netMan.start();
 		} catch (Exception e) {
 			logger.error("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
