@@ -27,7 +27,7 @@ public interface ConnectionManager {
 
 	boolean isFinished();
 
-	void send(Object internalChannel, Message msg) throws IOException;
+	void send(Object internalChannel, Message msg);
 
 	void close(Object internalChannel);
 
