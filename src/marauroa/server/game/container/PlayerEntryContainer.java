@@ -13,7 +13,6 @@
 package marauroa.server.game.container;
 
 import java.net.InetAddress;
-import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +24,7 @@ import java.util.Random;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.server.RWLock;
 import marauroa.server.game.Statistics;
 import marauroa.server.net.INetworkServerManager;
@@ -146,7 +146,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *            the socket channel to check
 	 * @return the PlayerEntry or null if it is not found.
 	 */
-	public PlayerEntry get(SocketChannel channel) {
+	public PlayerEntry get(Channel channel) {
 		synchronized (clientidMap) {
 			for (PlayerEntry entry : clientidMap.values()) {
 				if (entry.channel == channel) {
@@ -246,9 +246,9 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *            the socket channel associated with the client
 	 * @return client id resulting
 	 */
-	public PlayerEntry add(INetworkServerManager netMan, SocketChannel channel) {
+	public PlayerEntry add(Channel channel) {
 		/* We create an entry */
-		PlayerEntry entry = new PlayerEntry(netMan, channel);
+		PlayerEntry entry = new PlayerEntry(channel);
 		entry.clientid = generateClientID();
 
 		/* Finally adds it to map */

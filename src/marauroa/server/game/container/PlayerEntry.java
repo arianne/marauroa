@@ -14,7 +14,6 @@ package marauroa.server.game.container;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -24,6 +23,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
@@ -57,11 +57,8 @@ public class PlayerEntry {
 	/** The runtime clientid */
 	public int clientid;
 
-	/** network manager for this client */
-	private INetworkServerManager netMan;
-
 	/** The client associated SocketChannel */
-	public SocketChannel channel;
+	public Channel channel;
 
 	/**
 	 * The login Info. It is created after the first login message and destroyed
@@ -124,8 +121,7 @@ public class PlayerEntry {
 	 * @param channel
 	 *            the socket channel
 	 */
-	public PlayerEntry(INetworkServerManager netMan, SocketChannel channel) {
-		this.netMan = netMan;
+	public PlayerEntry(Channel channel) {
 		this.channel = channel;
 
 		clientid = Message.CLIENTID_INVALID;
@@ -147,21 +143,12 @@ public class PlayerEntry {
 	}
 
 	/**
-	 * gets the INetworkManager responsible for this entry
-	 *
-	 * @return INetworkManager
-	 */
-	public INetworkServerManager getNetMan() {
-		return netMan;
-	}
-
-	/**
 	 * Return the inet address of this PlayerEntry.
 	 *
 	 * @return the inet address of this PlayerEntry.
 	 */
 	public InetAddress getAddress() {
-		return channel.socket().getInetAddress();
+		return channel.getInetAddress();
 	}
 
 	/**
