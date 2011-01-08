@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import marauroa.common.Log4J;
-import marauroa.server.net.IDisconnectedListener;
 
 /**
  * This class is the basic schema for a nio server. It works in a pattern of
@@ -78,8 +77,6 @@ class NioServer extends Thread {
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
 	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
-	/** A list of the listeners to the onDisconnect event. */
-	private List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		super("NioServer");
@@ -94,7 +91,6 @@ class NioServer extends Thread {
 		this.worker.setServer(this);
 
 		pendingClosed = new LinkedList<ChangeRequest>();
-		listeners = new LinkedList<IDisconnectedListener>();
 	}
 
 	/**
@@ -105,30 +101,15 @@ class NioServer extends Thread {
 	 *            the channel to close.
 	 */
 	public void close(SocketChannel channel) {
-		notifyDisconnectListener(channel);
+		worker.onDisconnect(channel);
 
-		/*
-		 * We ask the server to close the channel
-		 */	
+		// We ask the server to close the channel
 		synchronized (this.pendingClosed) {
-		  pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
+			pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
 		}
 		
-		/*
-		 * Wake up to make the closure effective.
-		 */
+		// Wake up to make the closure effective.
 		selector.wakeup();
-	}
-
-	/**
-	 * notify the DisconnectListeners
-	 *
-	 * @param channel SocketChannel
-	 */
-	void notifyDisconnectListener(SocketChannel channel) {
-		for (IDisconnectedListener listener : listeners) {
-			listener.onDisconnect(channel);
-		}
 	}
 
 	/**
@@ -382,12 +363,4 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
-	/** 
-	 * Register a listener to notify about disconnected events
-	 *
-	 * @param listener listener to add
-	 */
-	public void registerDisconnectedListener(IDisconnectedListener listener) {
-		this.listeners.add(listener);
-	}
 }

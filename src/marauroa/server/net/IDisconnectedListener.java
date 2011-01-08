@@ -12,7 +12,7 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import java.nio.channels.SocketChannel;
+import marauroa.common.net.Channel;
 
 /**
  * This interface provides a callback notification for disconnected clients.
@@ -28,6 +28,6 @@ public interface IDisconnectedListener {
 	 * @param channel
 	 *            the channel that was closed.
 	 */
-	public void onDisconnect(SocketChannel channel);
+	public void onDisconnect(Channel channel);
 
 }

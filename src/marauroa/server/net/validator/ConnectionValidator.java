@@ -14,7 +14,6 @@ package marauroa.server.net.validator;
 
 import java.net.InetAddress;
 import java.net.Socket;
-import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,6 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.Channel;
 import marauroa.server.game.db.BanListDAO;
 import marauroa.server.game.db.DAORegister;
 
@@ -117,8 +117,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 * @param time
 	 *            how many seconds to ban.
 	 */
-	public void addBan(SocketChannel channel, int time) {
-		addBan(channel.socket().getInetAddress().getHostAddress(), "255.255.255.255", time);
+	public void addBan(Channel channel, int time) {
+		addBan(channel.getInetAddress().getHostAddress(), "255.255.255.255", time);
 
 	}
 
@@ -185,18 +185,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check if a socket that has a InetAddress associated is banned.
-	 *
-	 * @param socket
-	 *            the socket we want to check if it is banned or not.
-	 * @return true if it is banned.
-	 */
-	public synchronized boolean checkBanned(Socket socket) {
-		InetAddress address = socket.getInetAddress();
-		return checkBanned(address);
 	}
 
 	/**

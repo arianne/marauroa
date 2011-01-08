@@ -12,8 +12,7 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import java.nio.channels.SocketChannel;
-
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
 
@@ -83,7 +82,7 @@ public interface INetworkServerManager {
 	 * 
 	 * @param channel
 	 */
-	public abstract void disconnectClient(SocketChannel channel);
+	public abstract void disconnectClient(Channel channel);
 
 	/**
 	 * This method inits the active object
