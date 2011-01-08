@@ -42,11 +42,11 @@ import marauroa.server.net.flood.IFloodCheck;
  * @author miguel
  * 
  */
-public final class NIONetworkServerManager extends Thread implements IWorker, ConnectionManager {
+public final class NIONetworkConnectionManager extends Thread implements IWorker, ConnectionManager {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(NIONetworkServerManager.class);
+	        .getLogger(NIONetworkConnectionManager.class);
 
 	/** We store the server for sending stuff. */
 	private NioServer server;
@@ -81,7 +81,7 @@ public final class NIONetworkServerManager extends Thread implements IWorker, Co
 	 * @throws IOException
 	 *             if there any exception when starting the socket server.
 	 */
-	public NIONetworkServerManager(IServerManager serverManager) throws IOException {
+	public NIONetworkConnectionManager(IServerManager serverManager) throws IOException {
 		super("NetworkServerManager");
 
 		/* create a flood check on connections */

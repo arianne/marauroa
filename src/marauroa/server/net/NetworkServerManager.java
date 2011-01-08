@@ -25,7 +25,7 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageS2CConnectNACK;
-import marauroa.server.net.nio.NIONetworkServerManager;
+import marauroa.server.net.nio.NIONetworkConnectionManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
@@ -72,7 +72,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 
 		logger.debug("NetworkServerManager started successfully");
 
-		NIONetworkServerManager nio = new NIONetworkServerManager(this);
+		NIONetworkConnectionManager nio = new NIONetworkConnectionManager(this);
 		nio.start();
 		connectionManagers.add(nio);
 	}

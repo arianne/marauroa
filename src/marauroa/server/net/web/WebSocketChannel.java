@@ -27,7 +27,7 @@ public class WebSocketChannel implements SocketIOInbound {
 
 	private String sessionId;
 	private SocketIOOutbound outboundSocket;
-	private WebSocketServerManager webSocketServerManager;
+	private WebSocketConnectionManager webSocketServerManager;
 	private InetAddress address;
 
 	/**
@@ -38,7 +38,7 @@ public class WebSocketChannel implements SocketIOInbound {
 	 * @param sessionId sessionid
 	 * @throws UnknownHostException in case the ip-address is invalid
 	 */
-	public WebSocketChannel(WebSocketServerManager webSocketServerManager, String address, String sessionId) throws UnknownHostException {
+	public WebSocketChannel(WebSocketConnectionManager webSocketServerManager, String address, String sessionId) throws UnknownHostException {
 		this.webSocketServerManager = webSocketServerManager;
 		this.address = InetAddress.getByName(address);
 		this.sessionId = sessionId;

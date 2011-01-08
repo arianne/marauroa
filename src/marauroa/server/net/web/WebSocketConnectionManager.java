@@ -38,10 +38,10 @@ import com.glines.socketio.server.SocketIOServlet;
  *
  * @author hendrik
  */
-public class WebSocketServerManager extends SocketIOServlet implements ConnectionManager {
+public class WebSocketConnectionManager extends SocketIOServlet implements ConnectionManager {
 
 	private static final long serialVersionUID = 4898279536921406401L;
-	private static Logger logger = Log4J.getLogger(WebSocketServerManager.class);
+	private static Logger logger = Log4J.getLogger(WebSocketConnectionManager.class);
 
 	private IServerManager serverManager;
 	private Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<WebSocketChannel>());
@@ -51,7 +51,7 @@ public class WebSocketServerManager extends SocketIOServlet implements Connectio
 	 *
 	 * @param netMan classic network server manager.
 	 */
-	public WebSocketServerManager(IServerManager netMan) {
+	public WebSocketConnectionManager(IServerManager netMan) {
 		this.serverManager = netMan;
 	}
 
