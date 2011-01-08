@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.Channel;
 import marauroa.server.net.IDisconnectedListener;
 
 /**
@@ -33,7 +34,7 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	private static final marauroa.common.Logger logger = Log4J.getLogger(FloodValidator.class);
 
 	/** Stores the connections */
-	Map<SocketChannel, FloodMeasure> connections;
+	Map<Channel, FloodMeasure> connections;
 
 	/** This interface implements the flood checking. */
 	IFloodCheck floodCheck;
@@ -45,7 +46,7 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	 *            the implementation of the flood check.
 	 */
 	public FloodValidator(IFloodCheck check) {
-		connections = new HashMap<SocketChannel, FloodMeasure>();
+		connections = new HashMap<Channel, FloodMeasure>();
 		this.floodCheck = check;
 	}
 
@@ -55,7 +56,7 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	 * @param channel
 	 *            the new added channel.
 	 */
-	public void add(SocketChannel channel) {
+	public void add(Channel channel) {
 		connections.put(channel, new FloodMeasure(channel));
 	}
 
@@ -63,7 +64,7 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	 * Callback method. It will be called by NIOServer when the connection is
 	 * closed.
 	 */
-	public void onDisconnect(SocketChannel channel) {
+	public void onDisconnect(Channel channel) {
 		connections.remove(channel);
 	}
 
