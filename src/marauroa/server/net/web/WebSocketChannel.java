@@ -12,11 +12,8 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.glines.socketio.common.DisconnectReason;
 import com.glines.socketio.server.SocketIOInbound;
@@ -26,82 +23,25 @@ import com.glines.socketio.server.SocketIOInbound;
  *
  * @author hendrik
  */
-// TODO: don't extend SocketChannel but use some
-public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
+public class WebSocketChannel implements SocketIOInbound {
 
 	private String sessionId;
 	private SocketIOOutbound outboundSocket;
 	private WebSocketServerManager webSocketServerManager;
+	private InetAddress address;
 
 	/**
 	 * creates a new WebSocketChannel
 	 *
 	 * @param webSocketServerManager 
+	 * @param address ip-address of other end
 	 * @param sessionId sessionid
+	 * @throws UnknownHostException in case the ip-address is invalid
 	 */
-	public WebSocketChannel(WebSocketServerManager webSocketServerManager, String sessionId) {
-		super(null);
+	public WebSocketChannel(WebSocketServerManager webSocketServerManager, String address, String sessionId) throws UnknownHostException {
 		this.webSocketServerManager = webSocketServerManager;
+		this.address = InetAddress.getByName(address);
 		this.sessionId = sessionId;
-	}
-	
-	//
-	// SocketChannel
-	//
-
-	@Override
-	public Socket socket() {
-		return null;
-	}
-
-	@Override
-	public boolean isConnected() {
-		return false;
-	}
-
-	@Override
-	public boolean isConnectionPending() {
-		return false;
-	}
-
-	@Override
-	public boolean connect(SocketAddress remote) throws IOException {
-		return false;
-	}
-
-	@Override
-	public boolean finishConnect() throws IOException {
-		return false;
-	}
-
-	@Override
-	public int read(ByteBuffer dst) throws IOException {
-		return 0;
-	}
-
-	@Override
-	public long read(ByteBuffer[] dsts, int offset, int length) throws IOException {
-		return 0;
-	}
-
-	@Override
-	public int write(ByteBuffer src) throws IOException {
-		return 0;
-	}
-
-	@Override
-	public long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
-		return 0;
-	}
-
-	@Override
-	protected void implCloseSelectableChannel() throws IOException {
-		// ignore
-	}
-
-	@Override
-	protected void implConfigureBlocking(boolean block) throws IOException {
-		// ignore
 	}
 
 	//
@@ -127,6 +67,15 @@ public class WebSocketChannel extends SocketChannel implements SocketIOInbound {
 	@Override
 	public void onMessage(int messageType, String message) {
 		webSocketServerManager.onMessage(this, messageType, message);
+	}
+
+	/**
+	 * gets the ip-address
+	 *
+	 * @return address
+	 */
+	public InetAddress getAddress() {
+		return address;
 	}
 
 }

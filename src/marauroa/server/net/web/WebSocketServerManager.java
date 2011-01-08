@@ -13,7 +13,7 @@
 package marauroa.server.net.web;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,12 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
-import marauroa.server.net.IDisconnectedListener;
-import marauroa.server.net.INetworkServerManager;
-import marauroa.server.net.nio.NIONetworkServerManager;
-import marauroa.server.net.validator.ConnectionValidator;
+import marauroa.server.net.IServerManager;
 
 import org.eclipse.jetty.util.ajax.JSON;
 
@@ -40,12 +38,12 @@ import com.glines.socketio.server.SocketIOServlet;
  *
  * @author hendrik
  */
-public class WebSocketServerManager extends SocketIOServlet implements INetworkServerManager {
+public class WebSocketServerManager extends SocketIOServlet implements ConnectionManager {
 
 	private static final long serialVersionUID = 4898279536921406401L;
 	private static Logger logger = Log4J.getLogger(WebSocketServerManager.class);
 
-	private NIONetworkServerManager netMan;
+	private IServerManager serverManager;
 	private Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<WebSocketChannel>());
 
 	/**
@@ -53,49 +51,18 @@ public class WebSocketServerManager extends SocketIOServlet implements INetworkS
 	 *
 	 * @param netMan classic network server manager.
 	 */
-	public WebSocketServerManager(NIONetworkServerManager netMan) {
-		this.netMan = netMan;
-	}
-
-	@Override
-	public void registerDisconnectedListener(IDisconnectedListener listener) {
-		netMan.registerDisconnectedListener(listener);
-	}
-
-	@Override
-	public ConnectionValidator getValidator() {
-		return netMan.getValidator();
-	}
-
-	@Override
-	public Message getMessage() {
-		return null;
-	}
-
-	@Override
-	public void sendMessage(Message msg) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void disconnectClient(SocketChannel channel) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void start() {
-		// do nothing
-	}
-
-	@Override
-	public void finish() {
-		// do nothing
+	public WebSocketServerManager(IServerManager netMan) {
+		this.serverManager = netMan;
 	}
 
 	@Override
 	protected SocketIOInbound doSocketIOConnect(HttpServletRequest request, String[] protocols) {
-		return new WebSocketChannel(this, (String) request.getSession().getAttribute("jsessionid"));
+		try {
+			return new WebSocketChannel(this, request.getRemoteAddr(), (String) request.getSession().getAttribute("jsessionid"));
+		} catch (UnknownHostException e) {
+			logger.error(e, e);
+		}
+		return null;
 	}
 
 	/**
@@ -105,6 +72,7 @@ public class WebSocketServerManager extends SocketIOServlet implements INetworkS
 	 */
 	void onConnect(WebSocketChannel webSocketChannel) {
 		channels.add(webSocketChannel);
+		serverManager.onConnect(this, webSocketChannel.getAddress(), webSocketChannel);
 	}
 
 	/**
@@ -114,7 +82,7 @@ public class WebSocketServerManager extends SocketIOServlet implements INetworkS
 	 */
 	public void onDisconnect(WebSocketChannel webSocketChannel) {
 		channels.remove(webSocketChannel);
-		netMan.notifyDisconnectListener(webSocketChannel);
+		serverManager.onDisconnect(this, webSocketChannel);
 	}
 
 	/**
@@ -129,13 +97,37 @@ public class WebSocketServerManager extends SocketIOServlet implements INetworkS
 		logger.info("messateType: " + messageType + " message: " + message);
 		Map<String, Object> map = (Map<String, Object>) JSON.parse(message);
 		try {
-			Message msg = MessageFactory.getFactory().getMessage(map, webSocketChannel);
-			netMan.addMessage(msg);
+			Message msg = MessageFactory.getFactory().getMessage(map);
+			serverManager.onMessage(this, webSocketChannel, msg);
 		} catch (IOException e) {
 			logger.error(map);
 		} catch (RuntimeException e) {
 			logger.error(map);
 		}
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isFinished() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void send(Object internalChannel, Message msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close(Object internalChannel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
