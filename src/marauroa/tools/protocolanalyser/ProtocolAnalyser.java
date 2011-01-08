@@ -15,11 +15,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.nio.channels.SocketChannel;
 import java.util.List;
 
 import marauroa.common.Log4J;
 import marauroa.common.Utility;
+import marauroa.common.net.Channel;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
@@ -45,7 +45,7 @@ public class ProtocolAnalyser {
 	 *         the dump and the one used to parse it are incompatible
 	 */
 	public void dump(InputStream is, boolean dumpRawData) throws IOException, InvalidVersionException {
-		SocketChannel channel = new FakeSocketChannel(InetAddress.getByName("localhost"), 32123);
+		Channel channel = new Channel(null, InetAddress.getByName("localhost"), null);
 
 		while (true) {
 			//read a packet from the opened file

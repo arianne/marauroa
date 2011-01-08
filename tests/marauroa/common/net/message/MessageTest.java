@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 import marauroa.common.net.message.Message.MessageType;
@@ -31,7 +31,7 @@ public class MessageTest {
 
 	private static class MockMessage extends Message {
 
-		public MockMessage(MessageType type, SocketChannel channel) {
+		public MockMessage(MessageType type, Channel channel) {
 			super(type, channel);
 		}
 
@@ -39,24 +39,24 @@ public class MessageTest {
 
 	@Test
 	public final void testGetAddress() throws IOException {
-		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		assertNull(mm.getAddress());
 	}
 
 	@Test
 	public final void testGetType() throws IOException {
-		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		assertTrue(MessageType.C2S_ACTION == mm.getType());
 	}
 
 	@Test
 	public final void testReadWriteObject() throws IOException {
-		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		mmOut.setClientID(1);
 		mmOut.writeObject(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
-		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, new Channel());
 
 		mmInn.readObject(in);
 		assertEquals(mmOut.getClientID(), mmInn.getClientID());
@@ -66,12 +66,12 @@ public class MessageTest {
 
 	@Test
 	public final void testInvalidClientId() throws IOException {
-		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mmOut = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		mmOut.setClientID(Message.CLIENTID_INVALID);
 		mmOut.writeObject(new OutputSerializer(out));
 		InputSerializer in = new InputSerializer(new ByteArrayInputStream(out.toByteArray()));
-		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, SocketChannel.open());
+		MockMessage mmInn = new MockMessage(MessageType.C2S_ACTION, new Channel());
 
 		mmInn.readObject(in);
 		assertEquals(mmOut.getClientID(), mmInn.getClientID());
