@@ -14,6 +14,8 @@ package marauroa.server.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -67,8 +69,9 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		connectionValidator = new ConnectionValidator();
 
 		messages = new LinkedBlockingQueue<Message>();
-
+		channels = Collections.synchronizedMap(new HashMap<Object, Channel>());
 		listeners = new LinkedList<IDisconnectedListener>();
+		connectionManagers = new LinkedList<ConnectionManager>();
 
 		logger.debug("NetworkServerManager started successfully");
 
