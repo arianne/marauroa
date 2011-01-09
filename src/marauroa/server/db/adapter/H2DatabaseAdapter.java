@@ -24,7 +24,7 @@ import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
 
 /**
- * abstracts from H2 specifica
+ * abstracts from H2 specifications
  *
  * @author hendrik
  */
@@ -34,7 +34,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	/**
 	 * creates a new H2Adapter
 	 *
-	 * @param connInfo parmaters specifying the
+	 * @param connInfo parameters specifying the connection
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	public H2DatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
@@ -42,7 +42,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	/**
-	 * creates a new H2Adapter for test purpose without conection to the DB
+	 * creates a new H2Adapter for test purposes, without connection to the DB
 	 *
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
@@ -66,7 +66,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	    return con;
     }
 	/**
-	 * rewrites ALTER TABLE statements to remove the "COLUMS (" part
+	 * rewrites ALTER TABLE statements to remove the "COLUMNS (" part
 	 *
 	 * @param sql original SQL statement
 	 * @return modified SQL statement

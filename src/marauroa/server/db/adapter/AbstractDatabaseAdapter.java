@@ -47,7 +47,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	/**
 	 * creates a new AbstractDatabaseAdapter
 	 *
-	 * @param connInfo parmaters specifying the
+	 * @param connInfo parameters specifying the
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	public AbstractDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
@@ -57,7 +57,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	/**
-	 * creates a new AbstractDatabaseAdapter for test purpose without conection to the DB
+	 * creates a new AbstractDatabaseAdapter for test purpose without connection to the DB
 	 *
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
