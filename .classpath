@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="srcexternal"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="functional_tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -9,5 +10,12 @@
 	<classpathentry kind="lib" path="libs/mysql-connector.jar"/>
 	<classpathentry kind="lib" path="libs/jython.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-continuation-7.2.2.v20101205.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-util-7.2.2.v20101205.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-io-7.2.2.v20101205.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-server-7.2.2.v20101205.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-websocket-7.2.2.v20101205.jar"/>
+	<classpathentry kind="lib" path="libs/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/h2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
