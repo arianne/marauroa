@@ -23,7 +23,7 @@ import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
 
 /**
- * abstracts from MySQL specifica
+ * abstracts from MySQL specifications
  *
  * @author hendrik
  */
@@ -33,7 +33,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	/**
 	 * creates a new MySQLDatabaseAdapter
 	 *
-	 * @param connInfo parmaters specifying the
+	 * @param connInfo parameters specifying the connection
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	public MySQLDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
@@ -41,7 +41,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	/**
-	 * creates a new MySQLDatabaseAdapter for test purpose without conection to the DB
+	 * creates a new MySQLDatabaseAdapter for test purposes, without connection to the DB
 	 *
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */

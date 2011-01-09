@@ -47,7 +47,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	/**
 	 * creates a new AbstractDatabaseAdapter
 	 *
-	 * @param connInfo parmaters specifying the
+	 * @param connInfo parameters specifying the
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	public AbstractDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
@@ -57,7 +57,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	/**
-	 * creates a new AbstractDatabaseAdapter for test purpose without conection to the DB
+	 * creates a new AbstractDatabaseAdapter for test purpose without connection to the DB
 	 *
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
@@ -262,7 +262,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	
 	public int getColumnLength(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns("", "", table, column);
+		ResultSet result = meta.getColumns(null, null, table, column);
 		if (result.next()) {
 			return result.getInt("COLUMN_SIZE");
 		}

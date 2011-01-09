@@ -63,7 +63,7 @@ public interface DatabaseAdapter {
 	 * executes a batch of sql-statements
 	 *
 	 * @param sql           sql-statement to execute
-	 * @param inputStreams  a list of inpurt stream. For each of them the statement is executed
+	 * @param inputStreams  a list of input stream. For each of them the statement is executed
 	 * @throws SQLException in case of an database error
 	 * @throws IOException  in case one of the streams cannot be read to the end
 	 */
@@ -90,7 +90,7 @@ public interface DatabaseAdapter {
 	/**
 	 * gets the id of the last insert. Note: The table and idcolumn parameters
 	 * <b>must</b> match the last insert statement. This is because on some
-	 * database systems a SELECT IDENTITY is performaned and on other database
+	 * database systems a SELECT IDENTITY is performed and on other database
 	 * systems a SELECT curval(table_idcolumn_seq). 
 	 *  
 	 * @param table  name of table on which the last insert was done

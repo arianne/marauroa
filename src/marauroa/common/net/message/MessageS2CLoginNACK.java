@@ -62,7 +62,7 @@ public class MessageS2CLoginNACK extends Message {
         	+ "Please wait a couple of minutes or contact support.",
 	        "There have been too many failed login attempts from your network. "
         	+ "Please wait a couple of minutes or contact support.",
-        	"Preauthentication failed, please try again.",
+        	"Login expired. Please click again on your character on the web page.",
         	"This account was merged into another account. Please use the username "
         	+"of the other account to login or contact support."};
 

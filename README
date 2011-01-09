@@ -102,7 +102,7 @@ Changelog
 - fixed an issue on account renaming
 - fixed an issue with special characters in character names
 - zones are now stored asynchronously to the database
-- fixed a co-modifcation issue in Attributes.clone() and Statistics.clone()
+- fixed a co-modification issue in Attributes.clone() and Statistics.clone()
 
 3.8.4
 - fixed "Replacing content to transfer"
@@ -125,7 +125,7 @@ Changelog
 - added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game
 - added new method DBCommandQueue.getOneResult
 - database: added id and status to characters table
-- fixed an issue if a client with version 32 and a client with version 32 are in the same zone
+- fixed an issue if a client with version 32 and a client with version 33 are in the same zone
 
 3.8
 - attributes of type map
