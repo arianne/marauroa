@@ -99,7 +99,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns("", "", table.toUpperCase(), column.toUpperCase(Locale.ENGLISH));
+		ResultSet result = meta.getColumns(null, null, table.toUpperCase(), column.toUpperCase(Locale.ENGLISH));
 		boolean res = result.next();
 		result.close();
 		return res;
@@ -108,7 +108,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public int getColumnLength(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns("", "", table.toUpperCase(Locale.ENGLISH), column.toUpperCase(Locale.ENGLISH));
+		ResultSet result = meta.getColumns(null, null, table.toUpperCase(Locale.ENGLISH), column.toUpperCase(Locale.ENGLISH));
 		if (result.next()) {
 			return result.getInt("COLUMN_SIZE");
 		}
