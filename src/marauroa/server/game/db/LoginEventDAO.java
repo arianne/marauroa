@@ -102,9 +102,10 @@ public class LoginEventDAO {
 				params.put("service", service);
 			}
 			if (seed == null) {
-				seed = "";
-			}
-			params.put("seed", seed);
+			    params.put("seed", "");
+			} else {
+			    params.put("seed", seed);
+			};
 			transaction.execute(query, params);
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
