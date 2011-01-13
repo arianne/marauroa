@@ -116,12 +116,8 @@ public class OutputSerializer {
 	 *            in case of an IO-error
 	 */
 	public void write(short a) throws IOException {
-		int tmp;
-
-		tmp = a & 0xFF;
-		out.write(tmp);
-		tmp = (a >> 8) & 0xFF;
-		out.write(tmp);
+		byte[] tmp = new byte[] { (byte) (a & 0xff), (byte) (a >> 8 & 0xff)};
+		out.write(tmp, 0, 2);
 	}
 
 	/**
@@ -133,15 +129,8 @@ public class OutputSerializer {
 	 *            in case of an IO-error
 	 */
 	public void write(int a) throws IOException {
-		int tmp;
-
-		tmp = a & 0xFF;
-		out.write(tmp);
-		tmp = (a >> 8) & 0xFF;
-		out.write(tmp);
-		tmp = (a >> 16) & 0xFF;
-		out.write(tmp);
-		tmp = (a >> 24) & 0xFF;
+		byte[] tmp = new byte[] { (byte) (a & 0xff), (byte) (a >> 8 & 0xff),
+				(byte) (a >> 16 & 0xff), (byte) (a >>> 24) };
 		out.write(tmp);
 	}
 
@@ -154,16 +143,9 @@ public class OutputSerializer {
 	 *            in case of an IO-error
 	 */
 	public void write(float a) throws IOException {
-		int tmp;
-		int bits = Float.floatToIntBits(a);
-
-		tmp = bits & 0xFF;
-		out.write(tmp);
-		tmp = (bits >> 8) & 0xFF;
-		out.write(tmp);
-		tmp = (bits >> 16) & 0xFF;
-		out.write(tmp);
-		tmp = (bits >> 24) & 0xFF;
+		int intBits = Float.floatToIntBits(a);
+		byte[] tmp = new byte[] { (byte) (intBits & 0xff), (byte) (intBits >> 8 & 0xff),
+				(byte) (intBits >> 16 & 0xff), (byte) (intBits >>> 24) };
 		out.write(tmp);
 	}
 
@@ -232,8 +214,8 @@ public class OutputSerializer {
 		write(objs.length);
 		for (int i = 0; i < objs.length; i++) {
 			write(objs[i]);
-		}	    
-    }
+		}
+	}
 
 	/**
 	 * gets the protocolVersion
@@ -241,8 +223,8 @@ public class OutputSerializer {
 	 * @return protocol version
 	 */
 	public int getProtocolVersion() {
-    	return protocolVersion;
-    }
+		return protocolVersion;
+	}
 
 	/**
 	 * sets the protocol version
@@ -250,6 +232,6 @@ public class OutputSerializer {
 	 * @param protocolVersion protocol version
 	 */
 	public void setProtocolVersion(int protocolVersion) {
-    	this.protocolVersion = protocolVersion;
-    }
+		this.protocolVersion = protocolVersion;
+	}
 }
