@@ -245,6 +245,10 @@ public class PerceptionHandler {
 			/* And then we add the new and modified attributes */
 			for (RPObject object : message.getModifiedAddedRPObjects()) {
 				RPObject w_object = world.get(object.getID());
+				if (w_object == null) {
+					logger.warn("Missing base object for modified added RPObject with id " + object.getID());
+					continue;
+				}
 				if (!listener.onModifiedAdded(w_object, object)) {
 					w_object.applyDifferences(object, null);
 				}
