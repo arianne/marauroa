@@ -2,3 +2,6 @@
 /build
 /build-archive
 /dist
+/javadocs
+/.externalToolBuilders
+/.settings
