@@ -81,6 +81,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		logger.debug("Correct username/password");
 		if (entry == null) {
 			logger.warn("Did not find PlayerEntry in completeLogin, timeout? " + info);
+			return;
 		}
 
 		/* Correct: The login is correct */
