@@ -60,6 +60,9 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 			if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
 				logger.warn("Using H2DatabaseAdapter to connect to " + name);
 			}
+			if (connInfo.getProperty("jdbc_url", "").toLowerCase(Locale.ENGLISH).indexOf(";mode=") > -1) {
+				logger.warn("The configuration parameter jdbc_url configures H2 for compatibility mode. This is likely to cause trouble.");
+			}
 		} catch (SQLException e) {
 			logger.error(e, e);
 		}
