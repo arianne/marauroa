@@ -752,4 +752,28 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			}
 		}
 	}
+
+	/**
+	 * applies the added and deleted changes from the paramters to the current objects
+	 *
+	 * @param addedChanges attributes added or modified
+	 * @param deletedChanges attributes deleted
+	 */
+	public void applyDifferences(Attributes addedChanges, Attributes deletedChanges) {
+		// We remove attributes stored in deleted Changes. Except they are id or zoneid
+		if (deletedChanges != null) {
+			for (String attrib : deletedChanges) {
+				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
+					remove(attrib);
+				}
+			}
+		}
+
+		// We add the attributes contained at added changes.
+		if (addedChanges != null) {
+			for (String attrib : addedChanges) {
+				put(attrib, addedChanges.get(attrib));
+			}
+		}
+	}
 }

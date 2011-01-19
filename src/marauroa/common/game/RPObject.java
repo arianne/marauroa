@@ -108,6 +108,19 @@ public class RPObject extends SlotOwner {
 		clear();
 	}
 
+
+	/**
+	 * Constructor
+	 *
+	 * @param initialize initialize attributes
+	 */
+	RPObject(boolean initialize) {
+		super(RPClass.getBaseRPObjectDefault(), initialize);
+		if (initialize) {
+			clear();
+		}
+	}
+
 	private void clear() {
 		slots = new LinkedList<RPSlot>();
 		addedSlots = new LinkedList<String>();
@@ -1631,8 +1644,8 @@ public class RPObject extends SlotOwner {
 		 * We now get the diffs for the maps
 		 */
 		for (Entry<String, Attributes> entry : maps.entrySet()) {
-			RPObject addedMapChanges = new RPObject();
-			RPObject deletedMapChanges = new RPObject();
+			Attributes addedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
+			Attributes deletedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
 			addedMapChanges.setAddedAttributes(entry.getValue());
 			deletedMapChanges.setDeletedAttributes(entry.getValue());
 			if(!addedMapChanges.isEmpty()) {
@@ -1670,7 +1683,7 @@ public class RPObject extends SlotOwner {
 	}
 
 	/**
-	 * With the diferences computed by getDifferences in added and deleted we
+	 * With the differences computed by getDifferences in added and deleted we
 	 * build an update object by applying the changes.
 	 *
 	 * @param addedChanges
@@ -1679,16 +1692,9 @@ public class RPObject extends SlotOwner {
 	 *            the deleted attributes and slots or null
 	 */
 	public void applyDifferences(RPObject addedChanges, RPObject deletedChanges) {
+		super.applyDifferences(addedChanges, deletedChanges);
+
 		if (deletedChanges != null) {
-			/*
-			 * We remove attributes stored in deleted Changes. Except they are
-			 * id or zoneid
-			 */
-			for (String attrib : deletedChanges) {
-				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
-					remove(attrib);
-				}
-			}
 
 			/*
 			 * We apply the deleted changes to the object of the link.
@@ -1708,7 +1714,7 @@ public class RPObject extends SlotOwner {
 				if (entry.getValue().isEmpty()) {
 					removeMap(entry.getKey());
 				} else {
-					// TODO: maps.get(entry.getKey()).applyDifferences(null, entry.getValue());
+					maps.get(entry.getKey()).applyDifferences(null, entry.getValue());
 				}
 			}
 
@@ -1749,12 +1755,6 @@ public class RPObject extends SlotOwner {
 		}
 
 		if (addedChanges != null) {
-			/*
-			 * We add the attributes contained at added changes.
-			 */
-			for (String attrib : addedChanges) {
-				put(attrib, addedChanges.get(attrib));
-			}
 
 			/*
 			 * We add also the events
@@ -1779,9 +1779,13 @@ public class RPObject extends SlotOwner {
 			 */
 			for (Entry<String, Attributes> entry : addedChanges.maps.entrySet()) {
 				if(!maps.containsKey(entry.getKey())) {
-					maps.put(entry.getKey(), entry.getValue());
+					// entry.getValue is an RPObject for compatibility with the network
+					// protocol, so copy it into an attributes object
+					Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
+					attr.fill(entry.getValue());
+					maps.put(entry.getKey(), attr);
 				} else {
-					// TODO: maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
+					maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
 				}
 			}
 
