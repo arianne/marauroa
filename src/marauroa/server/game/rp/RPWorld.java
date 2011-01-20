@@ -271,7 +271,7 @@ public class RPWorld implements Iterable<IRPZone> {
 			return zone.remove(id);
 		}
 
-		logger.error("Cannot remove rpobject with id " + id + " from zone because there is no zone with that name in thw RPWorld");
+		logger.error("Cannot remove rpobject with id " + id + " from zone because there is no zone with that name in the RPWorld");
 		return null;
 	}
 

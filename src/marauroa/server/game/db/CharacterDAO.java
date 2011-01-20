@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import java.util.Date;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.ResultSet;
@@ -559,6 +560,35 @@ public class CharacterDAO {
 		attemps = transaction.querySingleCellInt(query, params);
 		return attemps > conf.getInt("character_creation_limit", TimeoutConf.CHARACTER_CREATION_LIMIT);
 	}
+	
+	/**
+	 * Gets the date the character was registered
+	 *
+	 * @param transaction DBTransaction
+	 * @param character name of character
+	 * @return date of character creation or null if no character with that name exists
+	 * @throws SQLException in case of an database error
+	 */
+	public Date getCreationDate(DBTransaction transaction, String character) throws SQLException {
+		try {
+			String query = "SELECT timedate FROM characters WHERE charname = '[character]'";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("character", character);
+			logger.debug("getCreationDate is executing query " + query);
+
+			ResultSet result = transaction.query(query, params);
+			
+			Date date = null;
+			if (result.next()) {
+				date = result.getDate("timedate");
+			}
+			result.close();
+			return date;
+		} catch (SQLException e) {
+			logger.error("Can't query date for character \"" + character + "\"", e);
+			throw e;
+		}
+	}
 
 
 	/**
@@ -811,5 +841,21 @@ public class CharacterDAO {
 		}
 	}
 
-
+	/**
+	 * Gets the date the character was registered
+	 *
+	 * @param character name of character
+	 * @return date of character creation or null if no character with that name exists
+	 * @throws SQLException in case of an database error
+	 */
+	public Date getCreationDate(String character) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			Date res = getCreationDate(transaction, character);
+			return res;
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+	
 }

@@ -79,6 +79,10 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 	private void completeLogin(Channel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
 		PlayerEntry entry = PlayerEntryContainer.getContainer().get(clientid);
 		logger.debug("Correct username/password");
+		if (entry == null) {
+			logger.warn("Did not find PlayerEntry in completeLogin, timeout? " + info);
+			return;
+		}
 
 		/* Correct: The login is correct */
 		entry.username = info.username;

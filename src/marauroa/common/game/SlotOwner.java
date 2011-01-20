@@ -41,6 +41,19 @@ public abstract class SlotOwner extends Attributes {
 		slots = new LinkedList<RPSlot>();
 	}
 
+	/**
+	 * creates a new SlowOwner
+	 *
+	 * @param rpclass RPClass definition
+	 * @param initialize initialize attributes
+	 */
+	SlotOwner(RPClass rpclass, boolean initialize) {
+		super(rpclass);
+		if (initialize) {
+			slots = new LinkedList<RPSlot>();
+		}
+	}
+
 
 	@Override
 	public Object fill(Attributes attr) {
@@ -120,7 +133,7 @@ public abstract class SlotOwner extends Attributes {
 		/* First we set the slot owner, so that slot can get access to RPClass */
 		slot.setOwner(this);
 		slots.add(slot);
-		
+
 		/* Now we make sure everyRPObject inside the added slot gets a proper id */
 		for(RPObject object: slot) {
 			assignSlotID(object);

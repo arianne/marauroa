@@ -51,7 +51,7 @@ public class RPObject extends SlotOwner {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RPObject.class);
-	
+
 	/** We are interested in clearing added and deleted only if they have changed. */
 	private boolean modified;
 
@@ -60,9 +60,9 @@ public class RPObject extends SlotOwner {
 
 	/** a list of links that this object contains. */
 	private List<RPLink> links;
-	
+
 	/** a map to store maps with keys and values **/
-	private Map<String, RPObject> maps;
+	private Map<String, Attributes> maps;
 
 	/** Which object contains this one. */
 	private SlotOwner container;
@@ -81,13 +81,13 @@ public class RPObject extends SlotOwner {
 
 	/** deleted slots, used at Delta^2 */
 	private List<String> deletedLinks;
-	
+
 	/** added maps, used at Delta^2 */
 	private List<String> addedMaps;
-	
+
 	/** deleted maps, used at Delta^2 */
 	private List<String> deletedMaps;
-	
+
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
@@ -107,7 +107,20 @@ public class RPObject extends SlotOwner {
 		super(RPClass.getBaseRPObjectDefault());
 		clear();
 	}
-	
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param initialize initialize attributes
+	 */
+	RPObject(boolean initialize) {
+		super(RPClass.getBaseRPObjectDefault(), initialize);
+		if (initialize) {
+			clear();
+		}
+	}
+
 	private void clear() {
 		slots = new LinkedList<RPSlot>();
 		addedSlots = new LinkedList<String>();
@@ -118,11 +131,11 @@ public class RPObject extends SlotOwner {
 		links = new LinkedList<RPLink>();
 		addedLinks = new LinkedList<String>();
 		deletedLinks = new LinkedList<String>();
-		
-		maps = new HashMap<String, RPObject>();
+
+		maps = new HashMap<String, Attributes>();
 		addedMaps = new LinkedList<String>();
 		deletedMaps = new LinkedList<String>();
-		
+
 		modified = false;
 
 		container = null;
@@ -131,7 +144,7 @@ public class RPObject extends SlotOwner {
 		hidden = false;
 		storable = false;
 	}
-	
+
 	/**
 	 * Copy constructor
 	 *
@@ -172,10 +185,14 @@ public class RPObject extends SlotOwner {
 			added.setOwner(this);
 			links.add(added);
 		}
-		
-		for (Entry<String, RPObject> entry : object.maps.entrySet()) {
-			RPObject toAdd = (RPObject) entry.getValue().clone();
-			maps.put(entry.getKey(), toAdd);
+
+		try {
+			for (Entry<String, Attributes> entry : object.maps.entrySet()) {
+				Attributes toAdd = (Attributes) entry.getValue().clone();
+				maps.put(entry.getKey(), toAdd);
+			}
+		} catch (CloneNotSupportedException e) {
+			logger.error(e, e);
 		}
 
 		/*
@@ -188,7 +205,7 @@ public class RPObject extends SlotOwner {
 		for (String slot : object.deletedSlots) {
 			deletedSlots.add(slot);
 		}
-		
+
 		for (String link : object.addedLinks) {
 			addedLinks.add(link);
 		}
@@ -200,7 +217,7 @@ public class RPObject extends SlotOwner {
 		for (String entry : object.addedMaps) {
 			addedMaps.add(entry);
 		}
-		
+
 		for (String entry : object.deletedMaps) {
 			deletedMaps.add(entry);
 		}
@@ -234,7 +251,7 @@ public class RPObject extends SlotOwner {
 	 */
 	public void setID(RPObject.ID id) {
 		put("id", id.getObjectID());
-		
+
 		/*
 		 * We don't use zoneid inside slots.
 		 */
@@ -290,6 +307,13 @@ public class RPObject extends SlotOwner {
 	 */
 	public void store() {
 		storable = true;
+	}
+	
+	/**
+	 * Declare that this object should not be stored at zones.
+	 */
+	public void unstore() {
+		storable = false;
 	}
 
 	/**
@@ -383,29 +407,29 @@ public class RPObject extends SlotOwner {
 	/**
 	 * Gets and object from the tree of RPSlots using its id ( that it is unique ).
 	 * Return null if it is not found.
-	 *  
+	 *
 	 * @param id the id of the object to look for.
 	 * @return RPObject
-	 */	
+	 */
 	public RPObject getFromSlots(int id) {
 		if(isContained()) {
 			if(getInt("id")==id) {
 				return this;
 			}
 		}
-		
+
 		RPObject found=null;
-		
+
 		for (RPSlot slot : slots) {
 			for(RPObject object: slot) {
 				found=object.getFromSlots(id);
-				
+
 				if(found!=null) {
 					return found;
 				}
 			}
 		}
-		
+
 		return found;
 	}
 
@@ -426,7 +450,7 @@ public class RPObject extends SlotOwner {
 		addedSlots.add(name);
 		modified = true;
 	}
-	
+
 	/**
 	 * This method add the slot to the object
 	 *
@@ -517,7 +541,7 @@ public class RPObject extends SlotOwner {
 		if(hasLink(name)) {
 			throw new SlotAlreadyAddedException(name);
 		}
-		
+
 		RPLink link = new RPLink(name, object);
 		link.setOwner(this);
 		links.add(link);
@@ -525,7 +549,7 @@ public class RPObject extends SlotOwner {
 		addedLinks.add(name);
 		modified = true;
 	}
-	
+
 	/**
 	 * Adds a new link to the object.
 	 * @param link the link to add.
@@ -534,7 +558,7 @@ public class RPObject extends SlotOwner {
 		if(hasLink(link.getName())) {
 			throw new SlotAlreadyAddedException(link.getName());
 		}
-		
+
 		link.setOwner(this);
 		links.add(link);
 
@@ -601,10 +625,10 @@ public class RPObject extends SlotOwner {
 
 		return null;
 	}
-	
+
 	/**
 	 * Puts a value for a key in a given map
-	 * 
+	 *
 	 * @param map the name of the map to put in the value
 	 * @param key the key to store for the value
 	 * @param value the value
@@ -621,10 +645,10 @@ public class RPObject extends SlotOwner {
 			this.addedMaps.add(map);
 		}
 	}
-	
+
 	/**
 	 * Puts a value for a key in a given map
-	 * 
+	 *
 	 * @param map the name of the map to put in the value
 	 * @param key the key to store for the value
 	 * @param value the value
@@ -632,10 +656,10 @@ public class RPObject extends SlotOwner {
 	public void put(String map, String key, int value) {
 		this.put(map, key, Integer.toString(value));
 	}
-	
+
 	/**
 	 * Puts a value for a key in a given map
-	 * 
+	 *
 	 * @param map the name of the map to put in the value
 	 * @param key the key to store for the value
 	 * @param value the value
@@ -643,10 +667,10 @@ public class RPObject extends SlotOwner {
 	public void put(String map, String key, double value) {
 		this.put(map, key, Double.toString(value));
 	}
-	
+
 	/**
 	 * Puts a value for a key in a given map
-	 * 
+	 *
 	 * @param map the name of the map to put in the value
 	 * @param key the key to store for the value
 	 * @param value the value
@@ -657,7 +681,7 @@ public class RPObject extends SlotOwner {
 
 	/**
 	 * Checks if a map has an entry
-	 * 
+	 *
 	 * @param map the name of the map to search in
 	 * @param key the key to search for
 	 * @return true, if the entry exists; false otherwise
@@ -668,10 +692,10 @@ public class RPObject extends SlotOwner {
 		}
 		return this.maps.get(map).has(key);
 	}
-	
+
 	/**
 	 * Retrieves a value
-	 * 
+	 *
 	 * @param map the name of the map to search in
 	 * @param key the key to search for
 	 * @return the value found
@@ -681,7 +705,7 @@ public class RPObject extends SlotOwner {
 			Definition def = getRPClass().getDefinition(DefinitionClass.STATIC, map);
 			if(def!=null) {
 				/*
-				 * It is possible that the attribute itself doesn't exist as static attribute, 
+				 * It is possible that the attribute itself doesn't exist as static attribute,
 				 * so we should return null instead.
 				 */
 				return def.getValue();
@@ -690,10 +714,10 @@ public class RPObject extends SlotOwner {
 		}
 		return this.maps.get(map).get(key);
 	}
-	
+
 	/**
 	 * Retrieves a value
-	 * 
+	 *
 	 * @param map the name of the map to search in
 	 * @param key the key to search for
 	 * @return the value found
@@ -704,10 +728,10 @@ public class RPObject extends SlotOwner {
 		}
 		return this.maps.get(map).getInt(key);
 	}
-	
+
 	/**
 	 * Retrieves a value
-	 * 
+	 *
 	 * @param map the name of the map to search in
 	 * @param key the key to search for
 	 * @return the value found
@@ -718,10 +742,10 @@ public class RPObject extends SlotOwner {
 		}
 		return this.maps.get(map).getDouble(key);
 	}
-	
+
 	/**
 	 * Retrieves a value
-	 * 
+	 *
 	 * @param map the name of the map to search in
 	 * @param key the key to search for
 	 * @return the value found
@@ -732,51 +756,51 @@ public class RPObject extends SlotOwner {
 		}
 		return this.maps.get(map).getBool(key);
 	}
-	
+
 	/**
 	 * Retrieves a full map with the given name
-	 * 
+	 *
 	 * @param map the name of the map
 	 * @return a copy of the map or null if no map with the given name is present
 	 */
 	public Map<String, String> getMap(String map) {
 		if(this.maps.containsKey(map)) {
 			HashMap<String, String> newMap = new HashMap<String, String>();
-			RPObject rpObject = this.maps.get(map);
-			for(String key : rpObject) {
+			Attributes attr = this.maps.get(map);
+			for(String key : attr) {
 				if ((!key.equals("id") && !key.equals("zoneid"))) {
-					newMap.put(key, rpObject.get(key));
+					newMap.put(key, attr.get(key));
 				}
 			}
 			return newMap;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Remove a map from this RPObject
-	 * 
+	 *
 	 * @param map the name of the map to remove
 	 * @return the RPObject representing the map or null if map not existing
 	 */
-	public RPObject removeMap(String map) {
+	public Attributes removeMap(String map) {
 		if(maps.containsKey(map)) {
-			RPObject rpo = maps.get(map);
+			Attributes attr = maps.get(map);
 			this.deletedMaps.add(map);
 			modified = true;
-			return rpo;
+			return attr;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * adds a Map to this RPObject
-	 * 
+	 *
 	 * @param map
 	 */
 	public void addMap(String map) {
 		if(maps.containsKey(map)) {
-			throw new SlotAlreadyAddedException(map); 
+			throw new SlotAlreadyAddedException(map);
 		}
 		if(getRPClass()!= null) {
 			if(getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map).getType() != Type.MAP) {
@@ -813,7 +837,7 @@ public class RPObject extends SlotOwner {
 
 	/**
 	 * gets all maps and their names as a map
-	 * 
+	 *
 	 * @return a map with key name of map and value the map itself
 	 */
 	public Map<String, Map<String, String>> maps() {
@@ -823,7 +847,7 @@ public class RPObject extends SlotOwner {
 		}
 		return maps;
 	}
-	
+
 	/**
 	 * check if a map is present in this object
 	 * @param map the name of the map
@@ -832,7 +856,7 @@ public class RPObject extends SlotOwner {
 	public boolean hasMap(String map) {
 		return this.maps.containsKey(map);
 	}
-	
+
 	/**
 	 * check if a map of this object contains a key
 	 * @param map the name of the map
@@ -845,7 +869,7 @@ public class RPObject extends SlotOwner {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method returns a String that represent the object
 	 *
@@ -858,7 +882,7 @@ public class RPObject extends SlotOwner {
 		tmp.append(super.toString());
 
 		tmp.append(" with maps");
-		for (Map.Entry<String, RPObject> map : maps.entrySet()) {
+		for (Map.Entry<String, Attributes> map : maps.entrySet()) {
 			tmp.append(" " + map.getKey());
 			tmp.append("=[" + map.getValue().toAttributeString() + "]");
 		}
@@ -942,13 +966,13 @@ public class RPObject extends SlotOwner {
 				link.writeObject(out, level);
 			}
 		}
-		
+
 		/*
-		 * we compute the amount of maps before serializing 
+		 * we compute the amount of maps before serializing
 		 */
 		if(out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
 			size=0;
-			for (Entry<String, RPObject> entry : maps.entrySet()) {
+			for (Entry<String, Attributes> entry : maps.entrySet()) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
 				if(shouldSerialize(def, level)) {
 					size++;
@@ -1042,7 +1066,7 @@ public class RPObject extends SlotOwner {
 			}
 			// get the map objects and put them into the internal maps
 			for (int k = 0; k < numberOfMaps; k++) {
-				RPObject rpo = new RPObject(); 
+				RPObject rpo = new RPObject();
 				rpo = (RPObject) in.readObject(rpo);
 				maps.put(mapNames.get(k), rpo);
 			}
@@ -1092,8 +1116,8 @@ public class RPObject extends SlotOwner {
 		if (has("id")) {
 			hash=getInt("id");
 		}
-		
-		return hash;	
+
+		return hash;
 	}
 
 	/**
@@ -1214,7 +1238,7 @@ public class RPObject extends SlotOwner {
 	/** This class stores the basic identification for a RPObject */
 	public static class ID {
 
-		private int id;
+		private final int id;
 
 		private String zoneid;
 
@@ -1339,7 +1363,7 @@ public class RPObject extends SlotOwner {
 	/**
 	 * Clean delta^2 information about added and deleted.
 	 * It also empty the event list.
-	 *  
+	 *
 	 * It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeleted() {
@@ -1347,9 +1371,9 @@ public class RPObject extends SlotOwner {
 		resetAddedAndDeletedRPSlot();
 		resetAddedAndDeletedRPLink();
 		resetAddedAndDeletedMaps();
-		
+
 		clearEvents();
-		
+
 		if(modified) {
 			modified = false;
 		}
@@ -1385,15 +1409,15 @@ public class RPObject extends SlotOwner {
 			deletedLinks.clear();
 		}
 	}
-	
+
 	/**
 	 * Clean delta^2 data in the maps. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedMaps() {
-		for(RPObject map : maps.values()) {
-			map.resetAddedAndDeleted();
+		for (Attributes map : maps.values()) {
+			map.resetAddedAndDeletedAttributes();
 		}
-		
+
 		addedMaps.clear();
 		deletedMaps.clear();
 	}
@@ -1434,7 +1458,7 @@ public class RPObject extends SlotOwner {
 			addMap(map);
 		}
 	}
-	
+
 	/**
 	 * adds the maps deleted in the specified object as maps to this object
 	 *
@@ -1511,125 +1535,135 @@ public class RPObject extends SlotOwner {
 		addedChanges.setAddedRPSlot(this);
 		deletedChanges.setDeletedRPSlot(this);
 
-		for (RPSlot slot : slots) {
+		// define tmpAddedChanges and tmpDeletedChanges so that they can be reused 
+		// because creating RPObjects is relativly expensive
+		RPObject tmpAddedChanges;
+		RPObject tmpDeletedChanges;
+		if (!slots.isEmpty()) {
+			tmpAddedChanges = new RPObject();
+			tmpDeletedChanges = new RPObject();
 
-			// ignore all slots that are server only
-			Definition def = this.getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
-			if (def.isHidden()) {
-				continue;
-			}
+			for (RPSlot slot : slots) {
 
-			/*
-			 * First we process the added things to slot.
-			 */
-			RPSlot addedObjectsInSlot = new RPSlot(slot.getName());
-			if (addedObjectsInSlot.setAddedRPObject(slot)) {
+				// ignore all slots that are server only
+				Definition def = this.getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+				if (def.isHidden()) {
+					continue;
+				}
+
 				/*
-				 * There is added objects in the slot, so we need to add them to
-				 * addedChanges.
+				 * First we process the added things to slot.
 				 */
-				if (!addedChanges.hasSlot(slot.getName())) {
-					addedChanges.addSlot(slot.getName());
-				}
-
-				RPSlot changes = addedChanges.getSlot(slot.getName());
-				for (RPObject ad : addedObjectsInSlot) {
-					changes.add(ad, false);
-				}
-			}
-
-			/*
-			 * Later we process the removed things from the slot.
-			 */
-			RPSlot deletedObjectsInSlot = new RPSlot(slot.getName());
-			if (deletedObjectsInSlot.setDeletedRPObject(slot)) {
-				/*
-				 * There is deleted objects in the slot, so we need to add them
-				 * to deletedChanges.
-				 */
-				if (!deletedChanges.hasSlot(slot.getName())) {
-					deletedChanges.addSlot(slot.getName());
-				}
-
-				RPSlot changes = deletedChanges.getSlot(slot.getName());
-				for (RPObject ad : deletedObjectsInSlot) {
-					changes.add(ad, false);
-				}
-			}
-
-			/*
-			 * Finally we process the changes on the objects of the slot.
-			 */
-			for (RPObject rec : slot) {
-				
-				// ignore modified objects that has been added in the same turn
-				if (!addedObjectsInSlot.has(rec.getID())) {
-					RPObject recAddedChanges = new RPObject();
-					RPObject recDeletedChanges = new RPObject();
-	
-					rec.getDifferences(recAddedChanges, recDeletedChanges);
-	
+				RPSlot addedObjectsInSlot = new RPSlot(slot.getName());
+				if (addedObjectsInSlot.setAddedRPObject(slot)) {
 					/*
-					 * If this object is not empty that means that there has been a
-					 * change at it. So we add this object to the slot.
+					 * There is added objects in the slot, so we need to add them to
+					 * addedChanges.
 					 */
-					if (!recAddedChanges.isEmpty()) {
-						/*
-						 * If slot was not created, create it now. For example if an
-						 * object is modified ( that means not added nor deleted ),
-						 * it won't have a slot already created on added.
-						 */
-						if (!addedChanges.hasSlot(slot.getName())) {
-							addedChanges.addSlot(slot.getName());
-						}
-	
-						RPSlot recAddedSlot = addedChanges.getSlot(slot.getName());
-						/*
-						 * We need to set the id of the object to be equals to the
-						 * object from which the diff was generated.
-						 */
-						recAddedChanges.put("id", rec.get("id"));
-						recAddedSlot.add(recAddedChanges, false);
+					if (!addedChanges.hasSlot(slot.getName())) {
+						addedChanges.addSlot(slot.getName());
 					}
 
+					RPSlot changes = addedChanges.getSlot(slot.getName());
+					for (RPObject ad : addedObjectsInSlot) {
+						changes.add(ad, false);
+					}
+				}
+
+				/*
+				 * Later we process the removed things from the slot.
+				 */
+				RPSlot deletedObjectsInSlot = new RPSlot(slot.getName());
+				if (deletedObjectsInSlot.setDeletedRPObject(slot)) {
 					/*
-					 * Same operation with delete changes
+					 * There is deleted objects in the slot, so we need to add them
+					 * to deletedChanges.
 					 */
-					if (!recDeletedChanges.isEmpty()) {
+					if (!deletedChanges.hasSlot(slot.getName())) {
+						deletedChanges.addSlot(slot.getName());
+					}
+
+					RPSlot changes = deletedChanges.getSlot(slot.getName());
+					for (RPObject ad : deletedObjectsInSlot) {
+						changes.add(ad, false);
+					}
+				}
+
+				/*
+				 * Finally we process the changes on the objects of the slot.
+				 */
+				for (RPObject rec : slot) {
+
+					// ignore modified objects that has been added in the same turn
+					if (!addedObjectsInSlot.has(rec.getID())) {
+
+						rec.getDifferences(tmpAddedChanges, tmpDeletedChanges);
+
 						/*
-						 * If slot was not created, create it now. For example if an
-						 * object is modified ( that means not added nor deleted ),
-						 * it won't have a slot already created on added.
+						 * If this object is not empty that means that there has been a
+						 * change at it. So we add this object to the slot.
 						 */
-						if (!deletedChanges.hasSlot(slot.getName())) {
-							deletedChanges.addSlot(slot.getName());
+						if (!tmpAddedChanges.isEmpty()) {
+							/*
+							 * If slot was not created, create it now. For example if an
+							 * object is modified ( that means not added nor deleted ),
+							 * it won't have a slot already created on added.
+							 */
+							if (!addedChanges.hasSlot(slot.getName())) {
+								addedChanges.addSlot(slot.getName());
+							}
+
+							RPSlot recAddedSlot = addedChanges.getSlot(slot.getName());
+							/*
+							 * We need to set the id of the object to be equals to the
+							 * object from which the diff was generated.
+							 */
+							tmpAddedChanges.put("id", rec.get("id"));
+							recAddedSlot.add(tmpAddedChanges, false);
+							tmpAddedChanges = new RPObject();
 						}
-	
-						RPSlot recDeletedSlot = deletedChanges.getSlot(slot.getName());
+
 						/*
-						 * We need to set the id of the object to be equals to the
-						 * object from which the diff was generated.
+						 * Same operation with delete changes
 						 */
-						recDeletedChanges.put("id", rec.get("id"));
-						recDeletedSlot.add(recDeletedChanges, false);
+						if (!tmpDeletedChanges.isEmpty()) {
+							/*
+							 * If slot was not created, create it now. For example if an
+							 * object is modified ( that means not added nor deleted ),
+							 * it won't have a slot already created on added.
+							 */
+							if (!deletedChanges.hasSlot(slot.getName())) {
+								deletedChanges.addSlot(slot.getName());
+							}
+	
+							RPSlot recDeletedSlot = deletedChanges.getSlot(slot.getName());
+							/*
+							 * We need to set the id of the object to be equals to the
+							 * object from which the diff was generated.
+							 */
+							tmpDeletedChanges.put("id", rec.get("id"));
+							recDeletedSlot.add(tmpDeletedChanges, false);
+							tmpDeletedChanges = new RPObject();
+						}
 					}
 				}
 			}
 		}
-		
+
 		/*
 		 * now we deal with the diff of maps
 		 */
 		addedChanges.setAddedMaps(this);
 		deletedChanges.setDeletedMaps(this);
-		
+
 		/*
 		 * We now get the diffs for the maps
 		 */
-		for (Entry<String, RPObject> entry : maps.entrySet()) {
-			RPObject addedMapChanges = new RPObject();
-			RPObject deletedMapChanges = new RPObject();
-			entry.getValue().getDifferences(addedMapChanges, deletedMapChanges);
+		for (Entry<String, Attributes> entry : maps.entrySet()) {
+			Attributes addedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
+			Attributes deletedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
+			addedMapChanges.setAddedAttributes(entry.getValue());
+			deletedMapChanges.setDeletedAttributes(entry.getValue());
 			if(!addedMapChanges.isEmpty()) {
 				for(String attribute : addedMapChanges) {
 					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
@@ -1647,7 +1681,7 @@ public class RPObject extends SlotOwner {
 		}
 
 		/*
-		 * If the diff objects are not empty, we make sure they has the id.
+		 * If the diff objects are not empty, we make sure they have the id.
 		 */
 		if(!addedChanges.isEmpty()) {
 			addedChanges.put("id",get("id"));
@@ -1665,7 +1699,7 @@ public class RPObject extends SlotOwner {
 	}
 
 	/**
-	 * With the diferences computed by getDifferences in added and deleted we
+	 * With the differences computed by getDifferences in added and deleted we
 	 * build an update object by applying the changes.
 	 *
 	 * @param addedChanges
@@ -1674,16 +1708,9 @@ public class RPObject extends SlotOwner {
 	 *            the deleted attributes and slots or null
 	 */
 	public void applyDifferences(RPObject addedChanges, RPObject deletedChanges) {
+		super.applyDifferences(addedChanges, deletedChanges);
+
 		if (deletedChanges != null) {
-			/*
-			 * We remove attributes stored in deleted Changes. Except they are
-			 * id or zoneid
-			 */
-			for (String attrib : deletedChanges) {
-				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
-					remove(attrib);
-				}
-			}
 
 			/*
 			 * We apply the deleted changes to the object of the link.
@@ -1695,11 +1722,11 @@ public class RPObject extends SlotOwner {
 					getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
 				}
 			}
-			
+
 			/*
-			 * we apply the deleted changes to each map 
+			 * we apply the deleted changes to each map
 			 */
-			for (Entry<String, RPObject> entry : deletedChanges.maps.entrySet()) {
+			for (Entry<String, Attributes> entry : deletedChanges.maps.entrySet()) {
 				if (entry.getValue().isEmpty()) {
 					removeMap(entry.getKey());
 				} else {
@@ -1718,7 +1745,7 @@ public class RPObject extends SlotOwner {
 					RPSlot changes = getSlot(slot.getName());
 
 					/*
-					 * For each of the deletded changes, check if they are
+					 * For each of the deleted changes, check if they are
 					 * already on the object so they an update and recursively
 					 * apply differences to it. On the other hand if object is
 					 * not present, it means it is a new object so we can add it
@@ -1744,12 +1771,6 @@ public class RPObject extends SlotOwner {
 		}
 
 		if (addedChanges != null) {
-			/*
-			 * We add the attributes contained at added changes.
-			 */
-			for (String attrib : addedChanges) {
-				put(attrib, addedChanges.get(attrib));
-			}
 
 			/*
 			 * We add also the events
@@ -1768,13 +1789,17 @@ public class RPObject extends SlotOwner {
 					getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
 				}
 			}
-			
+
 			/*
 			 * we apply the added changes for the maps
 			 */
-			for (Entry<String, RPObject> entry : addedChanges.maps.entrySet()) {
+			for (Entry<String, Attributes> entry : addedChanges.maps.entrySet()) {
 				if(!maps.containsKey(entry.getKey())) {
-					maps.put(entry.getKey(), entry.getValue());
+					// entry.getValue is an RPObject for compatibility with the network
+					// protocol, so copy it into an attributes object
+					Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
+					attr.fill(entry.getValue());
+					maps.put(entry.getKey(), attr);
 				} else {
 					maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
 				}
