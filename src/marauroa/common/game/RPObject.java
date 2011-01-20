@@ -308,6 +308,13 @@ public class RPObject extends SlotOwner {
 	public void store() {
 		storable = true;
 	}
+	
+	/**
+	 * Declare that this object should not be stored at zones.
+	 */
+	public void unstore() {
+		storable = false;
+	}
 
 	/**
 	 * Return true if the object should be stored at database.
