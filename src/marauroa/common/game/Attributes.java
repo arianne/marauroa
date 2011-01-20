@@ -499,7 +499,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @return Iterator
 	 */
-	@Override
 	public Iterator<String> iterator() {
 		Set<String> keySet = null;
 		synchronized(content) {
@@ -515,7 +514,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param out
 	 *			  the output serializer
 	 */
-	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
@@ -621,7 +619,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param in
 	 *			  the input serializer
 	 */
-	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		modified = true;
 		rpClass = RPClass.getRPClass(in.readString());
