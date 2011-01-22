@@ -23,9 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
+import marauroa.server.game.container.ClientState;
+import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.net.IServerManager;
 
 import org.eclipse.jetty.util.ajax.JSON;
@@ -43,8 +47,8 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	private static final long serialVersionUID = 4898279536921406401L;
 	private static Logger logger = Log4J.getLogger(WebSocketConnectionManager.class);
 
-	private IServerManager serverManager;
-	private Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<WebSocketChannel>());
+	private final IServerManager serverManager;
+	private final Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<WebSocketChannel>());
 
 	/**
 	 * creates a new WebSocketServerManager
@@ -58,7 +62,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	protected SocketIOInbound doSocketIOConnect(HttpServletRequest request, String[] protocols) {
 		try {
-			return new WebSocketChannel(this, request.getRemoteAddr(), (String) request.getSession().getAttribute("jsessionid"));
+			return new WebSocketChannel(this, request.getRemoteAddr(), (String) request.getSession().getAttribute("marauroa_authenticated_username"));
 		} catch (UnknownHostException e) {
 			logger.error(e, e);
 		}
@@ -67,12 +71,17 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 
 	/**
 	 * a client connected
-	 * 
+	 *
 	 * @param webSocketChannel channel to the client
 	 */
 	void onConnect(WebSocketChannel webSocketChannel) {
 		channels.add(webSocketChannel);
-		serverManager.onConnect(this, webSocketChannel.getAddress(), webSocketChannel);
+		Channel channel = serverManager.onConnect(this, webSocketChannel.getAddress(), webSocketChannel);
+		PlayerEntry entry = PlayerEntryContainer.getContainer().add(channel);
+		if (webSocketChannel.getUsername() != null) {
+			entry.state = ClientState.LOGIN_COMPLETE;
+			entry.username = webSocketChannel.getUsername();
+		}
 	}
 
 	/**
@@ -109,7 +118,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -121,13 +130,13 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	public void send(Object internalChannel, Message msg) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void close(Object internalChannel) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

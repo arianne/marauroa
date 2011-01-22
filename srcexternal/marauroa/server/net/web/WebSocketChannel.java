@@ -25,23 +25,23 @@ import com.glines.socketio.server.SocketIOInbound;
  */
 public class WebSocketChannel implements SocketIOInbound {
 
-	private String sessionId;
+	private final String username;
 	private SocketIOOutbound outboundSocket;
-	private WebSocketConnectionManager webSocketServerManager;
-	private InetAddress address;
+	private final WebSocketConnectionManager webSocketServerManager;
+	private final InetAddress address;
 
 	/**
 	 * creates a new WebSocketChannel
 	 *
-	 * @param webSocketServerManager 
+	 * @param webSocketServerManager
 	 * @param address ip-address of other end
-	 * @param sessionId sessionid
+	 * @param username sessionid
 	 * @throws UnknownHostException in case the ip-address is invalid
 	 */
-	public WebSocketChannel(WebSocketConnectionManager webSocketServerManager, String address, String sessionId) throws UnknownHostException {
+	public WebSocketChannel(WebSocketConnectionManager webSocketServerManager, String address, String username) throws UnknownHostException {
 		this.webSocketServerManager = webSocketServerManager;
 		this.address = InetAddress.getByName(address);
-		this.sessionId = sessionId;
+		this.username = username;
 	}
 
 	//
@@ -55,6 +55,7 @@ public class WebSocketChannel implements SocketIOInbound {
 
 	@Override
 	public void onConnect(SocketIOOutbound outbound) {
+		// TODO: if username == null, send message and disconnect
 		this.outboundSocket = outbound;
 		webSocketServerManager.onConnect(this);
 	}
@@ -76,6 +77,15 @@ public class WebSocketChannel implements SocketIOInbound {
 	 */
 	public InetAddress getAddress() {
 		return address;
+	}
+
+	/**
+	 * gets the username
+	 *
+	 * @return username
+	 */
+	public String getUsername() {
+		return username;
 	}
 
 }
