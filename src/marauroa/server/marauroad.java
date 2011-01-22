@@ -218,7 +218,7 @@ public class marauroad extends Thread {
 		System.out.println();
 
 		marauroad.setArguments(args);
-		
+
 		String log4jConfiguration = null;
 
 		try {
@@ -229,11 +229,11 @@ public class marauroad extends Thread {
 			System.out.println("Run game configuration to get a valid \"server.ini\" file");
 			System.exit(1);
 		}
-		
+
 		if(log4jConfiguration==null) {
 			log4jConfiguration="marauroa/server/log4j.properties";
 		}
-		
+
 		// Initialize Loggging
 		try {
 		  Log4J.init(log4jConfiguration);
@@ -242,7 +242,7 @@ public class marauroad extends Thread {
 			System.out.println("Verify you have created log/ directory.");
 			System.exit(1);
 		}
-		
+
 		// Check access to database is possible.
 		try {
 			new DatabaseFactory().initializeDatabase();
@@ -251,7 +251,7 @@ public class marauroad extends Thread {
 			System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
 			System.exit(1);
 		}
-		
+
 		marauroad.getMarauroa().start();
 	}
 
@@ -331,8 +331,8 @@ public class marauroad extends Thread {
 		logger.debug("staring initialize");
 		MarauroaUncaughtExceptionHandler.setup(true);
 
-		// Initialize Secure random in an extra thread because it can take up 
-		// to 20 seconds on some computers with low entropy. The hard disk 
+		// Initialize Secure random in an extra thread because it can take up
+		// to 20 seconds on some computers with low entropy. The hard disk
 		// access during start up will speed it up.
 		new Thread() {
 			@Override
@@ -368,6 +368,9 @@ public class marauroad extends Thread {
 		}
 
 		try {
+			if (Configuration.getConfiguration().get("n") == null) {
+				throw new Exception("Missing RSA key pair in server.ini; run marauroa.tools.GenerateKeys");
+			}
 			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
 					new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
 							Configuration.getConfiguration().get("e")));
@@ -385,7 +388,7 @@ public class marauroad extends Thread {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			private Logger log = Log4J.getLogger(marauroad.class);
+			private final Logger log = Log4J.getLogger(marauroad.class);
 
 			@Override
 			public void run() {
