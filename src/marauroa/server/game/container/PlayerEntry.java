@@ -34,7 +34,6 @@ import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.dbcommand.StoreCharacterCommand;
-import marauroa.server.net.INetworkServerManager;
 
 /**
  * This class represent a player on game. It handles all the business glue that
@@ -74,17 +73,17 @@ public class PlayerEntry {
 
 	/** The object of the player */
 	public RPObject object;
-	
+
 	/**
 	 * We need to control if player is active because sometimes server changes its IP
 	 * and we are not able to realize about this at server side, so all the clients are left there
 	 * until the TCP stack determine a timeout that can be a long time.
 	 */
 	public long activityTimestamp;
-	
+
 	/**
 	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
-	 */	
+	 */
 	private static final long TIMEOUT_IN_GAME_MILLISECONDS = 30 * 1000;
 
 	/**
@@ -92,7 +91,7 @@ public class PlayerEntry {
 	 * there is no keep-alive yet.
 	 */
 	private static final long TIMEOUT_PRE_GAME_MILLISECONDS = 10 * 60 * 1000;
-	
+
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
 	 * enumerate each perception so client can know in which order it is
@@ -117,7 +116,6 @@ public class PlayerEntry {
 	/**
 	 * Constructor
 	 *
-	 * @param netMan NetworkServerManager to use for this client
 	 * @param channel
 	 *            the socket channel
 	 */
@@ -137,7 +135,7 @@ public class PlayerEntry {
 		 */
 		requestedSync = true;
 		contentToTransfer = Collections.synchronizedList(new LinkedList<TransferContent>());
-		
+
 		creationTime = System.currentTimeMillis();
 		activityTimestamp=creationTime;
 	}
@@ -155,7 +153,7 @@ public class PlayerEntry {
 	 * Returns true when nothing has been received from client in TIMEOUT_SECONDS.
 	 * Note that client sends confirmations to perceptions, so this mean that client is
 	 * for whatever reason not working.
-	 * 
+	 *
 	 * @return  true when nothing has been received from client in TIMEOUT_SECONDS.
 	 */
 	public boolean isTimeout() {
@@ -273,7 +271,7 @@ public class PlayerEntry {
 	public void ban() throws SQLException {
 		DAORegister.get().get(AccountDAO.class).setAccountStatus(username, "banned");
 	}
-	
+
 	/**
 	 * sets the RPObject for this entry.
 	 *

@@ -27,7 +27,6 @@ import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
 import marauroa.server.RWLock;
 import marauroa.server.game.Statistics;
-import marauroa.server.net.INetworkServerManager;
 
 /**
  * This is a helper class to sort and access PlayerEntry in a controlled way.
@@ -49,10 +48,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
 
 	/** A reader/writers lock for controlling the access */
-	private RWLock lock;
+	private final RWLock lock;
 
 	/** A random number generator instance. */
-	private Random rand;
+	private final Random rand;
 
 	/** This map store player entry for fast access using clientid */
 	Map<Integer, PlayerEntry> clientidMap;
@@ -60,7 +59,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static PlayerEntryContainer playerEntryContainer;
 
 	/** Statistics about actions runs */
-	private Statistics stats = Statistics.getStatistics();
+	private final Statistics stats = Statistics.getStatistics();
 
 	/** Constructor */
 	protected PlayerEntryContainer() {
@@ -91,6 +90,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *
 	 * @return the iterator
 	 */
+	@Override
 	public Iterator<PlayerEntry> iterator() {
 		return new LinkedList<PlayerEntry>(clientidMap.values()).iterator();
 	}
@@ -242,7 +242,6 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 * Add a new Player entry to the container. This method assigns
 	 * automatically a random clientid to this player entry.
 	 *
-	 * @param netMan NetworkServerManager to use for this client
 	 * @param channel
 	 *            the socket channel associated with the client
 	 * @return client id resulting
@@ -306,7 +305,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		logger.debug("PlayerEntryContainer size: " + counter);
 		stats.set("Players online", counter);
 		stats.set("Ips online", addresses.size());
-	}	
+	}
 
 	/**
 	 * a string representation useful for debugging.
