@@ -200,7 +200,7 @@ public class marauroad extends Thread {
 	public static void main(String[] args) {
 		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
+		System.out.println("(C) 1999-2011 Miguel Angel Blanch Lardin and the Arianne project");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
