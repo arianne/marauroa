@@ -198,60 +198,11 @@ public class marauroad extends Thread {
 	 * @param args command line arguments
 	 */
 	public static void main(String[] args) {
-		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
-		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
-		System.out.println();
-		System.out.println("This program is free software; you can redistribute it and/or modify");
-		System.out.println("it under the terms of the GNU General Public License as published by");
-		System.out.println("the Free Software Foundation; either version 2 of the License, or");
-		System.out.println("(at your option) any later version.");
-		System.out.println();
-		System.out.println("This program is distributed in the hope that it will be useful,");
-		System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-		System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-		System.out.println("GNU General Public License for more details.");
-		System.out.println();
-		System.out.println("You should have received a copy of the GNU General Public License");
-		System.out.println("along with this program; if not, write to the Free Software");
-		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
-		System.out.println();
+		if (!marauroad.getMarauroa().init(args)) {
+			// initialize failed
+			System.exit(-1);
+		}
 
-		marauroad.setArguments(args);
-		
-		String log4jConfiguration = null;
-
-		try {
-			Configuration conf = Configuration.getConfiguration();
-			log4jConfiguration = conf.get("log4j_url");
-		} catch (IOException e) {
-			System.out.println("ERROR: Marauroa can't find configuration file.");
-			System.out.println("Run game configuration to get a valid \"server.ini\" file");
-			System.exit(1);
-		}
-		
-		if(log4jConfiguration==null) {
-			log4jConfiguration="marauroa/server/log4j.properties";
-		}
-		
-		// Initialize Loggging
-		try {
-		  Log4J.init(log4jConfiguration);
-		} catch(Exception e) {
-			System.out.println("ERROR: Marauroa can't initialize logging.");
-			System.out.println("Verify you have created log/ directory.");
-			System.exit(1);
-		}
-		
-		// Check access to database is possible.
-		try {
-			new DatabaseFactory().initializeDatabase();
-		} catch (DatabaseConnectionException e) {
-			System.out.println("ERROR: Marauroa can't connect to database");
-			System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
-			System.exit(1);
-		}
-		
 		marauroad.getMarauroa().start();
 	}
 
@@ -273,21 +224,9 @@ public class marauroad extends Thread {
 
 	@Override
 	public synchronized void run() {
-		long startTime = System.currentTimeMillis();
 		logger.debug("marauroad thread started");
-
-		createBeanForStatistics();
-
 		boolean finish = false;
 
-		if (!init()) {
-			// initialize failed
-			System.exit(-1);
-		}
-
-		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
-
-		logger.info("marauroa is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
 		while (!finish) {
 			try {
 				Statistics.getStatistics().print();
@@ -325,14 +264,75 @@ public class marauroad extends Thread {
 	 * Initializes the game. Returns true when all is OK, else false (this may
 	 * terminate the server).
 	 *
+	 * @param args command line arguments
 	 * @return true, in case the startup was successful, false otherwise
 	 */
-	public boolean init() {
+	public boolean init(String[] args) {
+		long startTime = System.currentTimeMillis();
+
+		createBeanForStatistics();
+
 		logger.debug("staring initialize");
+
+		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
+		System.out.println("Running on version " + VERSION);
+		System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
+		System.out.println();
+		System.out.println("This program is free software; you can redistribute it and/or modify");
+		System.out.println("it under the terms of the GNU General Public License as published by");
+		System.out.println("the Free Software Foundation; either version 2 of the License, or");
+		System.out.println("(at your option) any later version.");
+		System.out.println();
+		System.out.println("This program is distributed in the hope that it will be useful,");
+		System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+		System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+		System.out.println("GNU General Public License for more details.");
+		System.out.println();
+		System.out.println("You should have received a copy of the GNU General Public License");
+		System.out.println("along with this program; if not, write to the Free Software");
+		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+		System.out.println();
+
+		marauroad.setArguments(args);
+
+		String log4jConfiguration = null;
+
+		try {
+			Configuration conf = Configuration.getConfiguration();
+			log4jConfiguration = conf.get("log4j_url");
+		} catch (IOException e) {
+			System.out.println("ERROR: Marauroa can't find configuration file.");
+			System.out.println("Run game configuration to get a valid \"server.ini\" file");
+			System.exit(1);
+		}
+
+		if(log4jConfiguration==null) {
+			log4jConfiguration="marauroa/server/log4j.properties";
+		}
+
+		// Initialize Loggging
+		try {
+		  Log4J.init(log4jConfiguration);
+		} catch(Exception e) {
+			System.out.println("ERROR: Marauroa can't initialize logging.");
+			System.out.println("Verify you have created log/ directory.");
+			System.exit(1);
+		}
+
+		// Check access to database is possible.
+		try {
+			new DatabaseFactory().initializeDatabase();
+		} catch (DatabaseConnectionException e) {
+			System.out.println("ERROR: Marauroa can't connect to database");
+			System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
+			System.exit(1);
+		}
+
+
 		MarauroaUncaughtExceptionHandler.setup(true);
 
-		// Initialize Secure random in an extra thread because it can take up 
-		// to 20 seconds on some computers with low entropy. The hard disk 
+		// Initialize Secure random in an extra thread because it can take up
+		// to 20 seconds on some computers with low entropy. The hard disk
 		// access during start up will speed it up.
 		new Thread() {
 			@Override
@@ -385,7 +385,7 @@ public class marauroad extends Thread {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			private Logger log = Log4J.getLogger(marauroad.class);
+			private final Logger log = Log4J.getLogger(marauroad.class);
 
 			@Override
 			public void run() {
@@ -395,8 +395,19 @@ public class marauroad extends Thread {
 			}
 		});
 
-		logger.debug("initialize finished");
+		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
+
+		logger.info("marauroa is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
 		return true;
+	}
+
+	/**
+	 * gets the network server manager
+	 *
+	 * @return INetworkServerManager
+	 */
+	public INetworkServerManager getNetMan() {
+		return netMan;
 	}
 
 	/**
