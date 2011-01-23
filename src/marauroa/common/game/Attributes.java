@@ -499,6 +499,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @return Iterator
 	 */
+	@Override
 	public Iterator<String> iterator() {
 		Set<String> keySet = null;
 		synchronized(content) {
@@ -514,6 +515,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param out
 	 *			  the output serializer
 	 */
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
@@ -575,6 +577,43 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *			  the output buffer
+	 * @param level
+	 *			  the level of Detail
+	 */
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		jsonEscape(out, "_rpclass", rpClass.getName());
+
+		synchronized(content) {
+			for (Map.Entry<String, String> entry : content.entrySet()) {
+				String key = entry.getKey();
+				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+				if (shouldSerialize(def, level)) {
+					jsonEscape(out, "_rpclass", rpClass.getName());
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param out buffer to write to
+	 * @param key key
+	 * @param value value
+	 */
+	protected static void jsonEscape(StringBuilder out, String key, String value) {
+		out.append("\"");
+		// TODO: needs more escaping
+		out.append(key.replace("\"", "\\\""));
+		out.append("\": \"");
+		// TODO: needs more escaping
+		out.append(value.replace("\"", "\\\""));
+		out.append("\"");
+	}
+
+	/**
 	 * Returns true if the element should be serialized.
 	 *
 	 * @param clazz
@@ -619,6 +658,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param in the input serializer
 	 * @throws IOException in case of unexpected attributes
 	 */
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		modified = true;
 		rpClass = RPClass.getRPClass(in.readString());
