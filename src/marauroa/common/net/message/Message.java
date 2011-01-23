@@ -33,37 +33,37 @@ public class Message implements Serializable {
 
 	/** Type of message */
 	public enum MessageType {
-		C2S_ACTION, 
-		C2S_CHOOSECHARACTER, 
-		C2S_LOGIN_REQUESTKEY, 
-		C2S_LOGIN_SENDNONCENAMEANDPASSWORD, 
-		C2S_LOGIN_SENDPROMISE, 
-		C2S_LOGOUT, 
-		C2S_OUTOFSYNC, 
-		C2S_TRANSFER_ACK, 
+		C2S_ACTION,
+		C2S_CHOOSECHARACTER,
+		C2S_LOGIN_REQUESTKEY,
+		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		C2S_LOGIN_SENDPROMISE,
+		C2S_LOGOUT,
+		C2S_OUTOFSYNC,
+		C2S_TRANSFER_ACK,
 		C2S_KEEPALIVE,
-		S2C_CHARACTERLIST, 
-		S2C_CHOOSECHARACTER_ACK, 
-		S2C_CHOOSECHARACTER_NACK, 
-		S2C_INVALIDMESSAGE, 
-		S2C_LOGIN_ACK, 
-		S2C_LOGIN_NACK, 
-		S2C_LOGIN_SENDKEY, 
-		S2C_LOGIN_SENDNONCE, 
-		S2C_LOGOUT_ACK, 
-		S2C_LOGOUT_NACK, 
-		S2C_PERCEPTION, 
-		S2C_SERVERINFO, 
-		S2C_TRANSFER, 
-		S2C_TRANSFER_REQ, 
-		C2S_CREATEACCOUNT, 
-		S2C_CREATEACCOUNT_ACK, 
-		S2C_CREATEACCOUNT_NACK, 
-		C2S_CREATECHARACTER, 
-		S2C_CREATECHARACTER_ACK, 
-		S2C_CREATECHARACTER_NACK, 
+		S2C_CHARACTERLIST,
+		S2C_CHOOSECHARACTER_ACK,
+		S2C_CHOOSECHARACTER_NACK,
+		S2C_INVALIDMESSAGE,
+		S2C_LOGIN_ACK,
+		S2C_LOGIN_NACK,
+		S2C_LOGIN_SENDKEY,
+		S2C_LOGIN_SENDNONCE,
+		S2C_LOGOUT_ACK,
+		S2C_LOGOUT_NACK,
+		S2C_PERCEPTION,
+		S2C_SERVERINFO,
+		S2C_TRANSFER,
+		S2C_TRANSFER_REQ,
+		C2S_CREATEACCOUNT,
+		S2C_CREATEACCOUNT_ACK,
+		S2C_CREATEACCOUNT_NACK,
+		C2S_CREATECHARACTER,
+		S2C_CREATECHARACTER_ACK,
+		S2C_CREATECHARACTER_NACK,
 		S2C_CONNECT_NACK,
-		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, 
+		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED,
 		S2C_LOGIN_MESSAGE_NACK,
 		P2S_CREATECHARACTER,
 		P2S_CREATEACCOUNT
@@ -204,11 +204,27 @@ public class Message implements Serializable {
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
+	@Override
 	public void writeObject(OutputSerializer out) throws IOException {
 		out.write((byte)protocolVersion);
 		out.write((byte) type.ordinal());
 		out.write(clientid);
 		out.write(timestampMessage);
+	}
+
+	/**
+	 * Serialize the object to json
+	 *
+	 * @param out output buffer
+	 */
+	public void writeToJson(StringBuilder out) {
+		out.append("\"t\": \"");
+		out.append(type.ordinal());
+		out.append("\",\"c\": \"");
+		out.append(clientid);
+		out.append("\",\"s\": \"");
+		out.append(timestampMessage);
+		out.append("\"");
 	}
 
 	/**
@@ -219,6 +235,7 @@ public class Message implements Serializable {
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
+	@Override
 	public void readObject(InputSerializer in) throws IOException {
 		int protocolVersion = in.readByte();
 		if (protocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
@@ -270,5 +287,5 @@ public class Message implements Serializable {
 		return sb.toString();
 	}
 
-	
+
 }

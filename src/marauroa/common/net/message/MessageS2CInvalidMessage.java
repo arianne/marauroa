@@ -15,6 +15,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicates the client that it is running an incompatible version
@@ -70,6 +71,12 @@ public class MessageS2CInvalidMessage extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(reason);
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		OutputSerializer.writeJson(out, "reason", reason);
 	}
 
 	@Override
