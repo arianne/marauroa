@@ -26,6 +26,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class hosts a list of Attributes stored as pairs String=String. There
@@ -585,33 +586,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *			  the level of Detail
 	 */
 	public void writeToJson(StringBuilder out, DetailLevel level) {
-		jsonEscape(out, "_rpclass", rpClass.getName());
+		OutputSerializer.writeJson(out, "_rpclass", rpClass.getName());
 
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
 				String key = entry.getKey();
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 				if (shouldSerialize(def, level)) {
-					jsonEscape(out, "_rpclass", rpClass.getName());
+					OutputSerializer.writeJson(out, "_rpclass", rpClass.getName());
 				}
 			}
 		}
 	}
 
-	/**
-	 * @param out buffer to write to
-	 * @param key key
-	 * @param value value
-	 */
-	protected static void jsonEscape(StringBuilder out, String key, String value) {
-		out.append("\"");
-		// TODO: needs more escaping
-		out.append(key.replace("\"", "\\\""));
-		out.append("\": \"");
-		// TODO: needs more escaping
-		out.append(value.replace("\"", "\\\""));
-		out.append("\"");
-	}
 
 	/**
 	 * Returns true if the element should be serialized.

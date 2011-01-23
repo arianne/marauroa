@@ -22,7 +22,7 @@ import java.io.OutputStream;
  */
 public class OutputSerializer {
 
-	private OutputStream out;
+	private final OutputStream out;
 	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
 	/**
@@ -233,5 +233,22 @@ public class OutputSerializer {
 	 */
 	public void setProtocolVersion(int protocolVersion) {
 		this.protocolVersion = protocolVersion;
+	}
+
+	/**
+	 * writes a json key-value-pair
+	 *
+	 * @param out buffer to write to
+	 * @param key key
+	 * @param value value
+	 */
+	public static void writeJson(StringBuilder out, String key, String value) {
+		out.append("\"");
+		// TODO: needs more escaping
+		out.append(key.replace("\"", "\\\""));
+		out.append("\": \"");
+		// TODO: needs more escaping
+		out.append(value.replace("\"", "\\\""));
+		out.append("\"");
 	}
 }
