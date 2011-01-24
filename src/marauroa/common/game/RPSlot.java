@@ -21,6 +21,7 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class represent a slot in an object
@@ -47,7 +48,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	private LinkedRPObjectList deleted;
 
 	/**
-	 * Constructor for deserialization. Please use {@link RPSlot#RPSlot(String)}. 
+	 * Constructor for deserialization. Please use {@link RPSlot#RPSlot(String)}.
 	 */
 	public RPSlot() {
 		name = null;
@@ -223,7 +224,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
-		if (id == null) return null;
+		if (id == null) {
+			return null;
+		}
 		int oid = id.getObjectID();
 
 		Iterator<RPObject> it = objects.iterator();
@@ -304,7 +307,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return objects.hasByIDIgnoringZone(id);
 	}
 
-	
+
 	/**
 	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
@@ -314,14 +317,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return true if this slot is owned (at any depth) by id or false
 	 *         otherwise.
 	 */
-	// This signature with an RPObject as parameter is here for binary 
+	// This signature with an RPObject as parameter is here for binary
 	// compatibilty. Changing the parameter to the parent type SlotOwner
 	// is an incompatible change at binary level (although it is source
 	// compatible)
 	public boolean hasAsAncestor(RPObject object) {
 		return hasAsAncestor((SlotOwner) object);
 	}
-	
+
 	/**
 	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
@@ -373,11 +376,21 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
+	 * Is this slot empty?
+	 *
+	 * @return true if there are no objects in this slot
+	 */
+	public boolean isEmpty() {
+		return objects.isEmpty();
+	}
+
+	/**
 	 * Iterate over the objects of the slot. We disallow removing objects from
 	 * the iterator to avoid breaking delta^2 algorithm
 	 *
 	 * @return an unmodifiable iterator object the objects.
 	 */
+	@Override
 	public Iterator<RPObject> iterator() {
 		return Collections.unmodifiableList(objects).iterator();
 	}
@@ -421,6 +434,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @param out
 	 *            the output serializer
 	 */
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
@@ -477,8 +491,34 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	}
 
 	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *            the output buffer
+	 * @param level
+	 *            the level of Detail
+	 */
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		OutputSerializer.writeJson(out, this.getName());
+		out.append(":[");
+		boolean first = true;
+		for (RPObject rpobject : this) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			out.append("{");
+			rpobject.writeToJson(out, level);
+			out.append("}");
+		}
+		out.append("]");
+	}
+
+	/**
 	 * Fills this object with the data that has been serialized.
 	 */
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		short code = in.readShort();
 		if (code == -1) {
@@ -631,4 +671,5 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		}
 
 	}
+
 }

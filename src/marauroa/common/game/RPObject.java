@@ -27,6 +27,7 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class implements an Object.
@@ -308,7 +309,7 @@ public class RPObject extends SlotOwner {
 	public void store() {
 		storable = true;
 	}
-	
+
 	/**
 	 * Declare that this object should not be stored at zones.
 	 */
@@ -1022,6 +1023,72 @@ public class RPObject extends SlotOwner {
 	}
 
 	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *            the output buffer
+	 * @param level
+	 *            the level of Detail
+	 */
+	@Override
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		super.writeToJson(out, level);
+
+		// now we write the maps
+		for (Map.Entry<String, Attributes> entry : maps.entrySet()) {
+			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
+			if (shouldSerialize(def, level)) {
+				out.append(",");
+				OutputSerializer.writeJson(out, entry.getKey());
+				out.append(":{");
+				entry.getValue().writeToJson(out, level);
+				out.append("}");
+			}
+		}
+
+		// Now write links.
+		if (!links.isEmpty()) {
+			out.append(",\"_links\":{");
+			boolean first = true;
+			for (RPLink link : links) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					OutputSerializer.writeJson(out, link.getName());
+					out.append(":{");
+					link.getObject().writeToJson(out, level);
+					out.append("}");
+				}
+			}
+			out.append("}");
+		}
+
+		// Now write events
+		if (!events.isEmpty()) {
+			out.append(",\"_events\":[");
+			boolean first = true;
+			for (RPEvent event : events) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					out.append("{");
+					event.writeToJson(out, level);
+					out.append("}");
+					}
+				out.append("]");
+			}
+		}
+	}
+
+	/**
 	 * Fills this object with the data that has been serialized.
 	 *
 	 * @param in
@@ -1535,7 +1602,7 @@ public class RPObject extends SlotOwner {
 		addedChanges.setAddedRPSlot(this);
 		deletedChanges.setDeletedRPSlot(this);
 
-		// define tmpAddedChanges and tmpDeletedChanges so that they can be reused 
+		// define tmpAddedChanges and tmpDeletedChanges so that they can be reused
 		// because creating RPObjects is relativly expensive
 		RPObject tmpAddedChanges;
 		RPObject tmpDeletedChanges;
@@ -1635,7 +1702,7 @@ public class RPObject extends SlotOwner {
 							if (!deletedChanges.hasSlot(slot.getName())) {
 								deletedChanges.addSlot(slot.getName());
 							}
-	
+
 							RPSlot recDeletedSlot = deletedChanges.getSlot(slot.getName());
 							/*
 							 * We need to set the id of the object to be equals to the

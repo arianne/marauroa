@@ -239,6 +239,19 @@ public class OutputSerializer {
 	 * writes a json key-value-pair
 	 *
 	 * @param out buffer to write to
+	 * @param value value
+	 */
+	public static void writeJson(StringBuilder out, String value) {
+		out.append("\"");
+		// TODO: needs more escaping
+		out.append(value.replace("\"", "\\\""));
+		out.append("\"");
+	}
+
+	/**
+	 * writes a json key-value-pair
+	 *
+	 * @param out buffer to write to
 	 * @param key key
 	 * @param value value
 	 */
@@ -246,9 +259,10 @@ public class OutputSerializer {
 		out.append("\"");
 		// TODO: needs more escaping
 		out.append(key.replace("\"", "\\\""));
-		out.append("\": \"");
+		out.append("\":\"");
 		// TODO: needs more escaping
 		out.append(value.replace("\"", "\\\""));
 		out.append("\"");
 	}
+
 }
