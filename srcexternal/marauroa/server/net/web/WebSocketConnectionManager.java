@@ -81,6 +81,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		if (webSocketChannel.getUsername() != null) {
 			entry.state = ClientState.LOGIN_COMPLETE;
 			entry.username = webSocketChannel.getUsername();
+			logger.info("clientid: " + entry.clientid);
 		}
 	}
 
@@ -123,14 +124,15 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 
 	@Override
 	public boolean isFinished() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void send(Object internalChannel, Message msg) {
-		// TODO Auto-generated method stub
-
+		StringBuilder out = new StringBuilder();
+		msg.writeToJson(out);
+		// TODO: filter message of type MessageS2CPerception that are empty
+		((WebSocketChannel) internalChannel).sendMessage(out.toString());
 	}
 
 	@Override

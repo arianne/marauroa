@@ -12,10 +12,12 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.glines.socketio.common.DisconnectReason;
+import com.glines.socketio.server.SocketIOFrame;
 import com.glines.socketio.server.SocketIOInbound;
 
 /**
@@ -68,6 +70,19 @@ public class WebSocketChannel implements SocketIOInbound {
 	@Override
 	public void onMessage(int messageType, String message) {
 		webSocketServerManager.onMessage(this, messageType, message);
+	}
+
+	/**
+	 * sends a message to the client
+	 *
+	 * @param json json string to send
+	 */
+	public void sendMessage(String json) {
+		try {
+			outboundSocket.sendMessage(SocketIOFrame.JSON_MESSAGE_TYPE, json);
+		} catch (IOException e) {
+			outboundSocket.disconnect();
+		}
 	}
 
 	/**
