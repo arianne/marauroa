@@ -95,7 +95,7 @@ Also please copy src/marauroa/test/server.ini to main project folder.
 Changelog
 ---------
 3.8.6
-- 
+- performance optimization in RPObject.getDifference() by drastically reducing the number of list/map instantiations
 
 
 3.8.5
