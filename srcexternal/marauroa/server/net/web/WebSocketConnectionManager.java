@@ -81,6 +81,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		if (webSocketChannel.getUsername() != null) {
 			entry.state = ClientState.LOGIN_COMPLETE;
 			entry.username = webSocketChannel.getUsername();
+			entry.disableTimeout();
 			logger.info("clientid: " + entry.clientid);
 		}
 	}

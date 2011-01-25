@@ -112,6 +112,9 @@ public class PlayerEntry {
 	/** grant a longer timeout during login */
 	private boolean gotKeepAliveInGameState = false;
 
+	/** should this player entry time out? set to false if another timeout mechanism is in place */
+	private boolean checkTimeout = true;
+
 
 	/**
 	 * Constructor
@@ -157,6 +160,9 @@ public class PlayerEntry {
 	 * @return  true when nothing has been received from client in TIMEOUT_SECONDS.
 	 */
 	public boolean isTimeout() {
+		if (!checkTimeout ) {
+			return false;
+		}
 		if (state==ClientState.GAME_BEGIN) {
 			if (gotKeepAliveInGameState) {
 				return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_IN_GAME_MILLISECONDS;
@@ -166,6 +172,13 @@ public class PlayerEntry {
 		} else {
 			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_PRE_GAME_MILLISECONDS;
 		}
+	}
+
+	/**
+	 * disables the timeout check (because it is done elsewhere)
+	 */
+	public void disableTimeout() {
+		checkTimeout = false;
 	}
 
 	/**
