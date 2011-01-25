@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.zip.DeflaterOutputStream;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
+import marauroa.common.game.Attributes;
 import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
@@ -38,7 +40,7 @@ import org.apache.log4j.NDC;
 /**
  * This message indicate the client the objects that the server has determined
  * that this client is able to see.
- * 
+ *
  * @see marauroa.common.net.message.Message
  * @see marauroa.common.game.IRPZone
  */
@@ -76,7 +78,7 @@ public class MessageS2CPerception extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and
 	 * perception to send.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param perception
@@ -124,7 +126,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of added objects
 	 */
 	public List<RPObject> getAddedRPObjects() {
@@ -133,7 +135,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of modified objects that has attributes added
 	 */
 	public List<RPObject> getModifiedAddedRPObjects() {
@@ -142,7 +144,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of modified objects that has attributes removed
 	 */
 	public List<RPObject> getModifiedDeletedRPObjects() {
@@ -151,7 +153,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of deleted objects
-	 * 
+	 *
 	 * @return List<RPObject> of deleted objects
 	 */
 	public List<RPObject> getDeletedRPObjects() {
@@ -160,7 +162,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -331,11 +333,11 @@ public class MessageS2CPerception extends Message {
 
 		static class CacheKey {
 
-			private byte type;
+			private final byte type;
 
-			private IRPZone.ID zoneid;
+			private final IRPZone.ID zoneid;
 
-			private int protocolVersion;
+			private final int protocolVersion;
 
 			public CacheKey(byte type, IRPZone.ID zoneid, int protocolVersion) {
 				this.type = type;
@@ -361,7 +363,7 @@ public class MessageS2CPerception extends Message {
 			}
 		}
 
-		private Map<CacheKey, byte[]> cachedContent;
+		private final Map<CacheKey, byte[]> cachedContent;
 
 		private CachedCompressedPerception() {
 			cachedContent = new HashMap<CacheKey, byte[]>();
@@ -459,4 +461,64 @@ public class MessageS2CPerception extends Message {
 			ser.write(object);
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "zoneid", zoneid.getID());
+
+		// public
+		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
+			writeObjectCollectionToJson(out, "aO", addedRPObjects, DetailLevel.NORMAL);
+		}
+		if ((modifiedAddedAttribsRPObjects != null) && !modifiedAddedAttribsRPObjects.isEmpty()) {
+			writeObjectCollectionToJson(out, "aA", modifiedAddedAttribsRPObjects, DetailLevel.NORMAL);
+		}
+		if ((modifiedDeletedAttribsRPObjects != null) && !modifiedDeletedAttribsRPObjects.isEmpty()) {
+			writeObjectCollectionToJson(out, "dA", modifiedDeletedAttribsRPObjects, DetailLevel.NORMAL);
+		}
+		if ((deletedRPObjects != null) && !deletedRPObjects.isEmpty()) {
+			writeObjectCollectionToJson(out, "dO", deletedRPObjects, DetailLevel.NORMAL);
+		}
+
+		// private
+		if ((myRPObjectModifiedAdded != null)) {
+			out.append(",\"aM\":{");
+			myRPObjectModifiedAdded.writeToJson(out, DetailLevel.PRIVATE);
+			out.append("}");
+		}
+		if ((myRPObjectModifiedDeleted != null)) {
+			out.append(",\"dM\":{");
+			myRPObjectModifiedDeleted.writeToJson(out, DetailLevel.PRIVATE);
+			out.append("}");
+		}
+	}
+
+	/**
+	 * converts a list of objects into a json fragment
+	 *
+	 * @param out output buffer
+	 * @param name trusted name of list (will not be escaped).
+	 * @param collection list of rpobjects
+	 * @param level serialization level
+	 */
+	private void writeObjectCollectionToJson(StringBuilder out, String name, Collection<? extends Attributes> collection, DetailLevel level) {
+		out.append(",\"");
+		out.append(name);
+		out.append("\":[");
+		boolean first = true;
+		for (Attributes object : collection) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			out.append("{");
+			object.writeToJson(out, level);
+			out.append("}");
+		}
+		out.append("]");
+	}
+
 }
