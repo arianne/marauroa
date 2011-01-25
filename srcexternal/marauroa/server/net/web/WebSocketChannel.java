@@ -86,6 +86,14 @@ public class WebSocketChannel implements SocketIOInbound {
 	}
 
 	/**
+	 * closes the connection
+	 */
+	public void close() {
+		outboundSocket.close();
+		outboundSocket.disconnect();
+	}
+
+	/**
 	 * gets the ip-address
 	 *
 	 * @return address

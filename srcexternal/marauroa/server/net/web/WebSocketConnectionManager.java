@@ -137,8 +137,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 
 	@Override
 	public void close(Object internalChannel) {
-		// TODO Auto-generated method stub
-
+		((WebSocketChannel) internalChannel).close();
 	}
 
 }
