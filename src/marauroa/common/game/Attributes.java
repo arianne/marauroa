@@ -593,7 +593,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 				String key = entry.getKey();
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 				if (shouldSerialize(def, level)) {
-					OutputSerializer.writeJson(out, "_rpclass", rpClass.getName());
+					out.append(",");
+					OutputSerializer.writeJson(out, key, entry.getValue());
 				}
 			}
 		}

@@ -305,6 +305,7 @@ public abstract class SlotOwner extends Attributes {
 			}
 			slot.writeToJson(out, level);
 		}
+		out.append("}");
 	}
 
 	protected void deserializeRPSlots(marauroa.common.net.InputSerializer in)
