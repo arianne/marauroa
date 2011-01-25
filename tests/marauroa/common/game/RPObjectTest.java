@@ -12,10 +12,12 @@
  ***************************************************************************/
 package marauroa.common.game;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -127,13 +129,13 @@ public class RPObjectTest {
 		RPObject expected = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(1, expected.getInt("id"));
 	}
-	
+
 	@Test
 	public void testHasAsParent() {
 		RPObject p = obj.getSlot("lhand").getFirst();
-		
+
 		assertTrue(obj.getSlot("lhand").hasAsAncestor(obj));
-		assertTrue(p.getSlot("container").hasAsAncestor(obj));		
+		assertTrue(p.getSlot("container").hasAsAncestor(obj));
 	}
 
 	@Test(expected = SlotIsFullException.class)
@@ -190,7 +192,7 @@ public class RPObjectTest {
 		RPObject result = (RPObject) is.readObject(new RPObject());
 
 		assertEquals(obj, result);
-		
+
 		RPSlot inslot = result.getSlot("lhand");
 		for ( RPObject contained : inslot) {
 			assertTrue(contained.isContained());
@@ -208,7 +210,7 @@ public class RPObjectTest {
 		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 		assertEquals(obj, coin.getBaseContainer());
 	}
-	
+
 	/**
 	 * Test that the getFromSlots method returns the proper object and returns null
 	 * when it is not found.
@@ -255,7 +257,7 @@ public class RPObjectTest {
 		assertTrue(oadded.isEmpty());
 		assertTrue(odeleted.isEmpty());
 	}
-	
+
 	/**
 	 * Checks that passing <code>null</code> does not throw a NPE.
 	 */
@@ -266,12 +268,12 @@ public class RPObjectTest {
 		assertFalse(localobj.hasSlot(slotname));
 		assertFalse(localobj.hasSlot(slotname + "blabla"));
 		assertFalse(localobj.hasSlot(null));
-		
+
 		localobj.addSlot(slotname);
 		assertTrue(localobj.hasSlot(slotname));
 		assertFalse(localobj.hasSlot(slotname + "blabla"));
 		assertFalse(localobj.hasSlot(null));
-		
+
 	}
 
 	public void testClone() {
@@ -280,17 +282,17 @@ public class RPObjectTest {
 		assertFalse(obj1==obj2);
 		assertTrue(obj2.getClass() == obj1.getClass());
 		assertEquals(obj1, obj2);
-		
+
 		RPObject subobj1 = new SubRPObject();
 		Object subObj2 = subobj1.clone();
 		assertFalse(subobj1==subObj2);
 		assertTrue(subObj2.getClass() == SubRPObject.class);
-		
+
 		assertTrue(subObj2.getClass() == subobj1.getClass());
 		assertEquals(subobj1, subObj2);
-	
+
 	}
-	
+
 	@Test
 	public void testPutInMapAttribute() {
 		RPClass cls = new RPClass("testmaps");
@@ -304,7 +306,7 @@ public class RPObjectTest {
 			// should just be caught
 		}
 	}
-	
+
 	@Test
 	public void testPutInMapAttributeNotBeingMap() {
 		RPClass cls = new RPClass("testmaps-2");
@@ -318,7 +320,7 @@ public class RPObjectTest {
 			// should just be caught
 		}
 	}
-	
+
 	@Test
 	public void testMapSerialization() throws IOException {
 		RPClass cls = new RPClass("testmaps-serialization");
@@ -335,7 +337,7 @@ public class RPObjectTest {
 		RPObject result = (RPObject) is.readObject(new RPObject());
 		assertEquals(rpo, result);
 	}
-	
+
 	@Test
 	public void testMapSerializationTwoMaps() throws IOException {
 		RPClass cls = new RPClass("testmaps-serialization-2");
@@ -355,10 +357,28 @@ public class RPObjectTest {
 		RPObject result = (RPObject) is.readObject(new RPObject());
 		assertEquals(rpo, result);
 	}
-	
+
 	class SubRPObject extends RPObject{
 		// just subclass of RPObject used for testing for of the
 		// Object.clone() contract
 	}
-	
+
+	/**
+	 * Tests for writing an RPObject to JSON
+	 */
+	@Test
+	public void testWriteToJson() {
+		RPObject rpobject = new RPObject();
+		rpobject.put("mykey", "myvalue");
+		rpobject.addSlot(new RPSlot("empty"));
+		RPSlot slot = new RPSlot("myslot");
+		rpobject.addSlot(slot);
+		slot.add(new RPObject());
+		RPObject child = new RPObject();
+		child.put("mychildkey", "mychildvalue");
+		slot.add(child);
+		StringBuilder out = new StringBuilder();
+		rpobject.writeToJson(out, DetailLevel.NORMAL);
+		assertThat(out.toString(), equalTo("\"_rpclass\":\"\",\"mykey\":\"myvalue\",\"_slots\":{\"myslot\":[{\"_rpclass\":\"\",\"id\":\"0\"},{\"_rpclass\":\"\",\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}]}"));
+	}
 }
